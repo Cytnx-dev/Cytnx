@@ -1,0 +1,2892 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacecytnx" kind="namespace" language="C++">
+    <compoundname>cytnx</compoundname>
+    <innerclass refid="classcytnx_1_1Accessor" prot="public">cytnx::Accessor</innerclass>
+    <innerclass refid="classcytnx_1_1Bond" prot="public">cytnx::Bond</innerclass>
+    <innerclass refid="classcytnx_1_1LinOp" prot="public">cytnx::LinOp</innerclass>
+    <innerclass refid="classcytnx_1_1Network" prot="public">cytnx::Network</innerclass>
+    <innerclass refid="classcytnx_1_1Qs" prot="public">cytnx::Qs</innerclass>
+    <innerclass refid="classcytnx_1_1Symmetry" prot="public">cytnx::Symmetry</innerclass>
+    <innerclass refid="classcytnx_1_1Tensor" prot="public">cytnx::Tensor</innerclass>
+    <innerclass refid="classcytnx_1_1UniTensor" prot="public">cytnx::UniTensor</innerclass>
+    <innernamespace refid="namespacecytnx_1_1algo">cytnx::algo</innernamespace>
+    <innernamespace refid="namespacecytnx_1_1linalg">cytnx::linalg</innernamespace>
+    <innernamespace refid="namespacecytnx_1_1operators">cytnx::operators</innernamespace>
+    <innernamespace refid="namespacecytnx_1_1physics">cytnx::physics</innernamespace>
+    <innernamespace refid="namespacecytnx_1_1random">cytnx::random</innernamespace>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" prot="public" static="no" strong="no">
+        <type>int</type>
+        <name>bondType</name>
+        <qualifiedname>cytnx::bondType</qualifiedname>
+        <enumvalue id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" prot="public">
+          <name>BD_KET</name>
+          <initializer>= -1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>-1, represent ket state in physics </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" prot="public">
+          <name>BD_BRA</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>1, represent bra state in physics </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efabd7a05c57c46feedff6d9a4bfc136329" prot="public">
+          <name>BD_REG</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>0, only can be used in non-symmetry <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efaab9b5eb9d108ed1b49ce4d29bfa5b93a" prot="public">
+          <name>BD_NONE</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>0, same as BD_REG </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efa236cc2f8a468e7190902edda6ca8ee29" prot="public">
+          <name>BD_IN</name>
+          <initializer>= -1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>-1, same as BD_KET </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efa6bb366661f9937d42c2284dfac2910da" prot="public">
+          <name>BD_OUT</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+<para>1, same as BD_BRA </para>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>bond type </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is about the enumeration of the type of the object <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>.<orderedlist>
+<listitem><para>For the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> which is non-symmetry, the corresponding bondType will be set as <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efabd7a05c57c46feedff6d9a4bfc136329" kindref="member">bondType.BD_REG</ref> defaultly. You also can set the bondType as <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref> if you want to give the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> more physics meaning.</para>
+</listitem><listitem><para>For the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is symmetry, the corresponding bondType must be <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref>.</para>
+</listitem><listitem><para>Please note that if you want to do the contraction for symmetric <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>, you must make sure that the two bonds you want to contract are one <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> and the other <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref>. Namely, you cannot do the contraction if two bonds are both <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or both <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref>. <simplesect kind="note"><para>currently using gBD_* to indicate this is bond with new qnum structure! </para>
+</simplesect>
+</para>
+</listitem></orderedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Bond.hpp" line="31" column="3" bodyfile="include/Bond.hpp" bodystart="31" bodyend="38"/>
+      </memberdef>
+      <memberdef kind="enum" id="namespacecytnx_1a252e0f32148cfe7b82ef6baa1c9068de" prot="public" static="no" strong="no">
+        <type>int</type>
+        <name>SymmetryType</name>
+        <qualifiedname>cytnx::SymmetryType</qualifiedname>
+        <enumvalue id="namespacecytnx_1a252e0f32148cfe7b82ef6baa1c9068deaee0a1a8f516ce65a036e13dcea73ec66" prot="public">
+          <name>Void</name>
+          <initializer>= -99</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1a252e0f32148cfe7b82ef6baa1c9068dea29f385de3cadb65a68c610cd36ea3480" prot="public">
+          <name>U</name>
+          <initializer>= -1</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1a252e0f32148cfe7b82ef6baa1c9068dea67ec3a72fc49bbc46f385a0a875263c2" prot="public">
+          <name>Z</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1a252e0f32148cfe7b82ef6baa1c9068deaeedaaf99e71c85e7ded2d30192b9f221" prot="public">
+          <name>fPar</name>
+          <initializer>= -2</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1a252e0f32148cfe7b82ef6baa1c9068dea6114daf883a70bff7e7d43a9cad4dbc4" prot="public">
+          <name>fNum</name>
+          <initializer>= -3</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>It is about the type of the <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> object The supported enumerations are as following:</para>
+<para><table rows="6" cols="2"><row>
+<entry thead="yes"><para>enumeration   </para>
+</entry><entry thead="yes"><para>description    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Void   </para>
+</entry><entry thead="no"><para>-99, void type (that means not initialized)    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>U   </para>
+</entry><entry thead="no"><para>-1, U1 symmetry    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Z   </para>
+</entry><entry thead="no"><para>0, Zn symmetry    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>fPar   </para>
+</entry><entry thead="no"><para>-2, fermionParity symmetry    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>fNum   </para>
+</entry><entry thead="no"><para>-3, fermionNumber symmetry   </para>
+</entry></row>
+</table>
+</para>
+<para><simplesect kind="see"><para><ref refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kindref="member">Symmetry::stype()</ref>, <ref refid="classcytnx_1_1Symmetry_1a0ba15e919a5693923e54c2c6f7d376c6" kindref="member">Symmetry::stype_str()</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="32" column="3" bodyfile="include/Symmetry.hpp" bodystart="32" bodyend="32"/>
+      </memberdef>
+      <memberdef kind="enum" id="namespacecytnx_1af664ec40b8661447cc01a0e0d227795c" prot="public" static="no" strong="no">
+        <type>bool</type>
+        <name>fermionParity</name>
+        <qualifiedname>cytnx::fermionParity</qualifiedname>
+        <enumvalue id="namespacecytnx_1af664ec40b8661447cc01a0e0d227795ca6fd9ef7c3daa624e97952df76dc68a89" prot="public">
+          <name>EVEN</name>
+          <initializer>= false</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="namespacecytnx_1af664ec40b8661447cc01a0e0d227795cac7d73b44b81eca41c3956e1d9f5d19df" prot="public">
+          <name>ODD</name>
+          <initializer>= true</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>fermionParity </para>
+        </briefdescription>
+        <detaileddescription>
+<para>the parity of fermionis EVEN For bosons or an even number of fermions ODD For an even number of fermions </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Symmetry.hpp" line="40" column="3" bodyfile="include/Symmetry.hpp" bodystart="40" bodyend="40"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" prot="public" static="no" extern="yes" mutable="no">
+        <type>Device_class</type>
+        <definition>Device_class cytnx::Device</definition>
+        <argsstring></argsstring>
+        <name>Device</name>
+        <qualifiedname>cytnx::Device</qualifiedname>
+        <briefdescription>
+<para>data on which devices. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the variable about the data on which devices .<linebreak/>
+ You can use it as following: <programlisting><codeline><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>device<sp/>=<sp/><ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cpu;</highlight></codeline>
+</programlisting> The supported enumerations are as following:</para>
+<para><table rows="3" cols="2"><row>
+<entry thead="yes"><para>enumeration   </para>
+</entry><entry thead="yes"><para>description    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cpu   </para>
+</entry><entry thead="no"><para>-1, on cpu    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cuda   </para>
+</entry><entry thead="no"><para>0, on cuda   </para>
+</entry></row>
+</table>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Device.hpp" line="43" column="23" declfile="include/Device.hpp" declline="43" declcolumn="23"/>
+      </memberdef>
+      <memberdef kind="variable" id="namespacecytnx_1a224ad816267928be693a2396f5483e06" prot="public" static="no" extern="yes" mutable="no">
+        <type>UniTensorType_class</type>
+        <definition>UniTensorType_class cytnx::UTenType</definition>
+        <argsstring></argsstring>
+        <name>UTenType</name>
+        <qualifiedname>cytnx::UTenType</qualifiedname>
+        <briefdescription>
+<para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>It is about the type of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>.<linebreak/>
+ The supported enumerations are as following:</para>
+<para><table rows="6" cols="2"><row>
+<entry thead="yes"><para>enumeration   </para>
+</entry><entry thead="yes"><para>description    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Void   </para>
+</entry><entry thead="no"><para>-1, void <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Dense   </para>
+</entry><entry thead="no"><para>0, dense <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Sparse   </para>
+</entry><entry thead="no"><para>1, sparse <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (deprecated)    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Block   </para>
+</entry><entry thead="no"><para>2, block <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>BlockFermionic   </para>
+</entry><entry thead="no"><para>3, fermionic <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (block form)   </para>
+</entry></row>
+</table>
+</para>
+<para><simplesect kind="warning"><para>the type <emphasis>Sparse</emphasis> is deprecated. Use <emphasis>Block</emphasis> instead. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="classcytnx_1_1UniTensor_1afe930fe1d99b1149ccb65e1003c6030b" kindref="member">UniTensor::uten_type()</ref>, <ref refid="classcytnx_1_1UniTensor_1a1c7cfbb826a15cd3272985e6db0d9c78" kindref="member">UniTensor::uten_type_str()</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/UniTensor.hpp" line="57" column="30" declfile="include/UniTensor.hpp" declline="57" declcolumn="30"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacecytnx_1ab8a79a03fb0465f3eb2641017f3f1755" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::zeros</definition>
+        <argsstring>(const cytnx_uint64 &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>zeros</name>
+        <qualifiedname>cytnx::zeros</qualifiedname>
+        <param>
+          <type>const cytnx_uint64 &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Create a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all elements initialized to zero. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number of elements </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="28" column="10" declfile="include/Generator.hpp" declline="28" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ad53947bd87534866b11080f9898d2a53" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::zeros</definition>
+        <argsstring>(const std::vector&lt; cytnx_uint64 &gt; &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>zeros</name>
+        <qualifiedname>cytnx::zeros</qualifiedname>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Create a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all elements initialized to zero. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the shape of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="42" column="10" declfile="include/Generator.hpp" declline="42" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1af8aa7e619c030f80c54e4d26b576484b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::identity</definition>
+        <argsstring>(const cytnx_uint64 &amp;Dim, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>identity</name>
+        <qualifiedname>cytnx::identity</qualifiedname>
+        <param>
+          <type>const cytnx_uint64 &amp;</type>
+          <declname>Dim</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Create a square rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with the diagonal initialized to one and all other elements set to zero. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Dim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dimension of diagonal. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="59" column="10" declfile="include/Generator.hpp" declline="59" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1affbd9073156ce86d5e5c03742603c631" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::eye</definition>
+        <argsstring>(const cytnx_uint64 &amp;Dim, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>eye</name>
+        <qualifiedname>cytnx::eye</qualifiedname>
+        <param>
+          <type>const cytnx_uint64 &amp;</type>
+          <declname>Dim</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Create a square rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with the diagonal initialized to one and all other elements set to zero. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Dim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dimension of diagonal. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>]</para>
+</simplesect>
+Note: This function is a alias of <ref refid="namespacecytnx_1af8aa7e619c030f80c54e4d26b576484b" kindref="member">cytnx::identity()</ref>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="78" column="10" declfile="include/Generator.hpp" declline="78" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a83fb7bbe73368751a0d0f535d4a10a33" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::ones</definition>
+        <argsstring>(const cytnx_uint64 &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>ones</name>
+        <qualifiedname>cytnx::ones</qualifiedname>
+        <param>
+          <type>const cytnx_uint64 &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Create a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all elements initialized to one. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number of elements </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="94" column="10" declfile="include/Generator.hpp" declline="94" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a8e80968b20c01c839ea854c398c88ac1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::ones</definition>
+        <argsstring>(const std::vector&lt; cytnx_uint64 &gt; &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>ones</name>
+        <qualifiedname>cytnx::ones</qualifiedname>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Create a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all elements initialized to one. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the shape of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="108" column="10" declfile="include/Generator.hpp" declline="108" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::arange</definition>
+        <argsstring>(const cytnx_int64 &amp;Nelem)</argsstring>
+        <name>arange</name>
+        <qualifiedname>cytnx::arange</qualifiedname>
+        <param>
+          <type>const cytnx_int64 &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <briefdescription>
+<para>Create a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with incremental unsigned integer elements in the range [0,Nelem) </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number of incremental elements to create.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="121" column="10" declfile="include/Generator.hpp" declline="121" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1add9038b2dc354c3123dc56d5912430e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::arange</definition>
+        <argsstring>(const cytnx_double &amp;start, const cytnx_double &amp;end, const cytnx_double &amp;step=1, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>arange</name>
+        <qualifiedname>cytnx::arange</qualifiedname>
+        <param>
+          <type>const cytnx_double &amp;</type>
+          <declname>start</declname>
+        </param>
+        <param>
+          <type>const cytnx_double &amp;</type>
+          <declname>end</declname>
+        </param>
+        <param>
+          <type>const cytnx_double &amp;</type>
+          <declname>step</declname>
+          <defval>1</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>Create an rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with elements defined in range [start,end) with assigned step-size. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>start</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the start value of the range </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>end</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the end value of the range </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>step</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the step-size of the range </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="136" column="10" declfile="include/Generator.hpp" declline="136" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a1d2699133d66fb4140459de8553696df" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::linspace</definition>
+        <argsstring>(const cytnx_double &amp;start, const cytnx_double &amp;end, const cytnx_uint64 &amp;Nelem, const bool &amp;endpoint=true, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)</argsstring>
+        <name>linspace</name>
+        <qualifiedname>cytnx::linspace</qualifiedname>
+        <param>
+          <type>const cytnx_double &amp;</type>
+          <declname>start</declname>
+        </param>
+        <param>
+          <type>const cytnx_double &amp;</type>
+          <declname>end</declname>
+        </param>
+        <param>
+          <type>const cytnx_uint64 &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>endpoint</declname>
+          <defval>true</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Generator.hpp" line="140" column="10" declfile="include/Generator.hpp" declline="140" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ad1f97cdff6a9825441592b906d8ae330" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator+</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The addition operator between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1ac61bd0f99306496fae81f8601fa4070c" kindref="member">linalg::Add(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the addition. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1ac61bd0f99306496fae81f8601fa4070c" kindref="member">linalg::Add(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="31" column="20" declfile="include/linalg.hpp" declline="31" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ac4937c837a6b35b28b4307dfeb2b4e3c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator+</definition>
+        <argsstring>(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The addition operator between a template type and a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1af647a78f613d4377416099338d1b6e5e" kindref="member">linalg::Add(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the addition. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1af647a78f613d4377416099338d1b6e5e" kindref="member">linalg::Add(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="43" column="20" declfile="include/linalg.hpp" declline="43" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ab78b9a88285af588f13175832211e783" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator+</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The addition operator between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a28915f5d2748f9dfff9252a5f2faf3fb" kindref="member">linalg::Add(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the addition. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a28915f5d2748f9dfff9252a5f2faf3fb" kindref="member">linalg::Add(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="55" column="20" declfile="include/linalg.hpp" declline="55" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a64cab629757608840015fd955f53f961" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator-</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The subtraction operator between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a9918295b0d2d78fa475390e91ccbf57b" kindref="member">linalg::Sub(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the subtraction. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a9918295b0d2d78fa475390e91ccbf57b" kindref="member">linalg::Sub(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="67" column="20" declfile="include/linalg.hpp" declline="67" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a45878246163ead59e22c8f3d1c0f0a31" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator-</definition>
+        <argsstring>(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The subtraction operator between a template type and a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a93d15a4d2fa012d77683cb7e191ff7e9" kindref="member">linalg::Sub(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the subtraction. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a93d15a4d2fa012d77683cb7e191ff7e9" kindref="member">linalg::Sub(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="79" column="20" declfile="include/linalg.hpp" declline="79" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a0c3c40f9303eb01914b4739b6957e67b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator-</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The subtraction operator between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a46100e202b84bb40817ba0e3c0d628c1" kindref="member">linalg::Sub(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the subtraction. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a46100e202b84bb40817ba0e3c0d628c1" kindref="member">linalg::Sub(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="91" column="20" declfile="include/linalg.hpp" declline="91" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a0b23c5c933bf53cc25b8e94bf0e8cd80" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator*</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The multiplication operator between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a8705f85e347439577708173ab963f909" kindref="member">linalg::Mul(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the multiplication. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a8705f85e347439577708173ab963f909" kindref="member">linalg::Mul(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="103" column="20" declfile="include/linalg.hpp" declline="103" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a482e868bef211087752942b824114420" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator*</definition>
+        <argsstring>(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The multiplication operator between a template type and a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a251b0520dee5ccd09626cae97288e775" kindref="member">linalg::Mul(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the multiplication. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a251b0520dee5ccd09626cae97288e775" kindref="member">linalg::Mul(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="115" column="20" declfile="include/linalg.hpp" declline="115" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a3c2ff0e0343f0250ca446d1ce5e7e287" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator*</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The multiplication operator between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a37bc8d705dd0d70074d2df47cdadc0a6" kindref="member">linalg::Mul(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the multiplication. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a37bc8d705dd0d70074d2df47cdadc0a6" kindref="member">linalg::Mul(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="127" column="20" declfile="include/linalg.hpp" declline="127" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1adf098bf65b5c3fb990065f0df05d087c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator/</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The division operator between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1affc6138760ac67505ae194edf14525e8" kindref="member">linalg::Div(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the division. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1affc6138760ac67505ae194edf14525e8" kindref="member">linalg::Div(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="139" column="20" declfile="include/linalg.hpp" declline="139" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a2dd47e15e5252eff0e727739939ae392" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator/</definition>
+        <argsstring>(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The division operator between a template type and a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a122b2e7f195bbb1b5febc2cb09ebeb67" kindref="member">linalg::Div(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the division. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a122b2e7f195bbb1b5febc2cb09ebeb67" kindref="member">linalg::Div(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="151" column="20" declfile="include/linalg.hpp" declline="151" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1aef5c2e6d840e287e8f50834be5e1902a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator/</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The division operator between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1afdb69bcb0d23f46ded824ef33321c4ab" kindref="member">linalg::Div(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the division. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1afdb69bcb0d23f46ded824ef33321c4ab" kindref="member">linalg::Div(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="163" column="20" declfile="include/linalg.hpp" declline="163" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1acb9f1360d7c413c1e087d3e46b3ff907" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator%</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator%</name>
+        <qualifiedname>cytnx::operator%</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The modulo operator between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a56d73db3d0cdd3a2ca5ed5f88f0738ff" kindref="member">linalg::Mod(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the modulo. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a56d73db3d0cdd3a2ca5ed5f88f0738ff" kindref="member">linalg::Mod(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="175" column="20" declfile="include/linalg.hpp" declline="175" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ac4bfb24faa8b3c20005c29043d79ecfd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator%</definition>
+        <argsstring>(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</argsstring>
+        <name>operator%</name>
+        <qualifiedname>cytnx::operator%</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The modulo operator between a template type and a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a024c4293a5b5edfb432b9c15e4199264" kindref="member">linalg::Mod(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the modulo. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a024c4293a5b5edfb432b9c15e4199264" kindref="member">linalg::Mod(const T &amp;lc, const cytnx::UniTensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="187" column="20" declfile="include/linalg.hpp" declline="187" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a52b81425a33f7550aa8dcc309b98180c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
+        <definition>cytnx::UniTensor cytnx::operator%</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator%</name>
+        <qualifiedname>cytnx::operator%</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The modulo operator between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will call the <ref refid="namespacecytnx_1_1linalg_1a0a1378cb7fdd0bdd7445ee98805c85b7" kindref="member">linalg::Mod(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> function. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] The result of the modulo. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a0a1378cb7fdd0bdd7445ee98805c85b7" kindref="member">linalg::Mod(const cytnx::UniTensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="199" column="20" declfile="include/linalg.hpp" declline="199" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a067e7063e7cc7a80c9c91d8998ab7134" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator+</definition>
+        <argsstring>(const Tensor &amp;Lt, const Tensor &amp;Rt)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The addition operator for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1af36e9e20e4c7d74f2f6f838902482d98" kindref="member">linalg::Add(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> to perform the addition. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of addition. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1af36e9e20e4c7d74f2f6f838902482d98" kindref="member">linalg::Add(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3154" column="10" declfile="include/linalg.hpp" declline="3154" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a75a3787e9b9565f0bc90d19453d1ffa5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator+</definition>
+        <argsstring>(const T &amp;lc, const Tensor &amp;Rt)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The addition operator between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a33643657d8cc96b037818e2003c049c7" kindref="member">linalg::Add(const T &amp;lc, const Tensor &amp;Rt)</ref> to perform the addition between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of addition. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a33643657d8cc96b037818e2003c049c7" kindref="member">linalg::Add(const T &amp;lc, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3166" column="10" declfile="include/linalg.hpp" declline="3166" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a9b46a4945621a40fc5e23bbea0576b1a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator+</definition>
+        <argsstring>(const Tensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The addition operator between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1ae158543bf09e9e6914eab96995015d9e" kindref="member">linalg::Add(const Tensor &amp;Lt, const T &amp;rc)</ref> to perform the addition between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of addition. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1ae158543bf09e9e6914eab96995015d9e" kindref="member">linalg::Add(const Tensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3178" column="10" declfile="include/linalg.hpp" declline="3178" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a5a476408cdb97a10fa2330a5d6b4934c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator-</definition>
+        <argsstring>(const Tensor &amp;Lt, const Tensor &amp;Rt)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The subtraction operator for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a78477b25b3eed121847f1a13b878a925" kindref="member">linalg::Sub(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> to perform the subtraction. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of subtraction. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a78477b25b3eed121847f1a13b878a925" kindref="member">linalg::Sub(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3191" column="10" declfile="include/linalg.hpp" declline="3191" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a7c7bcfb0e14ec9e5317e686b955ea548" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator-</definition>
+        <argsstring>(const T &amp;lc, const Tensor &amp;Rt)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The subtraction operator between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a4fa0cd62f3723518ae4e46db00d8be50" kindref="member">linalg::Sub(const T &amp;lc, const Tensor &amp;Rt)</ref> to perform the subtraction between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of subtraction. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a4fa0cd62f3723518ae4e46db00d8be50" kindref="member">linalg::Sub(const T &amp;lc, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3203" column="10" declfile="include/linalg.hpp" declline="3203" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a7c77b1fa99bea6e243e7e1dab2cb15ab" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator-</definition>
+        <argsstring>(const Tensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The subtraction operator between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a0fa9fc16ad7e8d2685d0acfa25efc479" kindref="member">linalg::Sub(const Tensor &amp;Lt, const T &amp;rc)</ref> to perform the subtraction between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of subtraction. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a0fa9fc16ad7e8d2685d0acfa25efc479" kindref="member">linalg::Sub(const Tensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3215" column="10" declfile="include/linalg.hpp" declline="3215" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ad579dd62bafd8261a0192a108b0f4b1b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator*</definition>
+        <argsstring>(const Tensor &amp;Lt, const Tensor &amp;Rt)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The multiplication operator for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a2fc49876b7b53f6f6e97ce70f475f636" kindref="member">linalg::Mul(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> to perform the multiplication. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of multiplication. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a2fc49876b7b53f6f6e97ce70f475f636" kindref="member">linalg::Mul(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3228" column="10" declfile="include/linalg.hpp" declline="3228" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ae1925a88cc713abd7d25ad548b7f7c22" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator*</definition>
+        <argsstring>(const T &amp;lc, const Tensor &amp;Rt)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The multiplication operator between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a2d21f1d35bcecf3e257146540c668779" kindref="member">linalg::Mul(const T &amp;lc, const Tensor &amp;Rt)</ref> to perform the multiplication between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of multiplication. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a2d21f1d35bcecf3e257146540c668779" kindref="member">linalg::Mul(const T &amp;lc, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3240" column="10" declfile="include/linalg.hpp" declline="3240" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a5f0900c609bcf28f53091f403d8ea859" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator*</definition>
+        <argsstring>(const Tensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The multiplication operator between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a5b2930a8759b8ceb7cd92df6b27bdf24" kindref="member">linalg::Mul(const Tensor &amp;Lt, const T &amp;rc)</ref> to perform the multiplication between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of multiplication. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a5b2930a8759b8ceb7cd92df6b27bdf24" kindref="member">linalg::Mul(const Tensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3252" column="10" declfile="include/linalg.hpp" declline="3252" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1aa12ec2394a750ba7e4c29799ec4bd53e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator/</definition>
+        <argsstring>(const Tensor &amp;Lt, const Tensor &amp;Rt)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The division operator for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1abc1940e0e7364299ea1481c81003ba13" kindref="member">linalg::Div(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> to perform the division. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of division. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1abc1940e0e7364299ea1481c81003ba13" kindref="member">linalg::Div(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+<simplesect kind="pre"><para><orderedlist>
+<listitem><para>The divisor cannot be zero.</para>
+</listitem><listitem><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3267" column="10" declfile="include/linalg.hpp" declline="3267" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ac0b24a49371fb7bf2fc2992d1271a59d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator/</definition>
+        <argsstring>(const T &amp;lc, const Tensor &amp;Rt)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The division operator between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1acb8965e9a67906d0c8064725c7d499a8" kindref="member">linalg::Div(const T &amp;lc, const Tensor &amp;Rt)</ref> to perform the division between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of division. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1acb8965e9a67906d0c8064725c7d499a8" kindref="member">linalg::Div(const T &amp;lc, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+<simplesect kind="pre"><para>The divisor cannot be zero. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3280" column="10" declfile="include/linalg.hpp" declline="3280" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1aa0d1098af300b504134953d480d0f780" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator/</definition>
+        <argsstring>(const Tensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The division operator between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a9296701c7aad0456965f42b8ea01ad2e" kindref="member">linalg::Div(const Tensor &amp;Lt, const T &amp;rc)</ref> to perform the division between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of division. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a9296701c7aad0456965f42b8ea01ad2e" kindref="member">linalg::Div(const Tensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+<simplesect kind="pre"><para>The divisor cannot be zero. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3293" column="10" declfile="include/linalg.hpp" declline="3293" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1aef20777a8ac1af257e87abbe1487a789" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator%</definition>
+        <argsstring>(const Tensor &amp;Lt, const Tensor &amp;Rt)</argsstring>
+        <name>operator%</name>
+        <qualifiedname>cytnx::operator%</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The mode operator for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1ab8ac85bd0291ab12523eec073aef1fa3" kindref="member">linalg::Mod(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> to perform the mode. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of mode. </para>
+</simplesect>
+<simplesect kind="pre"><para><computeroutput>Lt</computeroutput> and <computeroutput>Rt</computeroutput> must have the same shape. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1ab8ac85bd0291ab12523eec073aef1fa3" kindref="member">linalg::Mod(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3306" column="10" declfile="include/linalg.hpp" declline="3306" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1aa1a0d001adbe36469803a4c9f6d02547" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator%</definition>
+        <argsstring>(const T &amp;lc, const Tensor &amp;Rt)</argsstring>
+        <name>operator%</name>
+        <qualifiedname>cytnx::operator%</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The mode operator between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a6c9fca4a4fd4cea1738babc120e51690" kindref="member">linalg::Mod(const T &amp;lc, const Tensor &amp;Rt)</ref> to perform the mode between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of mode. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a6c9fca4a4fd4cea1738babc120e51690" kindref="member">linalg::Mod(const T &amp;lc, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3318" column="10" declfile="include/linalg.hpp" declline="3318" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a3c3bc03a795c8c884fbd7a781f2eeea2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator%</definition>
+        <argsstring>(const Tensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator%</name>
+        <qualifiedname>cytnx::operator%</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The mode operator between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a35ed41287fa71215d4575de818f02e43" kindref="member">linalg::Mod(const Tensor &amp;Lt, const T &amp;rc)</ref> to perform the mode between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of mode. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a35ed41287fa71215d4575de818f02e43" kindref="member">linalg::Mod(const Tensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3330" column="10" declfile="include/linalg.hpp" declline="3330" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a6d2f2c308c9fbe7a791d981aa48ec5b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator==</definition>
+        <argsstring>(const Tensor &amp;Lt, const Tensor &amp;Rt)</argsstring>
+        <name>operator==</name>
+        <qualifiedname>cytnx::operator==</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The comparison operator for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1aea125f2928934007725809426bb77e38" kindref="member">linalg::Cpr(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> to perform the comparison. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of comparison. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1aea125f2928934007725809426bb77e38" kindref="member">linalg::Cpr(const Tensor &amp;Lt, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3342" column="10" declfile="include/linalg.hpp" declline="3342" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a37e5a46a2493ffec095e247e0a242d0f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator==</definition>
+        <argsstring>(const T &amp;lc, const Tensor &amp;Rt)</argsstring>
+        <name>operator==</name>
+        <qualifiedname>cytnx::operator==</qualifiedname>
+        <param>
+          <type>const T &amp;</type>
+          <declname>lc</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Rt</declname>
+        </param>
+        <briefdescription>
+<para>The comparison operator between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1a12d6a02bc402d9ae1bb7652f7ec92865" kindref="member">linalg::Cpr(const T &amp;lc, const Tensor &amp;Rt)</ref> to perform the comparison between a template type and <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">lc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left template type. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Rt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of comparison. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a12d6a02bc402d9ae1bb7652f7ec92865" kindref="member">linalg::Cpr(const T &amp;lc, const Tensor &amp;Rt)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3354" column="10" declfile="include/linalg.hpp" declline="3354" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a7c18f8c9b8ce890be3ae8c81c2a05139" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator==</definition>
+        <argsstring>(const Tensor &amp;Lt, const T &amp;rc)</argsstring>
+        <name>operator==</name>
+        <qualifiedname>cytnx::operator==</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Lt</declname>
+        </param>
+        <param>
+          <type>const T &amp;</type>
+          <declname>rc</declname>
+        </param>
+        <briefdescription>
+<para>The comparison operator between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This operator call <ref refid="namespacecytnx_1_1linalg_1ac59f29dd40385b5b2705299d0366876f" kindref="member">linalg::Cpr(const Tensor &amp;Lt, const T &amp;rc)</ref> to perform the comparison between <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Lt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">rc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Right template type. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] the result of comparison. </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1ac59f29dd40385b5b2705299d0366876f" kindref="member">linalg::Cpr(const Tensor &amp;Lt, const T &amp;rc)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="3366" column="10" declfile="include/linalg.hpp" declline="3366" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a75ffd11538c5da8c1099d8eab530f802" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
+        <definition>UniTensor cytnx::ncon</definition>
+        <argsstring>(const std::vector&lt; UniTensor &gt; &amp;tensor_list_in, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;connect_list_in, const bool check_network=false, const bool optimize=false, std::vector&lt; cytnx_int64 &gt; cont_order=std::vector&lt; cytnx_int64 &gt;(), const std::vector&lt; std::string &gt; &amp;out_labels=std::vector&lt; std::string &gt;())</argsstring>
+        <name>ncon</name>
+        <qualifiedname>cytnx::ncon</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt; &amp;</type>
+          <declname>tensor_list_in</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;</type>
+          <declname>connect_list_in</declname>
+        </param>
+        <param>
+          <type>const bool</type>
+          <declname>check_network</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>const bool</type>
+          <declname>optimize</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>std::vector&lt; cytnx_int64 &gt;</type>
+          <declname>cont_order</declname>
+          <defval>std::vector&lt; cytnx_int64 &gt;()</defval>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
+          <declname>out_labels</declname>
+          <defval>std::vector&lt; std::string &gt;()</defval>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/ncon.hpp" line="12" column="13" declfile="include/ncon.hpp" declline="12" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a5717588f86189b8687cf9d9596b7a736" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator+</definition>
+        <argsstring>(const Tensor &amp;lhs, const Tensor::Tproxy &amp;rhs)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1718" column="10" declfile="include/Tensor.hpp" declline="1718" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a9c25f8ea46015051abb7aa8b12d4d922" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator-</definition>
+        <argsstring>(const Tensor &amp;lhs, const Tensor::Tproxy &amp;rhs)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1719" column="10" declfile="include/Tensor.hpp" declline="1719" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a907f550960d7cff3629b034496c7277f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator*</definition>
+        <argsstring>(const Tensor &amp;lhs, const Tensor::Tproxy &amp;rhs)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1720" column="10" declfile="include/Tensor.hpp" declline="1720" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a1b5dcab529a34545c0202175cacee982" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator/</definition>
+        <argsstring>(const Tensor &amp;lhs, const Tensor::Tproxy &amp;rhs)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1721" column="10" declfile="include/Tensor.hpp" declline="1721" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a78e2a1032003b1961fa67dfaa6c9ae5d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator+</definition>
+        <argsstring>(const Tensor &amp;lhs, const Scalar::Sproxy &amp;rhs)</argsstring>
+        <name>operator+</name>
+        <qualifiedname>cytnx::operator+</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const Scalar::Sproxy &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1723" column="10" declfile="include/Tensor.hpp" declline="1723" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ade8c4e81459b4136aac831ae6b15f322" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator-</definition>
+        <argsstring>(const Tensor &amp;lhs, const Scalar::Sproxy &amp;rhs)</argsstring>
+        <name>operator-</name>
+        <qualifiedname>cytnx::operator-</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const Scalar::Sproxy &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1724" column="10" declfile="include/Tensor.hpp" declline="1724" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a6e943792e9aa2cadc156eb88459132ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator*</definition>
+        <argsstring>(const Tensor &amp;lhs, const Scalar::Sproxy &amp;rhs)</argsstring>
+        <name>operator*</name>
+        <qualifiedname>cytnx::operator*</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const Scalar::Sproxy &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1725" column="10" declfile="include/Tensor.hpp" declline="1725" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a39c7b16c06135b1de3ac699d74511ac9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::operator/</definition>
+        <argsstring>(const Tensor &amp;lhs, const Scalar::Sproxy &amp;rhs)</argsstring>
+        <name>operator/</name>
+        <qualifiedname>cytnx::operator/</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>lhs</declname>
+        </param>
+        <param>
+          <type>const Scalar::Sproxy &amp;</type>
+          <declname>rhs</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1726" column="10" declfile="include/Tensor.hpp" declline="1726" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1a6bf4d5dbc0c159db72ff3019ca8125f5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
+        <definition>UniTensor cytnx::Contract</definition>
+        <argsstring>(const UniTensor &amp;inL, const UniTensor &amp;inR, const bool &amp;cacheL=false, const bool &amp;cacheR=false)</argsstring>
+        <name>Contract</name>
+        <qualifiedname>cytnx::Contract</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
+          <declname>inL</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
+          <declname>inR</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>cacheL</declname>
+          <defval>false</defval>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>cacheR</declname>
+          <defval>false</defval>
+        </param>
+        <briefdescription>
+<para>Contract two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> by tracing the ranks with common labels. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">inL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> #1 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">inR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> #2 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">cacheL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the inL should be contiguous align after calling </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">cacheR</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the inR should be contiguous align after calling </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>]</para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969" kindref="member">cytnx::UniTensor::contract</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/UniTensor.hpp" line="5943" column="13" declfile="include/UniTensor.hpp" declline="5943" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ae707018c91a03ba0c43b9b0b20830a62" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
+        <definition>UniTensor cytnx::Contract</definition>
+        <argsstring>(const std::vector&lt; UniTensor &gt; &amp;TNs, const std::string &amp;order, const bool &amp;optimal)</argsstring>
+        <name>Contract</name>
+        <qualifiedname>cytnx::Contract</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt; &amp;</type>
+          <declname>TNs</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>order</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>optimal</declname>
+        </param>
+        <briefdescription>
+<para>Contract multiple <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> by tracing the ranks with common labels with pairwise operation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">TNs</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Tensors. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">order</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>desired contraction order. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">optimal</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>wheather to find the optimal contraction order automatically. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>]</para>
+</simplesect>
+See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969" kindref="member">UniTensor.contract </ref> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/UniTensor.hpp" line="5958" column="13" declfile="include/UniTensor.hpp" declline="5958" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ab3eaecf9ef354a43851bb3e4fd24147a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
+        <definition>UniTensor cytnx::Contracts</definition>
+        <argsstring>(const std::vector&lt; UniTensor &gt; &amp;TNs, const std::string &amp;order, const bool &amp;optimal)</argsstring>
+        <name>Contracts</name>
+        <qualifiedname>cytnx::Contracts</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt; &amp;</type>
+          <declname>TNs</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>order</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>optimal</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><xrefsect id="deprecated_1_deprecated000001"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="namespacecytnx_1ae707018c91a03ba0c43b9b0b20830a62" kindref="member">Contract(const std::vector&lt;UniTensor&gt; &amp;TNs, const std::string &amp;order, const bool
+&amp;optimal)</ref><linebreak/>
+ instead. </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/UniTensor.hpp" line="5971" column="5" declfile="include/UniTensor.hpp" declline="5971" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1aded169a56c47928185057cc8f24b4d66" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+            <declname>T</declname>
+            <defname>T</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
+        <definition>UniTensor cytnx::Contract</definition>
+        <argsstring>(const UniTensor &amp;in, const T &amp;...args, const std::string &amp;order, const bool &amp;optimal)</argsstring>
+        <name>Contract</name>
+        <qualifiedname>cytnx::Contract</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
+          <declname>in</declname>
+        </param>
+        <param>
+          <type>const T &amp;...</type>
+          <declname>args</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>order</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>optimal</declname>
+        </param>
+        <briefdescription>
+<para>Contract multiple <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> by tracing the indices with common labels with pairwise operation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>in</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Tensors. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>args</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Tensors. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>]</para>
+</simplesect>
+See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969" kindref="member">UniTensor.contract </ref> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/UniTensor.hpp" line="5994" column="13" bodyfile="include/UniTensor.hpp" bodystart="5994" bodyend="5999"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1ac17fa8d955067a516de44a7704a731ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+            <declname>T</declname>
+            <defname>T</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
+        <definition>UniTensor cytnx::Contracts</definition>
+        <argsstring>(const UniTensor &amp;in, const T &amp;...args, const std::string &amp;order, const bool &amp;optimal)</argsstring>
+        <name>Contracts</name>
+        <qualifiedname>cytnx::Contracts</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
+          <declname>in</declname>
+        </param>
+        <param>
+          <type>const T &amp;...</type>
+          <declname>args</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>order</declname>
+        </param>
+        <param>
+          <type>const bool &amp;</type>
+          <declname>optimal</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para><xrefsect id="deprecated_1_deprecated000002"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="namespacecytnx_1aded169a56c47928185057cc8f24b4d66" kindref="member">Contract(const UniTensor &amp;in, const T &amp;...args, const std::string &amp;order, const bool
+&amp;optimal)</ref><linebreak/>
+ instead. </para>
+</xrefdescription></xrefsect></para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/UniTensor.hpp" line="6012" column="5" bodyfile="include/UniTensor.hpp" bodystart="6012" bodyend="6017"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/Accessor.hpp" line="12" column="1"/>
+  </compounddef>
+</doxygen>

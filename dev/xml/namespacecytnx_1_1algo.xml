@@ -1,0 +1,442 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacecytnx_1_1algo" kind="namespace" language="C++">
+    <compoundname>cytnx::algo</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1a72a0c42c4b78524bcac444a5c8ed1c20" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::algo::Sort</definition>
+        <argsstring>(const Tensor &amp;Tin)</argsstring>
+        <name>Sort</name>
+        <qualifiedname>cytnx::algo::Sort</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <briefdescription>
+<para>sort <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> along last axis. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the input <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="23" column="12" declfile="include/algo.hpp" declline="23" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1a17ac6e68684bf5d5cf7392bd218e309f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::algo::Concatenate</definition>
+        <argsstring>(Tensor T1, Tensor T2)</argsstring>
+        <name>Concatenate</name>
+        <qualifiedname>cytnx::algo::Concatenate</qualifiedname>
+        <param>
+          <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+          <declname>T1</declname>
+        </param>
+        <param>
+          <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+          <declname>T2</declname>
+        </param>
+        <briefdescription>
+<para>concatenate two 1d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">T1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the first <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">T2</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the second <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> that is the concatenation of T1 and T2. </para>
+</simplesect>
+<simplesect kind="pre"><para><orderedlist>
+<listitem><para><computeroutput>T1</computeroutput> and <computeroutput>T2</computeroutput> should be 1d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>.</para>
+</listitem><listitem><para><computeroutput>T1</computeroutput> and <computeroutput>T2</computeroutput> should be on same device.</para>
+</listitem><listitem><para>The data type of <computeroutput>T1</computeroutput> and <computeroutput>T2</computeroutput> cannot be Type.Void. </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+<simplesect kind="note"><para>If the data type of <computeroutput>T1</computeroutput> and <computeroutput>T2</computeroutput> are different, the data type of the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the stronger one. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="38" column="12" declfile="include/algo.hpp" declline="38" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1a993ff4c266490e7fee38ab2f20e6aa50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::algo::Vstack</definition>
+        <argsstring>(const std::vector&lt; Tensor &gt; &amp;In_tensors)</argsstring>
+        <name>Vstack</name>
+        <qualifiedname>cytnx::algo::Vstack</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &amp;</type>
+          <declname>In_tensors</declname>
+        </param>
+        <briefdescription>
+<para>vertical stack a list of <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function will stack vertically a list of Matrices (a 2d tensor) with same number of columns. That is, if the input Matrices are <formula id="0">$ [M_1, M_2, M_3] $</formula>, the output will be:  <formula id="1">\[
+\begin{bmatrix}
+M_1\\
+M_2\\
+M_3\\
+\end{bmatrix}
+\]</formula> Note that the number of columns of <formula id="2">$ M_1 $</formula>, <formula id="3">$ M_2 $</formula> and <formula id="4">$ M_3 $</formula> should be the same. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">In_tensors</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a list of 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (Matrix). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> that is the vertical stack of <computeroutput>In_tensors</computeroutput>. </para>
+</simplesect>
+<simplesect kind="pre"><para><orderedlist>
+<listitem><para>The input <computeroutput>In_tensors</computeroutput> cannot be empty.</para>
+</listitem><listitem><para>The input <computeroutput>In_tensors</computeroutput> need to be 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (Matrix).</para>
+</listitem><listitem><para>The input <computeroutput>In_tensors</computeroutput> should have same number of columns.</para>
+</listitem><listitem><para>The input <computeroutput>In_tensors</computeroutput> should be on same device.</para>
+</listitem><listitem><para>The data type of the input <computeroutput>In_tensors</computeroutput> cannot be Type.Bool or Type.Void. (see cytnx::Type) </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+<simplesect kind="note"><para>If the data type of the input <computeroutput>In_tensors</computeroutput> are different, the data type of the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the stronger one. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="68" column="12" declfile="include/algo.hpp" declline="68" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1aab9f9b299fa60c565206f5f0c021618b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::algo::Hstack</definition>
+        <argsstring>(const std::vector&lt; Tensor &gt; &amp;In_tensors)</argsstring>
+        <name>Hstack</name>
+        <qualifiedname>cytnx::algo::Hstack</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &amp;</type>
+          <declname>In_tensors</declname>
+        </param>
+        <briefdescription>
+<para>horizontal stack a list of <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function will stack horizontally a list of Matrices (a 2d tensor) with same number of rows. That is, if the input Matrices are <formula id="0">$ [M_1, M_2, M_3] $</formula>, the output will be:  <formula id="5">\[
+\begin{bmatrix}
+M_1, M_2, M_3
+\end{bmatrix}
+\]</formula> Note that the number of rows of <formula id="2">$ M_1 $</formula>, <formula id="3">$ M_2 $</formula> and <formula id="4">$ M_3 $</formula> should be the same. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">In_tensors</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a list of 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (Matrix). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> that is the horizontal stack of <computeroutput>In_tensors</computeroutput>. </para>
+</simplesect>
+<simplesect kind="pre"><para><orderedlist>
+<listitem><para>The input <computeroutput>In_tensors</computeroutput> cannot be empty.</para>
+</listitem><listitem><para>The input <computeroutput>In_tensors</computeroutput> need to be 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (Matrix).</para>
+</listitem><listitem><para>The input <computeroutput>In_tensors</computeroutput> should have same number of rows.</para>
+</listitem><listitem><para>The input <computeroutput>In_tensors</computeroutput> should be on same device.</para>
+</listitem><listitem><para>The data type of the input <computeroutput>In_tensors</computeroutput> cannot be Type.Bool or Type.Void. (see cytnx::Type) </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+<simplesect kind="note"><para>If the data type of the input <computeroutput>In_tensors</computeroutput> are different, the data type of the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the stronger one. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="96" column="12" declfile="include/algo.hpp" declline="96" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1a63774284b4470db6265bc944b60ac476" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::algo::Vsplit_</definition>
+        <argsstring>(std::vector&lt; Tensor &gt; &amp;out, const Tensor &amp;Tin, const std::vector&lt; cytnx_uint64 &gt; &amp;dims)</argsstring>
+        <name>Vsplit_</name>
+        <qualifiedname>cytnx::algo::Vsplit_</qualifiedname>
+        <param>
+          <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &amp;</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>dims</declname>
+        </param>
+        <briefdescription>
+<para>split a Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) into a list of Matrices along the vertical direction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function is same as <ref refid="namespacecytnx_1_1algo_1a977a0c66043b8238214658b1178cd073" kindref="member">Vsplit</ref>, but the output is in the argument. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a list of <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> that will be the output. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the input <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dims</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the row number of each Matrix in the output list. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1algo_1a977a0c66043b8238214658b1178cd073" kindref="member">Vsplit</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="108" column="10" declfile="include/algo.hpp" declline="108" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1a030124e0b8e894d35837134e3111e3c7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::algo::Hsplit_</definition>
+        <argsstring>(std::vector&lt; Tensor &gt; &amp;out, const Tensor &amp;Tin, const std::vector&lt; cytnx_uint64 &gt; &amp;dims)</argsstring>
+        <name>Hsplit_</name>
+        <qualifiedname>cytnx::algo::Hsplit_</qualifiedname>
+        <param>
+          <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &amp;</type>
+          <declname>out</declname>
+        </param>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>dims</declname>
+        </param>
+        <briefdescription>
+<para>split a Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) into a list of Matrices along the horizontal direction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function is same as <ref refid="namespacecytnx_1_1algo_1a882e6a0d33e659d35f7f1df18a51152a" kindref="member">Hsplit</ref>, but the output is in the argument. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="out">out</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a list of <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> that will be the output. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the input <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dims</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the column number of each Matrix in the output list. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1algo_1a882e6a0d33e659d35f7f1df18a51152a" kindref="member">Hsplit</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="121" column="10" declfile="include/algo.hpp" declline="121" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1a977a0c66043b8238214658b1178cd073" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
+        <definition>std::vector&lt; Tensor &gt; cytnx::algo::Vsplit</definition>
+        <argsstring>(const Tensor &amp;Tin, const std::vector&lt; cytnx_uint64 &gt; &amp;dims)</argsstring>
+        <name>Vsplit</name>
+        <qualifiedname>cytnx::algo::Vsplit</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>dims</declname>
+        </param>
+        <briefdescription>
+<para>split a Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) into a list of Matrices along the vertical direction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function will split a Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) into a list of Matrices along the vertical direction. That is, if the input Matrix <computeroutput>Tin</computeroutput> is:  <formula id="6">\[
+M = \begin{bmatrix}
+m_{11} &amp; m_{12} &amp; m_{13}\\
+m_{21} &amp; m_{22} &amp; m_{23}\\
+m_{31} &amp; m_{32} &amp; m_{33}\\
+\end{bmatrix}
+\]</formula> and the input <computeroutput>dims</computeroutput> is <formula id="7">$ [1,2] $</formula>, the output will be <formula id="8">$ [M_1, M_2] $</formula>, where:  <formula id="9">\[
+M_1 = \begin{bmatrix}
+m_{11} &amp; m_{12} &amp; m_{13}\\
+\end{bmatrix}
+\]</formula> and  <formula id="10">\[
+M_2 = \begin{bmatrix}
+m_{21} &amp; m_{22} &amp; m_{23}\\
+m_{31} &amp; m_{32} &amp; m_{33}\\
+\end{bmatrix}
+\]</formula></para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the input Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dims</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the row number of each Matrix in the output list. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[std::vector&lt;Tensor&gt;] return a list of Matrices that is the split of <computeroutput>Tin</computeroutput> with respect to <computeroutput>dims</computeroutput>. </para>
+</simplesect>
+<simplesect kind="pre"><para><orderedlist>
+<listitem><para>The input <computeroutput>Tin</computeroutput> need to be 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (Matrix).</para>
+</listitem><listitem><para>The input <computeroutput>dims</computeroutput> cannot be empty.</para>
+</listitem><listitem><para>The input <computeroutput>dims</computeroutput> cannot be out of range. That is, the summation of <computeroutput>dims</computeroutput> need equal to the number of rows of <computeroutput>Tin</computeroutput>.</para>
+</listitem><listitem><para>The elements in <computeroutput>dims</computeroutput> cannot be zero. </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1algo_1a882e6a0d33e659d35f7f1df18a51152a" kindref="member">Hsplit</ref>, <ref refid="namespacecytnx_1_1algo_1a993ff4c266490e7fee38ab2f20e6aa50" kindref="member">Vstack</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="162" column="17" declfile="include/algo.hpp" declline="162" declcolumn="17"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1algo_1a882e6a0d33e659d35f7f1df18a51152a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
+        <definition>std::vector&lt; Tensor &gt; cytnx::algo::Hsplit</definition>
+        <argsstring>(const Tensor &amp;Tin, const std::vector&lt; cytnx_uint64 &gt; &amp;dims)</argsstring>
+        <name>Hsplit</name>
+        <qualifiedname>cytnx::algo::Hsplit</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>dims</declname>
+        </param>
+        <briefdescription>
+<para>split a Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) into a list of Matrices along the horizontal direction. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function will split a Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) into a list of Matrices along the horizontal direction. That is, if the input Matrix <computeroutput>Tin</computeroutput> is:  <formula id="6">\[
+M = \begin{bmatrix}
+m_{11} &amp; m_{12} &amp; m_{13}\\
+m_{21} &amp; m_{22} &amp; m_{23}\\
+m_{31} &amp; m_{32} &amp; m_{33}\\
+\end{bmatrix}
+\]</formula> and the input <computeroutput>dims</computeroutput> is <formula id="11">$ [2,1] $</formula>, the output will be <formula id="8">$ [M_1, M_2] $</formula>, where:  <formula id="12">\[
+M_1 = \begin{bmatrix}
+m_{11} &amp; m_{12}\\
+m_{21} &amp; m_{22}\\
+m_{31} &amp; m_{32}\\
+\end{bmatrix}
+\]</formula> and  <formula id="13">\[
+M_2 = \begin{bmatrix}
+m_{13}\\
+m_{23}\\
+m_{33}\\
+\end{bmatrix}
+\]</formula></para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the input Matrix (a 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dims</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the column number of each Matrix in the output list. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[std::vector&lt;Tensor&gt;] return a list of Matrices that is the split of <computeroutput>Tin</computeroutput> with respect to <computeroutput>dims</computeroutput>. </para>
+</simplesect>
+<simplesect kind="pre"><para><orderedlist>
+<listitem><para>The input <computeroutput>Tin</computeroutput> need to be 2d <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (Matrix).</para>
+</listitem><listitem><para>The input <computeroutput>dims</computeroutput> cannot be empty.</para>
+</listitem><listitem><para>The input <computeroutput>dims</computeroutput> cannot be out of range. That is, the summation of <computeroutput>dims</computeroutput> need equal to the number of columns of <computeroutput>Tin</computeroutput>.</para>
+</listitem><listitem><para>The elements in <computeroutput>dims</computeroutput> cannot be zero. </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1algo_1a977a0c66043b8238214658b1178cd073" kindref="member">Vsplit</ref>, <ref refid="namespacecytnx_1_1algo_1aab9f9b299fa60c565206f5f0c021618b" kindref="member">Hstack</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/algo.hpp" line="205" column="17" declfile="include/algo.hpp" declline="205" declcolumn="17"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Some basic algorithms API. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/algo.hpp" line="13" column="1"/>
+  </compounddef>
+</doxygen>
