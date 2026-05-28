@@ -315,7 +315,7 @@ The current version of the library can be printed by:
 
 Generate API documentation
 *************************************
-An API documentation can be generated from the source code of Cytnx by using doxygen. The documentation is accessible online at `here <api/index.html>`__. To create it locally, make sure that doxygen is installed:
+An API documentation can be generated from the source code of Cytnx by using doxygen. The generated documentation is accessible online as the `API reference <api/index.html>`__. To create it locally, make sure that doxygen is installed:
 
 .. code-block:: shell
 
