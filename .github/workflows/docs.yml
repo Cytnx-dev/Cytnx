@@ -50,35 +50,22 @@ jobs:
             echo "kind=branch" >>"$GITHUB_OUTPUT"
             echo "prerelease=false" >>"$GITHUB_OUTPUT"
           fi
-      - name: Stage site-root assets
+      - name: Assemble site tree
         if: github.event_name == 'push'
         run: |
-          mkdir -p docs/build/site_root
-          cp docs/site_root/index.html docs/build/site_root/index.html
-          cp docs/site_root/versions.json docs/build/site_root/versions.json
-      - name: Deploy current version
+          site="docs/build/_site"
+          rm -rf "${site}"
+          mkdir -p "${site}"
+          cp -a docs/build/html "${site}/${{ steps.target.outputs.version }}"
+          if [[ "${{ steps.target.outputs.kind }}" == "tag" && "${{ steps.target.outputs.prerelease }}" == "false" ]]; then
+            cp -a docs/build/html "${site}/stable"
+          fi
+          cp -a docs/site_root/. "${site}/"
+      - name: Deploy
         if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: docs/build/html
-          destination_dir: ${{ steps.target.outputs.version }}
-          keep_files: true
-      - name: Deploy stable alias
-        if: github.event_name == 'push' && steps.target.outputs.kind == 'tag' && steps.target.outputs.prerelease == 'false'
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: docs/build/html
-          destination_dir: stable
-          keep_files: true
-      - name: Deploy site-root assets
-        if: github.event_name == 'push'
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: docs/build/site_root
+          publish_dir: docs/build/_site
           keep_files: true
