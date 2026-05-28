@@ -29,6 +29,9 @@ namespace cytnx {
       Tensor S, V;
       S.Init({in.shape()[0]}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
              in.device());  // if type is complex, S should be real
+      // V is only allocated when eigenvectors are requested. When is_V == false, V stays an empty
+      // (Void) tensor; it is still passed to the backend below, which detects the Void storage and
+      // calls LAPACK with jobs='N' (eigenvectors not computed), so the empty V is never written to.
       if (is_V) {
         V.Init(in.shape(), in.dtype(), in.device());
       }
@@ -119,10 +122,10 @@ namespace cytnx {
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
-      Cy_S.Init(
-        {newBond, newBond}, {std::string("0"), std::string("1")}, 1, Type.Double,
-        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
-        true);  // is_diag!
+      Cy_S.Init({newBond, newBond}, {std::string("0"), std::string("1")},
+                1,  // rowrank
+                outT[t].dtype(), outT[t].device(),  // match the block that is inserted below
+                true);  // is_diag
       Cy_S.put_block_(outT[t]);
       t++;
       if (is_V) {

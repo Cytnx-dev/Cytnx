@@ -110,10 +110,10 @@ namespace cytnx {
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
-      Cy_S.Init(
-        {newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
-        true);  // is_diag!
+      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")},
+                1,  // rowrank
+                outT[t].dtype(), outT[t].device(),  // match the block that is inserted below
+                true);  // is_diag
       Cy_S.put_block_(outT[t]);
       t++;
 

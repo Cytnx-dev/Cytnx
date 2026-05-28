@@ -168,9 +168,10 @@ namespace cytnx {
 
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[0].shape()[0]);
-      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-                Tin.device(),
-                true);  // it is just reference so no hurt to alias ^^
+      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")},
+                1,  // rowrank
+                outT[t].dtype(), outT[t].device(),  // match the block that is inserted below
+                true);  // is_diag
       Cy_S.put_block_(outT[t]);
       t++;
 
