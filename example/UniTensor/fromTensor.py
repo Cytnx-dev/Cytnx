@@ -6,7 +6,7 @@ from cytnx import *
 
 
 T = zeros([4,4])
-CyT = UniTensor(T,rowrank=2) #create un-tagged UniTensor from Tensor
+CyT = UniTensor(T).set_rowrank_(2) #create un-tagged UniTensor from Tensor
 CyT.print_diagram()
 
 print("before:")
@@ -22,13 +22,13 @@ print(CyT)
 
 #If we want a new instance of memery, use clone at initialize:
 print("[non-share example]")
-CyT_nonshare = UniTensor(T.clone(),rowrank=2);
+CyT_nonshare = UniTensor(T.clone()).set_rowrank_(2)
 
 print("before:")
 print(T)
 print(CyT_nonshare)
 
-CyT_nonshare.set_elem([1,1],2.345);
+CyT_nonshare.set_elem([1,1],2.345)
 
 print("after")
 print(T) # T is unchanged!

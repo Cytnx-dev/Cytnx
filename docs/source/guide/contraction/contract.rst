@@ -1,9 +1,9 @@
-Contract(s)
-=============
-Contractions of two tensors can be done with **Contract()**. Using this function, indices with the same labels on the two tensors are contracted. **Contracts()** provides the same functionality for more than two tensors. In this case, the contraction order can additionally be specified.
-
 Contract
-------------------
+=============
+Two UniTensors can be contracted with the function **Contract()**. Indices with the same labels on two of the input tensors are summed over. The contraction order can additionally be specified.
+
+Contracting two UniTensors
+------------------------------------
 
 The function **cytnx.Contract()** contracts all common labels of two UniTensors. For example:
 
@@ -36,13 +36,13 @@ Output >>
     :language: text
 
 
-The function **.relabel()** creates a copy of the initial UniTensor and changes the labels, while keeping the labels on the initial tensor unchanged. The actual data is shared between the old and new tensor, only the meta is independent.
+The function **.relabel()** creates a copy of the initial UniTensor and changes the labels, while keeping the labels on the initial tensor unchanged. The actual data is shared between the old and new tensor, only the metadata is independent.
 
-Contracts
-------------------
-The function **Contracts** allows us to contract multiple UniTensors.
+Contracting multiple UniTensors
+------------------------------------
+The function **Contract** also allows one to contract multiple UniTensors.
 
-The first argument of this function is **TNs**, which is a list containing all UniTensors to be contracted. Contracts also provides the argument **order** to specify a desired contraction order, or the **optimal** option to use an auto-optimized contraction order.
+The first argument in this case is **TNs**, which is a list containing all UniTensors to be contracted. Contract also provides the argument **order** to specify a desired contraction order, or the **optimal** option to use an automatically optimized contraction order.
 
 Consider the following contraction task consisting of UniTensors **A1**, **A2** and **M**:
 
@@ -63,7 +63,11 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_contraction_contract_Contracts.out
     :language: text
 
-Note that the UniTensors' names have to be specified for an explicitly given contraction order. In this case we specified them in the constructor argument. The order *(M,(A1,A2))* indicates that first all common indices of *A1* and *A2* are contracted, then all common indices of the resulting tensor and *M*.
+Note that the UniTensors' names have to be specified for an explicitly given contraction order. In this case, we specified them by the method set_name. The order *(M,(A1,A2))* indicates that first all common indices of *A1* and *A2* are contracted, then all common indices of the resulting tensor and *M*.
 
 .. Note::
-    All tensors contracted with `Contracts()` need to have unique tensor names. Use `UniTensor.set_name()` to specify the name of a tensor.
+    All tensors contracted with `Contract()` need to have unique tensor names. Use `UniTensor.set_name()` to specify the name of a tensor.
+
+.. warning::
+
+    The function *Contracts()* is deprecated. Use *Contract()* instead with a list of input tensors.

@@ -165,6 +165,43 @@ TEST(Bond, CombindBondSymm_v2) {
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
 }
 
+TEST(Bond, ZnSymmetryPublicRulesProduceCanonicalOutputs) {
+  Symmetry z2 = Symmetry::Zn(2);
+
+  EXPECT_EQ(z2.combine_rule(0, 0), 0);
+  EXPECT_EQ(z2.combine_rule(0, 1), 1);
+  EXPECT_EQ(z2.combine_rule(1, 0), 1);
+  EXPECT_EQ(z2.combine_rule(1, 1), 0);
+  EXPECT_EQ(z2.combine_rule(1, 1, /*is_reverse=*/true), 0);
+  EXPECT_EQ(z2.reverse_rule(0), 0);
+  EXPECT_EQ(z2.reverse_rule(1), 1);
+
+  Symmetry z3 = Symmetry::Zn(3);
+  EXPECT_EQ(z3.combine_rule(2, 2), 1);
+  EXPECT_EQ(z3.reverse_rule(0), 0);
+  EXPECT_EQ(z3.reverse_rule(1), 2);
+  EXPECT_EQ(z3.reverse_rule(2), 1);
+}
+
+TEST(Bond, ZnSymmetryRejectsOutOfRangeInputs) {
+  Symmetry z2 = Symmetry::Zn(2);
+
+  EXPECT_THROW(z2.combine_rule(-1, 0), std::logic_error);
+  EXPECT_THROW(z2.combine_rule(0, -1), std::logic_error);
+  EXPECT_THROW(z2.combine_rule(2, 0), std::logic_error);
+  EXPECT_THROW(z2.combine_rule(0, 2), std::logic_error);
+  EXPECT_THROW(z2.combine_rule(-1, 0, /*is_reverse=*/true), std::logic_error);
+  EXPECT_THROW(z2.combine_rule(0, 2, /*is_reverse=*/true), std::logic_error);
+  EXPECT_THROW(z2.reverse_rule(-1), std::logic_error);
+  EXPECT_THROW(z2.reverse_rule(2), std::logic_error);
+
+  Symmetry z3 = Symmetry::Zn(3);
+  EXPECT_THROW(z3.combine_rule(std::vector<cytnx_int64>{0, 3}, std::vector<cytnx_int64>{0}),
+               std::logic_error);
+  EXPECT_THROW(z3.combine_rule(std::vector<cytnx_int64>{0}, std::vector<cytnx_int64>{-1}),
+               std::logic_error);
+}
+
 TEST(Bond, Clear_type) {
   Bond bd_sym = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
