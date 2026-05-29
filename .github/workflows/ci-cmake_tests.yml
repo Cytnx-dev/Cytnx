@@ -12,7 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash -l {0}
+        # Login shell (-l) so conda activation is sourced, plus fail-fast
+        # flags: -e aborts the step on the first failing command and
+        # -o pipefail propagates failures through pipes. Overriding the
+        # shell drops GitHub's default `-eo pipefail`, so set it back here.
+        shell: bash -leo pipefail {0}
     env:
       # Pinned via --config-settings=build-dir=build below so ctest and
       # gcovr know where the build tree (and .gcno / .gcda files) live.
