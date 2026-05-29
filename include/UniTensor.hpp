@@ -5579,12 +5579,12 @@ namespace cytnx {
     @details For example, if uTB is a BlockUniTensor and uTD is a DenseUniTensor of the same shape,
     then uTD.convert_from(uTB) makes uTD a sparse copy of uTB.
     @param[in] rhs the UniTensor to copy from
-    @param[in] force if true is true, the compatibility of the input and output tensor structure is
+    @param[in] force if true, the compatibility of the input and output tensor structure is
     not checked strictly; elements that do not exist in the output tensor are ignored in the input
     tensor, even if they are not zero or small.
     @param[in] tol applies if a denser UniTensor is converted to a sparser tensor structure; if an
     element in the output tensor does not exist, the absolute value of the element in the input
-    tensor has to be <= \p tol. Otherwise an errror is thrown. This is overwritten by force = true.
+    tensor has to be <= \p tol. Otherwise an error is thrown. This is overwritten by force = true.
     @return
         [UniTensor] a reference to this UniTensor
     */
