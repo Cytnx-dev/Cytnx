@@ -453,8 +453,8 @@ namespace cytnx {
       cytnx_int32 ipntr[14];
       T* resid = new T[dim];
       T_ten buffer_UT = UT_init.clone();
-      // Pin the Krylov vectors to the physical sign frame (signflip all-false) so the raw block
-      // data the iteration operates on is consistent; no-op for bosonic/dense tensors.
+      // Pin the Krylov vectors to the sign frame with all signflips applied so the raw block data
+      // the iteration operates on is consistent; no-op for bosonic/dense tensors.
       if constexpr (std::is_same_v<T_ten, UniTensor>) buffer_UT.apply_();
       cytnx_bool ifinit = true;  // not allow for false, currently
       if (ifinit) {
@@ -666,9 +666,12 @@ namespace cytnx {
       auto eigvals_tens = zeros({k}, out_dtype, device);
       out.push_back(UniTensor(eigvals_tens));
       if (is_V) {
-        for (cytnx_int32 ik = 0; ik < k; ++ik) {
-          out.push_back(UT_init.clone().astype(out_dtype));
-        }
+        // Output eigenvector templates: pass_data_UT fills these with the applied
+        // (all-signflips-applied) eigenvector data, so any pending signflips must be cleared first;
+        // apply_ is a no-op for bosonic/dense tensors.
+        UniTensor UT_out = UT_init.clone().astype(out_dtype);
+        UT_out.apply_();
+        for (cytnx_int32 ik = 0; ik < k; ++ik) out.push_back(UT_out.clone());
       }
 
       switch (dtype) {

@@ -383,9 +383,12 @@ namespace cytnx {
       auto eigvals_tens = zeros({k}, dtype, device);
       out.push_back(UniTensor(eigvals_tens));
       if (is_V) {
-        for (cytnx_int32 ik = 0; ik < k; ++ik) {
-          out.push_back(UT_init.clone());
-        }
+        // Output eigenvector templates: pass_data_UT fills these with the applied
+        // (all-signflips-applied) eigenvector data, so any pending signflips must be cleared first;
+        // apply_ is a no-op for bosonic/dense tensors.
+        UniTensor UT_out = UT_init.clone();
+        UT_out.apply_();
+        for (cytnx_int32 ik = 0; ik < k; ++ik) out.push_back(UT_out.clone());
       }
 
       switch (dtype) {
