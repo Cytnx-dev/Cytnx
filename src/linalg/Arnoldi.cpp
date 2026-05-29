@@ -565,7 +565,11 @@ namespace cytnx {
           }
         }
         if constexpr (std::is_same_v<T_ten, UniTensor>) {
-          if (UT_init.uten_type() == UTenType.Block) {
+          if (UT_init.uten_type() == UTenType.Block ||
+              UT_init.uten_type() == UTenType.BlockFermionic) {
+            // Both Block and BlockFermionic store data per block (get_blocks_()); the Ritz vectors
+            // must be copied back for both. The output templates were cloned from the applied (all
+            // signflips applied) input, so writing the applied eigenvector data here is consistent.
             for (cytnx_int32 ik = 0; ik < k; ++ik) {
               bool img_positive = di[sorted_idx[ik]] > 0;
               T* zr_k_ptr = zr_ptr + z_ptr_shifts[sorted_idx[ik]];
