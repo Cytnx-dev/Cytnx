@@ -66,6 +66,18 @@ TEST_F(linalg_Test, BkUt_Qr1) {
     }
 }
 
+// Regression for the reversed-qnums fix: a leading BD_OUT bond makes the combined left bond BD_OUT.
+// Q R must recompose to the (multi-sector) input.
+TEST_F(linalg_Test, BkUt_Qr_reversed_qnums) {
+  UniTensor T({Bond(BD_OUT, {{0}, {1}}, {2, 2}, {Symmetry::U1()}),
+               Bond(BD_IN, {{0}, {1}}, {2, 2}, {Symmetry::U1()})},
+              {"a", "b"}, 1, Type.Double, Device.cpu, false);
+  random::uniform_(T, -1.0, 1.0, 0);
+  auto res = linalg::Qr(T);
+  EXPECT_GT(res[0].bonds().back().qnums().size(), 1u);  // multi-sector auxiliary bond
+  EXPECT_TRUE((T - Contract(res[0], res[1])).Norm().item() < 1e-9);
+}
+
 TEST_F(linalg_Test, BkUt_expH) {
   auto res = linalg::ExpH(H);
   for (size_t i = 0; i < 27; i++)
