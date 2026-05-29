@@ -1636,6 +1636,14 @@ namespace cytnx {
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
+    // a diagonal target keeps only a rank-1 block, which the sparse->dense at(cart) fill cannot
+    // index
+    cytnx_error_msg(this->is_diag() && (rhs->uten_type() == UTenType.Block ||
+                                        rhs->uten_type() == UTenType.BlockFermionic),
+                    "[ERROR][from_] Cannot convert a Block/BlockFermionicUniTensor into a diagonal "
+                    "DenseUniTensor.%s",
+                    "\n");
+
     if (rhs->uten_type() == UTenType.Dense) {
       _DN_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.Block) {
