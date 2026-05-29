@@ -16,8 +16,7 @@ using namespace std;
 namespace cytnx {
 
   namespace {
-    void parse_order_line_internal_(vector<string> &tokens, const string &line,
-                                    const cytnx_uint64 &line_num) {
+    vector<string> ParseOrderLineInternal(const string &line, const cytnx_uint64 &line_num) {
       cytnx_error_msg((line.find_first_of("\t;\n:") != string::npos),
                       "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
                       "\n");
@@ -33,15 +32,16 @@ namespace cytnx {
                       "\n");
 
       // slice the line into pieces by parentheses and comma
-      tokens = str_findall(line, "(),");
+      vector<string> tokens = str_findall(line, "(),");
 
       cytnx_error_msg(tokens.size() == 0,
                       "[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s", line_num, "\n");
+      return tokens;
     }
 
-    void parse_tout_line_internal_(vector<string> &labels, cytnx_uint64 &TOUT_iBondNum,
-                                   const string &line, const cytnx_uint64 &line_num) {
-      labels.clear();
+    vector<string> ParseToutLineInternal(cytnx_uint64 &TOUT_iBondNum, const string &line,
+                                         const cytnx_uint64 &line_num) {
+      vector<string> labels;
 
       vector<string> tmp = str_split(line, false, ";");
       // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
@@ -96,85 +96,11 @@ namespace cytnx {
         // more than one ;
         cytnx_error_msg(true, "[ERROR][Network] line:%d Invalid TOUT line.%s", line_num, "\n");
       }
+      return labels;
     }
 
-    /// This is debug function for printing special characters
-    void tri_internal(const char *text) {
-      for (const char *p = text; *p != '\0'; ++p) {
-        int c = (unsigned char)*p;
-
-        switch (c) {
-          case '\\':
-            printf("\\\\");
-            break;
-          case '\n':
-            printf("\\n");
-            break;
-          case '\r':
-            printf("\\r");
-            break;
-          case '\t':
-            printf("\\t");
-            break;
-
-            // TODO: Add other C character escapes here.  See:
-            // <https://en.wikipedia.org/wiki/Escape_sequences_in_C#Table_of_escape_sequences>
-
-          default:
-            if (isprint(c)) {
-              putchar(c);
-            } else {
-              printf("\\x%X", c);
-            }
-            break;
-        }
-      }
-    }
-
-    void parse_tn_line_internal_(vector<string> &labels, cytnx_uint64 &TN_iBondNum,
-                                 const string &line, const cytnx_uint64 &line_num) {
-      labels.clear();
-      // vector<string> tmp = str_split(line, false, ";");
-      // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                 "Invalid TN line. A \';\' should be used to indicate the
-      //                 rowrank.\nexample1>
-      //                 "
-      //                 "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
-
-      // // handle col-space label
-      // vector<string> ket_labels = str_split(tmp[0], false, ",");
-      // if (ket_labels.size() == 1)
-      //   if (ket_labels[0].length() == 0) ket_labels.clear();
-      // for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
-      //   string tmp = str_strip(ket_labels[i]);
-      //   cytnx_error_msg(tmp.length() == 0,
-      //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s",
-      //                   line_num,
-      //                   "\n");
-      //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                   "Invalid TN line. label contain non integer.");
-      //   labels.push_back(tmp);
-      // }
-      // TN_iBondNum = labels.size();
-
-      // // handle row-space label
-      // vector<string> bra_labels = str_split(tmp[1], false, ",");
-      // if (bra_labels.size() == 1)
-      //   if (bra_labels[0].length() == 0) bra_labels.clear();
-      // for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
-      //   string tmp = str_strip(bra_labels[i]);
-      //   cytnx_error_msg(tmp.length() == 0,
-      //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-      //                   line_num, "\n");
-
-      //   // tri_internal(tmp.c_str());
-
-      //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                   "Invalid TN line. label contain non integer.");
-      //   labels.push_back(tmp);
-      // }
+    vector<string> ParseTnLineInternal(const string &line, const cytnx_uint64 &line_num) {
+      vector<string> labels;
 
       vector<string> alllabels = str_split(line, false, ",");
       if (alllabels.size() == 1)
@@ -190,14 +116,13 @@ namespace cytnx {
         labels.push_back(tmp);
       }
 
-      TN_iBondNum = labels.size();
-
       cytnx_error_msg(labels.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                       "Invalid TN line. no label present in this line, which is invalid.%s", "\n");
+      return labels;
     }
 
-    void extract_tns_from_order_internal_(vector<string> &TN_names, const vector<string> &tokens) {
-      TN_names.clear();
+    vector<string> ExtractTnsFromOrderInternal(const vector<string> &tokens) {
+      vector<string> TN_names;
       for (cytnx_uint64 i = 0; i < tokens.size(); i++) {
         string tok = str_strip(tokens[i]);  // remove space.
         if (tok.length() == 0) continue;
@@ -205,10 +130,11 @@ namespace cytnx {
           TN_names.push_back(tok);
         }
       }
+      return TN_names;
     }
 
-    string einsumpath_to_string_internal(vector<pair<cytnx_int64, cytnx_int64>> path,
-                                         vector<string> tns) {
+    string EinsumpathToStringInternal(vector<pair<cytnx_int64, cytnx_int64>> path,
+                                      vector<string> tns) {
       string res;
       for (int i = 0; i < path.size(); i++) {
         int id1 = path[i].first;
@@ -229,8 +155,8 @@ namespace cytnx {
       return res;
     }
 
-    vector<pair<cytnx_int64, cytnx_int64>> ct_tree_to_eisumpath_internal(ContractionTree CtTree,
-                                                                         vector<string> tns) {
+    vector<pair<cytnx_int64, cytnx_int64>> CtTreeToEinsumpathInternal(ContractionTree CtTree,
+                                                                      vector<string> tns) {
       vector<pair<cytnx_int64, cytnx_int64>> path;
       stack<std::shared_ptr<Node>> stk;
       std::shared_ptr<Node> root = CtTree.nodes_container.back();
@@ -273,7 +199,7 @@ namespace cytnx {
       return path;
     }
 
-    void check_internal(vector<UniTensor> &tns, vector<string> &tn_names) {
+    void CheckInternal(vector<UniTensor> &tns, vector<string> &tn_names) {
       // check tensors are all set, and put all unitensor on node for contraction:
       cytnx_error_msg(
         tns.size() == 0,
@@ -329,12 +255,12 @@ namespace cytnx {
     // reading
     if (contract_order.length()) {
       // ORDER assigned
-      parse_order_line_internal_(this->ORDER_tokens, contract_order, 0);
+      this->ORDER_tokens = ParseOrderLineInternal(contract_order, 0);
       isORDER_exist = true;
     }
     if (Tout.length()) {
       // TOUT assigned
-      parse_tout_line_internal_(this->TOUT_labels, this->TOUT_iBondNum, Tout, 0);
+      this->TOUT_labels = ParseToutLineInternal(this->TOUT_iBondNum, Tout, 0);
     }
 
     // assign input tensors into slots:
@@ -366,9 +292,6 @@ namespace cytnx {
       // this is an internal function that is defined in this cpp file.
       this->label_arr.back() = utensors[i].labels();
       this->iBondNums.push_back(utensors[i].rowrank());
-      // parse_tn_line_internal_(this->label_arr.back(),tmp_iBN,content,lnum);
-      //  this->iBondNums.push_back(tmp_iBN);
-
     }  // traversal input tensor list
 
     this->tensors.resize(this->names.size());
@@ -378,7 +301,7 @@ namespace cytnx {
     //  only alias assigned will activate order
     if (isORDER_exist) {
       vector<string> TN_names;  // this should be integer!
-      extract_tns_from_order_internal_(TN_names, this->ORDER_tokens);
+      TN_names = ExtractTnsFromOrderInternal(this->ORDER_tokens);
       cytnx_error_msg(TN_names.size() != utensors.size(),
                       "[ERROR][Network][Contract--planning] order assigned but the [%d] tensors "
                       "appears in ORDER does not match the # input tensors [%d]\n",
@@ -483,14 +406,14 @@ namespace cytnx {
           // cut the line into tokens,
           // and leave it to process by CtTree after read all lines.
           this->order_line = content;
-          parse_order_line_internal_(this->ORDER_tokens, content, i);
+          this->ORDER_tokens = ParseOrderLineInternal(content, i);
           isORDER_exist = true;
         }
       } else if (name == "TOUT") {
         // if content has length, then pass to process.
         if (content.length()) {
           // this is an internal function that is defined in this cpp file.
-          parse_tout_line_internal_(this->TOUT_labels, this->TOUT_iBondNum, content, i);
+          this->TOUT_labels = ParseToutLineInternal(this->TOUT_iBondNum, content, i);
         }
       } else {
         this->names.push_back(name);
@@ -515,10 +438,9 @@ namespace cytnx {
 
         this->name2pos[name] = names.size() - 1;  // register
         this->label_arr.push_back(vector<string>());
-        cytnx_uint64 tmp_iBN;
         // this is an internal function that is defined in this cpp file.
-        parse_tn_line_internal_(this->label_arr.back(), tmp_iBN, content, i);
-        this->iBondNums.push_back(tmp_iBN);
+        this->label_arr.back() = ParseTnLineInternal(content, i);
+        this->iBondNums.push_back(this->label_arr.back().size());
       }
 
     }  //
@@ -545,7 +467,7 @@ namespace cytnx {
     // checking if all TN are set in ORDER.
     if (isORDER_exist) {
       vector<string> TN_names;
-      extract_tns_from_order_internal_(TN_names, this->ORDER_tokens);
+      TN_names = ExtractTnsFromOrderInternal(this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {
         auto it = find(TN_names.begin(), TN_names.end(), this->names[i]);
         cytnx_error_msg(
@@ -644,7 +566,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = ct_tree_to_eisumpath_internal(CtTree, names);
+    this->einsum_path = CtTreeToEinsumpathInternal(CtTree, names);
   }  // end of FromString
 
   void RegularNetwork::Fromfile(const string &fname) {
@@ -871,19 +793,19 @@ namespace cytnx {
                       "\n");
     this->ORDER_tokens.clear();
     if (optimal) {
-      check_internal(this->tensors, this->names);
+      CheckInternal(this->tensors, this->names);
 
       if (this->tensors[0].device() == Device.cpu) {
         string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
-        parse_order_line_internal_(ORDER_tokens, Optim_ORDERline, 999999);
+        ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
       } else {
   #ifdef UNI_GPU
     #ifdef UNI_CUQUANTUM
         if (this->tensors[0].uten_type() != UTenType.Dense) {
           string Optim_ORDERline = this->getOptimalOrder();
           this->order_line = Optim_ORDERline;
-          parse_order_line_internal_(ORDER_tokens, Optim_ORDERline, 999999);
+          ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
         } else {
           vector<cytnx_uint64> out_shape;
           for (int i = 0; i < this->TOUT_labels.size(); i++) {
@@ -910,7 +832,7 @@ namespace cytnx {
             names.push_back(this->names[i]);
           }
           this->einsum_path = path;
-          this->order_line = einsumpath_to_string_internal(path, names);
+          this->order_line = EinsumpathToStringInternal(path, names);
         }
     #else
         // cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
@@ -918,7 +840,7 @@ namespace cytnx {
         //                 without " "CUQUANTUM support.\n");
         string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
-        parse_order_line_internal_(ORDER_tokens, Optim_ORDERline, 999999);
+        ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
     #endif
 
   #else
@@ -930,9 +852,9 @@ namespace cytnx {
     } else {
       this->order_line = contract_order;
       if (contract_order != "") {
-        parse_order_line_internal_(ORDER_tokens, contract_order, 999999);
+        ORDER_tokens = ParseOrderLineInternal(contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-        this->einsum_path = ct_tree_to_eisumpath_internal(CtTree, names);
+        this->einsum_path = CtTreeToEinsumpathInternal(CtTree, names);
       } else {
         CtTree.build_default_contraction_tree();
       }
@@ -953,13 +875,14 @@ namespace cytnx {
   }
 
   UniTensor RegularNetwork::Launch() {
-    check_internal(this->tensors, this->names);
+    CheckInternal(this->tensors, this->names);
 
     int tn_device = this->tensors[0].device();
 
   #if defined(UNI_GPU) && defined(UNI_CUQUANTUM)  // gpu workflow with cuquantum
     if (tn_device != Device.cpu && this->tensors[0].uten_type() == UTenType.Dense) {
       vector<cytnx_uint64> out_shape;
+      out_shape.reserve(this->TOUT_labels.size());
       for (int i = 0; i < this->TOUT_labels.size(); i++) {
         out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
       }
@@ -975,15 +898,12 @@ namespace cytnx {
       this->descNet = cutn.createNetworkDescriptor();
       cutn.setOutputMem(out);
       cutn.setInputMem(this->tensors);
-      // cutn.setNetworkDescriptor(this->descNet);
       if (this->optimizerInfo != nullptr) {
         cutn.setOptimizerInfo(this->optimizerInfo);
       } else {
         this->optimizerInfo = cutn.createOptimizerInfo();
       }
       cutn.setContractionPath(einsum_path);
-
-      // cutn.getContractionPath();
 
       cutn.createWorkspaceDescriptor();
       cutn.initializePlan();
@@ -1055,16 +975,10 @@ namespace cytnx {
     // 4. reset nodes:
     this->CtTree.reset_nodes();
 
-    // //5. reset back the original labels:
-    // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-    //     this->tensors[i].relabel_(old_labels[i]);
-    // }
-
-    // 6. permute according to pre-set labels:
+    // 5. permute according to pre-set labels:
     if (TOUT_labels.size()) {
       out.permute_(TOUT_labels, TOUT_iBondNum);
     }
-    // UniTensor out;
     return out;
   }
 
@@ -1086,9 +1000,9 @@ namespace cytnx {
     if (order.length()) {
       this->order_line = order;
       // checking if all TN are set in ORDER.
-      parse_order_line_internal_(this->ORDER_tokens, order, 0);
+      this->ORDER_tokens = ParseOrderLineInternal(order, 0);
       vector<string> TN_names;
-      extract_tns_from_order_internal_(TN_names, this->ORDER_tokens);
+      TN_names = ExtractTnsFromOrderInternal(this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {
         auto it = find(TN_names.begin(), TN_names.end(), this->names[i]);
         cytnx_error_msg(
@@ -1206,7 +1120,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = ct_tree_to_eisumpath_internal(CtTree, names);
+    this->einsum_path = CtTreeToEinsumpathInternal(CtTree, names);
   }  // end construct
 
 }  // namespace cytnx

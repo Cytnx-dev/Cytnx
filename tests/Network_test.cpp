@@ -146,3 +146,57 @@ TEST_F(NetworkTest, Network_block_find_optimal) {
 
   EXPECT_TRUE(AreNearlyEqUniTensor(res, BlockNetworkReference(bkut1, bkut2, bkut3), 1e-8));
 }
+
+// Helper: build a fermionic UniTensor with mixed in/out legs on both row and column spaces and
+// degeneracies (rowrank 2), filled with sequential values over its existing components.
+inline UniTensor make_mixed_inout_fermionic() {
+  Bond B5Li = Bond(BD_IN, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
+  Bond B5Lo = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
+  Bond B5Ri = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
+  Bond B5Ro = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
+  UniTensor M = UniTensor({B5Li, B5Lo, B5Ri, B5Ro}, {"li", "lo", "ri", "ro"});
+  M.set_rowrank_(2);
+  cytnx_double val = 1.0;
+  auto sh = M.shape();
+  for (cytnx_uint64 i = 0; i < sh[0]; i++)
+    for (cytnx_uint64 j = 0; j < sh[1]; j++)
+      for (cytnx_uint64 k = 0; k < sh[2]; k++)
+        for (cytnx_uint64 l = 0; l < sh[3]; l++) {
+          auto proxy = M.at({i, j, k, l});
+          if (proxy.exists()) {
+            proxy = val;
+            val += 1.0;
+          }
+        }
+  return M;
+}
+
+// Helper: build a permuted (consistent {1,0,3,2}) copy and assert it carries non-trivial sign
+// flips.
+inline UniTensor permute_with_signflips(const UniTensor& M) {
+  UniTensor Mp = M.permute({1, 0, 3, 2}).contiguous();
+  bool anyflip = false;
+  for (auto f : Mp.signflip()) anyflip = anyflip || f;
+  EXPECT_TRUE(anyflip);  // ensure the signflip negation path is actually exercised
+  return Mp;
+}
+
+// BlockFermionic network contraction: Launch must agree with a direct Contract of the same
+// tensors. One input is permuted so its blocks carry pending sign flips; comparison uses apply(),
+// which resolves those flips into the physical tensor.
+TEST_F(NetworkTest, Network_fermionic_matches_contract) {
+  UniTensor A = permute_with_signflips(make_mixed_inout_fermionic());  // legs (lo,li,ro,ri)
+  UniTensor B = make_mixed_inout_fermionic();  // legs (li,lo,ri,ro)
+  A.relabel_({"alo", "al", "m2", "m1"});  // A.ro -> m2 (OUT), A.ri -> m1 (IN)
+  B.relabel_({"m2", "m1", "br", "bro"});  // B.li -> m2 (IN), B.lo -> m1 (OUT)
+
+  auto net = Network();
+  net.FromString({"A: alo,al,m2,m1", "B: m2,m1,br,bro", "TOUT: al,alo;br,bro"});
+  net.PutUniTensors({"A", "B"}, {A, B});
+  UniTensor res = net.Launch();
+
+  UniTensor ref = Contract(A, B);
+  ref.permute_({"al", "alo", "br", "bro"}, 2);
+  EXPECT_EQ(res.uten_type(), UTenType.BlockFermionic);
+  EXPECT_TRUE((res.apply() - ref.apply()).Norm().item() < 1e-8);
+}

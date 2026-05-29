@@ -63,16 +63,17 @@ TEST_F(NetworkTest, gpu_Network_dense_reuse) {
 
 // Helper: Copy tensors to CPU. Contract them directly with Contract, and permute the open legs into
 // the requested TOUT order.
-static UniTensor BlockNetworkReferenceCPU(const UniTensor& A, const UniTensor& B,
-                                          const UniTensor& C) {
-  UniTensor a = A.to(Device.cpu).relabel({"a", "e"});
-  UniTensor b = B.to(Device.cpu).relabel({"a", "c_", "d_", "h"});
-  UniTensor c = C.to(Device.cpu).relabel({"e", "f_", "g_", "h"});
-  UniTensor expected = Contract(Contract(b, c), a);
-  expected.permute_({"c_", "d_", "f_", "g_"}, 2);
-  expected.contiguous_();
-  return expected;
-}
+namespace {
+  UniTensor BlockNetworkReferenceCPU(const UniTensor& A, const UniTensor& B, const UniTensor& C) {
+    UniTensor a = A.to(Device.cpu).relabel({"a", "e"});
+    UniTensor b = B.to(Device.cpu).relabel({"a", "c_", "d_", "h"});
+    UniTensor c = C.to(Device.cpu).relabel({"e", "f_", "g_", "h"});
+    UniTensor expected = Contract(Contract(b, c), a);
+    expected.permute_({"c_", "d_", "f_", "g_"}, 2);
+    expected.contiguous_();
+    return expected;
+  }
+}  // namespace
 
 // Block (symmetric) UniTensor network contraction on the GPU. Validate the GPU result against a CPU
 // contraction of the same tensors.
