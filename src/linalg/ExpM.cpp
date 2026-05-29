@@ -27,7 +27,13 @@ namespace cytnx {
 
       vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
       Tensor s, u, ut;
-      if (a == 0) return cytnx::linalg::Diag(cytnx::ones(Tin.shape()[0]));
+      // exp(a*M + b*I) with a == 0 is exp(b)*I: keep the bias b (matches ExpH).
+      if (a == 0) {
+        if (b == 0)
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device());
+        else
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device()) * exp(b);
+      }
 
       if (b == 0)
         s = cytnx::linalg::Exp(a * su[0]);
