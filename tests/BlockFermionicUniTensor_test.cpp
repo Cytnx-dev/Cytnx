@@ -317,3 +317,66 @@ TEST_F(BlockFermionicUniTensorTest, Transpose) {
   EXPECT_EQ(tmp2.bonds()[2].type(), BD_OUT);
   EXPECT_TRUE(AreEqUniTensor(tmp2, tmp));
 }
+
+// ============ convert_from / from_ ============
+
+// A rank-3 fermionic tensor is permuted (which flips signs on some but not all blocks), converted
+// to Dense and back, then permuted to the original leg order; the round-trip reproduces the
+// original. The converted tensor carries one sign flag per block.
+TEST_F(BlockFermionicUniTensorTest, convert_from_permute_roundtrip) {
+  const double tol = 1e-12;
+  UniTensor Tp = BFUT1.permute({2, 0, 1});
+  ASSERT_GT(Tp.Nblocks(), (cytnx_uint64)Tp.rank());  // more blocks than rank
+
+  // the permutation puts sign flips on some (not all) blocks
+  bool any_flip = false, any_noflip = false;
+  for (bool b : Tp.signflip()) {
+    any_flip = any_flip || b;
+    any_noflip = any_noflip || !b;
+  }
+  ASSERT_TRUE(any_flip);
+  ASSERT_TRUE(any_noflip);
+
+  UniTensor D = UniTensor(zeros(Tp.shape()));
+  D.convert_from(Tp);  // BlockFermionic -> Dense (resolves the pending sign flips)
+
+  UniTensor BKF2 = Tp.clone();
+  BKF2.convert_from(D);  // Dense -> BlockFermionic
+  EXPECT_EQ(BKF2.signflip().size(), BKF2.Nblocks());  // one sign flag per block
+
+  UniTensor back = BKF2.permute(BFUT1.labels());
+  EXPECT_TRUE(AreNearlyEqUniTensor(back.apply(), BFUT1.apply(), tol));
+}
+
+// Dense -> BlockFermionic honors tol: a nonzero symmetry-forbidden entry is rejected at the default
+// tol=0, but force=true / large tol drop it and the allowed entries reproduce the original exactly.
+TEST_F(BlockFermionicUniTensorTest, convert_from_tol_forbidden_nonzero) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+  UniTensor BKF = UniTensor({bi, bi.redirect()});
+  BKF.at({0, 0}) = 1.0;  // even-even block
+  BKF.at({1, 1}) = 2.0;  // odd-odd block
+
+  UniTensor D = UniTensor(zeros(BKF.shape()));
+  D.convert_from(BKF);
+  D.at({0, 1}) = 7.0;  // forbidden sector (even row, odd col)
+
+  UniTensor B0 = UniTensor({bi, bi.redirect()});
+  EXPECT_ANY_THROW(B0.convert_from(D));  // tol defaults to 0 -> rejected
+
+  UniTensor Bf = UniTensor({bi, bi.redirect()});
+  Bf.convert_from(D, true);  // force drops the forbidden entry
+  EXPECT_TRUE(AreEqUniTensor(Bf, BKF));
+
+  UniTensor Bt = UniTensor({bi, bi.redirect()});
+  Bt.convert_from(D, false, 10.0);  // large tol tolerates it, same result
+  EXPECT_TRUE(AreEqUniTensor(Bt, BKF));
+}
+
+// Converting a BlockFermionic into a diagonal Dense is not supported and must throw.
+TEST_F(BlockFermionicUniTensorTest, convert_from_diagonal_dense_target_throws) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+  UniTensor BKF = UniTensor({bi, bi.redirect()});
+
+  UniTensor Ddiag = UniTensor(zeros(2), true);  // diagonal Dense, shape (2,2)
+  EXPECT_ANY_THROW(Ddiag.convert_from(BKF));
+}
