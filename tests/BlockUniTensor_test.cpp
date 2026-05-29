@@ -1179,3 +1179,34 @@ TEST_F(BlockUniTensorTest, get_bond_ref) {
   EXPECT_EQ(ut1.bonds()[0].qnums(), std::vector<std::vector<cytnx_int64>>({{1}, {0}, {0}}));
   EXPECT_EQ(ut1.bonds()[1].qnums(), std::vector<std::vector<cytnx_int64>>({{1}, {0}, {0}}));
 }
+
+// ============ to_dense / to_dense_ ============
+
+// A diagonal BlockUniTensor is expanded to a full one: each rank-1 (diagonal) block becomes a
+// diagonal matrix and is_diag() becomes false; the in-place variant gives the same result.
+TEST_F(BlockUniTensorTest, to_dense_diag) {
+  Bond bd = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  UniTensor B = UniTensor({bd, bd.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  random::uniform_(B, -10.0, 10.0, 0);
+
+  UniTensor dense = B.to_dense();
+  EXPECT_TRUE(B.is_diag());
+  EXPECT_FALSE(dense.is_diag());
+  ASSERT_EQ(dense.Nblocks(), B.Nblocks());
+  for (cytnx_uint64 b = 0; b < B.Nblocks(); b++)
+    EXPECT_TRUE(AreNearlyEqTensor(dense.get_block_(b), linalg::Diag(B.get_block_(b)), 1e-14));
+
+  UniTensor Bp = B.clone();
+  Bp.to_dense_();
+  EXPECT_FALSE(Bp.is_diag());
+  EXPECT_TRUE(AreEqUniTensor(Bp, dense));
+}
+
+// to_dense on an already non-diagonal BlockUniTensor is a no-op (returns an equal tensor).
+TEST_F(BlockUniTensorTest, to_dense_non_diag) {
+  EXPECT_FALSE(BUT4.is_diag());
+  EXPECT_TRUE(AreEqUniTensor(BUT4, BUT4.to_dense()));
+  UniTensor Bp = BUT4.clone();
+  Bp.to_dense_();
+  EXPECT_TRUE(AreEqUniTensor(BUT4, Bp));
+}
