@@ -2784,7 +2784,7 @@ namespace cytnx {
   void _bkf_from_dn(BlockFermionicUniTensor *ths, DenseUniTensor *rhs, bool force,
                     cytnx_double tol) {
     //[14 May 2026] This is a copy from BlockUniTensor; The name is changed (BKF instead of BK);
-    // signflips are initialized to be all EVEN
+    // signflips are initialized to be all false
     if (!force) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
@@ -2800,7 +2800,7 @@ namespace cytnx {
     cytnx_uint64 total_elem = rhs->_block.storage().size();
 
     std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
-    ths->_signflip = std::vector<bool>(rhs->shape().size(), EVEN);
+    ths->_signflip = std::vector<bool>(ths->_blocks.size(), false);
     for (int i = (rhs->rank() - 2); i >= 0; i--) {
       stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
     }
