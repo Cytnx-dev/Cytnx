@@ -89,6 +89,23 @@ TEST_F(BlockUniTensorTest, syms) {
   EXPECT_EQ(BUT3.syms(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
 }
 
+// Regression: UniTensor whose first bond is BD_BRA with a non-uniform symmetry
+// list (here {U1, Zn(2)}) used to feed `syms[0].reverse_rule(...)` to every
+// component `i` in `_fx_get_total_fluxs`. For `i = 1` that meant U1's reverse
+// rule was applied to a Zn(2) qnum, producing a negative value that was then
+// passed back into `syms[1].combine_rule` (Zn(2)). The result was silently
+// wrong before strict Zn validation and a hard `std::logic_error` after it.
+TEST_F(BlockUniTensorTest, FxGetTotalFluxsUsesPerComponentSymmetry) {
+  std::vector<Symmetry> syms = {Symmetry::U1(), Symmetry::Zn(2)};
+  Bond bd_bra = Bond(BD_BRA, {{0, 0}, {0, 1}, {1, 0}, {1, 1}}, {1, 1, 1, 1}, syms);
+  Bond bd_ket = Bond(BD_KET, {{0, 0}, {0, 1}, {1, 0}, {1, 1}}, {1, 1, 1, 1}, syms);
+
+  EXPECT_NO_THROW({
+    UniTensor ut = UniTensor({bd_bra, bd_ket});
+    EXPECT_EQ(ut.syms(), syms);
+  });
+}
+
 TEST_F(BlockUniTensorTest, is_contiguous) {
   EXPECT_EQ(Spf.is_contiguous(), true);
   auto Spf_new = Spf.permute({2, 1, 0}, 1);

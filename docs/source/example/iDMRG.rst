@@ -60,8 +60,8 @@ The initailzation of MPO is much the same as we did in the previous DMRG example
     M[0,2] = 2*Hx*sx
     M = cytnx.UniTensor(M,rowrank=0)
 
-    L0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),rowrank=0) #Left boundary
-    R0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),rowrank=0) #Right boundary
+    L0 = cytnx.UniTensor.zeros([3,1,1],rowrank=0) #Left boundary
+    R0 = cytnx.UniTensor.zeros([3,1,1],rowrank=0) #Right boundary
     L0.get_block_()[0,0,0] = 1.; R0.get_block_()[2,0,0] = 1.;
 
     L = L0
@@ -124,7 +124,7 @@ Now do the optimization and SVD task:
 .. code-block:: python
     :linenos:
 
-    psi = cytnx.UniTensor(cytnx.random.normal([1,d,d,1],1,2),rowrank=2)
+    psi = cytnx.UniTensor.normal([1,d,d,1], 1., 2., rowrank=2)
     shp = psi.shape()
     psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
     psi_T, Entemp = eig_Lanczos(psi_T, (L,M,M,R), maxit=maxit);
@@ -168,7 +168,7 @@ we then solve the eigenvalue problem again and do SVD for the new effective hami
     :linenos:
 
     ## Construct n = 1
-    psi = cytnx.UniTensor(cytnx.random.normal([d,d,d,d],0,2),rowrank=2)
+    psi = cytnx.UniTensor.normal([d,d,d,d], 0. ,2., rowrank=2)
     shp = psi.shape()
     psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
     psi_T, Entemp = eig_Lanczos(psi_T, (L,M,M,R), maxit=maxit);

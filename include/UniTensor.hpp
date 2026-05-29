@@ -1122,7 +1122,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
@@ -1857,7 +1857,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
@@ -5646,16 +5646,17 @@ namespace cytnx {
     }
 
     /**
-    @brief Generate an identity UniTensor.
+    @brief Generate an identity UniTensor with two bonds.
     @param[in] dim the dimension of the diagnal.
-    @param[in] in_labels the labels of the UniTensor.
+    @param[in] in_labels the two labels of the UniTensor.
     @param[in] is_diag determine if the UniTensor is diagonal or not. Default is false.
     @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
     @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
-    @note 2-bond if not diagonal. 1-bond if diagonal.
+    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if
+    is_diag is true (false).
     */
     static UniTensor identity(const cytnx_uint64 &dim,
                               const std::vector<std::string> &in_labels = {},
@@ -5672,17 +5673,17 @@ namespace cytnx {
     /**
     @brief Generate a 2-bond identity UniTensor
     @param[in] dim the dimension of the diagnal.
-    @param[in] in_labels the labels of the UniTensor.
+    @param[in] in_labels the two labels of the UniTensor.
     @param[in] is_diag determine if the UniTensor is diagonal or not. Default is false.
     @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
     @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
-    @note 2-bond if not diagonal. 1-bond if diagonal.
-    @see identity(Nelem, in_labels, is_diag, dtype, device, name)
-    Note:
-      This function is a alias of cytnx::UniTensor::identity().
+    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if
+    is_diag is true (false).
+    @see cytnx::UniTensor::identity
+    @note This function is a alias of cytnx::UniTensor::identity().
     */
     static UniTensor eye(const cytnx_uint64 &dim, const std::vector<std::string> &in_labels = {},
                          const cytnx_bool &is_diag = false, const unsigned int &dtype = Type.Double,
