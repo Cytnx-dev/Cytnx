@@ -2471,7 +2471,7 @@ namespace cytnx {
             // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
             // could depend on the block and are not aware of this sign flip!
             //  this->_signflip[b] = this->_signflip[b] ? true : false;
-            // 3) fast way: TODOfermions: implement Tensor.negmul, which does the multiplication and
+            // 3) fast way: TODOfermions: implement Tensor.negdiv, which does the division and
             // sign flip in one step
           }
           break;
