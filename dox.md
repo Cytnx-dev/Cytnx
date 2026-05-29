@@ -232,8 +232,8 @@ Tensor A({3,4,5},Type.Double);
 UniTensor tA = UniTensor(A); // convert directly.
 UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{}); // init from scratch.
 // Relabel the tensor and then contract.
-tA.relabels_({"common_1", "common_2", "out_a"});
-tB.relabels_({"common_1", "common_2", "out_b"});
+tA.relabel_({"common_1", "common_2", "out_a"});
+tB.relabel_({"common_1", "common_2", "out_b"});
 UniTensor out = cytnx::Contract(tA,tB);
 tA.print_diagram();
 tB.print_diagram();
@@ -283,7 +283,7 @@ on device   : cytnx device: CPU
 
 ```
 
-* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://kaihsinwu.gitlab.io/Cytnx_doc/) for more details.
+* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://cytnx-dev.github.io/Cytnx/) for more details.
 
 
 ------------------------------
@@ -293,21 +293,21 @@ Creator and Project manager | Affiliation     | Email
 Kai-Hsin Wu                 |Boston Univ., USA|kaihsinwu@gmail.com
 \n
 
-Developers      | Affiliation     | Roles
-----------------|-----------------|---------
-Chang-Teng Lin  |NTU, Taiwan      |major maintainer and developer
-Ke Hsu          |NTU, Taiwan      |major maintainer and developer
-Ivana Gyro      |NTU, Taiwan      |major maintainer and developer
-Hao-Ti Hung     |NTU, Taiwan      |documentation and linalg
-Ying-Jer Kao    |NTU, Taiwan      |setuptool, cmake
+Developers       | Affiliation | Roles
+-----------------|-------------|---------
+Chang-Teng Lin   |NTU, Taiwan  |major maintainer and developer
+Ke Hsu           |NTU, Taiwan  |major maintainer and developer
+Ivana Gyro       |NTU, Taiwan  |major maintainer and developer
+Hao-Ti Hung     |NTU, Taiwan  |documentation and linalg
+Ying-Jer Kao    |NTU, Taiwan  |setuptool, cmake
+Manuel Schneider |NYCU, Taiwan |developer
 
 ## Contributors
 Contributors    | Affiliation
 ----------------|-----------------
 PoChung Chen    | NTHU, Taiwan
-Chia-Min Chung  | NSYSU, Taiwan
+Chia-Min Chung  | NYCU, Taiwan
 Ian McCulloch   | NTHU, Taiwan
-Manuel Schneider| NYCU, Taiwan
 Yen-Hsin Wu     | NTU, Taiwan
 Po-Kwan Wu      | OSU, USA
 Wen-Han Kao     | UMN, USA

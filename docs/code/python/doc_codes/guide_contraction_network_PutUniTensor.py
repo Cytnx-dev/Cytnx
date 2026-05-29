@@ -1,13 +1,13 @@
 # initialize tensors
-w = cytnx.UniTensor(cytnx.random.normal([2,2,2,2], mean=0., std=1.))
-c0 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-c1 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-c2 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-c3 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-t0 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
-t1 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
-t2 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
-t3 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
+w  = cytnx.UniTensor.normal([2,2,2,2], mean=0., std=1.)
+c0 = cytnx.UniTensor.normal([8,8], mean=0., std=1.)
+c1 = cytnx.UniTensor.normal([8,8], mean=0., std=1.)
+c2 = cytnx.UniTensor.normal([8,8], mean=0., std=1.)
+c3 = cytnx.UniTensor.normal([8,8], mean=0., std=1.)
+t0 = cytnx.UniTensor.normal([8,2,8], mean=0., std=1.)
+t1 = cytnx.UniTensor.normal([8,2,8], mean=0., std=1.)
+t2 = cytnx.UniTensor.normal([8,2,8], mean=0., std=1.)
+t3 = cytnx.UniTensor.normal([8,2,8], mean=0., std=1.)
 
 # initialize network object from ctm.net file
 net = cytnx.Network("ctm.net")

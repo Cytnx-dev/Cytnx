@@ -1,10 +1,10 @@
-Accessing the block(s)
+Accessing blocks
 ------------------------
 
 The data in a UniTensor is stored in blocks. We introduce how to access and manipulate these. This way, the data of a UniTensor can be accessed and manipulated. Each block is a **Tensor**.
 
-UniTensor without symmetries
-*****************************
+Block of UniTensor without symmetries
+****************************************
 
 A UniTensor without symmetries is simply a Tensor with labeled bonds. In this case, the methods **.get_block()**  and **.get_block_()** return the Tensor object of the UniTensor for us to manipulate.
 
@@ -24,8 +24,8 @@ Output >>
     While **.get_block_()** returns a reference to the Tensor which corresponds to the data in a UniTensor, **.get_block()** makes a copy of the data. Therefore, changes to a Tensor returned from **.get_block_()** will also change the UniTesor data, while changes after a **.get_block()** do not affect the UniTensor.
 
 
-UniTensor with symmetries
-*****************************
+Blocks of UniTensor with symmetries
+****************************************
 
 Let's use the same example of a UniTensor with *U1* symmetry that we introduced in the previous section :ref:`UniTensor with Symmetries` to demonstrate how to get block(s) from a block structured UniTensor:
 
@@ -52,6 +52,7 @@ The quantum number indices (*qindices*) need to be given in the same order as th
     * 0 for *U1(2)*
     * 1 for *U1(0)*
     * 2 for *U1(-2)*
+
 because the quantum numbers were created in this order. Similarly for *bond\_d* and *bond\_e: *U1(1)* has quantum number index 0 and *U1(-1)* has quantum number index 2.
 
 

@@ -1,4 +1,4 @@
-Get/set UniTensor element
+Get/set UniTensor elements
 --------------------------
 
 In this section, we discuss how to get an element directly from a UniTensor and how to set an element. Generally, elements can be accessed by first getting the corresponding block, and then accessing the correct element from that block. However, it is also possible to directly access an element from a UniTensor.
@@ -6,8 +6,8 @@ In this section, we discuss how to get an element directly from a UniTensor and 
 To get an element, one can call **UniTensor.at()**. It returns a *proxy* which contains a reference to the element. Furthermore, the proxy can be used to check whether an element corresponds to a valid block in a UniTensor with symmetries.
 
 
-UniTensor without symmetries
-*****************************
+Elements of UniTensor without symmetries
+*********************************************
 
 Accessing an element in a UniTensor without symmetries is straightforward by using *at*
 
@@ -53,8 +53,8 @@ Output >>
     :language: text
 
 
-UniTensor with symmetries
-*****************************
+Elements of UniTensor with symmetries
+***************************************
 
 When a UniTensor has block structure, not all possible elements correspond to a valid block. Invalid elements do not fulfill the symmetries. Therefore, these invalid elements should not be accessed.
 

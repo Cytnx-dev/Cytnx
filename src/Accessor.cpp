@@ -40,7 +40,6 @@ namespace cytnx {
   Accessor::Accessor(const std::string &str) {
     // this->_axis_len = 0;
 
-    // std::cout << str << "|" << std::endl;
     if ((str == "all") || (str == ":"))
       this->_type = Accessor::All;
     else {
@@ -76,17 +75,12 @@ namespace cytnx {
       } else {
         this->_step = 1;
       }
-
-      // cout << this->min;
-      // cout << this->max;
-      // cout << this->step << endl;
-      // std::cout << token << std::endl;
     }
   }
 
   // range constr.
   Accessor::Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step) {
-    cytnx_error_msg(step == 0, "[ERROR] cannot have step=0 for range%s", "\n");
+    cytnx_error_msg(step == 0, "[ERROR] Cannot have step=0 for range%s", "\n");
     this->_type = Accessor::Range;
     this->_min = min;
     this->_max = max;
@@ -114,6 +108,14 @@ namespace cytnx {
     return *this;
   }
 
+  // check equality
+  bool Accessor::operator==(const Accessor &rhs) const {
+    bool out = (this->_type == rhs._type) && (this->_min == rhs._min) && (this->_max == rhs._max) &&
+               (this->loc == rhs.loc) && (this->_step == rhs._step) &&
+               (this->idx_list == rhs.idx_list);
+    return out;
+  }
+
   // get the real len from dim
   // if _type is all, pos will be null, and len == dim
   // if _type is range, pos will be the locator, and len == len(pos)
@@ -137,20 +139,17 @@ namespace cytnx {
                       "a null Tensor.");
 
       // len = (r_max-r_min)/this->step;
-      // std::cout << len << " " << dim << std::endl;
       // if((r_max-r_min)%this->step) len+=1;
 
       len = 0;
       if (this->_step < 0) {
         for (cytnx_int64 i = r_min; i > r_max; i += this->_step) {
           pos.push_back(i);
-          // std::cout << pos.back() << std::endl;
           len++;
         }
       } else {
         for (cytnx_int64 i = r_min; i < r_max; i += this->_step) {
           pos.push_back(i);
-          // std::cout << pos.back() << std::endl;
           len++;
         }
       }
@@ -171,20 +170,17 @@ namespace cytnx {
       if (this->_step < 0) {
         for (cytnx_int64 i = r_min; i >= r_max; i += this->_step) {
           pos.push_back(i);
-          // std::cout << pos.back() << std::endl;
           len++;
         }
       } else {
         for (cytnx_int64 i = r_min; i <= r_max; i += this->_step) {
           pos.push_back(i);
-          // std::cout << pos.back() << std::endl;
           len++;
         }
       }
 
     } else if (this->_type == Accessor::Singl) {
       // check:
-      // std::cout << this->loc << " " << dim << std::endl;
       cytnx_error_msg(std::abs(this->loc) >= dim, "[ERROR] index is out of bound%s", "\n");
       len = 1;
       if (this->loc < 0)
@@ -207,13 +203,11 @@ namespace cytnx {
       if (this->_step < 0) {
         for (cytnx_int64 i = r_min; i >= r_max; i += this->_step) {
           pos.push_back(i);
-          // std::cout << pos.back() << std::endl;
           len++;
         }
       } else {
         for (cytnx_int64 i = r_min; i <= r_max; i += this->_step) {
           pos.push_back(i);
-          // std::cout << pos.back() << std::endl;
           len++;
         }
       }
@@ -222,7 +216,6 @@ namespace cytnx {
       pos.clear();
       pos.resize(this->idx_list.size());
       len = pos.size();
-      // cout << "list in accessor len:" <<len << endl;
       for (cytnx_uint64 i = 0; i < this->idx_list.size(); i++) {
         // checking:
         if (this->idx_list[i] < 0) {

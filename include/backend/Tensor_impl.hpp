@@ -187,7 +187,12 @@ namespace cytnx {
       return this->_storage.at(RealRank);
     }
 
-    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors);
+    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors,
+                                          std::vector<cytnx_int64> &removed);
+    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors) {
+      std::vector<cytnx_int64> removed;
+      return this->get(accessors, removed);
+    }
     [[deprecated("Use Tensor_impl::get instead")]] boost::intrusive_ptr<Tensor_impl> get_deprecated(
       const std::vector<cytnx::Accessor> &accessors);
     void set(const std::vector<cytnx::Accessor> &accessors,
@@ -221,7 +226,6 @@ namespace cytnx {
           this->_storage._impl->Move_memory(oldshape, this->_mapper, this->_invmapper);
         // this->_storage._impl->Move_memory_(oldshape, this->_mapper, this->_invmapper);
         // out->_storage._impl = this->_storage._impl;
-        // std::cout << out->_storage << std::endl;
         out->_invmapper = vec_range(this->_invmapper.size());
         out->_mapper = out->_invmapper;
         out->_shape = this->_shape;

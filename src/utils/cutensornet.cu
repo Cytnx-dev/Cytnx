@@ -69,7 +69,6 @@ namespace cytnx {
     // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
     // type_mapper[Type.Double] = CUDA_R_64F;
     // type_mapper[Type.Float] = CUDA_R_32F;
-    // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
     // extentsIn = std::vector<int64_t *>();
     // stridesIn = std::vector<int64_t *>();
     // tns = std::vector<UniTensor>();
@@ -92,7 +91,6 @@ namespace cytnx {
   //   // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
   //   // type_mapper[Type.Double] = CUDA_R_64F;
   //   // type_mapper[Type.Float] = CUDA_R_32F;
-  //   // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
   //   extentsIn.clear();
   //   stridesIn.clear();
   //   rawDataIn_d.clear();
@@ -204,11 +202,9 @@ namespace cytnx {
 
     std::vector<std::pair<int64_t, int64_t>> einsum_path;
 
-    // std::cout << "Number of contractions : " << path.numContractions << std::endl;
     for (int i = 0; i < path.numContractions; i++) {
       einsum_path.push_back(
         std::pair<int64_t, int64_t>((int64_t)path.data[i].first, (int64_t)path.data[i].second));
-      // std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
     }
     HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
       handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
@@ -232,8 +228,10 @@ namespace cytnx {
       std::cout << "Cutensornet set device id =  " << deviceId << std::endl;
       printf("===== Cutensornet device info ======\n");
       printf("GPU-name:%s\n", prop.name);
+    #if (CUDART_VERSION < 13000)
       printf("GPU-clock:%d\n", prop.clockRate);
       printf("GPU-memoryClock:%d\n", prop.memoryClockRate);
+    #endif
       printf("GPU-nSM:%d\n", prop.multiProcessorCount);
       printf("GPU-major:%d\n", prop.major);
       printf("GPU-minor:%d\n", prop.minor);

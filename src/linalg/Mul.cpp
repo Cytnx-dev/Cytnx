@@ -16,36 +16,46 @@ namespace cytnx {
       bool icnst = false;
       if (Lt.shape().size() == 1 && Lt.shape()[0] == 1) {
         out._impl = Rt._impl->_clone_meta_only();
-        out._impl->storage() = Storage(
-          Rt.storage().size(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Rt.device());
-        // out.Init(Rt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+        out._impl->storage() =
+          Storage(Rt.storage().size(), Type.type_promote(Lt.dtype(), Rt.dtype()), Rt.device());
+        // out.Init(Rt.shape(),Type.type_promote(Lt.dtype(), Rt.dtype()),Lt.device());
         icnst = true;
 
       } else if (Rt.shape().size() == 1 && Rt.shape()[0] == 1) {
-        // out.Init(Lt.shape(),Lt.dtype() < Rt.dtype()?Lt.dtype():Rt.dtype(),Lt.device());
+        // out.Init(Lt.shape(),Type.type_promote(Lt.dtype(), Rt.dtype()),Lt.device());
         out._impl = Lt._impl->_clone_meta_only();
-        out._impl->storage() = Storage(
-          Lt.storage().size(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Lt.device());
+        out._impl->storage() =
+          Storage(Lt.storage().size(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
         icnst = true;
 
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[Mul] The two tensors do not have the same shape.%s", "\n");
-        out.Init(Lt.shape(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Lt.device());
+        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
       }
 
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section
         if (Lt.device() == Device.cpu) {
-          cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](
-            out._impl->storage()._impl, Lt._impl->storage()._impl, Rt._impl->storage()._impl,
-            out._impl->storage()._impl->size(), {}, {}, {}, 1);
+          std::visit(
+            [&](auto *lptr) {
+              using TL = std::remove_pointer_t<decltype(lptr)>;
+              std::visit(
+                [&](auto *rptr) {
+                  using TR = std::remove_pointer_t<decltype(rptr)>;
+                  cytnx::linalg_internal::MulInternalImpl<TL, TR>(
+                    out._impl->storage()._impl, Lt._impl->storage()._impl,
+                    Rt._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
+                },
+                Rt.ptr());
+            },
+            Lt.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          cytnx::linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
-            out._impl->storage()._impl, Lt._impl->storage()._impl, Rt._impl->storage()._impl,
-            out._impl->storage()._impl->size(), {}, {}, {}, 1);
+          linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
+                                          Rt._impl->storage()._impl,
+                                          out._impl->storage()._impl->size(), {}, {}, {});
   #else
           cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -54,10 +64,20 @@ namespace cytnx {
       } else {
         // non-contiguous section
         if (Lt.device() == Device.cpu) {
-          cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Rt.dtype()](
-            out._impl->storage()._impl, Lt._impl->storage()._impl, Rt._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
-            Rt._impl->invmapper(), 1);
+          std::visit(
+            [&](auto *lptr) {
+              using TL = std::remove_pointer_t<decltype(lptr)>;
+              std::visit(
+                [&](auto *rptr) {
+                  using TR = std::remove_pointer_t<decltype(rptr)>;
+                  cytnx::linalg_internal::MulInternalImpl<TL, TR>(
+                    out._impl->storage()._impl, Lt._impl->storage()._impl,
+                    Rt._impl->storage()._impl, Lt._impl->storage()._impl->size(), Lt._impl->shape(),
+                    Lt._impl->invmapper(), Rt._impl->invmapper());
+                },
+                Rt.ptr());
+            },
+            Lt.ptr());
         } else {
   #ifdef UNI_GPU
           cytnx_error_msg(true,
@@ -76,7 +96,6 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
-      // std::cout << "entroy" << std::endl;
       Storage Cnst(1, Type.ComplexDouble, Rt.device());
       Cnst.at<cytnx_complex128>(0) = lc;
       Tensor out;
@@ -85,15 +104,20 @@ namespace cytnx {
       // Tensor out(Rt.shape(), Type.ComplexDouble, Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.ComplexDouble][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_complex128, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.ComplexDouble][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -109,22 +133,26 @@ namespace cytnx {
       Cnst.at<cytnx_complex64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type.ComplexFloat < Rt.dtype() ? Type.ComplexFloat : Rt.dtype(), Rt.device());
-      // Tensor out(Rt.shape(), Type.ComplexFloat < Rt.dtype() ? Type.ComplexFloat : Rt.dtype(),
+      out._impl->storage() = Storage(Rt._impl->storage().size(),
+                                     Type.type_promote(Type.ComplexFloat, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.ComplexFloat, Rt.dtype()),
       // Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.ComplexFloat][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_complex64, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.ComplexFloat][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -140,21 +168,25 @@ namespace cytnx {
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.Double < Rt.dtype() ? Type.Double : Rt.dtype(),
-                Rt.device());
-      // Tensor out(Rt.shape(), Type.Double < Rt.dtype() ? Type.Double : Rt.dtype(), Rt.device());
+      out._impl->storage() = Storage(Rt._impl->storage().size(),
+                                     Type.type_promote(Type.Double, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Double, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Double][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_double, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Double][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -170,20 +202,25 @@ namespace cytnx {
       Cnst.at<cytnx_float>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(
-        Rt._impl->storage().size(), Type.Float < Rt.dtype() ? Type.Float : Rt.dtype(), Rt.device());
-      // Tensor out(Rt.shape(), Type.Float < Rt.dtype() ? Type.Float : Rt.dtype(), Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Float, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Float, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Float][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_float, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Float][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -199,20 +236,25 @@ namespace cytnx {
       Cnst.at<cytnx_int64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(
-        Rt._impl->storage().size(), Type.Int64 < Rt.dtype() ? Type.Int64 : Rt.dtype(), Rt.device());
-      // Tensor out(Rt.shape(), Type.Int64 < Rt.dtype() ? Type.Int64 : Rt.dtype(), Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Int64, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Int64, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Int64][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_int64, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Int64][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -228,21 +270,25 @@ namespace cytnx {
       Cnst.at<cytnx_uint64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.Uint64 < Rt.dtype() ? Type.Uint64 : Rt.dtype(),
-                Rt.device());
-      // Tensor out(Rt.shape(), Type.Uint64 < Rt.dtype() ? Type.Uint64 : Rt.dtype(), Rt.device());
+      out._impl->storage() = Storage(Rt._impl->storage().size(),
+                                     Type.type_promote(Type.Uint64, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Uint64, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Uint64][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_uint64, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Uint64][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -258,20 +304,25 @@ namespace cytnx {
       Cnst.at<cytnx_int32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(
-        Rt._impl->storage().size(), Type.Int32 < Rt.dtype() ? Type.Int32 : Rt.dtype(), Rt.device());
-      // Tensor out(Rt.shape(), Type.Int32 < Rt.dtype() ? Type.Int32 : Rt.dtype(), Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Int32, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Int32, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Int32][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_int32, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Int32][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -287,21 +338,25 @@ namespace cytnx {
       Cnst.at<cytnx_uint32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.Uint32 < Rt.dtype() ? Type.Uint32 : Rt.dtype(),
-                Rt.device());
-      // Tensor out(Rt.shape(), Type.Uint32 < Rt.dtype() ? Type.Uint32 : Rt.dtype(), Rt.device());
+      out._impl->storage() = Storage(Rt._impl->storage().size(),
+                                     Type.type_promote(Type.Uint32, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Uint32, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Uint32][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_uint32, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Uint32][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -317,20 +372,25 @@ namespace cytnx {
       Cnst.at<cytnx_int16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(
-        Rt._impl->storage().size(), Type.Int16 < Rt.dtype() ? Type.Int16 : Rt.dtype(), Rt.device());
-      // Tensor out(Rt.shape(), Type.Int16 < Rt.dtype() ? Type.Int16 : Rt.dtype(), Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Int16, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Int16, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Int16][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_int16, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Int16][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -346,21 +406,25 @@ namespace cytnx {
       Cnst.at<cytnx_uint16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.Uint16 < Rt.dtype() ? Type.Uint16 : Rt.dtype(),
-                Rt.device());
-      // Tensor out(Rt.shape(), Type.Uint16 < Rt.dtype() ? Type.Uint16 : Rt.dtype(), Rt.device());
+      out._impl->storage() = Storage(Rt._impl->storage().size(),
+                                     Type.type_promote(Type.Uint16, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Uint16, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Uint16][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_uint16, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Uint16][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -376,20 +440,25 @@ namespace cytnx {
       Cnst.at<cytnx_bool>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(Rt._impl->storage().size(),
-                                     Type.Bool < Rt.dtype() ? Type.Bool : Rt.dtype(), Rt.device());
-      // Tensor out(Rt.shape(), Type.Bool < Rt.dtype() ? Type.Bool : Rt.dtype(), Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Bool, Rt.dtype()), Rt.device());
+      // Tensor out(Rt.shape(), Type.type_promote(Type.Bool, Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Ari_ii[Type.Bool][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *rptr) {
+            using TR = std::remove_pointer_t<decltype(rptr)>;
+            cytnx::linalg_internal::MulInternalImpl<cytnx_bool, TR>(
+              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+              Rt._impl->storage()._impl->size(), {}, {}, {});
+          },
+          Rt.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        cytnx::linalg_internal::lii.cuAri_ii[Type.Bool][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -406,19 +475,29 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(
-        Rt._impl->storage().size(), lc.dtype() < Rt.dtype() ? lc.dtype() : Rt.dtype(), Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(), Type.type_promote(lc.dtype(), Rt.dtype()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
-        linalg_internal::lii.Ari_ii[lc.dtype()][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        std::visit(
+          [&](auto *lptr) {
+            using TL = std::remove_pointer_t<decltype(lptr)>;
+            std::visit(
+              [&](auto *rptr) {
+                using TR = std::remove_pointer_t<decltype(rptr)>;
+                cytnx::linalg_internal::MulInternalImpl<TL, TR>(
+                  out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
+                  Rt._impl->storage()._impl->size(), {}, {}, {});
+              },
+              Rt.ptr());
+          },
+          Tensor::from_storage(Cnst).ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
-        linalg_internal::lii.cuAri_ii[lc.dtype()][Rt.dtype()](
-          out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-          Rt._impl->storage()._impl->size(), {}, {}, {}, 1);
+        linalg_internal::cuMul_dispatch(out._impl->storage()._impl, Cnst._impl,
+                                        Rt._impl->storage()._impl,
+                                        Rt._impl->storage()._impl->size(), {}, {}, {});
   #else
         cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
@@ -665,7 +744,7 @@ namespace cytnx {
         out = Lt.clone();
         out.Mul_(Rt);
       }
-      out.set_labels(vec_range<std::string>(Lt.rank()));
+      out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       return out;
@@ -675,7 +754,7 @@ namespace cytnx {
 
     template <class T>
     UniTensor Mul(const T &lc, const UniTensor &Rt) {
-      // cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
+      // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
       UniTensor out;

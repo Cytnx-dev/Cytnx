@@ -1,5 +1,5 @@
 -----------------------
-tensor Name :
+tensor Name : T
 tensor Rank : 3
 block_form  : False
 is_diag     : False
@@ -13,16 +13,16 @@ on device   : cytnx device: CPU
           ---------
 Rowrank of T =  2
 -----------------------
-tensor Name :
+tensor Name : T
 tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
           ---------
          /         \
-   c ____| 5     5 |____ a
+   c ____| 5     5 |____ b
          |         |
-         |       5 |____ b
+         |       5 |____ a
          \         /
           ---------
 Rowrank of transposed T =  1
