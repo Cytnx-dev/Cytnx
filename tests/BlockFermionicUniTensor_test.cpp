@@ -317,3 +317,56 @@ TEST_F(BlockFermionicUniTensorTest, Transpose) {
   EXPECT_EQ(tmp2.bonds()[2].type(), BD_OUT);
   EXPECT_TRUE(AreEqUniTensor(tmp2, tmp));
 }
+
+// ============ to_dense / to_dense_ ============
+
+// A diagonal BlockFermionicUniTensor is expanded to a full one: each rank-1 (diagonal) block
+// becomes a diagonal matrix and is_diag() becomes false. A twist flips the sign of the odd-parity
+// block, and those per-block sign flags are carried over unchanged.
+TEST_F(BlockFermionicUniTensorTest, to_dense_diag) {
+  Bond bd = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3}, {Symmetry::FermionParity()});
+  UniTensor B = UniTensor({bd, bd.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  random::uniform_(B, -10.0, 10.0, 0);
+  B.twist_(0);  // sign flip on the odd-parity block
+
+  bool any_flip = false, any_noflip = false;
+  for (bool s : B.signflip()) {
+    any_flip = any_flip || s;
+    any_noflip = any_noflip || !s;
+  }
+  ASSERT_TRUE(any_flip);  // sign flips on some...
+  ASSERT_TRUE(any_noflip);  // ...but not all blocks
+
+  UniTensor dense = B.to_dense();
+  EXPECT_TRUE(B.is_diag());
+  EXPECT_FALSE(dense.is_diag());
+  EXPECT_EQ(dense.signflip(), B.signflip());  // sign flags carried over unchanged
+  ASSERT_EQ(dense.Nblocks(), B.Nblocks());
+  for (cytnx_uint64 b = 0; b < B.Nblocks(); b++)
+    EXPECT_TRUE(AreNearlyEqTensor(dense.get_block_(b), linalg::Diag(B.get_block_(b)), 1e-14));
+
+  UniTensor Bp = B.clone();
+  Bp.to_dense_();
+  EXPECT_FALSE(Bp.is_diag());
+  EXPECT_EQ(Bp.signflip(), B.signflip());
+  EXPECT_TRUE(AreEqUniTensor(Bp, dense));
+}
+
+// to_dense on an already non-diagonal BlockFermionicUniTensor is a no-op: the tensor, including its
+// per-block sign flags (made non-trivial here by an initial permutation), is returned unchanged.
+TEST_F(BlockFermionicUniTensorTest, to_dense_non_diag) {
+  UniTensor T = BFUT5.permute({2, 0, 3, 1});  // sign flips on some blocks
+  bool any_flip = false;
+  for (bool s : T.signflip()) any_flip = any_flip || s;
+  ASSERT_TRUE(any_flip);
+  EXPECT_FALSE(T.is_diag());
+
+  UniTensor dense = T.to_dense();
+  EXPECT_TRUE(AreEqUniTensor(T, dense));
+  EXPECT_EQ(dense.signflip(), T.signflip());
+
+  UniTensor Tp = T.clone();
+  Tp.to_dense_();
+  EXPECT_TRUE(AreEqUniTensor(T, Tp));
+  EXPECT_EQ(Tp.signflip(), T.signflip());
+}
