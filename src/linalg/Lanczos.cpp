@@ -76,6 +76,7 @@ namespace cytnx {
 
     template <typename T, typename T_ten>
     static void pass_data_UT(T_ten &UT, T *data_ptr, bool to_UT) {
+      auto device = UT.device();
       if constexpr (std::is_same_v<T_ten, UniTensor>) {
         if (UT.uten_type() == UTenType.Block || UT.uten_type() == UTenType.BlockFermionic) {
           auto &blocks = UT.get_blocks_();
@@ -83,9 +84,23 @@ namespace cytnx {
             auto dim = get_dim(block);
             T *UT_data = get_obj_data_ptr<T, Tensor>(block);
             if (to_UT) {
-              memcpy(UT_data, data_ptr, dim * sizeof(T));
+              if (device == Device.cpu) {
+                memcpy(UT_data, data_ptr, dim * sizeof(T));
+              } else {
+  #ifdef UNI_GPU
+                checkCudaErrors(
+                  cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+              }
             } else {
-              memcpy(data_ptr, UT_data, dim * sizeof(T));
+              if (device == Device.cpu) {
+                memcpy(data_ptr, UT_data, dim * sizeof(T));
+              } else {
+  #ifdef UNI_GPU
+                checkCudaErrors(
+                  cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
+  #endif
+              }
             }
             data_ptr += dim;
           }
@@ -95,9 +110,23 @@ namespace cytnx {
           auto dim = get_dim(block);
           T *UT_data = get_obj_data_ptr<T, Tensor>(block);
           if (to_UT) {
-            memcpy(UT_data, data_ptr, dim * sizeof(T));
+            if (device == Device.cpu) {
+              memcpy(UT_data, data_ptr, dim * sizeof(T));
+            } else {
+  #ifdef UNI_GPU
+              checkCudaErrors(
+                cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+            }
           } else {
-            memcpy(data_ptr, UT_data, dim * sizeof(T));
+            if (device == Device.cpu) {
+              memcpy(data_ptr, UT_data, dim * sizeof(T));
+            } else {
+  #ifdef UNI_GPU
+              checkCudaErrors(
+                cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
+  #endif
+            }
           }
           return;
         }
@@ -105,9 +134,21 @@ namespace cytnx {
         auto dim = get_dim(UT);
         T *UT_data = get_obj_data_ptr<T, Tensor>(UT);
         if (to_UT) {
-          memcpy(UT_data, data_ptr, dim * sizeof(T));
+          if (device == Device.cpu) {
+            memcpy(UT_data, data_ptr, dim * sizeof(T));
+          } else {
+  #ifdef UNI_GPU
+            checkCudaErrors(cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+          }
         } else {
-          memcpy(data_ptr, UT_data, dim * sizeof(T));
+          if (device == Device.cpu) {
+            memcpy(data_ptr, UT_data, dim * sizeof(T));
+          } else {
+  #ifdef UNI_GPU
+            checkCudaErrors(cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
+  #endif
+          }
         }
         return;
       }
@@ -366,7 +407,14 @@ namespace cytnx {
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
             T *tmp_data = tens_data + ik * dim;
             T *z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
-            memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
+            if (Hop->device() == Device.cpu) {
+              memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
+            } else {
+  #ifdef UNI_GPU
+              checkCudaErrors(
+                cudaMemcpy(tmp_data, z_k_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+            }
           }
         }
       }
