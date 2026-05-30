@@ -7,7 +7,7 @@
 #include "cytnx.hpp"
 
 // GPU regression tests for the truncated SVD family (Svd_truncate / Gesvd_truncate /
-// Rsvd_truncate). These mirror the CPU flag-combination tests and exercise the refactored
+// Rsvd). These mirror the CPU flag-combination tests and exercise the refactored
 // cudaMemcpyTruncation: the packed Svd/Gesvd output is [S, U?, vT?] and indexing it positionally
 // used to read out-of-range / the wrong matrix when is_U / is_vT / is_UvT were false.
 using namespace cytnx;
@@ -79,7 +79,7 @@ namespace GpuTruncateTest {
     }
   }
 
-  TEST(Rsvd_truncate, gpu_flag_combinations) {
+  TEST(Rsvd, gpu_flag_combinations) {
     const unsigned int seed = 42;
     const cytnx_uint64 keep = 3;
     // Use oversampling large enough that samplenum >= n_singlu, i.e. the full-SVD path (no random
@@ -93,14 +93,14 @@ namespace GpuTruncateTest {
       InitTensorUniform(T, /*seed=*/3);
 
       std::vector<Tensor> ref =
-        linalg::Rsvd_truncate(T, keep, 0., true, true, 0, 1, summand, factor, power_it, seed);
+        linalg::Rsvd(T, keep, 0., true, true, 0, 1, summand, factor, power_it, seed);
       ASSERT_EQ(ref.size(), 3u);
       const cytnx_uint64 k = ref[0].shape()[0];
 
       for (bool is_U : {false, true}) {
         for (bool is_vT : {false, true}) {
           std::vector<Tensor> out =
-            linalg::Rsvd_truncate(T, keep, 0., is_U, is_vT, 0, 1, summand, factor, power_it, seed);
+            linalg::Rsvd(T, keep, 0., is_U, is_vT, 0, 1, summand, factor, power_it, seed);
           const cytnx_uint64 expected = 1u + (is_U ? 1u : 0u) + (is_vT ? 1u : 0u);
           ASSERT_EQ(out.size(), expected) << "is_U=" << is_U << " is_vT=" << is_vT;
           EXPECT_TRUE(SingularValsClose(out[0], ref[0], 1e-8))

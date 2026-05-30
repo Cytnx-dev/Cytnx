@@ -13,8 +13,8 @@
 #include "Type.hpp"
 #include "UniTensor.hpp"
 
-// This file contains some function we may usually use in the unit test
-// such as the data initialization and comparison.
+// This file contains some functions that we usually use in unit tests, such as data initialization
+// and comparison.
 namespace cytnx {
   namespace TestTools {
 
@@ -187,7 +187,7 @@ namespace cytnx {
      * @brief Validate the packed output of a truncated SVD against a full-SVD reference.
      *
      * @details Checks the packed `[S, U?, vT?, terr?]` vector produced by Svd_truncate /
-     * Gesvd_truncate / Rsvd_truncate:
+     * Gesvd_truncate / Rsvd:
      *   - the packed length equals `1 + is_U + is_vT + (return_err ? 1 : 0)`,
      *   - `out[0]` holds the top-`keep` entries of `full_sv` (within `rtol*(1+|exp|)`),
      *   - the trailing terr (if `return_err != 0`) holds the discarded singular values:

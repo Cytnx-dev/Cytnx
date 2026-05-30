@@ -7,3 +7,9 @@ source/__pycache__/*
 tests/__pycache__/*
 tests/build/*
 *.swp
+
+# Sphinx / Doxygen build outputs
+build/
+html/
+xml/
+api_docs/versions/

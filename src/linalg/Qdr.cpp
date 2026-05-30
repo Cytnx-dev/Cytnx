@@ -17,8 +17,6 @@ namespace cytnx {
     std::vector<Tensor> Qdr(const Tensor &Tin, const bool &is_tau) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Qdr] error, Qdr can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[Qdr] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_uint64 n_tau = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
 
@@ -84,11 +82,23 @@ namespace cytnx {
   namespace linalg {
     std::vector<UniTensor> Qdr(const UniTensor &Tin, const bool &is_tau) {
       if (Tin.is_blockform()) {
-        cytnx_error_msg(true, "[Qdr for sparse UniTensor is developling%s]", "\n");
+        cytnx_error_msg(true, "[ERROR][Qdr] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       } else {
         // using rowrank to split the bond to form a matrix.
-        cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                        "[Qdr][ERROR] Qdr for DenseUniTensor should have rank>1 and rowrank>0%s",
+        cytnx_error_msg(Tin.rank() <= 1,
+                        "[ERROR][Qdr] Input UniTensor should have rank>1, but rank is %d\n",
+                        Tin.rank());
+        cytnx_error_msg(Tin.rowrank() < 1,
+                        "[ERROR][Qdr] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                        Tin.rowrank());
+        cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                        "[ERROR][Qdr] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                        "and rank is %d\n",
+                        Tin.rowrank(), Tin.rank());
+        cytnx_error_msg(Tin.is_diag(),
+                        "[ERROR][Qdr] Input UniTensor is diagonal, so Qdr is trivial and not "
+                        "supported. Use other manipulation.%s",
                         "\n");
 
         Tensor tmp;

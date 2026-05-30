@@ -1122,7 +1122,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
@@ -1492,6 +1492,9 @@ namespace cytnx {
       return nullptr;
     }
 
+    boost::intrusive_ptr<UniTensor_base> to_dense();
+    void to_dense_();
+
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       BlockUniTensor *tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
@@ -1854,7 +1857,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
@@ -2264,6 +2267,9 @@ namespace cytnx {
       cytnx_error_msg(true, "[ERROR] Cannot reshape a UniTensor with symmetry.%s", "\n");
       return nullptr;
     }
+
+    boost::intrusive_ptr<UniTensor_base> to_dense();
+    void to_dense_();
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
@@ -4588,16 +4594,15 @@ namespace cytnx {
     }
 
     /**
-    @brief Convert the UniTensor to non-diagonal form.
-        @details to_dense() convert the UniTensor from diagonal form to non-diagonal structure.
-            That means input the UniTensor with \p is_diag = true to \p is_diag = false.
-        @pre
-            1. The UniTensor need to be Dense UniTensor, that means this function is only
-                    support for UTenType.Dense.
-            2. The UniTensor need to be diagonal form (that means is_diag is true.)
-        @return UniTensor
-        @see to_dense_(), is_diag()
-        */
+     * @brief Convert the UniTensor to non-diagonal form.
+     * @details Converts a UniTensor with \p is_diag = true to one with \p is_diag = false by
+     * expanding each block into a (diagonal) matrix.
+     * @note If the input tensor is already non-diagonal (\p is_diag = false), the input is
+     * returned. So every manipulation on the returned tensor will change the input tensor. Call \p
+     * clone() on the result if an independent copy is required.
+     * @return UniTensor
+     * @see to_dense_(), is_diag()
+     */
     UniTensor to_dense() {
       UniTensor out;
       out._impl = this->_impl->to_dense();
@@ -4605,9 +4610,9 @@ namespace cytnx {
     }
 
     /**
-    @brief Convert the UniTensor to non-diagonal form, inplacely.
-        @see to_dense(), is_diag()
-        */
+     * @brief Convert the UniTensor to non-diagonal form, inplacely.
+     * @see to_dense(), is_diag()
+     */
     UniTensor &to_dense_() {
       this->_impl->to_dense_();
       return *this;
@@ -5349,6 +5354,7 @@ namespace cytnx {
     @return UniTensor
     @note This function inverts the order of all indices.
     @note Compared to Dagger_(), this function will create a new UniTensor object.
+    @note For fermionic UniTensors, the index order is reversed without sign flips.
     @see Dagger_(), Transpose()
     */
     UniTensor Dagger() const {
@@ -5362,6 +5368,7 @@ namespace cytnx {
     @return UniTensor&
     @note This function inverts the order of all indices.
     @note Compared to Dagger(), this is an inplace function.
+    @note For fermionic UniTensors, the index order is reversed without sign flips.
     @see Dagger()
     */
     UniTensor &Dagger_() {
@@ -5705,16 +5712,17 @@ namespace cytnx {
     }
 
     /**
-    @brief Generate a one-bond UniTensor with all elements are arange from 0 to Nelem-1.
-    @details Generate a UniTensor with all elements are arange from 0 to Nelem-1 with double data
-    type on cpu device. The step is 1.
-    @param[in] Nelem the number of elements.
-    @param[in] in_labels the labels of the UniTensor.
+    @brief Create a rank-1 UniTensor with incremental unsigned integer elements in the range
+    [0,Nelem).
+    @details The elements are 0, 1, 2, ..., \p Nelem - 1.
+    @param[in] Nelem number of incremental elements.
+    @param[in] in_labels the label of the UniTensor.
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
     @see arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const
-    unsigned int &dtype, const int &device) \n
+    std::vector<std::string> &in_labels, const unsigned int &dtype, const int &device, const
+    std::string &name) \n
     @see arange(const cytnx_int64 &Nelem)
     */
     static UniTensor arange(const cytnx_int64 &Nelem,
@@ -5724,13 +5732,14 @@ namespace cytnx {
     }
 
     /**
-    @brief Generate a UniTensor with all elements are arange from \p start to \p end.
-    @details Generate a UniTensor with all elements are arange from \p start to \p end , the step is
-    \p step .
-    @param[in] start the start of the arange.
-    @param[in] end the end of the arange.
-    @param[in] step the step of the arange.
-    @param[in] in_labels the labels of the UniTensor.
+    @brief Create a rank-1 UniTensor with incremental elements in the range [\p start,\p end) with
+    given step-size \p step between elements.
+    @details The elements are \p start, \p start + \p step, \p start + 2 * \p step, ... The last
+    element is the largest one that is smaller than \p end.
+    @param[in] start start value of the range.
+    @param[in] end end value of the range (exclusive).
+    @param[in] step step-size between subsequent elements in the range.
+    @param[in] in_labels the label of the UniTensor.
     @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
     @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
     @param[in] name the name of the UniTensor.

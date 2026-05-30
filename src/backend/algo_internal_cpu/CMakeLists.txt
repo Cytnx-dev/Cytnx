@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
     Sort_internal.hpp
     Concate_internal.hpp
