@@ -156,9 +156,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a49a33a99468fba6213383b2f83ee7716" id="r_a49a33a99468fba6213383b2f83ee7716"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a49a33a99468fba6213383b2f83ee7716">Svd</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, const bool &amp;is_UvT=true)</td></tr>
 <tr class="memdesc:a49a33a99468fba6213383b2f83ee7716"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform Singular-Value decomposition on a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> using divide-and-conquer method.  <br /></td></tr>
 <tr class="separator:a49a33a99468fba6213383b2f83ee7716"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5e390efaabd99c21c838051411a7945" id="r_ad5e390efaabd99c21c838051411a7945"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ad5e390efaabd99c21c838051411a7945">Rsvd</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, bool is_U=true, bool is_vT=true, cytnx_uint64 power_iteration=2, unsigned int seed=<a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>())</td></tr>
-<tr class="memdesc:ad5e390efaabd99c21c838051411a7945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform randomized Singular-Value decomposition on a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> using the ?gesvd method.  <br /></td></tr>
-<tr class="separator:ad5e390efaabd99c21c838051411a7945"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a829b1cbf704ff5560e32473e71dd6ed1" id="r_a829b1cbf704ff5560e32473e71dd6ed1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a829b1cbf704ff5560e32473e71dd6ed1">Gesvd</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, const bool &amp;is_U=true, const bool &amp;is_vT=true)</td></tr>
 <tr class="memdesc:a829b1cbf704ff5560e32473e71dd6ed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform Singular-Value decomposition on a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> using ?gesvd method.  <br /></td></tr>
 <tr class="separator:a829b1cbf704ff5560e32473e71dd6ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,9 +171,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a7c7b2d5d502d72015cb2c0ffd4066a9b" id="r_a7c7b2d5d502d72015cb2c0ffd4066a9b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a7c7b2d5d502d72015cb2c0ffd4066a9b">Gesvd_truncate</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, const cytnx_uint64 &amp;keepdim, std::vector&lt; cytnx_uint64 &gt; min_blockdim, const double &amp;err=0., const bool &amp;is_U=true, const bool &amp;is_vT=true, const unsigned int &amp;return_err=0, const cytnx_uint64 &amp;mindim=1)</td></tr>
 <tr class="memdesc:a7c7b2d5d502d72015cb2c0ffd4066a9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform Singular-Value decomposition on a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> with truncation and keep at most <code>min_blockdim</code> singular values in each block.  <br /></td></tr>
 <tr class="separator:a7c7b2d5d502d72015cb2c0ffd4066a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5dd489efc826ef1968a5debe2048b4b" id="r_ad5dd489efc826ef1968a5debe2048b4b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ad5dd489efc826ef1968a5debe2048b4b">Rsvd_truncate</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, double err=0., bool is_U=true, bool is_vT=true, unsigned int return_err=0, cytnx_uint64 mindim=1, cytnx_uint64 oversampling_summand=10, double oversampling_factor=1., cytnx_uint64 power_iteration=0, unsigned int seed=<a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>())</td></tr>
-<tr class="memdesc:ad5dd489efc826ef1968a5debe2048b4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>.  <br /></td></tr>
-<tr class="separator:ad5dd489efc826ef1968a5debe2048b4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5d2679fdacea982722a55ff13ff30d3" id="r_ae5d2679fdacea982722a55ff13ff30d3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ae5d2679fdacea982722a55ff13ff30d3">Rsvd</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, double err=0., bool is_U=true, bool is_vT=true, unsigned int return_err=0, cytnx_uint64 mindim=1, cytnx_uint64 oversampling_summand=10, double oversampling_factor=1., cytnx_uint64 power_iteration=0, unsigned int seed=<a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>())</td></tr>
+<tr class="memdesc:ae5d2679fdacea982722a55ff13ff30d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a randomized truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>.  <br /></td></tr>
+<tr class="separator:ae5d2679fdacea982722a55ff13ff30d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adce6937bc07ded106c13520a0d37aae9" id="r_adce6937bc07ded106c13520a0d37aae9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#adce6937bc07ded106c13520a0d37aae9">Rsvd</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, const std::vector&lt; cytnx_uint64 &gt; min_blockdim, double err=0., bool is_U=true, bool is_vT=true, unsigned int return_err=0, cytnx_uint64 mindim=1, cytnx_uint64 oversampling_summand=10, double oversampling_factor=1., cytnx_uint64 power_iteration=0, unsigned int seed=<a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>())</td></tr>
+<tr class="memdesc:adce6937bc07ded106c13520a0d37aae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> and keep at most <code>min_blockdim</code> singular values in each block.  <br /></td></tr>
+<tr class="separator:adce6937bc07ded106c13520a0d37aae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1a08b9294b199a6d56f5f5aa2fa58cc" id="r_aa1a08b9294b199a6d56f5f5aa2fa58cc"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aa1a08b9294b199a6d56f5f5aa2fa58cc">Hosvd</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, const std::vector&lt; cytnx_uint64 &gt; &amp;mode, const bool &amp;is_core=true, const bool &amp;is_Ls=false, const std::vector&lt; cytnx_int64 &gt; &amp;trucate_dim=std::vector&lt; cytnx_int64 &gt;())</td></tr>
 <tr class="separator:aa1a08b9294b199a6d56f5f5aa2fa58cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae394378db613a244ad518504047669c0" id="r_ae394378db613a244ad518504047669c0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
@@ -319,15 +319,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a8ae32a5c874c9f5c1cf8cbbd59ef50bb" id="r_a8ae32a5c874c9f5c1cf8cbbd59ef50bb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a8ae32a5c874c9f5c1cf8cbbd59ef50bb">Gesvd</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_U=true, const bool &amp;is_vT=true)</td></tr>
 <tr class="memdesc:a8ae32a5c874c9f5c1cf8cbbd59ef50bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform Singular-Value decomposition on a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (a <em>matrix</em>).  <br /></td></tr>
 <tr class="separator:a8ae32a5c874c9f5c1cf8cbbd59ef50bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9be0af92040e5d49aea07056ca7293e8" id="r_a9be0af92040e5d49aea07056ca7293e8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a9be0af92040e5d49aea07056ca7293e8">Rsvd</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, cytnx_uint64 keepdim, bool is_U=true, bool is_vT=true, cytnx_uint64 power_iteration=2, unsigned int seed=<a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>())</td></tr>
-<tr class="memdesc:a9be0af92040e5d49aea07056ca7293e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform randomized Singular-Value decomposition on a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (a <em>matrix</em>) using the ?gesvd method.  <br /></td></tr>
-<tr class="separator:a9be0af92040e5d49aea07056ca7293e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0525c8197d0d441586467676bf814e90" id="r_a0525c8197d0d441586467676bf814e90"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a0525c8197d0d441586467676bf814e90">Svd_truncate</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const cytnx_uint64 &amp;keepdim, const double &amp;err=0., const bool &amp;is_UvT=true, const unsigned int &amp;return_err=0, const cytnx_uint64 &amp;mindim=1)</td></tr>
 <tr class="memdesc:a0525c8197d0d441586467676bf814e90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a truncated Singular-Value decomposition of a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (a <em>matrix</em>).  <br /></td></tr>
 <tr class="separator:a0525c8197d0d441586467676bf814e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0caa6be04164fb9c067e2e10dc6a728" id="r_ae0caa6be04164fb9c067e2e10dc6a728"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ae0caa6be04164fb9c067e2e10dc6a728">Rsvd_truncate</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, cytnx_uint64 keepdim, double err=0., bool is_U=true, bool is_vT=true, unsigned int return_err=0, cytnx_uint64 mindim=1, cytnx_uint64 oversampling_summand=10, double oversampling_factor=1., cytnx_uint64 power_iteration=0, unsigned int seed=<a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>())</td></tr>
-<tr class="memdesc:ae0caa6be04164fb9c067e2e10dc6a728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a truncated Singular-Value decomposition of a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (a <em>matrix</em>).  <br /></td></tr>
-<tr class="separator:ae0caa6be04164fb9c067e2e10dc6a728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f892de4a9319faf9e7822f8a072f77f" id="r_a6f892de4a9319faf9e7822f8a072f77f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a6f892de4a9319faf9e7822f8a072f77f">Rsvd</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, cytnx_uint64 keepdim, double err=0., bool is_U=true, bool is_vT=true, unsigned int return_err=0, cytnx_uint64 mindim=1, cytnx_uint64 oversampling_summand=10, double oversampling_factor=1., cytnx_uint64 power_iteration=0, unsigned int seed=<a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>())</td></tr>
+<tr class="memdesc:a6f892de4a9319faf9e7822f8a072f77f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a truncated Singular-Value decomposition of a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (a <em>matrix</em>).  <br /></td></tr>
+<tr class="separator:a6f892de4a9319faf9e7822f8a072f77f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a002709e89db060b9004412a6f0510600" id="r_a002709e89db060b9004412a6f0510600"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a002709e89db060b9004412a6f0510600">Gesvd_truncate</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const cytnx_uint64 &amp;keepdim, const double &amp;err=0., const bool &amp;is_U=true, const bool &amp;is_vT=true, const unsigned int &amp;return_err=0, const cytnx_uint64 &amp;mindim=1)</td></tr>
 <tr class="memdesc:a002709e89db060b9004412a6f0510600"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform a truncated Singular-Value decomposition of a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (a <em>matrix</em>) by a randomized SVD.  <br /></td></tr>
 <tr class="separator:a002709e89db060b9004412a6f0510600"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -5619,8 +5616,8 @@ M = Q R,
 
 </div>
 </div>
-<a id="ad5e390efaabd99c21c838051411a7945" name="ad5e390efaabd99c21c838051411a7945"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5e390efaabd99c21c838051411a7945">&#9670;&#160;</a></span>Rsvd() <span class="overload">[1/2]</span></h2>
+<a id="adce6937bc07ded106c13520a0d37aae9" name="adce6937bc07ded106c13520a0d37aae9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adce6937bc07ded106c13520a0d37aae9">&#9670;&#160;</a></span>Rsvd() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5640,71 +5637,14 @@ M = Q R,
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_U</em> = <code>true</code>, </td>
+          <td class="paramtype">const std::vector&lt; cytnx_uint64 &gt;&#160;</td>
+          <td class="paramname"><em>min_blockdim</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_vT</em> = <code>true</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cytnx_uint64&#160;</td>
-          <td class="paramname"><em>power_iteration</em> = <code>2</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>seed</em> = <code><a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device</a>()</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Perform randomized Singular-Value decomposition on a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> using the ?gesvd method. </p>
-<p>A randomized SVD of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> Tin; uses randomized isometries. The result will depend on the rowrank of the <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <code>Tin</code>. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>, with the correct rowrank set to interpret it as a matrix </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number of singular values to keep. Note that this is the size of the subspace, and the smallest singular values are less reliable. Use truncation with oversampling. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">is_U</td><td>if <em>true</em>, the left-unitary <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> U (isometry) is returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">is_vT</td><td>if <em>true</em>, the right-unitary <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> vT (isometry) is returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">power_iteration</td><td>number of iterations for the power method: Y = (A * Adag)^power_iteration * A * Tin </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#aa154d2fd120245a51bba64e68f21198b" title="Generate an isometrized left isometry for a rank-2 Tensor (a matrix), such that Q * Qdag * Tin approx...">Rand_isometry(const Tensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const cytnx_uint64
-&amp;power_iteration, const unsigned int &amp;seed)</a> </dd>
-<dd>
-<a class="el" href="namespacecytnx_1_1linalg.html#a829b1cbf704ff5560e32473e71dd6ed1" title="Perform Singular-Value decomposition on a UniTensor using ?gesvd method.">Gesvd(const UniTensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</a> </dd></dl>
-
-</div>
-</div>
-<a id="a9be0af92040e5d49aea07056ca7293e8" name="a9be0af92040e5d49aea07056ca7293e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9be0af92040e5d49aea07056ca7293e8">&#9670;&#160;</a></span>Rsvd() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; cytnx::linalg::Rsvd </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>Tin</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cytnx_uint64&#160;</td>
-          <td class="paramname"><em>keepdim</em>, </td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>err</em> = <code>0.</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -5721,8 +5661,32 @@ M = Q R,
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>return_err</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">cytnx_uint64&#160;</td>
-          <td class="paramname"><em>power_iteration</em> = <code>2</code>, </td>
+          <td class="paramname"><em>mindim</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cytnx_uint64&#160;</td>
+          <td class="paramname"><em>oversampling_summand</em> = <code>10</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>oversampling_factor</em> = <code>1.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cytnx_uint64&#160;</td>
+          <td class="paramname"><em>power_iteration</em> = <code>0</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -5738,35 +5702,31 @@ M = Q R,
       </table>
 </div><div class="memdoc">
 
-<p>Perform randomized Singular-Value decomposition on a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (a <em>matrix</em>) using the ?gesvd method. </p>
-<p>A randomized SVD of a matrix Tin; uses randomized isometries. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Perform a truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> and keep at most <code>min_blockdim</code> singular values in each block. </p>
+<p>For each block, the minimum dimension can be chosen for the truncation. This can be helpful to avoid loosing symmetry sectors in the truncated SVD. For more details, please refer to the documentation of the function <a class="el" href="namespacecytnx_1_1linalg.html#ae5d2679fdacea982722a55ff13ff30d3">Rsvd</a>(const <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, double err = 0., bool is_U = true, bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1, cytnx_uint64 oversampling_summand = 10, double oversampling_factor = 1., cytnx_uint64 power_iteration = 0, unsigned int seed = <a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device()</a>).</p>
+<p>The truncation order is as following (later constraints might be violated by previous ones):<br  />
+ 1) Keep the largest <code>min_blockdim</code> singular values in each block; reduce <code>keepdim</code> and <code>mindim</code> by the number of already kept singular values<br  />
+ 2) Keep at most <code>keepdim</code> singular values; there might be an exception in case of exact degeneracies where more singular values are kept<br  />
+ 3) Keep at least <code>mindim</code> singular values;<br  />
+ 4) Drop all singular values smaller than <code>err</code> (no normalization applied to the singular values)</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number of singular values to keep. Note that this is the size of the subspace, and the smallest singular values are less reliable. Use truncation with oversampling. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">is_U</td><td>if <em>true</em>, the left-unitary <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> U (isometry) is returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">is_vT</td><td>if <em>true</em>, the right-unitary <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> vT (isometry) is returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">power_iteration</td><td>number of iterations for the power method: Y = (A * Adag)^power_iteration * A * Tin </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">min_blockdim</td><td>a vector containing the minimum dimension of each block; alternatively, a vector with only one element can be given to have the same min_blockdim for each block </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd>Rsvd(const cytnx::UniTensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const bool &amp;is_U, const bool
-&amp;is_vT, const cytnx_uint64 &amp;power_iteration, const unsigned int &amp;seed); </dd>
-<dd>
-<a class="el" href="namespacecytnx_1_1linalg.html#aa154d2fd120245a51bba64e68f21198b" title="Generate an isometrized left isometry for a rank-2 Tensor (a matrix), such that Q * Qdag * Tin approx...">Rand_isometry(const Tensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const cytnx_uint64
-&amp;power_iteration, const unsigned int &amp;seed)</a> </dd>
-<dd>
-<a class="el" href="namespacecytnx_1_1linalg.html#a829b1cbf704ff5560e32473e71dd6ed1" title="Perform Singular-Value decomposition on a UniTensor using ?gesvd method.">Gesvd(const UniTensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#ae5d2679fdacea982722a55ff13ff30d3" title="Perform a randomized truncated Singular-Value decomposition of a UniTensor.">Rsvd</a>(const <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, double err = 0., bool is_U = true, bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1, cytnx_uint64 oversampling_summand = 10, double oversampling_factor = 1., cytnx_uint64 power_iteration = 0, unsigned int seed = <a class="el" href="namespacecytnx_1_1random.html#a4e3c78845de8c243cc0c31bb469f53cb">random::__static_random_device()</a>) </dd></dl>
 
 </div>
 </div>
-<a id="ad5dd489efc826ef1968a5debe2048b4b" name="ad5dd489efc826ef1968a5debe2048b4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5dd489efc826ef1968a5debe2048b4b">&#9670;&#160;</a></span>Rsvd_truncate() <span class="overload">[1/2]</span></h2>
+<a id="ae5d2679fdacea982722a55ff13ff30d3" name="ae5d2679fdacea982722a55ff13ff30d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5d2679fdacea982722a55ff13ff30d3">&#9670;&#160;</a></span>Rsvd() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt; cytnx::linalg::Rsvd_truncate </td>
+          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &gt; cytnx::linalg::Rsvd </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;&#160;</td>
           <td class="paramname"><em>Tin</em>, </td>
@@ -5839,8 +5799,8 @@ M = Q R,
       </table>
 </div><div class="memdoc">
 
-<p>Perform a truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>. </p>
-<p>This function will perform a truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>. It uses the ?gesvd method for the SVD. It will perform the randomized SVD first, and then truncate the singular values to the given cutoff <code>err</code>. That means, given a UniYrndot <code>Tin</code> as \( M \), then the result will be: </p><p class="formulaDsp">
+<p>Perform a randomized truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>. </p>
+<p>This function will perform a randomized truncated Singular-Value decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>. It uses the ?gesvd method for the SVD. It will perform the randomized SVD first, and then truncate the singular values to the given cutoff <code>err</code>. That means, given a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <code>Tin</code> as \( M \), then the result will be: </p><p class="formulaDsp">
 \[ M = U S V^\dagger, \]
 </p>
 <p> where \( S
@@ -5855,9 +5815,10 @@ M = Q R,
     <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number (at most) of singular values to keep. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary matrices (isometries) are returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is a <em>positive</em> int, then the full list of truncated singular values will be returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_summand</td><td>the randomized SVD computes (1 + oversampling_fact) * keepdim + oversampling_summand before further truncating to keepdim </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_fact</td><td>the randomized SVD computes (1 + oversampling_fact) * keepdim + oversampling_summand before further truncating to keepdim </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is &gt; 1, then the full list of truncated singular values will be returned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mindim</td><td>at least this amount of singular values are kept in each block. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_summand</td><td>the randomized SVD computes [(1 + oversampling_factor) * keepdim*d/D + oversampling_summand] singular values in each block before further truncating, where d is the block dimension and D the full tensor dimension (each being the minimum of row and column dimension of the block or tensor respectively). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_factor</td><td>see oversampling_summand </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">power_iteration</td><td>number of iterations for the power method: Y = (A * Adag)^power_iteration * A * Tin </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. </td></tr>
   </table>
@@ -5870,25 +5831,20 @@ M = Q R,
 <li>If <code>return_err</code> is true, then the error will be pushed back to the vector. </li>
 </ol>
 </dd></dl>
-<dl class="section pre"><dt>Precondition</dt><dd>The input tensor should be a rank-2 tensor (matrix). </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>Rsvd(const Tensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const bool &amp;is_U, const bool &amp;is_vT,
-const cytnx_uint64 &amp;power_iteration, const unsigned int &amp;seed); </dd>
-<dd>
-<a class="el" href="namespacecytnx_1_1linalg.html#a680fe65e25efe7650aa5f2c8bfa06e83" title="Perform Singular-Value decomposition on a UniTensor with truncation.">Gesvd_truncate(const cytnx::UniTensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const double &amp;err,
-const bool &amp;is_U, const bool &amp;is_vT, const unsigned int &amp;return_err, const cytnx_uint64
-&amp;mindim)</a>; </dd></dl>
+<dl class="section pre"><dt>Precondition</dt><dd>The rowrank and permutation must be set accordingly for a matrix interpretation of the <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#a680fe65e25efe7650aa5f2c8bfa06e83" title="Perform Singular-Value decomposition on a UniTensor with truncation.">Gesvd_truncate()</a>; </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Uses a full Gesvd if keepdim is as large as the rank of the tensor </dd></dl>
 
 </div>
 </div>
-<a id="ae0caa6be04164fb9c067e2e10dc6a728" name="ae0caa6be04164fb9c067e2e10dc6a728"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0caa6be04164fb9c067e2e10dc6a728">&#9670;&#160;</a></span>Rsvd_truncate() <span class="overload">[2/2]</span></h2>
+<a id="a6f892de4a9319faf9e7822f8a072f77f" name="a6f892de4a9319faf9e7822f8a072f77f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f892de4a9319faf9e7822f8a072f77f">&#9670;&#160;</a></span>Rsvd() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; cytnx::linalg::Rsvd_truncate </td>
+          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; cytnx::linalg::Rsvd </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
           <td class="paramname"><em>Tin</em>, </td>
@@ -5977,8 +5933,9 @@ const bool &amp;is_U, const bool &amp;is_vT, const unsigned int &amp;return_err,
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary matrices (isometries) are returned. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is a <em>positive</em> int, then the full list of truncated singular values will be returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_summand</td><td>the randomized SVD computes (1 + oversampling_fact) * keepdim + oversampling_summand before further truncating to keepdim </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_fact</td><td>the randomized SVD computes (1 + oversampling_fact) * keepdim + oversampling_summand before further truncating to keepdim </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mindim</td><td>at least this amount of singular values are kept in each block. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_summand</td><td>the randomized SVD computes [(1 + oversampling_factor) * keepdim*d/D + oversampling_summand] singular values in each block before further truncating, where d is the block dimension and D the full tensor dimension (each being the minimum of row and column dimension of the block or tensor respectively). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_factor</td><td>see oversampling_summand </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">power_iteration</td><td>number of iterations for the power method: Y = (A * Adag)^power_iteration * A * Tin </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">seed</td><td>the seed for the random generator. [Default] Using device entropy. </td></tr>
   </table>
@@ -5992,11 +5949,7 @@ const bool &amp;is_U, const bool &amp;is_vT, const unsigned int &amp;return_err,
 </ol>
 </dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd>The input tensor should be a rank-2 tensor (matrix). </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>Rsvd(const Tensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const bool &amp;is_U, const bool &amp;is_vT,
-const cytnx_uint64 &amp;power_iteration, const unsigned int &amp;seed) </dd>
-<dd>
-<a class="el" href="namespacecytnx_1_1linalg.html#a002709e89db060b9004412a6f0510600" title="Perform a truncated Singular-Value decomposition of a rank-2 Tensor (a matrix) by a randomized SVD.">Gesvd_truncate(const Tensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const double &amp;err, const
-bool &amp;is_U, const bool &amp;is_vT, const unsigned int &amp;return_err, const cytnx_uint64 &amp;mindim)</a>; </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#a680fe65e25efe7650aa5f2c8bfa06e83" title="Perform Singular-Value decomposition on a UniTensor with truncation.">Gesvd_truncate()</a>; </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Uses a full Gesvd if keepdim is as large as the rank of the tensor </dd></dl>
 
 </div>
@@ -6606,7 +6559,7 @@ M = U S V^\dagger,
     <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number (at most) of singular values to keep. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary matrices (isometries) are returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is a <em>positive</em> int, then the full list of truncated singular values will be returned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> &gt; 1, then the full list of truncated singular values will be returned. </td></tr>
   </table>
   </dd>
 </dl>

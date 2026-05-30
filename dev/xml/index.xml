@@ -546,13 +546,13 @@
     <member refid="namespacecytnx_1_1linalg_1a024c4293a5b5edfb432b9c15e4199264" kind="function"><name>Mod</name></member>
     <member refid="namespacecytnx_1_1linalg_1a0a1378cb7fdd0bdd7445ee98805c85b7" kind="function"><name>Mod</name></member>
     <member refid="namespacecytnx_1_1linalg_1a49a33a99468fba6213383b2f83ee7716" kind="function"><name>Svd</name></member>
-    <member refid="namespacecytnx_1_1linalg_1ad5e390efaabd99c21c838051411a7945" kind="function"><name>Rsvd</name></member>
     <member refid="namespacecytnx_1_1linalg_1a829b1cbf704ff5560e32473e71dd6ed1" kind="function"><name>Gesvd</name></member>
     <member refid="namespacecytnx_1_1linalg_1aab83b0d368d074fe93ae9ae55dd37766" kind="function"><name>Svd_truncate</name></member>
     <member refid="namespacecytnx_1_1linalg_1ae2ca9351e25411abfe9ffb6d18aeb6cf" kind="function"><name>Svd_truncate</name></member>
     <member refid="namespacecytnx_1_1linalg_1a680fe65e25efe7650aa5f2c8bfa06e83" kind="function"><name>Gesvd_truncate</name></member>
     <member refid="namespacecytnx_1_1linalg_1a7c7b2d5d502d72015cb2c0ffd4066a9b" kind="function"><name>Gesvd_truncate</name></member>
-    <member refid="namespacecytnx_1_1linalg_1ad5dd489efc826ef1968a5debe2048b4b" kind="function"><name>Rsvd_truncate</name></member>
+    <member refid="namespacecytnx_1_1linalg_1ae5d2679fdacea982722a55ff13ff30d3" kind="function"><name>Rsvd</name></member>
+    <member refid="namespacecytnx_1_1linalg_1adce6937bc07ded106c13520a0d37aae9" kind="function"><name>Rsvd</name></member>
     <member refid="namespacecytnx_1_1linalg_1aa1a08b9294b199a6d56f5f5aa2fa58cc" kind="function"><name>Hosvd</name></member>
     <member refid="namespacecytnx_1_1linalg_1ae394378db613a244ad518504047669c0" kind="function"><name>ExpH</name></member>
     <member refid="namespacecytnx_1_1linalg_1ad5c478aa9da366c15ec7a2351dc99d93" kind="function"><name>ExpM</name></member>
@@ -596,9 +596,8 @@
     <member refid="namespacecytnx_1_1linalg_1aa154d2fd120245a51bba64e68f21198b" kind="function"><name>Rand_isometry</name></member>
     <member refid="namespacecytnx_1_1linalg_1a330151ef7e84a8169d6871cc08fa14d4" kind="function"><name>Svd</name></member>
     <member refid="namespacecytnx_1_1linalg_1a8ae32a5c874c9f5c1cf8cbbd59ef50bb" kind="function"><name>Gesvd</name></member>
-    <member refid="namespacecytnx_1_1linalg_1a9be0af92040e5d49aea07056ca7293e8" kind="function"><name>Rsvd</name></member>
     <member refid="namespacecytnx_1_1linalg_1a0525c8197d0d441586467676bf814e90" kind="function"><name>Svd_truncate</name></member>
-    <member refid="namespacecytnx_1_1linalg_1ae0caa6be04164fb9c067e2e10dc6a728" kind="function"><name>Rsvd_truncate</name></member>
+    <member refid="namespacecytnx_1_1linalg_1a6f892de4a9319faf9e7822f8a072f77f" kind="function"><name>Rsvd</name></member>
     <member refid="namespacecytnx_1_1linalg_1a002709e89db060b9004412a6f0510600" kind="function"><name>Gesvd_truncate</name></member>
     <member refid="namespacecytnx_1_1linalg_1a6c3142f633f9aca2f80bb359b9c58cf5" kind="function"><name>Hosvd</name></member>
     <member refid="namespacecytnx_1_1linalg_1af22616b7e35f13b775f2423d19e9ffe7" kind="function"><name>Qr</name></member>

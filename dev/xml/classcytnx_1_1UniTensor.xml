@@ -6720,7 +6720,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5914" column="15"/>
+        <location file="include/UniTensor.hpp" line="5916" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6a9ad3afce8d654957443d8f105b7cb8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6779,7 +6779,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5929" column="15"/>
+        <location file="include/UniTensor.hpp" line="5931" column="15"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -7416,15 +7416,15 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
           <defval>&quot;&quot;</defval>
         </param>
         <briefdescription>
-<para>Generate a one-bond <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with all elements are arange from 0 to Nelem-1. </para>
+<para>Create a rank-1 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with incremental unsigned integer elements in the range [0,Nelem). </para>
         </briefdescription>
         <detaileddescription>
-<para>Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with all elements are arange from 0 to Nelem-1 with double data type on cpu device. The step is 1. <parameterlist kind="param"><parameteritem>
+<para>The elements are 0, 1, 2, ..., <computeroutput>Nelem</computeroutput> - 1. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Nelem</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the number of elements. </para>
+<para>number of incremental elements. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7432,7 +7432,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
 <parametername direction="in">in_labels</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the labels of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+<para>the label of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7446,8 +7446,9 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
 </parameterlist>
 <simplesect kind="return"><para>[<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>] </para>
 </simplesect>
-<simplesect kind="see"><para><ref refid="namespacecytnx_1add9038b2dc354c3123dc56d5912430e0" kindref="member">arange(const cytnx_double &amp;start, const cytnx_double &amp;end, const cytnx_double &amp;step, const
-unsigned int &amp;dtype, const int &amp;device)</ref> <linebreak/>
+<simplesect kind="see"><para><ref refid="classcytnx_1_1UniTensor_1a64b0230c0d3cb5b2a76362661744810c" kindref="member">arange(const cytnx_double &amp;start, const cytnx_double &amp;end, const cytnx_double &amp;step, const
+std::vector&lt;std::string&gt; &amp;in_labels, const unsigned int &amp;dtype, const int &amp;device, const
+std::string &amp;name)</ref> <linebreak/>
 </para>
 </simplesect>
 <simplesect kind="see"><para><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">arange(const cytnx_int64 &amp;Nelem)</ref> </para>
@@ -7456,7 +7457,7 @@ unsigned int &amp;dtype, const int &amp;device)</ref> <linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5727" column="22" bodyfile="include/UniTensor.hpp" bodystart="5727" bodyend="5731"/>
+        <location file="include/UniTensor.hpp" line="5728" column="22" bodyfile="include/UniTensor.hpp" bodystart="5728" bodyend="5732"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a64b0230c0d3cb5b2a76362661744810c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7498,15 +7499,15 @@ unsigned int &amp;dtype, const int &amp;device)</ref> <linebreak/>
           <defval>&quot;&quot;</defval>
         </param>
         <briefdescription>
-<para>Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with all elements are arange from <computeroutput>start</computeroutput> to <computeroutput>end</computeroutput>. </para>
+<para>Create a rank-1 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with incremental elements in the range [<computeroutput>start</computeroutput>,<computeroutput>end</computeroutput>) with given step-size <computeroutput>step</computeroutput> between elements. </para>
         </briefdescription>
         <detaileddescription>
-<para>Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with all elements are arange from <computeroutput>start</computeroutput> to <computeroutput>end</computeroutput> , the step is <computeroutput>step</computeroutput> . <parameterlist kind="param"><parameteritem>
+<para>The elements are <computeroutput>start</computeroutput>, <computeroutput>start</computeroutput> + <computeroutput>step</computeroutput>, <computeroutput>start</computeroutput> + 2 * <computeroutput>step</computeroutput>, ... The last element is the largest one that is smaller than <computeroutput>end</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">start</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the start of the arange. </para>
+<para>start value of the range. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7514,7 +7515,7 @@ unsigned int &amp;dtype, const int &amp;device)</ref> <linebreak/>
 <parametername direction="in">end</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the end of the arange. </para>
+<para>end value of the range (exclusive). </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7522,7 +7523,7 @@ unsigned int &amp;dtype, const int &amp;device)</ref> <linebreak/>
 <parametername direction="in">step</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the step of the arange. </para>
+<para>step-size between subsequent elements in the range. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7530,7 +7531,7 @@ unsigned int &amp;dtype, const int &amp;device)</ref> <linebreak/>
 <parametername direction="in">in_labels</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the labels of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
+<para>the label of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7567,7 +7568,7 @@ unsigned int &amp;dtype, const int &amp;device)</ref> </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5749" column="22" bodyfile="include/UniTensor.hpp" bodystart="5749" bodyend="5755"/>
+        <location file="include/UniTensor.hpp" line="5751" column="22" bodyfile="include/UniTensor.hpp" bodystart="5751" bodyend="5757"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4a54d47bb9daf00f898ea68aa13a7cf3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7690,7 +7691,7 @@ const bool &amp;endpoint, const unsigned int &amp;dtype, const int &amp;device)<
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5776" column="22" bodyfile="include/UniTensor.hpp" bodystart="5776" bodyend="5783"/>
+        <location file="include/UniTensor.hpp" line="5778" column="22" bodyfile="include/UniTensor.hpp" bodystart="5778" bodyend="5785"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1acd9620ae410650194e3cf2c314209d3e" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7813,7 +7814,7 @@ int &amp;device, const unsigned int &amp;seed, const unsigned int &amp;dtype)</r
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5804" column="22"/>
+        <location file="include/UniTensor.hpp" line="5806" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4c23490cb01b9cc9d387dde9384d0167" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7936,7 +7937,7 @@ int &amp;device, const unsigned int &amp;seed, const unsigned int &amp;dtype)</r
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5828" column="22"/>
+        <location file="include/UniTensor.hpp" line="5830" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1add23fcd2b00660de4685bc222c4a5f76" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -8059,7 +8060,7 @@ int &amp;device, const unsigned int &amp;seed, const unsigned int &amp;dtype)</r
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5852" column="22"/>
+        <location file="include/UniTensor.hpp" line="5854" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ab0098e53bd9646bdbf1da89e73ebb055" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -8253,7 +8254,7 @@ Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</re
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5895" column="22"/>
+        <location file="include/UniTensor.hpp" line="5897" column="22"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -8261,7 +8262,7 @@ Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</re
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/UniTensor.hpp" line="2695" column="3" bodyfile="include/UniTensor.hpp" bodystart="2695" bodyend="5932"/>
+    <location file="include/UniTensor.hpp" line="2695" column="3" bodyfile="include/UniTensor.hpp" bodystart="2695" bodyend="5934"/>
     <listofallmembers>
       <member refid="classcytnx_1_1UniTensor_1af8db9e12557098f0c424dabfb3a45ac3" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>Add</name></member>
       <member refid="classcytnx_1_1UniTensor_1a45ca59d3ef14450292fdb6bd188157fe" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>Add</name></member>
