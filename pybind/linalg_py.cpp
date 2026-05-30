@@ -100,7 +100,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
-    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
+    py::arg("oversampling_summand") = 10, py::arg("oversampling_factor") = 1.,
     py::arg("power_iteration") = 0, py::arg("seed") = -1);
   m_linalg.def(
     "Rsvd",  // for UniTensor, without min_blockdim
@@ -116,7 +116,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
-    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
+    py::arg("oversampling_summand") = 10, py::arg("oversampling_factor") = 1.,
     py::arg("power_iteration") = 0, py::arg("seed") = -1);
   m_linalg.def(
     "Rsvd",  // for UniTensor, with min_blockdim
@@ -133,7 +133,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("min_blockdim"), py::arg("err") = double(0),
     py::arg("is_U") = true, py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0),
-    py::arg("mindim") = 1, py::arg("oversampling_summand") = 20,
+    py::arg("mindim") = 1, py::arg("oversampling_summand") = 10,
     py::arg("oversampling_factor") = 1., py::arg("power_iteration") = 0, py::arg("seed") = -1);
 
   m_linalg.def(
