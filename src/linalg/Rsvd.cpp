@@ -134,7 +134,10 @@ namespace cytnx {
       oversampling.
       @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
       @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
-      @param[in] mindim at least this amount of singular values are kept in each block.
+      @param[in] min_blockdim per-block lower bound on the number of singular values: each block's
+      randomized SVD computes at least \p min_blockdim[b] singular values, and the subsequent
+      truncation also keeps at least \p min_blockdim[b] per block. May be empty for no per-block
+      floor; a single-element vector is broadcast to every block.
       @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
       keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
       where d is the block dimension and D the full tensor dimension (each being the minimum of row
@@ -148,7 +151,7 @@ namespace cytnx {
       @see Rsvd()
       @see Gesvd()
       @note At least one singular value per symmetry sector is always kept.
-      @note More than keepdim singular values might be returned (depending on mindim,
+      @note More than keepdim singular values might be returned (depending on min_blockdim,
       oversampling_summand, oversampling_factor, and symmetry sector sizes).
       @warning No truncation of the singular values is performed, and the smaller ones will be
       inaccurate. Use Rsvd() for a truncated version that drops small singular values.
@@ -158,7 +161,8 @@ namespace cytnx {
       template <typename BUT>
       void Rsvd_notruncate_BlockUT_internal(std::vector<cytnx::UniTensor> &outCyT,
                                             const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
-                                            bool is_U, bool is_vT, cytnx_uint64 mindim,
+                                            bool is_U, bool is_vT,
+                                            const std::vector<cytnx_uint64> &min_blockdim,
                                             cytnx_uint64 oversampling_summand,
                                             double oversampling_factor,
                                             cytnx_uint64 power_iteration, unsigned int seed) {
@@ -234,6 +238,7 @@ namespace cytnx {
         std::vector<Tensor> vT_blocks;
 
         int tr;
+        cytnx_uint64 block_idx = 0;  // tracks the position of the current sector in S/U/vT
         for (auto const &x : mgrp) {
           vec2d<cytnx_uint64> itoi_indicators(x.second.size());
           for (int i = 0; i < x.second.size(); i++) {
@@ -274,8 +279,14 @@ namespace cytnx {
           // Now we can perform linalg!
           aux_qnums.push_back(x.first);
           auto BlockDim = std::min(BTen.shape()[0], BTen.shape()[1]);
+          // per-block sampling floor: ensure each block's randomized SVD computes at least as
+          // many singular values as min_blockdim asks to keep. Empty -> 0; size 1 -> broadcast.
+          const cytnx_uint64 block_floor =
+            min_blockdim.empty()
+              ? 0u
+              : (min_blockdim.size() == 1 ? min_blockdim.front() : min_blockdim[block_idx]);
           cytnx::cytnx_uint64 svalnum =
-            std::max(static_cast<cytnx_int64>(mindim),
+            std::max(static_cast<cytnx_int64>(block_floor),
                      static_cast<cytnx_int64>(
                        std::ceil((1. + oversampling_factor) * keepdim * BlockDim / TenDim) +
                        static_cast<cytnx_int64>(oversampling_summand)));
@@ -341,6 +352,7 @@ namespace cytnx {
 
             tr++;
           }  // is_vT
+          ++block_idx;
         }
 
         // process S:
@@ -682,14 +694,18 @@ namespace cytnx {
         // from Gesvd_truncate, but using Rsvd_notruncate_BlockUT_internal for the SVD
         cytnx_uint64 keep_dim = keepdim;
 
+        // no min_blockdim was passed by the caller -> empty vector, per-block sampling floor is 0
+        const std::vector<cytnx_uint64> empty_min_blockdim;
+        // Set sampling target to max(keepdim, mindim) so the global mindim contract is satisfiable
+        const cytnx_uint64 sample_target = std::max(keepdim, mindim);
         if (Tin.uten_type() == UTenType.Block) {
           Rsvd_notruncate_BlockUT_internal<BlockUniTensor>(
-            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
-            power_iteration, seed);
+            outCyT, Tin, sample_target, is_U, is_vT, empty_min_blockdim, oversampling_summand,
+            oversampling_factor, power_iteration, seed);
         } else {  // BlockFermionic
           Rsvd_notruncate_BlockUT_internal<BlockFermionicUniTensor>(
-            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
-            power_iteration, seed);
+            outCyT, Tin, sample_target, is_U, is_vT, empty_min_blockdim, oversampling_summand,
+            oversampling_factor, power_iteration, seed);
         }
 
         // process truncation:
@@ -856,14 +872,16 @@ namespace cytnx {
                                          // negative!
         cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
 
+        // Set sampling target to max(keepdim, mindim) so the global mindim contract is satisfiable
+        const cytnx_uint64 sample_target = std::max(keepdim, mindim);
         if (Tin.uten_type() == UTenType.Block) {
           Rsvd_notruncate_BlockUT_internal<BlockUniTensor>(
-            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
-            power_iteration, seed);
+            outCyT, Tin, sample_target, is_U, is_vT, min_blockdim, oversampling_summand,
+            oversampling_factor, power_iteration, seed);
         } else {  // BlockFermionic
           Rsvd_notruncate_BlockUT_internal<BlockFermionicUniTensor>(
-            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
-            power_iteration, seed);
+            outCyT, Tin, sample_target, is_U, is_vT, min_blockdim, oversampling_summand,
+            oversampling_factor, power_iteration, seed);
         }
         if (min_blockdim.size() == 1)  // if only one element given, make it a vector
           min_blockdim.resize(outCyT[0].Nblocks(), min_blockdim.front());
