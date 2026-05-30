@@ -4594,16 +4594,15 @@ namespace cytnx {
     }
 
     /**
-    @brief Convert the UniTensor to non-diagonal form.
-        @details to_dense() convert the UniTensor from diagonal form to non-diagonal structure.
-            That means input the UniTensor with \p is_diag = true to \p is_diag = false.
-        @pre
-            1. The UniTensor need to be Dense UniTensor, that means this function is only
-                    support for UTenType.Dense.
-            2. The UniTensor need to be diagonal form (that means is_diag is true.)
-        @return UniTensor
-        @see to_dense_(), is_diag()
-        */
+     * @brief Convert the UniTensor to non-diagonal form.
+     * @details Converts a UniTensor with \p is_diag = true to one with \p is_diag = false by
+     * expanding each block into a (diagonal) matrix.
+     * @note If the input tensor is already non-diagonal (\p is_diag = false), the input is
+     * returned. So every manipulation on the returned tensor will change the input tensor. Call \p
+     * clone() on the result if an independent copy is required.
+     * @return UniTensor
+     * @see to_dense_(), is_diag()
+     */
     UniTensor to_dense() {
       UniTensor out;
       out._impl = this->_impl->to_dense();
@@ -4611,9 +4610,9 @@ namespace cytnx {
     }
 
     /**
-    @brief Convert the UniTensor to non-diagonal form, inplacely.
-        @see to_dense(), is_diag()
-        */
+     * @brief Convert the UniTensor to non-diagonal form, inplacely.
+     * @see to_dense(), is_diag()
+     */
     UniTensor &to_dense_() {
       this->_impl->to_dense_();
       return *this;

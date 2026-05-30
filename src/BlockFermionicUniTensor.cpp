@@ -1249,7 +1249,8 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::to_dense() {
     if (!(this->_is_diag)) {
-      return this->clone();
+      boost::intrusive_ptr<UniTensor_base> out(this);
+      return out;
     }
     BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks.resize(this->_blocks.size());

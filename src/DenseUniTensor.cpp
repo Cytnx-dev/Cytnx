@@ -994,7 +994,8 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::to_dense() {
     if (!(this->_is_diag)) {
-      return this->clone();
+      boost::intrusive_ptr<UniTensor_base> out(this);
+      return out;
     }
     DenseUniTensor *tmp = this->clone_meta();
     tmp->_block = cytnx::linalg::Diag(this->_block);
