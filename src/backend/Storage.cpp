@@ -199,7 +199,6 @@ namespace cytnx {
 
     // check size:
     ifstream jf;
-    // std::cout << fname << std::endl;
     jf.open(fname, ios::ate | ios::binary);
     if (!jf.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());

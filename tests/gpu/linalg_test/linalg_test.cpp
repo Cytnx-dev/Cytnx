@@ -355,3 +355,68 @@ TEST_F(linalg_Test, gpu_Tensor_Gemm_) {
 //           //}
 //       }
 // }
+
+// ====================================================================================
+// GPU fermionic linalg decompositions. Each test builds a fermionic operator that introduces sign
+// flips on the CPU, runs the operation on both CPU and on its .to(Device.cuda) copy, and checks
+// that ALL GPU output tensors agree with the CPU ones. For decompositions with gauge freedom (Svd
+// U/vT, Eigh V, Qr Q) the cross-check is gauge-invariant (spectrum matches CPU; GPU outputs
+// reconstruct the input and are isometric). Gauge-free results (ExpH) are compared element-wise
+// CPU-vs-GPU.
+// ====================================================================================
+TEST_F(linalg_Test, gpu_BkFUt_Svd_truncate) {
+  const double tol = 1e-10;
+  UniTensor M = permute_with_signflips(make_rank4_hermitian());
+  auto svd_cpu = linalg::Svd_truncate(M, 1000, 0., true, 0);
+  auto svd_gpu = linalg::Svd_truncate(M.to(Device.cuda), 1000, 0., true, 0);
+  // singular values match, and the GPU U/S/vT reconstruct M and are isometric.
+  expect_same(sorted_diagonal(svd_cpu[0]), sorted_diagonal(svd_gpu[0].to(Device.cpu)), tol);
+  std::vector<UniTensor> g = {svd_gpu[0].to(Device.cpu), svd_gpu[1].to(Device.cpu),
+                              svd_gpu[2].to(Device.cpu)};
+  expect_svd_reconstructs(g, M, tol);
+}
+
+TEST_F(linalg_Test, gpu_BkFUt_Gesvd_truncate) {
+  const double tol = 1e-10;
+  UniTensor M = permute_with_signflips(make_rank4_hermitian());
+  auto gesvd_cpu = linalg::Gesvd_truncate(M, 1000, 0., true, true, 0);
+  auto gesvd_gpu = linalg::Gesvd_truncate(M.to(Device.cuda), 1000, 0., true, true, 0);
+  expect_same(sorted_diagonal(gesvd_cpu[0]), sorted_diagonal(gesvd_gpu[0].to(Device.cpu)), tol);
+  std::vector<UniTensor> g = {gesvd_gpu[0].to(Device.cpu), gesvd_gpu[1].to(Device.cpu),
+                              gesvd_gpu[2].to(Device.cpu)};
+  expect_svd_reconstructs(g, M, tol);
+}
+
+TEST_F(linalg_Test, gpu_BkFUt_Eigh) {
+  const double tol = 1e-10;
+  UniTensor M = permute_with_signflips(make_rank4_hermitian());
+  auto eig_cpu = linalg::Eigh(M);
+  auto eig_gpu = linalg::Eigh(M.to(Device.cuda));
+  // eigenvalues match; GPU eigenvectors V are orthonormal (V^dagger V = I).
+  expect_same(sorted_diagonal(eig_cpu[0]), sorted_diagonal(eig_gpu[0].to(Device.cpu)), tol);
+  expect_unitary(eig_gpu[1].to(Device.cpu), "_aux_L", tol);
+}
+
+TEST_F(linalg_Test, gpu_BkFUt_Qr) {
+  const double tol = 1e-10;
+  UniTensor M = permute_with_signflips(make_rank4_hermitian());
+  auto qr_gpu = linalg::Qr(M.to(Device.cuda));
+  UniTensor Q = qr_gpu[0].to(Device.cpu), R = qr_gpu[1].to(Device.cpu);
+  expect_unitary(Q, "_aux_", tol);  // Q is an isometry
+  UniTensor recon = Contract(Q, R).permute(M.labels());
+  EXPECT_TRUE((recon.apply() - M.apply()).Norm().item() < tol);  // Q R == M
+}
+
+TEST_F(linalg_Test, gpu_BkFUt_ExpH) {
+  const double tol = 1e-10;
+  const double aa = 0.5;
+  UniTensor M = permute_with_signflips(make_rank4_hermitian());
+  UniTensor eM_cpu = linalg::ExpH(M, aa);
+  UniTensor eM_gpu = linalg::ExpH(M.to(Device.cuda), aa).to(Device.cpu);
+  // exp(aM) is gauge-free -> compare element-wise CPU vs GPU.
+  EXPECT_TRUE((eM_cpu.apply() - eM_gpu.apply()).Norm().item() < tol);
+}
+
+// NOTE: no ExpM GPU test -- ExpM uses the general (non-symmetric) Eig internally, which has no GPU
+// backend ("Eig for non-symmetric matrix is not supported"); only ExpH (via the Hermitian Eigh /
+// cuEigh) runs on the GPU. ExpM is covered by the CPU test.

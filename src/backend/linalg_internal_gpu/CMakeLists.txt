@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
     # cuNorm_internal.hpp
     # cuAbs_internal.hpp
@@ -36,6 +36,9 @@ target_sources_local(cytnx
 
     cuAbs_internal.cu
     cuAdd_internal.cu
+    cuSub_dispatch.cu
+    cuMul_dispatch.cu
+    cuDiv_dispatch.cu
     cuGer_internal.cu
     cuArithmetic_internal.cu
     cuConj_inplace_internal.cu
@@ -62,6 +65,7 @@ target_sources_local(cytnx
     cuMod_internal.cu
     cuDet_internal.cu
     cuSum_internal.cu
+    cuTrace_internal.cu
     cuMaxMin_internal.cu
     cuTensordot_internal.cu
     cuQuantumGeSvd_internal.cu

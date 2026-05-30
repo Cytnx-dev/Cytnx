@@ -21,8 +21,6 @@ namespace cytnx {
   }
   Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
                const int &device) {
-    // std::cout << "OK" << std::endl;
-    // std::cout << Nelem << std::endl;
     Tensor out(Nelem, dtype, device, true);
     // out._impl->storage().set_zeros();
     return out;

@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
     cuAlloc_gpu.hpp
     cuCast_gpu.hpp
