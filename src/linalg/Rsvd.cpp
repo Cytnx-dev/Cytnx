@@ -7,7 +7,6 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "linalg.hpp"
 
 #ifdef BACKEND_TORCH
 #else
