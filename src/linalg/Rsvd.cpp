@@ -1,3 +1,5 @@
+#include "linalg.hpp"
+
 #include <string>
 #include <vector>
 
@@ -108,6 +110,7 @@ namespace cytnx {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         terr.Init({1}, in.dtype(), in.device());
+
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
                                                                   S, vT, terr);
 
@@ -191,9 +194,6 @@ namespace cytnx {
         cytnx_uint64 keep_dim = keepdim;
 
         Tensor tmp = Tin.get_block_().contiguous();
-        // if(Tin.is_contiguous()) tmp = Tin.get_block_();
-        // else{ tmp = Tin.get_block(); tmp.contiguous_();}
-
         std::vector<cytnx_int64> oldshape(tmp.shape().begin(), tmp.shape().end());
         std::vector<std::string> oldlabel = Tin.labels();
 
@@ -224,7 +224,7 @@ namespace cytnx {
           // shape
           cytnx_error_msg(
             Tin.rowrank() > oldshape.size(),
-            "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+            "[ERROR] The rowrank of the input UniTensor is larger than the rank of the "
             "contained tensor.%s",
             "\n");
           std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
@@ -366,7 +366,6 @@ namespace cytnx {
         }
 
         // remove:
-        // vec_erase_(S.get_itoi(),to_be_removed);
         S.get_itoi() = new_itoi;
         if (!to_be_removed.empty()) {
           vec_erase_(S.get_blocks_(), to_be_removed);
@@ -599,7 +598,6 @@ namespace cytnx {
           }
 
           // remove:
-          // vec_erase_(S.get_itoi(),to_be_removed);
           S.get_itoi() = new_itoi;
           if (!to_be_removed.empty()) {
             vec_erase_(S.get_blocks_(), to_be_removed);

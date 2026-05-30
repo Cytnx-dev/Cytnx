@@ -127,7 +127,7 @@ namespace cytnx {
           cytnx::UniTensor &Cy_U = outCyT[t];
           cytnx_error_msg(
             Tin.rowrank() > oldshape.size(),
-            "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+            "[ERROR] The rowrank of the input UniTensor is larger than the rank of the "
             "contained tensor.%s",
             "\n");
           std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
@@ -357,10 +357,11 @@ namespace cytnx {
         // process S:
         Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
         BlockUniTensor *S_ptr = new BlockUniTensor();
-        S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                    Device.cpu,  // this two will be overwrite later, so doesnt matter.
-                    true,  // is_diag!
-                    true);  // no_alloc!
+        S_ptr->Init(
+          {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+          Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+          true,  // is_diag!
+          true);  // no_alloc!
         S_ptr->_blocks = S_blocks;
         UniTensor S;
         S._impl = boost::intrusive_ptr<UniTensor_base>(S_ptr);
@@ -482,10 +483,8 @@ namespace cytnx {
         int tr;
         for (auto const &x : mgrp) {
           vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-          // std::cout << x.second.size() << "-------" << std::endl;
           for (int i = 0; i < x.second.size(); i++) {
             itoi_indicators[i] = new_itoi[x.second[i]];
-            // std::cout << new_itoi[x.second[i]] << std::endl;
           }
           auto order = vec_sort(itoi_indicators, true);
           std::vector<Tensor> Tlist(itoi_indicators.size());
@@ -591,10 +590,11 @@ namespace cytnx {
         // process S:
         Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
         BlockFermionicUniTensor *S_ptr = new BlockFermionicUniTensor();
-        S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                    Device.cpu,  // this two will be overwrite later, so doesnt matter.
-                    true,  // is_diag!
-                    true);  // no_alloc!
+        S_ptr->Init(
+          {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+          Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+          true,  // is_diag!
+          true);  // no_alloc!
         S_ptr->_blocks = S_blocks;
         UniTensor S;
         S._impl = boost::intrusive_ptr<UniTensor_base>(S_ptr);
@@ -681,8 +681,8 @@ namespace cytnx {
                                                    power_iteration, seed);
       } else {
         cytnx_error_msg(
-          true,
-          "[ERROR][Rsvd_notruncate] only supports Dense/Block/BlockFermionic UniTensors.%s", "\n");
+          true, "[ERROR][Rsvd_notruncate] only supports Dense/Block/BlockFermionic UniTensors.%s",
+          "\n");
 
       }  // is block form ?
 
