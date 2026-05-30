@@ -13,8 +13,8 @@
 #include "Type.hpp"
 #include "UniTensor.hpp"
 
-// This file contains some function we may usually use in the unit test
-// such as the data initialization and comparison.
+// This file contains some functions that we usually use in unit tests, such as data initialization
+// and comparison.
 namespace cytnx {
   namespace TestTools {
 
