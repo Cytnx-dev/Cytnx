@@ -40,20 +40,21 @@ namespace cytnx {
       Tensor Q;
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> tmps;
-        // when Tin is (m, n), then Q^\dagger is multiplied from right (m>n) or left (m<=n) to
-        // reduce the numerical costs in the SVD
+        // Project away the larger external dimension so the  full SVD runs on the smaller matrix;
+        // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
+        // for m>n sketch the column space and SVD on (l x n).
         bool apply_Q_to_U = false;
         bool apply_Q_to_V = false;
         if (samplenum < n_singlu) {
           Tensor in = Tin.contiguous();
-          if (Tin.shape()[0] <= Tin.shape()[1]) {  // multiply Q from left
-            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
-            apply_Q_to_U = true;
-          } else {  // multiply Q from right
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
             Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run full SVD
+            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
             apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
+            apply_Q_to_U = true;
           }
         } else {
           tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
@@ -86,19 +87,21 @@ namespace cytnx {
     #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
-        // when Tin is (m, n), then Q^\dagger is multiplied from right (m>n) or left (m<=n) to
-        // reduce the numerical costs in the SVD
+
+        // Project away the larger external dimension so the  full SVD runs on the smaller matrix;
+        // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
+        // for m>n sketch the column space and SVD on (l x n).
         bool apply_Q_to_U = false;
         bool apply_Q_to_V = false;
         if (samplenum < n_singlu) {
-          if (Tin.shape()[0] <= Tin.shape()[1]) {  // multiply Q from left
-            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-            in = Matmul(Q.Conj().permute_({1, 0}), in);
-            apply_Q_to_U = true;
-          } else {  // multiply Q from right
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
             Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
             in = Matmul(in, Q.Conj());
             apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            in = Matmul(Q.Conj().permute_({1, 0}), in);
+            apply_Q_to_U = true;
           }
           n_singlu = samplenum;
         }
@@ -136,18 +139,21 @@ namespace cytnx {
 
     #else
         std::vector<Tensor> tmps;
+        // Project away the larger external dimension so the  full SVD runs on the smaller matrix;
+        // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
+        // for m>n sketch the column space and SVD on (l x n).
         bool apply_Q_to_U = false;
         bool apply_Q_to_V = false;
         if (samplenum < n_singlu) {
           Tensor in = Tin.contiguous();
-          if (Tin.shape()[0] <= Tin.shape()[1]) {  // multiply Q from left
-            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
-            apply_Q_to_U = true;
-          } else {  // multiply Q from right
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
             Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run full SVD
+            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
             apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
+            apply_Q_to_U = true;
           }
         } else {
           tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD

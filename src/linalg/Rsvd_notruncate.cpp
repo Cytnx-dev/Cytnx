@@ -28,14 +28,23 @@ namespace cytnx {
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
-      // form isometry Q[0] and apply Q.Dagger * in
+      // For Tin = (m, n), project away the larger external dimension so the full SVD runs on the
+      // smaller matrix: for m<=n sketch the row space and SVD on (m x l); for m>n sketch the
+      // column space and SVD on (l x n). Q gets applied back to V or U respectively below.
       Tensor Q;
-      bool applyQ = false;
+      bool apply_Q_to_U = false;
+      bool apply_Q_to_V = false;
       if (keepdim < std::min(shape[0], shape[1])) {
-        Q = Rand_isometry(Tin, keepdim, power_iteration, seed);
-        in = Matmul(Q.Conj().permute_({1, 0}), in);
+        if (shape[0] <= shape[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
+          Q = Rand_isometry(in.permute({1, 0}), keepdim, power_iteration, seed);
+          in = Matmul(in, Q.Conj());
+          apply_Q_to_V = true;
+        } else {  // m > n: column-space sketch, Q^H * A -> l x n
+          Q = Rand_isometry(in, keepdim, power_iteration, seed);
+          in = Matmul(Q.Conj().permute_({1, 0}), in);
+          apply_Q_to_U = true;
+        }
         shape = in.shape();
-        applyQ = true;
       }
 
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(shape[0], shape[1]));
@@ -69,12 +78,15 @@ namespace cytnx {
       std::vector<Tensor> out;
       out.push_back(S);
       if (is_U) {
-        if (applyQ) {
+        if (apply_Q_to_U) {
           U = Matmul(Q, U);
         }
         out.push_back(U);
       }
       if (is_vT) {
+        if (apply_Q_to_V) {
+          vT = Matmul(vT, Q.permute({1, 0}));
+        }
         out.push_back(vT);
       }
 
