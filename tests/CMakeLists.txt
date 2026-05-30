@@ -22,6 +22,7 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  Tensor_strides_test.cpp
   Storage_test.cpp
   search_tree_test.cpp
   utils_test/vec_concatenate.cpp
@@ -42,6 +43,7 @@ add_executable(
   linalg_test/Gesvd_truncate_test.cpp
   linalg_test/Rsvd_test.cpp
   linalg_test/Gemm_Batch_test.cpp
+  linalg_test/Trace_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/stride_view_test.cpp
   linalg_test/sum_test.cpp
@@ -80,7 +82,10 @@ add_link_options(-fsanitize=address)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
 gtest_discover_tests(test_main
-                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                     # The test binary takes longer to enumerate than the
+                     # default 5s under MKL + ASAN on slower runners.
+                     DISCOVERY_TIMEOUT 120)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
