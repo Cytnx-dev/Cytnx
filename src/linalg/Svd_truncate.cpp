@@ -471,8 +471,16 @@ namespace cytnx {
             outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
           }
         } else {
-          if (return_err >= 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+          // keep_dim < 1: per-block min_blockdim guarantees already cover the global cap, so
+          // every value in Sall is dropped.
+          if (return_err == 1) {
+            // largest dropped singular value
+            Sall = algo::Sort(Sall);  // ascending; largest dropped is the last element
+            Scalar Smax = Sall.storage()(Sall.shape()[0] - 1);
+            outCyT.push_back(UniTensor(Tensor({1}, Smax.dtype())));
+            outCyT.back().get_block_().storage().at(0) = Smax;
+          } else if (return_err) {
+            outCyT.push_back(UniTensor(Sall));
           }
         }
 
