@@ -243,6 +243,25 @@ namespace RsvdTest {
   }
 
   /*=====test info=====
+  describe:On a Block UniTensor, with err larger than every singular value, the truncation loop
+  would otherwise cut down to 1; mindim must clamp the kept count to at least mindim. Exercises
+  the sample_target=max(keepdim,mindim) path on the Block route.
+  ====================*/
+  TEST(Rsvd, mindim_floor_blockut) {
+    auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+    Bond bk = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3}, syms);
+    UniTensor src_T({bk, bk.redirect()}, {"l", "r"}, 1, Type.Double, Device.cpu, false);
+    InitUniTensorUniform(src_T, 31);
+    const cytnx_uint64 keepdim = 6, mindim = 4;
+
+    std::vector<UniTensor> out =
+      linalg::Rsvd(src_T, keepdim, /*err=*/1e9, true, true, 0, mindim, 0, 0., 2, 0);
+    cytnx_uint64 total_kept = 0;
+    for (auto d : out[0].bonds()[0].getDegeneracies()) total_kept += d;
+    EXPECT_GE(total_kept, mindim);
+  }
+
+  /*=====test info=====
   describe:Setting min_blockdim must keep at least the requested number of singular values per
   sector. With a small keepdim, the baseline (no min_blockdim) drops entire sectors; with
   min_blockdim={1,1,1} every sector keeps at least one singular value.
