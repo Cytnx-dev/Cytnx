@@ -385,11 +385,11 @@ namespace cytnx {
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
-        cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+        cerr << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
         for (int i = 0; i < TN_names.size(); i++) {
-          cout << "        " << TN_names[i] << endl;
+          cerr << "        " << TN_names[i] << endl;
         }
-        cytnx_error_msg(true, "[ERROR] TNs appeared in ORDER line, but are not defined.%s", "\n");
+        cytnx_error_msg(true, "%s", "\n");
       }
     }  // check all RN.
     // print_gn(this->table, this->names, this->name2pos);
