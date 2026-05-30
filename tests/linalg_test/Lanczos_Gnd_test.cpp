@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
+#include "linalg_test.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -32,7 +33,7 @@ namespace {
      *         | |         +          | |             "pi"
      *         |_|--"vol" "po" "vor"--|_|
      *
-     * Then relabels ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
+     * Then relabel ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
      *
      * "vil":virtual in bond left
      * "po":physical out bond
@@ -105,13 +106,13 @@ namespace {
       H.put_block(A, 0);
       H.put_block(B, 1);
       H.put_block(C, 2);
-      H.set_labels({"a", "b"});
+      H.relabel_({"a", "b"});
       // H.print_diagram();
       // H.print_blocks();
     }
     UniTensor matvec(const UniTensor& psi) override {
       auto out = H.contract(psi);
-      out.set_labels({"b", "c"});
+      out.relabel_({"b", "c"});
       // out.print_diagram();
       return out;
     }
@@ -219,7 +220,7 @@ namespace {
       // if k == 1, lanczos_eigvecs will be a rank-1 tensor
       auto lanczos_eigvec = lanczos_eigs[i + 1];
       auto exact_eigval = fst_few_eigvals[i];
-      // check eigen value by comparing with the full spectrum results.
+      // check eigenvalue by comparing with the full spectrum results.
       // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
       auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
       // std::cout << "eigval err" << eigval_err << std::endl;
@@ -397,7 +398,7 @@ TEST(Lanczos_Gnd, Bk_Lanczos_Gnd_test) {
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 0);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
-  lan_guess.set_labels({"b", "c"});
+  lan_guess.relabel_({"b", "c"});
   // lan_guess.print_diagram();
   // std::cout << lan_guess.shape() << std::endl;
   //  lan_guess.print_blocks();
@@ -427,7 +428,7 @@ TEST(Lanczos_Gnd, Bk_Lanczos_test) {
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 0);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
-  lan_guess.set_labels({"b", "c"});
+  lan_guess.relabel_({"b", "c"});
 
   MyOp2 H = MyOp2(27);
 
@@ -446,4 +447,22 @@ TEST(Lanczos_Gnd, Bk_Lanczos_test) {
   auto err = (H.matvec(eigs[1]) - ev * eigs[1]).Norm().item();
   EXPECT_TRUE(err < 1e-12);
   // EXPECT_DOUBLE_EQ(ev, evans);
+}
+
+/*=====test info=====
+describe:Lanczos ('Gnd', Lanczos_Gnd_Ut) for the fermionic LinOp Op=A^dag A which introduces sign
+flips, and with an initial vector containing sign flips. Checks the eigenvalue against and
+independent dense ground state run (and against the squre of the singular values of A), the
+eigenvector residual ||Op v - E v|| ~ 0, and the eigenvector fidelity |<v|w>|/sqrt(<v|v><w|w>) ~ 1
+vs the dense diagonalization.
+====================*/
+TEST(Lanczos_Gnd, fermionic_LanczosFermionic) {
+  const double tol = 1e-7;
+  UniTensor A = make_ferm_A();
+  UniTensor v0 = make_ferm_ada_ket(A);
+  FermiAdaOp op(A, ferm_ket_nx(v0));
+  auto low = ferm_dense_lowest(A, 1);  // ground state only ('Gnd' supports k=1)
+  auto eigs = linalg::Lanczos(&op, v0, "Gnd", 1e-12, 1000, 1, true);
+  // eigenvalue + residual + sigma^2 membership + per-state fidelity + unit norm (k=1).
+  expect_lowest_states(A, eigs, low, tol);
 }

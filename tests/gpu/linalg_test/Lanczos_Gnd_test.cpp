@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
 #include "gpu_test_tools.h"
+#include "linalg_test.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -33,14 +34,14 @@ class MyOp2 : public LinOp {
     H.put_block(A, 0);
     H.put_block(B, 1);
     H.put_block(C, 2);
-    H.set_labels({"a", "b"});
+    H.relabel_({"a", "b"});
     H.to_(cytnx::Device.cuda);
     // H.print_diagram();
     // H.print_blocks();
   }
   UniTensor matvec(const UniTensor& psi) override {
     auto out = H.contract(psi);
-    out.set_labels({"b", "c"});
+    out.relabel_({"b", "c"});
     return out;
   }
 };
@@ -63,6 +64,18 @@ TEST(Lanczos_Gnd, gpu_Lanczos_Gnd_test) {
   // EXPECT_DOUBLE_EQ(ev, evans);
 }
 
+// GPU fermionic Krylov: O = A^dag A (sign-flip-active 4-leg A); eigenpairs computed on the GPU and
+// checked against an independent CPU dense diagonalization.
+TEST(Lanczos_Gnd, fermionic_Lanczos) {  // naive Lanczos 'Gnd', ground state
+  const double tol = 1e-7;
+  UniTensor A = make_ferm_A();
+  UniTensor v0 = make_ferm_ada_ket(A);
+  auto low = ferm_dense_lowest(A, 1);
+  FermiAdaOp op(A.to(Device.cuda), ferm_ket_nx(v0));
+  auto eigs = to_cpu(linalg::Lanczos(&op, v0.to(Device.cuda), "Gnd", 1e-12, 1000, 1, true));
+  expect_lowest_states(A, eigs, low, tol);
+}
+
 TEST(Lanczos_Gnd, gpu_Bk_Lanczos_Gnd_test) {
   // CompareWithScipy
   cytnx_double evans = -2.31950925;
@@ -74,7 +87,7 @@ TEST(Lanczos_Gnd, gpu_Bk_Lanczos_Gnd_test) {
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 0);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
-  lan_guess.set_labels({"b", "c"});
+  lan_guess.relabel_({"b", "c"});
   lan_guess.to_(cytnx::Device.cuda);
   // lan_guess.print_diagram();
   // lan_guess.print_blocks();

@@ -11,6 +11,7 @@ CMakeUserPresets.json
 # this project
 build/
 Testing/
+.ccache/
 
 # need to be cleaned up
 .cache/
@@ -21,4 +22,17 @@ dev_test
 *.o
 *.so
 
-.ccache/
+# Personal AI/coding-agent notes & local config (per-user, not shared)
+# Claude Code
+CLAUDE.local.md
+.claude/
+# OpenAI Codex
+AGENTS.local.md
+.codex/
+# Gemini CLI
+GEMINI.local.md
+.gemini/
+# Google Antigravity
+.antigravity/
+# Cursor
+.cursor/

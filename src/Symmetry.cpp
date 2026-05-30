@@ -1,5 +1,6 @@
 #include "Symmetry.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -8,6 +9,19 @@
 using namespace std;
 
 namespace cytnx {
+
+  namespace {
+    void ValidateZnQnum(const cytnx_int64 qnum, const cytnx_int64 n) {
+      cytnx_error_msg(
+        (qnum < 0) || (qnum >= n),
+        "[ERROR][ZnSymmetry] qnum %lld is out of the valid range [0, %lld) for Z%lld.\n",
+        static_cast<long long>(qnum), static_cast<long long>(n), static_cast<long long>(n));
+    }
+
+    void ValidateZnQnums(const std::vector<cytnx_int64> &qnums, const cytnx_int64 n) {
+      for (const auto &q : qnums) ValidateZnQnum(q, n);
+    }
+  }  // namespace
 
   bool cytnx::Symmetry::operator==(const cytnx::Symmetry &rhs) const {
     return (this->stype() == rhs.stype()) && (this->n() == rhs.n());
@@ -114,21 +128,28 @@ namespace cytnx {
   void cytnx::ZnSymmetry::combine_rule_(std::vector<cytnx_int64> &out,
                                         const std::vector<cytnx_int64> &inL,
                                         const std::vector<cytnx_int64> &inR) {
+    ValidateZnQnums(inL, this->n);
+    ValidateZnQnums(inR, this->n);
     out.resize(inL.size() * inR.size());
-    for (cytnx_uint64 i = 0; i < out.size(); i++) {
-      out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n);
+    for (cytnx_uint64 i = 0; i < inL.size(); i++) {
+      for (cytnx_uint64 j = 0; j < inR.size(); j++) {
+        out[i * inR.size() + j] = (inL[i] + inR[j]) % this->n;
+      }
     }
   }
   void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
                                         const cytnx_int64 &inR, const bool &is_reverse) {
+    ValidateZnQnum(inL, this->n);
+    ValidateZnQnum(inR, this->n);
+    const cytnx_int64 combined = (inL + inR) % this->n;
     if (is_reverse)
-      this->reverse_rule_(out, (inL + inR) % (this->n));
+      this->reverse_rule_(out, combined);
     else
-      out = (inL + inR) % (this->n);
+      out = combined;
   }
   void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
-    // out = -in<0?-in+this->n:-in;
-    out = -in + this->n;
+    ValidateZnQnum(in, this->n);
+    out = (this->n - in) % this->n;
   }
 
   void cytnx::ZnSymmetry::print_info() const {
@@ -240,46 +261,38 @@ namespace cytnx {
 
   void cytnx::Symmetry::Save(const std::string &fname) const {
     fstream f;
-    f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::out | ios::trunc | ios::binary);
+    } else {
+      // add filename extension
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cysym'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.c_str());
+      f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Save(f);
     f.close();
   }
-  void cytnx::Symmetry::Save(const char *fname) const {
-    fstream f;
-    string ffname = string(fname) + ".cysym";
-    f.open((ffname), ios::out | ios::trunc | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
+  void cytnx::Symmetry::Save(const char *fname) const { this->Save(string(fname)); }
 
   cytnx::Symmetry cytnx::Symmetry::Load(const std::string &fname) {
     Symmetry out;
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     out._Load(f);
     f.close();
     return out;
   }
-
   cytnx::Symmetry cytnx::Symmetry::Load(const char *fname) {
-    Symmetry out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
-    }
-    out._Load(f);
-    f.close();
-    return out;
+    return cytnx::Symmetry::Load(string(fname));
   }
 
   //==================

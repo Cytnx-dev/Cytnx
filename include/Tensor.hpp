@@ -232,25 +232,21 @@ namespace cytnx {
     //----------------------------------------
     template <class... Ts>
     Tproxy operator()(const std::string &e1, const Ts &...elems) {
-      // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
     Tproxy operator()(const cytnx_int64 &e1, const Ts &...elems) {
-      // std::cout << e1<< std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
     Tproxy operator()(const cytnx::Accessor &e1, const Ts &...elems) {
-      // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
     const Tproxy operator()(const std::string &e1, const Ts &...elems) const {
-      // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
@@ -728,6 +724,8 @@ namespace cytnx {
     @brief Make the Tensor contiguous by coalescing the memory (storage).
     @return [Tensor] a new Tensor that is with contiguous memory (storage).
     @see \link Tensor::contiguous_ Tensor::contiguous_() \endlink
+    @warning If the input tensor is not contiguous, then the data will be stored in new memory;
+    otherwise, the input tensor is returned and no cloning of the data happens.
 
     ## Example:
     ### c++ API:
@@ -803,7 +801,6 @@ namespace cytnx {
     template <class... Ts>
     Tensor &reshape_(const cytnx_int64 &e1, const Ts... elems) {
       std::vector<cytnx_int64> shape = dynamic_arg_int64_resolver(e1, elems...);
-      // std::cout << shape << std::endl;
       this->_impl->reshape_(shape);
       return *this;
     }
@@ -1006,10 +1003,13 @@ namespace cytnx {
     /**
     @brief get elements using Accessor (C++ API) / slices (python API)
     @param[in] accessors the Accessor (C++ API) / slices (python API) to get the elements.
+    @param[out] removed the indices that were removed from the original shape of the Tensor are
+    pushed to the end of this vector. Usually, an empty vector should be passed.
     @return [Tensor]
     @see \link cytnx::Accessor Accessor\endlink for cordinate with Accessor in C++ API.
     @note
-        1. the return will be a new Tensor instance, which not share memory with the current Tensor.
+        The return will be a new Tensor instance, which does not share memory with the current
+    Tensor.
 
     ## Equivalently:
         One can also using more intruisive way to get the slice using [] operator.
@@ -1024,9 +1024,16 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/get.py.out
     */
+    Tensor get(const std::vector<cytnx::Accessor> &accessors,
+               std::vector<cytnx_int64> &removed) const {
+      Tensor out;
+      out._impl = this->_impl->get(accessors, removed);
+      return out;
+    }
     Tensor get(const std::vector<cytnx::Accessor> &accessors) const {
       Tensor out;
-      out._impl = this->_impl->get(accessors);
+      std::vector<cytnx_int64> removed;
+      out._impl = this->_impl->get(accessors, removed);
       return out;
     }
 
@@ -1615,16 +1622,24 @@ namespace cytnx {
     Tensor InvM() const;
 
     /**
-     * @brief the Inv_ member function. Same as
-     * \ref cytnx::linalg::Inv_(Tensor &Tin, const double &clip)
+      @brief Apply the inverse on each entry of the Tensor.
+        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+      pseudo-inverse
+        @return Tensor
+        @note Compared to Inv(), this function is an inplace function.
+        @see Inv(const double &clip)
      */
-    Tensor &Inv_(const double &clip);
+    Tensor &Inv_(const double &clip = -1.);
 
     /**
-     * @brief the Inv member function. Same as
-     * \ref cytnx::linalg::Inv(const Tensor &Tin, const double &clip)
+      @brief Apply the inverse on each entry of the Tensor.
+        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+      pseudo-inverse
+        @return Tensor
+        @note Compared to Inv_(), this function will create a new Tensor.
+        @see Inv_(const double &clip)
      */
-    Tensor Inv(const double &clip) const;
+    Tensor Inv(const double &clip = -1.) const;
 
     /**
      * @brief the Conj_ member function. Same as

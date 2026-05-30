@@ -35,7 +35,7 @@ namespace GesvdTest {
     bool is_diag = false;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, -10, 0, 0);
+    random::uniform_(T, -10, 0, 0);
     std::vector<UniTensor> Gesvds = linalg::Gesvd(T);
     EXPECT_TRUE(CheckLabels(T, Gesvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Gesvds)) << fail_msg.TraceFailMsgs();
@@ -224,7 +224,7 @@ namespace GesvdTest {
     bool is_diag = true;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, 0, 10, 0);
+    random::uniform_(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(T); }, std::logic_error);
   }
 
@@ -246,7 +246,7 @@ namespace GesvdTest {
     bool is_diag = true;
     std::vector<std::string> labels = {};
     auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-    random::Make_uniform(UT, 0, 10, 0);
+    random::uniform_(UT, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(UT); }, std::logic_error);
   }
 
@@ -294,6 +294,15 @@ namespace GesvdTest {
       << "Should throw error when input void type unitensor but not."
          " Line:"
       << __LINE__ << std::endl;
+  }
+
+  TEST(Gesvd, err_rowrank_equal_rank_dense_UT) {
+    std::vector<Bond> bonds = {Bond(2), Bond(3)};
+    auto src_T = UniTensor(bonds, {}, 2, Type.Double, Device.cpu, false);
+    random::uniform_(src_T, 0, 10, 0);
+    EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(src_T); }, std::logic_error)
+      << "Should throw error when rowrank is not smaller than rank."
+      << " Line:" << __LINE__ << std::endl;
   }
 
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
@@ -371,7 +380,7 @@ namespace GesvdTest {
     const UniTensor& U = Tout[1];
     const UniTensor& V = Tout[2];
     auto UD = U.Dagger();
-    UD.set_labels({"0", "1", "9"});
+    UD.relabel_({"0", "1", "9"});
     UD.permute_({2, 0, 1}, 1);
     auto UUD = Contract(U, UD);
   }

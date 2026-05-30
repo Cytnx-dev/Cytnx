@@ -4,7 +4,7 @@
 ### ADD SUB-DIRECTORIES
 ######################################################################
 
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
     linalg_internal_interface.hpp
     linalg_internal_interface.cpp

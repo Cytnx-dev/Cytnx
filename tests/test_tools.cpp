@@ -222,7 +222,7 @@ namespace cytnx {
                         ? Type.ComplexDouble
                         : Type.Double;
       Tensor tmp = Tensor(T.shape(), tmp_type, T.device());
-      random::Make_uniform(tmp, l_bd, h_bd, rand_seed);
+      random::uniform_(tmp, l_bd, h_bd, rand_seed);
       if (dtype == Type.Bool) {
         // bool type prepare:double in range (0, 2) -> uint32 [0, 1] ->bool
         //   bool type prepare:1.X -> 1 ->true; 0.X -> 0 ->false
@@ -424,7 +424,11 @@ namespace cytnx {
         Tensor block1 = Ut1.get_block();
         Tensor block2 = Ut2.get_block();
         if (!AreNearlyEqTensor(block1, block2, tol)) {
-          std::cout << "[AreNearlyEqUniTensor] two block not the same. " << std::endl;
+          std::cout << "[AreNearlyEqUniTensor] The entries of the dense UniTensor are not the same."
+                    << std::endl;
+          std::cout << block1 << std::endl;
+          std::cout << block2 << std::endl;
+
           return false;
         }
       }
@@ -518,6 +522,20 @@ namespace cytnx {
       return AreNearlyEqUniTensor(Ut1, Ut2, 0);
     }
 
+    bool AreEqUniTensorMeta(const UniTensor& Ut1, const UniTensor& Ut2) {
+      if (Ut1.uten_type() != Ut2.uten_type()) return false;
+      if (Ut1.name() != Ut2.name()) return false;
+      if (Ut1.labels() != Ut2.labels()) return false;
+      if (Ut1.rowrank() != Ut2.rowrank()) return false;
+      if (Ut1.rank() != Ut2.rank()) return false;
+      if (Ut1.shape() != Ut2.shape()) return false;
+      if (Ut1.is_diag() != Ut2.is_diag()) return false;
+      if (Ut1.is_tag() != Ut2.is_tag()) return false;
+      if (Ut1.is_braket_form() != Ut2.is_braket_form()) return false;
+      if (Ut1.bonds() != Ut2.bonds()) return false;
+      return true;
+    }
+
     // UniTensor
     void InitUniTensorUniform(UniTensor& UT, unsigned int rand_seed) {
       auto dtype = UT.dtype();
@@ -530,7 +548,7 @@ namespace cytnx {
                         ? Type.ComplexDouble
                         : Type.Double;
       UniTensor tmp = UT.astype(tmp_type);
-      random::Make_uniform(tmp, l_bd, h_bd, rand_seed);
+      random::uniform_(tmp, l_bd, h_bd, rand_seed);
       if (dtype == Type.Bool) {
         // bool type prepare:double in range (0, 2) -> uint32 [0, 1] ->bool
         //   bool type prepare:1.X -> 1 ->true; 0.X -> 0 ->false

@@ -31,7 +31,6 @@ namespace cytnx {
       cudaMemset(dacres, 0, sizeof(cuDoubleComplex) * TotSeg);
 
       while (remain != 0) {
-        cout << "cnt" << endl;
         if (remain >= INT_MAX)
           MAXX = INT_MAX;
         else
@@ -155,10 +154,8 @@ namespace cytnx {
           MAXX = INT_MAX;
         else
           MAXX = remain;
-        // std::cout << cnt << std::endl;
         checkCudaErrors(
           cublasDdot(cublasH, MAXX, _Lin + bias, ONE, _Rin + bias, ONE, dacres + cnt));
-        // std::cout << cnt << std::endl;
         cnt++;
         //_out[0] += acres[0];
         remain -= MAXX;
@@ -170,7 +167,6 @@ namespace cytnx {
       } else {
         utils_internal::cuReduce_gpu(_out, dacres, TotSeg);
       }
-      // std::cout << "done" << std::endl;
       /*
       cytnx_double *hacres = (cytnx_double*)malloc(sizeof(cytnx_double)*TotSeg);
       cudaMemcpy((cytnx_double*)hacres,dacres,sizeof(cytnx_double)*TotSeg,cudaMemcpyDeviceToHost);

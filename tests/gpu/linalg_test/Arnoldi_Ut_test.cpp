@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
 #include "../test_tools.h"
+#include "linalg_test.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -24,7 +25,7 @@ namespace {
          const int& device);
     UniTensor matvec(const UniTensor& l) override {
       auto tmp = Contracts({A, l, B}, "", true);
-      tmp.relabels_(l.labels()).set_rowrank(l.rowrank());
+      tmp.relabel_(l.labels()).set_rowrank(l.rowrank());
       return tmp;
     }
   };
@@ -34,15 +35,15 @@ namespace {
     std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D)};
     A = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("A")
-          .relabels_({"al", "phys", "ar"})
+          .relabel_({"al", "phys", "ar"})
           .set_rowrank(2);
     B = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("B")
-          .relabels_({"bl", "phys", "br"})
+          .relabel_({"bl", "phys", "br"})
           .set_rowrank(2);
     T_init = UniTensor({Bond(D), Bond(D)}, {}, -1, in_dtype, in_device)
                .set_name("l")
-               .relabels_({"al", "bl"})
+               .relabel_({"al", "bl"})
                .set_rowrank(1);
     if (Type.is_float(this->dtype())) {
       double low = -1.0, high = 1.0;
@@ -64,7 +65,7 @@ namespace {
     }
     UniTensor matvec(const UniTensor& l) override {
       auto tmp = Contracts({A, l, B}, "", true);
-      tmp.relabels_(l.labels()).set_rowrank(l.rowrank());
+      tmp.relabel_(l.labels()).set_rowrank(l.rowrank());
       return tmp;
     }
   };
@@ -205,4 +206,16 @@ TEST(Arnoldi_Ut, gpu_smallest_dim) {
   cytnx_uint64 k;
   k = 1;
   ExcuteTest(which, mat_type, k);
+}
+
+// GPU fermionic Krylov: O = A^dag A (sign-flip-active 4-leg A); eigenpairs computed on the GPU and
+// checked against an independent CPU dense diagonalization.
+TEST(Arnoldi_Ut, fermionic_Arnoldi) {  // ARPACK Arnoldi 'SR', two lowest
+  const double tol = 1e-7;
+  UniTensor A = make_ferm_A();
+  UniTensor v0 = make_ferm_ada_ket(A);
+  auto low = ferm_dense_lowest(A, 2);
+  FermiAdaOp op(A.to(Device.cuda), ferm_ket_nx(v0));
+  auto eigs = to_cpu(linalg::Arnoldi(&op, v0.to(Device.cuda), "SR", 1000, 1e-12, 2, true));
+  expect_lowest_states(A, eigs, low, tol);
 }

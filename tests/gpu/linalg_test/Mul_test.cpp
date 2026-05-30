@@ -128,6 +128,41 @@ namespace MulTest {
     }
   }
 
+  TEST(MulMixedDtypeTest, gpu_tensor_mul_tensor_mixed_unsigned_signed_type_promote) {
+    cytnx::Tensor lhs = cytnx::arange(0, 6, 1, cytnx::Type.Uint32).reshape({2, 3});
+    cytnx::Tensor rhs = cytnx::arange(0, 6, 1, cytnx::Type.Int16).reshape({2, 3});
+    lhs = lhs.to(cytnx::Device.cuda);
+    rhs = rhs.to(cytnx::Device.cuda);
+
+    cytnx::Tensor gpu_result = cytnx::linalg::Mul(lhs, rhs);
+    cytnx::Tensor expected_cpu =
+      cytnx::linalg::Mul(lhs.to(cytnx::Device.cpu), rhs.to(cytnx::Device.cpu));
+    cytnx::Tensor gpu_result_cpu = gpu_result.to(cytnx::Device.cpu);
+
+    EXPECT_EQ(gpu_result.dtype(), expected_cpu.dtype());
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, 1e-6));
+  }
+
+  TEST(MulMixedDtypeTest, gpu_scalar_mul_tensor_mixed_unsigned_signed_type_promote) {
+    const cytnx::cytnx_uint32 scalar = 5;
+    cytnx::Tensor rhs =
+      cytnx::arange(0, 6, 1, cytnx::Type.Int16).reshape({2, 3}).to(cytnx::Device.cuda);
+
+    cytnx::Tensor gpu_result_l = cytnx::linalg::Mul(scalar, rhs);
+    cytnx::Tensor gpu_result_r = cytnx::linalg::Mul(rhs, scalar);
+
+    cytnx::Tensor rhs_cpu = rhs.to(cytnx::Device.cpu);
+    cytnx::Tensor expected_l = cytnx::linalg::Mul(scalar, rhs_cpu);
+    cytnx::Tensor expected_r = cytnx::linalg::Mul(rhs_cpu, scalar);
+    cytnx::Tensor gpu_result_l_cpu = gpu_result_l.to(cytnx::Device.cpu);
+    cytnx::Tensor gpu_result_r_cpu = gpu_result_r.to(cytnx::Device.cpu);
+
+    EXPECT_EQ(gpu_result_l.dtype(), expected_l.dtype());
+    EXPECT_EQ(gpu_result_r.dtype(), expected_r.dtype());
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_l_cpu, expected_l, 1e-6));
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_r_cpu, expected_r, 1e-6));
+  }
+
   INSTANTIATE_TEST_SUITE_P(MulTests, MulTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
   ::testing::AssertionResult CheckMulResult(const cytnx::Tensor& gpu_result,

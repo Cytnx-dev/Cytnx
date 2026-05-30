@@ -24,7 +24,7 @@ namespace cytnx {
       // 2. all tensors must be rank-2!
       // 3. device matching
       // 4. dimension matching
-      cytnx_error_msg(In_tensors.size() == 0, "[ERROR][Hstack] cannot have empty input list!%s",
+      cytnx_error_msg(In_tensors.size() == 0, "[ERROR][Hstack] Cannot have empty input list!%s",
                       "\n");
       cytnx_error_msg(In_tensors[0].shape().size() != 2,
                       "[ERROR][Hstack] elem: [0], Vstack can only work for rank-2 tensors.%s",

@@ -62,7 +62,7 @@ namespace CommonDataGen {
       auto UT =
         cytnx::UniTensor(bonds, labels, row_rank, dtype, cytnx::Device.cpu, is_diag = false);
       InitUniTensorUniform(UT);
-      std::string file_name = dataRoot + "dense_nondiag_" + GetDTypeFileName(dtype);
+      std::string file_name = dataRoot + "dense_nondiag_" + GetDTypeFileName(dtype) + ".cytnx";
       UT.Save(file_name);
     }
   }
@@ -85,7 +85,7 @@ namespace CommonDataGen {
       // currently only for cpu device
       auto UT = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
       InitUniTensorUniform(UT);
-      std::string file_name = dataRoot + "sym_UT_U1_" + GetDTypeFileName(dtype);
+      std::string file_name = dataRoot + "sym_UT_U1_" + GetDTypeFileName(dtype) + ".cytnx";
       UT.Save(file_name);
     }
   }
@@ -110,7 +110,7 @@ namespace CommonDataGen {
       // currently only for cpu device
       auto UT = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
       InitUniTensorUniform(UT);
-      std::string file_name = dataRoot + "sym_UT_Z2_" + GetDTypeFileName(dtype);
+      std::string file_name = dataRoot + "sym_UT_Z2_" + GetDTypeFileName(dtype) + ".cytnx";
       UT.Save(file_name);
     }
   }
@@ -135,7 +135,7 @@ namespace CommonDataGen {
       // currently only for cpu device
       auto UT = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
       InitUniTensorUniform(UT);
-      std::string file_name = dataRoot + "sym_UT_Z3_" + GetDTypeFileName(dtype);
+      std::string file_name = dataRoot + "sym_UT_Z3_" + GetDTypeFileName(dtype) + ".cytnx";
       UT.Save(file_name);
     }
   }
@@ -161,7 +161,7 @@ namespace CommonDataGen {
       // currently only for cpu device
       auto UT = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
       InitUniTensorUniform(UT);
-      std::string file_name = dataRoot + "sym_UT_U1xZ2_" + GetDTypeFileName(dtype);
+      std::string file_name = dataRoot + "sym_UT_U1xZ2_" + GetDTypeFileName(dtype) + ".cytnx";
       UT.Save(file_name);
     }
   }
@@ -179,7 +179,7 @@ namespace CommonDataGen {
     std::vector<std::string> labels = {};
     auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, false);
     // here since we don't init elements. All block will be zeros.
-    std::string file_name = dataRoot + "sym_UT_U1_zeros_F64";
+    std::string file_name = dataRoot + "sym_UT_U1_zeros_F64.cytnx";
     UT.Save(file_name);
   }
 
@@ -196,7 +196,7 @@ namespace CommonDataGen {
     std::vector<std::string> labels = {};
     auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, false);
     UT.at({0, 0, 0}) = 10.5;
-    std::string file_name = dataRoot + "sym_UT_U1_one_elem_F64";
+    std::string file_name = dataRoot + "sym_UT_U1_one_elem_F64.cytnx";
     UT.Save(file_name);
   }
 

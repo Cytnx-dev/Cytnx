@@ -96,12 +96,6 @@ namespace cytnx {
     vector<cytnx_uint64> degenerates;
     vector<vector<cytnx_int64>> uniq_bonds_row = tot_bonds[0].getUniqueQnums();
     vector<vector<cytnx_int64>> uniq_bonds_col = tot_bonds[1].getUniqueQnums();
-    // vec_print(std::cout,uniq_bonds_row);// << endl;
-    // vec_print(std::cout,uniq_bonds_col);// << endl;
-    // exit(1);
-    // vec_print(std::cout,tot_bonds[0].qnums());
-    // vec_print(std::cout,tot_bonds[1].qnums());
-    //[DDK]
 
     // get common qnum set of row-col (bra-ket) space.
     this->_blockqnums = vec2d_intersect(uniq_bonds_row, uniq_bonds_col, false, false);
@@ -109,8 +103,6 @@ namespace cytnx {
     cytnx_error_msg(
       this->_blockqnums.size() == 0,
       "[ERROR][SparseUniTensor] invalid qnums. no common block (qnum) in this setup.%s", "\n");
-
-    // vec_print(std::cout,this->_blockqnums);
 
     // calculate&init the No. of blocks and their sizes.
     this->_blocks.resize(this->_blockqnums.size());
@@ -1931,7 +1923,7 @@ namespace cytnx {
 
     // checking type
     cytnx_error_msg(rhs->uten_type() != UTenType.Sparse,
-                    "[ERROR] cannot contract symmetry UniTensor with non-symmetry UniTensor%s",
+                    "[ERROR] Cannot contract symmetry UniTensor with non-symmetry UniTensor%s",
                     "\n");
 
     // checking symmetry:
@@ -2360,34 +2352,34 @@ namespace cytnx {
 
   // arithmetic
   void SparseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(true, "[ERROR] cannot perform arithmetic + with one of UniTensor is sparse!.%s",
+    cytnx_error_msg(true, "[ERROR] Cannot perform arithmetic + with one of UniTensor is sparse!.%s",
                     "\n");
   }
   void SparseUniTensor::Add_(const Scalar &rhs) {
-    cytnx_error_msg(true, "[ERROR] cannot perform arithmetic + btwn Scalar and SparseUniTensor!.%s",
+    cytnx_error_msg(true, "[ERROR] Cannot perform arithmetic + btwn Scalar and SparseUniTensor!.%s",
                     "\n");
   }
 
   void SparseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(true, "[ERROR] cannot perform arithmetic - with one of UniTensor is sparse!.%s",
+    cytnx_error_msg(true, "[ERROR] Cannot perform arithmetic - with one of UniTensor is sparse!.%s",
                     "\n");
   }
   void SparseUniTensor::Sub_(const Scalar &rhs) {
-    cytnx_error_msg(true, "[ERROR] cannot perform arithmetic - btwn Scalar and UniTensor!.%s",
+    cytnx_error_msg(true, "[ERROR] Cannot perform arithmetic - btwn Scalar and UniTensor!.%s",
                     "\n");
   }
   void SparseUniTensor::lSub_(const Scalar &lhs) {
-    cytnx_error_msg(true, "[ERROR] cannot perform arithmetic - btwn Scalar and UniTensor!.%s",
+    cytnx_error_msg(true, "[ERROR] Cannot perform arithmetic - btwn Scalar and UniTensor!.%s",
                     "\n");
   }
 
   void SparseUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(true, "[ERROR] cannot perform arithmetic * with one of UniTensor is sparse!.%s",
+    cytnx_error_msg(true, "[ERROR] Cannot perform arithmetic * with one of UniTensor is sparse!.%s",
                     "\n");
   }
 
   void SparseUniTensor::Mul_(const Scalar &rhs) {
-    // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
+    // cytnx_error_msg(true,"[ERROR] Cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i] *= rhs;
@@ -2395,10 +2387,10 @@ namespace cytnx {
   }
 
   void SparseUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(true, "[ERROR] cannot arithmetic SparseUniTensor/SparseUniTensor.%s", "\n");
+    cytnx_error_msg(true, "[ERROR] Cannot arithmetic SparseUniTensor/SparseUniTensor.%s", "\n");
   }
   void SparseUniTensor::Div_(const Scalar &rhs) {
-    // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
+    // cytnx_error_msg(true,"[ERROR] Cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i] /= rhs;
@@ -2406,7 +2398,7 @@ namespace cytnx {
   }
 
   void SparseUniTensor::lDiv_(const Scalar &lhs) {
-    cytnx_error_msg(true, "[ERROR] cannot arithmetic Scalar/SparseUniTensor.%s", "\n");
+    cytnx_error_msg(true, "[ERROR] Cannot arithmetic Scalar/SparseUniTensor.%s", "\n");
   }
 
 }  // namespace cytnx

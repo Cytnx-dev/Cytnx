@@ -94,6 +94,84 @@ inline bool parse_get_blocks_silent_arg(const py::args &args, const py::kwargs &
   return silent;
 }
 
+// Lambda used for _getitem__ and _setitem__
+auto build_accessors = [](const UniTensor &self, py::object locators) {
+  ssize_t start, stop, step, slicelength;
+  std::vector<cytnx::Accessor> accessors;
+  if (self.is_diag()) {
+    if (py::isinstance<py::tuple>(locators)) {
+      py::tuple Args = locators.cast<py::tuple>();
+      cytnx_error_msg(Args.size() > 2,
+                      "[ERROR][slicing] A diagonal UniTensor can only be accessed with one- or "
+                      "two dimensional slicing.%s",
+                      "\n");
+      // mixing of slice and ints
+      for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+        // check type:
+        if (py::isinstance<py::slice>(Args[axis])) {
+          py::slice sls = Args[axis].cast<py::slice>();
+          if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+            throw py::error_already_set();
+          accessors.push_back(
+            cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop), cytnx_int64(step)));
+        } else {
+          accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+        }
+      }
+    } else if (py::isinstance<py::slice>(locators)) {
+      py::slice sls = locators.cast<py::slice>();
+      if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+        throw py::error_already_set();
+      accessors.push_back(cytnx::Accessor::range(start, stop, step));
+    } else {
+      accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+    }
+  } else {
+    if (py::isinstance<py::tuple>(locators)) {
+      py::tuple Args = locators.cast<py::tuple>();
+      cytnx_uint64 cnt = 0;
+      // mixing of slice and ints
+      for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+        cnt++;
+        // check type:
+        if (py::isinstance<py::slice>(Args[axis])) {
+          py::slice sls = Args[axis].cast<py::slice>();
+          if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+            throw py::error_already_set();
+          // if(slicelength == self.shape()[axis])
+          // accessors.push_back(cytnx::Accessor::all());
+          accessors.push_back(
+            cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop), cytnx_int64(step)));
+        } else {
+          accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+        }
+      }
+      while (cnt < self.shape().size()) {
+        cnt++;
+        accessors.push_back(Accessor::all());
+      }
+    } else if (py::isinstance<py::slice>(locators)) {
+      py::slice sls = locators.cast<py::slice>();
+      if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+        throw py::error_already_set();
+      // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+      accessors.push_back(cytnx::Accessor::range(start, stop, step));
+      for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
+        accessors.push_back(Accessor::all());
+      }
+    } else {
+      // only int
+      for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
+        if (i == 0)
+          accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+        else
+          accessors.push_back(cytnx::Accessor::all());
+      }
+    }
+  }
+  return accessors;
+};
+
 void unitensor_binding(py::module &m) {
   py::class_<cHclass>(m, "Helpclass")
     .def("exists", &cHclass::exists)
@@ -164,7 +242,9 @@ void unitensor_binding(py::module &m) {
 
 
     .def("c_set_labels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                            return self.set_labels(new_labels);
+                            PyErr_WarnEx(PyExc_DeprecationWarning,
+                              "c_set_labels() is deprecated, use relabel_() instead.", 1);
+                            return self.relabel_(new_labels);
                         },py::arg("new_labels"))
 
 
@@ -175,14 +255,18 @@ void unitensor_binding(py::module &m) {
                         return self.relabel(new_labels);
                     }, py::arg("new_labels"))
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        return self.relabels(new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1);
+                        return self.relabel(new_labels);
                     }, py::arg("new_labels"))
 
      .def("c_relabel_",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         self.relabel_(new_labels);
                     }, py::arg("new_labels"))
      .def("c_relabels_",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        self.relabels_(new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "c_relabels_() is deprecated, use relabel_() instead.", 1);
+                        self.relabel_(new_labels);
                     }, py::arg("new_labels"))
 
 
@@ -211,11 +295,15 @@ void unitensor_binding(py::module &m) {
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        return self.relabels(old_labels,new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1);
+                        return self.relabel(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("c_relabels_",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        self.relabels_(old_labels,new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "c_relabels_() is deprecated, use relabel_() instead.", 1);
+                        self.relabel_(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
 
@@ -301,76 +389,15 @@ void unitensor_binding(py::module &m) {
                   return cHclass(tmp);
                },py::arg("labels"), py::arg("locator"))
 
-
-
-
-    .def("__getitem__",
+     .def("__getitem__",
          [](const UniTensor &self, py::object locators) {
            cytnx_error_msg(self.shape().size() == 0,
                            "[ERROR] try to getitem from a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
-             "[ERROR] cannot get element using [] from Block/SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] Cannot get element using [] from Block/SparseUniTensor. Use at() instead.%s", "\n");
 
-           ssize_t start, stop, step, slicelength;
-           std::vector<cytnx::Accessor> accessors;
-           if (self.is_diag()){
-               if (py::isinstance<py::tuple>(locators)) {
-                    cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
-               } else if (py::isinstance<py::slice>(locators)) {
-                    py::slice sls = locators.cast<py::slice>();
-                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-                         throw py::error_already_set();
-                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
-               } else {
-                    accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-               }
-           }else{
-               if (py::isinstance<py::tuple>(locators)) {
-               py::tuple Args = locators.cast<py::tuple>();
-               cytnx_uint64 cnt = 0;
-               // mixing of slice and ints
-               for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
-                    cnt++;
-                    // check type:
-                    if (py::isinstance<py::slice>(Args[axis])) {
-                    py::slice sls = Args[axis].cast<py::slice>();
-                    if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
-                    throw py::error_already_set();
-                    // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
-                    // if(slicelength == self.shape()[axis])
-                    // accessors.push_back(cytnx::Accessor::all());
-                    accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
-                                                                 cytnx_int64(step)));
-                    } else {
-                    accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
-                    }
-               }
-               while (cnt < self.shape().size()) {
-                    cnt++;
-                    accessors.push_back(Accessor::all());
-               }
-               } else if (py::isinstance<py::slice>(locators)) {
-               py::slice sls = locators.cast<py::slice>();
-               if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-                    throw py::error_already_set();
-               // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-               accessors.push_back(cytnx::Accessor::range(start, stop, step));
-               for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
-                    accessors.push_back(Accessor::all());
-               }
-
-               } else {
-               // only int
-               for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
-                    if (i == 0)
-                    accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-                    else
-                    accessors.push_back(cytnx::Accessor::all());
-               }
-               }
-          }
+           auto accessors = build_accessors(self, locators);
            return self.get(accessors);
          })
     .def("__setitem__",
@@ -379,66 +406,9 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to setelem to a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() == UTenType.Sparse,
-             "[ERROR] cannot set element using [] from SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] Cannot set element using [] from SparseUniTensor. Use at() instead.%s", "\n");
 
-           ssize_t start, stop, step, slicelength;
-           std::vector<cytnx::Accessor> accessors;
-          if (self.is_diag()){
-               if (py::isinstance<py::tuple>(locators)) {
-                    cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
-               } else if (py::isinstance<py::slice>(locators)) {
-                    py::slice sls = locators.cast<py::slice>();
-                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-                         throw py::error_already_set();
-                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
-               } else {
-                    accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-               }
-          }else{
-               if (py::isinstance<py::tuple>(locators)) {
-                    py::tuple Args = locators.cast<py::tuple>();
-                    cytnx_uint64 cnt = 0;
-                    // mixing of slice and ints
-                    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
-                         cnt++;
-                         // check type:
-                         if (py::isinstance<py::slice>(Args[axis])) {
-                         py::slice sls = Args[axis].cast<py::slice>();
-                         if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
-                         throw py::error_already_set();
-                         // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
-                         // if(slicelength == self.shape()[axis])
-                         // accessors.push_back(cytnx::Accessor::all());
-                         accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
-                                                                      cytnx_int64(step)));
-                         } else {
-                         accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
-                         }
-                    }
-                    while (cnt < self.shape().size()) {
-                         cnt++;
-                         accessors.push_back(Accessor::all());
-                    }
-               } else if (py::isinstance<py::slice>(locators)) {
-                    py::slice sls = locators.cast<py::slice>();
-                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-                         throw py::error_already_set();
-                    // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
-                    for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
-                         accessors.push_back(Accessor::all());
-                    }
-               } else {
-                    // only int
-                    for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
-                         if (i == 0)
-                         accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-                         else
-                         accessors.push_back(cytnx::Accessor::all());
-                    }
-               }
-           }
+           auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs);
          })
     .def("__setitem__",
@@ -447,69 +417,12 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to setelem to a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
-             "[ERROR] cannot set element using [] from Blcok/SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] cannot set element using [] from Block/SparseUniTensor. Use at() instead.%s", "\n");
 
-           ssize_t start, stop, step, slicelength;
-           std::vector<cytnx::Accessor> accessors;
-          if (self.is_diag()){
-               if (py::isinstance<py::tuple>(locators)) {
-                    cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
-               } else if (py::isinstance<py::slice>(locators)) {
-                    py::slice sls = locators.cast<py::slice>();
-                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-                         throw py::error_already_set();
-                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
-               } else {
-                    accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-               }
-          }else{
-               if (py::isinstance<py::tuple>(locators)) {
-                    py::tuple Args = locators.cast<py::tuple>();
-                    cytnx_uint64 cnt = 0;
-                    // mixing of slice and ints
-                    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
-                         cnt++;
-                         // check type:
-                         if (py::isinstance<py::slice>(Args[axis])) {
-                         py::slice sls = Args[axis].cast<py::slice>();
-                         if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
-                         throw py::error_already_set();
-                         // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
-                         // if(slicelength == self.shape()[axis])
-                         // accessors.push_back(cytnx::Accessor::all());
-                         accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
-                                                                      cytnx_int64(step)));
-                         } else {
-                         accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
-                         }
-                    }
-                    while (cnt < self.shape().size()) {
-                         cnt++;
-                         accessors.push_back(Accessor::all());
-                    }
-               } else if (py::isinstance<py::slice>(locators)) {
-                    py::slice sls = locators.cast<py::slice>();
-                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-                         throw py::error_already_set();
-                    // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
-                    for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
-                         accessors.push_back(Accessor::all());
-                    }
-               } else {
-                    // only int
-                    for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
-                         if (i == 0)
-                         accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-                         else
-                         accessors.push_back(cytnx::Accessor::all());
-                    }
-               }
-           }
-
+           auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs.get_block());
          })
+
     .def("get_elem",
          [](UniTensor &self, const std::vector<cytnx_uint64> &locator) {
            py::object out;
@@ -594,7 +507,7 @@ void unitensor_binding(py::module &m) {
       [](UniTensor &self, const cytnx_int64 &device) {
         cytnx_error_msg(self.device() == device,
                         "[ERROR][pybind][to_diffferent_device] same device for to() should be "
-                        "handle in python side.%s",
+                        "handled on the Python side.%s",
                         "\n");
         return self.to(device);
       },
@@ -644,18 +557,37 @@ void unitensor_binding(py::module &m) {
                         return self.permute_nosignflip(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
      .def("permute_nosignflip_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
-                        self.permute_nosignflip_(mapper,rowrank);
+                        return &self.permute_nosignflip_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute_nosignflip_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
-                        self.permute_nosignflip_(mapper,rowrank);
+                        return &self.permute_nosignflip_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
-
-
+     .def("twist", [](UniTensor &self, const cytnx_int64 &idx){
+                        return self.twist(idx);
+                },py::arg("idx"))
+     .def("twist", [](UniTensor &self, const std::string label){
+                        return self.twist(label);
+                },py::arg("label"))
+     .def("twist_", [](UniTensor &self, const cytnx_int64 &idx){
+                        return self.twist_(idx);
+                },py::arg("idx"))
+     .def("twist_", [](UniTensor &self, const std::string label){
+                        return self.twist_(label);
+                },py::arg("label"))
+     .def("fermion_twists", &UniTensor::fermion_twists)
+     .def("fermion_twists_", &UniTensor::fermion_twists_)
 
     .def("make_contiguous", &UniTensor::contiguous)
     .def("contiguous_", &UniTensor::contiguous_)
+    .def("apply", &UniTensor::apply,
+         "Apply fermionic signflips and return a new UniTensor. Blocks that require a signflip "
+         "are copied and inverted; blocks that do not are shared views. Non-fermionic tensors are "
+         "returned unchanged. See also: apply_()")
+    .def("apply_", &UniTensor::apply_,
+         "Apply fermionic signflips inplacely. Subsequently, signflip() returns False for all "
+         "elements. Non-fermionic tensors are left unchanged. See also: apply()")
     .def("print_diagram", &UniTensor::print_diagram, py::arg("bond_info") = false,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,
@@ -848,6 +780,18 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return linalg::Add(self, rhs); })
     .def("__add__",
          [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return linalg::Add(self, rhs); })
+    .def("__add__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Add(self, rhs); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__add__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return linalg::Add(self, static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__radd__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Add(lhs, self); })
@@ -871,6 +815,20 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &lhs) { return linalg::Add(lhs, self); })
     .def("__radd__",
          [](UniTensor &self, const cytnx::cytnx_bool &lhs) { return linalg::Add(lhs, self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Add(lhs, self); })
+     // does not give the right type because of type casting to python objects before handling to pybind
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_complex128>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_complex64>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_double>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_float>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_int64>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_uint64>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_int32>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_uint32>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_int16>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_uint16>(lhs), self); })
+    .def("__radd__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return cytnx::linalg::Add(static_cast<cytnx::cytnx_bool>(lhs), self); })
+
 
     .def("__iadd__",
          [](UniTensor &self, const UniTensor &rhs) {
@@ -889,6 +847,18 @@ void unitensor_binding(py::module &m) {
     .def("__iadd__", [](UniTensor &self, const cytnx::cytnx_int16 &rhs) { return self.Add_(rhs); })
     .def("__iadd__", [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return self.Add_(rhs); })
     .def("__iadd__", [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return self.Add_(rhs); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Add_(rhs); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Add_(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Add_(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Add_(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Add_(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Add_(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Add_(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Add_(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Add_(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Add_(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Add_(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__iadd__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Add_(static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__sub__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Sub(self, rhs); })
     .def("__sub__",
@@ -913,6 +883,18 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return linalg::Sub(self, rhs); })
     .def("__sub__",
          [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return linalg::Sub(self, rhs); })
+    .def("__sub__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Sub(rhs); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Sub(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Sub(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Sub(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Sub(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Sub(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Sub(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Sub(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Sub(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Sub(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Sub(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__sub__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Sub(static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__rsub__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Sub(lhs, self); })
@@ -936,6 +918,19 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &lhs) { return linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](UniTensor &self, const cytnx::cytnx_bool &lhs) { return linalg::Sub(lhs, self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Sub(lhs, self); })
+     // does not give the right type because of type casting to python objects before handling to pybind
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_complex128>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_complex64>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_double>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_float>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_int64>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_uint64>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_int32>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_uint32>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_int16>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_uint16>(lhs), self); })
+    .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return cytnx::linalg::Sub(static_cast<cytnx::cytnx_bool>(lhs), self); })
 
     .def("__isub__",
          [](UniTensor &self, const UniTensor &rhs) {
@@ -954,6 +949,18 @@ void unitensor_binding(py::module &m) {
     .def("__isub__", [](UniTensor &self, const cytnx::cytnx_int16 &rhs) { return self.Sub_(rhs); })
     .def("__isub__", [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return self.Sub_(rhs); })
     .def("__isub__", [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return self.Sub_(rhs); })
+    .def("__isub__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Sub_(rhs); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__isub__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Sub_(static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__mul__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Mul(self, rhs); })
     .def("__mul__",
@@ -978,6 +985,18 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return linalg::Mul(self, rhs); })
     .def("__mul__",
          [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return linalg::Mul(self, rhs); })
+    .def("__mul__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Mul(rhs); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Mul(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Mul(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Mul(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Mul(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Mul(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Mul(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Mul(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Mul(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Mul(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Mul(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__mul__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Mul(static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__rmul__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Mul(lhs, self); })
@@ -1001,36 +1020,19 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &lhs) { return linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](UniTensor &self, const cytnx::cytnx_bool &lhs) { return linalg::Mul(lhs, self); })
-
-    /*
-    .def("__mod__",[](UniTensor &self, const UniTensor &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mod(rhs);})
-    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_bool    &rhs){return self.Mod(rhs);})
-
-    .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_complex128&lhs){return
-    linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_complex64
-    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const
-    cytnx::cytnx_double    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self,
-    const cytnx::cytnx_float     &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor
-    &self, const cytnx::cytnx_int64     &lhs){return linalg::Mod(lhs,self);})
-    .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_uint64    &lhs){return
-    linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_int32
-    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const
-    cytnx::cytnx_uint32    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self,
-    const cytnx::cytnx_int16     &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor
-    &self, const cytnx::cytnx_uint16    &lhs){return linalg::Mod(lhs,self);})
-    .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_bool      &lhs){return
-    linalg::Mod(lhs,self);})
-    */
+    .def("__rmul__", [](cytnx::UniTensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mul(lhs, self); })
+     // does not give the right type because of type casting to python objects before handling to pybind
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_complex128>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_complex64>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_double>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_float>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_int64>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_uint64>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_int32>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_uint32>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_int16>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_uint16>(lhs), self); })
+    .def("__rmul__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return cytnx::linalg::Mul(static_cast<cytnx::cytnx_bool>(lhs), self); })
 
     .def("__imul__",
          [](UniTensor &self, const UniTensor &rhs) {
@@ -1049,6 +1051,18 @@ void unitensor_binding(py::module &m) {
     .def("__imul__", [](UniTensor &self, const cytnx::cytnx_int16 &rhs) { return self.Mul_(rhs); })
     .def("__imul__", [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return self.Mul_(rhs); })
     .def("__imul__", [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return self.Mul_(rhs); })
+    .def("__imul__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Mul_(rhs); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__imul__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Mul_(static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__truediv__",
          [](UniTensor &self, const UniTensor &rhs) { return linalg::Div(self, rhs); })
@@ -1074,6 +1088,18 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return linalg::Div(self, rhs); })
     .def("__truediv__",
          [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return linalg::Div(self, rhs); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Div(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Div(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Div(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Div(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__truediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Div(static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__rtruediv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Div(lhs, self); })
@@ -1097,6 +1123,19 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &lhs) { return linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](UniTensor &self, const cytnx::cytnx_bool &lhs) { return linalg::Div(lhs, self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
+     // does not give the right type because of type casting to python objects before handling to pybind
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_complex128>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_complex64>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_double>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_float>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_int64>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint64>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_int32>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint32>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_int16>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint16>(lhs), self); })
+    .def("__rtruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_bool>(lhs), self); })
 
     .def("__itruediv__",
          [](UniTensor &self, const UniTensor &rhs) {
@@ -1124,6 +1163,19 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return self.Div_(rhs); })
     .def("__itruediv__",
          [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return self.Div_(rhs); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Div_(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Div_(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Div_(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Div_(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__itruediv__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Div_(static_cast<cytnx::cytnx_bool>(rhs)); })
+
     .def("__floordiv__",
          [](UniTensor &self, const UniTensor &rhs) { return linalg::Div(self, rhs); })
     .def("__floordiv__",
@@ -1148,6 +1200,18 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return linalg::Div(self, rhs); })
     .def("__floordiv__",
          [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return linalg::Div(self, rhs); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Div(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Div(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Div(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Div(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Div(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__floordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Div(static_cast<cytnx::cytnx_bool>(rhs)); })
 
     .def("__rfloordiv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Div(lhs, self); })
@@ -1171,6 +1235,19 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &lhs) { return linalg::Div(lhs, self); })
     .def("__rfloordiv__",
          [](UniTensor &self, const cytnx::cytnx_bool &lhs) { return linalg::Div(lhs, self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
+     // does not give the right type because of type casting to python objects before handling to pybind
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_complex128>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_complex64>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_double>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_float>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_int64>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint64>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_int32>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint32>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_int16>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint16>(lhs), self); })
+    .def("__rfloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return cytnx::linalg::Div(static_cast<cytnx::cytnx_bool>(lhs), self); })
 
     .def("__ifloordiv__",
          [](UniTensor &self, const UniTensor &rhs) {
@@ -1198,10 +1275,86 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const cytnx::cytnx_uint16 &rhs) { return self.Div_(rhs); })
     .def("__ifloordiv__",
          [](UniTensor &self, const cytnx::cytnx_bool &rhs) { return self.Div_(rhs); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &rhs) { return self.Div_(static_cast<cytnx::cytnx_complex128>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &rhs) { return self.Div_(static_cast<cytnx::cytnx_complex64>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &rhs) { return self.Div_(static_cast<cytnx::cytnx_double>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &rhs) { return self.Div_(static_cast<cytnx::cytnx_float>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_int64>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_uint64>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_int32>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_uint32>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_int16>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &rhs) { return self.Div_(static_cast<cytnx::cytnx_uint16>(rhs)); })
+    .def("__ifloordiv__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &rhs) { return self.Div_(static_cast<cytnx::cytnx_bool>(rhs)); })
+
+    /*
+    .def("__mod__",[](UniTensor &self, const UniTensor &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_complex128&rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_complex64 &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_double    &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_float     &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_int64     &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_uint64    &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_int32     &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_uint32    &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_int16     &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_uint16    &rhs){return self.Mod(rhs);})
+    .def("__mod__",[](UniTensor &self, const cytnx::cytnx_bool    &rhs){return self.Mod(rhs);})
+    .def("__mod__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return self.Mod(lhs, self); })
+    .def("__mod__", [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<double>> &lhs) { return self.Mod(static_cast<cytnx::cytnx_complex128>(lhs), self); })
+    .def("__mod__", [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &lhs) { return self.Mod(static_cast<cytnx::cytnx_complex64>(lhs), self); })
+    .def("__mod__", [](cytnx::Tensor &self, const py::numpy_scalar<double> &lhs) { return self.Mod(static_cast<cytnx::cytnx_double>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &lhs) { return self.Mod(static_cast<cytnx::cytnx_float>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &lhs) { return self.Mod(static_cast<cytnx::cytnx_int64>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &lhs) { return self.Mod(static_cast<cytnx::cytnx_uint64>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &lhs) { return self.Mod(static_cast<cytnx::cytnx_int32>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &lhs) { return self.Mod(static_cast<cytnx::cytnx_uint32>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return self.Mod(static_cast<cytnx::cytnx_int16>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return self.Mod(static_cast<cytnx::cytnx_uint16>(lhs), self); })
+    .def("__mod__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return self.Mod(static_cast<cytnx::cytnx_bool>(lhs), self); })
+
+    .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_complex128&lhs){return
+    linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_complex64
+    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const
+    cytnx::cytnx_double    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self,
+    const cytnx::cytnx_float     &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor
+    &self, const cytnx::cytnx_int64     &lhs){return linalg::Mod(lhs,self);})
+    .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_uint64    &lhs){return
+    linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_int32
+    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self, const
+    cytnx::cytnx_uint32    &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor &self,
+    const cytnx::cytnx_int16     &lhs){return linalg::Mod(lhs,self);}) .def("__rmod__",[](UniTensor
+    &self, const cytnx::cytnx_uint16    &lhs){return linalg::Mod(lhs,self);})
+    .def("__rmod__",[](UniTensor &self, const cytnx::cytnx_bool      &lhs){return
+    linalg::Mod(lhs,self);})
+    .def("__rmod__", [](cytnx::UniTensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mod(lhs, self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<double>> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_complex128>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<std::complex<float>> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_complex64>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<double> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_double>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<float> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_float>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<int64_t> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_int64>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint64_t> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_uint64>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<int32_t> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_int32>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint32_t> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_uint32>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_int16>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_uint16>(lhs), self); })
+    .def("__rmod__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return cytnx::linalg::Mod(static_cast<cytnx::cytnx_bool>(lhs), self); })
+    */
+
     .def("__pow__", [](UniTensor &self, const cytnx::cytnx_double &p) { return self.Pow(p); })
     .def("c__ipow__", [](UniTensor &self, const cytnx::cytnx_double &p) { self.Pow_(p); })
     .def("Pow", &UniTensor::Pow)
     .def("cPow_", &UniTensor::Pow_)
+
+    .def("cInv_", [](UniTensor &self, double clip){
+                            return self.Inv_(clip);
+                    },
+                    py::arg("clip")=-1)
+    .def("Inv", [](UniTensor &self, double clip){
+                            return self.Inv(clip);
+                    },
+                    py::arg("clip")=-1)
     .def("cConj_", &UniTensor::Conj_)
     .def("Conj", &UniTensor::Conj)
 

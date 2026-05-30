@@ -23,7 +23,7 @@ namespace cytnx {
     template <typename T, typename T_ten>
     static T *get_obj_data_ptr(const T_ten &buffer, const cytnx_int32 bk_idx = 0) {
       if constexpr (std::is_same_v<T_ten, UniTensor>) {
-        if (buffer.uten_type() == UTenType.Block) {
+        if (buffer.uten_type() == UTenType.Block || buffer.uten_type() == UTenType.BlockFermionic) {
           if (buffer.device() == Device.cpu) {
             return buffer.get_blocks_()[bk_idx].template ptr_as<T>();
           } else {  // on cuda
@@ -62,7 +62,7 @@ namespace cytnx {
     }
 
     static cytnx_int64 get_elem_num(const UniTensor &UT) {
-      if (UT.uten_type() == UTenType.Block) {
+      if (UT.uten_type() == UTenType.Block || UT.uten_type() == UTenType.BlockFermionic) {
         cytnx_int64 dim = 0;
         auto &blocks = UT.get_blocks_();
         for (int i = 0; i < blocks.size(); ++i) {
@@ -76,16 +76,31 @@ namespace cytnx {
 
     template <typename T, typename T_ten>
     static void pass_data_UT(T_ten &UT, T *data_ptr, bool to_UT) {
+      auto device = UT.device();
       if constexpr (std::is_same_v<T_ten, UniTensor>) {
-        if (UT.uten_type() == UTenType.Block) {
+        if (UT.uten_type() == UTenType.Block || UT.uten_type() == UTenType.BlockFermionic) {
           auto &blocks = UT.get_blocks_();
           for (auto &block : blocks) {
             auto dim = get_dim(block);
             T *UT_data = get_obj_data_ptr<T, Tensor>(block);
             if (to_UT) {
-              memcpy(UT_data, data_ptr, dim * sizeof(T));
+              if (device == Device.cpu) {
+                memcpy(UT_data, data_ptr, dim * sizeof(T));
+              } else {
+  #ifdef UNI_GPU
+                checkCudaErrors(
+                  cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+              }
             } else {
-              memcpy(data_ptr, UT_data, dim * sizeof(T));
+              if (device == Device.cpu) {
+                memcpy(data_ptr, UT_data, dim * sizeof(T));
+              } else {
+  #ifdef UNI_GPU
+                checkCudaErrors(
+                  cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
+  #endif
+              }
             }
             data_ptr += dim;
           }
@@ -95,9 +110,23 @@ namespace cytnx {
           auto dim = get_dim(block);
           T *UT_data = get_obj_data_ptr<T, Tensor>(block);
           if (to_UT) {
-            memcpy(UT_data, data_ptr, dim * sizeof(T));
+            if (device == Device.cpu) {
+              memcpy(UT_data, data_ptr, dim * sizeof(T));
+            } else {
+  #ifdef UNI_GPU
+              checkCudaErrors(
+                cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+            }
           } else {
-            memcpy(data_ptr, UT_data, dim * sizeof(T));
+            if (device == Device.cpu) {
+              memcpy(data_ptr, UT_data, dim * sizeof(T));
+            } else {
+  #ifdef UNI_GPU
+              checkCudaErrors(
+                cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
+  #endif
+            }
           }
           return;
         }
@@ -105,9 +134,21 @@ namespace cytnx {
         auto dim = get_dim(UT);
         T *UT_data = get_obj_data_ptr<T, Tensor>(UT);
         if (to_UT) {
-          memcpy(UT_data, data_ptr, dim * sizeof(T));
+          if (device == Device.cpu) {
+            memcpy(UT_data, data_ptr, dim * sizeof(T));
+          } else {
+  #ifdef UNI_GPU
+            checkCudaErrors(cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+          }
         } else {
-          memcpy(data_ptr, UT_data, dim * sizeof(T));
+          if (device == Device.cpu) {
+            memcpy(data_ptr, UT_data, dim * sizeof(T));
+          } else {
+  #ifdef UNI_GPU
+            checkCudaErrors(cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
+  #endif
+          }
         }
         return;
       }
@@ -188,6 +229,9 @@ namespace cytnx {
                       "[ERROR][Lanczos], the output dtype in the matvec is not "
                       "consistent with the one in LinOp.%s",
                       "\n");
+      // Resolve any pending fermionic signflip so the raw block data copied out below corresponds
+      // to all signflips applied; no-op for bosonic/dense tensors.
+      if constexpr (std::is_same_v<T_ten, UniTensor>) nextTens.apply_();
       nextTens.contiguous_();
       pass_data_UT<T, T_ten>(nextTens, v_out, false);
     }
@@ -270,6 +314,9 @@ namespace cytnx {
       cytnx_int32 ipntr[14];
       T *resid = new T[dim];
       T_ten buffer_UT = UT_init.clone();
+      // Pin the Krylov vectors to the sign frame with all signflips applied so the raw block data
+      // the iteration operates on is consistent; no-op for bosonic/dense tensors.
+      if constexpr (std::is_same_v<T_ten, UniTensor>) buffer_UT.apply_();
       cytnx_bool ifinit = true;  // not allow for false, currently
       if (ifinit) {
         info = 1;
@@ -360,7 +407,14 @@ namespace cytnx {
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
             T *tmp_data = tens_data + ik * dim;
             T *z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
-            memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
+            if (Hop->device() == Device.cpu) {
+              memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
+            } else {
+  #ifdef UNI_GPU
+              checkCudaErrors(
+                cudaMemcpy(tmp_data, z_k_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
+  #endif
+            }
           }
         }
       }
@@ -377,10 +431,12 @@ namespace cytnx {
       auto eigvals_tens = zeros({k}, dtype, device);
       out.push_back(UniTensor(eigvals_tens));
       if (is_V) {
-        auto labels = UT_init.labels();
-        for (cytnx_int32 ik = 0; ik < k; ++ik) {
-          out.push_back(UT_init.clone());
-        }
+        // Output eigenvector templates: pass_data_UT fills these with the applied
+        // (all-signflips-applied) eigenvector data, so any pending signflips must be cleared first;
+        // apply_ is a no-op for bosonic/dense tensors.
+        UniTensor UT_out = UT_init.clone();
+        UT_out.apply_();
+        for (cytnx_int32 ik = 0; ik < k; ++ik) out.push_back(UT_out.clone());
       }
 
       switch (dtype) {
@@ -499,7 +555,7 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR][Lanczos] 'which' should be 'LM', 'LA', 'SA'", "\n");
       }
 
-      // If the operator is complex hermaitian, just call Arnoldi algorthm since there is no
+      // If the operator is complex Hermitian, just call Arnoldi algorthm since there is no
       //     specific routine for complex Hermitian operaton in arpack.
       if (Type.is_complex(Hop->dtype())) {
         try {
@@ -522,7 +578,6 @@ namespace cytnx {
                       "\n");
 
       // check Tin should be rank-1:
-      auto _UT_init = UT_init.clone();
       if (UT_init.dtype() == Type.Void) {
         cytnx_error_msg(k < 1, "[ERROR][Lanczos] The initial UniTensor sould be defined.%s", "\n");
       } else {

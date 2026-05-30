@@ -1,10 +1,14 @@
 #include "linalg.hpp"
+
+#include <iostream>
+#include <string>
+#include <type_traits>
+#include <vector>
+
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include <iostream>
-#include <vector>
-using namespace std;
+
 typedef cytnx::Accessor ac;
 
 #ifdef BACKEND_TORCH
@@ -17,19 +21,15 @@ namespace cytnx {
     std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Qr] error, Qr can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[Qr] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_uint64 n_tau = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
-      // std::cout << n_singlu << std::endl;
-
       Tensor tau, Q, R, D;  // D is not used here.
       tau.Init({n_tau}, in.dtype(), in.device());
-      tau.storage().set_zeros();  // if type is complex, S should be real
+      tau.storage().set_zeros();
       R.Init({n_tau, Tin.shape()[1]}, in.dtype(), in.device());
       R.storage().set_zeros();
 
@@ -53,7 +53,6 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
     #ifdef UNI_CUQUANTUM
-        // cytnx_error_msg(true, "[Qr] error,%s", "Currently QR does not support CUDA.\n");
 
         checkCudaErrors(cudaSetDevice(in.device()));
 
@@ -87,14 +86,8 @@ namespace cytnx {
       }
     }
 
-  }  // namespace linalg
-
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
-
-    void _qr_Dense_UT(std::vector<UniTensor> &outCyT, const UniTensor &Tin, const bool &is_tau) {
+    static void Qr_Dense_UT_internal(std::vector<UniTensor> &outCyT, const UniTensor &Tin,
+                                     const bool &is_tau) {
       Tensor tmp;
       if (Tin.is_contiguous())
         tmp = Tin.get_block_();
@@ -103,27 +96,27 @@ namespace cytnx {
         tmp.contiguous_();
       }
 
-      vector<cytnx_uint64> tmps = tmp.shape();
-      vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+      std::vector<cytnx_uint64> tmps = tmp.shape();
+      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
       tmps.clear();
-      vector<string> oldlabel = Tin.labels();
+      std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
       cytnx_int64 rowdim = 1;
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp.reshape_({rowdim, -1});
 
-      vector<Tensor> outT = cytnx::linalg::Qr(tmp, is_tau);
+      std::vector<Tensor> outT = cytnx::linalg::Qr(tmp, is_tau);
       if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
       int t = 0;
       outCyT.resize(outT.size());
 
-      string newlbl = "_aux_";
+      std::string newlbl = "_aux_";
 
       // Q
-      vector<cytnx_int64> Qshape;
-      vector<string> Qlbl;
+      std::vector<cytnx_int64> Qshape;
+      std::vector<std::string> Qlbl;
       for (int i = 0; i < Tin.rowrank(); i++) {
         Qshape.push_back(oldshape[i]);
         Qlbl.push_back(oldlabel[i]);
@@ -132,7 +125,7 @@ namespace cytnx {
       Qlbl.push_back(newlbl);
       outT[0].reshape_(Qshape);
       outCyT[0] = UniTensor(outT[0], false, Qshape.size() - 1);
-      outCyT[0].set_labels(Qlbl);
+      outCyT[0].relabel_(Qlbl);
 
       // R
       Qshape.clear();
@@ -145,7 +138,7 @@ namespace cytnx {
       }
       outT[1].reshape_(Qshape);
       outCyT[1] = UniTensor(outT[1], false, 1);
-      outCyT[1].set_labels(Qlbl);
+      outCyT[1].relabel_(Qlbl);
 
       // tau
       if (is_tau) {
@@ -166,11 +159,21 @@ namespace cytnx {
           outCyT[1].bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
         }
         outCyT[1]._impl->_is_braket_form = outCyT[1]._impl->_update_braket();
-      }
-    };
+      }  // if tag
+    }  // QR_Dense_UT_internal
 
-    void _qr_Block_UT(std::vector<UniTensor> &outCyT, const UniTensor &Tin, const bool &is_tau) {
+    // Block-wise Qr for a symmetric UniTensor. Handles both BlockUniTensor (bosonic) and
+    // BlockFermionicUniTensor (fermionic), selected by the template parameter BUT. For the
+    // fermionic case, sign-flipped blocks are negated to the physical operator before the
+    // per-sector dense Qr, and the resulting Q/R carry an all-false signflip (they are already
+    // physical). For the bosonic case there are no sign flips and those steps do nothing.
+    template <class BUT>
+    static void Qr_BlockUT_internal(std::vector<UniTensor> &outCyT, const UniTensor &Tin,
+                                    const bool &is_tau) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
+      std::vector<bool> signflip;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
@@ -183,7 +186,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -191,8 +193,6 @@ namespace cytnx {
         BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
       strides.push_back(1);
-      // std::cout << BdRight << std::endl;
-      // std::cout << strides << std::endl;
 
       // 2) making new inner_to_outer_idx lists for each block:
       // -> a. get stride:
@@ -202,7 +202,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
       //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
@@ -216,7 +215,6 @@ namespace cytnx {
           new_itoi[b][1] += tmpv[cnt] * strides[cnt];
         }
       }
-      // std::cout << new_itoi <<  std::endl;
 
       // 3) categorize:
       // key = qnum, val = list of block locations:
@@ -226,10 +224,9 @@ namespace cytnx {
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
-      // ->a initialize an empty shell of UniTensor!
+      // ->a initialize an empty shell of UniTensors!
       vec2d<cytnx_int64> aux_qnums;  // for sharing bond
-      std::vector<cytnx_uint64> aux_degs;  // forsharing bond
-
+      std::vector<cytnx_uint64> aux_degs;  // for sharing bond
       std::vector<Tensor> tau_blocks;
 
       vec2d<cytnx_uint64> Q_itoi;  // for Q
@@ -241,26 +238,34 @@ namespace cytnx {
       cytnx_uint64 trcntr = 0;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // cout << x.second.size() << "-------" << endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());
         std::vector<cytnx_int64> row_szs(order.size(), 1);
         cytnx_uint64 Rblk_dim = 0;
         cytnx_int64 tmp = -1;
+        cytnx_int64 current_block;
         for (int i = 0; i < order.size(); i++) {
+          current_block = x.second[order[i]];
           if (itoi_indicators[i][0] != tmp) {
             tmp = itoi_indicators[i][0];
             Rblk_dim++;
           }
-          Tlist[i] = Tin.get_blocks()[x.second[order[i]]];
+          Tlist[i] = Tin.get_blocks_()[current_block];
           for (int j = 0; j < Tin.rowrank(); j++) {
             row_szs[i] *= Tlist[i].shape()[j];
           }
-          Tlist[i] = Tlist[i].reshape({row_szs[i], -1});
+          bool flip = false;
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+            flip = signflip[current_block];
+          if (flip) {
+            Tlist[i] = -Tlist[i];  // copies Tensor
+            Tlist[i].reshape_({row_szs[i], -1});
+          } else {
+            Tlist[i] = Tlist[i].reshape({row_szs[i], -1});  // copies Tensor
+          }
         }
         cytnx_error_msg(Tlist.size() % Rblk_dim, "[Internal ERROR] Tlist is not complete!%s", "\n");
         // BTen is the big block!!
@@ -334,7 +339,7 @@ namespace cytnx {
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
 
       // process Q
-      BlockUniTensor *Q_ptr = new BlockUniTensor();
+      BUT *Q_ptr = new BUT();
       for (int i = 0; i < Tin.rowrank(); i++) {
         Q_ptr->_bonds.push_back(Tin.bonds()[i].clone());
         Q_ptr->_labels.push_back(Tin.labels()[i]);
@@ -346,12 +351,14 @@ namespace cytnx {
       Q_ptr->_is_braket_form = Q_ptr->_update_braket();
       Q_ptr->_inner_to_outer_idx = Q_itoi;
       Q_ptr->_blocks = Q_blocks;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+        Q_ptr->_signflip = std::vector<bool>(Q_blocks.size(), false);
       UniTensor Q;
       Q._impl = boost::intrusive_ptr<UniTensor_base>(Q_ptr);
       outCyT.push_back(Q);
 
       // process R:
-      BlockUniTensor *R_ptr = new BlockUniTensor();
+      BUT *R_ptr = new BUT();
       R_ptr->_bonds.push_back(Bd_aux);
       R_ptr->_labels.push_back("_aux_");
       for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
@@ -363,42 +370,57 @@ namespace cytnx {
       R_ptr->_is_braket_form = R_ptr->_update_braket();
       R_ptr->_inner_to_outer_idx = R_itoi;
       R_ptr->_blocks = R_blocks;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+        R_ptr->_signflip = std::vector<bool>(R_blocks.size(), false);
       UniTensor R;
       R._impl = boost::intrusive_ptr<UniTensor_base>(R_ptr);
       outCyT.push_back(R);
 
       if (is_tau) {
-        BlockUniTensor *tau_ptr = new BlockUniTensor();
-        tau_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_tau_L", "_tau_R"}, 1, Type.Double,
-                      Device.cpu,  // this two will be overwrite later, so doesnt matter.
-                      true,  // is_diag!
-                      true);  // no_alloc!
+        BUT *tau_ptr = new BUT();
+        tau_ptr->Init(
+          {Bd_aux, Bd_aux.redirect()}, {"_tau_L", "_tau_R"}, 1, Type.Double,
+          Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+          true,  // is_diag!
+          true);  // no_alloc!
         tau_ptr->_blocks = tau_blocks;
         UniTensor tau;
         tau._impl = boost::intrusive_ptr<UniTensor_base>(tau_ptr);
 
         outCyT.push_back(tau);
       }
-    };
+    }  // Qr_BlockUT_internal
 
     std::vector<UniTensor> Qr(const UniTensor &Tin, const bool &is_tau) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank(),
-                      "[QR][ERROR] QR for DenseUniTensor should have rank>1 and rank>rowrank>0%s",
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][QR] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][QR] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(
+        Tin.rowrank() >= Tin.rank(),
+        "[ERROR][QR] Input UniTensor should have rowrank<rank, but rowrank is %d and rank is %d\n",
+        Tin.rowrank(), Tin.rank());
+      cytnx_error_msg(Tin.is_diag(),
+                      "[ERROR][QR] Input UniTensor is diagonal, so QR is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _qr_Dense_UT(outCyT, Tin, is_tau);
-        return outCyT;
+        Qr_Dense_UT_internal(outCyT, Tin, is_tau);
       } else if (Tin.uten_type() == UTenType.Block) {
-        _qr_Block_UT(outCyT, Tin, is_tau);
-        return outCyT;
-
+        Qr_BlockUT_internal<BlockUniTensor>(outCyT, Tin, is_tau);
+      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
+        Qr_BlockUT_internal<BlockFermionicUniTensor>(outCyT, Tin, is_tau);
       } else {
-        cytnx_error_msg(true, "[QR for sparse UniTensor is developling%s]", "\n");
+        cytnx_error_msg(true, "[ERROR][QR] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
-    };
+      return outCyT;
+    }
 
   }  // namespace linalg
 }  // namespace cytnx

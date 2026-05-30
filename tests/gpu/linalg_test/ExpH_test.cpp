@@ -54,7 +54,7 @@ TEST(ExpH_UT, gpu_UTExpH_test) {
   // convert to UT
   UniTensor UT = UniTensor(t_i).to(cytnx::Device.cuda);
   UT.set_rowrank(2);
-  UT.set_labels({"a", "b", "c", "d"});
+  UT.relabel_({"a", "b", "c", "d"});
 
   double dt = 0.05;
   UniTensor UTFin = linalg::ExpH(UT, -dt).to(cytnx::Device.cuda);

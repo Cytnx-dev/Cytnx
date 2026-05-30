@@ -105,8 +105,8 @@ Now, let's first prepare the MPO, **M**. Here, the **d** is the physical bond di
     M[0,2] = M[1,3] = 2**0.5*sm.real()
     M = cytnx.UniTensor(M,0)
 
-    L0 = cytnx.UniTensor(cytnx.zeros([4,1,1]), rowrank = 0) #Left boundary
-    R0 = cytnx.UniTensor(cytnx.zeros([4,1,1]), rowrank = 0) #Right boundary
+    L0 = cytnx.UniTensor.zeros([4,1,1]).set_rowrank_(0) #Left boundary
+    R0 = cytnx.UniTensor.zeros([4,1,1]).set_rowrank_(0) #Right boundary
     L0[0,0,0] = 1.; R0[3,0,0] = 1.
 
 .. Note::
@@ -194,17 +194,17 @@ Next, we are going to prepare our variational ansatz (MPS). Here, **chi** is the
     Nsites = 20
     lbls = [] # List for storing the MPS labels
     A = [None for i in range(Nsites)]
-    A[0] = cytnx.UniTensor(cytnx.random.normal([1, d, min(chi, d)], 0., 1.), rowrank = 2)
-    A[0].relabels_(["0","1","2"])
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1.) \
+                                  .set_rowrank_(2).relabel_(["0","1","2"])
     lbls.append(["0","1","2"]) # store the labels for later convinience.
 
     for k in range(1,Nsites):
         dim1 = A[k-1].shape()[2]; dim2 = d
         dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1))
-        A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1.), rowrank = 2)
+        A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3],0.,1.).set_rowrank_(2)
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
-        A[k].relabels_(lbl)
+        A[k].relabel_(lbl)
         lbls.append(lbl) # store the labels for later convinience.
 
 
@@ -281,11 +281,11 @@ The full implementation looks like:
         LR[p+1] = anet.Launch()
 
         # Recover the original MPS labels
-        A[p].relabels_(lbls[p])
-        A[p+1].relabels_(lbls[p+1])
+        A[p].relabel_(lbls[p])
+        A[p+1].relabel_(lbls[p+1])
 
     _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-    A[-1].relabels_(lbls[-1]) # Recover the original MPS labels
+    A[-1].relabel_(lbls[-1]) # Recover the original MPS labels
 
 
 
@@ -319,12 +319,12 @@ Now we are ready for describing the main DMRG algorithm that optimize our MPS, t
 
         psi.set_rowrank_(2) # maintain rowrank to perform the svd
         s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-        A[p+1].relabels_(lbls[p+1]); # set the label back to be consistent
+        A[p+1].relabel_(lbls[p+1]); # set the label back to be consistent
 
         s = s/s.Norm().item() # normalize s
 
         A[p] = cytnx.Contract(A[p],s) # absorb s into next neighbor
-        A[p].relabels_(lbls[p]); # set the label back to be consistent
+        A[p].relabel_(lbls[p]); # set the label back to be consistent
 
         # update LR from right to left:
         anet = cytnx.Network("R_AMAH.net")
@@ -335,7 +335,7 @@ Now we are ready for describing the main DMRG algorithm that optimize our MPS, t
 
     A[0].set_rowrank_(1) # maintain rowrank to perform the svd
     _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-    A[0].relabels_(lbls[0]); # set the label back to be consistent
+    A[0].relabel_(lbls[0]); # set the label back to be consistent
 
 There are lots of things happening here, let's break it up a bit, from right to left, the first thing we do is to contract two tensors A[p] and A[p+1]:
 
@@ -389,7 +389,7 @@ To ultilize the Lanczos function, the opertion of acting Hamitonian (which invol
             lbl = v.labels()
             self.anet.PutUniTensor("psi",v)
             out = self.anet.Launch()
-            out.relabels_(lbl)
+            out.relabel_(lbl)
             return out
 
 .. Hint::
@@ -429,12 +429,12 @@ we have to make our psi into the canonical form, for which we do the SVD for the
 
     psi.set_rowrank_(2) # maintain rowrank to perform the svd
     s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-    A[p+1].relabels_(lbls[p+1]); # set the label back to be consistent
+    A[p+1].relabel_(lbls[p+1]); # set the label back to be consistent
 
     s = s/s.Norm().item() # normalize s
 
     A[p] = cytnx.Contract(A[p],s) # absorb s into next neighbor
-    A[p].relabels_(lbls[p]); # set the label back to be consistent
+    A[p].relabel_(lbls[p]); # set the label back to be consistent
 
 
 
@@ -482,7 +482,7 @@ The for loop is finished, now we arrived at the left end of the system, with the
 
     A[0].set_rowrank_(1)
     _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-    A[0].relabels_(lbls[0]); #set the label back to be consistent
+    A[0].relabel_(lbls[0]); #set the label back to be consistent
 
 looks like the same as we did for the right-end site in the beginning, this time we saves the vT, the purpose of the
 set_rowrank_(1) is only for the convenience of calling Svd/Svd_truncate in the next sweeping procedure from left to right.
@@ -514,12 +514,12 @@ So we are done! With the other loop to control the number of times we sweep, we 
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p+1].relabels_(lbls[p+1]); # set the label back to be consistent
+            A[p+1].relabel_(lbls[p+1]); # set the label back to be consistent
 
             s = s/s.Norm().item() # normalize s
 
             A[p] = cytnx.Contract(A[p],s) # absorb s into next neighbor
-            A[p].relabels_(lbls[p]); # set the label back to be consistent
+            A[p].relabel_(lbls[p]); # set the label back to be consistent
 
             # update LR from right to left:
             anet = cytnx.Network("R_AMAH.net")
@@ -530,7 +530,7 @@ So we are done! With the other loop to control the number of times we sweep, we 
 
         A[0].set_rowrank_(1)
         _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-        A[0].relabels_(lbls[0]); #set the label back to be consistent
+        A[0].relabel_(lbls[0]); #set the label back to be consistent
 
         for p in range(Nsites-1):
             dim_l = A[p].shape()[0]
@@ -543,12 +543,12 @@ So we are done! With the other loop to control the number of times we sweep, we 
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].relabels_(lbls[p]); #set the label back to be consistent
+            A[p].relabel_(lbls[p]); #set the label back to be consistent
 
             s = s/s.Norm().item() # normalize s
 
             A[p+1] = cytnx.Contract(s,A[p+1]) ## absorb s into next neighbor.
-            A[p+1].relabels_(lbls[p+1]); #set the label back to be consistent
+            A[p+1].relabel_(lbls[p+1]); #set the label back to be consistent
 
             # update LR from left to right:
             anet = cytnx.Network("L_AMAH.net")
@@ -559,7 +559,7 @@ So we are done! With the other loop to control the number of times we sweep, we 
 
         A[-1].set_rowrank_(2)
         _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-        A[-1].relabels_(lbls[-1]); #set the label back to be consistent
+        A[-1].relabel_(lbls[-1]); #set the label back to be consistent
 
 Compare DMRG Results
 ************************************

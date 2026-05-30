@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
+#include "linalg_test.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -23,7 +24,7 @@ namespace {
          const unsigned int& dtype = Type.Double, const int& device = Device.cpu);
     UniTensor matvec(const UniTensor& l) override {
       auto tmp = Contracts({A, l, B}, "", true);
-      tmp.relabels_(l.labels()).set_rowrank(l.rowrank());
+      tmp.relabel_(l.labels()).set_rowrank(l.rowrank());
       return tmp;
     }
 
@@ -48,15 +49,15 @@ namespace {
     std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D)};
     A = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("A")
-          .relabels_({"al", "phys", "ar"})
+          .relabel_({"al", "phys", "ar"})
           .set_rowrank(2);
     B = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("B")
-          .relabels_({"bl", "phys", "br"})
+          .relabel_({"bl", "phys", "br"})
           .set_rowrank(2);
     T_init = UniTensor({Bond(D), Bond(D)}, {}, -1, in_dtype, in_device)
                .set_name("l")
-               .relabels_({"al", "bl"})
+               .relabel_({"al", "bl"})
                .set_rowrank(1);
     if (Type.is_float(this->dtype())) {
       double low = -1.0, high = 1.0;
@@ -77,13 +78,13 @@ namespace {
       double low = -1.0, high = 1.0;
       int seed = 0;
       H.uniform_(low, high, seed);
-      H.set_labels({"a", "b"});
+      H.relabel_({"a", "b"});
       // H.print_diagram();
       // H.print_blocks();
     }
     UniTensor matvec(const UniTensor& psi) override {
       auto out = (H.astype(psi.dtype())).contract(psi);
-      out.set_labels({"b", "c"});
+      out.relabel_({"b", "c"});
       return out;
     }
   };
@@ -145,7 +146,7 @@ namespace {
       // if k == 1, arnoldi_eigvecs will be a rank-1 tensor
       auto arnoldi_eigvec = arnoldi_eigs[i + 1];
       auto exact_eigval = fst_few_eigvals[i];
-      // check eigen value by comparing with the full spectrum results.
+      // check eigenvalue by comparing with the full spectrum results.
       // avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
       auto eigval_err = abs(abs(arnoldi_eigval) - abs(exact_eigval)) / abs(exact_eigval);
       // std::cout << "eigval err" << eigval_err << std::endl;
@@ -383,4 +384,22 @@ TEST(Arnoldi_Ut, err_ncv_out_of_range) {
   auto dim = err_task.D * err_task.D * err_task.d;
   err_task.ncv = dim + 1;
   err_task.ExcuteErrorTest();
+}
+
+/*=====test info=====
+describe:Arnoldi ('SR') for a fermionic LinOp Op=A^dag A introducing sign flips; solving for the
+TWO lowest states (k=2). Tests the fermionic ARPACK matvec and the BlockFermionicUniTensor returns.
+Checks both eigenvalues against the dense reference, that both eigenvectors are normalized and match
+the dense eigenvectors (|<v|w>| ~ 1), and that the two eigenvectors are mutually orthogonal.
+(ARPACK's real driver packs the eigenvector as complex with zero imaginary part for a real
+eigenvalue; ferm_fidelity uses the magnitude |<v|w>| so it handles that.)
+====================*/
+TEST(Arnoldi_Ut, fermionic_ArnoldiFermionic) {
+  const double tol = 1e-7;
+  UniTensor A = make_ferm_A();
+  UniTensor v0 = make_ferm_ada_ket(A);
+  FermiAdaOp op(A, ferm_ket_nx(v0));
+  auto low = ferm_dense_lowest(A, 2);  // two lowest dense eigenpairs (ascending)
+  auto eigs = linalg::Arnoldi(&op, v0, "SR", 1000, 1e-12, 2, true);  // k=2
+  expect_lowest_states(A, eigs, low, tol);
 }

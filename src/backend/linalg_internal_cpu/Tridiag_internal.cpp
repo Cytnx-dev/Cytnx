@@ -13,7 +13,6 @@ namespace cytnx {
                             bool throw_excp /*= false*/) {
       char job;
       job = (U->dtype() == Type.Void) ? 'N' : 'V';
-      // std::cout << L << std::endl;
       // copy from in to S[out]
       memcpy(S->data(), diag->data(), L * sizeof(cytnx_double));
 
@@ -31,7 +30,6 @@ namespace cytnx {
 
       info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L, (cytnx_double *)S->data(), Dsv,
                            (cytnx_double *)U->data(), ldz);
-      // std::cout << L << std::endl;
       if (!throw_excp and info != 0) {
         cytnx_error_msg(info != 0, "%s %d",
                         "Error in Lapack function 'dstev': Lapack INFO = ", info);
@@ -49,7 +47,6 @@ namespace cytnx {
                             bool throw_excp /*= false*/) {
       char job;
       job = (U->dtype() == Type.Void) ? 'N' : 'V';
-      // std::cout << L << std::endl;
       // copy from in to S[out]
       memcpy(S->data(), diag->data(), L * sizeof(cytnx_float));
 

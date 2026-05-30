@@ -1,20 +1,20 @@
 #include "linalg.hpp"
 
 #include "Tensor.hpp"
-#include "UniTensor.hpp"
 
 #ifdef BACKEND_TORCH
 #else
   #include "backend/linalg_internal_interface.hpp"
+  #include "iArithmetic_visit.hpp"
 namespace cytnx {
   namespace linalg {
 
     void iMul(Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[iMul] error, two tensor cannot on different devices.%s", "\n");
+                      "[iMul] The two tensors cannot be on different devices.%s", "\n");
       if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[iMul] error, the two tensor does not have the same shape. Lt rank: [%d] "
+                        "[iMul] The two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
@@ -28,14 +28,12 @@ namespace cytnx {
         R = Rt;
       }
 
-      Storage nulls;
+      static const std::vector<cytnx_uint64> empty_mapper;
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous())) {
         // contiguous section.
         if (Lt.device() == Device.cpu) {
-          cytnx::linalg_internal::lii.iAri_ii[Lt.dtype()][Rt.dtype()](
-            nulls._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), {}, {}, {}, 1);
+          detail::DispatchInplaceArithmeticCPU<1>(Lt, R, empty_mapper, empty_mapper, empty_mapper);
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -59,10 +57,8 @@ namespace cytnx {
       } else {
         // non-contiguous section
         if (Lt.device() == Device.cpu) {
-          linalg_internal::lii.iAri_ii[Lt.dtype()][Rt.dtype()](
-            nulls._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
-            Rt._impl->invmapper(), 1);
+          detail::DispatchInplaceArithmeticCPU<1>(Lt, R, Lt._impl->shape(), Lt._impl->invmapper(),
+                                                  Rt._impl->invmapper());
         } else {
   #ifdef UNI_GPU
           cytnx_error_msg(true,
