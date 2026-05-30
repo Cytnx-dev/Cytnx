@@ -1,13 +1,12 @@
 #include "linalg.hpp"
 
-#include <iostream>
 #include <string>
 #include <vector>
 
+#include "Accessor.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "Accessor.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -112,10 +111,7 @@ namespace cytnx {
       cytnx_uint64 keep_dim = keepdim;
 
       Tensor tmp = Tin.get_block_().contiguous();
-
-      std::vector<cytnx_uint64> tmps = tmp.shape();
-      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
-      tmps.clear();
+      std::vector<cytnx_int64> oldshape(tmp.shape().begin(), tmp.shape().end());
       std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
@@ -130,7 +126,6 @@ namespace cytnx {
       outCyT.resize(outT.size());
 
       // s
-
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[0].shape()[0]);
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")},
@@ -530,7 +525,7 @@ namespace cytnx {
         cytnx_uint64 cnt = 0;
         for (int b = 0; b < S.Nblocks(); b++) {
           Storage stmp = S.get_block_(b).storage();
-          cytnx_int64 kdim = min_blockdim[b];
+          cytnx_int64 kdim = std::min<cytnx_int64>(min_blockdim[b], stmp.size());
           if (keep_dim > 0) {
             // search for first value >= Smin
             for (int i = stmp.size(); i > min_blockdim[b]; i--) {

@@ -23,12 +23,6 @@ namespace cytnx {
       return std::vector<Tensor>();
     }
 
-  }  // namespace linalg
-
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
     std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor &Tin,
                                         const std::vector<cytnx_uint64> &mode, const bool &is_core,
                                         const bool &is_Ls,
