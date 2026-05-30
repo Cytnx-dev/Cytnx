@@ -188,19 +188,7 @@ namespace cytnx {
                                       const std::vector<cytnx_uint64> &idxl,
                                       const std::vector<cytnx_uint64> &idxr);
 
-    typedef void (*memcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                         const cytnx_uint64 &keepdim, const double &err,
-                                         const bool &is_U, const bool &is_vT,
-                                         const unsigned int &return_err,
-                                         const unsigned int &mindim);
-
 #ifdef UNI_GPU
-
-    typedef void (*cudaMemcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                             const cytnx_uint64 &keepdim, const double &err,
-                                             const bool &is_U, const bool &is_vT,
-                                             const unsigned int &return_err,
-                                             const unsigned int &mindim);
 
   #ifdef UNI_CUQUANTUM
     typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
@@ -246,8 +234,6 @@ namespace cytnx {
       std::vector<axpy_oii> axpy_ii;
       std::vector<ger_oii> ger_ii;
 
-      std::vector<memcpyTruncation_oii> memcpyTruncation_ii;
-
 #ifdef UNI_GPU
       std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
       std::vector<Svdfunc_oii> cuSvd_ii;
@@ -274,8 +260,6 @@ namespace cytnx {
       std::vector<Sumfunc_oii> cuSum_ii;
       std::vector<Tracefunc_oii> cuTrace_ii;
       std::vector<Tensordotfunc_oii> cuTensordot_ii;
-
-      std::vector<cudaMemcpyTruncation_oii> cudaMemcpyTruncation_ii;
 
   #ifdef UNI_CUQUANTUM
       std::vector<cuQuantumGeSvd_oii> cuQuantumGeSvd_ii;

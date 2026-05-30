@@ -24,40 +24,19 @@ namespace cytnx {
                       "[ERROR][Svd_truncate] can only operate on rank-2 Tensor.%s", "\n");
 
       if (Tin.device() == Device.cpu) {
-        std::vector<Tensor> tmps = Svd(Tin, is_UvT);
+        std::vector<Tensor> outT = Svd(Tin, is_UvT);
 
-        Tensor terr({1}, Tin.dtype(), Tin.device());
-
-        // dtype should be that of U (or Vt) here, since S is real and Tin could be Int, Bool etc.
-        cytnx::linalg_internal::lii.memcpyTruncation_ii[tmps[1].dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err,
-          (mindim < 1 ? 1 : mindim));
-
-        std::vector<Tensor> outT;
-        outT.push_back(tmps[0]);
-        if (is_UvT) {
-          outT.push_back(tmps[1]);
-          outT.push_back(tmps[2]);
-        }
-        if (return_err) outT.push_back(terr);
+        // Svd packs is_UvT as both U and vT, so pass it for both flags. memcpyTruncation truncates
+        // outT in place and appends the error tensor when return_err != 0.
+        cytnx::linalg_internal::memcpyTruncation(outT, keepdim, err, is_UvT, is_UvT, return_err,
+                                                 mindim);
 
         return outT;
       } else {
   #ifdef UNI_GPU
-        std::vector<Tensor> tmps = Svd(Tin, is_UvT);
-        Tensor terr({1}, Tin.dtype(), Tin.device());
-
-        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[tmps[1].dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err, mindim);
-
-        std::vector<Tensor> outT;
-        outT.push_back(tmps[0]);
-        if (is_UvT) {
-          outT.push_back(tmps[1]);
-          outT.push_back(tmps[2]);
-        }
-        if (return_err) outT.push_back(terr);
-
+        std::vector<Tensor> outT = Svd(Tin, is_UvT);
+        cytnx::linalg_internal::cudaMemcpyTruncation(outT, keepdim, err, is_UvT, is_UvT, return_err,
+                                                     mindim);
         return outT;
   #else
         cytnx_error_msg(

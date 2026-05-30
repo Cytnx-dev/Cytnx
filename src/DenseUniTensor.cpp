@@ -993,8 +993,10 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::to_dense() {
-    cytnx_error_msg(!(this->_is_diag),
-                    "[ERROR] to_dense can only operate on UniTensor with is_diag = True.%s", "\n");
+    if (!(this->_is_diag)) {
+      boost::intrusive_ptr<UniTensor_base> out(this);
+      return out;
+    }
     DenseUniTensor *tmp = this->clone_meta();
     tmp->_block = cytnx::linalg::Diag(this->_block);
     tmp->_is_diag = false;
@@ -1002,10 +1004,10 @@ namespace cytnx {
     return out;
   }
   void DenseUniTensor::to_dense_() {
-    cytnx_error_msg(!(this->_is_diag),
-                    "[ERROR] to_dense_ can only operate on UniTensor with is_diag = True.%s", "\n");
-    this->_block = cytnx::linalg::Diag(this->_block);
-    this->_is_diag = false;
+    if (this->_is_diag) {
+      this->_block = cytnx::linalg::Diag(this->_block);
+      this->_is_diag = false;
+    }
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::contract(
