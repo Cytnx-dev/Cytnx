@@ -168,37 +168,34 @@ namespace cytnx {
     cytnx_error_msg(dtype == Type.Void, "[ERROR] Cannot have Void dtype.%s", "\n");
     cytnx_error_msg(count == 0, "[ERROR] count cannot be zero!%s", "\n");
 
-    Storage out;
-    cytnx_uint64 Nbytes;
-    cytnx_uint64 Nelem;
-
-    // check size:
+    // check size
     ifstream jf;
     jf.open(fname, ios::ate | ios::binary);
     if (!jf.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    Nbytes = jf.tellg();
+    cytnx_uint64 Nbytes = jf.tellg();
     jf.close();
 
-    fstream f;
-    // check if type match?
+    // check if type matches
     cytnx_error_msg(Nbytes % Type.typeSize(dtype),
                     "[ERROR] the total size of file is not an interval of assigned dtype.%s", "\n");
 
-    // check count smaller than Nelem:
-    if (count < 0)
-      Nelem = Nbytes / Type.typeSize(dtype);
-    else {
-      cytnx_error_msg(count > Nelem, "[ERROR] count exceed the total # of elements %d in file.\n",
-                      Nelem);
+    // check if count <= Nelem
+    cytnx_uint64 Nelem = Nbytes / Type.typeSize(dtype);  // total elements in the file
+    if (count >= 0) {
+      cytnx_error_msg(static_cast<cytnx_uint64>(count) > Nelem,
+                      "[ERROR] count exceed the total number of elements %d in the file `%s`\n",
+                      Nelem, fname.c_str());
       Nelem = count;
     }
 
+    fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
+    Storage out;
     out.data_from_binary(f, Nelem, dtype, device);
     f.close();
     return out;
