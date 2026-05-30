@@ -64,6 +64,8 @@ namespace GesvdTest {
     EXPECT_GT(gesvds[0].bonds()[0].qnums().size(), 1u);
     EXPECT_EQ(gesvds[1].bonds().back().qnums(), gesvds[0].bonds()[0].qnums());
     EXPECT_EQ(gesvds[2].bonds().front().qnums(), gesvds[0].bonds()[0].qnums());
+    EXPECT_EQ(gesvds[1].bonds().back().getDegeneracies(), gesvds[0].bonds()[0].getDegeneracies());
+    EXPECT_EQ(gesvds[2].bonds().front().getDegeneracies(), gesvds[0].bonds()[0].getDegeneracies());
   }
 
   /*=====test info=====

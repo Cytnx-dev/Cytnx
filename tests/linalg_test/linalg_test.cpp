@@ -71,16 +71,101 @@ TEST_F(linalg_Test, BkUt_Qr1) {
     }
 }
 
-// Regression for the reversed-qnums fix: a leading BD_OUT bond makes the combined left bond BD_OUT.
+// Check if QR works when the first bond is BD_OUT.
 // Q R must recompose to the (multi-sector) input.
 TEST_F(linalg_Test, BkUt_Qr_reversed_qnums) {
-  UniTensor T({Bond(BD_OUT, {{0}, {1}}, {2, 2}, {Symmetry::U1()}),
-               Bond(BD_IN, {{0}, {1}}, {2, 2}, {Symmetry::U1()})},
-              {"a", "b"}, 1, Type.Double, Device.cpu, false);
+  UniTensor T({Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::U1()}),
+               Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::U1()}),
+               Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2, Qs(2) >> 2}, {Symmetry::U1()})},
+              {"a", "b", "c"}, 2, Type.Double, Device.cpu, false);
   random::uniform_(T, -1.0, 1.0, 0);
   auto res = linalg::Qr(T);
   EXPECT_GT(res[0].bonds().back().qnums().size(), 1u);  // multi-sector auxiliary bond
   EXPECT_TRUE((T - Contract(res[0], res[1])).Norm().item() < 1e-9);
+}
+
+// 4-leg square Hermitian Block UniTensor where the two row legs use the directions given by input
+// arguments. Real-valued (row,col)-symmetric values -> Hermitian.
+inline UniTensor make_rank4_hermitian_left_dirs(bondType first, bondType second) {
+  Bond a = Bond(first, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::U1()});
+  Bond b = Bond(second, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::U1()});
+  UniTensor M = UniTensor({a, b, a.redirect(), b.redirect()}, {"a", "b", "c", "d"});
+  M.set_rowrank_(2);
+  auto sh = M.shape();
+  for (cytnx_uint64 i = 0; i < sh[0]; i++)
+    for (cytnx_uint64 j = 0; j < sh[1]; j++)
+      for (cytnx_uint64 k = 0; k < sh[2]; k++)
+        for (cytnx_uint64 l = 0; l < sh[3]; l++) {
+          auto p = M.at({i, j, k, l});
+          if (p.exists()) {
+            cytnx_uint64 row = i * sh[1] + j;
+            cytnx_uint64 col = k * sh[3] + l;
+            p = (row == col) ? double(1 + row) : double(0.5 * (row + col + 1));
+          }
+        }
+  return M;
+}
+
+// Eigh and ExpM use BD_OUT/BD_OUT as left bonds; Eig and ExpH use BD_OUT/BD_IN; Covers different
+// combine_bonds patternes in the linalg functions.
+
+TEST_F(linalg_Test, BkUt_Eigh_reversed_qnums) {
+  const double tol = 1e-10;
+  UniTensor M = make_rank4_hermitian_left_dirs(BD_OUT, BD_OUT);
+  auto out = linalg::Eigh(M);
+  ASSERT_EQ(out.size(), 2u);
+  UniTensor e = out[0], V = out[1];
+  EXPECT_TRUE(e.is_diag());
+  EXPECT_EQ(e.dtype(), Type.Double);
+  EXPECT_GT(V.bonds().back().qnums().size(), 1u);  // multi-sector auxiliary bond
+  // eigenvectors are orthonormal: V^dagger V = I
+  expect_unitary(V, "_aux_L", tol);
+  // M = V * diag(e) * V^dagger. V's row legs are M's row labels ("a","b") and its col is "_aux_L";
+  // rename V.Dagger()'s row labels to M's col labels and its aux to "_aux_R" to chain correctly.
+  UniTensor Vdag = V.Dagger();
+  Vdag.relabel_("_aux_L", "_aux_R");
+  Vdag.relabel_("a", "c");
+  Vdag.relabel_("b", "d");
+  UniTensor reconstructed = Contract(Contract(V, e), Vdag);
+  EXPECT_TRUE((M - reconstructed.permute_(M.labels())).Norm().item() < tol);
+}
+
+TEST_F(linalg_Test, BkUt_Eig_reversed_qnums) {
+  const double tol = 1e-10;
+  UniTensor M = make_rank4_hermitian_left_dirs(BD_OUT, BD_IN);
+  auto out = linalg::Eig(M);
+  ASSERT_EQ(out.size(), 2u);
+  EXPECT_TRUE(out[0].is_diag());
+  EXPECT_GT(out[1].bonds().back().qnums().size(), 1u);  // multi-sector auxiliary bond
+  // M is Hermitian -> Eig and Eigh must return the same (real) spectrum.
+  expect_same_diagonal(out[0], linalg::Eigh(M)[0], tol);
+}
+
+TEST_F(linalg_Test, BkUt_ExpH_reversed_qnums) {
+  const double tol = 1e-10;
+  const double alpha = 0.1;
+  UniTensor M = make_rank4_hermitian_left_dirs(BD_OUT, BD_IN);
+  UniTensor R = linalg::ExpH(M, alpha);
+  // exp(alpha*M) commutes with M
+  UniTensor RM = Contract(R.relabel({"a", "b", "_m", "_n"}), M.relabel({"_m", "_n", "c", "d"}));
+  UniTensor MR = Contract(M.relabel({"a", "b", "_m", "_n"}), R.relabel({"_m", "_n", "c", "d"}));
+  EXPECT_TRUE((RM - MR.permute_(RM.labels())).Norm().item() < tol);
+  // spectrum of ExpH(M, alpha) is exp(alpha * spectrum(M))
+  expect_exp_spectrum(linalg::Eigh(R)[0], linalg::Eigh(M)[0], alpha, tol);
+}
+
+TEST_F(linalg_Test, BkUt_ExpM_reversed_qnums) {
+  const double tol = 1e-10;
+  const double alpha = 0.1;
+  UniTensor M = make_rank4_hermitian_left_dirs(BD_OUT, BD_OUT);
+  UniTensor R = linalg::ExpM(M, alpha);
+  // exp(alpha*M) commutes with M
+  UniTensor RM = Contract(R.relabel({"a", "b", "_m", "_n"}), M.relabel({"_m", "_n", "c", "d"}));
+  UniTensor MR = Contract(M.relabel({"a", "b", "_m", "_n"}), R.relabel({"_m", "_n", "c", "d"}));
+  EXPECT_TRUE((RM - MR.permute_(RM.labels())).Norm().item() < tol);
+  // M is Hermitian, so ExpM(M, alpha) has the same spectrum as ExpH(M, alpha): exp(alpha *
+  // spec(M)).
+  expect_exp_spectrum(linalg::Eigh(R)[0], linalg::Eigh(M)[0], alpha, tol);
 }
 
 TEST_F(linalg_Test, BkUt_expH) {
