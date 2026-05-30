@@ -52,7 +52,6 @@ target_sources(cytnx
     Rand_isometry.cpp
     Svd.cpp
     Gesvd.cpp
-    Rsvd_notruncate.cpp
     Svd_truncate.cpp
     Gesvd_truncate.cpp
     Rsvd.cpp

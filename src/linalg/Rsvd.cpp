@@ -1,6 +1,7 @@
 #include "linalg.hpp"
 
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "Accessor.hpp"
@@ -21,6 +22,386 @@
 
 namespace cytnx {
   namespace linalg {
+
+    namespace {  // Rsvd_notruncate internal helpers: calculate SVD in a reduced space, but before
+                 // further truncation; similar to Gesvd but with Rand_isometry applied
+
+      /**
+      @brief Perform randomized Singular-Value decomposition on a rank-2 Tensor (a @em matrix) using
+      the ?gesvd method.
+      @details A randomized SVD of a matrix Tin; uses randomized isometries.
+      @param[in] keepdim the number of singular values to keep. Note that this is the size of the
+      subspace, and the smallest singular values are less reliable. Use truncation with
+      oversampling.
+      @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
+      @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
+      @param[in] power_iteration number of iterations for the power method: Y = (A *
+      Adag)^power_iteration * A * Tin
+      @param[in] seed the seed for the random generator. [Default] Using device entropy.
+      @see Rsvd()
+      @see Rand_isometry()
+      @see Gesvd()
+      @warning No truncation of the singular values is performed, and the smaller ones will be
+      inaccurate. Use Rsvd() for a truncated version that drops small singular values.
+      */
+      std::vector<Tensor> Rsvd_notruncate_Tensor_internal(const cytnx::Tensor &Tin,
+                                                          cytnx_uint64 keepdim, bool is_U,
+                                                          bool is_vT, cytnx_uint64 power_iteration,
+                                                          unsigned int seed) {
+        std::vector<cytnx_uint64> shape = Tin.shape();
+        cytnx_error_msg(shape.size() != 2,
+                        "[Rsvd] error, Rsvd can only operate on rank-2 Tensor.%s", "\n");
+        cytnx_error_msg(keepdim < 1,
+                        "[ERROR][Rsvd] Number of kept singular values must be > 0, but is %d.\n",
+                        keepdim);
+
+        Tensor in = Tin.contiguous();
+        if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
+
+        // For Tin = (m, n), project away the larger external dimension so the full SVD runs on the
+        // smaller matrix: for m<=n sketch the row space and SVD on (m x l); for m>n sketch the
+        // column space and SVD on (l x n). Q gets applied back to V or U respectively below.
+        Tensor Q;
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
+        if (keepdim < std::min(shape[0], shape[1])) {
+          if (shape[0] <= shape[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
+            Q = Rand_isometry(in.permute({1, 0}), keepdim, power_iteration, seed);
+            in = Matmul(in, Q.Conj());
+            apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = Rand_isometry(in, keepdim, power_iteration, seed);
+            in = Matmul(Q.Conj().permute_({1, 0}), in);
+            apply_Q_to_U = true;
+          }
+          shape = in.shape();
+        }
+
+        cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(shape[0], shape[1]));
+
+        Tensor U, S, vT;
+        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+               in.device());  // if type is complex, S should be real
+        if (is_U) {
+          U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+        }
+        if (is_vT) {
+          vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+        }
+
+        if (Tin.device() == Device.cpu) {
+          cytnx::linalg_internal::lii.Gesvd_ii[in.dtype()](
+            in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
+            S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
+        } else {
+  #ifdef UNI_GPU
+          checkCudaErrors(cudaSetDevice(in.device()));
+          cytnx::linalg_internal::lii.cuGeSvd_ii[in.dtype()](
+            in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
+            S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
+  #else
+          cytnx_error_msg(true, "[Rsvd] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          return std::vector<Tensor>();
+  #endif
+        }
+        std::vector<Tensor> out;
+        out.push_back(S);
+        if (is_U) {
+          if (apply_Q_to_U) {
+            U = Matmul(Q, U);
+          }
+          out.push_back(U);
+        }
+        if (is_vT) {
+          if (apply_Q_to_V) {
+            vT = Matmul(vT, Q.permute({1, 0}));
+          }
+          out.push_back(vT);
+        }
+
+        return out;
+      }  // Rsvd_notruncate_Tensor_internal
+
+      /**
+      @brief Perform randomized Singular-Value decomposition on a UniTensor using the ?gesvd method.
+      @details A randomized SVD of a UniTensor Tin; uses randomized isometries. The result will
+      depend on the rowrank of the UniTensor \p Tin.
+      @param[out] outCyT [S,(U),(V)]
+      @param[in] Tin a UniTensor, with the correct rowrank set to interpret it as a matrix
+      @param[in] keepdim the number of singular values to keep. Note that this is the size of the
+      subspace, and the smallest singular values are less reliable. Use truncation with
+      oversampling.
+      @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
+      @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
+      @param[in] mindim at least this amount of singular values are kept in each block.
+      @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
+      keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
+      where d is the block dimension and D the full tensor dimension (each being the minimum of row
+      and column dimension of the block or tensor respectively).
+      @param[in] oversampling_factor see oversampling_summand
+      @param[in] power_iteration number of iterations for the power method: Y = (A *
+      Adag)^power_iteration * A * Tin
+      @param[in] seed the seed for the random generator. [Default] Using device entropy.
+      @see Rand_isometry(const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_uint64
+      &power_iteration, const unsigned int &seed)
+      @see Rsvd()
+      @see Gesvd()
+      @note At least one singular value per symmetry sector is always kept.
+      @note More than keepdim singular values might be returned (depending on mindim,
+      oversampling_summand, oversampling_factor, and symmetry sector sizes).
+      @warning No truncation of the singular values is performed, and the smaller ones will be
+      inaccurate. Use Rsvd() for a truncated version that drops small singular values.
+      */
+      // Templated over BUT = BlockUniTensor or BlockFermionicUniTensor; the fermionic-specific
+      // signflip handling is gated by `if constexpr` checks against BUT.
+      template <typename BUT>
+      void Rsvd_notruncate_BlockUT_internal(std::vector<cytnx::UniTensor> &outCyT,
+                                            const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                            bool is_U, bool is_vT, cytnx_uint64 mindim,
+                                            cytnx_uint64 oversampling_summand,
+                                            double oversampling_factor,
+                                            cytnx_uint64 power_iteration, unsigned int seed) {
+        // outCyT must be empty and Tin must be checked with proper rowrank!
+
+        std::vector<bool> signflip;
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+          signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+
+        // 1) getting the combineBond L and combineBond R for qnum list without grouping:
+        //
+        //   BDLeft -[ ]- BDRight
+        //
+        std::vector<cytnx_uint64> strides;
+        strides.reserve(Tin.rank());
+        auto BdLeft = Tin.bonds()[0].clone();
+        auto DimsLeft = Tin.shape()[0];
+        for (int i = 1; i < Tin.rowrank(); i++) {
+          strides.push_back(Tin.bonds()[i].qnums().size());
+          BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
+          DimsLeft *= Tin.shape()[i];
+        }
+        strides.push_back(1);
+        auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
+        auto DimsRight = Tin.shape()[Tin.rowrank()];
+        for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
+          strides.push_back(Tin.bonds()[i].qnums().size());
+          BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
+          DimsRight *= Tin.shape()[i];
+        }
+        strides.push_back(1);
+
+        const auto TenDim = std::min(DimsLeft, DimsRight);
+
+        // 2) making new inner_to_outer_idx lists for each block:
+        // -> a. get stride:
+        for (int i = Tin.rowrank() - 2; i >= 0; i--) {
+          strides[i] *= strides[i + 1];
+        }
+        for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
+          strides[i] *= strides[i + 1];
+        }
+        vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
+
+        int cnt;
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          const std::vector<cytnx_uint64> &tmpv = Tin.get_qindices(b);
+          for (cnt = 0; cnt < Tin.rowrank(); cnt++) {
+            new_itoi[b][0] += tmpv[cnt] * strides[cnt];
+          }
+          for (cnt = Tin.rowrank(); cnt < Tin.rank(); cnt++) {
+            new_itoi[b][1] += tmpv[cnt] * strides[cnt];
+          }
+        }
+
+        // 3) categorize:
+        // key = qnum, val = list of block locations:
+        std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64>> mgrp;
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        }
+
+        // 4) for each qcharge in key, combining the blocks into a big chunk!
+        // ->a initialize an empty shell of UniTensors!
+        vec2d<cytnx_int64> aux_qnums;  // for sharing bond
+        std::vector<cytnx_uint64> aux_degs;  // for sharing bond
+        std::vector<Tensor> S_blocks;
+
+        vec2d<cytnx_uint64> U_itoi;  // for U
+        std::vector<Tensor> U_blocks;
+
+        vec2d<cytnx_uint64> vT_itoi;  // for vT
+        std::vector<Tensor> vT_blocks;
+
+        int tr;
+        for (auto const &x : mgrp) {
+          vec2d<cytnx_uint64> itoi_indicators(x.second.size());
+          for (int i = 0; i < x.second.size(); i++) {
+            itoi_indicators[i] = new_itoi[x.second[i]];
+          }
+          auto order = vec_sort(itoi_indicators, true);
+          std::vector<Tensor> Tlist(itoi_indicators.size());
+          std::vector<cytnx_int64> row_szs(order.size(), 1);
+          cytnx_uint64 Rblk_dim = 0;
+          cytnx_int64 tmp = -1;
+          for (int i = 0; i < order.size(); i++) {
+            if (itoi_indicators[i][0] != tmp) {
+              tmp = itoi_indicators[i][0];
+              Rblk_dim++;
+            }
+            cytnx_int64 current_block = x.second[order[i]];
+            Tlist[i] = Tin.get_blocks_()[current_block];
+            for (int j = 0; j < Tin.rowrank(); j++) {
+              row_szs[i] *= Tlist[i].shape()[j];
+            }
+            if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) {
+              if (signflip[current_block]) {
+                Tlist[i] = -Tlist[i];  // copies Tensor
+                Tlist[i].reshape_({row_szs[i], -1});
+              } else {
+                Tlist[i] = Tlist[i].reshape({row_szs[i], -1});  // copies Tensor
+              }
+            } else {
+              Tlist[i] = Tlist[i].reshape({row_szs[i], -1});
+            }
+          }
+          cytnx_error_msg(Tlist.size() % Rblk_dim, "[Internal ERROR] Tlist is not complete!%s",
+                          "\n");
+          // BTen is the big block!!
+          cytnx_uint64 Cblk_dim = Tlist.size() / Rblk_dim;
+          Tensor BTen = algo::_fx_Matric_combine(Tlist, Rblk_dim, Cblk_dim);
+
+          // Now we can perform linalg!
+          aux_qnums.push_back(x.first);
+          auto BlockDim = std::min(BTen.shape()[0], BTen.shape()[1]);
+          cytnx::cytnx_uint64 svalnum =
+            std::max(static_cast<cytnx_int64>(mindim),
+                     static_cast<cytnx_int64>(
+                       std::ceil((1. + oversampling_factor) * keepdim * BlockDim / TenDim) +
+                       static_cast<cytnx_int64>(oversampling_summand)));
+          std::vector<Tensor> out =
+            Rsvd_notruncate_Tensor_internal(BTen, svalnum, is_U, is_vT, power_iteration, seed);
+          aux_degs.push_back(out[0].shape()[0]);
+          S_blocks.push_back(out[0]);
+          tr = 1;
+
+          if (is_U) {
+            std::vector<cytnx_uint64> split_dims;
+            for (int i = 0; i < Rblk_dim; i++) {
+              split_dims.push_back(row_szs[i * Cblk_dim]);
+            }
+            std::vector<Tensor> blks;
+            algo::Vsplit_(blks, out[tr], split_dims);
+            out[tr] = Tensor();
+            std::vector<cytnx_int64> new_shape(Tin.rowrank() + 1);
+            new_shape.back() = -1;
+            for (int ti = 0; ti < blks.size(); ti++) {
+              U_blocks.push_back(blks[ti]);
+              U_itoi.push_back(Tin.get_qindices(x.second[order[ti * Cblk_dim]]));
+
+              // reshaping:
+              for (int i = 0; i < Tin.rowrank(); i++) {
+                new_shape[i] =
+                  Tin.bonds()[i]
+                    .getDegeneracies()[Tin.get_qindices(x.second[order[ti * Cblk_dim]])[i]];
+              }
+              U_blocks.back().reshape_(new_shape);
+
+              U_itoi.back()[Tin.rowrank()] = S_blocks.size() - 1;
+              U_itoi.back().resize(Tin.rowrank() + 1);
+            }
+            tr++;
+          }  // is_U
+
+          if (is_vT) {
+            std::vector<cytnx_uint64> split_dims;
+            for (int i = 0; i < Cblk_dim; i++) {
+              split_dims.push_back(Tlist[i].shape().back());
+            }
+            std::vector<Tensor> blks;
+            algo::Hsplit_(blks, out[tr], split_dims);
+            out[tr] = Tensor();
+
+            std::vector<cytnx_int64> new_shape(Tin.rank() - Tin.rowrank() + 1);
+            new_shape[0] = -1;
+            for (int ti = 0; ti < blks.size(); ti++) {
+              vT_blocks.push_back(blks[ti]);
+              auto &tpitoi = Tin.get_qindices(x.second[order[ti]]);
+              vT_itoi.push_back({S_blocks.size() - 1});
+              for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
+                vT_itoi.back().push_back(tpitoi[i]);
+              }
+
+              // reshaping:
+              for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
+                new_shape[i - Tin.rowrank() + 1] = Tin.bonds()[i].getDegeneracies()[tpitoi[i]];
+              }
+              vT_blocks.back().reshape_(new_shape);
+            }
+
+            tr++;
+          }  // is_vT
+        }
+
+        // process S:
+        Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
+        BUT *S_ptr = new BUT();
+        S_ptr->Init(
+          {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+          Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+          true,  // is_diag!
+          true);  // no_alloc!
+        S_ptr->_blocks = S_blocks;
+        UniTensor S;
+        S._impl = boost::intrusive_ptr<UniTensor_base>(S_ptr);
+
+        outCyT.push_back(S);
+
+        if (is_U) {
+          BUT *U_ptr = new BUT();
+          for (int i = 0; i < Tin.rowrank(); i++) {
+            U_ptr->_bonds.push_back(Tin.bonds()[i].clone());
+            U_ptr->_labels.push_back(Tin.labels()[i]);
+          }
+          U_ptr->_bonds.push_back(Bd_aux.redirect());
+          U_ptr->_labels.push_back("_aux_L");
+          U_ptr->_rowrank = Tin.rowrank();
+          U_ptr->_is_diag = false;
+          U_ptr->_is_braket_form = U_ptr->_update_braket();
+          U_ptr->_inner_to_outer_idx = U_itoi;
+          U_ptr->_blocks = U_blocks;
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+            U_ptr->_signflip = std::vector<bool>(U_blocks.size(), false);
+          UniTensor U;
+          U._impl = boost::intrusive_ptr<UniTensor_base>(U_ptr);
+          outCyT.push_back(U);
+        }
+
+        if (is_vT) {
+          BUT *vT_ptr = new BUT();
+          vT_ptr->_bonds.push_back(Bd_aux);
+          vT_ptr->_labels.push_back("_aux_R");
+
+          for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
+            vT_ptr->_bonds.push_back(Tin.bonds()[i].clone());
+            vT_ptr->_labels.push_back(Tin.labels()[i]);
+          }
+          vT_ptr->_rowrank = 1;
+          vT_ptr->_is_diag = false;
+          vT_ptr->_is_braket_form = vT_ptr->_update_braket();
+          vT_ptr->_inner_to_outer_idx = vT_itoi;
+          vT_ptr->_blocks = vT_blocks;
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+            vT_ptr->_signflip = std::vector<bool>(vT_blocks.size(), false);
+          UniTensor vT;
+          vT._impl = boost::intrusive_ptr<UniTensor_base>(vT_ptr);
+          outCyT.push_back(vT);
+        }
+
+      }  // Rsvd_notruncate_BlockUT_internal
+
+    }  // unnamed namespace
+
     std::vector<Tensor> Rsvd(const Tensor &Tin, cytnx_uint64 keepdim, double err, bool is_U,
                              bool is_vT, unsigned int return_err, cytnx_uint64 mindim,
                              cytnx_uint64 oversampling_summand, double oversampling_factor,
@@ -298,11 +679,18 @@ namespace cytnx {
                                   const cytnx_uint64 &mindim, cytnx_uint64 oversampling_summand,
                                   double oversampling_factor, cytnx_uint64 power_iteration,
                                   unsigned int seed) {
-        // from Gesvd_truncate, but using Rsvd_notruncate internally
+        // from Gesvd_truncate, but using Rsvd_notruncate_BlockUT_internal for the SVD
         cytnx_uint64 keep_dim = keepdim;
 
-        outCyT = linalg::Rsvd_notruncate(Tin, keepdim, is_U, is_vT, mindim, oversampling_summand,
-                                         oversampling_factor, power_iteration, seed);
+        if (Tin.uten_type() == UTenType.Block) {
+          Rsvd_notruncate_BlockUT_internal<BlockUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        } else {  // BlockFermionic
+          Rsvd_notruncate_BlockUT_internal<BlockFermionicUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        }
 
         // process truncation:
         // 1) concate all S vals from all blk
@@ -463,13 +851,20 @@ namespace cytnx {
                                   const unsigned int &return_err, const cytnx_uint64 &mindim,
                                   cytnx_uint64 oversampling_summand, double oversampling_factor,
                                   cytnx_uint64 power_iteration, unsigned int seed) {
-        // from Gesvd_truncate, but using Rsvd_notruncate internally
+        // from Gesvd_truncate, but using Rsvd_notruncate_BlockUT_internal for the SVD
         cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                          // negative!
         cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
 
-        outCyT = linalg::Rsvd_notruncate(Tin, keepdim, is_U, is_vT, mindim, oversampling_summand,
-                                         oversampling_factor, power_iteration, seed);
+        if (Tin.uten_type() == UTenType.Block) {
+          Rsvd_notruncate_BlockUT_internal<BlockUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        } else {  // BlockFermionic
+          Rsvd_notruncate_BlockUT_internal<BlockFermionicUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        }
         if (min_blockdim.size() == 1)  // if only one element given, make it a vector
           min_blockdim.resize(outCyT[0].Nblocks(), min_blockdim.front());
         cytnx_error_msg(
