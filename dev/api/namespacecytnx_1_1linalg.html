@@ -955,7 +955,8 @@ template&lt;class T &gt; </div>
 </dd></dl>
 <dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>To use, define a linear operator with <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> class either by assigning a custom function or creating a class that inherits <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> (see <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> for further details).</li>
-<li>If k is close to the dimension of the vector, the routine may return error (arpack routine -3). In such cases, it is recommended to use the <a class="el" href="namespacecytnx_1_1linalg.html#a243ceac5dc7d4a8c983b0e7693b97489" title="eigen-value decomposition for generic square matrix">linalg::Eig</a> function directly. </li>
+<li>If k is close to the dimension of the vector, the routine may return error (arpack routine -3). In such cases, it is recommended to use the <a class="el" href="namespacecytnx_1_1linalg.html#a243ceac5dc7d4a8c983b0e7693b97489" title="eigen-value decomposition for generic square matrix">linalg::Eig</a> function directly.</li>
+<li>For a fermionic (BlockFermionicUniTensor) input, the user-supplied <a class="el" href="classcytnx_1_1LinOp.html#a45e98312370884ae85bbc53921011e7d">LinOp::matvec</a> MUST implement the operator action with the correct fermionic signs (e.g. apply fermion_twists() to the appropriate operand before the contraction). The iteration keeps every Krylov vector in the physical (signflip-resolved) frame and the inner products are then correct automatically, but the correctness of H|v&gt; itself is entirely the <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a>'s responsibility. </li>
 </ol>
 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>For the <code>which</code> equal to <code>SI</code> or <code>LI</code>, and the data type of <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> is real rather than complex, the output of eigenvectors are same as <code>ARPACK</code>. For example, if the full spectrum is \([1.0+0i, 0.7+0.1i,
@@ -1950,6 +1951,7 @@ M = V D V^{-1},
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensors&gt;], the first tensor is the eigen values, a 1-d tensor (vector). The second tensor is the eigen vectors, a 2-d tensor (matrix). This tensor will only return when <code>is_V</code> = <em>true</em>. Furthermore, if <code>row_V</code> = <em>true</em>, then the eigen vectors will be row form. Otherwise, the eigen vectors will be column form. </dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd>the <code>Tin</code> should be a square matrix. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The returned eigenvectors \( V \) are in general only invertible, NOT unitary: the reconstruction is \( M = V D V^{-1} \), not \( V D V^\dagger \). The underlying LAPACK geev routine does not orthonormalize the eigenvectors, so \( V \) is generally non-unitary even when <code>Tin</code> is Hermitian/normal. Use Eigh for a unitary eigen basis. </dd></dl>
 
 </div>
 </div>
@@ -3754,7 +3756,8 @@ T_L[i] = T_L[i] - T_R[i],
 </dd></dl>
 <dl class="section note"><dt>Note</dt><dd><ol type="1">
 <li>To use, define a linear operator with <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> class either by assigning a custom function or creating a class that inherits <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> (see <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> for further details).</li>
-<li>If k is close to the dimension of the vector, the routine may return error (arpack routine -3). In such cases, it is recommended to use the <a class="el" href="namespacecytnx_1_1linalg.html#a63fb9c9751ff27d22f84a52a876cc6fc" title="eigen-value decomposition for Hermitian matrix">linalg::Eigh</a> function directly. </li>
+<li>If k is close to the dimension of the vector, the routine may return error (arpack routine -3). In such cases, it is recommended to use the <a class="el" href="namespacecytnx_1_1linalg.html#a63fb9c9751ff27d22f84a52a876cc6fc" title="eigen-value decomposition for Hermitian matrix">linalg::Eigh</a> function directly.</li>
+<li>For a fermionic (BlockFermionicUniTensor) input, the user-supplied <a class="el" href="classcytnx_1_1LinOp.html#a45e98312370884ae85bbc53921011e7d">LinOp::matvec</a> MUST implement the operator action with the correct fermionic signs (e.g. apply fermion_twists() to the appropriate operand before the contraction). The iteration keeps every Krylov vector in the physical (signflip-resolved) frame and the inner products are then correct automatically, but the correctness of H|v&gt; itself is entirely the <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a>'s responsibility. </li>
 </ol>
 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>The input operator in <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> must be Hermitian; otherwise, the simulation results will be incorrect. </dd></dl>
