@@ -55,12 +55,17 @@ void tnalgo_binding(py::module &m) {
       "Save", [](tn_algo::MPS &self, const std::string &fname) { self.Save(fname); },
       py::arg("fname"))
     .def_static(
-      "Load", [](const std::string &fname) { return cytnx::tn_algo::MPS::Load(fname); },
-      py::arg("fname"))
+      "Load",
+      [](const std::string &fname, const bool restore_device) {
+        return cytnx::tn_algo::MPS::Load(fname, restore_device);
+      },
+      py::arg("fname"), py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::tn_algo::MPS &self, const std::string &fname) { return self.Load_(fname); },
-      py::arg("fname"))
+      [](cytnx::tn_algo::MPS &self, const std::string &fname, const bool restore_device) {
+        return self.Load_(fname, restore_device);
+      },
+      py::arg("fname"), py::arg("restore_device") = true)
 
     .def(py::pickle(
       [](const tn_algo::MPS &self) {  // __getstate__
