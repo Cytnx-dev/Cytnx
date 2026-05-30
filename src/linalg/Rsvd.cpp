@@ -570,7 +570,7 @@ namespace cytnx {
           cytnx_uint64 cnt = 0;
           for (int b = 0; b < S.Nblocks(); b++) {
             Storage stmp = S.get_block_(b).storage();
-            cytnx_int64 kdim = min_blockdim[b];
+            cytnx_int64 kdim = std::min<cytnx_int64>(min_blockdim[b], stmp.size());
             if (keep_dim > 0) {
               // search for first value >= Smin
               for (int i = stmp.size(); i > min_blockdim[b]; i--) {
