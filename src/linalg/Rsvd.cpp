@@ -225,6 +225,15 @@ namespace cytnx {
           mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
         }
 
+        // Validate min_blockdim against the number of blocks (mgrp.size())
+        cytnx_error_msg(
+          !(min_blockdim.empty() || (min_blockdim.size() == 1) ||
+            (min_blockdim.size() == mgrp.size())),
+          "[ERROR][Rsvd] min_blockdim must be empty, size 1, or have one entry per symmetry "
+          "sector (%llu); got %llu.%s",
+          static_cast<unsigned long long>(mgrp.size()),
+          static_cast<unsigned long long>(min_blockdim.size()), "\n");
+
         // 4) for each qcharge in key, combining the blocks into a big chunk!
         // ->a initialize an empty shell of UniTensors!
         vec2d<cytnx_int64> aux_qnums;  // for sharing bond
@@ -864,6 +873,10 @@ namespace cytnx {
         cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                          // negative!
         cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
+        cytnx_error_msg(min_blockdim.empty(),
+                        "[ERROR][Rsvd] min_blockdim must not be empty; use the overload without "
+                        "min_blockdim if no per-block floor is needed.%s",
+                        "\n");
 
         // Set sampling target to max(keepdim, mindim) so the global mindim contract is satisfiable
         const cytnx_uint64 sample_target = std::max(keepdim, mindim);
@@ -878,11 +891,6 @@ namespace cytnx {
         }
         if (min_blockdim.size() == 1)  // if only one element given, make it a vector
           min_blockdim.resize(outCyT[0].Nblocks(), min_blockdim.front());
-        cytnx_error_msg(
-          min_blockdim.size() != outCyT[0].Nblocks(),
-          "[ERROR][Gesvd_truncate] min_blockdim must have the same number of elements as "
-          "blocks in the singular value UniTensor%s",
-          "\n");
 
         // process truncation:
         // 1) concate all S vals from all blk but exclude the first min_blockdim Svals in each block
@@ -965,8 +973,9 @@ namespace cytnx {
               // largest dropped singular value
               Sall = algo::Sort(Sall);  // ascending; largest dropped is the last element
               Scalar Smax = Sall.storage()(Sall.shape()[0] - 1);
-              outCyT.push_back(UniTensor(Tensor({1}, Smax.dtype())));
-              outCyT.back().get_block_().storage().at(0) = Smax;
+              Tensor terr({1}, Sall.dtype());
+              terr.storage().at(0) = Smax;
+              outCyT.push_back(UniTensor(terr));
             } else if (return_err) {
               outCyT.push_back(UniTensor(Sall));
             }

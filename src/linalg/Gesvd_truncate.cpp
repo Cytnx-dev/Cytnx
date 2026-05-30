@@ -418,6 +418,10 @@ namespace cytnx {
       cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                        // negative!
       cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
+      cytnx_error_msg(min_blockdim.empty(),
+                      "[ERROR][Gesvd_truncate] min_blockdim must not be empty; use the overload "
+                      "without min_blockdim if no per-block floor is needed.%s",
+                      "\n");
 
       outCyT = linalg::Gesvd(Tin, is_U, is_vT);
       if (min_blockdim.size() == 1)  // if only one element given, make it a vector
@@ -508,8 +512,9 @@ namespace cytnx {
             // largest dropped singular value
             Sall = algo::Sort(Sall);  // ascending; largest dropped is the last element
             Scalar Smax = Sall.storage()(Sall.shape()[0] - 1);
-            outCyT.push_back(UniTensor(Tensor({1}, Smax.dtype())));
-            outCyT.back().get_block_().storage().at(0) = Smax;
+            Tensor terr({1}, Sall.dtype());
+            terr.storage().at(0) = Smax;
+            outCyT.push_back(UniTensor(terr));
           } else if (return_err) {
             outCyT.push_back(UniTensor(Sall));
           }
