@@ -45,6 +45,30 @@ namespace GesvdTest {
   }
 
   /*=====test info=====
+  describe:Multi-sector regression for the case where the combinded bond BdLeft is outgoing.
+  rowrank=2 with a leading BD_OUT bond makes the combined left bond BD_OUT, and several qcharge
+  sectors survive in the auxiliary bond.
+  ====================*/
+  TEST(Gesvd, U1_sym_regression_multi_sector_bd_out_left) {
+    fail_msg.Init(UnitTest::GetInstance()->current_test_info()->name());
+    UniTensor T({Bond(BD_OUT, {{0}, {1}}, {2, 2}, {Symmetry::U1()}),
+                 Bond(BD_IN, {{4}, {5}}, {2, 2}, {Symmetry::U1()}),
+                 Bond(BD_OUT, {{4}, {5}}, {2, 2}, {Symmetry::U1()})},
+                {"a", "b", "c"}, 2, Type.Double, Device.cpu, false);
+    random::uniform_(T, -1.0, 1.0, 0);
+
+    std::vector<UniTensor> gesvds = linalg::Gesvd(T);
+    ASSERT_EQ(gesvds.size(), 3);
+    EXPECT_TRUE(CheckLabels(T, gesvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(ReComposeCheck(T, gesvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_GT(gesvds[0].bonds()[0].qnums().size(), 1u);
+    EXPECT_EQ(gesvds[1].bonds().back().qnums(), gesvds[0].bonds()[0].qnums());
+    EXPECT_EQ(gesvds[2].bonds().front().qnums(), gesvds[0].bonds()[0].qnums());
+    EXPECT_EQ(gesvds[1].bonds().back().getDegeneracies(), gesvds[0].bonds()[0].getDegeneracies());
+    EXPECT_EQ(gesvds[2].bonds().front().getDegeneracies(), gesvds[0].bonds()[0].getDegeneracies());
+  }
+
+  /*=====test info=====
   describe:Test Dense UniTensor.
   input:
     T:Dense UniTensor with real or complex real type.
