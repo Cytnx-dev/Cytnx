@@ -29,7 +29,7 @@ namespace cytnx {
         // Svd packs is_UvT as both U and vT, so pass it for both flags. memcpyTruncation truncates
         // outT in place and appends the error tensor when return_err != 0.
         cytnx::linalg_internal::memcpyTruncation(outT, keepdim, err, is_UvT, is_UvT, return_err,
-                                                 (mindim < 1 ? 1 : mindim));
+                                                 mindim);
 
         return outT;
       } else {

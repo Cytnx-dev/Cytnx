@@ -29,6 +29,8 @@ namespace cytnx {
     // pointer via std::visit.
     void cudaMemcpyTruncation(std::vector<Tensor> &tens, cytnx_uint64 keepdim, double err,
                               bool is_U, bool is_vT, unsigned int return_err, cytnx_uint64 mindim) {
+      // at least one singular value is always kept
+      if (mindim < 1) mindim = 1;
       const cytnx_uint64 nums = tens[0].storage().size();
       cytnx_uint64 trunc_dim = (nums < keepdim) ? nums : keepdim;
 
