@@ -20,3 +20,18 @@ dev_test
 *.e
 *.o
 *.so
+
+# Personal AI/coding-agent notes & local config (per-user, not shared)
+# Claude Code
+CLAUDE.local.md
+.claude/
+# OpenAI Codex
+AGENTS.local.md
+.codex/
+# Gemini CLI
+GEMINI.local.md
+.gemini/
+# Google Antigravity
+.antigravity/
+# Cursor
+.cursor/

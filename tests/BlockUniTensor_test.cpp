@@ -89,6 +89,23 @@ TEST_F(BlockUniTensorTest, syms) {
   EXPECT_EQ(BUT3.syms(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
 }
 
+// Regression: UniTensor whose first bond is BD_BRA with a non-uniform symmetry
+// list (here {U1, Zn(2)}) used to feed `syms[0].reverse_rule(...)` to every
+// component `i` in `_fx_get_total_fluxs`. For `i = 1` that meant U1's reverse
+// rule was applied to a Zn(2) qnum, producing a negative value that was then
+// passed back into `syms[1].combine_rule` (Zn(2)). The result was silently
+// wrong before strict Zn validation and a hard `std::logic_error` after it.
+TEST_F(BlockUniTensorTest, FxGetTotalFluxsUsesPerComponentSymmetry) {
+  std::vector<Symmetry> syms = {Symmetry::U1(), Symmetry::Zn(2)};
+  Bond bd_bra = Bond(BD_BRA, {{0, 0}, {0, 1}, {1, 0}, {1, 1}}, {1, 1, 1, 1}, syms);
+  Bond bd_ket = Bond(BD_KET, {{0, 0}, {0, 1}, {1, 0}, {1, 1}}, {1, 1, 1, 1}, syms);
+
+  EXPECT_NO_THROW({
+    UniTensor ut = UniTensor({bd_bra, bd_ket});
+    EXPECT_EQ(ut.syms(), syms);
+  });
+}
+
 TEST_F(BlockUniTensorTest, is_contiguous) {
   EXPECT_EQ(Spf.is_contiguous(), true);
   auto Spf_new = Spf.permute({2, 1, 0}, 1);
@@ -566,6 +583,31 @@ TEST_F(BlockUniTensorTest, contract3) {
     // std::cout << ansbks[i] << std::endl;
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], ansbks[i], 1e-5), true);
   }
+}
+
+TEST_F(BlockUniTensorTest, contract_mixed_dtype_order_independent) {
+  // Reproduce issue #758: real(QN) x complex(QN) should not depend on argument order.
+  UniTensor left_real = UT_contract_L2.astype(Type.Double);
+  UniTensor right_complex = UT_contract_R2.astype(Type.ComplexDouble);
+
+  left_real.set_labels({"a", "b"});
+  right_complex.set_labels({"b", "c"});
+
+  UniTensor out_real_complex;
+  UniTensor out_complex_real;
+  EXPECT_NO_THROW(out_real_complex = left_real.contract(right_complex));
+  EXPECT_NO_THROW(out_complex_real = right_complex.contract(left_real));
+
+  EXPECT_EQ(out_real_complex.dtype(), Type.ComplexDouble);
+  EXPECT_EQ(out_complex_real.dtype(), Type.ComplexDouble);
+
+  // Cross-check against all-complex references for each contraction ordering.
+  UniTensor left_complex = left_real.astype(Type.ComplexDouble);
+  UniTensor right_complex_ref = right_complex.astype(Type.ComplexDouble);
+  UniTensor ref_real_complex = left_complex.contract(right_complex_ref);
+  UniTensor ref_complex_real = right_complex_ref.contract(left_complex);
+  EXPECT_TRUE(AreNearlyEqUniTensor(out_real_complex, ref_real_complex, 1e-10));
+  EXPECT_TRUE(AreNearlyEqUniTensor(out_complex_real, ref_complex_real, 1e-10));
 }
 
 TEST_F(BlockUniTensorTest, same_data) {
@@ -1202,4 +1244,38 @@ TEST_F(BlockUniTensorTest, convert_from_diagonal_dense_target_throws) {
 
   UniTensor Ddiag = UniTensor(zeros(2), true);  // diagonal Dense, shape (2,2)
   EXPECT_ANY_THROW(Ddiag.convert_from(B));
+}
+
+// ============ to_dense / to_dense_ ============
+
+// A diagonal BlockUniTensor is expanded to a full one: each rank-1 (diagonal) block becomes a
+// diagonal matrix and is_diag() becomes false; the in-place variant gives the same result.
+TEST_F(BlockUniTensorTest, to_dense_diag) {
+  Bond bd = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  for (auto dtype : {Type.ComplexDouble, Type.Double}) {
+    UniTensor B = UniTensor({bd, bd.redirect()}, {"a", "b"}, 1, dtype, Device.cpu, true);
+    random::uniform_(B, -10.0, 10.0, 0);
+
+    UniTensor dense = B.to_dense();
+    EXPECT_TRUE(B.is_diag());
+    EXPECT_FALSE(dense.is_diag());
+    EXPECT_EQ(dense.dtype(), dtype);
+    ASSERT_EQ(dense.Nblocks(), B.Nblocks());
+    for (cytnx_uint64 b = 0; b < B.Nblocks(); b++)
+      EXPECT_TRUE(AreNearlyEqTensor(dense.get_block_(b), linalg::Diag(B.get_block_(b)), 1e-14));
+
+    UniTensor Bp = B.clone();
+    Bp.to_dense_();
+    EXPECT_FALSE(Bp.is_diag());
+    EXPECT_TRUE(AreEqUniTensor(Bp, dense));
+  }
+}
+
+// to_dense on an already non-diagonal BlockUniTensor is a no-op (returns an equal tensor).
+TEST_F(BlockUniTensorTest, to_dense_non_diag) {
+  EXPECT_FALSE(BUT4.is_diag());
+  EXPECT_TRUE(AreEqUniTensor(BUT4, BUT4.to_dense()));
+  UniTensor Bp = BUT4.clone();
+  Bp.to_dense_();
+  EXPECT_TRUE(AreEqUniTensor(BUT4, Bp));
 }

@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
       ut1.combineBonds({2,0},true,false);
       ut1.print_diagram();
       ut2.print_diagram();
-      ut2.set_label(2,-4);
+      ut2.relabel_(2,-4);
       ut2.print_diagram();
 
       CyTensor ut3 = Contract(ut1,ut2);

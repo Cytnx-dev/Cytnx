@@ -2,10 +2,10 @@
 #if NEED_GEN_COMMON_DATA
 
 /*
- * This file is about the code to generate the test data in the directory
- *   "tests/test_data_base/common"
- *   if need to re generate the data again by google test, set the macro
- *   NEED_GEN_COMMON_DATA equal 1, and generate the data by google test again.
+ * This file contains code to generate the test data in the directory
+ *   "tests/test_data_base/common".
+ *   To re-generate the data again by google test, set the macro
+ *   NEED_GEN_COMMON_DATA equal 1.
  */
 
   #include "cytnx.hpp"

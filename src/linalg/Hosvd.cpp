@@ -23,12 +23,6 @@ namespace cytnx {
       return std::vector<Tensor>();
     }
 
-  }  // namespace linalg
-
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
     std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor &Tin,
                                         const std::vector<cytnx_uint64> &mode, const bool &is_core,
                                         const bool &is_Ls,
@@ -80,8 +74,8 @@ namespace cytnx {
             out.push_back(tsvdout[1]);
             if (is_Ls) Ls.push_back(tsvdout[0]);
           }
-          out.back().set_label(out.back().rank() - 1,
-                               out.back().labels().back() + "_" + to_string(i));
+          out.back().relabel_(out.back().rank() - 1,
+                              out.back().labels().back() + "_" + to_string(i));
           perm.clear();
           if (i == mode.size() - 1) {
             for (int j = mode[i] + in.rank() - tot; j < in.rank(); j++) perm.push_back(j);
