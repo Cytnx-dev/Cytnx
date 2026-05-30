@@ -276,4 +276,56 @@ namespace SvdTruncateTest {
 
     return true;
   }
+
+  /*=====test info=====
+  describe:Tensor-level Svd_truncate must work for both is_UvT=true and is_UvT=false (the latter
+  previously read out-of-range vector slots) and every return_err mode. Singular-value content is
+  validated against a full Svd reference via CheckTruncatedSvdResult; U/vT shapes are checked
+  inline (their gauge depends on LAPACK gesdd mode so we don't compare values).
+  ====================*/
+  TEST(Svd_truncate, flag_combinations_dense) {
+    for (auto dtype : {Type.Double, Type.ComplexDouble}) {
+      Tensor T = Tensor({6, 5}, dtype);
+      InitTensorUniform(T, /*seed=*/1);
+      const cytnx_uint64 keep = 3;
+
+      // full reference: untruncated Svd provides all min(6,5)=5 singular values
+      std::vector<Tensor> full_ref = linalg::Svd(T, /*is_UvT=*/true);
+
+      for (bool is_UvT : {false, true}) {
+        for (int return_err : {0, 1, 2}) {
+          std::vector<Tensor> out = linalg::Svd_truncate(T, keep, 0., is_UvT, return_err, 1);
+          const std::string label =
+            "is_UvT=" + std::to_string(is_UvT) + " return_err=" + std::to_string(return_err);
+          // Svd packs is_UvT as both U and vT
+          CheckTruncatedSvdResult(out, full_ref[0], keep, is_UvT, is_UvT, return_err, 1e-12, label);
+
+          if (is_UvT) {
+            EXPECT_EQ(out[1].shape(), std::vector<cytnx_uint64>({6, keep})) << label;
+            EXPECT_EQ(out[2].shape(), std::vector<cytnx_uint64>({keep, 5})) << label;
+          }
+        }
+      }
+    }
+  }
+
+  /*=====test info=====
+  describe:When keepdim >= #singular values and err=0, nothing is truncated; the returned error
+  tensor must be a 1-element zero (the truncation error is zero).
+  ====================*/
+  TEST(Svd_truncate, no_truncation_returns_zero_error) {
+    Tensor T = Tensor({6, 5}, Type.Double);
+    InitTensorUniform(T, 7);
+    const cytnx_uint64 full = 5;  // min(6, 5) singular values
+    std::vector<Tensor> full_ref = linalg::Svd(T, /*is_UvT=*/true);
+    for (int return_err : {1, 2}) {
+      std::vector<Tensor> out =
+        linalg::Svd_truncate(T, /*keepdim=*/full, 0., /*is_UvT=*/true, return_err, 1);
+      const std::string label = "return_err=" + std::to_string(return_err);
+      // is_UvT=true and keep == full means [S, U, vT, terr] with a 1-element zero terr
+      CheckTruncatedSvdResult(out, full_ref[0], full, true, true, return_err, 1e-12, label);
+      EXPECT_EQ(out[1].shape(), std::vector<cytnx_uint64>({6, full})) << label;
+      EXPECT_EQ(out[2].shape(), std::vector<cytnx_uint64>({full, 5})) << label;
+    }
+  }
 }  // namespace SvdTruncateTest

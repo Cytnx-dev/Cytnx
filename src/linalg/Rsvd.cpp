@@ -420,8 +420,8 @@ namespace cytnx {
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
       Tensor Q;
       if (Tin.device() == Device.cpu) {
-        std::vector<Tensor> tmps;
-        // Project away the larger external dimension so the  full SVD runs on the smaller matrix;
+        std::vector<Tensor> outT;
+        // Project away the larger external dimension so the full SVD runs on the smaller matrix;
         // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
         // for m>n sketch the column space and SVD on (l x n).
         bool apply_Q_to_U = false;
@@ -430,36 +430,27 @@ namespace cytnx {
           Tensor in = Tin.contiguous();
           if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
             Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
+            outT = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
             apply_Q_to_V = true;
           } else {  // m > n: column-space sketch, Q^H * A -> l x n
             Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
+            outT = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
             apply_Q_to_U = true;
           }
         } else {
-          tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
+          outT = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
-        Tensor terr({1}, Tin.dtype(), Tin.device());
 
-        cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err, mindim);
+        // truncates outT in place and appends the error tensor when return_err != 0.
+        cytnx::linalg_internal::memcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
+                                                 mindim);
 
-        std::vector<Tensor> outT;
-        outT.push_back(tmps[0]);
-        if (is_U) {
-          if (apply_Q_to_U)
-            outT.push_back(Matmul(Q, tmps[1]));
-          else
-            outT.push_back(tmps[1]);
+        // bring U or vT back to the original row/column space if a projection was applied
+        if (is_U && apply_Q_to_U) outT[1] = Matmul(Q, outT[1]);
+        if (is_vT && apply_Q_to_V) {
+          const cytnx_uint64 vT_idx = is_U ? 2 : 1;
+          outT[vT_idx] = Matmul(outT[vT_idx], Q.permute({1, 0}));
         }
-        if (is_vT) {
-          if (apply_Q_to_V)
-            outT.push_back(Matmul(tmps[2], Q.permute_({1, 0})));
-          else
-            outT.push_back(tmps[2]);
-        }
-        if (return_err) outT.push_back(terr);
 
         return outT;
 
@@ -496,10 +487,23 @@ namespace cytnx {
 
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
                                                                   S, vT, terr);
+        // restart if less than mindim singular values are kept.
+        // TODO: issue #650 - mindim should be part of cuQuantumGeSvd after the refactoring to avoid
+        // redundant calls
+        if (S.shape()[0] < std::min(mindim, keepdim)) {
+          // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
+          // output tensor descriptors from the passed buffer shapes, so the buffers must be
+          // re-initialized to the full size before restarting.
+          S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(), in.device());
+          U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+          vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+          terr.Init({1}, in.dtype(), in.device());
+          cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
+                                                                    0., return_err, U, S, vT, terr);
+        }
 
-        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[in.dtype()](
-          U, vT, S, terr, keepdim, err, is_U, is_vT, return_err, mindim);
-
+        // cuQuantum's SVD already truncates (keepdim/err) and fills terr with the discarded
+        // singular values, so we only assemble the packed result here.
         std::vector<Tensor> outT;
         outT.push_back(S);
         if (is_U) {
@@ -510,7 +514,7 @@ namespace cytnx {
         }
         if (is_vT) {
           if (apply_Q_to_V)
-            outT.push_back(Matmul(vT, Q.permute_({1, 0})));
+            outT.push_back(Matmul(vT, Q.permute({1, 0})));
           else
             outT.push_back(vT);
         }
@@ -519,8 +523,8 @@ namespace cytnx {
         return outT;
 
     #else
-        std::vector<Tensor> tmps;
-        // Project away the larger external dimension so the  full SVD runs on the smaller matrix;
+        std::vector<Tensor> outT;
+        // Project away the larger external dimension so the full SVD runs on the smaller matrix;
         // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
         // for m>n sketch the column space and SVD on (l x n).
         bool apply_Q_to_U = false;
@@ -529,36 +533,25 @@ namespace cytnx {
           Tensor in = Tin.contiguous();
           if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
             Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
+            outT = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
             apply_Q_to_V = true;
           } else {  // m > n: column-space sketch, Q^H * A -> l x n
             Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
+            outT = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
             apply_Q_to_U = true;
           }
         } else {
-          tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
+          outT = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
-        Tensor terr({1}, Tin.dtype(), Tin.device());
 
-        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err, mindim);
+        cytnx::linalg_internal::cudaMemcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
+                                                     mindim);
 
-        std::vector<Tensor> outT;
-        outT.push_back(tmps[0]);
-        if (is_U) {
-          if (apply_Q_to_U)
-            outT.push_back(Matmul(Q, tmps[1]));
-          else
-            outT.push_back(tmps[1]);
+        if (is_U && apply_Q_to_U) outT[1] = Matmul(Q, outT[1]);
+        if (is_vT && apply_Q_to_V) {
+          const cytnx_uint64 vT_idx = is_U ? 2 : 1;
+          outT[vT_idx] = Matmul(outT[vT_idx], Q.permute({1, 0}));
         }
-        if (is_vT) {
-          if (apply_Q_to_V)
-            outT.push_back(Matmul(tmps[2], Q.permute_({1, 0})));
-          else
-            outT.push_back(tmps[2]);
-        }
-        if (return_err) outT.push_back(terr);
 
         return outT;
     #endif

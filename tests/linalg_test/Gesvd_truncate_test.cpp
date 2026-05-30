@@ -295,4 +295,62 @@ namespace GesvdTruncateTest {
 
     return true;
   }
+
+  /*=====test info=====
+  describe:Tensor-level Gesvd_truncate must work for all (is_U, is_vT) combinations and every
+  return_err mode. Singular-value content (kept + discarded) is validated against a full SVD
+  reference via CheckTruncatedSvdResult; U / vT shapes are checked inline (their gauge depends on
+  LAPACK jobu/jobvt mode so we don't compare values).
+  ====================*/
+  TEST(Gesvd_truncate, flag_combinations_dense) {
+    for (auto dtype : {Type.Double, Type.ComplexDouble}) {
+      Tensor T = Tensor({6, 5}, dtype);
+      InitTensorUniform(T, /*seed=*/2);
+      const cytnx_uint64 keep = 3;
+
+      // full reference: untruncated SVD provides all min(6,5)=5 singular values
+      std::vector<Tensor> full_ref = linalg::Gesvd(T, true, true);
+
+      for (bool is_U : {false, true}) {
+        for (bool is_vT : {false, true}) {
+          for (int return_err : {0, 1, 2}) {
+            std::vector<Tensor> out =
+              linalg::Gesvd_truncate(T, keep, 0., is_U, is_vT, return_err, 1);
+            const std::string label = "is_U=" + std::to_string(is_U) +
+                                      " is_vT=" + std::to_string(is_vT) +
+                                      " return_err=" + std::to_string(return_err);
+            CheckTruncatedSvdResult(out, full_ref[0], keep, is_U, is_vT, return_err, 1e-12, label);
+
+            cytnx_uint64 idx = 1;
+            if (is_U) {
+              EXPECT_EQ(out[idx].shape(), std::vector<cytnx_uint64>({6, keep})) << label;
+              ++idx;
+            }
+            if (is_vT) {
+              EXPECT_EQ(out[idx].shape(), std::vector<cytnx_uint64>({keep, 5})) << label;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /*=====test info=====
+  describe:When keepdim >= #singular values and err=0, nothing is truncated; the returned error
+  tensor must be a 1-element zero.
+  ====================*/
+  TEST(Gesvd_truncate, no_truncation_returns_zero_error) {
+    Tensor T = Tensor({6, 5}, Type.Double);
+    InitTensorUniform(T, 11);
+    const cytnx_uint64 full = 5;  // min(6, 5) singular values
+    for (int return_err : {1, 2}) {
+      std::vector<Tensor> out = linalg::Gesvd_truncate(T, /*keepdim=*/full, 0., /*is_U=*/true,
+                                                       /*is_vT=*/true, return_err, 1);
+      ASSERT_EQ(out.size(), 4u) << "[S, U, vT, terr], return_err=" << return_err;
+      EXPECT_EQ(out[0].shape()[0], full);
+      Tensor terr = out.back();
+      EXPECT_EQ(terr.shape(), std::vector<cytnx_uint64>({1}));
+      EXPECT_DOUBLE_EQ(terr.storage().at<double>(0), 0.0) << "return_err=" << return_err;
+    }
+  }
 }  // namespace GesvdTruncateTest

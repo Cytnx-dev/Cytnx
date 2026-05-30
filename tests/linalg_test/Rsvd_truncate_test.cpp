@@ -232,4 +232,54 @@ namespace RsvdTruncateTest {
 
     return true;
   }
+
+  /*=====test info=====
+  describe:Tensor-level Rsvd_truncate must work for all (is_U, is_vT) combinations.
+  With a fixed seed the random isometry is identical across flag choices, so the kept
+  singular values (and any requested matrices) must match the all-true reference.
+  ====================*/
+  TEST(Rsvd_truncate, flag_combinations_dense) {
+    const unsigned int seed = 42;
+    const cytnx_uint64 keep = 3;
+    const cytnx_uint64 summand = 3;  // samplenum = 6 == min(8,6), so Rsvd matches a full SVD
+    const double factor = 0.;
+    const cytnx_uint64 power_it = 4;
+
+    for (auto dtype : {Type.Double, Type.ComplexDouble}) {
+      Tensor T = Tensor({8, 6}, dtype);
+      InitTensorUniform(T, /*seed=*/3);
+
+      // independent reference for singular-value content: full Gesvd. With samplenum = min(m,n)
+      // and a few power iterations, Rsvd's S values agree with Gesvd's.
+      std::vector<Tensor> gesvd_ref = linalg::Gesvd(T, true, true);
+
+      // Rsvd reference for U/vT (these depend on the random isometry; same seed -> same basis).
+      std::vector<Tensor> ref =
+        linalg::Rsvd_truncate(T, keep, 0., true, true, 0, 1, summand, factor, power_it, seed);
+
+      for (bool is_U : {false, true}) {
+        for (bool is_vT : {false, true}) {
+          for (int return_err : {0, 1, 2}) {
+            std::vector<Tensor> out = linalg::Rsvd_truncate(T, keep, 0., is_U, is_vT, return_err, 1,
+                                                            summand, factor, power_it, seed);
+            const std::string label = "is_U=" + std::to_string(is_U) +
+                                      " is_vT=" + std::to_string(is_vT) +
+                                      " return_err=" + std::to_string(return_err);
+            CheckTruncatedSvdResult(out, gesvd_ref[0], keep, is_U, is_vT, return_err, 1e-8, label);
+
+            cytnx_uint64 idx = 1;
+            if (is_U) {
+              EXPECT_EQ(out[idx].shape()[1], keep) << label;  // U truncated to keep columns
+              EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[1], 1e-10)) << label;
+              ++idx;
+            }
+            if (is_vT) {
+              EXPECT_EQ(out[idx].shape()[0], keep) << label;  // vT truncated to keep rows
+              EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[2], 1e-10)) << label;
+            }
+          }
+        }
+      }
+    }
+  }
 }  // namespace RsvdTruncateTest
