@@ -1802,8 +1802,8 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::Transpose_() {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // The bonds are redirected, as in the bosonic case. Additionally, the order of the indices is
-    // reversed and a permutation WITHOUT signflips is applied.
+    // The bonds are redirected, and the order of the indices is reversed with a permutation WITHOUT
+    // signflips.
 
     // modify tag
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
@@ -2469,7 +2469,7 @@ namespace cytnx {
             // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
             // could depend on the block and are not aware of this sign flip!
             //  this->_signflip[b] = this->_signflip[b] ? true : false;
-            // 3) fast way: TODOfermions: implement Tensor.negmul, which does the multiplication and
+            // 3) fast way: TODOfermions: implement Tensor.negdiv, which does the division and
             // sign flip in one step
           }
           break;

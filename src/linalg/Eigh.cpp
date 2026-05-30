@@ -1,8 +1,13 @@
 #include "linalg.hpp"
-#include "algo.hpp"
+
 #include <iostream>
+#include <string>
+#include <type_traits>
+#include <vector>
+
 #include "Tensor.hpp"
-using namespace std;
+#include "UniTensor.hpp"
+#include "algo.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -10,20 +15,23 @@ using namespace std;
 
 namespace cytnx {
   namespace linalg {
+
     std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Eigh] error, Eigh can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[Eigh] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[Eigh] error, Eigh should accept a square matrix.%s", "\n");
+
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
       Tensor S, V;
       S.Init({in.shape()[0]}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
              in.device());  // if type is complex, S should be real
+      // V is only allocated when eigenvectors are requested. When is_V == false, V stays an empty
+      // (Void) tensor; it is still passed to the backend below, which detects the Void storage and
+      // calls LAPACK with jobs='N' (eigenvectors not computed), so the empty V is never written to.
       if (is_V) {
         V.Init(in.shape(), in.dtype(), in.device());
       }
@@ -80,11 +88,12 @@ namespace cytnx {
     }
 
     // actual impls:
-    void _Eigh_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
-                        const bool &is_V, const bool &row_v) {
+    static void Eigh_Dense_UT_internal(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
+                                       const bool &is_V, const bool &row_v) {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
+
       Tensor tmp;
       if (Tin.is_contiguous())
         tmp = Tin.get_block_();
@@ -93,17 +102,17 @@ namespace cytnx {
         tmp.contiguous_();
       }
 
-      vector<cytnx_uint64> tmps = tmp.shape();
-      vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+      std::vector<cytnx_uint64> tmps = tmp.shape();
+      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
       tmps.clear();
-      vector<string> oldlabel = Tin.labels();
+      std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
       cytnx_int64 rowdim = 1;
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp.reshape_({rowdim, -1});
 
-      vector<Tensor> outT = cytnx::linalg::Eigh(tmp, is_V, row_v);
+      std::vector<Tensor> outT = cytnx::linalg::Eigh(tmp, is_V, row_v);
       if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
       int t = 0;
@@ -113,26 +122,41 @@ namespace cytnx {
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
-      Cy_S.Init({newBond, newBond}, {std::string("0"), std::string("1")}, 1, Type.Double,
-                Device.cpu, true);  // it is just reference so no hurt to alias ^^. All eigvals are
-                                    // real for eigh so Type.Double.
-
+      Cy_S.Init({newBond, newBond}, {std::string("0"), std::string("1")},
+                1,  // rowrank
+                outT[t].dtype(), outT[t].device(),  // match the block that is inserted below
+                true);  // is_diag
       Cy_S.put_block_(outT[t]);
       t++;
       if (is_V) {
         cytnx::UniTensor &Cy_U = outCyT[t];
         Cy_U.Init(outT[t], false, 1);  // Tin is a rowrank = 1 square UniTensor.
       }  // V
-    }  //_Eigh_Dense_UT
+    }  // Eigh_Dense_UT_internal
 
-    void _Eigh_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
-                        const bool &is_V, const bool &row_v) {
+    // Block-wise Hermitian eigendecomposition for a symmetric UniTensor. Handles both
+    // BlockUniTensor (bosonic) and BlockFermionicUniTensor (fermionic), selected by the template
+    // parameter BUT. For the fermionic case, sign-flipped blocks are negated to the physical
+    // operator before the per-sector dense Eigh, and the resulting eigenvectors carry an all-false
+    // signflip (they are already physical). For the bosonic case there are no sign flips and those
+    // steps do nothing.
+    template <class BUT>
+    static void Eigh_BlockUT_internal(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
+                                      const bool &is_V, const bool &row_v) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
       //   BDLeft -[ ]- BDRight
       //
+      cytnx_error_msg(
+        row_v && is_V,
+        "[ERROR] Currently Eigh with row_v = true is not supported for symmetric UniTensors.%s",
+        "\n");
+
+      std::vector<bool> signflip;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
       std::vector<cytnx_uint64> strides;
       strides.reserve(Tin.rank());
       auto BdLeft = Tin.bonds()[0].clone();
@@ -178,16 +202,13 @@ namespace cytnx {
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
-      // ->a initialize an empty shell of UniTensor!
+      // ->a initialize an empty shell of UniTensors!
       vec2d<cytnx_int64> aux_qnums;  // for sharing bond
-      std::vector<cytnx_uint64> aux_degs;  // forsharing bond
+      std::vector<cytnx_uint64> aux_degs;  // for sharing bond
       std::vector<Tensor> e_blocks;  // for eigenvalues
 
-      vec2d<cytnx_uint64> v_itoi;  // for eigen vectors
+      vec2d<cytnx_uint64> v_itoi;  // for eigenvectors
       std::vector<Tensor> v_blocks;
-
-      // vec2d<cytnx_uint64> vT_itoi;  // for vT
-      // std::vector<Tensor> vT_blocks;
 
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
@@ -199,16 +220,26 @@ namespace cytnx {
         std::vector<cytnx_int64> row_szs(order.size(), 1);
         cytnx_uint64 Rblk_dim = 0;
         cytnx_int64 tmp = -1;
+        cytnx_int64 current_block;
         for (int i = 0; i < order.size(); i++) {
+          current_block = x.second[order[i]];
           if (itoi_indicators[i][0] != tmp) {
             tmp = itoi_indicators[i][0];
             Rblk_dim++;
           }
-          Tlist[i] = Tin.get_blocks_()[x.second[order[i]]];
+          Tlist[i] = Tin.get_blocks_()[current_block];
           for (int j = 0; j < Tin.rowrank(); j++) {
             row_szs[i] *= Tlist[i].shape()[j];
           }
-          Tlist[i] = Tlist[i].reshape({row_szs[i], -1});
+          bool flip = false;
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+            flip = signflip[current_block];
+          if (flip) {
+            Tlist[i] = -Tlist[i];  // copies Tensor
+            Tlist[i].reshape_({row_szs[i], -1});
+          } else {
+            Tlist[i] = Tlist[i].reshape({row_szs[i], -1});  // copies Tensor
+          }
         }
         cytnx_error_msg(Tlist.size() % Rblk_dim, "[Internal ERROR] Tlist is not complete!%s", "\n");
         // BTen is the big block!!
@@ -246,15 +277,16 @@ namespace cytnx {
             v_itoi.back().resize(Tin.rowrank() + 1);
           }
         }  // is_V
-      }
+      }  // for each qcharge
 
       // process e:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
-      BlockUniTensor *e_ptr = new BlockUniTensor();
-      e_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                  Device.cpu,  // this two will be overwrite later, so doesnt matter.
-                  true,  // is_diag!
-                  true);  // no_alloc!
+      BUT *e_ptr = new BUT();
+      e_ptr->Init(
+        {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+        true,  // is_diag!
+        true);  // no_alloc!
       e_ptr->_blocks = e_blocks;
       UniTensor e;
       e._impl = boost::intrusive_ptr<UniTensor_base>(e_ptr);
@@ -262,7 +294,7 @@ namespace cytnx {
       outCyT.push_back(e);
 
       if (is_V) {
-        BlockUniTensor *v_ptr = new BlockUniTensor();
+        BUT *v_ptr = new BUT();
         for (int i = 0; i < Tin.rowrank(); i++) {
           v_ptr->_bonds.push_back(Tin.bonds()[i].clone());
           v_ptr->_labels.push_back(Tin.labels()[i]);
@@ -274,40 +306,49 @@ namespace cytnx {
         v_ptr->_is_braket_form = v_ptr->_update_braket();
         v_ptr->_inner_to_outer_idx = v_itoi;
         v_ptr->_blocks = v_blocks;
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+          v_ptr->_signflip = std::vector<bool>(v_blocks.size(), false);
         UniTensor V;
         V._impl = boost::intrusive_ptr<UniTensor_base>(v_ptr);
         outCyT.push_back(V);
       }
-
-    }  //_Eigh_Block_UT
+    }  // Eigh_BlockUT_internal
 
     std::vector<cytnx::UniTensor> Eigh(const UniTensor &Tin, const bool &is_V, const bool &row_v) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[Eigh][ERROR] Eigh for UniTensor should have rank>1 and rowrank>0%s", "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][Eigh] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][Eigh] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][Eigh] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[Eigh][ERROR] Eigh for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
+                      "[ERROR][Eigh] Input UniTensor is diagonal, so Eigh is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _Eigh_Dense_UT(outCyT, Tin, is_V, row_v);
+        Eigh_Dense_UT_internal(outCyT, Tin, is_V, row_v);
 
       } else if (Tin.uten_type() == UTenType.Block) {
-        _Eigh_Block_UT(outCyT, Tin, is_V, row_v);
+        Eigh_BlockUT_internal<BlockUniTensor>(outCyT, Tin, is_V, row_v);
+
+      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
+        Eigh_BlockUT_internal<BlockFermionicUniTensor>(outCyT, Tin, is_V, row_v);
+
       } else {
-        cytnx_error_msg(
-          true,
-          "[ERROR] Eigh, unsupported type of UniTensor only support (Dense and Block). "
-          "something wrong internal%s",
-          "\n");
-      }  // is block form ?
+        cytnx_error_msg(true, "[ERROR][Eigh] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
+      }  // ut type
 
       return outCyT;
 
-    };  // Eigh
+    }  // Eigh
 
   }  // namespace linalg
 }  // namespace cytnx

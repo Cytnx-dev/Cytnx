@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
+#include "linalg_test.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -145,7 +146,7 @@ namespace {
       // if k == 1, arnoldi_eigvecs will be a rank-1 tensor
       auto arnoldi_eigvec = arnoldi_eigs[i + 1];
       auto exact_eigval = fst_few_eigvals[i];
-      // check eigen value by comparing with the full spectrum results.
+      // check eigenvalue by comparing with the full spectrum results.
       // avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
       auto eigval_err = abs(abs(arnoldi_eigval) - abs(exact_eigval)) / abs(exact_eigval);
       // std::cout << "eigval err" << eigval_err << std::endl;
@@ -383,4 +384,22 @@ TEST(Arnoldi_Ut, err_ncv_out_of_range) {
   auto dim = err_task.D * err_task.D * err_task.d;
   err_task.ncv = dim + 1;
   err_task.ExcuteErrorTest();
+}
+
+/*=====test info=====
+describe:Arnoldi ('SR') for a fermionic LinOp Op=A^dag A introducing sign flips; solving for the
+TWO lowest states (k=2). Tests the fermionic ARPACK matvec and the BlockFermionicUniTensor returns.
+Checks both eigenvalues against the dense reference, that both eigenvectors are normalized and match
+the dense eigenvectors (|<v|w>| ~ 1), and that the two eigenvectors are mutually orthogonal.
+(ARPACK's real driver packs the eigenvector as complex with zero imaginary part for a real
+eigenvalue; ferm_fidelity uses the magnitude |<v|w>| so it handles that.)
+====================*/
+TEST(Arnoldi_Ut, fermionic_ArnoldiFermionic) {
+  const double tol = 1e-7;
+  UniTensor A = make_ferm_A();
+  UniTensor v0 = make_ferm_ada_ket(A);
+  FermiAdaOp op(A, ferm_ket_nx(v0));
+  auto low = ferm_dense_lowest(A, 2);  // two lowest dense eigenpairs (ascending)
+  auto eigs = linalg::Arnoldi(&op, v0, "SR", 1000, 1e-12, 2, true);  // k=2
+  expect_lowest_states(A, eigs, low, tol);
 }

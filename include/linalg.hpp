@@ -2058,6 +2058,10 @@ namespace cytnx {
     \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row
     form. Otherwise, the eigen vectors will be column form.
     @pre the \p Tin should be a square matrix.
+    @warning The returned eigenvectors \f$ V \f$ are in general only invertible, NOT unitary: the
+    reconstruction is \f$ M = V D V^{-1} \f$, not \f$ V D V^\dagger \f$. The underlying LAPACK geev
+    routine does not orthonormalize the eigenvectors, so \f$ V \f$ is generally non-unitary even
+    when \p Tin is Hermitian/normal. Use Eigh for a unitary eigen basis.
     */
     std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
 
@@ -2670,6 +2674,11 @@ namespace cytnx {
   creating a class that inherits LinOp (see LinOp for further details).
   2. If k is close to the dimension of the vector, the routine may return error (arpack routine -3).
  In such cases, it is recommended to use the linalg::Eig function directly.
+  3. For a fermionic (BlockFermionicUniTensor) input, the user-supplied LinOp::matvec MUST implement
+ the operator action with the correct fermionic signs (e.g. apply fermion_twists() to the
+ appropriate operand before the contraction). The iteration keeps every Krylov vector in the
+ physical (signflip-resolved) frame and the inner products are then correct automatically, but the
+ correctness of H|v> itself is entirely the LinOp's responsibility.
   @attention
   For the `which` equal to `SI` or `LI`, and the data type of LinOp is real rather than complex, the
  output
@@ -2805,6 +2814,11 @@ namespace cytnx {
   creating a class that inherits LinOp (see LinOp for further details).
   2. If k is close to the dimension of the vector, the routine may return error (arpack routine -3).
   In such cases, it is recommended to use the linalg::Eigh function directly.
+  3. For a fermionic (BlockFermionicUniTensor) input, the user-supplied LinOp::matvec MUST implement
+  the operator action with the correct fermionic signs (e.g. apply fermion_twists() to the
+  appropriate operand before the contraction). The iteration keeps every Krylov vector in the
+  physical (signflip-resolved) frame and the inner products are then correct automatically, but the
+  correctness of H|v> itself is entirely the LinOp's responsibility.
   @attention
   The input operator in LinOp must be Hermitian; otherwise, the simulation results will be
   incorrect.
