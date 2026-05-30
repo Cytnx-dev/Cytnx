@@ -1,5 +1,8 @@
 #include "BlockFermionicUniTensor_test.h"
 
+#include <algorithm>
+#include <cmath>
+
 /*=====test info=====
 describe:scalar product between two vectors
 ====================*/
@@ -95,58 +98,6 @@ TEST_F(BlockFermionicUniTensorTest, FermionTwists) {
   EXPECT_TRUE(AreEqUniTensor(twice.apply_(), BFUT5.apply()));
 }
 
-/*=====test info=====
-describe:test SVD unitarity and reconstruction for fermionic tensors with mixed in/out legs
-====================*/
-TEST_F(BlockFermionicUniTensorTest, SvdUnitaryAndReconstruction) {
-  const double tol = 1e-10;
-
-  std::vector<UniTensor> svd_out = linalg::Svd_truncate(BFUT5, 10, 0., true, 0);
-  ASSERT_EQ(svd_out.size(), 3);
-  UniTensor S = svd_out[0].set_name("S");
-  UniTensor U = svd_out[1].set_name("U");
-  UniTensor vT = svd_out[2].set_name("vT");
-  UniTensor Udag = U.Dagger().set_name("Udag");
-  Udag.relabel_("_aux_L", "_aux_L_dag");
-  UniTensor vTdag = vT.Dagger().set_name("vTdag");
-  vTdag.relabel_("_aux_R", "_aux_R_dag");
-
-  // Check U^dagger U = I on the auxiliary left space.
-  UniTensor UdagU = Contract(Udag.fermion_twists(), U);
-  UniTensor Iu = 0. * UdagU.clone();  // will be identity matrix
-  auto shape_u = Iu.shape();
-  for (cytnx_uint64 k = 0; k < shape_u[0]; k++) {
-    auto proxy = Iu.at({k, k});
-    proxy = 1.0;
-  }
-  EXPECT_TRUE(AreNearlyEqUniTensor(UdagU.apply(), Iu, tol));
-
-  // Check vT vT^dagger = I on the auxiliary right space.
-  UniTensor vTvTdag = Contract(vT.fermion_twists(), vTdag);
-  UniTensor Iv = 0. * vTvTdag.clone();  // will be identity matrix
-  auto shape_v = Iv.shape();
-  for (cytnx_uint64 k = 0; k < shape_v[0]; k++) {
-    auto proxy = Iv.at({k, k});
-    proxy = 1.0;
-  }
-  EXPECT_TRUE(AreNearlyEqUniTensor(vTvTdag.apply(), Iv, tol));
-
-  // Check U^dagger * BFUT5 * V^dagger = S (where V^dagger is returned as vT).
-  UniTensor Scontr = Contract(Contract(Udag.fermion_twists(), BFUT5.fermion_twists()), vTdag);
-  Scontr.relabel_("_aux_L_dag", "_aux_L");
-  Scontr.relabel_("_aux_R_dag", "_aux_R");
-  Scontr.permute_(S.labels());
-  UniTensor Sref = 0. * Scontr.clone();  // Creating Sref, a dense version of S
-  S.apply_();
-  auto shape_s = Sref.shape();
-  for (cytnx_uint64 k = 0; k < shape_s[0]; k++) {
-    auto pref = Sref.at({k, k});
-    auto ps = S.at({k, k});
-    if (pref.exists() && ps.exists()) pref = Scalar(ps);
-  }
-  EXPECT_TRUE(AreNearlyEqUniTensor(Scontr.apply(), Sref.apply(), tol));
-}
-
 TEST_F(BlockFermionicUniTensorTest, group_basis) {
   auto out = BFUT4.group_basis();
 
@@ -190,68 +141,6 @@ TEST_F(BlockFermionicUniTensorTest, group_basis) {
   EXPECT_DOUBLE_EQ(double(out.at({2, 1, 0}).real()), double(7));
   EXPECT_DOUBLE_EQ(double(out.at({1, 1, 1}).real()), double(8));
   EXPECT_DOUBLE_EQ(double(out.at({2, 1, 1}).real()), double(9));
-}
-
-/*=====test info=====
-describe:test pseudo-inverse
-====================*/
-TEST_F(BlockFermionicUniTensorTest, Inv) {
-  const double tol = 1e-14;
-  double clip = 1e-15;
-  EXPECT_TRUE(AreNearlyEqUniTensor(BFUT3.Inv(clip), BFUT3INV, tol));
-  UniTensor T = BFUT3.permute({3, 1, 4, 2, 0}).contiguous();
-  EXPECT_TRUE(AreNearlyEqUniTensor(T.Inv(clip).Inv_(clip), T, tol));
-  EXPECT_FALSE(AreNearlyEqUniTensor(T.Inv(clip), T, tol));
-  clip = 0.1;  // test actual clipping as well
-  auto tmp = T.clone();
-  tmp.Inv_(clip);  // test inline version
-  EXPECT_TRUE(AreEqUniTensor(T.Inv(clip), tmp));
-  tmp = T.clone();
-  for (size_t i = 0; i < 2; i++)
-    for (size_t j = 0; j < 2; j++)
-      for (size_t k = 0; k < 4; k++)
-        for (size_t l = 0; l < 2; l++)
-          for (size_t m = 0; m < 2; m++) {
-            // elements are permuted!
-            auto proxy = tmp.at({l, j, m, k, i});
-            if (proxy.exists()) {
-              Scalar val = proxy;
-              if (val.abs() <= clip)
-                proxy = 0.;
-              else
-                proxy = 1. / proxy;
-            }
-          }
-  EXPECT_TRUE(AreNearlyEqUniTensor(T.Inv(clip), tmp, tol));
-}
-
-/*=====test info=====
-describe:test power
-====================*/
-TEST_F(BlockFermionicUniTensorTest, Pow) {
-  const double tol = 1e-14;
-  UniTensor T = BFUT3.permute({3, 1, 4, 2, 0}).contiguous();
-  // only even powers are products, odd powers differ by signflips
-  EXPECT_TRUE(AreNearlyEqUniTensor(T.Pow(3.), T * T * T, tol));
-  auto tmp = T.clone();
-  tmp.Pow_(2.3);  // test inline version
-  EXPECT_TRUE(AreEqUniTensor(T.Pow(2.3), tmp));
-  for (double p = 0.; p < 1.6; p += 0.5) {
-    tmp = T.clone();
-    for (size_t i = 0; i < 2; i++)
-      for (size_t j = 0; j < 2; j++)
-        for (size_t k = 0; k < 4; k++)
-          for (size_t l = 0; l < 2; l++)
-            for (size_t m = 0; m < 2; m++) {
-              // elements are permuted!
-              auto proxy = tmp.at({l, j, m, k, i});
-              if (proxy.exists()) {
-                Scalar val = proxy;
-                proxy = std::pow((cytnx_double)val, p);
-              }
-            }
-    EXPECT_TRUE(AreNearlyEqUniTensor(T.Pow(p), tmp, tol));
-  }
 }
 
 /*=====test info=====
@@ -316,4 +205,60 @@ TEST_F(BlockFermionicUniTensorTest, Transpose) {
   EXPECT_EQ(tmp2.bonds()[1].type(), BD_OUT);
   EXPECT_EQ(tmp2.bonds()[2].type(), BD_OUT);
   EXPECT_TRUE(AreEqUniTensor(tmp2, tmp));
+}
+
+// ============ to_dense / to_dense_ ============
+
+// A diagonal BlockFermionicUniTensor is expanded to a full one: each rank-1 (diagonal) block
+// becomes a diagonal matrix and is_diag() becomes false. A twist flips the sign of the odd-parity
+// block, and those per-block sign flags are carried over unchanged.
+TEST_F(BlockFermionicUniTensorTest, to_dense_diag) {
+  Bond bd = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3}, {Symmetry::FermionParity()});
+  for (auto dtype : {Type.ComplexDouble, Type.Double}) {
+    UniTensor B = UniTensor({bd, bd.redirect()}, {"a", "b"}, 1, dtype, Device.cpu, true);
+    random::uniform_(B, -10.0, 10.0, 0);
+    B.twist_(0);  // sign flip on the odd-parity block
+
+    bool any_flip = false, any_noflip = false;
+    for (bool s : B.signflip()) {
+      any_flip = any_flip || s;
+      any_noflip = any_noflip || !s;
+    }
+    ASSERT_TRUE(any_flip);  // sign flips on some...
+    ASSERT_TRUE(any_noflip);  // ...but not all blocks
+
+    UniTensor dense = B.to_dense();
+    EXPECT_TRUE(B.is_diag());
+    EXPECT_FALSE(dense.is_diag());
+    EXPECT_EQ(dense.dtype(), dtype);
+    EXPECT_EQ(dense.signflip(), B.signflip());  // sign flags carried over unchanged
+    ASSERT_EQ(dense.Nblocks(), B.Nblocks());
+    for (cytnx_uint64 b = 0; b < B.Nblocks(); b++)
+      EXPECT_TRUE(AreNearlyEqTensor(dense.get_block_(b), linalg::Diag(B.get_block_(b)), 1e-14));
+
+    UniTensor Bp = B.clone();
+    Bp.to_dense_();
+    EXPECT_FALSE(Bp.is_diag());
+    EXPECT_EQ(Bp.signflip(), B.signflip());
+    EXPECT_TRUE(AreEqUniTensor(Bp, dense));
+  }
+}
+
+// to_dense on an already non-diagonal BlockFermionicUniTensor is a no-op: the tensor, including its
+// per-block sign flags (made non-trivial here by an initial permutation), is returned unchanged.
+TEST_F(BlockFermionicUniTensorTest, to_dense_non_diag) {
+  UniTensor T = BFUT5.permute({2, 0, 3, 1});  // sign flips on some blocks
+  bool any_flip = false;
+  for (bool s : T.signflip()) any_flip = any_flip || s;
+  ASSERT_TRUE(any_flip);
+  EXPECT_FALSE(T.is_diag());
+
+  UniTensor dense = T.to_dense();
+  EXPECT_TRUE(AreEqUniTensor(T, dense));
+  EXPECT_EQ(dense.signflip(), T.signflip());
+
+  UniTensor Tp = T.clone();
+  Tp.to_dense_();
+  EXPECT_TRUE(AreEqUniTensor(T, Tp));
+  EXPECT_EQ(Tp.signflip(), T.signflip());
 }

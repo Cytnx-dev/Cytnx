@@ -1,10 +1,10 @@
 
-# This must be before the target_sources_local(), so that the target is added as CUDA
+# This must be before the target_sources(), so that the target is added as CUDA
 if(USE_CUDA)
   set_source_files_properties(Kron.cpp DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTIES LANGUAGE CUDA)
 endif()
 
-target_sources_local(cytnx
+target_sources(cytnx
     PRIVATE
     #linalg_internal_interface.hpp
     Add.cpp
@@ -52,10 +52,9 @@ target_sources_local(cytnx
     Rand_isometry.cpp
     Svd.cpp
     Gesvd.cpp
-    Rsvd.cpp
     Svd_truncate.cpp
     Gesvd_truncate.cpp
-    Rsvd_truncate.cpp
+    Rsvd.cpp
     Gemm.cpp
     Gemm_Batch.cpp
     Tensordot.cpp

@@ -1,5 +1,6 @@
 -------- start of print ---------
-Tensor name:
+Tensor name: uT
+Tensor type: Block
 braket_form : True
 is_diag    : False
 [OVERALL] contiguous : True
@@ -114,7 +115,8 @@ Shape : (1,1,1)
 
 
 -------- start of print ---------
-Tensor name:
+Tensor name: uT
+Tensor type: Block
 braket_form : False
 is_diag    : False
 [OVERALL] contiguous : True

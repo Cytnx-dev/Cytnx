@@ -1,11 +1,10 @@
 # Creating A1, A2, M
-A1 = cytnx.UniTensor(
-    cytnx.random.normal(
-        [2,8,8], mean=0., std=1.,
-        dtype=cytnx.Type.ComplexDouble))
+A1 = cytnx.UniTensor.normal(
+           [2,8,8], mean=0., std=1.,
+           dtype=cytnx.Type.ComplexDouble)
 
 A2 = A1.Conj()
-M = cytnx.UniTensor(cytnx.ones([2,2,4,4]))
+M = cytnx.UniTensor.ones([2,2,4,4])
 
 # Calling ncon
 Res = cytnx.ncon([A1,M,A2],

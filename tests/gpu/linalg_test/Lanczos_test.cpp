@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
 #include "../test_tools.h"
+#include "linalg_test.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -163,4 +164,20 @@ TEST(Lanczos, gpu_smallest_dim) {
   k = 1;
   dim = 3;
   ExcuteTest(which, mat_type, k, dim);
+}
+
+// GPU fermionic Krylov: O = A^dag A (sign-flip-active 4-leg A); eigenpairs computed on the GPU and
+// checked against an independent CPU dense diagonalization.
+TEST(Lanczos, fermionic_LanczosArpack) {  // ARPACK symmetric Lanczos 'SA', two lowest
+  const double tol = 1e-7;
+  UniTensor A = make_ferm_A();
+  UniTensor v0 = make_ferm_ada_ket(A);
+  auto low = ferm_dense_lowest(A, 2);
+  FermiAdaOp op(A.to(Device.cuda), ferm_ket_nx(v0));
+  // exact argument types select the ARPACK which-based Lanczos overload over the method-based one
+  // (uint64 maxiter, double cvg_crit, int32 ncv), so the call resolves without a cast.
+  auto eigs =
+    to_cpu(linalg::Lanczos(&op, v0.to(Device.cuda), std::string("SA"), (cytnx_uint64)1000,
+                           (cytnx_double)1e-12, (cytnx_uint64)2, true, (cytnx_int32)0, false));
+  expect_lowest_states(A, eigs, low, tol);
 }

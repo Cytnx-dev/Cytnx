@@ -3,6 +3,8 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include <iostream>
+#include <type_traits>
 #include <vector>
 
 #ifdef BACKEND_TORCH
@@ -16,16 +18,22 @@ namespace cytnx {
     template <typename T>
     Tensor ExpM(const Tensor &Tin, const T &a, const T &b) {
       cytnx_error_msg(Tin.shape().size() != 2,
-                      "[ExpH] error, ExpH can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[ExpH] error tensor must be contiguous. Call
+                      "[ExpM] error, ExpM can only operate on rank-2 Tensor.%s", "\n");
+      // cytnx_error_msg(!Tin.is_contiguous(), "[ExpM] error tensor must be contiguous. Call
       // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
-                      "[ExpH] error, ExpM can only operator on square Tensor (#row = #col%s", "\n");
+                      "[ExpM] error, ExpM can only operator on square Tensor (#row = #col%s", "\n");
 
       vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
       Tensor s, u, ut;
-      if (a == 0) return cytnx::linalg::Diag(cytnx::ones(Tin.shape()[0]));
+      // exp(a*M + b*I) with a == 0 is exp(b)*I: keep the bias b (matches ExpH).
+      if (a == 0) {
+        if (b == 0)
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device());
+        else
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device()) * exp(b);
+      }
 
       if (b == 0)
         s = cytnx::linalg::Exp(a * su[0]);
@@ -63,7 +71,8 @@ namespace cytnx {
   namespace linalg {
 
     template <typename T>
-    void _expm_Dense_UT(UniTensor &out, const UniTensor &Tin, const T &a, const T &b) {
+    static void ExpM_Dense_UT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
+                                       const T &b) {
       cytnx_int64 Drow = 1, Dcol = 1;
       for (int i = 0; i < Tin.rowrank(); i++) {
         Drow *= Tin.shape()[i];
@@ -83,7 +92,8 @@ namespace cytnx {
     }
 
     template <typename T>
-    void _expm_Sparse_UT(UniTensor &out, const UniTensor &Tin, const T &a, const T &b) {
+    static void ExpM_Sparse_UT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
+                                        const T &b) {
       std::vector<Tensor> &tmp = out.get_blocks_();
 
       for (int i = 0; i < tmp.size(); i++) {
@@ -91,8 +101,18 @@ namespace cytnx {
       }
     }
 
-    template <typename T>
-    void _expm_Block_UT(UniTensor &out, const UniTensor &Tin, const T &a, const T &b) {
+    // Block-wise matrix exponential of a general symmetric UniTensor. Handles both BlockUniTensor
+    // (bosonic) and BlockFermionicUniTensor (fermionic), selected by the template parameter BUT.
+    // For the fermionic case, sign-flipped blocks are negated to the physical operator before each
+    // per-qcharge dense ExpM, and the result is stored with an all-false signflip (it is already
+    // physical). For the bosonic case there are no sign flips and those steps do nothing.
+    template <class BUT, typename T>
+    static void ExpM_BlockUT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
+                                      const T &b) {
+      std::vector<bool> signflip;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
       //   BDLeft -[ ]- BDRight
@@ -137,13 +157,15 @@ namespace cytnx {
       // 3) categorize:
       // key = qnum, val = list of block locations:
       std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64>> mgrp;
+      const auto left_qnums =
+        (BdLeft.type() == bondType::BD_IN) ? BdLeft.qnums() : BdLeft.calc_reverse_qnums();
       for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        mgrp[left_qnums[new_itoi[b][0]]].push_back(b);
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
-      vec2d<cytnx_uint64> &ref_itoi = ((BlockUniTensor *)out._impl.get())->_inner_to_outer_idx;
-      std::vector<Tensor> &out_blocks_ = ((BlockUniTensor *)out._impl.get())->_blocks;
+      vec2d<cytnx_uint64> &ref_itoi = ((BUT *)out._impl.get())->_inner_to_outer_idx;
+      std::vector<Tensor> &out_blocks_ = ((BUT *)out._impl.get())->_blocks;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
         for (int i = 0; i < x.second.size(); i++) {
@@ -158,12 +180,17 @@ namespace cytnx {
         vec2d<cytnx_uint64> old_shape(order.size());
 
         for (int i = 0; i < order.size(); i++) {
-          Tlist[i] = Tin.get_blocks()[x.second[order[i]]];
+          cytnx_int64 current_block = x.second[order[i]];
+          Tlist[i] = Tin.get_blocks()[current_block];
           row_szs = 1;
           old_shape[i] = Tlist[i].shape();
           for (int j = 0; j < Tin.rowrank(); j++) {
             row_szs *= Tlist[i].shape()[j];
           }
+          bool flip = false;
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+            flip = signflip[current_block];
+          if (flip) Tlist[i] = -Tlist[i];  // negate to the physical operator before exp
           Tlist[i] = Tlist[i].reshape({row_szs, -1});
           if (itoi_indicators[i][0] != tmp) {
             tmp = itoi_indicators[i][0];
@@ -198,56 +225,58 @@ namespace cytnx {
         }
 
       }  // for each qcharge
+
+      // the sign was already included when creating the per-qcharge blocks, so the resulting
+      // signflip is all false.
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+        ((BUT *)out._impl.get())->_signflip = std::vector<bool>(out_blocks_.size(), false);
     }
 
     template <typename T>
     UniTensor ExpM(const UniTensor &Tin, const T &a, const T &b) {
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][ExpM] Input UniTensor should have rowrank > 0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][ExpM] Input UniTensor should have rowrank < rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
+
       if (Tin.uten_type() == UTenType.Dense) {
-        cytnx_error_msg((Tin.rowrank() == 0) || (Tin.rowrank() == Tin.rank()),
-                        "[ERROR][ExpM] Rowrank must be >0 and <Tin.rank() !!%s", "\n");
         UniTensor out;
         if (Tin.is_contiguous()) {
           out = Tin.clone();
         } else {
           out = Tin.contiguous();
         }
-        _expm_Dense_UT(out, Tin, a, b);
-
+        ExpM_Dense_UT_internal(out, Tin, a, b);
         return out;
       } else if (Tin.uten_type() == UTenType.Block) {
-        cytnx_error_msg((Tin.rowrank() == 0) || (Tin.rowrank() == Tin.rank()),
-                        "[ERROR][ExpM] Rowrank must be >0 and <Tin.rank() !!%s", "\n");
-
         // copy everything except _blocks and _inner_to_outer_idx
         BlockUniTensor *raw_out = ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
-
         UniTensor out;
         out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
-
-        _expm_Block_UT(out, Tin, a, b);
-
+        ExpM_BlockUT_internal<BlockUniTensor>(out, Tin, a, b);
         return out;
-
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        // TODOfermionic: implement
-        cytnx_error_msg(true, "[ERROR] ExpM not implemented for BlockFermionic UniTensors.%s",
-                        "\n");
+        // copy everything except _blocks and _inner_to_outer_idx
+        BlockFermionicUniTensor *raw_out =
+          ((BlockFermionicUniTensor *)Tin._impl.get())->clone_meta(false, true);
+        UniTensor out;
+        out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
+        ExpM_BlockUT_internal<BlockFermionicUniTensor>(out, Tin, a, b);
+        return out;
       } else if (Tin.uten_type() == UTenType.Sparse) {
-        // cytnx_error_msg(Tin.is_contiguous()==false, "[ERROR][ExpM] currently ExpM on symmetric
-        // UniTensor have to operate on contiguous(). Call contiguous_() or contiguous()
-        // first,%s","\n");
-
         UniTensor out;
         if (Tin.is_contiguous())
           out = Tin.clone();
         else
           out = Tin.contiguous();
-
-        _expm_Sparse_UT(out, Tin, a, b);
+        ExpM_Sparse_UT_internal(out, Tin, a, b);
         return out;
       } else {
-        cytnx_error_msg(true, "[ERROR] ExpM only supports Dense/Block/BlockFermionic UniTensors.%s",
-                        "\n");
+        cytnx_error_msg(true, "[ERROR][ExpM] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
     }
 

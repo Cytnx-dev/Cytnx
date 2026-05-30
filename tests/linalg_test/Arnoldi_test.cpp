@@ -138,7 +138,7 @@ namespace {
       // if k == 1, arnoldi_eigvecs will be a rank-1 tensor
       auto arnoldi_eigvec = k == 1 ? arnoldi_eigvecs : arnoldi_eigvecs(i);
       auto exact_eigval = fst_few_eigvals[i];
-      // check eigen value by comparing with the full spectrum results.
+      // check eigenvalue by comparing with the full spectrum results.
       // avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'SM'
       auto eigval_err = abs(abs(arnoldi_eigval) - abs(exact_eigval)) / abs(exact_eigval);
       // std::cout << "eigval err=" << eigval_err << std::endl;

@@ -11,8 +11,6 @@ namespace cytnx {
     void InvM_(Tensor &Tin) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[InvM] error, InvM can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[InvM] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[InvM] error, the size of last two rank should be the same.%s", "\n");
@@ -61,19 +59,27 @@ namespace cytnx {
       if (Tin.is_contiguous()) tmp.reshape_(oldshape);
     }
     void InvM_(UniTensor &Tin) {
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[InvM_][ERROR] InvM_ for UniTensor should have rank>1 and rowrank>0%s",
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][InvM_] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][InvM_] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][InvM_] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
+      cytnx_error_msg(Tin.is_diag(),
+                      "[ERROR][InvM_] Input UniTensor is diagonal, so InvM_ is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
 
-      cytnx_error_msg(Tin.is_diag(),
-                      "[InvM_[ERROR] InvM_ for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
-                      "\n");
       if (Tin.uten_type() == UTenType.Dense) {
         _InvM_inplace_Dense_UT(Tin);
 
       } else {
-        cytnx_error_msg(true, "[ERROR] InvM_ only supports Dense UniTensors.%s", "\n");
+        cytnx_error_msg(true, "[ERROR][InvM_] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
     }
 

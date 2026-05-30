@@ -67,8 +67,8 @@ namespace cytnx {
         res.at({0}) = sqrt(res.at({0}));
         return res;
       } else {
-        cytnx_error_msg(true, "[ERROR] Norm only supports Dense/Block/BlockFermionic UniTensors.%s",
-                        "\n");
+        cytnx_error_msg(true, "[ERROR][Norm] UniTensor type '%s' not supported\n",
+                        uTl.uten_type_str().c_str());
       }
     }
 

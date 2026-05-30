@@ -97,7 +97,7 @@ Output >>
 PutUniTensor according to label ordering
 ------------------------------------------
 
-When we put a UniTensor into a Network, we can also specify its leg order according to a label ordering, this interface turns out to be convinient since users don't need to memorize look up the index of s desired leg. To be more specific, consider a example, we grab two three leg tensors **A1** and **A2**, they both have one leg that spans the physical space and the other two legs describe the virtual space (such tensors are often appearing as the building block tensors of matrix product state), we create the tensors and set the corresponding lebels as following:
+When we put a UniTensor into a Network, we can also specify its leg order according to a label ordering, this interface turns out to be convenient since users don't need to memorize look up the index of s desired leg. To be more specific, consider a example, we grab two three leg tensors **A1** and **A2**, they both have one leg that spans the physical space and the other two legs describe the virtual space (such tensors are often appearing as the building block tensors of matrix product state), we create the tensors and set the corresponding lebels as following:
 
 * In Python:
 

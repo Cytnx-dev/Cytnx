@@ -22,6 +22,12 @@ namespace cytnx {
 
     // <A|B>
     static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
+      // For a fermionic tensor the bra-ket contraction carries sign flips; applying
+      // fermion_twists() to the dagger (bra) operand cancels them so the result is the true scalar
+      // product. For bosonic/dense tensors fermion_twists() is not defined, so use the plain
+      // contraction.
+      if (A.uten_type() == UTenType.BlockFermionic)
+        return Contract(A.Dagger().fermion_twists(), B).item();
       return Contract(A.Dagger(), B).item();
     }
 
@@ -32,11 +38,15 @@ namespace cytnx {
       std::vector<UniTensor> psi_s;
       //[require] Tin should be provided!
 
-      double Norm = double(Contract(Tin, Tin.Dagger()).item().real());
-      Norm = std::sqrt(Norm);
+      // Frobenius norm is sign-flip independent, so it is the correct vector norm for fermionic
+      // tensors too (and equals sqrt(<Tin|Tin>) for bosonic).
+      double Norm = double(Tin.Norm().item().real());
 
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
+      // Pin the Krylov vectors to the sign frame with all signflips applied and the vector
+      // arithmetic below stay consistent; no-op for bosonic/dense tensors.
+      psi_1.apply_();
       if (is_V) {
         psi_s.push_back(psi_1);
       }
@@ -56,6 +66,7 @@ namespace cytnx {
       // i=0
       //-------------------------------------------------
       new_psi = Hop->matvec(psi_1);
+      new_psi.apply_();  // resolve pending fermionic signflip; no-op for bosonic/dense
 
       /*
          checking if the output match input:
@@ -88,6 +99,7 @@ namespace cytnx {
       // iteration LZ:
       for (unsigned int i = 1; i < Maxiter; i++) {
         new_psi = Hop->matvec(psi_1);
+        new_psi.apply_();  // resolve pending fermionic signflip; no-op for bosonic/dense
         alpha = _Dot(new_psi, psi_1).real();
         As.append(alpha);
         new_psi -= (alpha * psi_1 + beta * psi_0);

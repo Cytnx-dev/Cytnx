@@ -60,3 +60,69 @@ TEST_F(NetworkTest, gpu_Network_dense_reuse) {
   net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnC, utdnB});
   EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
 }
+
+// Helper: Copy tensors to CPU. Contract them directly with Contract, and permute the open legs into
+// the requested TOUT order.
+namespace {
+  UniTensor BlockNetworkReferenceCPU(const UniTensor& A, const UniTensor& B, const UniTensor& C) {
+    UniTensor a = A.to(Device.cpu).relabel({"a", "e"});
+    UniTensor b = B.to(Device.cpu).relabel({"a", "c_", "d_", "h"});
+    UniTensor c = C.to(Device.cpu).relabel({"e", "f_", "g_", "h"});
+    UniTensor expected = Contract(Contract(b, c), a);
+    expected.permute_({"c_", "d_", "f_", "g_"}, 2);
+    expected.contiguous_();
+    return expected;
+  }
+}  // namespace
+
+// Block (symmetric) UniTensor network contraction on the GPU. Validate the GPU result against a CPU
+// contraction of the same tensors.
+TEST_F(NetworkTest, gpu_Network_block_no_order) {
+  random::uniform_(bkut1, -1., 1., 1);
+  random::uniform_(bkut2, -1., 1., 2);
+  random::uniform_(bkut3, -1., 1., 3);
+
+  auto net = Network();
+  net.FromString({"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "TOUT: c_,d_;f_,g_"});
+  net.PutUniTensors({"A", "B", "C"}, {bkut1, bkut2, bkut3});
+  UniTensor res = net.Launch();
+  EXPECT_EQ(res.uten_type(), UTenType.Block);
+  EXPECT_EQ(res.device(), Device.cuda);
+
+  UniTensor res_cpu = res.to(Device.cpu);
+  res_cpu.contiguous_();
+  EXPECT_TRUE(AreNearlyEqUniTensor(res_cpu, BlockNetworkReferenceCPU(bkut1, bkut2, bkut3), 1e-8));
+}
+
+TEST_F(NetworkTest, gpu_Network_block_specified_order) {
+  random::uniform_(bkut1, -1., 1., 1);
+  random::uniform_(bkut2, -1., 1., 2);
+  random::uniform_(bkut3, -1., 1., 3);
+
+  auto net = Network();
+  net.FromString(
+    {"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "ORDER:(A,(B,C))", "TOUT: c_,d_;f_,g_"});
+  net.PutUniTensors({"A", "B", "C"}, {bkut1, bkut2, bkut3});
+  UniTensor res = net.Launch();
+
+  UniTensor res_cpu = res.to(Device.cpu);
+  res_cpu.contiguous_();
+  EXPECT_TRUE(AreNearlyEqUniTensor(res_cpu, BlockNetworkReferenceCPU(bkut1, bkut2, bkut3), 1e-8));
+}
+
+// setOrder(true, "") on a non-dense network
+TEST_F(NetworkTest, gpu_Network_block_find_optimal) {
+  random::uniform_(bkut1, -1., 1., 1);
+  random::uniform_(bkut2, -1., 1., 2);
+  random::uniform_(bkut3, -1., 1., 3);
+
+  auto net = Network();
+  net.FromString({"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "TOUT: c_,d_;f_,g_"});
+  net.PutUniTensors({"A", "B", "C"}, {bkut1, bkut2, bkut3});
+  net.setOrder(true, "");
+  UniTensor res = net.Launch();
+
+  UniTensor res_cpu = res.to(Device.cpu);
+  res_cpu.contiguous_();
+  EXPECT_TRUE(AreNearlyEqUniTensor(res_cpu, BlockNetworkReferenceCPU(bkut1, bkut2, bkut3), 1e-8));
+}
