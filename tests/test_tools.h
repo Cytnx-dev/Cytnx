@@ -183,6 +183,34 @@ namespace cytnx {
 
     // Tensor tools
 
+    /**
+     * @brief Validate the packed output of a truncated SVD against a full-SVD reference.
+     *
+     * @details Checks the packed `[S, U?, vT?, terr?]` vector produced by Svd_truncate /
+     * Gesvd_truncate / Rsvd_truncate:
+     *   - the packed length equals `1 + is_U + is_vT + (return_err ? 1 : 0)`,
+     *   - `out[0]` holds the top-`keep` entries of `full_sv` (within `rtol*(1+|exp|)`),
+     *   - the trailing terr (if `return_err != 0`) holds the discarded singular values:
+     *       * `return_err == 1` &rarr; a single element equal to `full_sv[keep]`,
+     *       * `return_err >= 2` &rarr; `full_sv[keep .. full_size]`,
+     *       * if nothing was truncated, terr is a 1-element zero regardless of `return_err`.
+     *
+     * `U` and `vT` are not validated (they depend on the basis chosen by the SVD backend,
+     * especially in the presence of degenerate singular values).
+     *
+     * @param out         packed output `[S, U?, vT?, terr?]` from the truncated SVD.
+     * @param full_sv     singular values from an untruncated reference SVD of the same input.
+     * @param keep        the `keepdim` argument that was passed to the truncated SVD.
+     * @param is_U        whether `out` includes `U`.
+     * @param is_vT       whether `out` includes `vT`.
+     * @param return_err  `return_err` flag that was passed to the truncated SVD.
+     * @param rtol        relative tolerance for the singular-value comparisons.
+     * @param label       optional prefix added to assertion failure messages.
+     */
+    void CheckTruncatedSvdResult(const std::vector<Tensor>& out, const Tensor& full_sv,
+                                 cytnx_uint64 keep, bool is_U, bool is_vT, int return_err,
+                                 double rtol = 1e-12, const std::string& label = "");
+
   }  // namespace TestTools
 }  // namespace cytnx
 

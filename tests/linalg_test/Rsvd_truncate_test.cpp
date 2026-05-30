@@ -241,38 +241,42 @@ namespace RsvdTruncateTest {
   TEST(Rsvd_truncate, flag_combinations_dense) {
     const unsigned int seed = 42;
     const cytnx_uint64 keep = 3;
-    const cytnx_uint64 summand = 0;
+    const cytnx_uint64 summand = 3;  // samplenum = 6 == min(8,6), so Rsvd matches a full SVD
     const double factor = 0.;
-    const cytnx_uint64 power_it = 2;
+    const cytnx_uint64 power_it = 4;
 
     for (auto dtype : {Type.Double, Type.ComplexDouble}) {
       Tensor T = Tensor({8, 6}, dtype);
       InitTensorUniform(T, /*seed=*/3);
 
+      // independent reference for singular-value content: full Gesvd. With samplenum = min(m,n)
+      // and a few power iterations, Rsvd's S values agree with Gesvd's.
+      std::vector<Tensor> gesvd_ref = linalg::Gesvd(T, true, true);
+
+      // Rsvd reference for U/vT (these depend on the random isometry; same seed -> same basis).
       std::vector<Tensor> ref =
         linalg::Rsvd_truncate(T, keep, 0., true, true, 0, 1, summand, factor, power_it, seed);
-      ASSERT_EQ(ref.size(), 3u);
-      const cytnx_uint64 k = ref[0].shape()[0];
 
       for (bool is_U : {false, true}) {
         for (bool is_vT : {false, true}) {
-          std::vector<Tensor> out =
-            linalg::Rsvd_truncate(T, keep, 0., is_U, is_vT, 0, 1, summand, factor, power_it, seed);
-          const cytnx_uint64 expected = 1u + (is_U ? 1u : 0u) + (is_vT ? 1u : 0u);
-          ASSERT_EQ(out.size(), expected) << "is_U=" << is_U << " is_vT=" << is_vT;
+          for (int return_err : {0, 1, 2}) {
+            std::vector<Tensor> out = linalg::Rsvd_truncate(T, keep, 0., is_U, is_vT, return_err, 1,
+                                                            summand, factor, power_it, seed);
+            const std::string label = "is_U=" + std::to_string(is_U) +
+                                      " is_vT=" + std::to_string(is_vT) +
+                                      " return_err=" + std::to_string(return_err);
+            CheckTruncatedSvdResult(out, gesvd_ref[0], keep, is_U, is_vT, return_err, 1e-8, label);
 
-          EXPECT_TRUE(AreNearlyEqTensor(out[0], ref[0], 1e-10))
-            << "S mismatch, is_U=" << is_U << " is_vT=" << is_vT;
-
-          cytnx_uint64 idx = 1;
-          if (is_U) {
-            EXPECT_EQ(out[idx].shape()[1], k);  // U truncated to k columns
-            EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[1], 1e-10));
-            ++idx;
-          }
-          if (is_vT) {
-            EXPECT_EQ(out[idx].shape()[0], k);  // vT truncated to k rows
-            EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[2], 1e-10));
+            cytnx_uint64 idx = 1;
+            if (is_U) {
+              EXPECT_EQ(out[idx].shape()[1], keep) << label;  // U truncated to keep columns
+              EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[1], 1e-10)) << label;
+              ++idx;
+            }
+            if (is_vT) {
+              EXPECT_EQ(out[idx].shape()[0], keep) << label;  // vT truncated to keep rows
+              EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[2], 1e-10)) << label;
+            }
           }
         }
       }
