@@ -21,8 +21,6 @@ namespace cytnx {
   }
   Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
                const int &device) {
-    // std::cout << "OK" << std::endl;
-    // std::cout << Nelem << std::endl;
     Tensor out(Nelem, dtype, device, true);
     // out._impl->storage().set_zeros();
     return out;
@@ -52,7 +50,7 @@ namespace cytnx {
                 const unsigned int &dtype, const int &device) {
     cytnx_error_msg((end - start) / step <= 0,
                     "[ERROR] arange(start=%f,end=%f,step=%f) "
-                    "No values in the sspecified range.\n",
+                    "No values in the specified range.\n",
                     start, end, step);
     cytnx_uint64 Nelem;
     Tensor out;

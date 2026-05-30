@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
+#include "linalg_test.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -130,7 +131,7 @@ namespace {
       // if k == 1, lanczos_eigvecs will be a rank-1 tensor
       auto lanczos_eigvec = k == 1 ? lanczos_eigvecs : lanczos_eigvecs(i);
       auto exact_eigval = fst_few_eigvals[i];
-      // check eigen value by comparing with the full spectrum results.
+      // check eigenvalue by comparing with the full spectrum results.
       // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'SM'
       // check the is the eigenvector correct
       auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
@@ -248,4 +249,22 @@ TEST(Lanczos, err_ncv_out_of_range) {
   err_task.ExcuteErrorTest();
   err_task.ncv = err_task.dim + 1;
   err_task.ExcuteErrorTest();
+}
+
+/*=====test info=====
+describe:Lanczos ('SA', ARPACK symmetric path _Lanczos) for the a fermionic LinOp Op=A^dag A
+introducing sign flips; solving for the TWO lowest states (k=2). Checks both eigenvalues against the
+dense reference, that both eigenvectors are normalized and match the dense eigenvectors (|<v|w>|~1),
+and that the two eigenvectors are mutually orthogonal.
+====================*/
+TEST(Lanczos, fermionic_LanczosArpackFermionic) {
+  const double tol = 1e-7;
+  UniTensor A = make_ferm_A();
+  UniTensor v0 = make_ferm_ada_ket(A);
+  FermiAdaOp op(A, ferm_ket_nx(v0));
+  auto low = ferm_dense_lowest(A, 2);  // two lowest dense eigenpairs (ascending)
+  // Choose ARPACK implementation with "SA"
+  auto eigs = linalg::Lanczos(&op, v0, std::string("SA"), (cytnx_uint64)1000, (cytnx_double)1e-12,
+                              (cytnx_uint64)2, true, (cytnx_int32)0, false);  // k=2
+  expect_lowest_states(A, eigs, low, tol);
 }

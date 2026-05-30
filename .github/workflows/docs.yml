@@ -1,0 +1,71 @@
+name: Publish Sphinx Documentation
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  publish_sphinx_docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Install uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
+        with:
+          version: "0.8.17"
+          enable-cache: true
+      - name: Install dependencies
+        run: |
+          uv sync --python 3.10 --extra docs --no-install-project
+          sudo apt-get update && sudo apt-get install -y doxygen graphviz
+      - name: Build API documentation
+        run: uv run --no-sync python docs/build_api_docs.py
+      - name: Sphinx build
+        run: uv run --no-sync sphinx-build -M html docs/source docs/build
+      - name: Compute deploy target
+        id: target
+        if: github.event_name == 'push'
+        run: |
+          ref="${GITHUB_REF}"
+          if [[ "${ref}" == refs/tags/v* ]]; then
+            version="${ref#refs/tags/v}"
+            echo "version=${version}" >>"$GITHUB_OUTPUT"
+            echo "kind=tag" >>"$GITHUB_OUTPUT"
+            if [[ "${version}" =~ (rc|a|b|alpha|beta|dev) ]]; then
+              echo "prerelease=true" >>"$GITHUB_OUTPUT"
+            else
+              echo "prerelease=false" >>"$GITHUB_OUTPUT"
+            fi
+          else
+            echo "version=dev" >>"$GITHUB_OUTPUT"
+            echo "kind=branch" >>"$GITHUB_OUTPUT"
+            echo "prerelease=false" >>"$GITHUB_OUTPUT"
+          fi
+      - name: Assemble site tree
+        if: github.event_name == 'push'
+        run: |
+          site="docs/build/_site"
+          rm -rf "${site}"
+          mkdir -p "${site}"
+          cp -a docs/build/html "${site}/${{ steps.target.outputs.version }}"
+          if [[ "${{ steps.target.outputs.kind }}" == "tag" && "${{ steps.target.outputs.prerelease }}" == "false" ]]; then
+            cp -a docs/build/html "${site}/stable"
+          fi
+          cp -a docs/site_root/. "${site}/"
+      - name: Deploy
+        if: github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: docs/build/_site
+          keep_files: true

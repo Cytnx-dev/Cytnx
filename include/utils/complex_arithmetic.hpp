@@ -5,9 +5,6 @@
 #include "cytnx_error.hpp"
 
 namespace cytnx {
-#ifdef UNI_ICPC
-
-#else
   // operator overload for CPU code. for COMPLEX type arithmic.
   // cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_complex128 &rn);
   cytnx_complex128 operator+(const cytnx_complex128 &ln, const cytnx_complex64 &rn);
@@ -253,7 +250,6 @@ namespace cytnx {
   bool operator==(const cytnx_int16 &rn, const cytnx_complex64 &ln);
   bool operator==(const cytnx_uint16 &rn, const cytnx_complex64 &ln);
   bool operator==(const cytnx_bool &rn, const cytnx_complex64 &ln);
-#endif
 
 #if defined(UNI_GPU)
   //__host__ __device__ bool operator==(const cuDoubleComplex &ln, const cuDoubleComplex &rn);

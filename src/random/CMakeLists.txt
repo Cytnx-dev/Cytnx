@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
     PRIVATE
     #random_internal_interface.hpp
     #random_internal_interface.cpp

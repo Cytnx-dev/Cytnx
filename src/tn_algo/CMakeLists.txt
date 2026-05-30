@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
     MPS.cpp
     RegularMPS.cpp

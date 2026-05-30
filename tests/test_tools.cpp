@@ -557,5 +557,61 @@ namespace cytnx {
       UT = tmp.astype(dtype);
     }  // func:InitTensUniform
 
+    void CheckTruncatedSvdResult(const std::vector<Tensor>& out, const Tensor& full_sv,
+                                 cytnx_uint64 keep, bool is_U, bool is_vT, int return_err,
+                                 double rtol, const std::string& label) {
+      const std::string prefix = label.empty() ? "" : ("[" + label + "] ");
+      const cytnx_uint64 full_size = full_sv.shape()[0];
+      const cytnx_uint64 k = std::min(keep, full_size);
+      const bool truncated = k < full_size;
+
+      const cytnx_uint64 expected_packed =
+        1 + (is_U ? 1 : 0) + (is_vT ? 1 : 0) + (return_err ? 1 : 0);
+      ASSERT_EQ(out.size(), expected_packed) << prefix << "packed length";
+
+      // kept singular values: top-k of full_sv
+      ASSERT_EQ(out[0].shape(), std::vector<cytnx_uint64>({k})) << prefix << "S shape";
+      const Tensor sv = out[0].astype(Type.Double).contiguous();
+      const Tensor ref = full_sv.astype(Type.Double).contiguous();
+      for (cytnx_uint64 i = 0; i < k; ++i) {
+        const double got = sv.storage().at<double>(i);
+        const double exp = ref.storage().at<double>(i);
+        EXPECT_NEAR(got, exp, rtol * (1.0 + std::abs(exp))) << prefix << "S[" << i << "]";
+      }
+
+      if (!return_err) return;
+
+      const Tensor terr_d = out.back().astype(Type.Double).contiguous();
+
+      if (!truncated) {
+        // no truncation -> terr is a 1-element zero regardless of return_err
+        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>({1}))
+          << prefix << "terr shape (no truncation)";
+        EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
+          << prefix << "terr value (no truncation)";
+        return;
+      }
+
+      if (return_err == 1) {
+        // 1 element: the first discarded singular value, full_sv[k]
+        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>({1}))
+          << prefix << "terr shape (return_err=1)";
+        const double got = terr_d.storage().at<double>(0);
+        const double exp = ref.storage().at<double>(k);
+        EXPECT_NEAR(got, exp, rtol * (1.0 + std::abs(exp))) << prefix << "terr (return_err=1)";
+      } else {
+        // all discarded values: full_sv[k .. full_size]
+        const cytnx_uint64 ndisc = full_size - k;
+        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>({ndisc}))
+          << prefix << "terr shape (return_err>=2)";
+        for (cytnx_uint64 i = 0; i < ndisc; ++i) {
+          const double got = terr_d.storage().at<double>(i);
+          const double exp = ref.storage().at<double>(k + i);
+          EXPECT_NEAR(got, exp, rtol * (1.0 + std::abs(exp)))
+            << prefix << "terr[" << i << "] (return_err>=2)";
+        }
+      }
+    }
+
   }  // namespace TestTools
 }  // namespace cytnx

@@ -142,32 +142,17 @@ namespace cytnx {
       bool fin = false;
       while (1) {
         // get elem
-        // cout << "start!" << endl;
-        // cytnx::vec_print_simple(std::cout , Loc);
         this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(), tot_qns);
-
-        // std::cout << "Loc: ";
-        // cytnx::vec_print_simple(std::cout, Loc);
-        // std::cout << "tot_flx: ";
-        // cytnx::vec_print_simple(std::cout, tot_qns);
 
         // if exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
-          // get size & init block!
+          // init block!
+          for (cytnx_int32 i = 0; i < Loc.size(); i++) {
+            size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+          }
           if (!no_alloc) {
-            // cytnx_uint64 blockNelem = 1;
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-              // blockNelem *= size[i];
-            }
             this->_blocks.push_back(zeros(size, dtype, device));
-            // blocklens.push_back(blockNelem);
-            // blocksizes.push_back(size);
-            // totblocksize += blockNelem;
           } else {
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-            }
             this->_blocks.push_back(Tensor(size, dtype, device, false));
           }
           // push its loc
@@ -180,7 +165,6 @@ namespace cytnx {
             continue;
           } else {
             Loc.back() += 1;
-            // cout << "+1 at loc:" << Loc.size()-1 <<endl;
             while (Loc.size() != this->_bonds.size()) {
               Loc.push_back(0);
             }
@@ -728,6 +712,26 @@ namespace cytnx {
     return out;
   }
 
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::to_dense() {
+    if (!(this->_is_diag)) {
+      boost::intrusive_ptr<UniTensor_base> out(this);
+      return out;
+    }
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks.resize(this->_blocks.size());
+    for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
+      tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
+    tmp->_is_diag = false;
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  void BlockUniTensor::to_dense_() {
+    if (this->_is_diag) {
+      for (auto &blk : this->_blocks) blk = cytnx::linalg::Diag(blk);
+      this->_is_diag = false;
+    }
+  }
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contract(
     const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
     const bool &mv_elem_rhs) {
@@ -753,6 +757,7 @@ namespace cytnx {
       // output instance;
       BlockUniTensor *tmp = new BlockUniTensor();
       BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+      const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
       std::vector<string> out_labels;
       std::vector<Bond> out_bonds;
       cytnx_int64 out_rowrank;
@@ -767,7 +772,6 @@ namespace cytnx {
       out_rowrank = this->rowrank() + rhs->rowrank();
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
-      // cout << out_bonds;
       tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false);
 
       // tmp->_name = this->_name + "+" + rhs->_name;
@@ -906,6 +910,7 @@ namespace cytnx {
       } else {
         BlockUniTensor *tmp = new BlockUniTensor();
         BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+        const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
         std::vector<string> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
@@ -924,20 +929,21 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++)
           if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
 
-  #ifdef UNI_MKL
-        // Initialize!!
-        if (true or
-            (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
-              (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
-            this->is_diag() or Rtn->is_diag()) {
-          tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false,
-                    false);
-        } else {
-          tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, true);
-        }
-  #else
-        tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, false);
-  #endif
+        // #ifdef UNI_MKL
+        //       // Initialize!!
+        //       if (true or
+        //           (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
+        //             (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
+        //           this->is_diag() or Rtn->is_diag()) {
+        //         tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(),
+        //         false, false);
+        //       } else {
+        //         tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(),
+        //         false, true);
+        //       }
+        // #else
+        tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, false);
+        // #endif
 
         // now, build the itoi table:
         std::vector<std::vector<cytnx_uint64>> itoiL_common(this->_blocks.size()),
@@ -1012,6 +1018,7 @@ namespace cytnx {
           std::vector<Scalar> betas(Rtn->_blocks.size(), 0.0);
 
           BlockUniTensor *tmp_Rtn = Rtn;
+          bool tmp_rtn_is_casted = false;
 
           // check if all sub-tensor are same dtype and device
           if (User_debug) {
@@ -1050,13 +1057,14 @@ namespace cytnx {
           }
   #ifdef UNI_MKL
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
-          if (this->dtype() != Rtn->dtype()) {
+          if (Rtn->dtype() != common_dtype) {
             BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
             tmpp->_blocks.resize(Rtn->_blocks.size());
             for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
-              tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(this->dtype());
+              tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(common_dtype);
             }
             tmp_Rtn = tmpp;
+            tmp_rtn_is_casted = true;
           }
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -1098,32 +1106,35 @@ namespace cytnx {
                 reshaped[targ_b] = true;
                 betas[binx] = 0.0;
               }
-              // prepare to call gemm_batch
-              if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
-                  (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
-                   tmp_Rtn->dtype() != Type.Void)) {
-                ms[binx] = this->_blocks[a].shape()[0];
-                ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
-                ks[binx] = comm_dim;
-                LMems[binx] = this->_blocks[a].storage()._impl->data();
-                RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
-                CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
-              } else {
-                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                          .reshape(tmp->_blocks[targ_b].shape());
-              }
+              // // prepare to call gemm_batch
+              // if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4)
+              // and
+              //     (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
+              //      tmp_Rtn->dtype() != Type.Void)) {
+              //   ms[binx] = this->_blocks[a].shape()[0];
+              //   ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
+              //   ks[binx] = comm_dim;
+              //   LMems[binx] = this->_blocks[a].storage()._impl->data();
+              //   RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
+              //   CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
+              // } else {
+              tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
+                                        .reshape(tmp->_blocks[targ_b].shape());
+              // }
             }
             // mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
-            blas_int group_count = itoiR_idx.size();
-            if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
-                (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
-                 tmp_Rtn->dtype() != Type.Void)) {
-              group_size.resize(group_count, 1);
-              linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(),
-                                   (const void **)RMems.data(), betas, (void **)CMems.data(),
-                                   group_count, group_size, this->dtype(), tmp->device());
-            }
+            // if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4)
+            // and
+            //     (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
+            //      tmp_Rtn->dtype() != Type.Void)) {
+            //   blas_int group_count = itoiR_idx.size();
+            //   group_size.resize(group_count, 1);
+            //   linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void
+            //   **)LMems.data(),
+            //                        (const void **)RMems.data(), betas, (void **)CMems.data(),
+            //                        group_count, group_size, common_dtype, tmp->device());
+            // }
             // restore the shape&permutation of this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
               cytnx_uint64 b = itoiR_idx[binx];
@@ -1145,7 +1156,7 @@ namespace cytnx {
           }
 
           // if Rtn dtype is casted, delete the tmp_Rtn
-          if (this->dtype() != Rtn->dtype()) {
+          if (tmp_rtn_is_casted) {
             delete tmp_Rtn;
           }
         }
@@ -1210,12 +1221,12 @@ namespace cytnx {
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
 
-      }  // does it contract all the bond?
+      }  // does it contract all the bonds?
 
       cytnx_error_msg(true, "[ERROR][BlockUniTensor][contract] Something is fatally wrong!%s",
                       "\n");
 
-    }  // does it contract all the bond?
+    }  // does it contract all the bonds?
   };
 
   void BlockUniTensor::Transpose_() {
@@ -1308,7 +1319,6 @@ namespace cytnx {
       std::map<std::vector<cytnx_uint64>, cytnx_uint64> tmap;
       std::map<std::vector<cytnx_uint64>, cytnx_uint64>::iterator itr;
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
-        // std::cout << "blk: " << i << std::endl;
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
           auto s = this->_inner_to_outer_idx[i];
           s.erase(s.begin() + idb);
@@ -1811,8 +1821,6 @@ namespace cytnx {
 
     // process one by one:
     for (cytnx_int64 bn = 0; bn < dup_bond_idxs.size(); bn++) {
-      // cout << "BOND:" << dup_bond_idxs[bn] << endl;
-      // cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
       tmp_inner_to_outer_idx = this->_inner_to_outer_idx;
 
       for (cytnx_int64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
@@ -1912,8 +1920,6 @@ namespace cytnx {
         }
       }
     }
-    // std::cout << idx_mapper << std::endl;
-    // std::cout << new_shape_aft_perm << std::endl;
 
     this->permute_(idx_mapper);
     this->contiguous_();
@@ -1921,8 +1927,6 @@ namespace cytnx {
     // group bonds:
     std::vector<Bond> new_bonds;
     std::vector<cytnx_uint64> cb_stride(indicators.size());
-    // std::cout << "idor" << idor << std::endl;
-    // std::cout << "rank" << this->rank() << std::endl;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
         Bond tmp = this->_bonds[i];
@@ -1973,9 +1977,6 @@ namespace cytnx {
       this->_blocks[b].reshape_(new_shape);
     }
 
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->get_qindices(2)<<endl;
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->bonds()<<endl;
-
     for (int b = 0; b < this->_blocks.size(); b++) {
       this->_inner_to_outer_idx[b][idor] *= cb_stride[0];
       for (int i = idor + 1; i < idor + indicators.size(); i++) {
@@ -1989,15 +1990,12 @@ namespace cytnx {
       }
       this->_inner_to_outer_idx[b].resize(this->rank());
     }
-    // std::cout << this->_inner_to_outer_idx << std::endl;
 
     // change rowrank:
     this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
 
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->get_qindices(2)<<endl;
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->bonds()<<endl;
     // regroup:
     this->group_basis_();
   }
