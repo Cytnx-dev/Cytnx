@@ -283,7 +283,7 @@ on device   : cytnx device: CPU
 
 ```
 
-* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://kaihsinwu.gitlab.io/Cytnx_doc/) for more details.
+* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://cytnx-dev.github.io/Cytnx/) for more details.
 
 
 ------------------------------

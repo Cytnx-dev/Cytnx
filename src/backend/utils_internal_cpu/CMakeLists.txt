@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
     Alloc_cpu.hpp
     Cast_cpu.hpp

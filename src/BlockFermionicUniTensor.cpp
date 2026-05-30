@@ -157,21 +157,13 @@ namespace cytnx {
 
         // if exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
-          // get size & init block!
+          // init block!
+          for (cytnx_int32 i = 0; i < Loc.size(); i++) {
+            size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+          }
           if (!no_alloc) {
-            // cytnx_uint64 blockNelem = 1;
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-              // blockNelem *= size[i];
-            }
             this->_blocks.push_back(zeros(size, dtype, device));
-            // blocklens.push_back(blockNelem);
-            // blocksizes.push_back(size);
-            // totblocksize += blockNelem;
           } else {
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-            }
             this->_blocks.push_back(Tensor(size, dtype, device, false));
           }
           // push its loc
@@ -1284,6 +1276,7 @@ namespace cytnx {
       // output instance;
       BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
       BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
+      const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
       std::vector<string> out_labels;
       std::vector<Bond> out_bonds;
       cytnx_int64 out_rowrank;
@@ -1459,6 +1452,7 @@ namespace cytnx {
       } else {
         BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
         BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
+        const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
         std::vector<string> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
@@ -1477,20 +1471,21 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++)
           if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
 
-  #ifdef UNI_MKL
-        // Initialize!!
-        if (true or
-            (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
-              (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
-            this->is_diag() or Rtn->is_diag()) {
-          tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false,
-                    false);
-        } else {
-          tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, true);
-        }
-  #else
-        tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, false);
-  #endif
+        // #ifdef UNI_MKL
+        //       // Initialize!!
+        //       if (true or
+        //           (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
+        //             (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
+        //           this->is_diag() or Rtn->is_diag()) {
+        //         tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(),
+        //         false, false);
+        //       } else {
+        //         tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(),
+        //         false, true);
+        //       }
+        // #else
+        tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, false);
+        // #endif
 
         // now, build the itoi table:
         std::vector<std::vector<cytnx_uint64>> itoiL_common(this->_blocks.size()),
@@ -1577,6 +1572,7 @@ namespace cytnx {
           std::vector<Scalar> betas(Rtn->_blocks.size(), 0.0);
 
           BlockFermionicUniTensor *tmp_Rtn = Rtn;
+          bool tmp_rtn_is_casted = false;
 
           // check if all sub-tensor are same dtype and device
           if (User_debug) {
@@ -1615,13 +1611,14 @@ namespace cytnx {
           }
   #ifdef UNI_MKL
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
-          if (this->dtype() != Rtn->dtype()) {
+          if (Rtn->dtype() != common_dtype) {
             BlockFermionicUniTensor *tmpp = Rtn->clone_meta(true, true);
             tmpp->_blocks.resize(Rtn->_blocks.size());
             for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
-              tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(this->dtype());
+              tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(common_dtype);
             }
             tmp_Rtn = tmpp;
+            tmp_rtn_is_casted = true;
           }
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -1663,26 +1660,27 @@ namespace cytnx {
                 reshaped[targ_b] = true;
                 betas[binx] = 0.0;
               }
-              // prepare to call gemm_batch
-              if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
-                  (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
-                   tmp_Rtn->dtype() != Type.Void)) {
-                ms[binx] = this->_blocks[a].shape()[0];
-                ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
-                ks[binx] = comm_dim;
-                LMems[binx] = this->_blocks[a].storage()._impl->data();
-                RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
-                CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
+              // // prepare to call gemm_batch
+              // if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4)
+              // and
+              //     (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
+              //      tmp_Rtn->dtype() != Type.Void)) {
+              //   ms[binx] = this->_blocks[a].shape()[0];
+              //   ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
+              //   ks[binx] = comm_dim;
+              //   LMems[binx] = this->_blocks[a].storage()._impl->data();
+              //   RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
+              //   CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
+              // } else {
+              // fermionic signs included here
+              if (signfliplhs[a] != signfliprhs[b]) {
+                tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
+                                          .reshape(tmp->_blocks[targ_b].shape());
               } else {
-                // fermionic signs included here
-                if (signfliplhs[a] != signfliprhs[b]) {
-                  tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                            .reshape(tmp->_blocks[targ_b].shape());
-                } else {
-                  tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                            .reshape(tmp->_blocks[targ_b].shape());
-                }
+                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
+                                          .reshape(tmp->_blocks[targ_b].shape());
               }
+              // }
             }
             // mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
@@ -1723,7 +1721,7 @@ namespace cytnx {
           }
 
           // if Rtn dtype is casted, delete the tmp_Rtn
-          if (this->dtype() != Rtn->dtype()) {
+          if (tmp_rtn_is_casted) {
             delete tmp_Rtn;
           }
         }
@@ -1804,8 +1802,8 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::Transpose_() {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // The bonds are redirected, as in the bosonic case. Additionally, the order of the indices is
-    // reversed and a permutation WITHOUT signflips is applied.
+    // The bonds are redirected, and the order of the indices is reversed with a permutation WITHOUT
+    // signflips.
 
     // modify tag
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
@@ -2471,7 +2469,7 @@ namespace cytnx {
             // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
             // could depend on the block and are not aware of this sign flip!
             //  this->_signflip[b] = this->_signflip[b] ? true : false;
-            // 3) fast way: TODOfermions: implement Tensor.negmul, which does the multiplication and
+            // 3) fast way: TODOfermions: implement Tensor.negdiv, which does the division and
             // sign flip in one step
           }
           break;

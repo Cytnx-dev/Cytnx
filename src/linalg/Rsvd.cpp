@@ -212,9 +212,10 @@ namespace cytnx {
         // s
         cytnx::UniTensor &Cy_S = outCyT[t];
         cytnx::Bond newBond(outT[0].shape()[0]);
-        Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1,
-                  Type.Double, Tin.device(),
-                  true);  // it is just reference so no hurt to alias ^^
+        Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")},
+                  1,  // rowrank
+                  outT[t].dtype(), outT[t].device(),  // match the block that is inserted below
+                  true);  // is_diag
         Cy_S.put_block_(outT[t]);
         t++;
 
@@ -684,20 +685,21 @@ namespace cytnx {
                                        cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
                                        double oversampling_factor, cytnx_uint64 power_iteration,
                                        unsigned int seed) {
-      // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
-                      "[ERROR][Rsvd] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s",
-                      "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[Rsvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
+                      "[ERROR][Rsvd] Input UniTensor is diagonal, so Rsvd is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
-
-      // check input arguments
-      cytnx_error_msg(mindim < 0, "[ERROR][Rsvd] mindim must be >=1%s", "\n");
       cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd] keepdim must be >=1%s", "\n");
-      cytnx_error_msg(return_err < 0, "[ERROR][Rsvd] return_err cannot be negative%s", "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
@@ -721,20 +723,21 @@ namespace cytnx {
                                        cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
                                        double oversampling_factor, cytnx_uint64 power_iteration,
                                        unsigned int seed) {
-      // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
-                      "[ERROR][Rsvd] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s",
-                      "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[Rsvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
+                      "[ERROR][Rsvd] Input UniTensor is diagonal, so Rsvd is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
-
-      // check input arguments
-      cytnx_error_msg(mindim < 0, "[ERROR][Rsvd] mindim must be >=1%s", "\n");
       cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd] keepdim must be >=1%s", "\n");
-      cytnx_error_msg(return_err < 0, "[ERROR][Rsvd] return_err cannot be negative%s", "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {

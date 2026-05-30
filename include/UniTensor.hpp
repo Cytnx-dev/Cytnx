@@ -1122,7 +1122,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
@@ -1854,7 +1854,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
@@ -5349,6 +5349,7 @@ namespace cytnx {
     @return UniTensor
     @note This function inverts the order of all indices.
     @note Compared to Dagger_(), this function will create a new UniTensor object.
+    @note For fermionic UniTensors, the index order is reversed without sign flips.
     @see Dagger_(), Transpose()
     */
     UniTensor Dagger() const {
@@ -5362,6 +5363,7 @@ namespace cytnx {
     @return UniTensor&
     @note This function inverts the order of all indices.
     @note Compared to Dagger(), this is an inplace function.
+    @note For fermionic UniTensors, the index order is reversed without sign flips.
     @see Dagger()
     */
     UniTensor &Dagger_() {
