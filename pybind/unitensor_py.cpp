@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <sstream>
 #include <string>
 
 #include <pybind11/pybind11.h>
@@ -588,12 +589,42 @@ void unitensor_binding(py::module &m) {
     .def("apply_", &UniTensor::apply_,
          "Apply fermionic signflips inplacely. Subsequently, signflip() returns False for all "
          "elements. Non-fermionic tensors are left unchanged. See also: apply()")
-    .def("print_diagram", &UniTensor::print_diagram, py::arg("bond_info") = false,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("print_block", &UniTensor::print_block, py::arg("idx"), py::arg("full_info") = true,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def(
+      "print_diagram",
+      [](const UniTensor &self, const bool &bond_info, py::object file) {
+        std::ostringstream ss;
+        self.print_diagram(bond_info, ss);
+        if (file.is_none())
+          py::print(ss.str(), "end"_a = "");
+        else
+          file.attr("write")(ss.str());
+      },
+      py::arg("bond_info") = false, py::arg("file") = py::none(),
+      "Print the diagram of the UniTensor to ``file``.")
+    .def(
+      "print_blocks",
+      [](const UniTensor &self, const bool &full_info, py::object file) {
+        std::ostringstream ss;
+        self.print_blocks(full_info, ss);
+        if (file.is_none())
+          py::print(ss.str(), "end"_a = "");
+        else
+          file.attr("write")(ss.str());
+      },
+      py::arg("full_info") = true, py::arg("file") = py::none(),
+      "Print all blocks of the UniTensor to ``file``.")
+    .def(
+      "print_block",
+      [](const UniTensor &self, const cytnx_int64 &idx, const bool &full_info, py::object file) {
+        std::ostringstream ss;
+        self.print_block(idx, full_info, ss);
+        if (file.is_none())
+          py::print(ss.str(), "end"_a = "");
+        else
+          file.attr("write")(ss.str());
+      },
+      py::arg("idx"), py::arg("full_info") = true, py::arg("file") = py::none(),
+      "Print the block with index ``idx`` to ``file``.")
 
     .def("group_basis_", &UniTensor::group_basis_)
     .def("group_basis", &UniTensor::group_basis)
@@ -731,11 +762,11 @@ void unitensor_binding(py::module &m) {
       py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
 
     .def("__repr__",
-      [](UniTensor &self) -> std::string {
-        std::cout << self << std::endl;
-        return std::string("");
-      },
-      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+         [](const UniTensor &self) {
+           std::ostringstream ss;
+           ss << self;
+           return ss.str();
+         })
     .def("to_dense", &UniTensor::to_dense)
     .def("to_dense_", &UniTensor::to_dense_)
     .def("combineBonds",

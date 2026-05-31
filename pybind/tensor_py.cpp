@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <sstream>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -249,13 +250,12 @@ void tensor_binding(py::module &m) {
     .def("storage", &cytnx::Tensor::storage)
     .def("real", &cytnx::Tensor::real)
     .def("imag", &cytnx::Tensor::imag)
-    .def(
-      "__repr__",
-      [](cytnx::Tensor &self) -> std::string {
-        std::cout << self << std::endl;
-        return std::string("");
-      },
-      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def("__repr__",
+         [](const cytnx::Tensor &self) {
+           std::ostringstream ss;
+           ss << self;
+           return ss.str();
+         })
     .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_complex128>, py::arg("val"))
     .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_complex64>, py::arg("val"))
     .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_double>, py::arg("val"))

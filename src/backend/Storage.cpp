@@ -9,9 +9,9 @@ namespace cytnx {
 
   Storage_init_interface __SII;
 
-  std::ostream &operator<<(std::ostream &os, const Storage &in) {
-    in.print();
-    return os;
+  std::ostream &operator<<(std::ostream &file, const Storage &in) {
+    in._impl->print(file);
+    return file;
   }
 
   bool Storage::operator==(const Storage &rhs) {

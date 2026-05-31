@@ -6,7 +6,7 @@ using namespace std;
 #else
 
 namespace cytnx {
-  std::string GnconType_class::getname(const int& nwrktype_id) {
+  std::string GnconType_class::getname(const int &nwrktype_id) {
     if (nwrktype_id == this->Regular) {
       return string("Regular");
     } else if (nwrktype_id == this->Fermion) {
@@ -20,9 +20,9 @@ namespace cytnx {
 
   GnconType_class NtType;
 
-  std::ostream& operator<<(std::ostream& os, const Gncon& in) {
-    in._impl->PrintNet(os);
-    return os;
+  std::ostream &operator<<(std::ostream &file, const Gncon &in) {
+    in._impl->PrintNet(file);
+    return file;
   }
 
 }  // namespace cytnx

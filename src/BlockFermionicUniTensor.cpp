@@ -1,15 +1,20 @@
 #include "UniTensor.hpp"
-#include "Accessor.hpp"
-#include "utils/utils.hpp"
-#include "linalg.hpp"
-#include "Generator.hpp"
-#include <vector>
-#include "utils/vec_clone.hpp"
-#include "utils/vec_print.hpp"
-#include "utils/vec_concatenate.hpp"
+
 #include <map>
-#include <boost/unordered_map.hpp>
+#include <ostream>
 #include <stack>
+#include <vector>
+
+#include <boost/unordered_map.hpp>
+
+#include "Accessor.hpp"
+#include "Generator.hpp"
+#include "linalg.hpp"
+#include "utils/utils.hpp"
+#include "utils/vec_clone.hpp"
+#include "utils/vec_concatenate.hpp"
+#include "utils/vec_print.hpp"
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -211,11 +216,11 @@ namespace cytnx {
     this->_signflip = signflip;
   }
 
-  void BlockFermionicUniTensor::beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin,
+  void BlockFermionicUniTensor::beauty_print_block(const cytnx_uint64 &Nin,
                                                    const cytnx_uint64 &Nout,
                                                    const std::vector<cytnx_uint64> &qn_indices,
                                                    const std::vector<Bond> &bonds,
-                                                   const Tensor &block) const {
+                                                   const Tensor &block, std::ostream &file) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor
     cytnx_uint64 Total_line = Nin < Nout ? Nout : Nin;
 
@@ -274,12 +279,12 @@ namespace cytnx {
     //  3spacing, Lmax , 5 for arrow
     std::string empty_line =
       (std::string(" ") * (3 + Lmax + 5)) + "| " + std::string(" ") * (mL + 5 + mR) + " |";
-    os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
-    os << empty_line << endl;
+    file << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
+    file << empty_line << endl;
 
     std::string bks;
     for (int i = 0; i < Total_line; i++) {
-      os << "   " << Lside[i];
+      file << "   " << Lside[i];
       // arrow:
       if (i < Nin) {
         if (bonds[i].type() == bondType::BD_KET)
@@ -289,7 +294,7 @@ namespace cytnx {
       } else {
         bks = "     ";
       }
-      os << bks << "| " << MidL[i] << "     " << MidR[i] << " |";
+      file << bks << "| " << MidL[i] << "     " << MidR[i] << " |";
       if (i < Nout) {
         if (bonds[Nin + i].type() == bondType::BD_KET)
           bks = "<--* ";
@@ -299,107 +304,106 @@ namespace cytnx {
         bks = "";
       }
 
-      os << bks << Rside[i] << endl;
-      os << empty_line << endl;
+      file << bks << Rside[i] << endl;
+      file << empty_line << endl;
     }
 
-    os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
+    file << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
   }
 
-  void BlockFermionicUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+  void BlockFermionicUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info,
+                                            std::ostream &file) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; sign structure is printed additionally
     cytnx_error_msg(
       (idx < 0) || (idx >= this->_blocks.size()),
       "[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n", idx,
       this->_blocks.size());
 
-    std::ostream &os = std::cout;
-
-    os << "========================\n";
-    if (this->_is_diag) os << " *is_diag: True\n";
-    os << "BLOCK [#" << idx << "]\n";
-    os << "fermionic sign = " << (this->_signflip[idx] ? -1 : +1) << "\n";
+    file << "========================\n";
+    if (this->_is_diag) file << " *is_diag: True\n";
+    file << "BLOCK [#" << idx << "]\n";
+    file << "fermionic sign = " << (this->_signflip[idx] ? -1 : +1) << "\n";
     /*
-    os << "  |-Qn indices for each axis:\n   {\t";
+    file << "  |-Qn indices for each axis:\n   {\t";
     for(int s=0;s<this->_inner_to_outer_idx[idx].size();s++){
-        os << this->_inner_to_outer_idx[idx][s] << "\t";
+        file << this->_inner_to_outer_idx[idx][s] << "\t";
     }
-    os << "}" << endl;
-    os << "\t";
+    file << "}" << endl;
+    file << "\t";
     for(int s=0;s<this->_bonds.size();s++){
-        os << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
+        file << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
     }
-    os << endl;
-    os << "  |-Qn for each axis:\n";
+    file << endl;
+    file << "  |-Qn for each axis:\n";
     for(int s=0;s<this->_bonds[0].Nsym();s++){
-        os << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t";
+        file << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t";
         for(int l=0;l<this->_blocks[idx].shape().size();l++){
-            os << std::showpos <<
+            file << std::showpos <<
     this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[idx][l]][s] << "\t";
         }
-        os << std::noshowpos << endl;
+        file << std::noshowpos << endl;
     }
     */
-    os << " |- []   : Qn index \n";
-    os << " |- Sym(): Qnum of correspond symmetry\n";
-    this->beauty_print_block(os, this->_rowrank, this->_labels.size() - this->_rowrank,
-                             this->_inner_to_outer_idx[idx], this->_bonds, this->_blocks[idx]);
+    file << " |- []   : Qn index \n";
+    file << " |- Sym(): Qnum of correspond symmetry\n";
+    this->beauty_print_block(this->_rowrank, this->_labels.size() - this->_rowrank,
+                             this->_inner_to_outer_idx[idx], this->_bonds, this->_blocks[idx],
+                             file);
 
     if (full_info)
-      os << this->_blocks[idx];
+      file << this->_blocks[idx];
     else {
-      os << "  |-dtype:\t" << Type.getname(this->_blocks[idx].dtype()) << endl;
-      os << "  |-device:\t" << Device.getname(this->_blocks[idx].device()) << endl;
-      os << "  |-contiguous:\t" << (this->_blocks[idx].is_contiguous() ? "True" : "False") << endl;
-      os << "  |-shape:\t";
-      vec_print_simple(os, this->_blocks[idx].shape());
+      file << "  |-dtype:\t" << Type.getname(this->_blocks[idx].dtype()) << endl;
+      file << "  |-device:\t" << Device.getname(this->_blocks[idx].device()) << endl;
+      file << "  |-contiguous:\t" << (this->_blocks[idx].is_contiguous() ? "True" : "False")
+           << endl;
+      file << "  |-shape:\t";
+      vec_print_simple(file, this->_blocks[idx].shape());
     }
   }
 
-  void BlockFermionicUniTensor::print_blocks(const bool &full_info) const {
+  void BlockFermionicUniTensor::print_blocks(const bool &full_info, std::ostream &file) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; sign structure is printed additionally
-    std::ostream &os = std::cout;
-
-    os << "-------- start of print ---------\n";
+    file << "-------- start of print ---------\n";
     char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
-    os << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "Tensor type: %s\n", this->uten_type_str().c_str());
-    os << std::string(buffer);
+    file << std::string(buffer);
     if (this->_is_tag)
       sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
-    os << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "is_diag    : %s\n", this->_is_diag ? "True" : "False");
-    os << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "[OVERALL] contiguous : %s\n", this->is_contiguous() ? "True" : "False");
-    os << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "fermion sign:");
-    os << buffer;
+    file << buffer;
     for (int i = 0; i < this->_signflip.size(); i++) {
       sprintf(buffer, this->_signflip[i] ? " -1" : " +1");
-      os << buffer;
+      file << buffer;
     }
     sprintf(buffer, "\n");
-    os << buffer;
+    file << buffer;
 
     /*
-    os << "Symmetries: ";
+    file << "Symmetries: ";
     for(int s=0;s<this->_bonds[0].Nsym();s++)
-        os << this->_bonds[0]._impl->_syms[s].stype_str() << " ";
-    os << endl;
+        file << this->_bonds[0]._impl->_syms[s].stype_str() << " ";
+    file << endl;
     */
 
     // print each blocks with its qnum!
     for (int b = 0; b < this->_blocks.size(); b++) {
-      this->print_block(b, full_info);
+      this->print_block(b, full_info, file);
     }
 
     /*
       auto tmp_qnums = in.get_blocks_qnums();
       std::vector<Tensor> tmp = in.get_blocks_(true);
       sprintf(buffer, "BLOCKS:: %s", "\n");
-      os << std::string(buffer);
-      os << "=============\n";
+      file << std::string(buffer);
+      file << "=============\n";
 
       if (!in.is_contiguous()) {
         cytnx_warning_msg(
@@ -409,43 +413,43 @@ namespace cytnx {
           "\n");
       }
       for (cytnx_uint64 i = 0; i < tmp.size(); i++) {
-        os << "Qnum:" << tmp_qnums[i] << std::endl;
-        os << tmp[i] << std::endl;
-        os << "=============\n";
+        file << "Qnum:" << tmp_qnums[i] << std::endl;
+        file << tmp[i] << std::endl;
+        file << "=============\n";
       }
-      os << "-------- end of print ---------\n";
+      file << "-------- end of print ---------\n";
     */
     free(buffer);
   }
 
-  void BlockFermionicUniTensor::print_diagram(const bool &bond_info) const {
+  void BlockFermionicUniTensor::print_diagram(const bool &bond_info, std::ostream &file) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, 'f' symbols in the corners of
     // the diagram are shown, and the sign structure is printed
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "--fermionic UniTensor---%s", "\n");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "tensor Name : %s\n", this->_name.c_str());
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "tensor Rank : %d\n", this->_labels.size());
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     // sprintf(buffer, "block_form  : true%s", "\n");
-    // std::cout << std::string(buffer);
+    // file << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "valid blocks: %d\n", this->_blocks.size());
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "is diag     : %s\n", this->is_diag() ? "True" : "False");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "fermion sign:");
     for (int i = 0; i < this->_signflip.size(); i++) {
       sprintf(buffer + strlen(buffer), this->_signflip[i] ? " -1" : " +1");
     }
     sprintf(buffer + strlen(buffer), "\n");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
 
     cytnx_uint64 Nin = this->_rowrank;
     cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
@@ -481,12 +485,12 @@ namespace cytnx {
 
     std::string tmpss;
     sprintf(buffer, "%s row %s col %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "%s    f%sf    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     for (cytnx_uint64 i = 0; i < vl; i++) {
       sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-      std::cout << std::string(buffer);
+      file << std::string(buffer);
 
       if (i < Nin) {
         if (this->_bonds[i].type() == bondType::BD_KET)
@@ -530,21 +534,21 @@ namespace cytnx {
         sprintf(rlbl, "%s", tmpss.c_str());
       }
       sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
-      std::cout << std::string(buffer);
+      file << std::string(buffer);
     }
     sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "%s    f%sf    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
     sprintf(buffer, "%s", "\n");
-    std::cout << std::string(buffer);
+    file << std::string(buffer);
 
     if (bond_info) {
       for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
         // sprintf(buffer, "lbl:%d ", this->_labels[i]);
         sprintf(buffer, "lbl:%s ", this->_labels[i].c_str());
-        std::cout << std::string(buffer);
-        std::cout << this->_bonds[i] << std::endl;
+        file << std::string(buffer);
+        file << this->_bonds[i] << std::endl;
       }
     }
 

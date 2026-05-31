@@ -1,5 +1,6 @@
 #include <map>
 #include <random>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -164,13 +165,12 @@ void storage_binding(py::module &m) {
              cytnx_error_msg(true, "%s", "[ERROR] try to get element from a void Storage.");
          })
 
-    .def(
-      "__repr__",
-      [](cytnx::Storage &self) -> std::string {
-        std::cout << self << std::endl;
-        return std::string("");
-      },
-      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def("__repr__",
+         [](const cytnx::Storage &self) {
+           std::ostringstream ss;
+           ss << self;
+           return ss.str();
+         })
     .def("__len__", [](cytnx::Storage &self) -> cytnx::cytnx_uint64 { return self.size(); })
 
     .def("to_", &cytnx::Storage::to_, py::arg("device"))
@@ -194,8 +194,17 @@ void storage_binding(py::module &m) {
     .def("__deepcopy__", &cytnx::Storage::clone)
     .def("size", &cytnx::Storage::size)
     .def("__len__", [](cytnx::Storage &self) { return self.size(); })
-    .def("print_info", &cytnx::Storage::print_info,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def(
+      "print_info",
+      [](const cytnx::Storage &self, py::object file) {
+        std::ostringstream ss;
+        self.print_info(ss);
+        if (file.is_none())
+          py::print(ss.str(), "end"_a = "");
+        else
+          file.attr("write")(ss.str());
+      },
+      py::arg("file") = py::none(), "Print metadata (dtype, device, size) to ``file``.")
     .def("set_zeros", &cytnx::Storage::set_zeros)
     .def("__eq__",
          [](cytnx::Storage &self, const cytnx::Storage &rhs) -> bool { return self == rhs; })

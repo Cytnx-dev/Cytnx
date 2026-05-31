@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <sstream>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -107,14 +108,23 @@ void network_binding(py::module &m) {
     .def("clone", &Network::clone)
     .def("__copy__", &Network::clone)
     .def("__deepcopy__", &Network::clone)
+    .def("__repr__",
+         [](const Network &self) {
+           std::ostringstream ss;
+           ss << self;
+           return ss.str();
+         })
     .def(
-      "__repr__",
-      [](Network &self) -> std::string {
-        self.PrintNet();
-        return std::string("");
+      "PrintNet",
+      [](const Network &self, py::object file) {
+        std::ostringstream ss;
+        self.PrintNet(ss);
+        if (file.is_none())
+          py::print(ss.str(), "end"_a = "");
+        else
+          file.attr("write")(ss.str());
       },
-      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("PrintNet", &Network::PrintNet)
+      py::arg("file") = py::none(), "Print the network description to ``file``.")
     .def_static(
       "Contract",
       [](const std::vector<UniTensor> &utensors, const std::string &Tout,

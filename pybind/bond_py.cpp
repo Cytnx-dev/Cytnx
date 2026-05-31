@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <sstream>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -77,13 +78,12 @@ void bond_binding(py::module &m) {
       py::arg("bond_type"), py::arg("qnums"), py::arg("degs"),
       py::arg("symmetries") = std::vector<Symmetry>())
 
-    .def(
-      "__repr__",
-      [](Bond &self) {
-        std::cout << self << std::endl;
-        return std::string("");
-      },
-      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def("__repr__",
+         [](const Bond &self) {
+           std::ostringstream ss;
+           ss << self;
+           return ss.str();
+         })
     .def("__eq__", &Bond::operator==)
     .def("type", &Bond::type)
     .def("qnums", [](Bond &self) { return self.qnums(); })

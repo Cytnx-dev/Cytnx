@@ -163,17 +163,17 @@ namespace cytnx {
     cytnx_error_msg(true, "%s", "[ERROR] call PrintElem_byShape directly on Void Storage.");
   }
 
-  void Storage_base::print_info() {
-    cout << "dtype : " << this->dtype_str() << endl;
-    cout << "device: " << Device.getname(this->device()) << endl;
-    cout << "size  : " << this->size() << endl;
+  void Storage_base::print_info(std::ostream &file) const {
+    file << "dtype : " << this->dtype_str() << std::endl;
+    file << "device: " << Device.getname(this->device()) << std::endl;
+    file << "size  : " << this->size() << std::endl;
   }
-  void Storage_base::print_elems() {
+  void Storage_base::print_elems(std::ostream &file) const {
     cytnx_error_msg(true, "%s", "[ERROR] call print_elems directly on Void Storage.");
   }
-  void Storage_base::print() {
-    this->print_info();
-    this->print_elems();
+  void Storage_base::print(std::ostream &file) const {
+    this->print_info(file);
+    this->print_elems(file);
   }
 
   // shadow new:

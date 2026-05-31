@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <sstream>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -9,6 +10,7 @@
 #include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/warnings.h>
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
@@ -116,7 +118,21 @@ void scalar_binding(py::module &m) {
     .def("iabs", &Scalar::iabs)
     .def("isqrt", &Scalar::isqrt)
     .def("dtype", &Scalar::dtype)
-    .def("print", &Scalar::print)
+    .def(
+      "print",
+      [](const Scalar &self, py::object file) {
+        py::warnings::warn(
+          "Scalar.print() is deprecated; use `print(scalar)` (or `print(scalar, file=...)`).",
+          PyExc_FutureWarning, 2);
+        std::ostringstream ss;
+        self.print(ss);
+        if (file.is_none())
+          py::print(ss.str(), "end"_a = "");
+        else
+          file.attr("write")(ss.str());
+      },
+      py::arg("file") = py::none(),
+      "Deprecated: use ``print(scalar)`` instead. Print the Scalar to ``file``.")
 
     // ---- Arithmetic in-place ----
     .def("__iadd__",

@@ -135,7 +135,7 @@ namespace cytnx {
                            const std::vector<std::vector<std::string>> &labels,
                            const std::vector<std::string> &outlabel, const cytnx_int64 &outrk,
                            const std::string &order, const bool optim);
-    virtual void PrintNet(std::ostream &os);
+    virtual void PrintNet(std::ostream &file = std::cout) const;
     virtual boost::intrusive_ptr<Network_base> clone();
     virtual void Savefile(const std::string &fname);
     virtual ~Network_base(){};
@@ -194,7 +194,7 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os);
+    void PrintNet(std::ostream &file = std::cout) const;
     void Savefile(const std::string &fname);
     ~RegularNetwork(){};
   };
@@ -245,7 +245,7 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os){};
+    void PrintNet(std::ostream &file = std::cout) const {};
     void Savefile(const std::string &fname){};
     ~FermionNetwork(){};
   };
@@ -450,13 +450,16 @@ namespace cytnx {
       out._impl = this->_impl->clone();
       return out;
     }
-    void PrintNet() { this->_impl->PrintNet(std::cout); }
+    /**
+     * @brief Print the network description to @p file.
+     */
+    void PrintNet(std::ostream &file = std::cout) const { this->_impl->PrintNet(file); }
 
     void Savefile(const std::string &fname) { this->_impl->Savefile(fname); }
   };
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Network &bin);
+  std::ostream &operator<<(std::ostream &file, const Network &bin);
   ///@endcond
 }  // namespace cytnx
 

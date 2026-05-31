@@ -725,51 +725,43 @@ namespace cytnx {
     this->PutUniTensor(idx, utensor);
   }
 
-  void RegularNetwork::PrintNet(ostream &os) {
-    string status;
-    os << "==== Network ====" << endl;
+  void RegularNetwork::PrintNet(std::ostream &file) const {
+    std::string status;
+    file << "==== Network ====" << std::endl;
     if (this->tensors.size() == 0) {
-      os << "      Empty      " << endl;
+      file << "      Empty      " << std::endl;
     } else {
       for (cytnx_uint64 i = 0; i < this->tensors.size(); i++) {
         if (this->tensors[i].uten_type() != UTenType.Void)
           status = "o";
         else
           status = "x";
-        os << "[" << status.c_str() << "] " << this->names[i].c_str() << " : ";
-        // printf("[%s] %s : ",status.c_str(), this->names[i].c_str());
+        file << "[" << status.c_str() << "] " << this->names[i].c_str() << " : ";
 
         for (cytnx_int64 j = 0; j < this->iBondNums[i]; j++) {
-          os << this->label_arr[i][j] << " ";
-          // printf("%d ",this->label_arr[i][j]);
+          file << this->label_arr[i][j] << " ";
         }
-        // os << "; ";
-        // printf("%s","; ");
         for (cytnx_int64 j = this->iBondNums[i]; j < this->label_arr[i].size(); j++) {
-          os << this->label_arr[i][j] << " ";
-          // printf("%d ",this->label_arr[i][j]);
+          file << this->label_arr[i][j] << " ";
         }
-        os << endl;
+        file << std::endl;
       }
 
-      os << "TOUT : ";
+      file << "TOUT : ";
       for (cytnx_uint64 i = 0; i < TOUT_iBondNum; i++) {
-        os << this->TOUT_labels[i] << " ";
-        // printf("%d ",this->TOUT_labels[i]);
+        file << this->TOUT_labels[i] << " ";
       }
-      os << "; ";
-      // printf("%s","; ");
+      file << "; ";
       for (cytnx_int64 j = this->TOUT_iBondNum; j < this->TOUT_labels.size(); j++) {
-        os << this->TOUT_labels[j] << " ";
-        // printf("%d ",this->TOUT_labels[j]);
+        file << this->TOUT_labels[j] << " ";
       }
-      os << endl;
-      os << "ORDER : ";
+      file << std::endl;
+      file << "ORDER : ";
       for (cytnx_int64 i = 0; i < this->ORDER_tokens.size(); i++) {
-        os << this->ORDER_tokens[i];
+        file << this->ORDER_tokens[i];
       }
-      os << endl;
-      os << "=================" << endl;
+      file << std::endl;
+      file << "=================" << std::endl;
     }
   }
 

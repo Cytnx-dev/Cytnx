@@ -93,7 +93,7 @@ namespace cytnx {
     virtual void clear();
     virtual std::string getOptimalOrder();
     virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
-    virtual void PrintNet(std::ostream &os);
+    virtual void PrintNet(std::ostream &file = std::cout) const;
     virtual boost::intrusive_ptr<Gncon_base> clone();
     virtual void Savefile(const std::string &fname);
     virtual ~Gncon_base(){};
@@ -137,7 +137,7 @@ namespace cytnx {
       boost::intrusive_ptr<Gncon_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os);
+    void PrintNet(std::ostream &file = std::cout) const;
     void Savefile(const std::string &fname);
     ~RegularGncon(){};
   };
@@ -182,7 +182,7 @@ namespace cytnx {
       boost::intrusive_ptr<Gncon_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os){};
+    void PrintNet(std::ostream &file = std::cout) const {};
     void Savefile(const std::string &fname){};
     ~FermionGncon(){};
   };
@@ -352,13 +352,16 @@ namespace cytnx {
       out._impl = this->_impl->clone();
       return out;
     }
-    void PrintNet() { this->_impl->PrintNet(std::cout); }
+    /**
+     * @brief Print the Gncon description to @p file.
+     */
+    void PrintNet(std::ostream &file = std::cout) const { this->_impl->PrintNet(file); }
 
     void Savefile(const std::string &fname) { this->_impl->Savefile(fname); }
   };
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Gncon &bin);
+  std::ostream &operator<<(std::ostream &file, const Gncon &bin);
   ///@endcond
 }  // namespace cytnx
 

@@ -35,11 +35,11 @@ namespace cytnx {
       this->vars = tmp.storage();
     }
 
-    void Histogram::print() const {
-      std::cout << "[Histogram 1D] Real" << std::endl;
-      std::cout << "Nbins: " << this->bins << std::endl;
-      std::cout << "bound: [ " << this->min << " , " << this->max << " ]\n";
-      std::cout << "current count: " << this->total_count << std::endl;
+    void Histogram::print(std::ostream &file) const {
+      file << "[Histogram 1D] Real" << std::endl;
+      file << "Nbins: " << this->bins << std::endl;
+      file << "bound: [ " << this->min << " , " << this->max << " ]\n";
+      file << "current count: " << this->total_count << std::endl;
     }
 
     //-----------[2d]
@@ -83,12 +83,12 @@ namespace cytnx {
       this->vars = tmp.storage();
     }
 
-    void Histogram2d::print() const {
-      std::cout << "[Histogram 2D] Real" << std::endl;
-      std::cout << "Nbins: [x= " << this->binx << " , y= " << this->biny << " ]\n";
-      std::cout << "bound,x: [ " << this->minx << " , " << this->maxx << " ]\n";
-      std::cout << "bound,y: [ " << this->miny << " , " << this->maxy << " ]\n";
-      std::cout << "current count: " << this->total_count << std::endl;
+    void Histogram2d::print(std::ostream &file) const {
+      file << "[Histogram 2D] Real" << std::endl;
+      file << "Nbins: [x= " << this->binx << " , y= " << this->biny << " ]\n";
+      file << "bound,x: [ " << this->minx << " , " << this->maxx << " ]\n";
+      file << "bound,y: [ " << this->miny << " , " << this->maxy << " ]\n";
+      file << "current count: " << this->total_count << std::endl;
     }
 
   }  // namespace stat

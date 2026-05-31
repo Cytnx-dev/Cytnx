@@ -2,6 +2,7 @@
 #define CYTNX_SYMMETRY_H_
 
 #include <fstream>
+#include <iostream>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -90,7 +91,7 @@ namespace cytnx {
     virtual fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const;
     virtual bool is_fermionic() const { return false; };
 
-    virtual void print_info() const;
+    virtual void print_info(std::ostream &file = std::cout) const;
     virtual std::string stype_str() const;
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
     // std::vector<cytnx_int64> &inR);
@@ -118,7 +119,7 @@ namespace cytnx {
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    void print_info() const;
+    void print_info(std::ostream &file = std::cout) const;
     std::string stype_str() const override { return "U1"; };
   };
   ///@endcond
@@ -144,7 +145,7 @@ namespace cytnx {
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    void print_info() const;
+    void print_info(std::ostream &file = std::cout) const;
     std::string stype_str() const override { return "Z" + std::to_string(this->n); };
   };
   ///@endcond
@@ -169,7 +170,7 @@ namespace cytnx {
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
-    void print_info() const;
+    void print_info(std::ostream &file = std::cout) const;
     std::string stype_str() const override { return "fP"; }
   };
   ///@endcond
@@ -194,7 +195,7 @@ namespace cytnx {
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
-    void print_info() const;
+    void print_info(std::ostream &file = std::cout) const;
     std::string stype_str() const override { return "f#"; }
   };
   ///@endcond
@@ -522,9 +523,9 @@ namespace cytnx {
     /// @endcond
 
     /**
-     * @brief Print the information of current Symmetry object.
+     * @brief Print the information of current Symmetry object to @p file.
      */
-    void print_info() const { this->_impl->print_info(); }
+    void print_info(std::ostream &file = std::cout) const { this->_impl->print_info(file); }
 
     /**
      * @brief the equality operator of the Symmetry object.
