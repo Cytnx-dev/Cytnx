@@ -1301,3 +1301,22 @@ TEST_F(BlockUniTensorTest, ContractMixedDtype) {
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], refbks[i], 1e-5), true);
   }
 }
+
+/*=====test info=====
+describe:Integer-dtype block contractions must not throw in MKL builds.
+         Gemm_Batch rejects dtype > 4; the Matmul fallback must be taken instead.
+====================*/
+TEST_F(BlockUniTensorTest, ContractIntegerDtype) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2});
+  UniTensor L = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Int64, Device.cpu, false);
+  UniTensor R = UniTensor({bi, bi.redirect()}, {"b", "c"}, 1, Type.Int64, Device.cpu, false);
+  L.at({0, 0}) = 1;
+  L.at({2, 2}) = 2;
+  R.at({0, 0}) = 3;
+  R.at({2, 2}) = 4;
+  // Contract must not throw; result block [0,0]=1*3=3, block [2,2]=2*4=8
+  UniTensor out;
+  EXPECT_NO_THROW(out = Contract(L, R));
+  EXPECT_EQ(int64_t(out.at({0, 0}).real()), 3);
+  EXPECT_EQ(int64_t(out.at({2, 2}).real()), 8);
+}

@@ -1047,6 +1047,39 @@ namespace cytnx {
                             "\n");
           }
   #ifdef UNI_MKL
+          if (common_dtype > 4) {
+            // Integer dtype: Gemm_Batch only supports fp/complex (dtype <= 4); fall back to Matmul.
+            for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
+              cytnx_int64 comm_dim = 1;
+              itoiR_idx = mp[itoiL_common[a]];
+              for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++)
+                comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
+              this->_blocks[a].permute_(mapperL);
+              oldshapeL = this->_blocks[a].shape();
+              this->_blocks[a].reshape_({-1, comm_dim});
+              for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
+                cytnx_uint64 b = itoiR_idx[binx];
+                Rtn->_blocks[b].permute_(mapperR);
+                oldshapeR[b] = Rtn->_blocks[b].shape();
+                Rtn->_blocks[b].reshape_({comm_dim, -1});
+                Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
+                for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++)
+                  Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
+                for (cytnx_uint64 cc = non_comm_idx1.size();
+                     cc < non_comm_idx1.size() + non_comm_idx2.size(); cc++)
+                  Lgbuffer[cc] =
+                    Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
+                cytnx_int64 targ_b = mpC[Lgbuffer];
+                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
+                                          .reshape(tmp->_blocks[targ_b].shape());
+                Rtn->_blocks[b].reshape_(oldshapeR[b]);
+                Rtn->_blocks[b].permute_(inv_mapperR);
+              }
+              this->_blocks[a].reshape_(oldshapeL);
+              this->_blocks[a].permute_(inv_mapperL);
+            }
+          } else {
+          // fp/complex: use Gemm_Batch
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
           if (Rtn->dtype() != common_dtype) {
             BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
@@ -1138,6 +1171,7 @@ namespace cytnx {
           if (tmp_rtn_is_casted) {
             delete tmp_Rtn;
           }
+          }  // end else (common_dtype <= 4)
         }
   #else
           // First select left block to do gemm
