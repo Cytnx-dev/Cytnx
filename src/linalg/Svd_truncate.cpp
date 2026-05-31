@@ -309,9 +309,7 @@ namespace cytnx {
       }
 
       // handle return_err!
-      if (return_err == 1) {
-        outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
-      } else if (return_err) {
+      if (return_err) {
         outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
       }
     }  // Svd_truncate_Block_UTs_internal
@@ -417,7 +415,7 @@ namespace cytnx {
       if (!anySall) {
         // no truncation; return_err is tensor with one element, set to 0
         if (return_err >= 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+          outCyT.push_back(UniTensor(Tensor({1}, outCyT[0].dtype())));
         }
       } else {
         Scalar Smin;
@@ -448,9 +446,7 @@ namespace cytnx {
             Smin = Sall.storage()(smidx);
           }
           // handle return_err!
-          if (return_err == 1) {
-            outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
-          } else if (return_err) {
+          if (return_err) {
             outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
           }
         } else {
