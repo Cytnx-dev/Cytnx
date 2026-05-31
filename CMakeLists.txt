@@ -438,7 +438,7 @@ write_basic_package_version_file(
 
 # CytnxConfig.cmake.in references @USE_CUDA@ / @USE_HPTT@ / @BACKEND_TORCH@
 # directly so the installed Config re-finds the imported-target deps that
-# match the matching cytnx build. See the template for the gating logic.
+# match the options of the cytnx build. See the template for the gating logic.
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
