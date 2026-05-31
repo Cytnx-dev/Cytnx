@@ -103,7 +103,7 @@ before-build = "python ./tools/cibuildwheel_before_build.py"
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
 environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }
-environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR", "CCACHE_DEBUG", "CCACHE_DEBUGLEVEL", "CCACHE_LOGFILE"]
+environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR", "CCACHE_DEBUG", "CCACHE_DEBUGLEVEL", "CCACHE_LOGFILE", "CYTNX_VERSION_TAG"]
 
 [tool.cibuildwheel.macos]
 before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"

@@ -63,9 +63,21 @@ include(version.cmake)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
 )
+# `CYTNX_VERSION_FULL` carries an optional PEP 440-style suffix
+# (e.g. `.dev202605311220`) supplied via the `CYTNX_VERSION_TAG`
+# environment variable. The nightly release pipeline sets this from
+# tools/prepare_nightly_release.py so that the wheel filename
+# (cytnx_nightly-X.Y.Z.devN-*.whl) and the runtime `cytnx.__version__`
+# agree. `CYTNX_VERSION` itself stays strictly numeric because
+# `project(VERSION ...)` and `set_target_properties(VERSION ...)`
+# require MAJOR.MINOR.PATCH.
+set(CYTNX_VERSION_FULL "${CYTNX_VERSION}")
+if(DEFINED ENV{CYTNX_VERSION_TAG} AND NOT "$ENV{CYTNX_VERSION_TAG}" STREQUAL "")
+  string(APPEND CYTNX_VERSION_FULL "$ENV{CYTNX_VERSION_TAG}")
+endif()
 set(CYTNX_VARIANT_INFO "")
 
-message(STATUS " Version: ${CYTNX_VERSION}")
+message(STATUS " Version: ${CYTNX_VERSION_FULL}")
 
 # create a file that contain all the link flags:
 FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
@@ -392,7 +404,7 @@ IF(BUILD_PYTHON)
     pybind/ncon_py.cpp
   )
   target_link_libraries(pycytnx PUBLIC cytnx)
-  target_compile_definitions(pycytnx PRIVATE CYTNX_VERSION="${CYTNX_VERSION}")
+  target_compile_definitions(pycytnx PRIVATE CYTNX_VERSION="${CYTNX_VERSION_FULL}")
 
   # On macOS, Python extensions should NOT link to libpython
   # Use -undefined dynamic_lookup to resolve symbols from the running interpreter
