@@ -224,7 +224,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
 #endif
       }
     }
@@ -277,7 +277,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
         return nullptr;
 #endif
       }
@@ -295,8 +295,8 @@ namespace cytnx {
       Ne *= shape[i];
     }
     if (Ne != this->size_) {
-      cytnx_error_msg(true, "%s",
-                      "PrintElem_byShape, the number of shape not match with the No. of elements.");
+      cytnx_error_msg(
+        true, "PrintElem_byShape, the number of shape not match with the No. of elements.%s", "\n");
     }
 
     if (size_ == 0) {
@@ -543,7 +543,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
 #endif
       }
     }
@@ -633,7 +633,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
         return nullptr;
 #endif
       }
@@ -674,7 +674,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
         return nullptr;
 #endif
       }

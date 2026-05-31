@@ -238,9 +238,14 @@ if(USE_HPTT)
     target_compile_definitions(cytnx PRIVATE UNI_HPTT)
     target_link_libraries(cytnx PUBLIC "${hptt_lib_dir}/libhptt.a")
 
-    # XXX: `cytnx` itself doesn't need this linking flag. Why?
-    #target_link_options(cytnx INTERFACE -fopenmp)
-    #Find OpenMP for HPTT
+    # OpenMP must be PUBLIC even though no cytnx source uses `#pragma omp`
+    # or `<omp.h>`. libcytnx is a STATIC archive
+    # (`add_library(cytnx STATIC)` in the top-level CMakeLists.txt) and
+    # libhptt.a uses OpenMP internally; static linking leaves libhptt's
+    # OpenMP symbol references (`__kmpc_*`, `omp_*`) unresolved until the
+    # consumer's final executable link, so the consumer's link line needs
+    # OpenMP too. PRIVATE here would re-introduce the bug fixed by commit
+    # 5733a441 ("Propagate `-fopenmp` linking flag when using HPTT").
     find_package(OpenMP REQUIRED)
     target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
 

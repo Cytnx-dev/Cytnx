@@ -27,6 +27,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS " CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+message(STATUS " PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 
 # #####################################################################
 # ## DISABLING IN-SOURCE BUILD
@@ -195,6 +197,7 @@ if(USE_CUDA)
   set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
 endif()
 
+
 # C++ uses link-time optimization anyway; this enables additionally -flto=auto,
 # for parallel compilation
 # It cannot enable on MacOS since it causes building errors when linking the library libcytnx.a.
@@ -238,7 +241,7 @@ include(GNUInstallDirs)
 # #####################################################################
 
 # ## Boost
-find_package(Boost CONFIG REQUIRED)
+find_package(Boost REQUIRED)
 target_include_directories(cytnx SYSTEM
   PUBLIC
   ${Boost_INCLUDE_DIRS}
@@ -467,6 +470,9 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion
 )
 
+# CytnxConfig.cmake.in references @USE_CUDA@ / @USE_HPTT@ / @BACKEND_TORCH@
+# directly so the installed Config re-finds the imported-target deps that
+# match the options of the cytnx build. See the template for the gating logic.
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}

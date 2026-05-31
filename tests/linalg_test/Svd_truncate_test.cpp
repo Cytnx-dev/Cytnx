@@ -328,4 +328,87 @@ namespace SvdTruncateTest {
       EXPECT_EQ(out[2].shape(), std::vector<cytnx_uint64>({full, 5})) << label;
     }
   }
+
+  /*=====test info=====
+  describe:When per-block min_blockdim guarantees already meet or exceed the global keepdim cap
+  (keep_dim<=0 internally) but there are further singular values, the return_err path must report
+  the actually dropped singular values, not a 1-element zero tensor.
+  ====================*/
+  TEST(Svd_truncate, return_err_when_min_blockdim_exhausts_keepdim) {
+    // 2-leg U(1) BlockUT, 3 sectors of size 3x3 each. With min_blockdim=[2,2,2] every block
+    // keeps its top 2 SVs and contributes its 3rd to Sall (3 dropped values total);
+    // keep_dim = 3 - 6 = -3 < 0, so all 3 are dropped via the keep_dim<=0 branch.
+    auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+    Bond bk = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3}, syms);
+    UniTensor src_T({bk, bk.redirect()}, {"l", "r"}, 1, Type.Double, Device.cpu, false);
+    InitUniTensorUniform(src_T, 23);
+
+    const cytnx_uint64 keepdim = 3;
+    const std::vector<cytnx_uint64> min_blockdim = {2, 2, 2};
+
+    // return_err = 2: terr holds every dropped singular value (3 total)
+    std::vector<UniTensor> svds_all =
+      linalg::Svd_truncate(src_T, keepdim, min_blockdim, 0., true, 2, 1);
+    Tensor terr_all = svds_all.back().get_block_();
+    ASSERT_EQ(terr_all.shape(), std::vector<cytnx_uint64>({3}))
+      << "terr must hold all 3 dropped singular values, not a 1-element zero";
+    double max_abs = 0.0;
+    for (cytnx_uint64 i = 0; i < terr_all.storage().size(); ++i)
+      max_abs = std::max(max_abs, std::abs(terr_all.storage().at<double>(i)));
+    EXPECT_GT(max_abs, 0.0) << "terr values are all zero (previous bug)";
+
+    // return_err = 1: terr is a single element = largest dropped singular value
+    std::vector<UniTensor> svds_max =
+      linalg::Svd_truncate(src_T, keepdim, min_blockdim, 0., true, 1, 1);
+    Tensor terr_max = svds_max.back().get_block_();
+    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>({1}));
+    EXPECT_NEAR(std::abs(terr_max.storage().at<double>(0)), max_abs, 1e-10 * (1.0 + max_abs));
+  }
+
+  /*=====test info=====
+  describe:Setting min_blockdim must keep at least the requested number of singular values per
+  sector. With a small keepdim, the baseline (no min_blockdim) drops entire sectors; with
+  min_blockdim={1,1,1} every sector keeps at least one singular value.
+  ====================*/
+  TEST(Svd_truncate, min_blockdim_keeps_each_sector) {
+    auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+    Bond bk = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3}, syms);
+    UniTensor src_T({bk, bk.redirect()}, {"l", "r"}, 1, Type.Double, Device.cpu, false);
+    InitUniTensorUniform(src_T, 29);
+    const cytnx_uint64 keepdim = 1;
+
+    // baseline: only the single largest singular value is kept, so most sectors disappear
+    std::vector<UniTensor> base = linalg::Svd_truncate(src_T, keepdim);
+    const auto base_degs = base[0].bonds()[0].getDegeneracies();
+    EXPECT_LT(base_degs.size(), 3u)
+      << "baseline should drop some sectors; pick a smaller keepdim or larger blocks";
+
+    // with min_blockdim={1,1,1}: every sector must keep at least 1
+    std::vector<UniTensor> withf = linalg::Svd_truncate(src_T, keepdim, {1, 1, 1});
+    const auto withf_degs = withf[0].bonds()[0].getDegeneracies();
+    ASSERT_EQ(withf_degs.size(), 3u);
+    for (cytnx_uint64 b = 0; b < 3; ++b) EXPECT_GE(withf_degs[b], 1u) << "block " << b;
+  }
+
+  /*=====test info=====
+  describe:With err larger than every singular value, the truncation loop would otherwise cut
+  down to 1. mindim must restrict the kept count to at least mindim, and the kept values must be
+  the mindim largest ones of the full SVD.
+  ====================*/
+  TEST(Svd_truncate, mindim_floor) {
+    Tensor T = Tensor({6, 5}, Type.Double);
+    InitTensorUniform(T, 13);
+    const cytnx_uint64 full = 5;
+    const cytnx_uint64 floor = 3;
+    std::vector<Tensor> ref = linalg::Svd(T, /*is_UvT=*/true);
+
+    std::vector<Tensor> out =
+      linalg::Svd_truncate(T, /*keepdim=*/full, /*err=*/1e9, /*is_UvT=*/true, 0, floor);
+    ASSERT_EQ(out[0].shape(), std::vector<cytnx_uint64>({floor}));
+    for (cytnx_uint64 i = 0; i < floor; ++i) {
+      const double got = out[0].astype(Type.Double).storage().at<double>(i);
+      const double exp = ref[0].astype(Type.Double).storage().at<double>(i);
+      EXPECT_NEAR(got, exp, 1e-12 * (1.0 + std::abs(exp))) << "S[" << i << "]";
+    }
+  }
 }  // namespace SvdTruncateTest

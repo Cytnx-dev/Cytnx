@@ -315,9 +315,9 @@ namespace cytnx {
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
-        cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+        cerr << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
         for (int i = 0; i < TN_names.size(); i++) {
-          cout << "        " << TN_names[i] << endl;
+          cerr << "        " << TN_names[i] << endl;
         }
         cytnx_error_msg(true, "%s", "\n");
       }
@@ -349,14 +349,14 @@ namespace cytnx {
     }
 
     if (err) {
-      cout << "[ERROR][Network][Contract--planning] The TOUT contains labels that does not match "
+      cerr << "[ERROR][Network][Contract--planning] The TOUT contains labels that does not match "
               "with the delcartion from TNs.\n";
-      cout << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
-      for (int i = 0; i < expected_TOUT.size(); i++) cout << expected_TOUT[i] << " ";
-      cout << endl;
-      cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
-      for (int i = 0; i < TOUT_labels.size(); i++) cout << TOUT_labels[i] << " ";
-      cout << endl;
+      cerr << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
+      for (int i = 0; i < expected_TOUT.size(); i++) cerr << expected_TOUT[i] << " ";
+      cerr << endl;
+      cerr << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
+      for (int i = 0; i < TOUT_labels.size(); i++) cerr << TOUT_labels[i] << " ";
+      cerr << endl;
       cytnx_error_msg(true, "%s", "\n");
     }
 
@@ -477,9 +477,9 @@ namespace cytnx {
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
-        cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+        cerr << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
         for (int i = 0; i < TN_names.size(); i++) {
-          cout << "        " << TN_names[i] << endl;
+          cerr << "        " << TN_names[i] << endl;
         }
         cytnx_error_msg(true, "%s", "\n");
       }
@@ -509,14 +509,14 @@ namespace cytnx {
     }
 
     if (err) {
-      cout << "[ERROR][Network][Fromfile] The TOUT contains labels that does not match with the "
+      cerr << "[ERROR][Network][Fromfile] The TOUT contains labels that does not match with the "
               "delcartion from TNs.\n";
-      cout << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
-      for (int i = 0; i < expected_TOUT.size(); i++) cout << expected_TOUT[i] << " ";
-      cout << endl;
-      cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
-      for (int i = 0; i < TOUT_labels.size(); i++) cout << TOUT_labels[i] << " ";
-      cout << endl;
+      cerr << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
+      for (int i = 0; i < expected_TOUT.size(); i++) cerr << expected_TOUT[i] << " ";
+      cerr << endl;
+      cerr << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
+      for (int i = 0; i < TOUT_labels.size(); i++) cerr << TOUT_labels[i] << " ";
+      cerr << endl;
       cytnx_error_msg(true, "%s", "\n");
     }
 
@@ -1012,9 +1012,9 @@ namespace cytnx {
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
-        cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+        cerr << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
         for (int i = 0; i < TN_names.size(); i++) {
-          cout << "        " << TN_names[i] << endl;
+          cerr << "        " << TN_names[i] << endl;
         }
         cytnx_error_msg(true, "%s", "\n");
       }
@@ -1062,14 +1062,14 @@ namespace cytnx {
         err = true;
       }
       if (err) {
-        cout << "[ERROR][Network][Fromfile] The TOUT contains labels that does not match with the "
+        cerr << "[ERROR][Network][Fromfile] The TOUT contains labels that does not match with the "
                 "delcartion from TNs.\n";
-        cout << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
-        for (int i = 0; i < expected_TOUT.size(); i++) cout << expected_TOUT[i] << " ";
-        cout << endl;
-        cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
-        for (int i = 0; i < TOUT_labels.size(); i++) cout << TOUT_labels[i] << " ";
-        cout << endl;
+        cerr << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
+        for (int i = 0; i < expected_TOUT.size(); i++) cerr << expected_TOUT[i] << " ";
+        cerr << endl;
+        cerr << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
+        for (int i = 0; i < TOUT_labels.size(); i++) cerr << TOUT_labels[i] << " ";
+        cerr << endl;
         cytnx_error_msg(true, "%s", "\n");
       }
     }
