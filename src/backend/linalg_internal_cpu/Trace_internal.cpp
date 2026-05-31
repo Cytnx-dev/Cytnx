@@ -1,10 +1,8 @@
 #include "Trace_internal.hpp"
 #include "cytnx_error.hpp"
-#include "backend/lapack_wrapper.hpp"
 
 #include "backend/linalg_internal_cpu/pairwise_sum.hpp"
 #include "backend/linalg_internal_cpu/stride_view.hpp"
-#include "utils/utils.hpp"
 
 #include <algorithm>
 #include <span>
@@ -51,18 +49,30 @@ namespace cytnx {
           return out;
         }
 
-        std::vector<cytnx_uint64> accu(out_shape.size(), 1);
-        for (int i = static_cast<int>(out_shape.size()) - 1; i > 0; --i)
-          accu[i - 1] = accu[i] * static_cast<cytnx_uint64>(out_shape[i]);
+        // Input stride for each surviving (output) axis, so the hot loop indexes a
+        // flat array instead of going through remain_rank_id on every step.
+        std::vector<cytnx_uint64> out_strides(out_shape.size());
+        for (cytnx_uint64 x = 0; x < out_shape.size(); ++x)
+          out_strides[x] = strides[remain_rank_id[x]];
 
+        // Walk the output elements in row-major order, carrying the input base
+        // offset on an odometer: each step bumps the last axis index (carrying into
+        // earlier axes on wrap) and adjusts base by the affected axes' strides. This
+        // avoids the per-element division and modulo of decoding the flat index, and
+        // needs no precomputed row-major accumulators.
         T *out_data = out.storage().data<T>();
+        std::vector<cytnx_uint64> index(out_shape.size(), 0);
+        cytnx_uint64 base = 0;
         for (cytnx_uint64 i = 0; i < Nelem; ++i) {
-          cytnx_uint64 tmp = i, base = 0;
-          for (cytnx_uint64 x = 0; x < out_shape.size(); ++x) {
-            base += (tmp / accu[x]) * strides[remain_rank_id[x]];
-            tmp %= accu[x];
-          }
           out_data[i] = PairwiseSum(std::span<const T>(data + base, extent) | stride(diag_stride));
+          for (cytnx_uint64 x = out_shape.size(); x-- > 0;) {
+            if (++index[x] < static_cast<cytnx_uint64>(out_shape[x])) {
+              base += out_strides[x];
+              break;
+            }
+            index[x] = 0;
+            base -= (static_cast<cytnx_uint64>(out_shape[x]) - 1) * out_strides[x];
+          }
         }
         out.reshape_(out_shape);
         return out;
