@@ -92,3 +92,47 @@ def test_get_blocks_argument_validation():
             "'invalid_arg' is an invalid keyword argument for get_blocks_\\(\\)"
     ):
         unitensor.get_blocks_(invalid_arg=True)
+
+
+def _u1_block_pair():
+    """A 2-leg U(1) BlockUniTensor (blocks at the (0,0) and (1,1) sectors) and its bond."""
+    bi = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1],
+                    [cytnx.Symmetry.U1()])
+    B = cytnx.UniTensor([bi, bi.redirect()])
+    return bi, B
+
+
+def test_convert_from_returns_self():
+    """convert_from returns the (in-place converted) UniTensor for fluent chaining."""
+    bi, B = _u1_block_pair()
+    B.at([0, 0]).value = 2.0
+    B.at([1, 1]).value = 3.0
+
+    # Dense of the same shape, filled from the block tensor.
+    D = cytnx.UniTensor(cytnx.zeros(B.shape()))
+    r = D.convert_from(B)
+    assert r is D  # returns self, not None
+    assert abs(r.at([0, 0]).value - 2.0) < 1e-12
+    assert abs(r.at([1, 1]).value - 3.0) < 1e-12
+    assert abs(r.at([0, 1]).value) < 1e-12  # symmetry-forbidden entry stays zero
+
+    # Round-trip: dense back into a fresh block recovers the original blocks.
+    B2 = cytnx.UniTensor([bi, bi.redirect()])
+    B2.convert_from(D)
+    assert (B.get_block_(0) - B2.get_block_(0)).Norm().item() < 1e-12
+    assert (B.get_block_(1) - B2.get_block_(1)).Norm().item() < 1e-12
+
+
+def test_convert_from_tol_default_rejects_forbidden_nonzero():
+    """Default tol=0 rejects a dense->block conversion with a nonzero forbidden entry."""
+    bi, B = _u1_block_pair()
+    D = cytnx.UniTensor(cytnx.zeros(B.shape()))
+    D.at([0, 1]).value = 1.0  # nonzero in a symmetry-forbidden position
+
+    with pytest.raises(Exception):
+        B.convert_from(D)  # tol defaults to 0 -> must raise
+
+    # force=True ignores forbidden entries and succeeds, still returning self.
+    B2 = cytnx.UniTensor([bi, bi.redirect()])
+    r = B2.convert_from(D, force=True)
+    assert r is B2

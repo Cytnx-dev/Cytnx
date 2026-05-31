@@ -1552,7 +1552,7 @@ namespace cytnx {
     this->_block = lhs / this->_block;
   }
 
-  void _DN_from_DN(DenseUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
+  void _DN_from_DN(DenseUniTensor *ths, DenseUniTensor *rhs, bool force) {
     if (!force) {
       // more checking:
       if ((int(ths->bond_(0).type()) != bondType::BD_NONE) &&
@@ -1567,7 +1567,7 @@ namespace cytnx {
     ths->_block = rhs->_block.clone();
   }
 
-  void _DN_from_BK(DenseUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
+  void _DN_from_BK(DenseUniTensor *ths, BlockUniTensor *rhs, bool force) {
     if (!force) {
       // more checking:
       if (int(ths->bond_(0).type()) != bondType::BD_NONE) {
@@ -1593,20 +1593,68 @@ namespace cytnx {
       auto elem = rhs->at_for_sparse(cart);
       if (elem.exists()) {
         ths->_block.at(cart) = Scalar(elem);
+      } else {
+        ths->_block.at(cart) = 0;
       }
     }
   }
 
-  void DenseUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
+  void _DN_from_BKF(DenseUniTensor *ths, BlockFermionicUniTensor *rhs, bool force) {
+    if (!force) {
+      // more checking:
+      if (int(ths->bond_(0).type()) != bondType::BD_NONE) {
+        for (int i = 0; i < ths->bonds().size(); i++) {
+          cytnx_error_msg(
+            ths->bond_(i).type() != rhs->bond_(i).type(),
+            "[ERROR] Conversion BlockFermionicUniTensor -> DenseUniTensor cannot be made, because "
+            "force=false, both UniTensors have directional bonds, and the directions mismatch.%s",
+            "\n");
+        }
+      }
+    }
+
+    cytnx_uint64 total_elem = ths->_block.storage().size();
+
+    std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
+    for (int i = (rhs->rank() - 2); i >= 0; i--) {
+      stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
+    }
+
+    auto rhsapplied = rhs->apply();
+    // moving element:
+    for (cytnx_uint64 i = 0; i < total_elem; i++) {
+      auto cart = c2cartesian(i, stride_rhs);
+      auto elem = rhsapplied->at_for_sparse(cart);
+      if (elem.exists()) {
+        ths->_block.at(cart) = Scalar(elem);
+      } else {
+        ths->_block.at(cart) = 0;
+      }
+    }
+  }
+
+  void DenseUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force,
+                             cytnx_double tol) {
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
+
+    // a diagonal target keeps only a rank-1 block, which the sparse->dense at(cart) fill cannot
+    // index
+    cytnx_error_msg(this->is_diag() && (rhs->uten_type() == UTenType.Block ||
+                                        rhs->uten_type() == UTenType.BlockFermionic),
+                    "[ERROR][from_] Cannot convert a Block/BlockFermionicUniTensor into a diagonal "
+                    "DenseUniTensor.%s",
+                    "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
       _DN_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.Block) {
       _DN_from_BK(this, (BlockUniTensor *)(rhs.get()), force);
+    } else if (rhs->uten_type() == UTenType.BlockFermionic) {
+      _DN_from_BKF(this, (BlockFermionicUniTensor *)(rhs.get()), force);
     } else {
-      cytnx_error_msg(true, "[ERROR] unsupport conversion of UniTensor from %s => DenseUniTensor\n",
+      cytnx_error_msg(true,
+                      "[ERROR] Unsupported conversion of UniTensor from %s => DenseUniTensor\n",
                       UTenType.getname(rhs->uten_type()).c_str());
     }
   }

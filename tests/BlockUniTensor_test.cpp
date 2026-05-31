@@ -1180,6 +1180,72 @@ TEST_F(BlockUniTensorTest, get_bond_ref) {
   EXPECT_EQ(ut1.bonds()[1].qnums(), std::vector<std::vector<cytnx_int64>>({{1}, {0}, {0}}));
 }
 
+// ============ convert_from / from_ ============
+
+// Dense <-> Block round-trip: full block content (incl. within-block off-diagonal) is preserved,
+// symmetry-forbidden entries stay zero, and convert_from returns *this for chaining.
+TEST_F(BlockUniTensorTest, convert_from_dense_block_roundtrip) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2});
+  UniTensor B = UniTensor({bi, bi.redirect()});
+  B.at({0, 0}) = 1.0;
+  B.at({0, 1}) = 5.0;  // within the charge-0 block (off-diagonal, allowed)
+  B.at({1, 1}) = 2.0;
+  B.at({2, 2}) = 3.0;  // within the charge-1 block
+  B.at({3, 3}) = 4.0;
+
+  UniTensor D = UniTensor(zeros(B.shape()));
+  UniTensor& ret = D.convert_from(B);
+  EXPECT_EQ(&ret, &D);  // returns reference to *this
+  EXPECT_DOUBLE_EQ(double(D.at({0, 0}).real()), 1.0);
+  EXPECT_DOUBLE_EQ(double(D.at({0, 1}).real()), 5.0);
+  EXPECT_DOUBLE_EQ(double(D.at({2, 2}).real()), 3.0);
+  EXPECT_DOUBLE_EQ(double(D.at({0, 2}).real()), 0.0);  // forbidden sector stays zero
+
+  UniTensor B2 = UniTensor({bi, bi.redirect()});
+  B2.convert_from(D);
+  EXPECT_TRUE(AreEqUniTensor(B, B2));  // round-trip recovers the original block exactly
+}
+
+// Dense -> Block honors tol in all cases: a nonzero symmetry-forbidden entry is rejected at the
+// default tol=0, but a large tol or force=true tolerates it (the forbidden entry is dropped and the
+// allowed entries reproduce the original block exactly).
+TEST_F(BlockUniTensorTest, convert_from_tol_forbidden_nonzero) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2});
+  UniTensor B = UniTensor({bi, bi.redirect()});
+  B.at({0, 0}) = 1.0;
+  B.at({0, 1}) = 5.0;
+  B.at({1, 1}) = 2.0;
+  B.at({2, 2}) = 3.0;
+  B.at({3, 3}) = 4.0;
+
+  // Dense form of B with one extra nonzero in a symmetry-forbidden position.
+  UniTensor D = UniTensor(zeros(B.shape()));
+  D.convert_from(B);
+  D.at({0, 2}) = 7.0;  // forbidden sector (charge-0 row, charge-1 col)
+
+  UniTensor B0 = UniTensor({bi, bi.redirect()});
+  EXPECT_ANY_THROW(B0.convert_from(D));  // tol defaults to 0 -> rejected
+
+  UniTensor Bf = UniTensor({bi, bi.redirect()});
+  Bf.convert_from(D, true);  // force drops the forbidden entry
+  EXPECT_TRUE(AreEqUniTensor(Bf, B));
+
+  UniTensor Bt = UniTensor({bi, bi.redirect()});
+  Bt.convert_from(D, false, 10.0);  // large tol tolerates it, same result
+  EXPECT_TRUE(AreEqUniTensor(Bt, B));
+}
+
+// Converting a Block into a diagonal Dense is not supported and must throw.
+TEST_F(BlockUniTensorTest, convert_from_diagonal_dense_target_throws) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1});
+  UniTensor B = UniTensor({bi, bi.redirect()});
+  B.at({0, 0}) = 1.0;
+  B.at({1, 1}) = 2.0;
+
+  UniTensor Ddiag = UniTensor(zeros(2), true);  // diagonal Dense, shape (2,2)
+  EXPECT_ANY_THROW(Ddiag.convert_from(B));
+}
+
 // ============ to_dense / to_dense_ ============
 
 // A diagonal BlockUniTensor is expanded to a full one: each rank-1 (diagonal) block becomes a
