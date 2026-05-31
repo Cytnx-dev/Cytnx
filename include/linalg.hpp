@@ -842,7 +842,9 @@ namespace cytnx {
     the largest error will be pushed back to the vector (The smallest singular value in the return
     singular values matrix \f$ S \f$.) If \p return_err is > 1, then the full list of truncated
     singular values will be returned.
-    @param[in] mindim at least this amount of singular values are kept in each block.
+    @param[in] mindim at least this many singular values are kept in total. For a per-block lower
+    bound (which also acts as the per-block sampling floor of the randomized SVD), use the
+    overload that takes a \p min_blockdim vector.
     @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
     keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
     where d is the block dimension and D the full tensor dimension (each being the minimum of row
@@ -1878,7 +1880,7 @@ namespace cytnx {
     the largest error will be pushed back to the vector (The smallest singular value in the return
     singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
     full list of truncated singular values will be returned.
-    @param[in] mindim at least this amount of singular values are kept in each block.
+    @param[in] mindim at least this many singular values are kept in total.
     @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
     keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
     where d is the block dimension and D the full tensor dimension (each being the minimum of row

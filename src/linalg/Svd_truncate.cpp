@@ -366,6 +366,10 @@ namespace cytnx {
       cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                        // negative!
       cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
+      cytnx_error_msg(min_blockdim.empty(),
+                      "[ERROR][Svd_truncate] min_blockdim must not be empty; use the overload "
+                      "without min_blockdim if no per-block floor is needed.%s",
+                      "\n");
 
       outCyT = linalg::Gesvd(Tin, is_UvT, is_UvT);
       if (min_blockdim.size() == 1)  // if only one element given, make it a vector
@@ -450,8 +454,13 @@ namespace cytnx {
             outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
           }
         } else {
-          if (return_err >= 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+          // keep_dim < 1: per-block min_blockdim guarantees already cover the global cap, so
+          // every value in Sall is dropped.
+          if (return_err == 1) {
+            // largest dropped singular value
+            outCyT.push_back(UniTensor(linalg::Max(Sall)));
+          } else if (return_err) {
+            outCyT.push_back(UniTensor(Sall));
           }
         }
 

@@ -177,6 +177,116 @@ namespace RsvdTest {
     // EXPECT_TRUE(ReComposeCheck(src_T, rsvds)) << fail_msg.TraceFailMsgs();
   }
 
+  /*=====test info=====
+  describe:When per-block min_blockdim guarantees already meet or exceed the global keepdim cap
+  (keep_dim<=0 internally) but there are further singular values, the return_err path must report
+  the actually dropped singular values.
+  ====================*/
+  TEST(Rsvd, return_err_when_min_blockdim_exhausts_keepdim) {
+    // 2-leg U(1) BlockUT, 3 sectors of size 3x3 each. With min_blockdim=[2,2,2] every block
+    // keeps its top 2 SVs and contributes its 3rd to Sall (3 dropped values total);
+    // oversampling_summand=2 makes the per-block sampling formula ask for the full 3 SVs per
+    // block (the default ceil(keepdim*BlockDim/TenDim)=1 would otherwise leave only 1 SV per
+    // block and the min_blockdim cut would never see anything to put into Sall).
+    auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+    Bond bk = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3}, syms);
+    UniTensor src_T({bk, bk.redirect()}, {"l", "r"}, 1, Type.Double, Device.cpu, false);
+    InitUniTensorUniform(src_T, 23);
+
+    const cytnx_uint64 keepdim = 3;
+    const std::vector<cytnx_uint64> min_blockdim = {2, 2, 2};
+    const cytnx_uint64 oversampling_summand = 2;
+
+    // return_err = 2: terr holds every dropped singular value (3 total)
+    std::vector<UniTensor> rsvd_all = linalg::Rsvd(src_T, keepdim, min_blockdim, 0., true, true, 2,
+                                                   1, oversampling_summand, 0., 2, 0);
+    Tensor terr_all = rsvd_all.back().get_block_();
+    ASSERT_EQ(terr_all.shape(), std::vector<cytnx_uint64>({3}))
+      << "terr must hold all 3 dropped singular values, not a 1-element zero";
+    double max_abs = 0.0;
+    for (cytnx_uint64 i = 0; i < terr_all.storage().size(); ++i)
+      max_abs = std::max(max_abs, std::abs(terr_all.storage().at<double>(i)));
+    EXPECT_GT(max_abs, 0.0) << "terr values are all zero (previous bug)";
+
+    // return_err = 1: terr is a single element = largest dropped singular value
+    std::vector<UniTensor> rsvd_max = linalg::Rsvd(src_T, keepdim, min_blockdim, 0., true, true, 1,
+                                                   1, oversampling_summand, 0., 2, 0);
+    Tensor terr_max = rsvd_max.back().get_block_();
+    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>({1}));
+    EXPECT_NEAR(std::abs(terr_max.storage().at<double>(0)), max_abs, 1e-10 * (1.0 + max_abs));
+  }
+
+  /*=====test info=====
+  describe:With err larger than every singular value, the truncation loop would otherwise cut
+  down to 1. mindim must restrict the kept count to at least mindim, and the kept values must be
+  the mindim largest ones of the full SVD. Uses samplenum = min(m,n) so Rsvd matches a full SVD.
+  ====================*/
+  TEST(Rsvd, mindim_floor) {
+    Tensor T = Tensor({8, 6}, Type.Double);
+    InitTensorUniform(T, 19);
+    const cytnx_uint64 keepdim = 6;  // == min(m, n) so the randomized projection is full rank
+    const cytnx_uint64 floor = 3;
+    const cytnx_uint64 oversampling_summand = 0;
+    const double oversampling_factor = 0.;
+    const cytnx_uint64 power_it = 4;
+    std::vector<Tensor> ref = linalg::Gesvd(T, /*is_U=*/true, /*is_vT=*/true);
+
+    std::vector<Tensor> out =
+      linalg::Rsvd(T, keepdim, /*err=*/1e9, /*is_U=*/true, /*is_vT=*/true, 0, floor,
+                   oversampling_summand, oversampling_factor, power_it, 0);
+    ASSERT_EQ(out[0].shape(), std::vector<cytnx_uint64>({floor}));
+    for (cytnx_uint64 i = 0; i < floor; ++i) {
+      const double got = out[0].astype(Type.Double).storage().at<double>(i);
+      const double exp = ref[0].astype(Type.Double).storage().at<double>(i);
+      EXPECT_NEAR(got, exp, 1e-8 * (1.0 + std::abs(exp))) << "S[" << i << "]";
+    }
+  }
+
+  /*=====test info=====
+  describe:On a Block UniTensor, with err larger than every singular value, the truncation loop
+  would otherwise cut down to 1; mindim must clamp the kept count to at least mindim. Exercises
+  the sample_target=max(keepdim,mindim) path on the Block route.
+  ====================*/
+  TEST(Rsvd, mindim_floor_blockut) {
+    auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+    Bond bk = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3}, syms);
+    UniTensor src_T({bk, bk.redirect()}, {"l", "r"}, 1, Type.Double, Device.cpu, false);
+    InitUniTensorUniform(src_T, 31);
+    const cytnx_uint64 keepdim = 6, mindim = 4;
+
+    std::vector<UniTensor> out =
+      linalg::Rsvd(src_T, keepdim, /*err=*/1e9, true, true, 0, mindim, 0, 0., 2, 0);
+    cytnx_uint64 total_kept = 0;
+    for (auto d : out[0].bonds()[0].getDegeneracies()) total_kept += d;
+    EXPECT_GE(total_kept, mindim);
+  }
+
+  /*=====test info=====
+  describe:Setting min_blockdim must keep at least the requested number of singular values per
+  sector. With a small keepdim, the baseline (no min_blockdim) drops entire sectors; with
+  min_blockdim={1,1,1} every sector keeps at least one singular value.
+  ====================*/
+  TEST(Rsvd, min_blockdim_keeps_each_sector) {
+    auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+    Bond bk = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3}, syms);
+    UniTensor src_T({bk, bk.redirect()}, {"l", "r"}, 1, Type.Double, Device.cpu, false);
+    InitUniTensorUniform(src_T, 29);
+    const cytnx_uint64 keepdim = 1;
+
+    // baseline: only the single largest singular value is kept, so most sectors disappear
+    std::vector<UniTensor> base = linalg::Rsvd(src_T, keepdim, 0., true, true, 0, 1, 0, 0., 2, 0);
+    const auto base_degs = base[0].bonds()[0].getDegeneracies();
+    EXPECT_LT(base_degs.size(), 3u)
+      << "baseline should drop some sectors; pick a smaller keepdim or larger blocks";
+
+    // with min_blockdim={1,1,1}: every sector must keep at least 1
+    std::vector<UniTensor> withf =
+      linalg::Rsvd(src_T, keepdim, {1, 1, 1}, 0., true, true, 0, 1, 0, 0., 2, 0);
+    const auto withf_degs = withf[0].bonds()[0].getDegeneracies();
+    ASSERT_EQ(withf_degs.size(), 3u);
+    for (cytnx_uint64 b = 0; b < 3; ++b) EXPECT_GE(withf_degs[b], 1u) << "block " << b;
+  }
+
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
     bool is_double_float_acc = true;
     auto dtype = Tin.dtype();
