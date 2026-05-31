@@ -1,0 +1,190 @@
+name: Downstream find_package
+
+# Verifies that a downstream project consuming cytnx purely through
+# `find_package(Cytnx CONFIG)` + `Cytnx::cytnx` can configure, build, link,
+# and run against cytnx from BOTH:
+#   * the build tree   (export(EXPORT cytnx_targets ...) / build-dir CytnxConfig.cmake)
+#   * the install tree  (install(EXPORT ...) under <prefix>/lib/cmake/cytnx)
+#
+# The consumer lives in tests/downstream_find_package/ and exercises a
+# permute() call, which routes through the HPTT-backed transpose — so a
+# clean link proves the exported package pulls in cytnx's bundled
+# Cytnx::hptt_static and its OpenMP / Boost / LAPACK dependencies without
+# the consumer naming any of them.
+#
+# cytnx is built with RUN_TESTS=OFF here on purpose: RUN_TESTS=ON adds
+# `--coverage` as a PUBLIC $<BUILD_INTERFACE:> usage requirement on the cytnx
+# target, which a consumer pointed at the BUILD TREE would inherit and then
+# fail to link without the gcov runtime. The coverage-instrumented build is
+# already covered by the "Tests and Codecov" workflow; this job builds the
+# uninstrumented configuration a real downstream user would.
+#
+# The native dependency set and the CMake preset are NOT hardcoded here:
+# they are rendered from the conda build recipe (conda_build/meta.yaml), the
+# single source of truth that conda_build.yml already ships. `conda render`
+# resolves the recipe's Jinja `compiler()` calls and `# [x86]` / `# [not x86]`
+# selectors for this runner, so this job reproduces the exact toolchain +
+# BLAS vendor (MKL on x86) the release packages are built with.
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  DownstreamFindPackage:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        # Login shell (-l) so conda activation is sourced (this is what sets
+        # CC/CXX to the conda compilers in later steps); -e / -o pipefail so
+        # the job fails on the first failing command (overriding the shell
+        # drops GitHub's default `-eo pipefail`, so set it back).
+        shell: bash -leo pipefail {0}
+    env:
+      # Build cytnx here, install it here, and build the consumer here, all
+      # under the workspace so paths are stable across steps.
+      CYTNX_BUILD_DIR: ${{ github.workspace }}/build
+      CYTNX_INSTALL_DIR: ${{ github.workspace }}/install
+      CONSUMER_SRC_DIR: ${{ github.workspace }}/tests/downstream_find_package
+      # ccache wraps every C/C++ compile via CMake's compiler-launcher hook.
+      # Mirror conda_build.yml's ccache settings so the recipe-equivalent
+      # build hits the cache the same way.
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB.
+      CCACHE_NOHASHDIR: 1
+      CCACHE_COMPILERCHECK: content
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      # Match ci-cmake_tests.yml: re-runs of a PR job use the original merge
+      # commit, so merge the latest target branch to test against current tip.
+      - name: Merge with latest target branch (pull_request only)
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+          # Refresh submodules in case the merge moved any gitlinks.
+          git submodule update --init --recursive
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: "3.11"
+          miniforge-version: latest
+          use-mamba: true
+          mamba-version: "*"
+
+      - name: Cache Ccache Directory (push)
+        if: ${{ github.event_name == 'push' }}
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-downstream-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            ccache-downstream-${{ runner.os }}-${{ github.ref_name }}-
+
+      - name: Cache Ccache Directory (pull_request)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-downstream-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
+          restore-keys: |
+            ccache-downstream-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
+            ccache-downstream-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
+
+      - name: Resolve native dependencies and preset from the conda recipe
+        # Reuse conda_build/meta.yaml as the single dependency source. `conda
+        # render` evaluates its Jinja + selectors for this runner; we install
+        # the rendered build + host specs (the native toolchain, Boost, the
+        # selected BLAS vendor, gtest, arpack) and read back the recipe's
+        # CMAKE_PRESET. Python-only build inputs (python, pip,
+        # scikit-build-core, pybind11) are skipped: this job builds the C++
+        # package with BUILD_PYTHON=OFF, so they are not needed and pinning
+        # the recipe's Python would clash with this env's Python.
+        run: |
+          mamba install -y conda-build
+          # --file writes only the rendered recipe (no solver/progress noise
+          # that piping stdout would mix in); --python pins a single variant so
+          # render emits one recipe instead of one per python in the config.
+          conda render conda_build/ --python "3.11" --file rendered-meta.yaml
+          # Write one spec per line to conda-deps.txt (so `mamba install --file`
+          # parses each line as a single MatchSpec — finalized specs like
+          # "gxx_linux-64 12.3.0 h..." contain spaces and would word-split if
+          # passed on a command line) and export the recipe's preset.
+          python - <<'PY'
+          import yaml
+          m = yaml.safe_load(open("rendered-meta.yaml"))
+          reqs = (m.get("requirements") or {})
+          specs = (reqs.get("build") or []) + (reqs.get("host") or [])
+          skip = {"python", "pip", "scikit-build-core", "pybind11"}
+          deps = [s for s in specs if s.split()[0] not in skip]
+          with open("conda-deps.txt", "w") as f:
+              f.write("\n".join(deps) + "\n")
+          # The recipe encodes the per-platform preset in build.script_env as
+          # "CMAKE_PRESET=<preset>"; recover the value selected for this runner.
+          preset = next(
+              e.split("=", 1)[1]
+              for e in (m.get("build") or {}).get("script_env", [])
+              if e.startswith("CMAKE_PRESET=")
+          )
+          import os
+          with open(os.environ["GITHUB_ENV"], "a") as f:
+              f.write("CMAKE_PRESET=" + preset + "\n")
+          PY
+
+      - name: Install native dependencies
+        run: mamba install -y --file conda-deps.txt
+
+      - name: Configure cytnx (recipe preset, USE_HPTT=ON)
+        # Use the recipe's preset (USE_HPTT=ON + HPTT_ENABLE_FINE_TUNE=ON) but
+        # override BUILD_PYTHON=OFF (this job is about the C++ package export,
+        # not the Python wheel) and RUN_TESTS=OFF (keeps the build free of the
+        # --coverage usage requirement; see the file header). Pin the build dir
+        # and install prefix so later steps have stable paths.
+        run: |
+          cmake -S . -B "$CYTNX_BUILD_DIR" \
+            --preset="$CMAKE_PRESET" \
+            -G "Unix Makefiles" \
+            -DBUILD_PYTHON=OFF \
+            -DRUN_TESTS=OFF \
+            -DCMAKE_INSTALL_PREFIX="$CYTNX_INSTALL_DIR"
+
+      - name: Build cytnx
+        run: cmake --build "$CYTNX_BUILD_DIR" --target cytnx -j "$(nproc)"
+
+      # --- Build tree consumer -------------------------------------------------
+      # The build-tree export is emitted by export(EXPORT cytnx_targets ...)
+      # plus the build-dir CytnxConfig.cmake; point the consumer at the build
+      # dir via Cytnx_DIR (no install step has run yet).
+      - name: Consumer against the BUILD TREE
+        run: |
+          cmake -S "$CONSUMER_SRC_DIR" -B "${{ github.workspace }}/consumer-build-tree" \
+            -G "Unix Makefiles" \
+            -DCytnx_DIR="$CYTNX_BUILD_DIR"
+          cmake --build "${{ github.workspace }}/consumer-build-tree" -j "$(nproc)"
+          "${{ github.workspace }}/consumer-build-tree/consumer"
+
+      # --- Install tree consumer ----------------------------------------------
+      - name: Install cytnx
+        run: cmake --install "$CYTNX_BUILD_DIR"
+
+      - name: Consumer against the INSTALL TREE
+        # Use a fresh build dir and resolve the package from the install
+        # prefix via CMAKE_PREFIX_PATH (the canonical way a real downstream
+        # user would find an installed cytnx).
+        run: |
+          cmake -S "$CONSUMER_SRC_DIR" -B "${{ github.workspace }}/consumer-install-tree" \
+            -G "Unix Makefiles" \
+            -DCMAKE_PREFIX_PATH="$CYTNX_INSTALL_DIR"
+          cmake --build "${{ github.workspace }}/consumer-install-tree" -j "$(nproc)"
+          "${{ github.workspace }}/consumer-install-tree/consumer"

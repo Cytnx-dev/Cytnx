@@ -21,9 +21,6 @@ jobs:
       # Pinned via --config-settings=build-dir=build below so ctest and
       # gcovr know where the build tree (and .gcno / .gcda files) live.
       BUILD_DIR: ${{ github.workspace }}/build
-      # Prefix the downstream find_package(Cytnx) install-tree check installs to.
-      CYTNX_INSTALL_DIR: ${{ github.workspace }}/install
-      CONSUMER_SRC_DIR: ${{ github.workspace }}/tests/downstream_find_package
     steps:
       - uses: actions/checkout@v4
         with:
@@ -190,38 +187,3 @@ jobs:
           disable_search: true
           fail_ci_if_error: true
           verbose: true
-
-      # --- Downstream find_package(Cytnx) checks ------------------------------
-      # Verify that a downstream project consuming cytnx purely through
-      # `find_package(Cytnx CONFIG)` + `Cytnx::cytnx` can configure, build,
-      # link, and run against cytnx from BOTH the build tree and the install
-      # tree. The consumer lives in tests/downstream_find_package/ and calls
-      # Tensor::permute, which routes through the HPTT-backed transpose — so a
-      # clean link proves the exported package pulls in cytnx's bundled
-      # Cytnx::hptt_static and its OpenMP / Boost / LAPACK dependencies without
-      # the consumer naming any of them.
-      #
-      # This reuses the cytnx build tree ($BUILD_DIR) and the conda toolchain
-      # already provisioned above, so there is no second cytnx build and no
-      # duplicated dependency list.
-      - name: Consumer against the BUILD TREE
-        # The build-tree export is emitted by export(EXPORT cytnx_targets ...)
-        # plus the build-dir CytnxConfig.cmake; point the consumer at $BUILD_DIR
-        # via Cytnx_DIR (the install step below has not run yet).
-        run: |
-          cmake -S "$CONSUMER_SRC_DIR" -B "${{ github.workspace }}/consumer-build-tree" \
-            -DCytnx_DIR="$BUILD_DIR"
-          cmake --build "${{ github.workspace }}/consumer-build-tree" -j "$(nproc)"
-          "${{ github.workspace }}/consumer-build-tree/consumer"
-
-      - name: Install cytnx
-        run: cmake --install "$BUILD_DIR" --prefix "$CYTNX_INSTALL_DIR"
-
-      - name: Consumer against the INSTALL TREE
-        # Resolve the package from the install prefix via CMAKE_PREFIX_PATH (the
-        # canonical way a real downstream user finds an installed cytnx).
-        run: |
-          cmake -S "$CONSUMER_SRC_DIR" -B "${{ github.workspace }}/consumer-install-tree" \
-            -DCMAKE_PREFIX_PATH="$CYTNX_INSTALL_DIR"
-          cmake --build "${{ github.workspace }}/consumer-install-tree" -j "$(nproc)"
-          "${{ github.workspace }}/consumer-install-tree/consumer"
