@@ -29,8 +29,8 @@ TEST(IOUniTensorTest, RoundTripDenseUntaggedAllDtypes) {
 
 // Tagged (directional, no-symmetry) dense UniTensor.
 TEST(IOUniTensorTest, RoundTripDenseTagged) {
-  UniTensor ut =
-    UniTensor({Bond(3, BD_KET), Bond(3, BD_BRA)}, {"i", "j"}, 1, Type.ComplexDouble).set_name("tagged");
+  UniTensor ut = UniTensor({Bond(3, BD_KET), Bond(3, BD_BRA)}, {"i", "j"}, 1, Type.ComplexDouble)
+                   .set_name("tagged");
   ASSERT_TRUE(ut.is_tag());
   InitUniTensorUniform(ut, 21);
   ExpectRoundTrip(ut);
@@ -83,7 +83,8 @@ TEST(IOUniTensorTest, RoundTripFermionic) {
 TEST(IOUniTensorTest, Overwrite) {
   TempH5File tmp;
   UniTensor a = UniTensor({Bond(3), Bond(2)}, {"a", "b"}, 1, Type.Double).set_name("A");
-  UniTensor b = UniTensor({Bond(4), Bond(5), Bond(2)}, {"x", "y", "z"}, 2, Type.Double).set_name("B");
+  UniTensor b =
+    UniTensor({Bond(4), Bond(5), Bond(2)}, {"x", "y", "z"}, 2, Type.Double).set_name("B");
   InitUniTensorUniform(a, 1);
   InitUniTensorUniform(b, 2);
   {

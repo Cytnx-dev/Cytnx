@@ -108,8 +108,8 @@ namespace cytnx {
       }
 
       inline UniTensor unitensor_dense() {
-        UniTensor ut =
-          UniTensor({Bond(3), Bond(4), Bond(2)}, {"a", "b", "c"}, 1, Type.Double).set_name("ref_dense");
+        UniTensor ut = UniTensor({Bond(3), Bond(4), Bond(2)}, {"a", "b", "c"}, 1, Type.Double)
+                         .set_name("ref_dense");
         TestTools::InitUniTensorUniform(ut, 5678);
         return ut;
       }

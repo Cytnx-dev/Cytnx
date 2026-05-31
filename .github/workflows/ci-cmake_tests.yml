@@ -106,8 +106,7 @@ jobs:
           pip install --editable '.[dev]' --verbose \
             --config-settings=build-dir=build \
             --config-settings=cmake.define.CMAKE_BUILD_TYPE=Debug \
-            --config-settings=cmake.define.RUN_TESTS=ON \
-            --config-settings=cmake.define.HDF5_ROOT=$CONDA_PREFIX
+            --config-settings=cmake.define.RUN_TESTS=ON
 
       - name: Sanity-check the install
         run: python -c "import cytnx; print('cytnx', cytnx.__version__)"

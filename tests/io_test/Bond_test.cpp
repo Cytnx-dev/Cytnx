@@ -28,8 +28,8 @@ TEST(IOBondTest, RoundTripU1) {
 
 // A bond carrying multiple symmetries (U1 x Z2).
 TEST(IOBondTest, RoundTripMultiSymmetry) {
-  Bond b = Bond(BD_KET, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3},
-                {Symmetry::Zn(2), Symmetry::U1()});
+  Bond b =
+    Bond(BD_KET, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
   Bond loaded = RoundTrip(b);
   EXPECT_TRUE(loaded == b);
 }
