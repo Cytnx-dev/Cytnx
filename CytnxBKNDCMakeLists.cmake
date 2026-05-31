@@ -67,8 +67,20 @@ if (USE_HPTT)
             "Run: git submodule update --init --recursive")
     endif()
 
+    # Declare cytnx's HPTT_ENABLE_* knobs as cache options so they show up in
+    # cmake-gui / ccmake with a help string and a documented OFF default
+    # (a bare -DHPTT_ENABLE_AVX=ON on the command line would otherwise work
+    # but stay invisible/undocumented).
+    option(HPTT_ENABLE_ARM "HPTT option ARM" OFF)
+    option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
+    option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
+    option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
+
     # Forward cytnx's HPTT_ENABLE_* options to the names hptt's CMakeLists
-    # expects (ENABLE_ARM / ENABLE_AVX / ENABLE_IBM / FINE_TUNE).
+    # expects (ENABLE_ARM / ENABLE_AVX / ENABLE_IBM / FINE_TUNE). These four
+    # names are generic and unprefixed, so unset() them right after
+    # add_subdirectory (below) to keep them from leaking into the rest of
+    # this scope.
     set(ENABLE_ARM "${HPTT_ENABLE_ARM}")
     set(ENABLE_AVX "${HPTT_ENABLE_AVX}")
     set(ENABLE_IBM "${HPTT_ENABLE_IBM}")
@@ -89,6 +101,13 @@ if (USE_HPTT)
     # as a real CMake target — so we can drop the manual include_directories,
     # add_dependencies, and absolute-path library link below.
     add_subdirectory("${HPTT_SUBMODULE_DIR}" "${CMAKE_BINARY_DIR}/hptt")
+
+    # Drop the generic forwarding variables so a later if(ENABLE_AVX) /
+    # if(FINE_TUNE) elsewhere in the build doesn't see HPTT's values.
+    unset(ENABLE_ARM)
+    unset(ENABLE_AVX)
+    unset(ENABLE_IBM)
+    unset(FINE_TUNE)
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
     message(STATUS " Build HPTT Support: YES")
