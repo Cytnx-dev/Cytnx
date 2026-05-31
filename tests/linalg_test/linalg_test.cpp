@@ -92,6 +92,29 @@ TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_one_returns_first_discarded_v
   EXPECT_EQ(all_svals.at({all_svals.shape()[0] - trunc[0].shape()[0] - 1}), trunc[3].at({0}));
 }
 
+/*=====test info=====
+describe:When keepdim >= total singular values (smidx == 0), nothing is dropped. return_err
+must still return a one-element zero tensor rather than crashing or returning garbage.
+====================*/
+TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_no_truncation) {
+  // keepdim=999 keeps everything; both return_err=1 and return_err=2 must produce {1} x {0.0}
+  for (unsigned int re : {1u, 2u}) {
+    std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 999, 0, true, re);
+    ASSERT_EQ(res.size(), 4u) << "return_err=" << re;
+    ASSERT_EQ(res[3].shape()[0], 1u) << "return_err=" << re;
+    EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+  }
+}
+
+TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_no_truncation) {
+  for (unsigned int re : {1u, 2u}) {
+    std::vector<UniTensor> res = linalg::Gesvd_truncate(svd_T, 999, 0, true, true, re);
+    ASSERT_EQ(res.size(), 4u) << "return_err=" << re;
+    ASSERT_EQ(res[3].shape()[0], 1u) << "return_err=" << re;
+    EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+  }
+}
+
 // TEST_F(linalg_Test, BkUt_Svd_truncate3) {
 //   Bond I = Bond(BD_IN, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
 //   Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});

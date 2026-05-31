@@ -7,6 +7,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "block_truncation_helpers.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -21,26 +22,6 @@
 
 namespace cytnx {
   namespace linalg {
-    namespace {
-      UniTensor BuildBlockDiscardedSingularValues(const Tensor &Sall, const cytnx_uint64 smidx,
-                                                  const unsigned int return_err) {
-        Tensor terr({1}, Sall.dtype());
-        terr.storage().at(0) = 0;
-        if (smidx == 0) {
-          return UniTensor(terr);
-        }
-        if (return_err == 1) {
-          terr.storage().at(0) = Sall.storage()(smidx - 1);
-          return UniTensor(terr);
-        }
-
-        terr = Tensor({smidx}, Sall.dtype());
-        for (cytnx_uint64 i = 0; i < smidx; i++) {
-          terr.storage().at(i) = Sall.storage()(smidx - 1 - i);
-        }
-        return UniTensor(terr);
-      }
-    }  // namespace
 
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const bool &is_U, const bool &is_vT,
