@@ -14,8 +14,7 @@ namespace cytnx {
     // return_err: 1 → return largest dropped value; >1 → return all dropped values descending.
     //
     // When smidx == 0 (no truncation), returns a one-element zero tensor regardless of return_err.
-    inline UniTensor BuildBlockDiscardedSingularValues(const Tensor &Sall,
-                                                       const cytnx_uint64 smidx,
+    inline UniTensor BuildBlockDiscardedSingularValues(const Tensor &Sall, const cytnx_uint64 smidx,
                                                        const unsigned int return_err) {
       Tensor terr({1}, Sall.dtype());
       terr.storage().at(0) = 0;
