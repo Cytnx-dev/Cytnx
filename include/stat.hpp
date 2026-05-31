@@ -86,7 +86,7 @@ namespace cytnx {
       }
 
       void normalize();
-      void print() const;
+      void print(std::ostream &file = std::cout) const;
 
       const Storage &get_x() const {
         // get x
@@ -179,7 +179,7 @@ namespace cytnx {
       }
 
       void normalize();
-      void print() const;
+      void print(std::ostream &file = std::cout) const;
 
       const Storage &get_x() const {
         // get x

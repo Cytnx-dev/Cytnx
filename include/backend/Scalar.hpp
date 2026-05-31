@@ -2847,12 +2847,16 @@ namespace cytnx {
 
     // print()
     /**
-     * @brief Print the Scalar to the standard output.
+     * @brief Print the Scalar to @p file.
+     *
+     * @note For Python users this method is exposed as a deprecated binding;
+     *       the idiomatic Python form is @c print(scalar) , which goes through
+     *       @c __repr__ and ultimately @c operator<< .
      */
-    void print() const {
-      this->_impl->print(std::cout);
-      std::cout << std::string(" Scalar dtype: [") << Type.getname(this->_impl->_dtype)
-                << std::string("]") << std::endl;
+    void print(std::ostream &file = std::cout) const {
+      this->_impl->print(file);
+      file << std::string(" Scalar dtype: [") << Type.getname(this->_impl->_dtype)
+           << std::string("]") << std::endl;
     }
 
     // casting

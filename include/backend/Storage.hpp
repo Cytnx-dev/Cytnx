@@ -63,8 +63,8 @@ namespace cytnx {
 
     void _cpy_bool(void *ptr, const std::vector<cytnx_bool> &vin);
 
-    void print();
-    void print_info();
+    void print(std::ostream &file = std::cout) const;
+    void print_info(std::ostream &file = std::cout) const;
     /*
         This function is design to check the type mismatch.
         Handy for developer to exclude the assign of double
@@ -186,7 +186,7 @@ namespace cytnx {
                               const std::vector<cytnx_uint64> &invmapper);
     virtual void PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
                                    const std::vector<cytnx_uint64> &mapper = {});
-    virtual void print_elems();
+    virtual void print_elems(std::ostream &file = std::cout) const;
 
     virtual boost::intrusive_ptr<Storage_base> real();
     virtual boost::intrusive_ptr<Storage_base> imag();
@@ -258,7 +258,7 @@ namespace cytnx {
     boost::intrusive_ptr<Storage_base> to(const int &device);
     void PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &mapper = {});
-    void print_elems();
+    void print_elems(std::ostream &file = std::cout) const override;
 
     ~StorageImplementation();
 
@@ -765,14 +765,19 @@ namespace cytnx {
     void *release() noexcept { return this->_impl->release(); }
 
     /**
-    @brief print the info of the Storage, including the device, dtype and size.
-
+    @brief print the info of the Storage (device, dtype, size) to @p file.
     */
-    void print_info() const { this->_impl->print_info(); }
-    /// @cond
-    // this is a redundant function
-    void print() const { this->_impl->print(); }
-    /// @endcond
+    void print_info(std::ostream &file = std::cout) const { this->_impl->print_info(file); }
+
+    /**
+    @brief Print the full Storage (info + elements) to @c std::cout .
+
+    @deprecated Use @c std::cout @c << @c storage instead (or stream into any
+                other @c std::ostream ).
+    */
+    [[deprecated("Use `std::cout << storage;` instead.")]] void print() const {
+      this->_impl->print(std::cout);
+    }
 
     /**
     @brief set all the elements to zero.
@@ -1000,7 +1005,7 @@ namespace cytnx {
   };
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Storage &in);
+  std::ostream &operator<<(std::ostream &file, const Storage &in);
   ///@endcond
 
 }  // namespace cytnx

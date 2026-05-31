@@ -447,13 +447,13 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::print_elems() {
+  void StorageImplementation<DType>::print_elems(std::ostream &file) const {
     DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
-    cout << "[ ";
+    file << "[ ";
     for (unsigned long long cnt = 0; cnt < this->size_; cnt++) {
-      PrintValueAndSpace(std::cout, elem_ptr_[cnt]);
+      PrintValueAndSpace(file, elem_ptr_[cnt]);
     }
-    std::cout << "]" << std::endl;
+    file << "]" << std::endl;
   }
 
   template <typename DType>

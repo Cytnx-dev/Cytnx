@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <sstream>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -95,13 +96,12 @@ void symmetry_binding(py::module &m) {
       "Save", [](Symmetry &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
       "Load", [](const std::string &fname) { return Symmetry::Load(fname); }, py::arg("fname"))
-    .def(
-      "__repr__",
-      [](Symmetry &self) {
-        std::cout << self << std::endl;
-        return std::string("");
-      },
-      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def("__repr__",
+         [](const Symmetry &self) {
+           std::ostringstream ss;
+           ss << self;
+           return ss.str();
+         })
 
     //.def("combine_rule",&Symmetry::combine_rule,py::arg("qnums_1"),py::arg("qnums_2"))
     //.def("combine_rule_",&Symmetry::combine_rule_,py::arg("qnums_l"),py::arg("qnums_r"))

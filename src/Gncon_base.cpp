@@ -48,10 +48,10 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR][Gncon][clone] call from uninitialize Gncon. %s", "\n");
     return nullptr;
   }
-  void Gncon_base::PrintNet(std::ostream &os) {
-    os << "        [Empty Gncon]" << endl;
-    os << "--- Please Load Gncon file ---\n";
-    os << endl;
+  void Gncon_base::PrintNet(std::ostream &file) const {
+    file << "        [Empty Gncon]" << std::endl;
+    file << "--- Please Load Gncon file ---\n";
+    file << std::endl;
   }
 
 }  // namespace cytnx

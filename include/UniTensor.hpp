@@ -273,9 +273,10 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual boost::intrusive_ptr<UniTensor_base> apply_();
     virtual boost::intrusive_ptr<UniTensor_base> apply();
-    virtual void print_diagram(const bool &bond_info = false) const;
-    virtual void print_blocks(const bool &full_info = true) const;
-    virtual void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    virtual void print_diagram(const bool &bond_info = false, std::ostream &file = std::cout) const;
+    virtual void print_blocks(const bool &full_info = true, std::ostream &file = std::cout) const;
+    virtual void print_block(const cytnx_int64 &idx, const bool &full_info = true,
+                             std::ostream &file = std::cout) const;
 
     virtual boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const;
 
@@ -636,9 +637,10 @@ namespace cytnx {
       return out;
     }
 
-    void print_diagram(const bool &bond_info = false) const;
-    void print_blocks(const bool &full_info = true) const;
-    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    void print_diagram(const bool &bond_info = false, std::ostream &file = std::cout) const;
+    void print_blocks(const bool &full_info = true, std::ostream &file = std::cout) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info = true,
+                     std::ostream &file = std::cout) const;
     Tensor get_block() const { return this->_block.clone(); }
     Tensor get_block(const cytnx_uint64 &idx) const {
       cytnx_error_msg(idx != 0,
@@ -1458,9 +1460,10 @@ namespace cytnx {
       return out;
     }
 
-    void print_diagram(const bool &bond_info = false) const;
-    void print_blocks(const bool &full_info = true) const;
-    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    void print_diagram(const bool &bond_info = false, std::ostream &file = std::cout) const;
+    void print_blocks(const bool &full_info = true, std::ostream &file = std::cout) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info = true,
+                     std::ostream &file = std::cout) const;
 
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,
@@ -2224,9 +2227,10 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> apply_();
     boost::intrusive_ptr<UniTensor_base> apply();
 
-    void print_diagram(const bool &bond_info = false) const;
-    void print_blocks(const bool &full_info = true) const;
-    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    void print_diagram(const bool &bond_info = false, std::ostream &file = std::cout) const;
+    void print_blocks(const bool &full_info = true, std::ostream &file = std::cout) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info = true,
+                     std::ostream &file = std::cout) const;
 
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,
@@ -2619,9 +2623,10 @@ namespace cytnx {
       return this->_inner_to_outer_idx;
     }
 
-    void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
+    void beauty_print_block(const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
                             const std::vector<cytnx_uint64> &qn_indices,
-                            const std::vector<Bond> &bonds, const Tensor &block) const;
+                            const std::vector<Bond> &bonds, const Tensor &block,
+                            std::ostream &file = std::cout) const;
   };
   /// @endcond
 
@@ -3865,26 +3870,29 @@ namespace cytnx {
     }
 
     /**
-    @brief Plot the diagram of the UniTensor.
+    @brief Print the diagram of the UniTensor to @p file.
         @param[in] bond_info whether need to print the information of the bonds of the UniTensor.
     */
-    void print_diagram(const bool &bond_info = false) const {
-      this->_impl->print_diagram(bond_info);
+    void print_diagram(const bool &bond_info = false, std::ostream &file = std::cout) const {
+      this->_impl->print_diagram(bond_info, file);
     }
 
     /**
-    @brief Print all blocks of the UniTensor.
+    @brief Print all blocks of the UniTensor to @p file.
         @param[in] full_info whether need to print the full information of the blocks
     */
-    void print_blocks(const bool &full_info = true) const { this->_impl->print_blocks(full_info); }
+    void print_blocks(const bool &full_info = true, std::ostream &file = std::cout) const {
+      this->_impl->print_blocks(full_info, file);
+    }
 
     /**
-    @brief Print out the block of the UniTensor with a given block index number.
+    @brief Print out the block of the UniTensor with a given block index number, to @p file.
         @param[in] idx the input index
         @param[in] full_info whether need to print the full information of the block
     */
-    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const {
-      this->_impl->print_block(idx, full_info);
+    void print_block(const cytnx_int64 &idx, const bool &full_info = true,
+                     std::ostream &file = std::cout) const {
+      this->_impl->print_block(idx, full_info, file);
     }
 
     /**
@@ -5997,7 +6005,7 @@ namespace cytnx {
   };  // class UniTensor
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const UniTensor &in);
+  std::ostream &operator<<(std::ostream &file, const UniTensor &in);
   ///@endcond
 
   /**
