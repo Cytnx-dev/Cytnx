@@ -198,13 +198,6 @@ if(USE_CUDA)
 endif()
 
 
-# Print all environment variables for debugging
-message(STATUS "==================== Environment Variables ====================")
-execute_process(COMMAND ${CMAKE_COMMAND} -E environment
-                OUTPUT_VARIABLE ENV_OUTPUT)
-message(STATUS "${ENV_OUTPUT}")
-message(STATUS "================================================================")
-
 # C++ uses link-time optimization anyway; this enables additionally -flto=auto,
 # for parallel compilation
 # It cannot enable on MacOS since it causes building errors when linking the library libcytnx.a.
