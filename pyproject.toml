@@ -44,9 +44,8 @@ coverage = [
 # both Python and C++ coverage. Build-time deps (scikit-build-core,
 # pybind11) come from `[build-system].requires` automatically.
 dev = [
-    "pytest",
-    "pytest-cov",
-    "gcovr",
+    "cytnx[test]",
+    "cytnx[coverage]",
 ]
 docs = [
     "sphinx>=7.4.7",
@@ -55,6 +54,17 @@ docs = [
     "sphinxbootstrap4theme>=0.6.0",
     "furo>=2024.8.6",
 ]
+
+[dependency-groups]
+# Build / release helpers (e.g. tools/prepare_nightly_release.py,
+# which rewrites this file to stamp a nightly version). Declared as a
+# PEP 735 dependency-group rather than under
+# `[project.optional-dependencies]` because these tools are needed at
+# *build pipeline* time only, not at install or run time of cytnx
+# itself. `pip install --group release-tools` installs the listed
+# packages without invoking scikit-build-core to compile the project,
+# which `pip install .[release-tools]` would have forced.
+release-tools = ["tomlkit"]
 
 [project.urls]
 Documentation = "https://cytnx-dev.github.io/Cytnx/"
