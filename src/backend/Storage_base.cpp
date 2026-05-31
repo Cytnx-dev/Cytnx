@@ -1,4 +1,7 @@
 #include "backend/Storage.hpp"
+
+#include <ostream>
+
 #include "utils_internal_interface.hpp"
 #include "utils/vec_print.hpp"
 
@@ -163,17 +166,17 @@ namespace cytnx {
     cytnx_error_msg(true, "%s", "[ERROR] call PrintElem_byShape directly on Void Storage.");
   }
 
-  void Storage_base::print_info() {
-    cout << "dtype : " << this->dtype_str() << endl;
-    cout << "device: " << Device.getname(this->device()) << endl;
-    cout << "size  : " << this->size() << endl;
+  void Storage_base::print_info(std::ostream &os) const {
+    os << "dtype : " << this->dtype_str() << std::endl;
+    os << "device: " << Device.getname(this->device()) << std::endl;
+    os << "size  : " << this->size() << std::endl;
   }
-  void Storage_base::print_elems() {
+  void Storage_base::print_elems(std::ostream &os) const {
     cytnx_error_msg(true, "%s", "[ERROR] call print_elems directly on Void Storage.");
   }
-  void Storage_base::print() {
-    this->print_info();
-    this->print_elems();
+  void Storage_base::print(std::ostream &os) const {
+    this->print_info(os);
+    this->print_elems(os);
   }
 
   // shadow new:

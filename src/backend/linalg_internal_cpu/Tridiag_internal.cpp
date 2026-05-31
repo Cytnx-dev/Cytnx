@@ -1,7 +1,6 @@
 #include "Tridiag_internal.hpp"
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
-#include <iostream>
 namespace cytnx {
 
   namespace linalg_internal {

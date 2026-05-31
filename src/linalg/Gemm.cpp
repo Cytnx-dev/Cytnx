@@ -1,6 +1,5 @@
 #include "linalg.hpp"
 
-#include <iostream>
 #include "Tensor.hpp"
 #include "Generator.hpp"
 

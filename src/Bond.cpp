@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <ostream>
 
 #include "utils/utils.hpp"
 

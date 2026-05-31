@@ -1,5 +1,7 @@
-#include <typeinfo>
 #include "Network.hpp"
+
+#include <ostream>
+#include <typeinfo>
 
 #include "linalg.hpp"
 
@@ -81,7 +83,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR][Network][clone] call from uninitialized network. %s", "\n");
     return nullptr;
   }
-  void Network_base::PrintNet(std::ostream &os) {
+  void Network_base::PrintNet(std::ostream &os) const {
     os << "        [Empty Network]" << endl;
     os << "--- Please Load Network file ---\n";
     os << endl;

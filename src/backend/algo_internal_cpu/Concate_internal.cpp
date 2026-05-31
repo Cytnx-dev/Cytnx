@@ -1,5 +1,4 @@
 #include "Concate_internal.hpp"
-#include <iostream>
 #include <algorithm>
 
 namespace cytnx {

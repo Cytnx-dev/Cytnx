@@ -725,7 +725,7 @@ namespace cytnx {
     this->PutUniTensor(idx, utensor);
   }
 
-  void RegularNetwork::PrintNet(ostream &os) {
+  void RegularNetwork::PrintNet(ostream &os) const {
     string status;
     os << "==== Network ====" << endl;
     if (this->tensors.size() == 0) {

@@ -1,15 +1,16 @@
-#include "linalg.hpp"
-#include "Generator.hpp"
-#include "random.hpp"
-#include "Tensor.hpp"
-#include "LinOp.hpp"
-
 #include <cfloat>
-#include <vector>
 #include <cmath>
-#include "UniTensor.hpp"
-#include "utils/vec_print.hpp"
 #include <iomanip>
+#include <iostream>
+#include <vector>
+
+#include "Generator.hpp"
+#include "LinOp.hpp"
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
+#include "linalg.hpp"
+#include "random.hpp"
+#include "utils/vec_print.hpp"
 
 #ifdef BACKEND_TORCH
 #else

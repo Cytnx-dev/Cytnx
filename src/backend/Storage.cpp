@@ -1,7 +1,7 @@
 #include "backend/Storage.hpp"
 
 #include <filesystem>
-#include <iostream>
+#include <ostream>
 
 using namespace std;
 
@@ -10,7 +10,7 @@ namespace cytnx {
   Storage_init_interface __SII;
 
   std::ostream &operator<<(std::ostream &os, const Storage &in) {
-    in.print();
+    in.print(os);
     return os;
   }
 

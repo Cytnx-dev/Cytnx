@@ -2,7 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
-#include <iostream>
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -73,7 +73,7 @@ namespace cytnx {
     return EVEN;
   }
 
-  void cytnx::Symmetry_base::print_info() const {
+  void cytnx::Symmetry_base::print_info(std::ostream &os) const {
     cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
@@ -102,13 +102,13 @@ namespace cytnx {
   }
   void cytnx::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) { out = in * -1; }
 
-  void cytnx::U1Symmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : Abelian, U1" << endl;
-    cout << "combine rule : Q1 + Q2" << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+  void cytnx::U1Symmetry::print_info(std::ostream &os) const {
+    os << "--------------------\n";
+    os << "[Symmetry]" << std::endl;
+    os << "type : Abelian, U1" << std::endl;
+    os << "combine rule : Q1 + Q2" << std::endl;
+    os << "reverse rule : Q*(-1) " << std::endl;
+    os << "--------------------\n";
   }
 
   ///========================
@@ -152,13 +152,13 @@ namespace cytnx {
     out = (this->n - in) % this->n;
   }
 
-  void cytnx::ZnSymmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : Abelian, Z(" << this->n << ")" << endl;
-    cout << "combine rule : (Q1 + Q2)\%" << this->n << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+  void cytnx::ZnSymmetry::print_info(std::ostream &os) const {
+    os << "--------------------\n";
+    os << "[Symmetry]" << std::endl;
+    os << "type : Abelian, Z(" << this->n << ")" << std::endl;
+    os << "combine rule : (Q1 + Q2)\%" << this->n << std::endl;
+    os << "reverse rule : Q*(-1) " << std::endl;
+    os << "--------------------\n";
   }
 
   ///========================
@@ -206,13 +206,13 @@ namespace cytnx {
                       "\n");
   }
 
-  void cytnx::FermionParitySymmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : fermionic, FermionParity" << endl;
-    cout << "combine rule : (Q1 + Q2)\2" << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+  void cytnx::FermionParitySymmetry::print_info(std::ostream &os) const {
+    os << "--------------------\n";
+    os << "[Symmetry]" << std::endl;
+    os << "type : fermionic, FermionParity" << std::endl;
+    os << "combine rule : (Q1 + Q2)\2" << std::endl;
+    os << "reverse rule : Q*(-1) " << std::endl;
+    os << "--------------------\n";
   }
 
   ///=========================
@@ -248,13 +248,13 @@ namespace cytnx {
       return ODD;
   }
 
-  void cytnx::FermionNumberSymmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : fermionic, FermionNumber" << endl;
-    cout << "combine rule : Q1 + Q2" << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+  void cytnx::FermionNumberSymmetry::print_info(std::ostream &os) const {
+    os << "--------------------\n";
+    os << "[Symmetry]" << std::endl;
+    os << "type : fermionic, FermionNumber" << std::endl;
+    os << "combine rule : Q1 + Q2" << std::endl;
+    os << "reverse rule : Q*(-1) " << std::endl;
+    os << "--------------------\n";
   }
 
   //==================================================
@@ -315,8 +315,8 @@ namespace cytnx {
     this->Init(stype_in, n_in);
   }
 
-  ostream &operator<<(ostream &os, const Symmetry &in) {
-    in.print_info();
+  std::ostream &operator<<(std::ostream &os, const Symmetry &in) {
+    in.print_info(os);
     return os;
   }
 };  // namespace cytnx

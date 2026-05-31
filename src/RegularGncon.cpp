@@ -1,10 +1,11 @@
-#include <typeinfo>
 #include "Gncon.hpp"
 
-#include "search_tree.hpp"
-#include <stack>
 #include <algorithm>
 #include <iostream>
+#include <stack>
+#include <typeinfo>
+
+#include "search_tree.hpp"
 
 using namespace std;
 
@@ -134,17 +135,17 @@ namespace cytnx {
 
   /// This is debug function
   void print_gn(std::vector<vector<pair<string, string>>> &table, vector<string> &names,
-                map<string, cytnx_uint64> &name2pos) {
-    std::cout << "### table  ###" << std::endl;
+                map<string, cytnx_uint64> &name2pos, std::ostream &os = std::cout) {
+    os << "### table  ###" << std::endl;
     for (int i = 0; i < table.size(); i++) {
       for (int j = 0; j < table[i].size(); j++) {
-        std::cout << "original lbl, replaced lbl =  " << table[i][j].first << " ,"
-                  << table[i][j].second << std::endl;
+        os << "original lbl, replaced lbl =  " << table[i][j].first << " ," << table[i][j].second
+           << std::endl;
       }
     }
-    std::cout << "### tensor names  ###" << std::endl;
+    os << "### tensor names  ###" << std::endl;
     for (int i = 0; i < names.size(); i++) {
-      std::cout << names[i] << " pos : " << name2pos[names[i]] << std::endl;
+      os << names[i] << " pos : " << name2pos[names[i]] << std::endl;
     }
   }
 
@@ -385,9 +386,10 @@ namespace cytnx {
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
-        cerr << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+        std::cerr << "[ERROR] The following TNs appeared in ORDER line, but are not defined."
+                  << std::endl;
         for (int i = 0; i < TN_names.size(); i++) {
-          cerr << "        " << TN_names[i] << endl;
+          std::cerr << "        " << TN_names[i] << std::endl;
         }
         cytnx_error_msg(true, "%s", "\n");
       }
@@ -544,7 +546,7 @@ namespace cytnx {
     this->PutUniTensor(idx, utensor);
   }
 
-  void RegularGncon::PrintNet(std::ostream &os) {
+  void RegularGncon::PrintNet(std::ostream &os) const {
     string status;
     os << "==== Gncon ====" << endl;
     if (this->tensors.size() == 0) {

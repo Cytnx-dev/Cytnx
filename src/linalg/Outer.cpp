@@ -2,7 +2,6 @@
 #include "utils/utils.hpp"
 #include "Device.hpp"
 #include "Tensor.hpp"
-#include <iostream>
 
 #ifdef BACKEND_TORCH
 #else

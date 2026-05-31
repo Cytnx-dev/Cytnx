@@ -1,6 +1,7 @@
 #include "Tensor.hpp"
 
 #include <filesystem>
+#include <ostream>
 #include <typeinfo>
 
 #include "linalg.hpp"

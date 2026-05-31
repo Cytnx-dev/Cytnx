@@ -1,8 +1,9 @@
 #ifndef CYTNX_DEVICE_H_
 #define CYTNX_DEVICE_H_
 
-#include <vector>
+#include <iostream>
 #include <string>
+#include <vector>
 
 namespace cytnx {
 
@@ -18,7 +19,10 @@ namespace cytnx {
     int Ncpus;
     std::vector<std::vector<bool>> CanAccessPeer;
     Device_class();
-    void Print_Property();
+    void Print_Property() { this->Print_Property(std::cout); }
+    /// @cond
+    void Print_Property(std::ostream &os);
+    /// @endcond
     std::string getname(const int &device_id);
     ~Device_class();
     // void cudaDeviceSynchronize();

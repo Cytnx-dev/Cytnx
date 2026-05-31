@@ -1,4 +1,7 @@
 #include "backend/Scalar.hpp"
+
+#include <ostream>
+
 #include "backend/Storage.hpp"
 
 namespace cytnx {

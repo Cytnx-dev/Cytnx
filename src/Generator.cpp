@@ -1,10 +1,9 @@
 #include "Generator.hpp"
 
-#include "utils/utils.hpp"
+#include <cfloat>
 
 #include "linalg.hpp"
-#include <cfloat>
-#include <iostream>
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else

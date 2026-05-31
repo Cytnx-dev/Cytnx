@@ -1,11 +1,14 @@
 #include "UniTensor.hpp"
-#include "utils/utils.hpp"
+
+#include <algorithm>
+#include <ostream>
+#include <utility>
+#include <vector>
 
 #include "Generator.hpp"
 #include "linalg.hpp"
-#include <algorithm>
-#include <utility>
-#include <vector>
+#include "utils/utils.hpp"
+
 typedef cytnx::Accessor ac;
 
 using namespace std;
@@ -416,8 +419,8 @@ namespace cytnx {
     }
   }
 
-  void DenseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
-    std::ostream &os = std::cout;
+  void DenseUniTensor::print_block(std::ostream &os, const cytnx_int64 &idx,
+                                   const bool &full_info) const {
     os << "-------- start of print ---------\n";
     char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
@@ -443,26 +446,26 @@ namespace cytnx {
     }
     free(buffer);
   }
-  void DenseUniTensor::print_blocks(const bool &full_info) const {
-    this->print_block(0, full_info);
+  void DenseUniTensor::print_blocks(std::ostream &os, const bool &full_info) const {
+    this->print_block(os, 0, full_info);
   }
 
-  void DenseUniTensor::print_diagram(const bool &bond_info) const {
+  void DenseUniTensor::print_diagram(std::ostream &os, const bool &bond_info) const {
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "tensor Name : %s\n", this->_name.c_str());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "tensor Rank : %ld\n", this->_labels.size());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "block_form  : False%s", "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "is_diag     : %s\n", this->_is_diag ? "True" : "False");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
 
     cytnx_uint64 Nin = this->_rowrank;
     cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
@@ -499,15 +502,15 @@ namespace cytnx {
 
     if (this->is_tag()) {
       sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
 
       sprintf(buffer, "%s row %s col %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
       sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
       for (cytnx_uint64 i = 0; i < vl; i++) {
         sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-        std::cout << std::string(buffer);
+        os << std::string(buffer);
 
         if (i < Nin) {
           if (this->_bonds[i].type() == bondType::BD_KET)
@@ -553,25 +556,25 @@ namespace cytnx {
           sprintf(rlbl, "%s", tmpss.c_str());
         }
         sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
-        std::cout << std::string(buffer);
+        os << std::string(buffer);
       }
       sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
       sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
       // sprintf(buffer, "%s", "\n");
-      // std::cout << std::string(buffer);
+      // os << std::string(buffer);
 
     } else {
       sprintf(buffer, "%s     %s     %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
       for (cytnx_uint64 i = 0; i < vl; i++) {
         if (i == 0) {
           sprintf(buffer, "%s    /%s\\    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-          std::cout << std::string(buffer);
+          os << std::string(buffer);
         } else {
           sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-          std::cout << std::string(buffer);
+          os << std::string(buffer);
         }
 
         if (i < Nin) {
@@ -614,20 +617,20 @@ namespace cytnx {
           sprintf(rlbl, "%s", tmpss.c_str());
         }
         sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
-        std::cout << std::string(buffer);
+        os << std::string(buffer);
       }
       sprintf(buffer, "%s    \\%s/    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
       sprintf(buffer, "%s     %s     %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
     }
 
     if (bond_info) {
       for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
         // sprintf(buffer, "lbl:%ld ", this->_labels[i]);
         sprintf(buffer, "lbl:%s ", this->_labels[i].c_str());
-        std::cout << std::string(buffer);
-        std::cout << this->_bonds[i] << std::endl;
+        os << std::string(buffer);
+        os << this->_bonds[i] << std::endl;
       }
     }
 

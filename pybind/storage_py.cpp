@@ -1,3 +1,4 @@
+#include <iostream>
 #include <map>
 #include <random>
 #include <string>
@@ -194,8 +195,9 @@ void storage_binding(py::module &m) {
     .def("__deepcopy__", &cytnx::Storage::clone)
     .def("size", &cytnx::Storage::size)
     .def("__len__", [](cytnx::Storage &self) { return self.size(); })
-    .def("print_info", &cytnx::Storage::print_info,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def(
+      "print_info", [](cytnx::Storage &self) { self.print_info(); },
+      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("set_zeros", &cytnx::Storage::set_zeros)
     .def("__eq__",
          [](cytnx::Storage &self, const cytnx::Storage &rhs) -> bool { return self == rhs; })

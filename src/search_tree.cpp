@@ -1,4 +1,6 @@
 #include "search_tree.hpp"
+
+#include <iostream>
 #include <stack>
 
 using namespace std;
