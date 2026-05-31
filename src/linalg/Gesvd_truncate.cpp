@@ -506,8 +506,7 @@ namespace cytnx {
           // every value in Sall is dropped.
           if (return_err) {
             Sall = algo::Sort(Sall);  // ascending; BuildBlockDiscardedSingularValues expects this
-            outCyT.push_back(
-              BuildBlockDiscardedSingularValues(Sall, Sall.shape()[0], return_err));
+            outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, Sall.shape()[0], return_err));
           }
         }
 
