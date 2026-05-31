@@ -12,7 +12,8 @@
 #     the bundled `Cytnx::hptt_static` ($<LINK_ONLY:>) it needs at link time.
 #
 # The same project is driven against both the build-tree export and the
-# install-tree export by .github/workflows/ci-downstream-find-package.yml.
+# install-tree export by the "Tests and Codecov" workflow
+# (.github/workflows/ci-cmake_tests.yml).
 cmake_minimum_required(VERSION 3.24)
 project(cytnx_downstream_consumer LANGUAGES CXX)
 
