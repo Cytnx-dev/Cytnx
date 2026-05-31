@@ -49,24 +49,24 @@ namespace cytnx {
   }
 
   bool cytnx::Symmetry_base::check_qnum(const cytnx_int64 &qnum) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
     return false;
   }
   bool cytnx::Symmetry_base::check_qnums(const std::vector<cytnx_int64> &qnums) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
     return false;
   }
   void cytnx::Symmetry_base::combine_rule_(std::vector<cytnx_int64> &out,
                                            const std::vector<cytnx_int64> &inL,
                                            const std::vector<cytnx_int64> &inR) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
   void cytnx::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
                                            const cytnx_int64 &inR, const bool &is_reverse) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
   void cytnx::Symmetry_base::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
   fermionParity cytnx::Symmetry_base::get_fermion_parity(const cytnx_int64 &in_qnum) const {
@@ -74,11 +74,11 @@ namespace cytnx {
   }
 
   void cytnx::Symmetry_base::print_info() const {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
   std::string cytnx::Symmetry_base::stype_str() const {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
   ///=========================
