@@ -4,6 +4,7 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 #include <pybind11/operators.h>
 #include <pybind11/iostream.h>
 #include <pybind11/numpy.h>
@@ -104,8 +105,8 @@ void random_binding(py::module &m) {
       }
       return cytnx::random::normal(Nelem, mean, std, device, seed, dtype);
     },
-    py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = -1, py::arg("seed") = -1,
-    py::arg("dtype") = (unsigned int)(Type.Double));
+    py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = (int)cytnx::Device.cpu,
+    py::arg("seed") = -1, py::arg("dtype") = (unsigned int)(Type.Double));
   m_random.def(
     "normal",
     [](const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std,
@@ -116,8 +117,8 @@ void random_binding(py::module &m) {
       }
       return cytnx::random::normal(Nelem, mean, std, device, seed, dtype);
     },
-    py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = -1, py::arg("seed") = -1,
-    py::arg("dtype") = (unsigned int)(Type.Double));
+    py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = (int)cytnx::Device.cpu,
+    py::arg("seed") = -1, py::arg("dtype") = (unsigned int)(Type.Double));
   m_random.def(
     "uniform",
     [](const cytnx_uint64 &Nelem, const double &low, const double &high, const int &device,
@@ -128,8 +129,8 @@ void random_binding(py::module &m) {
       }
       return cytnx::random::uniform(Nelem, low, high, device, seed, dtype);
     },
-    py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = -1, py::arg("seed") = -1,
-    py::arg("dtype") = (unsigned int)(Type.Double));
+    py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = (int)cytnx::Device.cpu,
+    py::arg("seed") = -1, py::arg("dtype") = (unsigned int)(Type.Double));
   m_random.def(
     "uniform",
     [](const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high,
@@ -140,7 +141,7 @@ void random_binding(py::module &m) {
       }
       return cytnx::random::uniform(Nelem, low, high, device, seed, dtype);
     },
-    py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = -1, py::arg("seed") = -1,
-    py::arg("dtype") = (unsigned int)(Type.Double));
+    py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = (int)cytnx::Device.cpu,
+    py::arg("seed") = -1, py::arg("dtype") = (unsigned int)(Type.Double));
 }
 #endif

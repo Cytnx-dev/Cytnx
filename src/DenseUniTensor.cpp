@@ -2,10 +2,12 @@
 #include "utils/utils.hpp"
 
 #include "Generator.hpp"
+#include "io.hpp"
 #include "linalg.hpp"
 #include <algorithm>
 #include <utility>
 #include <vector>
+
 typedef cytnx::Accessor ac;
 
 using namespace std;
@@ -1268,8 +1270,62 @@ namespace cytnx {
 
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
 
-  void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
-  void DenseUniTensor::_load_dispatch(std::fstream &f) { this->_block._Load(f); }
+  void DenseUniTensor::to_hdf5_dispatch(H5::Group &container, const bool overwrite) const {
+    // delete all entries that could be written by one of the UniTensor implementations;
+    io::unlink(container, "block_to_sectors", overwrite);
+    io::unlink(container, "blocks", overwrite);
+
+    // is_tag, write as attribute
+    io::save_attribute(this->_is_tag, container, "directed", overwrite);
+
+    this->_block.to_hdf5(container, "Tensor", overwrite);
+  }
+
+  void DenseUniTensor::from_hdf5_dispatch(H5::Group &container, bool restore_device) {
+    this->_block.from_hdf5(container, "Tensor", restore_device);
+    // check data consistency
+    auto shape = this->_block.shape();
+    if (this->_bonds.empty()) {
+      size_t Nelem = std::accumulate(shape.begin(), shape.end(), 1, std::multiplies<size_t>());
+      cytnx_error_msg(
+        Nelem > 1,
+        "[ERROR] No bonds exit, but the Tensor has %d > 1 elements. The HDF5 data seems corrupt!\n",
+        Nelem);
+    } else if (!this->_is_diag) {
+      cytnx_error_msg(
+        this->_bonds.size() != shape.size(),
+        "[ERROR] %d bonds exit, but the Tensor has rank %d. The HDF5 data seems corrupt!\n",
+        this->_bonds.size(), shape.size());
+      for (cytnx_uint64 i = 0; i < shape.size(); i++) {
+        cytnx_error_msg(shape[i] != this->_bonds[i].dim(),
+                        "[ERROR] Tensor has dimension %d on index %d, but the corresponding bond "
+                        "has dimension %d. The HDF5 data seems corrupt!\n",
+                        shape[i], i, this->_bonds[i].dim());
+      }
+    }
+
+    // is_tag, read from attribute or reproduce
+    if (container.attrExists("directed")) {
+      H5::Attribute attr = container.openAttribute("directed");
+      H5::DataType datatype = attr.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != Type.get_hdf5_type(this->_is_tag).getSize(),
+        "[ERROR] 'directed' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), Type.get_hdf5_type(this->_is_tag).getSize());
+      attr.read(datatype, &this->_is_tag);
+    } else {
+      if (this->_bonds.empty()) {
+        this->_is_tag = false;
+      } else {
+        this->_is_tag = (this->_bonds[0].type() != bondType::BD_REG);
+      }
+    }
+  }
+
+  void DenseUniTensor::to_binary_dispatch(std::ostream &f) const { this->_block.to_binary(f); }
+  void DenseUniTensor::from_binary_dispatch(std::istream &f, bool restore_device) {
+    this->_block.from_binary(f, restore_device);
+  }
 
   void DenseUniTensor::truncate_(const std::string &bond_label, const cytnx_uint64 &dim) {
     // if it is diagonal tensor, truncate will be done on both index!

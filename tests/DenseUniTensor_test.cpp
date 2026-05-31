@@ -343,13 +343,15 @@ TEST_F(DenseUniTensorTest, dtype_str_uninit) { EXPECT_ANY_THROW(ut_uninit.dtype_
 /*=====test info=====
 describe:test uten_type_str for dense tensor.
 ====================*/
-TEST_F(DenseUniTensorTest, uten_type_str) { EXPECT_EQ(utzero345.uten_type_str(), "Dense"); }
+TEST_F(DenseUniTensorTest, uten_type_str) {
+  EXPECT_EQ(utzero345.uten_type_str(), "DenseUniTensor");
+}
 
 /*=====test info=====
 describe:test uten_type for uninitialized tensor.
 ====================*/
 TEST_F(DenseUniTensorTest, uten_type_str_uninit) {
-  EXPECT_EQ(ut_uninit.uten_type_str(), "Void (un-initialize UniTensor)");
+  EXPECT_EQ(ut_uninit.uten_type_str(), "Void (uninitialized UniTensor)");
 }
 
 TEST_F(DenseUniTensorTest, device_str) { EXPECT_EQ(Spf.device_str(), "cytnx device: CPU"); }
@@ -4893,6 +4895,29 @@ TEST_F(DenseUniTensorTest, Save_path_incorrect) {
 describe:test Save uninitialized UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Save_uninit) { EXPECT_ANY_THROW(ut_uninit.Save(temp_file_path)); }
+
+/*=====test info=====
+describe:In-place Load_ must not inherit a stale name from a previous UniTensor.
+====================*/
+TEST_F(DenseUniTensorTest, Load_ResetsStaleName) {
+  auto row_rank = 1u;
+  std::vector<Bond> bonds = {Bond(3), Bond(2)};
+
+  // 1) save a UniTensor with an empty name
+  UniTensor ut_anon = UniTensor(bonds, {"a", "b"}, row_rank);
+  ASSERT_TRUE(ut_anon.name().empty());
+  ut_anon.Save(temp_file_path);
+
+  // 2) build a UniTensor with a non-empty name, then Load_ the anonymous payload into it.
+  UniTensor ut_named = UniTensor(bonds, {"a", "b"}, row_rank);
+  ut_named.set_name("stale_name");
+  ASSERT_EQ(ut_named.name(), "stale_name");
+  ut_named.Load_(temp_file_path);
+  EXPECT_TRUE(ut_named.name().empty())
+    << "stale UniTensor name leaked when loading a payload with empty name";
+  EXPECT_TRUE(AreEqUniTensor(ut_named, ut_anon))
+    << "Load_ should fully reconstruct the saved UniTensor";
+}
 
 /*=====test info=====
 describe:test truncate by label

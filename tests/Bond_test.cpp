@@ -209,6 +209,32 @@ TEST(Bond, Clear_type) {
   EXPECT_THROW(bd_sym.set_type(BD_REG), std::logic_error);
 }
 
+// In-place Load_ must not inherit stale qnums/degs/syms from a previously Bond
+TEST(Bond, Load_ResetsStaleMetadata) {
+  const std::string fpath = std::string(std::tmpnam(nullptr)) + ".cytnx";
+
+  // 1) save a plain non-symmetric Bond (no qnums/degs/syms)
+  Bond bd_plain(5);
+  bd_plain.Save(fpath);
+
+  // 2) start with a symmetric Bond that has non-empty _qnums, _degs, _syms
+  Bond bd_sym = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3});
+  EXPECT_FALSE(bd_sym.qnums().empty());
+  EXPECT_FALSE(bd_sym.getDegeneracies().empty());
+  EXPECT_NE(bd_sym.Nsym(), 0);
+
+  // 3) Load_ the plain payload into the symmetric Bond; the result must equal the saved Bond.
+  bd_sym.Load_(fpath);
+  EXPECT_EQ(bd_sym, bd_plain) << "Load_ should fully reconstruct the saved Bond";
+  EXPECT_EQ(bd_sym.dim(), 5);
+  EXPECT_EQ(bd_sym.type(), BD_REG);
+  EXPECT_EQ(bd_sym.Nsym(), 0);
+  EXPECT_TRUE(bd_sym.qnums().empty()) << "stale qnums leaked into a non-symmetric Bond";
+  EXPECT_TRUE(bd_sym.getDegeneracies().empty()) << "stale degs leaked into a non-symmetric Bond";
+
+  std::filesystem::remove(fpath);
+}
+
 // TEST(Bond, ConstructorTypeQnums){
 //   // Bond(bondType tp, const std::vector<Qnum>& qnums);
 //

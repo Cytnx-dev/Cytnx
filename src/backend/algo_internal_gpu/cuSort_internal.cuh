@@ -11,7 +11,7 @@ namespace cytnx {
 
   namespace algo_internal {
 
-    // handle flaot2, double2
+    // handle float2, double2
     template <typename T>
     concept Vec2Like = requires(T t) {
       t.x;

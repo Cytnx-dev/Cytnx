@@ -49,6 +49,11 @@ add_executable(
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
   random_test/uniform_test.cpp
+  io_test/Storage_test.cpp
+  io_test/Tensor_test.cpp
+  io_test/Bond_test.cpp
+  io_test/Symmetry_test.cpp
+  io_test/UniTensor_test.cpp
 )
 
 if(USE_CUDA)

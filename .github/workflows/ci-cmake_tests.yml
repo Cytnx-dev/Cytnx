@@ -63,7 +63,8 @@ jobs:
         # pyproject.toml as the single source of truth for everything
         # Python.
         run: |
-          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest
+          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest hdf5
+
 
       - name: CPU info
         run: lscpu

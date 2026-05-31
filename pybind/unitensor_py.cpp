@@ -1,19 +1,23 @@
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <format>
-#include <vector>
 #include <map>
 #include <random>
 #include <string>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 #include <pybind11/warnings.h>
 
-#include "cytnx.hpp"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -515,10 +519,40 @@ void unitensor_binding(py::module &m) {
     .def("clone", &UniTensor::clone)
     .def("__copy__", &UniTensor::clone)
     .def("__deepcopy__", &UniTensor::clone)
+
     .def(
-      "Save", [](UniTensor &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
+      "Save",
+      [](UniTensor &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/UniTensor/", py::arg("mode") = 'w')
     .def_static(
-      "Load", [](const std::string &fname) { return UniTensor::Load(fname); }, py::arg("fname"))
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return UniTensor::Load(fname, path, restore_device);
+      },
+      py::arg("fname"), py::arg("path") = "/UniTensor/", py::arg("restore_device") = true)
+    .def(
+      "Load_",
+      [](UniTensor &self, const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return self.Load_(fname, path, restore_device);
+      },
+      py::arg("fname"), py::arg("path") = "/UniTensor/", py::arg("restore_device") = true)
+
+    .def(py::pickle(
+      [](const UniTensor &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+            std::string data = state;
+            std::istringstream iss(data, std::ios::binary);
+            UniTensor out;
+            out.from_binary(iss);
+            return out;
+        }
+     ))
+
     //.def("permute",&UniTensor::permute,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
     //.def("permute_",&UniTensor::permute_,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
     .def(

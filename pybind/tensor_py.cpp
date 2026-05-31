@@ -1,18 +1,21 @@
-#include <vector>
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <map>
 #include <random>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
-#include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
 #include "complex.h"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -159,6 +162,7 @@ void tensor_binding(py::module &m) {
     .def("device", &cytnx::Tensor::device)
     .def("device_str", &cytnx::Tensor::device_str)
     .def("shape", &cytnx::Tensor::shape)
+    .def("strides", &cytnx::Tensor::strides)
     .def("rank", &cytnx::Tensor::rank)
     .def("clone", &cytnx::Tensor::clone)
     .def("__copy__", &cytnx::Tensor::clone)
@@ -287,20 +291,46 @@ void tensor_binding(py::module &m) {
       py::arg("val"))
 
     .def(
-      "Save", [](cytnx::Tensor &self, const std::string &fname) { self.Save(fname); },
-      py::arg("fname"))
+      "Save",
+      [](cytnx::Tensor &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/Tensor", py::arg("mode") = 'w')
     .def_static(
-      "Load", [](const std::string &fname) { return cytnx::Tensor::Load(fname); }, py::arg("fname"))
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return cytnx::Tensor::Load(fname, path, restore_device);
+      },
+      py::arg("fname"), py::arg("path") = "/Tensor", py::arg("restore_device") = true)
+    .def(
+      "Load_",
+      [](cytnx::Tensor &self, const std::filesystem::path &fname, const std::string &path,
+         const bool restore_device) { return self.Load_(fname, path, restore_device); },
+      py::arg("fname"), py::arg("path") = "/Tensor", py::arg("restore_device") = true)
+
+    .def(py::pickle(
+      [](const cytnx::Tensor &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+        std::string data = state;
+        std::istringstream iss(data, std::ios::binary);
+        cytnx::Tensor out;
+        out.from_binary(iss);
+        return out;
+      }))
 
     .def(
-      "Tofile", [](cytnx::Tensor &self, const std::string &fname) { self.Tofile(fname); },
+      "Tofile", [](cytnx::Tensor &self, const std::filesystem::path &fname) { self.Tofile(fname); },
       py::arg("fname"))
     .def_static(
       "Fromfile",
-      [](const std::string &fname, const unsigned int &dtype, const cytnx::cytnx_int64 &count) {
-        return cytnx::Tensor::Load(fname);
-      },
-      py::arg("fname"), py::arg("dtype"), py::arg("count") = cytnx::cytnx_int64(-1))
+      [](const std::filesystem::path &fname, const unsigned int &dtype,
+         const cytnx::cytnx_int64 &count,
+         const int device) { return cytnx::Tensor::Fromfile(fname, dtype, count, device); },
+      py::arg("fname"), py::arg("dtype"), py::arg("count") = cytnx::cytnx_int64(-1),
+      py::arg("device") = (int)cytnx::Device.cpu)
 
     .def_static(
       "from_storage",

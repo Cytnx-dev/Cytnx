@@ -10,6 +10,8 @@
 #include <map>
 #include <boost/unordered_map.hpp>
 #include <stack>
+#include "io.hpp"
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -134,7 +136,7 @@ namespace cytnx {
       }
 
     } else {
-      // checking how many blocks are there, and the size:
+      // find the number of blocks and their sizes:
       std::vector<cytnx_uint64> Loc(this->_bonds.size(), 0);
       std::vector<cytnx_int64> tot_qns(
         this->_bonds[0].Nsym());  // use first bond to determine symmetry size
@@ -144,21 +146,22 @@ namespace cytnx {
         // get elem
         this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(), tot_qns);
 
-        // if exists:
+        // if total flux is zero -> block exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
-          // init block!
+          // get size & init block!
           for (cytnx_int32 i = 0; i < Loc.size(); i++) {
             size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
           }
-          if (!no_alloc) {
-            this->_blocks.push_back(zeros(size, dtype, device));
-          } else {
+          if (no_alloc) {
             this->_blocks.push_back(Tensor(size, dtype, device, false));
+          } else {
+            this->_blocks.push_back(zeros(size, dtype, device));
           }
           // push its loc
           this->_inner_to_outer_idx.push_back(Loc);
         }
 
+        // increment Loc by one or emtpy Loc if last element is reached
         while (Loc.size() != 0) {
           if (Loc.back() == this->_bonds[Loc.size() - 1]._impl->_qnums.size() - 1) {
             Loc.pop_back();
@@ -1361,9 +1364,12 @@ namespace cytnx {
   }
 
   // helper function:
+  // @param[in] locator: indices to check
+  // @param[out] bidx: block index corresponding to the locator
+  // @param[out] loc_in_T: indices in block[bidx] that locator corresponds to
   void BlockUniTensor::_fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
                                        const std::vector<cytnx_uint64> &locator) const {
-    // 1. check if out of range:
+    // 1. check if out of range
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
 
@@ -1372,7 +1378,8 @@ namespace cytnx {
                       "[ERROR][BlockUniTensor][elem_exists] locator @index: %d out of range.\n", i);
     }
 
-    // 2. calculate the location is in which qindices:
+    // 2. calculate qindices corresponding to the locator
+    // subtracts the degeneracies from the locator until loc_in_T < degeneracy on that index
     if (this->is_diag()) {
       if (locator[0] != locator[1])
         bidx = -1;
@@ -1592,9 +1599,75 @@ namespace cytnx {
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
-  void BlockUniTensor::_save_dispatch(std::fstream &f) const {
-    // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+  void BlockUniTensor::to_hdf5_dispatch(H5::Group &container, const bool overwrite) const {
+    // delete all entries that could be written by one of the UniTensor implementations;
+    io::remove_attribute(container, "directed", overwrite);
+    io::unlink(container, "Tensor", overwrite);
 
+    // blocks; write to group
+    if (this->_blocks.empty()) {
+      io::unlink(container, "blocks", overwrite);
+    } else {
+      H5::Group dir = io::create_group(container, "blocks", false);
+      hsize_t blknum = 0;
+      for (; blknum < this->_blocks.size(); blknum++) {
+        this->_blocks[blknum].to_hdf5(dir, "Tensor" + std::to_string(blknum), overwrite);
+      }
+      // delete further blocks if they exist
+      while (io::remove_attribute(dir, "Tensor" + std::to_string(blknum), overwrite)) blknum++;
+    }
+    // inner_to_outer_idx; write matrix (blocknum x rank)
+    if (this->_inner_to_outer_idx.empty()) {
+      io::unlink(container, "block_to_sectors", overwrite);
+    } else {
+      H5::DataSet dataset =
+        io::save_dataset(this->_inner_to_outer_idx, container, "block_to_sectors", overwrite);
+      // label axes
+      io::save_attribute(std::vector<std::string>{"block", "bond"}, dataset, "axis_labels",
+                         overwrite);
+    }
+  }
+
+  void BlockUniTensor::from_hdf5_dispatch(H5::Group &container, bool restore_device) {
+    this->_is_tag = true;
+    // blocks; read from group
+    this->_blocks.clear();
+    if (container.nameExists("blocks")) {
+      H5::Group dir = container.openGroup("blocks");
+      hsize_t idx = 0;
+      while (true) {
+        std::string name = "Tensor" + std::to_string(idx);
+        if (!dir.nameExists(name)) {
+          break;
+        }
+        Tensor block;
+        block.from_hdf5(dir, name, restore_device);
+        this->_blocks.push_back(block);
+        idx++;
+      }
+    }
+    // inner_to_outer_idx; read matrix (blocknum x rank)
+    if (container.nameExists("block_to_sectors")) {
+      io::load_dataset(this->_inner_to_outer_idx, container, "block_to_sectors");
+      cytnx_error_msg(this->_inner_to_outer_idx.size() != this->_blocks.size(),
+                      "[ERROR] %zu blocks found, but first dimension of 'block_to_sectors' is %zu. "
+                      "The HDF5 data seems corrupt!\n",
+                      this->_blocks.size(), this->_inner_to_outer_idx.size());
+      cytnx_error_msg(!(this->_inner_to_outer_idx.empty()) &&
+                        this->_inner_to_outer_idx[0].size() != this->_bonds.size(),
+                      "[ERROR] %zu bonds found, but second dimension of 'block_to_sectors' is %zu. "
+                      "The HDF5 data seems corrupt!\n",
+                      this->_bonds.size(), this->_inner_to_outer_idx[0].size());
+    } else {
+      cytnx_error_msg(!(this->_blocks.empty()),
+                      "[ERROR] 'block_to_sectors' not found, but %zu blocks exist. The HDF5 data "
+                      "seems corrupt!\n",
+                      this->_blocks.size());
+      this->_inner_to_outer_idx.clear();
+    }
+  }
+
+  void BlockUniTensor::to_binary_dispatch(std::ostream &f) const {
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -1603,13 +1676,11 @@ namespace cytnx {
       f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
     }
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i]._Save(f);
+      this->_blocks[i].to_binary(f);
     }
   }
 
-  void BlockUniTensor::_load_dispatch(std::fstream &f) {
-    // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
-
+  void BlockUniTensor::from_binary_dispatch(std::istream &f, bool restore_device) {
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -1622,7 +1693,7 @@ namespace cytnx {
     this->_blocks.resize(Nblocks);
 
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i]._Load(f);
+      this->_blocks[i].from_binary(f, restore_device);
     }
   }
 

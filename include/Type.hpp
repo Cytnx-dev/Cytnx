@@ -1,15 +1,17 @@
 #ifndef CYTNX_TYPE_H_
 #define CYTNX_TYPE_H_
 
+#include <array>
 #include <complex>
 #include <cstdint>
 #include <string>
-#include <type_traits>
 #include <tuple>
-#include <array>
+#include <type_traits>
 #include <utility>
-#include <vector>
 #include <variant>
+#include <vector>
+
+#include "H5Cpp.h"
 
 #include "cytnx_error.hpp"  // also brings in cuComplex.h
 
@@ -73,7 +75,6 @@ namespace cytnx {
         return index_in_tuple_helper<I + 1, T, Tuple>();
       }
     }
-
   }  // namespace internal
 
   // helper metafunction to transform a variant into another variant via a
@@ -153,6 +154,61 @@ namespace cytnx {
     std::variant<void, cuDoubleComplex, cuComplex, cytnx_double, cytnx_float, cytnx_int64,
                  cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
 #endif
+
+  namespace internal {
+    /// @cond
+    // This mechanism is to remove the 'void' type from Type_list. Taking advantage of it
+    // appearing first ...
+    struct truncate_variant {
+      template <typename Variant>
+      struct exclude_first;
+
+      template <typename First, typename... Rest>
+      struct exclude_first<std::variant<First, Rest...>> {
+        using type = std::variant<Rest...>;
+      };
+    };  // truncate_variant
+    /// @endcond
+  }  // namespace internal
+
+  // the list of supported Scalar types. Removes void because it cannot be used in visit
+  using Scalar_list = internal::truncate_variant::exclude_first<Type_list>::type;
+
+#ifdef UNI_GPU
+  using Scalar_list_gpu = internal::truncate_variant::exclude_first<Type_list_gpu>::type;
+#endif
+
+  namespace internal {
+    /// @cond
+    // This is create a variant containing vectors of all supported types
+    template <typename Variant>
+    struct vector_variant;
+
+    template <typename... Types>
+    struct vector_variant<std::variant<Types...>> {
+      using type = std::variant<std::vector<Types>...>;
+    };
+    /// @endcond
+  }  // namespace internal
+
+  // the list of vectors of all supported Scalar types.
+  using Vector_list = typename internal::vector_variant<Scalar_list>::type;
+
+  namespace internal {
+    /// @cond
+    // This is create a variant containing vectors of vectors of all supported types
+    template <typename Variant>
+    struct matrix_variant;
+
+    template <typename... Types>
+    struct matrix_variant<std::variant<Types...>> {
+      using type = std::variant<std::vector<std::vector<Types>>...>;
+    };
+    /// @endcond
+  }  // namespace internal
+
+  // the list of vectors of vectors of all supported Scalar types.
+  using Matrix_list = typename internal::matrix_variant<Scalar_list>::type;
 
   // The number of supported types
   constexpr int N_Type = std::variant_size_v<Type_list>;
@@ -393,6 +449,105 @@ namespace cytnx {
     using type_promote_from_gpu_pointer_t = typename type_promote_from_gpu_pointer<TL, TR>::type;
 #endif
 
+    H5::DataType dtype_to_hdf5_type(unsigned int type_id) const {
+      switch (type_id) {
+        case Type::Double:
+          return H5::PredType::NATIVE_DOUBLE;
+
+        case Type::Float:
+          return H5::PredType::NATIVE_FLOAT;
+
+        case Type::Int64:
+          return H5::PredType::NATIVE_INT64;
+
+        case Type::Uint64:
+          return H5::PredType::NATIVE_UINT64;
+
+        case Type::Int32:
+          return H5::PredType::NATIVE_INT32;
+
+        case Type::Uint32:
+          return H5::PredType::NATIVE_UINT32;
+
+        case Type::Int16:
+          return H5::PredType::NATIVE_INT16;
+
+        case Type::Uint16:
+          return H5::PredType::NATIVE_UINT16;
+
+        case Type::Bool:
+          return H5::PredType::NATIVE_HBOOL;
+
+#if H5_VERSION_GE(2, 0, 0)
+        case Type::ComplexDouble:
+          return H5::DataType(H5Tcopy(H5T_NATIVE_DOUBLE_COMPLEX));
+
+        case Type::ComplexFloat:
+          return H5::DataType(H5Tcopy(H5T_NATIVE_FLOAT_COMPLEX));
+#else
+        case Type::ComplexDouble: {
+          static const H5::CompType ct = [] {
+            H5::CompType tmp(sizeof(cytnx_complex128));
+            tmp.insertMember("r", 0, H5::PredType::NATIVE_DOUBLE);
+            tmp.insertMember("i", sizeof(double), H5::PredType::NATIVE_DOUBLE);
+            return tmp;
+          }();
+          return ct;
+        }
+
+        case Type::ComplexFloat: {
+          static const H5::CompType ct = [] {
+            H5::CompType tmp(sizeof(cytnx_complex64));
+            tmp.insertMember("r", 0, H5::PredType::NATIVE_FLOAT);
+            tmp.insertMember("i", sizeof(float), H5::PredType::NATIVE_FLOAT);
+            return tmp;
+          }();
+          return ct;
+        }
+#endif
+
+        case Type::Void:
+          cytnx_error_msg(true, "[ERROR] Void dtype cannot be mapped to HDF5%s", "\n");
+
+        default:
+          cytnx_error_msg(true, "[ERROR] Unsupported Cytnx dtype: %s\n", getname(type_id).c_str());
+      }
+    }
+    template <typename T>
+    H5::DataType get_hdf5_type(const T& rc) const {
+      return dtype_to_hdf5_type(cy_typeid(rc));
+    }
+
+    unsigned int from_hdf5_type(const H5::DataType& h5_type) const {
+      if (h5_type == H5::PredType::NATIVE_DOUBLE) return Type::Double;
+      if (h5_type == H5::PredType::NATIVE_FLOAT) return Type::Float;
+      if (h5_type == H5::PredType::NATIVE_INT64) return Type::Int64;
+      if (h5_type == H5::PredType::NATIVE_UINT64) return Type::Uint64;
+      if (h5_type == H5::PredType::NATIVE_INT32) return Type::Int32;
+      if (h5_type == H5::PredType::NATIVE_UINT32) return Type::Uint32;
+      if (h5_type == H5::PredType::NATIVE_INT16) return Type::Int16;
+      if (h5_type == H5::PredType::NATIVE_UINT16) return Type::Uint16;
+      if (h5_type == H5::PredType::NATIVE_HBOOL) return Type::Bool;
+#if H5_VERSION_GE(2, 0, 0)
+      if (h5_type.getClass() == H5T_COMPLEX) {
+        if (h5_type.getSize() == sizeof(cytnx_complex128)) return Type::ComplexDouble;
+        if (h5_type.getSize() == sizeof(cytnx_complex64)) return Type::ComplexFloat;
+      }
+#endif
+      if (h5_type.getClass() == H5T_COMPOUND) {  // supporting older versions of HDF5
+        H5::CompType ct(h5_type.getId());
+        if (ct.getNmembers() == 2) {
+          H5::DataType m0 = ct.getMemberDataType(0);
+          H5::DataType m1 = ct.getMemberDataType(1);
+          if (m0 == m1 && m0.getClass() == H5T_FLOAT) {
+            if (ct.getSize() == sizeof(cytnx_complex128)) return Type::ComplexDouble;
+            if (ct.getSize() == sizeof(cytnx_complex64)) return Type::ComplexFloat;
+          }
+        }
+      }
+      cytnx_error_msg(true, "[ERROR] HDF5 DataType cannot be mapped to Cytnx dtype.%s", "\n");
+    }
+
   };  // Type_class
   /// @endcond
 
@@ -402,7 +557,7 @@ namespace cytnx {
    * @details This is the variable about the data type of the UniTensor, Tensor, ... .\n
    *     You can use it as following:
    *     \code
-   *     int type = Type.Double;
+   *     int type = Type::Double;
    *     \endcode
    *
    *     The supported enumerations are as following:

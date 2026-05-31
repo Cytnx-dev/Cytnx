@@ -248,7 +248,6 @@ namespace cytnx {
 
     vector<cytnx_uint64> get_shape(acc.size());
 
-    // vector<cytnx_uint64> new_shape;
     std::vector<std::vector<cytnx_uint64>> locators(this->_shape.size());
     for (cytnx_uint32 i = 0; i < acc.size(); i++) {
       acc[i].get_len_pos(this->_shape[i], get_shape[i], locators[i]);

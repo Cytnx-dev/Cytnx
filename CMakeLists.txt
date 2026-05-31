@@ -286,6 +286,11 @@ find_library(ARPACK_LIB arpack REQUIRED)
 message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
 target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
 
+#HDF5
+find_package(HDF5 1.10.0 REQUIRED COMPONENTS CXX)
+target_include_directories(cytnx PRIVATE ${HDF5_INCLUDE_DIRS})
+target_link_libraries(cytnx PRIVATE ${HDF5_LIBRARIES})
+
 
 # #####################################################################
 # ## Get Gtest & benchmark
@@ -375,6 +380,7 @@ IF(BUILD_PYTHON)
   endif()
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
+    pybind/io_py.cpp
     pybind/generator_py.cpp
     pybind/storage_py.cpp
     pybind/tensor_py.cpp

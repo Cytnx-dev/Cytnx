@@ -1,16 +1,18 @@
 #ifndef CYTNX_GNCON_H_
 #define CYTNX_GNCON_H_
 
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include <initializer_list>
-#include <vector>
-#include <map>
+#include <filesystem>
 #include <fstream>
-#include "intrusive_ptr_base.hpp"
-#include "utils/utils.hpp"
+#include <initializer_list>
+#include <map>
+#include <vector>
+
+#include "Type.hpp"
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
+#include "cytnx_error.hpp"
+#include "intrusive_ptr_base.hpp"
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -88,14 +90,14 @@ namespace cytnx {
                                const std::vector<std::string> &alias,
                                const std::string &contract_order);
 
-    virtual void Fromfile(const std::string &fname);
+    virtual void Fromfile(const std::filesystem::path &fname);
     virtual void FromString(const std::vector<std::string> &content);
     virtual void clear();
     virtual std::string getOptimalOrder();
     virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
     virtual void PrintNet(std::ostream &os);
     virtual boost::intrusive_ptr<Gncon_base> clone();
-    virtual void Savefile(const std::string &fname);
+    virtual void Savefile(const std::filesystem::path &fname);
     virtual ~Gncon_base(){};
 
   };  // Gncon_base
@@ -103,7 +105,7 @@ namespace cytnx {
   class RegularGncon : public Gncon_base {
    public:
     RegularGncon() { this->nwrktype_id = GNType.Regular; };
-    void Fromfile(const std::string &fname);
+    void Fromfile(const std::filesystem::path &fname);
     void FromString(const std::vector<std::string> &contents);
     void PutUniTensor(const std::string &name, const UniTensor &utensor);
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
@@ -138,7 +140,7 @@ namespace cytnx {
       return out;
     }
     void PrintNet(std::ostream &os);
-    void Savefile(const std::string &fname);
+    void Savefile(const std::filesystem::path &fname);
     ~RegularGncon(){};
   };
 
@@ -149,7 +151,7 @@ namespace cytnx {
 
    public:
     FermionGncon() { this->nwrktype_id = GNType.Fermion; };
-    void Fromfile(const std::string &fname){};
+    void Fromfile(const std::filesystem::path &fname){};
     void FromString(const std::vector<std::string> &contents){};
     void PutUniTensor(const std::string &name, const UniTensor &utensor){};
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){};
@@ -183,7 +185,7 @@ namespace cytnx {
       return out;
     }
     void PrintNet(std::ostream &os){};
-    void Savefile(const std::string &fname){};
+    void Savefile(const std::filesystem::path &fname){};
     ~FermionGncon(){};
   };
 
@@ -254,7 +256,7 @@ namespace cytnx {
 
 
     */
-    void Fromfile(const std::string &fname, const int &Gncon_type = GNType.Regular) {
+    void Fromfile(const std::filesystem::path &fname, const int &Gncon_type = GNType.Regular) {
       if (Gncon_type == GNType.Regular) {
         boost::intrusive_ptr<Gncon_base> tmp(new RegularGncon());
         this->_impl = tmp;
@@ -301,7 +303,7 @@ namespace cytnx {
       }
       this->_impl->FromString(contents);
     }
-    // void Savefile(const std::string &fname);
+    // void Savefile(const std::filesystem::path &fname);
 
     static Gncon Contract(const std::vector<UniTensor> &tensors, const std::string &Tout,
                           const std::vector<std::string> &alias = {},
@@ -313,7 +315,7 @@ namespace cytnx {
       return out;
     }
 
-    Gncon(const std::string &fname, const int &Gncon_type = GNType.Regular) {
+    Gncon(const std::filesystem::path &fname, const int &Gncon_type = GNType.Regular) {
       this->Fromfile(fname, Gncon_type);
     }
 
@@ -354,7 +356,7 @@ namespace cytnx {
     }
     void PrintNet() { this->_impl->PrintNet(std::cout); }
 
-    void Savefile(const std::string &fname) { this->_impl->Savefile(fname); }
+    void Savefile(const std::filesystem::path &fname) { this->_impl->Savefile(fname); }
   };
 
   ///@cond

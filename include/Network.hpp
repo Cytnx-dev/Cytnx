@@ -1,16 +1,18 @@
 #ifndef CYTNX_NETWORK_H_
 #define CYTNX_NETWORK_H_
 
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include <initializer_list>
-#include <vector>
-#include <map>
+#include <filesystem>
 #include <fstream>
-#include "intrusive_ptr_base.hpp"
-#include "utils/utils.hpp"
+#include <initializer_list>
+#include <map>
+#include <vector>
+
+#include "Type.hpp"
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
+#include "cytnx_error.hpp"
+#include "intrusive_ptr_base.hpp"
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -119,7 +121,7 @@ namespace cytnx {
                                const std::vector<std::string> &alias,
                                const std::string &contract_order);
 
-    virtual void Fromfile(const std::string &fname);
+    virtual void Fromfile(const std::filesystem::path &fname);
     virtual void FromString(const std::vector<std::string> &content);
     virtual void clear();
     virtual std::string getOptimalOrder();
@@ -137,7 +139,7 @@ namespace cytnx {
                            const std::string &order, const bool optim);
     virtual void PrintNet(std::ostream &os);
     virtual boost::intrusive_ptr<Network_base> clone();
-    virtual void Savefile(const std::string &fname);
+    virtual void Savefile(const std::filesystem::path &fname);
     virtual ~Network_base(){};
 
   };  // Network_base
@@ -145,7 +147,7 @@ namespace cytnx {
   class RegularNetwork : public Network_base {
    public:
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
-    void Fromfile(const std::string &fname);
+    void Fromfile(const std::filesystem::path &fname);
     void FromString(const std::vector<std::string> &contents);
     void PutUniTensor(const std::string &name, const UniTensor &utensor);
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
@@ -195,7 +197,7 @@ namespace cytnx {
       return out;
     }
     void PrintNet(std::ostream &os);
-    void Savefile(const std::string &fname);
+    void Savefile(const std::filesystem::path &fname);
     ~RegularNetwork(){};
   };
 
@@ -206,7 +208,7 @@ namespace cytnx {
 
    public:
     FermionNetwork() { this->nwrktype_id = NtType.Fermion; };
-    void Fromfile(const std::string &fname){};
+    void Fromfile(const std::filesystem::path &fname){};
     void FromString(const std::vector<std::string> &contents){};
     void RmUniTensor(const cytnx_uint64 &idx){};
     void RmUniTensor(const std::string &name){};
@@ -246,7 +248,7 @@ namespace cytnx {
       return out;
     }
     void PrintNet(std::ostream &os){};
-    void Savefile(const std::string &fname){};
+    void Savefile(const std::filesystem::path &fname){};
     ~FermionNetwork(){};
   };
 
@@ -317,7 +319,7 @@ namespace cytnx {
 
 
     */
-    void Fromfile(const std::string &fname, const int &network_type = NtType.Regular) {
+    void Fromfile(const std::filesystem::path &fname, const int &network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
         boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
         this->_impl = tmp;
@@ -364,7 +366,7 @@ namespace cytnx {
       }
       this->_impl->FromString(contents);
     }
-    // void Savefile(const std::string &fname);
+    // void Savefile(const std::filesystem::path &fname);
 
     static Network Contract(const std::vector<UniTensor> &tensors, const std::string &Tout,
                             const std::vector<std::string> &alias = {},
@@ -376,7 +378,7 @@ namespace cytnx {
       return out;
     }
 
-    Network(const std::string &fname, const int &network_type = NtType.Regular) {
+    Network(const std::filesystem::path &fname, const int &network_type = NtType.Regular) {
       this->Fromfile(fname, network_type);
     }
 
@@ -452,7 +454,7 @@ namespace cytnx {
     }
     void PrintNet() { this->_impl->PrintNet(std::cout); }
 
-    void Savefile(const std::string &fname) { this->_impl->Savefile(fname); }
+    void Savefile(const std::filesystem::path &fname) { this->_impl->Savefile(fname); }
   };
 
   ///@cond

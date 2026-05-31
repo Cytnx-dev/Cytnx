@@ -26,6 +26,7 @@ target_sources(cytnx
   Physics.cpp
   Accessor.cpp
   LinOp.cpp
+  io.cpp
   Type.cpp
   Tensor.cpp
 

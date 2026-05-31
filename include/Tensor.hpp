@@ -1,18 +1,22 @@
 #ifndef CYTNX_TENSOR_H_
 #define CYTNX_TENSOR_H_
 
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "intrusive_ptr_base.hpp"
-#include <iostream>
+#include <filesystem>
 #include <fstream>
-#include "utils/dynamic_arg_resolver.hpp"
-#include "Accessor.hpp"
+#include <initializer_list>
+#include <iostream>
+#include <string>
 #include <utility>
 #include <vector>
-#include <initializer_list>
-#include <string>
+
+#include "H5Cpp.h"
+#include "intrusive_ptr_base.hpp"
+
+#include "Accessor.hpp"
+#include "cytnx_error.hpp"
+#include "Device.hpp"
+#include "Type.hpp"
+#include "utils/dynamic_arg_resolver.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -311,25 +315,113 @@ namespace cytnx {
     ///@endcond
     //-------------------------------------------
 
-    /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
-
-    /// @endcond
     /**
-    @brief Save current Tensor to file
-    @param[in] fname file name (without file extension)
-
-    @details
-        save the Tensor to file with file path specify with input param \p fname with postfix
-    ".cytn"
-    @see Load(const std::string &fname)
-    */
-    void Save(const std::string &fname) const;
-    /**
-     * @see Save(const std::string &fname) const
+     * @brief Save Tensor to file
+     * @details Save the Tensor to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
+     * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @param[in] fname file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/Ten' will
+     * write the Tensor to the dataset 'Ten' the group '/foo/bar' in the file.
+     * @param[in] mode the write mode:\n
+     *  `w` Creates a new file. If the given file exists, its contents are destroyed.\n
+     *  `x` Creates a new file. Fails if the given file exists already.\n
+     *  `a` Opens for writing without overwriting any existing content. Creates the file if it
+     *      doesn't exist. Only available for HDF5 files.\n
+     *  `u` Opens for writing. Existing content will be updated(overwritten).
+     *      Creates the file if it doesn't exist. Only available for HDF5 files.
+     * @note The common file ending for saving a Tensor in binary format is ".cytn".
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
+     * @see Load()
      */
-    void Save(const char *fname) const;
+    void Save(const std::filesystem::path &fname, const std::string &path = "/Tensor",
+              const char mode = 'w') const;
+    /**
+     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode)
+     * const;
+     */
+    void Save(const char *fname, const std::string &path = "/Tensor", const char mode = 'w') const;
+
+    /**
+     * @brief Load Tensor from file and create new instance
+     * @details This function creates a new Tensor and keeps the original Tensor unchanged. See
+     * Load_() for loading the Tensor to the current Tensor.
+     * @param fname[in] file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path /foo/bar/Ten will read
+     * the Tensor from the dataset 'Ten' the group '/foo/bar' in the file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @pre The file must be a Tensor object which is saved by Save().
+     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is
+     * expected. For binary format, the common file ending for a Tensor is ".cytn".
+     */
+    static cytnx::Tensor Load(const std::filesystem::path &fname,
+                              const std::string &path = "/Tensor", bool restore_device = true);
+    /**
+     * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    static cytnx::Tensor Load(const char *fname, const std::string &path = "/Tensor",
+                              bool restore_device = true);
+
+    /**
+     * @brief Load Tensor from file and overwrite current instance
+     * @details This function overwrites the existing Tensor. See Load() for creating a new Tensor.
+     * @see Load()
+     */
+    void Load_(const std::filesystem::path &fname, const std::string &path = "/Tensor",
+               bool restore_device = true);
+    /**
+     * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    void Load_(const char *fname, const std::string &path = "/Tensor", bool restore_device = true);
+
+    /**
+     * @brief Save Tensor to HDF5 file
+     * @param[in] container the HDF5 parent group.
+     * @param[in] name the subgroup in which the Tensor will be saved.
+     * @param[in] overwrite overwrite previous Tensor information in the container.
+     * @warning This function is only available in C++. Use Save() for saving to file in C++ or
+     * Python.
+     * @see from_hdf5()
+     */
+    void to_hdf5(H5::Group &container, const std::string &name = "Tensor",
+                 const bool overwrite = false) const;
+    /**
+     * @brief Load Tensor from HDF5 file (inline)
+     * @param[in] container the HDF5 group where the Tensor will be loaded from.
+     * @param[in] name the name of the dataset in the HDF5 file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. Use Load() for loading from file in C++ or
+     * Python.
+     * @see to_hdf5()
+     */
+    void from_hdf5(H5::Group &container, const std::string &name = "Tensor",
+                   bool restore_device = true);
+
+    /**
+     * @brief Save Tensor to binary file
+     * @param[in] f the output stream where the Tensor will be saved.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Save() for saving to file in C++ or Python.
+     * @see from_binary()
+     */
+    void to_binary(std::ostream &f) const;
+    /**
+     * @brief Load Tensor from binary file
+     * @param[in] f the input stream from which the Tensor will be loaded.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Load() for loading from file in C++ or Python.
+     * @see to_binary()
+     */
+    void from_binary(std::istream &f, bool restore_device = true);
 
     /**
      * @brief Save current Tensor to the binary file
@@ -338,32 +430,21 @@ namespace cytnx {
      * @param fname[in] the file name of the binary file.
      * @pre The file name @p fname must be valid.
      * @see cytnx::Tensor::Fromfile
+     * @deprecated This function is deprecated. Please use \ref Save(const std::filesystem::path
+     * &fname) instead for saving raw data together with metadata.
      */
-    void Tofile(const std::string &fname) const;
-
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
+      const std::filesystem::path &fname) const;
     /**
-     * @see Tofile(const std::string &fname) const
+     * @see Tofile(const std::filesystem::path &fname) const
      */
-    void Tofile(const char *fname) const;
-
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
+      const char *fname) const;
     /**
-     * @see Tofile(const std::string &fname) const
+     * @see Tofile(const std::filesystem::path &fname) const
      */
-    void Tofile(std::fstream &f) const;
-
-    /**
-    @brief Load current Tensor from file
-    @param fname[in] file name
-    @details
-        load the Storage from file with file path specify with input param 'fname'
-    @pre the file must be a Tensor object which is saved by cytnx::Tensor::Save.
-    */
-
-    static Tensor Load(const std::string &fname);
-    /**
-     * @see Load(const std::string &fname)
-     */
-    static Tensor Load(const char *fname);
+    [[deprecated("Please use to_binary(std::ostream &f) instead.")]] void Tofile(
+      std::fstream &f) const;
 
     /**
      * @brief Load current Tensor from the binary file
@@ -371,11 +452,13 @@ namespace cytnx {
      *    cytnx::Tensor::Tofile. Given the file name \p fname , data type \p dtype and
      *    number of elements \p count, this function will load the first \p count elements
      *    from the binary file \p fname with data type \p dtype.
-     * @param fname[in] the file name of the binary file.
-     * @param dtype[in] the data type of the binary file. This can be any of the type defined in
+     * @param[in] fname the file name of the binary file.
+     * @param[in] dtype the data type of the binary file. This can be any of the type defined in
      *   cytnx::Type.
-     * @param count[in] the number of elements to be loaded from the binary file. If set to -1,
+     * @param[in] count the number of elements to be loaded from the binary file. If set to -1,
      *  all elements in the binary file will be loaded.
+     * @param[in] device the device that tensor to be created. This can be cytnx::Device.cpu or
+     * cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.
      * @return Tensor
      * @pre
      *  1. The @p dtype cannot be Type.Void.
@@ -384,13 +467,16 @@ namespace cytnx {
      *  4. The @p Nelem cannot be larger than the number of elements in the binary file.
      *  5. The file name @p fname must be valid.
      * @see cytnx::Tensor::Tofile
+     * @deprecated This function is deprecated. Please use Save/Load functions instead for storing
+     * raw data together with metadata.
      */
-    static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1);
-    static Tensor Fromfile(const char *fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1);
-
-    // static Tensor Frombinary(const std::string &fname);
+    [[deprecated("Please use Save/Load functions instead.")]] static Tensor Fromfile(
+      const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
+      const int device = Device.cpu);
+    [[deprecated("Please use Save/Load functions instead.")]] static Tensor Fromfile(
+      const char *fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
+      const int device = Device.cpu);
+    // static Tensor Frombinary(const std::filesystem::path &fname);
 
     ///@cond
     boost::intrusive_ptr<Tensor_impl> _impl;
@@ -424,6 +510,7 @@ namespace cytnx {
     @param[in] shape the shape of tensor.
     @param[in] dtype the dtype of tensor. This can be any of type defined in cytnx::Type
     @param[in] device the device that tensor to be created. This can be cytnx::Device.cpu or
+    cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.
     @param[in] init_zero if true, the content of Tensor will be initialized to zero. if false, the
     content of Tensor will be un-initialize.
     cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.
@@ -444,7 +531,7 @@ namespace cytnx {
     \verbinclude example/Tensor/Init.py.out
     */
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              const int &device = -1, const bool &init_zero = true) {
+              const int &device = Device.cpu, const bool &init_zero = true) {
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       this->_impl = tmp;
       this->_impl->Init(shape, dtype, device, init_zero);
@@ -455,7 +542,7 @@ namespace cytnx {
     //   this->_impl->Init(storage);
     // }
     // void Init(const Storage& storage, const std::vector<cytnx_uint64> &shape,
-    //   const unsigned int &dtype = Type.Double, const int &device = -1) {
+    //   const unsigned int &dtype = Type.Double, const int &device = Device.cpu) {
     //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
     //   this->_impl = tmp;
     //   this->_impl->Init(storage, shape, dtype, device);
@@ -474,7 +561,7 @@ namespace cytnx {
      * @see cytnx::Tensor::Init
      */
     Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-           const int &device = -1, const bool &init_zero = 1)
+           const int &device = Device.cpu, const bool &init_zero = 1)
         : _impl(new Tensor_impl()) {
       this->Init(shape, dtype, device, init_zero);
     }
@@ -483,31 +570,14 @@ namespace cytnx {
     //   this->Init(storage);
     // }
     // Tensor(const Storage& storage, const std::vector<cytnx_uint64> &shape,
-    //   const unsigned int &dtype = Type.Double, const int &device = -1)
+    //   const unsigned int &dtype = Type.Double, const int &device = Device.cpu)
     //     : _impl(new Tensor_impl()) {
     //   this->Init(storage, shape, dtype, device);
     // }
     //@}
 
-    // This mechanism is to remove the 'void' type from Type_list. Taking advantage of it
-    // appearing first ...
-
-    /// @cond
-    struct internal {
-      template <typename Variant>
-      struct exclude_first;
-
-      template <typename First, typename... Rest>
-      struct exclude_first<std::variant<First, Rest...>> {
-        using type = std::variant<Rest...>;
-      };
-    };  // internal
-        /// @endcond
-
     // std::variant of pointers to Type_list, without void ....
-    using pointer_types =
-      make_variant_from_transform_t<typename internal::exclude_first<Type_list>::type,
-                                    std::add_pointer>;
+    using pointer_types = make_variant_from_transform_t<Scalar_list, std::add_pointer>;
 
     // convert this->_impl->_storage._impl->Mem to a typed variant of pointers, excluding void*
     pointer_types ptr() const;
@@ -527,9 +597,7 @@ namespace cytnx {
 
   #ifdef UNI_GPU
     // std::variant of pointers to Type_list_gpu, without void ....
-    using gpu_pointer_types =
-      make_variant_from_transform_t<typename internal::exclude_first<Type_list_gpu>::type,
-                                    std::add_pointer>;
+    using gpu_pointer_types = make_variant_from_transform_t<Scalar_list_gpu, std::add_pointer>;
 
     // convert this->_impl->_storage->Mem to a typed variant of pointers, excluding void*
     gpu_pointer_types gpu_ptr() const;
@@ -595,6 +663,12 @@ namespace cytnx {
     @return [std::vector<cytnx_uint64>] the shape of the Tensor
     */
     const std::vector<cytnx_uint64> &shape() const { return this->_impl->shape(); }
+
+    /**
+    @brief the strides of the Tensor
+    @return [std::vector<cytnx_uint64>] the strides of the Tensor
+    */
+    const std::vector<cytnx_uint64> strides() const { return this->_impl->strides(); }
 
     /**
         @brief the rank of the Tensor
@@ -1256,7 +1330,7 @@ namespace cytnx {
      * @param[in] rhs the added Tensor or scalar.
      */
     template <class T>
-    Tensor Add(const T &rhs) {
+    Tensor Add(const T &rhs) const {
       return *this + rhs;
     }
 
@@ -1276,7 +1350,7 @@ namespace cytnx {
      * @param[in] rhs the subtracted Tensor or scalar.
      */
     template <class T>
-    Tensor Sub(const T &rhs) {
+    Tensor Sub(const T &rhs) const {
       return *this - rhs;
     }
 
@@ -1296,7 +1370,7 @@ namespace cytnx {
      * @param[in] rhs the multiplied Tensor or scalar.
      */
     template <class T>
-    Tensor Mul(const T &rhs) {
+    Tensor Mul(const T &rhs) const {
       return *this * rhs;
     }
 
@@ -1317,7 +1391,7 @@ namespace cytnx {
      * @attension \p rhs cannot be zero.
      */
     template <class T>
-    Tensor Div(const T &rhs) {
+    Tensor Div(const T &rhs) const {
       return *this / rhs;
     }
 
@@ -1339,7 +1413,7 @@ namespace cytnx {
      * @param[in] rhs the compared object.
      */
     template <class T>
-    Tensor Cpr(const T &rhs) {
+    Tensor Cpr(const T &rhs) const {
       return *this == rhs;
     }
 
@@ -1382,7 +1456,7 @@ namespace cytnx {
     // }
 
     template <class T>
-    Tensor Mod(const T &rhs) {
+    Tensor Mod(const T &rhs) const {
       return *this % rhs;
     }
 
@@ -1392,7 +1466,7 @@ namespace cytnx {
      * tensor is \f$A\f$, then the output tensor is \f$-A\f$.
      * @return The negation of the current tensor.
      */
-    Tensor operator-() { return this->Mul(-1.); }
+    Tensor operator-() const { return this->Mul(-1.); }
 
     /**
      * @brief The flatten function.
