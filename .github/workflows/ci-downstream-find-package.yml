@@ -1,0 +1,110 @@
+name: Downstream find_package
+
+# Verifies that a downstream project consuming cytnx purely through
+# `find_package(Cytnx CONFIG)` + `Cytnx::cytnx` can configure, build, link,
+# and run against cytnx from BOTH:
+#   * the build tree   (export(EXPORT cytnx_targets ...) / build-dir CytnxConfig.cmake)
+#   * the install tree  (install(EXPORT ...) under <prefix>/lib/cmake/cytnx)
+#
+# The consumer lives in tests/downstream_find_package/ and exercises a
+# permute() call, which routes through the HPTT-backed transpose — so a
+# clean link proves the exported package pulls in cytnx's bundled
+# Cytnx::hptt_static and its OpenMP / Boost / LAPACK dependencies without
+# the consumer naming any of them.
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  DownstreamFindPackage:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        # Login shell so conda activation is sourced; -e / -o pipefail so the
+        # job fails on the first failing command (overriding the shell drops
+        # GitHub's default -eo pipefail, so set it back).
+        shell: bash -leo pipefail {0}
+    env:
+      # Build cytnx here, install it here, and build the consumer here, all
+      # under the workspace so paths are stable across steps.
+      CYTNX_BUILD_DIR: ${{ github.workspace }}/build
+      CYTNX_INSTALL_DIR: ${{ github.workspace }}/install
+      CONSUMER_SRC_DIR: ${{ github.workspace }}/tests/downstream_find_package
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      # Match ci-cmake_tests.yml: re-runs of a PR job use the original merge
+      # commit, so merge the latest target branch to test against current tip.
+      - name: Merge with latest target branch (pull_request only)
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+          git submodule update --init --recursive
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: "3.11"
+          miniforge-version: latest
+          use-mamba: true
+          mamba-version: "*"
+
+      - name: Install native dependencies
+        # Same native toolchain + OpenBLAS stack as ci-cmake_tests.yml so the
+        # openblas-cpu preset resolves. No gtest needed (the consumer is a
+        # plain executable, not a gtest binary).
+        run: |
+          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack
+
+      - name: Configure cytnx (openblas-cpu preset, USE_HPTT=ON)
+        # The openblas-cpu preset inherits USE_HPTT=ON + HPTT_ENABLE_FINE_TUNE=ON
+        # — the exact config that earlier broke the export set and leaked
+        # -march=native into cytnx. BUILD_PYTHON=OFF: this job is about the
+        # C++ package export, not the Python wheel. Pin the build dir and the
+        # install prefix so later steps have stable paths.
+        run: |
+          cmake -S . -B "$CYTNX_BUILD_DIR" \
+            --preset=openblas-cpu \
+            -G Ninja \
+            -DBUILD_PYTHON=OFF \
+            -DRUN_TESTS=OFF \
+            -DCMAKE_INSTALL_PREFIX="$CYTNX_INSTALL_DIR"
+
+      - name: Build cytnx
+        run: cmake --build "$CYTNX_BUILD_DIR" --target cytnx -j "$(nproc)"
+
+      # --- Build tree consumer -------------------------------------------------
+      # The build-tree export is emitted by export(EXPORT cytnx_targets ...)
+      # plus the build-dir CytnxConfig.cmake; point the consumer at the build
+      # dir via Cytnx_DIR (no install step has run yet).
+      - name: Consumer against the BUILD TREE
+        run: |
+          cmake -S "$CONSUMER_SRC_DIR" -B "${{ github.workspace }}/consumer-build-tree" \
+            -G Ninja \
+            -DCytnx_DIR="$CYTNX_BUILD_DIR"
+          cmake --build "${{ github.workspace }}/consumer-build-tree" -j "$(nproc)"
+          "${{ github.workspace }}/consumer-build-tree/consumer"
+
+      # --- Install tree consumer ----------------------------------------------
+      - name: Install cytnx
+        run: cmake --install "$CYTNX_BUILD_DIR"
+
+      - name: Consumer against the INSTALL TREE
+        # Use a fresh build dir and resolve the package from the install
+        # prefix via CMAKE_PREFIX_PATH (the canonical way a real downstream
+        # user would find an installed cytnx).
+        run: |
+          cmake -S "$CONSUMER_SRC_DIR" -B "${{ github.workspace }}/consumer-install-tree" \
+            -G Ninja \
+            -DCMAKE_PREFIX_PATH="$CYTNX_INSTALL_DIR"
+          cmake --build "${{ github.workspace }}/consumer-install-tree" -j "$(nproc)"
+          "${{ github.workspace }}/consumer-install-tree/consumer"
