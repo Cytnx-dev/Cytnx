@@ -18,13 +18,6 @@ name: Downstream find_package
 # fail to link without the gcov runtime. The coverage-instrumented build is
 # already covered by the "Tests and Codecov" workflow; this job builds the
 # uninstrumented configuration a real downstream user would.
-#
-# The native dependency set and the CMake preset are NOT hardcoded here:
-# they are rendered from the conda build recipe (conda_build/meta.yaml), the
-# single source of truth that conda_build.yml already ships. `conda render`
-# resolves the recipe's Jinja `compiler()` calls and `# [x86]` / `# [not x86]`
-# selectors for this runner, so this job reproduces the exact toolchain +
-# BLAS vendor (MKL on x86) the release packages are built with.
 
 on:
   push:
@@ -102,61 +95,31 @@ jobs:
             ccache-downstream-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
             ccache-downstream-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
 
-      - name: Resolve native dependencies and preset from the conda recipe
-        # Reuse conda_build/meta.yaml as the single dependency source. `conda
-        # render` evaluates its Jinja + selectors for this runner; we install
-        # the rendered build + host specs (the native toolchain, Boost, the
-        # selected BLAS vendor, gtest, arpack) and read back the recipe's
-        # CMAKE_PRESET. Python-only build inputs (python, pip,
-        # scikit-build-core, pybind11) are skipped: this job builds the C++
-        # package with BUILD_PYTHON=OFF, so they are not needed and pinning
-        # the recipe's Python would clash with this env's Python.
-        run: |
-          mamba install -y conda-build
-          # conda-build ships `conda-render` as a standalone console script
-          # (the `conda render` subcommand is not registered in recent
-          # conda-build). --file writes only the rendered recipe (no solver /
-          # progress noise that piping stdout would mix in); --python pins a
-          # single variant so it emits one recipe instead of one per python in
-          # the config.
-          conda-render conda_build/ --python "3.11" --file rendered-meta.yaml
-          # Write one spec per line to conda-deps.txt (so `mamba install --file`
-          # parses each line as a single MatchSpec — finalized specs like
-          # "gxx_linux-64 12.3.0 h..." contain spaces and would word-split if
-          # passed on a command line) and export the recipe's preset.
-          python - <<'PY'
-          import yaml
-          m = yaml.safe_load(open("rendered-meta.yaml"))
-          reqs = (m.get("requirements") or {})
-          specs = (reqs.get("build") or []) + (reqs.get("host") or [])
-          skip = {"python", "pip", "scikit-build-core", "pybind11"}
-          deps = [s for s in specs if s.split()[0] not in skip]
-          with open("conda-deps.txt", "w") as f:
-              f.write("\n".join(deps) + "\n")
-          # The recipe encodes the per-platform preset in build.script_env as
-          # "CMAKE_PRESET=<preset>"; recover the value selected for this runner.
-          preset = next(
-              e.split("=", 1)[1]
-              for e in (m.get("build") or {}).get("script_env", [])
-              if e.startswith("CMAKE_PRESET=")
-          )
-          import os
-          with open(os.environ["GITHUB_ENV"], "a") as f:
-              f.write("CMAKE_PRESET=" + preset + "\n")
-          PY
-
       - name: Install native dependencies
-        run: mamba install -y --file conda-deps.txt
+        # TODO(deps-single-source): this native dependency set duplicates the
+        # ones in ci-cmake_tests.yml ("Install native dependencies") and in
+        # conda_build/meta.yaml (requirements.build/host). Merge the three into
+        # a single shared source of truth. It is kept as an explicit list for
+        # now because the conda recipe encodes its specs with Jinja
+        # `compiler()` calls and `# [x86]` / `# [not x86]` selectors that only
+        # conda-build can render, which is heavier than this job warrants.
+        #
+        # gtest is omitted on purpose (RUN_TESTS=OFF builds no gtest binary);
+        # OpenBLAS + LAPACKE match the openblas-cpu preset used below.
+        run: |
+          mamba install -y \
+            _openmp_mutex=*=*_llvm cmake make boost git compilers \
+            blas=*=openblas liblapacke arpack
 
-      - name: Configure cytnx (recipe preset, USE_HPTT=ON)
-        # Use the recipe's preset (USE_HPTT=ON + HPTT_ENABLE_FINE_TUNE=ON) but
-        # override BUILD_PYTHON=OFF (this job is about the C++ package export,
+      - name: Configure cytnx (openblas-cpu preset, USE_HPTT=ON)
+        # The openblas-cpu preset inherits USE_HPTT=ON + HPTT_ENABLE_FINE_TUNE=ON.
+        # Override BUILD_PYTHON=OFF (this job is about the C++ package export,
         # not the Python wheel) and RUN_TESTS=OFF (keeps the build free of the
         # --coverage usage requirement; see the file header). Pin the build dir
         # and install prefix so later steps have stable paths.
         run: |
           cmake -S . -B "$CYTNX_BUILD_DIR" \
-            --preset="$CMAKE_PRESET" \
+            --preset=openblas-cpu \
             -G "Unix Makefiles" \
             -DBUILD_PYTHON=OFF \
             -DRUN_TESTS=OFF \
