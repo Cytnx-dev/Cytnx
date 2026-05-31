@@ -1,11 +1,13 @@
+#include "linalg.hpp"
+
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "Accessor.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "linalg.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -20,210 +22,1135 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Rsvd(const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
-                             cytnx_uint64 power_iteration, unsigned int seed) {
-      std::vector<cytnx_uint64> shape = Tin.shape();
-      cytnx_error_msg(shape.size() != 2, "[Rsvd] error, Rsvd can only operate on rank-2 Tensor.%s",
-                      "\n");
-      cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd] Keepdim must be > 0, but is %d.\n", keepdim);
 
-      Tensor in = Tin.contiguous();
-      if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
+    namespace {  // Rsvd_notruncate internal helpers: calculate SVD in a reduced space, but before
+                 // further truncation; similar to Gesvd but with Rand_isometry applied
 
-      // form isometry Q[0] and apply Q.Dagger * in
-      Tensor Q = Rand_isometry(Tin, keepdim, power_iteration, seed);
-      in = Matmul(Q.Conj().permute_({1, 0}), in);
+      /**
+      @brief Perform randomized Singular-Value decomposition on a rank-2 Tensor (a @em matrix) using
+      the ?gesvd method.
+      @details A randomized SVD of a matrix Tin; uses randomized isometries.
+      @param[in] keepdim the number of singular values to keep. Note that this is the size of the
+      subspace, and the smallest singular values are less reliable. Use truncation with
+      oversampling.
+      @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
+      @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
+      @param[in] power_iteration number of iterations for the power method: Y = (A *
+      Adag)^power_iteration * A * Tin
+      @param[in] seed the seed for the random generator. [Default] Using device entropy.
+      @see Rsvd()
+      @see Rand_isometry()
+      @see Gesvd()
+      @warning No truncation of the singular values is performed, and the smaller ones will be
+      inaccurate. Use Rsvd() for a truncated version that drops small singular values.
+      */
+      std::vector<Tensor> Rsvd_notruncate_Tensor_internal(const cytnx::Tensor &Tin,
+                                                          cytnx_uint64 keepdim, bool is_U,
+                                                          bool is_vT, cytnx_uint64 power_iteration,
+                                                          unsigned int seed) {
+        std::vector<cytnx_uint64> shape = Tin.shape();
+        cytnx_error_msg(shape.size() != 2,
+                        "[Rsvd] error, Rsvd can only operate on rank-2 Tensor.%s", "\n");
+        cytnx_error_msg(keepdim < 1,
+                        "[ERROR][Rsvd] Number of kept singular values must be > 0, but is %d.\n",
+                        keepdim);
 
-      shape = in.shape();
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(shape[0], shape[1]));
+        Tensor in = Tin.contiguous();
+        if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
-      Tensor U, S, vT;
-      S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
-             in.device());  // if type is complex, S should be real
-      // S.storage().set_zeros();
-      if (is_U) {
-        U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
-        // U.storage().set_zeros();
-      }
-      if (is_vT) {
-        vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-        // vT.storage().set_zeros();
-      }
+        // For Tin = (m, n), project away the larger external dimension so the full SVD runs on the
+        // smaller matrix: for m<=n sketch the row space and SVD on (m x l); for m>n sketch the
+        // column space and SVD on (l x n). Q gets applied back to V or U respectively below.
+        Tensor Q;
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
+        if (keepdim < std::min(shape[0], shape[1])) {
+          if (shape[0] <= shape[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
+            Q = Rand_isometry(in.permute({1, 0}), keepdim, power_iteration, seed);
+            in = Matmul(in, Q.Conj());
+            apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = Rand_isometry(in, keepdim, power_iteration, seed);
+            in = Matmul(Q.Conj().permute_({1, 0}), in);
+            apply_Q_to_U = true;
+          }
+          shape = in.shape();
+        }
 
-      if (Tin.device() == Device.cpu) {
-        // cytnx::linalg_internal::lii.Gesvd_ii[in.dtype()](
-        //   in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
-        //   S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
-        cytnx::linalg_internal::lii.Gesvd_ii[in.dtype()](
-          in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
-          S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
+        cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(shape[0], shape[1]));
 
+        Tensor U, S, vT;
+        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+               in.device());  // if type is complex, S should be real
+        if (is_U) {
+          U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+        }
+        if (is_vT) {
+          vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+        }
+
+        if (Tin.device() == Device.cpu) {
+          cytnx::linalg_internal::lii.Gesvd_ii[in.dtype()](
+            in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
+            S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
+        } else {
+  #ifdef UNI_GPU
+          checkCudaErrors(cudaSetDevice(in.device()));
+          cytnx::linalg_internal::lii.cuGeSvd_ii[in.dtype()](
+            in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
+            S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
+  #else
+          cytnx_error_msg(true, "[Rsvd] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          return std::vector<Tensor>();
+  #endif
+        }
         std::vector<Tensor> out;
         out.push_back(S);
         if (is_U) {
-          U = Matmul(Q, U);
+          if (apply_Q_to_U) {
+            U = Matmul(Q, U);
+          }
           out.push_back(U);
         }
         if (is_vT) {
+          if (apply_Q_to_V) {
+            vT = Matmul(vT, Q.permute({1, 0}));
+          }
           out.push_back(vT);
         }
 
         return out;
+      }  // Rsvd_notruncate_Tensor_internal
+
+      /**
+      @brief Perform randomized Singular-Value decomposition on a UniTensor using the ?gesvd method.
+      @details A randomized SVD of a UniTensor Tin; uses randomized isometries. The result will
+      depend on the rowrank of the UniTensor \p Tin.
+      @param[out] outCyT [S,(U),(V)]
+      @param[in] Tin a UniTensor, with the correct rowrank set to interpret it as a matrix
+      @param[in] keepdim the number of singular values to keep. Note that this is the size of the
+      subspace, and the smallest singular values are less reliable. Use truncation with
+      oversampling.
+      @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
+      @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
+      @param[in] mindim at least this amount of singular values are kept in each block.
+      @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
+      keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
+      where d is the block dimension and D the full tensor dimension (each being the minimum of row
+      and column dimension of the block or tensor respectively).
+      @param[in] oversampling_factor see oversampling_summand
+      @param[in] power_iteration number of iterations for the power method: Y = (A *
+      Adag)^power_iteration * A * Tin
+      @param[in] seed the seed for the random generator. [Default] Using device entropy.
+      @see Rand_isometry(const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_uint64
+      &power_iteration, const unsigned int &seed)
+      @see Rsvd()
+      @see Gesvd()
+      @note At least one singular value per symmetry sector is always kept.
+      @note More than keepdim singular values might be returned (depending on mindim,
+      oversampling_summand, oversampling_factor, and symmetry sector sizes).
+      @warning No truncation of the singular values is performed, and the smaller ones will be
+      inaccurate. Use Rsvd() for a truncated version that drops small singular values.
+      */
+      // Templated over BUT = BlockUniTensor or BlockFermionicUniTensor; the fermionic-specific
+      // signflip handling is gated by `if constexpr` checks against BUT.
+      template <typename BUT>
+      void Rsvd_notruncate_BlockUT_internal(std::vector<cytnx::UniTensor> &outCyT,
+                                            const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                            bool is_U, bool is_vT, cytnx_uint64 mindim,
+                                            cytnx_uint64 oversampling_summand,
+                                            double oversampling_factor,
+                                            cytnx_uint64 power_iteration, unsigned int seed) {
+        // outCyT must be empty and Tin must be checked with proper rowrank!
+
+        std::vector<bool> signflip;
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+          signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+
+        // 1) getting the combineBond L and combineBond R for qnum list without grouping:
+        //
+        //   BDLeft -[ ]- BDRight
+        //
+        std::vector<cytnx_uint64> strides;
+        strides.reserve(Tin.rank());
+        auto BdLeft = Tin.bonds()[0].clone();
+        auto DimsLeft = Tin.shape()[0];
+        for (int i = 1; i < Tin.rowrank(); i++) {
+          strides.push_back(Tin.bonds()[i].qnums().size());
+          BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
+          DimsLeft *= Tin.shape()[i];
+        }
+        strides.push_back(1);
+        auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
+        auto DimsRight = Tin.shape()[Tin.rowrank()];
+        for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
+          strides.push_back(Tin.bonds()[i].qnums().size());
+          BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
+          DimsRight *= Tin.shape()[i];
+        }
+        strides.push_back(1);
+
+        const auto TenDim = std::min(DimsLeft, DimsRight);
+
+        // 2) making new inner_to_outer_idx lists for each block:
+        // -> a. get stride:
+        for (int i = Tin.rowrank() - 2; i >= 0; i--) {
+          strides[i] *= strides[i + 1];
+        }
+        for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
+          strides[i] *= strides[i + 1];
+        }
+        vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
+
+        int cnt;
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          const std::vector<cytnx_uint64> &tmpv = Tin.get_qindices(b);
+          for (cnt = 0; cnt < Tin.rowrank(); cnt++) {
+            new_itoi[b][0] += tmpv[cnt] * strides[cnt];
+          }
+          for (cnt = Tin.rowrank(); cnt < Tin.rank(); cnt++) {
+            new_itoi[b][1] += tmpv[cnt] * strides[cnt];
+          }
+        }
+
+        // 3) categorize:
+        // key = qnum, val = list of block locations:
+        std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64>> mgrp;
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        }
+
+        // 4) for each qcharge in key, combining the blocks into a big chunk!
+        // ->a initialize an empty shell of UniTensors!
+        vec2d<cytnx_int64> aux_qnums;  // for sharing bond
+        std::vector<cytnx_uint64> aux_degs;  // for sharing bond
+        std::vector<Tensor> S_blocks;
+
+        vec2d<cytnx_uint64> U_itoi;  // for U
+        std::vector<Tensor> U_blocks;
+
+        vec2d<cytnx_uint64> vT_itoi;  // for vT
+        std::vector<Tensor> vT_blocks;
+
+        int tr;
+        for (auto const &x : mgrp) {
+          vec2d<cytnx_uint64> itoi_indicators(x.second.size());
+          for (int i = 0; i < x.second.size(); i++) {
+            itoi_indicators[i] = new_itoi[x.second[i]];
+          }
+          auto order = vec_sort(itoi_indicators, true);
+          std::vector<Tensor> Tlist(itoi_indicators.size());
+          std::vector<cytnx_int64> row_szs(order.size(), 1);
+          cytnx_uint64 Rblk_dim = 0;
+          cytnx_int64 tmp = -1;
+          for (int i = 0; i < order.size(); i++) {
+            if (itoi_indicators[i][0] != tmp) {
+              tmp = itoi_indicators[i][0];
+              Rblk_dim++;
+            }
+            cytnx_int64 current_block = x.second[order[i]];
+            Tlist[i] = Tin.get_blocks_()[current_block];
+            for (int j = 0; j < Tin.rowrank(); j++) {
+              row_szs[i] *= Tlist[i].shape()[j];
+            }
+            if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) {
+              if (signflip[current_block]) {
+                Tlist[i] = -Tlist[i];  // copies Tensor
+                Tlist[i].reshape_({row_szs[i], -1});
+              } else {
+                Tlist[i] = Tlist[i].reshape({row_szs[i], -1});  // copies Tensor
+              }
+            } else {
+              Tlist[i] = Tlist[i].reshape({row_szs[i], -1});
+            }
+          }
+          cytnx_error_msg(Tlist.size() % Rblk_dim, "[Internal ERROR] Tlist is not complete!%s",
+                          "\n");
+          // BTen is the big block!!
+          cytnx_uint64 Cblk_dim = Tlist.size() / Rblk_dim;
+          Tensor BTen = algo::_fx_Matric_combine(Tlist, Rblk_dim, Cblk_dim);
+
+          // Now we can perform linalg!
+          aux_qnums.push_back(x.first);
+          auto BlockDim = std::min(BTen.shape()[0], BTen.shape()[1]);
+          cytnx::cytnx_uint64 svalnum =
+            std::max(static_cast<cytnx_int64>(mindim),
+                     static_cast<cytnx_int64>(
+                       std::ceil((1. + oversampling_factor) * keepdim * BlockDim / TenDim) +
+                       static_cast<cytnx_int64>(oversampling_summand)));
+          std::vector<Tensor> out =
+            Rsvd_notruncate_Tensor_internal(BTen, svalnum, is_U, is_vT, power_iteration, seed);
+          aux_degs.push_back(out[0].shape()[0]);
+          S_blocks.push_back(out[0]);
+          tr = 1;
+
+          if (is_U) {
+            std::vector<cytnx_uint64> split_dims;
+            for (int i = 0; i < Rblk_dim; i++) {
+              split_dims.push_back(row_szs[i * Cblk_dim]);
+            }
+            std::vector<Tensor> blks;
+            algo::Vsplit_(blks, out[tr], split_dims);
+            out[tr] = Tensor();
+            std::vector<cytnx_int64> new_shape(Tin.rowrank() + 1);
+            new_shape.back() = -1;
+            for (int ti = 0; ti < blks.size(); ti++) {
+              U_blocks.push_back(blks[ti]);
+              U_itoi.push_back(Tin.get_qindices(x.second[order[ti * Cblk_dim]]));
+
+              // reshaping:
+              for (int i = 0; i < Tin.rowrank(); i++) {
+                new_shape[i] =
+                  Tin.bonds()[i]
+                    .getDegeneracies()[Tin.get_qindices(x.second[order[ti * Cblk_dim]])[i]];
+              }
+              U_blocks.back().reshape_(new_shape);
+
+              U_itoi.back()[Tin.rowrank()] = S_blocks.size() - 1;
+              U_itoi.back().resize(Tin.rowrank() + 1);
+            }
+            tr++;
+          }  // is_U
+
+          if (is_vT) {
+            std::vector<cytnx_uint64> split_dims;
+            for (int i = 0; i < Cblk_dim; i++) {
+              split_dims.push_back(Tlist[i].shape().back());
+            }
+            std::vector<Tensor> blks;
+            algo::Hsplit_(blks, out[tr], split_dims);
+            out[tr] = Tensor();
+
+            std::vector<cytnx_int64> new_shape(Tin.rank() - Tin.rowrank() + 1);
+            new_shape[0] = -1;
+            for (int ti = 0; ti < blks.size(); ti++) {
+              vT_blocks.push_back(blks[ti]);
+              auto &tpitoi = Tin.get_qindices(x.second[order[ti]]);
+              vT_itoi.push_back({S_blocks.size() - 1});
+              for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
+                vT_itoi.back().push_back(tpitoi[i]);
+              }
+
+              // reshaping:
+              for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
+                new_shape[i - Tin.rowrank() + 1] = Tin.bonds()[i].getDegeneracies()[tpitoi[i]];
+              }
+              vT_blocks.back().reshape_(new_shape);
+            }
+
+            tr++;
+          }  // is_vT
+        }
+
+        // process S:
+        Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
+        BUT *S_ptr = new BUT();
+        S_ptr->Init(
+          {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+          Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+          true,  // is_diag!
+          true);  // no_alloc!
+        S_ptr->_blocks = S_blocks;
+        UniTensor S;
+        S._impl = boost::intrusive_ptr<UniTensor_base>(S_ptr);
+
+        outCyT.push_back(S);
+
+        if (is_U) {
+          BUT *U_ptr = new BUT();
+          for (int i = 0; i < Tin.rowrank(); i++) {
+            U_ptr->_bonds.push_back(Tin.bonds()[i].clone());
+            U_ptr->_labels.push_back(Tin.labels()[i]);
+          }
+          U_ptr->_bonds.push_back(Bd_aux.redirect());
+          U_ptr->_labels.push_back("_aux_L");
+          U_ptr->_rowrank = Tin.rowrank();
+          U_ptr->_is_diag = false;
+          U_ptr->_is_braket_form = U_ptr->_update_braket();
+          U_ptr->_inner_to_outer_idx = U_itoi;
+          U_ptr->_blocks = U_blocks;
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+            U_ptr->_signflip = std::vector<bool>(U_blocks.size(), false);
+          UniTensor U;
+          U._impl = boost::intrusive_ptr<UniTensor_base>(U_ptr);
+          outCyT.push_back(U);
+        }
+
+        if (is_vT) {
+          BUT *vT_ptr = new BUT();
+          vT_ptr->_bonds.push_back(Bd_aux);
+          vT_ptr->_labels.push_back("_aux_R");
+
+          for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
+            vT_ptr->_bonds.push_back(Tin.bonds()[i].clone());
+            vT_ptr->_labels.push_back(Tin.labels()[i]);
+          }
+          vT_ptr->_rowrank = 1;
+          vT_ptr->_is_diag = false;
+          vT_ptr->_is_braket_form = vT_ptr->_update_braket();
+          vT_ptr->_inner_to_outer_idx = vT_itoi;
+          vT_ptr->_blocks = vT_blocks;
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
+            vT_ptr->_signflip = std::vector<bool>(vT_blocks.size(), false);
+          UniTensor vT;
+          vT._impl = boost::intrusive_ptr<UniTensor_base>(vT_ptr);
+          outCyT.push_back(vT);
+        }
+
+      }  // Rsvd_notruncate_BlockUT_internal
+
+    }  // unnamed namespace
+
+    std::vector<Tensor> Rsvd(const Tensor &Tin, cytnx_uint64 keepdim, double err, bool is_U,
+                             bool is_vT, unsigned int return_err, cytnx_uint64 mindim,
+                             cytnx_uint64 oversampling_summand, double oversampling_factor,
+                             cytnx_uint64 power_iteration, unsigned int seed) {
+      // similar to Gesvd_truncate
+
+      // check input arguments
+      cytnx_error_msg(mindim < 0, "[ERROR][Rsvd] mindim must be >=1.%s", "\n");
+      cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd] keepdim must be >=1.%s", "\n");
+      cytnx_error_msg(return_err < 0, "[ERROR][Rsvd] return_err cannot be negative%s", "\n");
+      //
+      cytnx_error_msg(Tin.shape().size() != 2, "[Rsvd] can only operate on rank-2 Tensor.%s", "\n");
+      cytnx_uint64 samplenum =
+        (cytnx_uint64)((std::max(0., oversampling_factor) + 1.) * (double)keepdim) +
+        oversampling_summand;
+      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      Tensor Q;
+      if (Tin.device() == Device.cpu) {
+        std::vector<Tensor> outT;
+        // Project away the larger external dimension so the full SVD runs on the smaller matrix;
+        // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
+        // for m>n sketch the column space and SVD on (l x n).
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
+        if (samplenum < n_singlu) {
+          Tensor in = Tin.contiguous();
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
+            Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
+            outT = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
+            apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            outT = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
+            apply_Q_to_U = true;
+          }
+        } else {
+          outT = Gesvd(Tin, is_U, is_vT);  // run full SVD
+        }
+
+        // truncates outT in place and appends the error tensor when return_err != 0.
+        cytnx::linalg_internal::memcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
+                                                 mindim);
+
+        // bring U or vT back to the original row/column space if a projection was applied
+        if (is_U && apply_Q_to_U) outT[1] = Matmul(Q, outT[1]);
+        if (is_vT && apply_Q_to_V) {
+          const cytnx_uint64 vT_idx = is_U ? 2 : 1;
+          outT[vT_idx] = Matmul(outT[vT_idx], Q.permute({1, 0}));
+        }
+
+        return outT;
 
       } else {
   #ifdef UNI_GPU
-        checkCudaErrors(cudaSetDevice(in.device()));
-        cytnx::linalg_internal::lii.cuGeSvd_ii[in.dtype()](
-          in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
-          S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
+    #ifdef UNI_CUQUANTUM
+        Tensor in = Tin.contiguous();
+        // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
-        std::vector<Tensor> out;
-        out.push_back(S);
+        // Project away the larger external dimension so the  full SVD runs on the smaller matrix;
+        // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
+        // for m>n sketch the column space and SVD on (l x n).
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
+        if (samplenum < n_singlu) {
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
+            Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
+            in = Matmul(in, Q.Conj());
+            apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            in = Matmul(Q.Conj().permute_({1, 0}), in);
+            apply_Q_to_U = true;
+          }
+          n_singlu = samplenum;
+        }
+        // prepare U, S, vT
+        Tensor U, S, vT, terr;
+        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+               in.device());  // if type is complex, S should be real
+        U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+        vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+        terr.Init({1}, in.dtype(), in.device());
+
+        cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
+                                                                  S, vT, terr);
+        // restart if less than mindim singular values are kept.
+        // TODO: issue #650 - mindim should be part of cuQuantumGeSvd after the refactoring to avoid
+        // redundant calls
+        if (S.shape()[0] < std::min(mindim, keepdim)) {
+          // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
+          // output tensor descriptors from the passed buffer shapes, so the buffers must be
+          // re-initialized to the full size before restarting.
+          S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(), in.device());
+          U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+          vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+          terr.Init({1}, in.dtype(), in.device());
+          cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
+                                                                    0., return_err, U, S, vT, terr);
+        }
+
+        // cuQuantum's SVD already truncates (keepdim/err) and fills terr with the discarded
+        // singular values, so we only assemble the packed result here.
+        std::vector<Tensor> outT;
+        outT.push_back(S);
         if (is_U) {
-          U = Matmul(Q, U);
-          out.push_back(U);
+          if (apply_Q_to_U)
+            outT.push_back(Matmul(Q, U));
+          else
+            outT.push_back(U);
         }
         if (is_vT) {
-          out.push_back(vT);
+          if (apply_Q_to_V)
+            outT.push_back(Matmul(vT, Q.permute({1, 0})));
+          else
+            outT.push_back(vT);
+        }
+        if (return_err) outT.push_back(terr);
+
+        return outT;
+
+    #else
+        std::vector<Tensor> outT;
+        // Project away the larger external dimension so the full SVD runs on the smaller matrix;
+        // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
+        // for m>n sketch the column space and SVD on (l x n).
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
+        if (samplenum < n_singlu) {
+          Tensor in = Tin.contiguous();
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // m <= n: row-space sketch, A * Q^* -> m x l
+            Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
+            outT = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run SVD on m x l
+            apply_Q_to_V = true;
+          } else {  // m > n: column-space sketch, Q^H * A -> l x n
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            outT = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run SVD on l x n
+            apply_Q_to_U = true;
+          }
+        } else {
+          outT = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
 
-        return out;
+        cytnx::linalg_internal::cudaMemcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
+                                                     mindim);
+
+        if (is_U && apply_Q_to_U) outT[1] = Matmul(Q, outT[1]);
+        if (is_vT && apply_Q_to_V) {
+          const cytnx_uint64 vT_idx = is_U ? 2 : 1;
+          outT[vT_idx] = Matmul(outT[vT_idx], Q.permute({1, 0}));
+        }
+
+        return outT;
+    #endif
   #else
-        cytnx_error_msg(true, "[Rsvd] fatal error,%s",
-                        "try to call the gpu section without CUDA support.\n");
+        cytnx_error_msg(true, "[Error][Rsvd] Trying to call the gpu section without CUDA support%s",
+                        "\n");
         return std::vector<Tensor>();
   #endif
       }
     }  // Rsvd(Tensor)
 
-    void _Rsvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                        cytnx_uint64 keepdim, bool is_U, bool is_vT, cytnx_uint64 power_iteration,
-                        unsigned int seed) {
-      //[Note] outCyT must be empty!
+    namespace {  // actual implementations:
+      void Rsvd_Dense_UT_internal(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+                                  cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
+                                  unsigned int return_err, cytnx_uint64 mindim,
+                                  cytnx_uint64 oversampling_summand, double oversampling_factor,
+                                  cytnx_uint64 power_iteration, unsigned int seed) {
+        // DenseUniTensor:
+        cytnx_uint64 keep_dim = keepdim;
 
-      // DenseUniTensor:
-      Tensor tmp;
-      if (Tin.is_contiguous())
-        tmp = Tin.get_block_();
-      else {
-        tmp = Tin.get_block();
-        tmp.contiguous_();
-      }
+        Tensor tmp = Tin.get_block_().contiguous();
+        std::vector<cytnx_int64> oldshape(tmp.shape().begin(), tmp.shape().end());
+        std::vector<std::string> oldlabel = Tin.labels();
 
-      std::vector<cytnx_uint64> tmps = tmp.shape();
-      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
-      tmps.clear();
-      std::vector<std::string> oldlabel = Tin.labels();
+        // collapse as Matrix:
+        cytnx_int64 rowdim = 1;
+        for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
+        tmp = tmp.reshape({rowdim, -1});
 
-      // collapse as Matrix:
-      cytnx_int64 rowdim = 1;
-      for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
-      tmp.reshape_({rowdim, -1});
+        std::vector<Tensor> outT =
+          cytnx::linalg::Rsvd(tmp, keepdim, err, is_U, is_vT, return_err, mindim,
+                              oversampling_summand, oversampling_factor, power_iteration, seed);
 
-      std::vector<Tensor> outT =
-        cytnx::linalg::Rsvd(tmp, keepdim, is_U, is_vT, power_iteration, seed);
-      if (Tin.is_contiguous()) tmp.reshape_(oldshape);
+        int t = 0;
+        outCyT.resize(outT.size());
 
-      int t = 0;
-      outCyT.resize(outT.size());
+        // s
+        cytnx::UniTensor &Cy_S = outCyT[t];
+        cytnx::Bond newBond(outT[0].shape()[0]);
+        Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")},
+                  1,  // rowrank
+                  outT[t].dtype(), outT[t].device(),  // match the block that is inserted below
+                  true);  // is_diag
+        Cy_S.put_block_(outT[t]);
+        t++;
 
-      // s
-      cytnx::UniTensor &Cy_S = outCyT[t];
-      cytnx::Bond newBond(outT[t].shape()[0]);
-
-      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-                Tin.device(), true);  // it is just reference so no hurt to alias ^^
-
-      Cy_S.put_block_(outT[t]);
-      t++;
-
-      if (is_U) {
-        cytnx::UniTensor &Cy_U = outCyT[t];
-        cytnx_error_msg(Tin.rowrank() > oldshape.size(),
-                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
-                        "contained tensor.%s",
-                        "\n");
-        std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
-        shapeU.push_back(-1);
-        outT[t].reshape_(shapeU);
-        Cy_U.Init(outT[t], false, Tin.rowrank());
-        std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
-        labelU.push_back(Cy_S.labels()[0]);
-        Cy_U.relabel_(labelU);
-        t++;  // U
-      }
-      if (is_vT) {
-        cytnx::UniTensor &Cy_vT = outCyT[t];
-        std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
-        shapevT[0] = -1;
-        memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
-
-        outT[t].reshape_(shapevT);
-        Cy_vT.Init(outT[t], false, 1);
-        std::vector<std::string> labelvT(shapevT.size());
-        labelvT[0] = Cy_S.labels()[1];
-        // memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() -
-        // 1));
-        std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
-        Cy_vT.relabel_(labelvT);
-        t++;  // vT
-      }
-      // if tag, then update  the tagging informations
-      if (Tin.is_tag()) {
-        Cy_S.tag();
-        t = 1;
         if (is_U) {
           cytnx::UniTensor &Cy_U = outCyT[t];
-          Cy_U._impl->_is_tag = true;
-          for (int i = 0; i < Cy_U.rowrank(); i++) {
-            Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
-          }
-          Cy_U.bonds().back().set_type(cytnx::BD_BRA);
-          Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
-          t++;
+          // shape
+          cytnx_error_msg(
+            Tin.rowrank() > oldshape.size(),
+            "[ERROR] The rowrank of the input UniTensor is larger than the rank of the "
+            "contained tensor.%s",
+            "\n");
+          std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
+          shapeU.push_back(-1);
+
+          outT[t].reshape_(shapeU);
+
+          Cy_U.Init(outT[t], false, Tin.rowrank());
+          std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
+          labelU.push_back(Cy_S.labels()[0]);
+          Cy_U.relabel_(labelU);
+          t++;  // U
         }
+
         if (is_vT) {
           cytnx::UniTensor &Cy_vT = outCyT[t];
-          Cy_vT._impl->_is_tag = true;
-          Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
-          for (int i = 1; i < Cy_vT.rank(); i++) {
-            Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+
+          // shape
+          std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
+          shapevT[0] = -1;
+          memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
+
+          outT[t].reshape_(shapevT);
+
+          Cy_vT.Init(outT[t], false, 1);
+          std::vector<std::string> labelvT(shapevT.size());
+          labelvT[0] = Cy_S.labels()[1];
+          std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
+          Cy_vT.relabel_(labelvT);
+          t++;  // vT
+        }
+
+        // if tag, then update  the tagging informations
+        if (Tin.is_tag()) {
+          Cy_S.tag();
+          t = 1;
+          if (is_U) {
+            cytnx::UniTensor &Cy_U = outCyT[t];
+            Cy_U._impl->_is_tag = true;
+            for (int i = 0; i < Cy_U.rowrank(); i++) {
+              Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
+            }
+            Cy_U.bonds().back().set_type(cytnx::BD_BRA);
+            Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
+            t++;
           }
-          Cy_vT._impl->_is_braket_form = Cy_vT._impl->_update_braket();
+          if (is_vT) {
+            cytnx::UniTensor &Cy_vT = outCyT[t];
+            Cy_vT._impl->_is_tag = true;
+            Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
+            for (int i = 1; i < Cy_vT.rank(); i++) {
+              Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+            }
+            Cy_vT._impl->_is_braket_form = Cy_vT._impl->_update_braket();
+            t++;
+          }
+
+        }  // if tag
+
+        if (return_err) outCyT.back().Init(outT.back(), false, 0);
+      }  // Rsvd_Dense_UT_internal
+
+      void Rsvd_Block_UT_internal(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
+                                  const bool &is_vT, const unsigned int &return_err,
+                                  const cytnx_uint64 &mindim, cytnx_uint64 oversampling_summand,
+                                  double oversampling_factor, cytnx_uint64 power_iteration,
+                                  unsigned int seed) {
+        // from Gesvd_truncate, but using Rsvd_notruncate_BlockUT_internal for the SVD
+        cytnx_uint64 keep_dim = keepdim;
+
+        if (Tin.uten_type() == UTenType.Block) {
+          Rsvd_notruncate_BlockUT_internal<BlockUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        } else {  // BlockFermionic
+          Rsvd_notruncate_BlockUT_internal<BlockFermionicUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        }
+
+        // process truncation:
+        // 1) concate all S vals from all blk
+        Tensor Sall = outCyT[0].get_block_(0);
+        for (int i = 1; i < outCyT[0].Nblocks(); i++) {
+          Sall = algo::Concatenate(Sall, outCyT[0].get_block_(i));
+        }
+        Sall = algo::Sort(Sall);  // all singular values, starting from the smallest
+
+        // 2) get the minimum S value based on the args input.
+        Scalar Smin;
+        cytnx_uint64 smidx;
+        cytnx_uint64 Sshape = Sall.shape()[0];
+        if (keep_dim < Sshape) {
+          smidx = Sshape - keep_dim;
+          Smin = Sall.storage()(smidx);
+        } else {
+          keep_dim = Sshape;
+          smidx = 0;
+          Smin = Sall.storage()(0);
+        }
+        while ((Smin < err) and (keep_dim > (mindim < 1 ? 1 : mindim))) {
+          // at least one singular value is always kept!
+          keep_dim--;
+          // if (keep_dim == 0) break;
+          smidx++;
+          Smin = Sall.storage()(smidx);
+        }
+
+        // traversal each block and truncate!
+        UniTensor &S = outCyT[0];
+        std::vector<cytnx_uint64> new_dims;  // keep_dims for each block!
+        std::vector<cytnx_int64> keep_dims;
+        keep_dims.reserve(S.Nblocks());
+        std::vector<cytnx_int64> new_qid;
+        new_qid.reserve(S.Nblocks());
+
+        std::vector<std::vector<cytnx_uint64>>
+          new_itoi;  // assume S block is in same order as qnum:
+        std::vector<cytnx_uint64> to_be_removed;
+
+        cytnx_uint64 tot_dim = 0;
+        cytnx_uint64 cnt = 0;
+        for (int b = 0; b < S.Nblocks(); b++) {
+          Storage stmp = S.get_block_(b).storage();
+          cytnx_int64 kdim = 0;
+          for (int i = stmp.size(); i > 0; i--) {
+            if (stmp(i - 1) >= Smin) {
+              kdim = i;
+              break;
+            }
+          }
+          keep_dims.push_back(kdim);
+          if (kdim == 0) {
+            to_be_removed.push_back(b);
+            new_qid.push_back(-1);
+
+          } else {
+            new_qid.push_back(new_dims.size());
+            new_itoi.push_back({new_dims.size(), new_dims.size()});
+            new_dims.push_back(kdim);
+            tot_dim += kdim;
+            if (kdim != S.get_blocks_()[b].shape()[0])
+              S.get_blocks_()[b] = S.get_blocks_()[b].get({Accessor::range(0, kdim)});
+          }
+        }
+
+        // remove:
+        S.get_itoi() = new_itoi;
+        if (!to_be_removed.empty()) {
+          vec_erase_(S.get_blocks_(), to_be_removed);
+          vec_erase_(S.bonds()[0].qnums(), to_be_removed);
+          if (Tin.uten_type() == UTenType.BlockFermionic) {
+            vec_erase_(S.signflip_(), to_be_removed);
+          }
+        }
+        S.bonds()[0]._impl->_degs = new_dims;
+        S.bonds()[0]._impl->_dim = tot_dim;
+        S.bonds()[1] = S.bonds()[0].redirect();
+
+        int t = 1;
+        if (is_U) {
+          UniTensor &U = outCyT[t];
+          to_be_removed.clear();
+          U.bonds().back() = S.bonds()[1].clone();
+          std::vector<Accessor> acs(U.rank());
+          for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
+
+          for (int b = 0; b < U.Nblocks(); b++) {
+            if (keep_dims[U.get_qindices(b).back()] == 0)
+              to_be_removed.push_back(b);
+            else {
+              /// process blocks:
+              if (keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()) {
+                acs.back() = Accessor::range(0, keep_dims[U.get_qindices(b).back()]);
+                U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
+              }
+
+              // change to new qindices:
+              U.get_qindices(b).back() = new_qid[U.get_qindices(b).back()];
+            }
+          }
+          if (!to_be_removed.empty()) {
+            vec_erase_(U.get_itoi(), to_be_removed);
+            vec_erase_(U.get_blocks_(), to_be_removed);
+            if (Tin.uten_type() == UTenType.BlockFermionic) {
+              vec_erase_(U.signflip_(), to_be_removed);
+            }
+          }
+
           t++;
         }
 
-      }  // if tag
-    }  // _Rsvd_Dense_UT
+        if (is_vT) {
+          UniTensor &vT = outCyT[t];
+          to_be_removed.clear();
+          vT.bonds().front() = S.bonds()[0].clone();
+          std::vector<Accessor> acs(vT.rank());
+          for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
 
-    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U,
-                                       bool is_vT, cytnx_uint64 power_iteration,
+          for (int b = 0; b < vT.Nblocks(); b++) {
+            if (keep_dims[vT.get_qindices(b)[0]] == 0)
+              to_be_removed.push_back(b);
+            else {
+              /// process blocks:
+              if (keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]) {
+                acs[0] = Accessor::range(0, keep_dims[vT.get_qindices(b)[0]]);
+                vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
+              }
+              // change to new qindices:
+              vT.get_qindices(b)[0] = new_qid[vT.get_qindices(b)[0]];
+            }
+          }
+          if (!to_be_removed.empty()) {
+            vec_erase_(vT.get_itoi(), to_be_removed);
+            vec_erase_(vT.get_blocks_(), to_be_removed);
+            if (Tin.uten_type() == UTenType.BlockFermionic) {
+              vec_erase_(vT.signflip_(), to_be_removed);
+            }
+          }
+
+          t++;
+        }
+
+        // handle return_err!
+        if (return_err == 1) {
+          outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
+          outCyT.back().get_block_().storage().at(0) = Smin;
+        } else if (return_err) {
+          outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+        }
+      }  // Rsvd_Block_UT_internal no minblockdim
+
+      void Rsvd_Block_UT_internal(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+                                  const cytnx_uint64 &keepdim,
+                                  std::vector<cytnx_uint64> min_blockdim, const double &err,
+                                  const bool &is_U, const bool &is_vT,
+                                  const unsigned int &return_err, const cytnx_uint64 &mindim,
+                                  cytnx_uint64 oversampling_summand, double oversampling_factor,
+                                  cytnx_uint64 power_iteration, unsigned int seed) {
+        // from Gesvd_truncate, but using Rsvd_notruncate_BlockUT_internal for the SVD
+        cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
+                                         // negative!
+        cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
+
+        if (Tin.uten_type() == UTenType.Block) {
+          Rsvd_notruncate_BlockUT_internal<BlockUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        } else {  // BlockFermionic
+          Rsvd_notruncate_BlockUT_internal<BlockFermionicUniTensor>(
+            outCyT, Tin, keepdim, is_U, is_vT, mindim, oversampling_summand, oversampling_factor,
+            power_iteration, seed);
+        }
+        if (min_blockdim.size() == 1)  // if only one element given, make it a vector
+          min_blockdim.resize(outCyT[0].Nblocks(), min_blockdim.front());
+        cytnx_error_msg(
+          min_blockdim.size() != outCyT[0].Nblocks(),
+          "[ERROR][Gesvd_truncate] min_blockdim must have the same number of elements as "
+          "blocks in the singular value UniTensor%s",
+          "\n");
+
+        // process truncation:
+        // 1) concate all S vals from all blk but exclude the first min_blockdim Svals in each block
+        // (since they will be kept anyways later)
+        Tensor Sall;  // S vals excluding the already kept ones
+        Tensor Block;  // current block
+        cytnx_uint64 blockdim;
+        bool anySall = false;  // are there already any values in Sall?
+        bool any_min_blockdim = false;  // is any min_blockdim > 0?
+        for (int b = 0; b < outCyT[0].Nblocks(); b++) {
+          if (min_blockdim[b] < 1)  // save whole block to Sall
+            Block = outCyT[0].get_block_(b);
+          else {
+            any_min_blockdim = true;
+            blockdim = outCyT[0].get_block_(b).shape()[0];
+            if (blockdim <= min_blockdim[b]) {
+              // keep whole block
+              keep_dim -= blockdim;
+              min_dim -= blockdim;
+              continue;
+            }
+            // remove first min_blockdim[b] values since they are saved anyways and do not need to
+            // be included in Sall
+            blockdim = outCyT[0].get_block_(b).shape()[0];
+            Block = outCyT[0].get_block_(b).get({Accessor::range(min_blockdim[b], blockdim)});
+            keep_dim -= min_blockdim[b];
+            min_dim -= min_blockdim[b];
+          }
+          if (anySall)
+            Sall = algo::Concatenate(Sall, Block);
+          else {
+            Sall = Block;
+            anySall = true;
+          }
+        }
+        if (!anySall) {
+          // no truncation; return_err is tensor with one element, set to 0
+          if (return_err >= 1) {
+            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+          }
+        } else {
+          Scalar Smin;
+          if (keep_dim > 0) {
+            if (!any_min_blockdim) {
+              // make sure that at least one singular value is kept
+              min_dim = (min_dim < 1 ? 1 : min_dim);
+            } else {
+              min_dim = (min_dim < 1 ? 0 : min_dim);
+            }
+            Sall = algo::Sort(Sall);  // all singular values, starting from the smallest
+            // 2) get the minimum S value based on the args input.
+            cytnx_uint64 smidx;
+            cytnx_uint64 Sshape = Sall.shape()[0];
+            if (keep_dim < Sshape) {
+              smidx = Sshape - (cytnx_uint64)keep_dim;
+              Smin = Sall.storage()(smidx);
+            } else {
+              keep_dim = Sshape;
+              smidx = 0;
+              Smin = Sall.storage()(0);
+            }
+            while ((Smin < err) and (keep_dim > min_dim)) {
+              // at least one singular value is always kept!
+              keep_dim--;
+              if (keep_dim == 0) break;  // this is needed, keep_dim can be 0
+              smidx++;
+              Smin = Sall.storage()(smidx);
+            }
+            // handle return_err!
+            if (return_err == 1) {
+              outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
+              outCyT.back().get_block_().storage().at(0) = Smin;
+            } else if (return_err) {
+              outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+            }
+          } else {
+            if (return_err >= 1) {
+              outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+            }
+          }
+
+          // traversal each block and truncate!
+          UniTensor &S = outCyT[0];
+          std::vector<cytnx_uint64> new_dims;  // keep_dims for each block!
+          std::vector<cytnx_int64> keep_dims;
+          keep_dims.reserve(S.Nblocks());
+          std::vector<cytnx_int64> new_qid;
+          new_qid.reserve(S.Nblocks());
+
+          std::vector<std::vector<cytnx_uint64>>
+            new_itoi;  // assume S block is in same order as qnum:
+          std::vector<cytnx_uint64> to_be_removed;
+
+          cytnx_uint64 tot_dim = 0;
+          cytnx_uint64 cnt = 0;
+          for (int b = 0; b < S.Nblocks(); b++) {
+            Storage stmp = S.get_block_(b).storage();
+            cytnx_int64 kdim = std::min<cytnx_int64>(min_blockdim[b], stmp.size());
+            if (keep_dim > 0) {
+              // search for first value >= Smin
+              for (int i = stmp.size(); i > min_blockdim[b]; i--) {
+                // Careful here: if (int i = stmp.size() -1; i >= min_blockdim[b]; i--) is used
+                // instead, the compiler might make i an unsigned integer; if then min_blockdim[b]
+                // == 0, the condition i > min_blockdim[b] is always fulfilled and the loop never
+                // stops!
+                if (stmp(i - 1) >= Smin) {
+                  kdim = i;
+                  break;
+                }
+              }
+            }
+            keep_dims.push_back(kdim);
+            if (kdim == 0) {
+              to_be_removed.push_back(b);
+              new_qid.push_back(-1);
+            } else {
+              new_qid.push_back(new_dims.size());
+              new_itoi.push_back({new_dims.size(), new_dims.size()});
+              new_dims.push_back(kdim);
+              tot_dim += kdim;
+              if (kdim != S.get_blocks_()[b].shape()[0])
+                S.get_blocks_()[b] = S.get_blocks_()[b].get({Accessor::range(0, kdim)});
+            }
+          }
+
+          // remove:
+          S.get_itoi() = new_itoi;
+          if (!to_be_removed.empty()) {
+            vec_erase_(S.get_blocks_(), to_be_removed);
+            vec_erase_(S.bonds()[0].qnums(), to_be_removed);
+            if (Tin.uten_type() == UTenType.BlockFermionic) {
+              vec_erase_(S.signflip_(), to_be_removed);
+            }
+          }
+          S.bonds()[0]._impl->_degs = new_dims;
+          S.bonds()[0]._impl->_dim = tot_dim;
+          S.bonds()[1] = S.bonds()[0].redirect();
+
+          int t = 1;
+          if (is_U) {
+            UniTensor &U = outCyT[t];
+            to_be_removed.clear();
+            U.bonds().back() = S.bonds()[1].clone();
+            std::vector<Accessor> acs(U.rank());
+            for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
+
+            for (int b = 0; b < U.Nblocks(); b++) {
+              if (keep_dims[U.get_qindices(b).back()] == 0)
+                to_be_removed.push_back(b);
+              else {
+                /// process blocks:
+                if (keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()) {
+                  acs.back() = Accessor::range(0, keep_dims[U.get_qindices(b).back()]);
+                  U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
+                }
+
+                // change to new qindices:
+                U.get_qindices(b).back() = new_qid[U.get_qindices(b).back()];
+              }
+            }
+            if (!to_be_removed.empty()) {
+              vec_erase_(U.get_itoi(), to_be_removed);
+              vec_erase_(U.get_blocks_(), to_be_removed);
+              if (Tin.uten_type() == UTenType.BlockFermionic) {
+                vec_erase_(U.signflip_(), to_be_removed);
+              }
+            }
+
+            t++;
+          }
+
+          if (is_vT) {
+            UniTensor &vT = outCyT[t];
+            to_be_removed.clear();
+            vT.bonds().front() = S.bonds()[0].clone();
+            std::vector<Accessor> acs(vT.rank());
+            for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
+
+            for (int b = 0; b < vT.Nblocks(); b++) {
+              if (keep_dims[vT.get_qindices(b)[0]] == 0)
+                to_be_removed.push_back(b);
+              else {
+                /// process blocks:
+                if (keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]) {
+                  acs[0] = Accessor::range(0, keep_dims[vT.get_qindices(b)[0]]);
+                  vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
+                }
+                // change to new qindices:
+                vT.get_qindices(b)[0] = new_qid[vT.get_qindices(b)[0]];
+              }
+            }
+            if (!to_be_removed.empty()) {
+              vec_erase_(vT.get_itoi(), to_be_removed);
+              vec_erase_(vT.get_blocks_(), to_be_removed);
+              if (Tin.uten_type() == UTenType.BlockFermionic) {
+                vec_erase_(vT.signflip_(), to_be_removed);
+              }
+            }
+
+            t++;
+          }
+        }
+      }  // Rsvd_truncate_Block_UT_internal with minblockdim
+
+    }  // unnamed namespace
+
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                       double err, bool is_U, bool is_vT, unsigned int return_err,
+                                       cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+                                       double oversampling_factor, cytnx_uint64 power_iteration,
                                        unsigned int seed) {
-      // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[Rsvd][ERROR] Rsvd for UniTensor should have rank>1 and rowrank>0%s", "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[Rsvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-                      "supported. Use other manipulations.%s",
+                      "[ERROR][Rsvd] Input UniTensor is diagonal, so Rsvd is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
+      cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd] keepdim must be >=1%s", "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _Rsvd_Dense_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
-        // } else if (Tin.uten_type() == UTenType.Block) {
-        //   _Rsvd_Block_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
-
-        // } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        //   _Rsvd_BlockFermionic_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
+        Rsvd_Dense_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+                               oversampling_summand, oversampling_factor, power_iteration, seed);
+      } else if ((Tin.uten_type() == UTenType.Block) ||
+                 (Tin.uten_type() == UTenType.BlockFermionic)) {
+        Rsvd_Block_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+                               oversampling_summand, oversampling_factor, power_iteration, seed);
       } else {
-        cytnx_error_msg(true, "[ERROR] Rsvd currently only supports Dense UniTensors.%s", "\n");
-
-      }  // is block form ?
-
+        cytnx_error_msg(
+          true, "[ERROR][Rsvd] only supports Dense/Block/BlockFermionic UniTensors.%s", "\n");
+      }
       return outCyT;
 
     }  // Rsvd
+
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                       const std::vector<cytnx_uint64> min_blockdim, double err,
+                                       bool is_U, bool is_vT, unsigned int return_err,
+                                       cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+                                       double oversampling_factor, cytnx_uint64 power_iteration,
+                                       unsigned int seed) {
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][Rsvd] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
+      cytnx_error_msg(Tin.is_diag(),
+                      "[ERROR][Rsvd] Input UniTensor is diagonal, so Rsvd is trivial and not "
+                      "supported. Use other manipulation.%s",
+                      "\n");
+      cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd] keepdim must be >=1%s", "\n");
+
+      std::vector<UniTensor> outCyT;
+      if (Tin.uten_type() == UTenType.Dense) {
+        cytnx_error_msg(min_blockdim.size() != 1,
+                        "[ERROR][Rsvd] min_blockdim must have one element for dense UniTensor%s",
+                        "\n");
+        Rsvd_Dense_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
+                               std::max(mindim, min_blockdim[0]), oversampling_summand,
+                               oversampling_factor, power_iteration, seed);
+      } else if ((Tin.uten_type() == UTenType.Block) ||
+                 (Tin.uten_type() == UTenType.BlockFermionic)) {
+        Rsvd_Block_UT_internal(outCyT, Tin, keepdim, min_blockdim, err, is_U, is_vT, return_err,
+                               mindim, oversampling_summand, oversampling_factor, power_iteration,
+                               seed);
+      } else {
+        cytnx_error_msg(
+          true, "[ERROR][Rsvd] only supports Dense/Block/BlockFermionic UniTensors.%s", "\n");
+      }
+      return outCyT;
+
+    }  // Rsvd with minblockdim
+
   }  // namespace linalg
 }  // namespace cytnx
 #endif  // BACKEND_TORCH

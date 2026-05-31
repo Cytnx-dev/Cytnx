@@ -388,6 +388,8 @@ namespace cytnx {
       f.read(cname, sizeof(char) * len_name);
       this->_impl->_name = std::string(cname);
       free(cname);
+    } else {
+      this->_impl->_name.clear();
     }
 
     cytnx_uint64 rank;

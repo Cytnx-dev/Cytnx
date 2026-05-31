@@ -12,8 +12,6 @@ namespace cytnx {
     Tensor InvM(const Tensor &Tin) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[InvM] error, InvM can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[InvM] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[InvM] error, the size of last two rank should be the same.%s", "\n");
@@ -74,19 +72,28 @@ namespace cytnx {
     }
 
     UniTensor InvM(const UniTensor &Tin) {
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[InvM_][ERROR] InvM for UniTensor should have rank>1 and rowrank>0%s", "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][InvM] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][InvM] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][InvM] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[InvM_[ERROR] InvM for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
+                      "[ERROR][InvM] Input UniTensor is diagonal, so InvM is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
+
       UniTensor outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
         _InvM_Dense_UT(outCyT, Tin);
         return outCyT;
       } else {
-        cytnx_error_msg(true, "[ERROR] InvM only supports Dense UniTensors.%s", "\n");
+        cytnx_error_msg(true, "[ERROR][InvM] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
         return UniTensor();
       }
     }

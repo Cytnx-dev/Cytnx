@@ -2,7 +2,7 @@
 # ## ADD SUB-DIRECTORIES
 # #####################################################################
 
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
 
   # Scalar.cpp

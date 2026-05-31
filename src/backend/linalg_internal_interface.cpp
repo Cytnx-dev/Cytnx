@@ -361,14 +361,6 @@ namespace cytnx {
       Gemm_Batch_ii[Type.Double] = Gemm_Batch_internal_d;
       Gemm_Batch_ii[Type.Float] = Gemm_Batch_internal_f;
 
-      //========Helper function for svd_truncate on cuda========
-      memcpyTruncation_ii = vector<memcpyTruncation_oii>(N_Type);
-
-      memcpyTruncation_ii[Type.ComplexDouble] = memcpyTruncation_cd;
-      memcpyTruncation_ii[Type.ComplexFloat] = memcpyTruncation_cf;
-      memcpyTruncation_ii[Type.Double] = memcpyTruncation_d;
-      memcpyTruncation_ii[Type.Float] = memcpyTruncation_f;
-
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
 
@@ -719,6 +711,20 @@ namespace cytnx {
       cuVd_ii[Type.Uint16] = cuVectordot_internal_u16;
       cuVd_ii[Type.Bool] = cuVectordot_internal_b;
 
+      //=====================
+      cuTrace_ii = vector<Tracefunc_oii>(N_Type);
+
+      cuTrace_ii[Type.ComplexDouble] = cuTrace_internal_cd;
+      cuTrace_ii[Type.ComplexFloat] = cuTrace_internal_cf;
+      cuTrace_ii[Type.Double] = cuTrace_internal_d;
+      cuTrace_ii[Type.Float] = cuTrace_internal_f;
+      cuTrace_ii[Type.Uint64] = cuTrace_internal_u64;
+      cuTrace_ii[Type.Int64] = cuTrace_internal_i64;
+      cuTrace_ii[Type.Uint32] = cuTrace_internal_u32;
+      cuTrace_ii[Type.Int32] = cuTrace_internal_i32;
+      cuTrace_ii[Type.Uint16] = cuTrace_internal_u16;
+      cuTrace_ii[Type.Int16] = cuTrace_internal_i16;
+      cuTrace_ii[Type.Bool] = cuTrace_internal_b;
       //================
 
       cuOuter_ii = vector<vector<Outerfunc_oii>>(N_Type, vector<Outerfunc_oii>(N_Type, NULL));
@@ -854,14 +860,6 @@ namespace cytnx {
       cuOuter_ii[Type.Bool][Type.Uint16] = cuOuter_internal_btu16;
       cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
       cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
-
-      //========Helper function for svd_truncate on cuda========
-      cudaMemcpyTruncation_ii = vector<cudaMemcpyTruncation_oii>(N_Type);
-
-      cudaMemcpyTruncation_ii[Type.ComplexDouble] = cudaMemcpyTruncation_cd;
-      cudaMemcpyTruncation_ii[Type.ComplexFloat] = cudaMemcpyTruncation_cf;
-      cudaMemcpyTruncation_ii[Type.Double] = cudaMemcpyTruncation_d;
-      cudaMemcpyTruncation_ii[Type.Float] = cudaMemcpyTruncation_f;
 
   #ifdef UNI_CUQUANTUM
       cuQuantumGeSvd_ii = vector<cuQuantumGeSvd_oii>(N_Type);

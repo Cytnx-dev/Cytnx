@@ -14,7 +14,7 @@ Texp=cytnx.linalg.Matmul(Texp, vTex)
 uB = cytnx.UniTensor(Texp.reshape_(20, 4, 10), labels=["one", 'two', 'three']).set_name("Dense UniTensor with exponentially falling singular values in the range 1 to 10^-16")
 uB.Save(src_file_dir + "dense_nondiag_exp_Svals_F64.cytnx")
 
-#calculate truncated singular values and reconstructed matrix for Rsvd_truncate; F64 version
+#calculate truncated singular values and reconstructed matrix for Rsvd; F64 version
 src_file_name = "dense_nondiag_exp_Svals_F64"
 res_file_dir = "../test_data_base/linalg/Svd_truncate/"
 src_T = cytnx.UniTensor.Load(src_file_dir + src_file_name + ".cytnx");

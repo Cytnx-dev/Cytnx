@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
 
     #utils_internal_interface.hpp
@@ -25,14 +25,14 @@ target_sources_local(cytnx
 
 
 if(USE_CUDA)
-  target_sources_local(cytnx
+  target_sources(cytnx
     PRIVATE
     #cucomplex_arithmetic.hpp
     cucomplex_arithmetic.cu
   )
 
   if(USE_CUQUANTUM)
-    target_sources_local(cytnx
+    target_sources(cytnx
     PRIVATE
     cutensornet.hpp
     cutensornet.cu

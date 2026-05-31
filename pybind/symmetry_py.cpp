@@ -1,6 +1,7 @@
 #include "cytnx.hpp"
 
 #include <filesystem>
+#include <format>
 #include <map>
 #include <random>
 #include <vector>
@@ -20,6 +21,24 @@
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
+
+namespace {
+  cytnx_int64 NormalizeZnInput(const Symmetry &sym, const cytnx_int64 qnum, const char *fn_name,
+                               const char *arg_name) {
+    if (sym.stype() != SymmetryType::Z) return qnum;
+    const cytnx_int64 n = sym.n();
+    if (qnum >= 0 && qnum < n) return qnum;
+    cytnx_int64 normalized = qnum % n;
+    if (normalized < 0) normalized += n;
+    const std::string message = std::format(
+      "Passing out-of-range Z{} qnum {} to '{}' (argument '{}') is deprecated and will be "
+      "rejected in v2.0.0; pass a canonical representative in [0, {}) instead. Normalizing to "
+      "{} for now.",
+      n, qnum, fn_name, arg_name, n, normalized);
+    if (PyErr_WarnEx(PyExc_FutureWarning, message.c_str(), 2) < 0) throw py::error_already_set();
+    return normalized;
+  }
+}  // namespace
 
 void symmetry_binding(py::module &m) {
   py::enum_<SymmetryType>(m, "SymType")
@@ -60,12 +79,19 @@ void symmetry_binding(py::module &m) {
     .def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
     .def(
       "combine_rule",
-      [](Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse) {
-        return self.combine_rule(inL, inR, is_reverse);
+      [](const Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR,
+         const bool &is_reverse) {
+        const cytnx_int64 normL = NormalizeZnInput(self, inL, "combine_rule", "qnL");
+        const cytnx_int64 normR = NormalizeZnInput(self, inR, "combine_rule", "qnR");
+        return self.combine_rule(normL, normR, is_reverse);
       },
       py::arg("qnL"), py::arg("qnR"), py::arg("is_reverse") = false)
     .def(
-      "reverse_rule", [](Symmetry &self, const cytnx_int64 &qin) { return self.reverse_rule(qin); },
+      "reverse_rule",
+      [](const Symmetry &self, const cytnx_int64 &qin) {
+        const cytnx_int64 norm = NormalizeZnInput(self, qin, "reverse_rule", "qin");
+        return self.reverse_rule(norm);
+      },
       py::arg("qin"))
     .def("get_fermion_parity", &Symmetry::get_fermion_parity, py::arg("qnum"))
     .def("is_fermionic", &Symmetry::is_fermionic)

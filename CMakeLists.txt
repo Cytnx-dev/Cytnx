@@ -9,7 +9,6 @@ message(STATUS "")
 # #####################################################################
 cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_ARCHITECTURES
 
-include(cmake/target_sources_local.cmake)
 include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 # Inria's morse_cmake provides an up-to-date FindLAPACKE (and helpers) that
@@ -297,8 +296,45 @@ if(RUN_TESTS)
   # Include CTest explicitly to suppress the error that DartConfiguration.tcl
   # is not found
   include(CTest)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
-  target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
+
+  # Source-level coverage instrumentation for the library and anything that
+  # links it (e.g. the gtest binary under tests/, which links cytnx PUBLIC).
+  # PUBLIC + $<BUILD_INTERFACE:...> propagates the flag to in-tree
+  # consumers (test_main picks it up) but strips it from the exported
+  # CytnxTargets.cmake, so external projects that `find_package(Cytnx)`
+  # against the installed library are NOT forced into coverage
+  # instrumentation.
+  #
+  #   - GCC / Clang / AppleClang: `--coverage` is a driver shorthand that
+  #     expands to `-fprofile-arcs -ftest-coverage` at compile time and adds
+  #     the gcov runtime (`-lgcov` on GCC, equivalent on Clang) at link time.
+  #     Produces .gcno/.gcda files that gcovr and lcov can consume.
+  #
+  #   - MSVC: no native gcov-style instrumentation. On Windows, coverage is
+  #     typically collected with OpenCppCoverage (post-build binary
+  #     instrumentation), which needs no CMake flags. Skip silently except
+  #     for a status message so configure still succeeds.
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
+     CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(cytnx PUBLIC $<BUILD_INTERFACE:--coverage>)
+    target_link_options(cytnx PUBLIC $<BUILD_INTERFACE:--coverage>)
+  # TODO(coverage-msvc): wire up OpenCppCoverage in CI for Windows builds.
+  # It instruments the test binary post-build and emits Cobertura XML that
+  # Codecov ingests directly, so no compile flags are needed here -- only
+  # a CI step that runs `OpenCppCoverage --sources <src> -- test_main.exe`
+  # and uploads the result alongside the gcovr XML. Left as a follow-up
+  # because Cytnx has no Windows CI today.
+  elseif(MSVC)
+    message(STATUS
+      "Coverage: source-level instrumentation is not supported with MSVC; "
+      "tests will run without it. Use OpenCppCoverage on the test binary "
+      "if coverage data is needed on Windows.")
+  else()
+    message(WARNING
+      "Coverage: unknown compiler '${CMAKE_CXX_COMPILER_ID}'; "
+      "coverage flags were not applied.")
+  endif()
+
   # "-fopenmp" flag is appended to CMAKE_CXX_FLAGS in CytnxBKNDCMakeLists.cmake.
   # To make the executalbe targets defined under tests/ link OpenMP correctly,
   # tests/ must be added after including CytnxBKNDCMakeLists.cmake.
@@ -412,9 +448,6 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
 )
 
 if(BUILD_PYTHON)
-  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/cytnx
-    DESTINATION ${CMAKE_INSTALL_PREFIX}
-  )
   INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
     LIBRARY
     DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
@@ -500,7 +533,7 @@ endif()
 # #####################################################################
 # Final Information Messages
 # #####################################################################
-message(STATUS "|= Final FLAGS infomation for install >>>>> ")
+message(STATUS "|= Final FLAGS information for install >>>>> ")
 message(STATUS "    CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "    CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "    BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")

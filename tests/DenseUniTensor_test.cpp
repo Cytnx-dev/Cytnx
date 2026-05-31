@@ -2046,7 +2046,7 @@ TEST_F(DenseUniTensorTest, to_dense_non_diag) {
   auto ut_diag = UniTensor({Bond(4), Bond(4)});
   int seed = 0;
   random::uniform_(ut_diag, -100.0, 100.0, seed);
-  EXPECT_THROW(ut_diag.to_dense(), std::logic_error);
+  EXPECT_TRUE(AreEqUniTensor(ut_diag, ut_diag.to_dense()));
 }
 
 /*=====test info=====
@@ -2054,7 +2054,9 @@ describe:test to_dense_, but the UniTensor is non diagonal
 ====================*/
 TEST_F(DenseUniTensorTest, to_dense__non_diag) {
   auto ut_diag = UniTensor({Bond(4), Bond(4)});
-  EXPECT_THROW(ut_diag.to_dense_(), std::logic_error);
+  auto ut_to_diag = ut_diag.clone();
+  ut_to_diag.to_dense_();
+  EXPECT_TRUE(AreEqUniTensor(ut_diag, ut_to_diag));
 }
 
 /*=====test info=====
@@ -4893,6 +4895,29 @@ TEST_F(DenseUniTensorTest, Save_path_incorrect) {
 describe:test Save uninitialized UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Save_uninit) { EXPECT_ANY_THROW(ut_uninit.Save(temp_file_path)); }
+
+/*=====test info=====
+describe:In-place Load_ must not inherit a stale name from a previous UniTensor.
+====================*/
+TEST_F(DenseUniTensorTest, Load_ResetsStaleName) {
+  auto row_rank = 1u;
+  std::vector<Bond> bonds = {Bond(3), Bond(2)};
+
+  // 1) save a UniTensor with an empty name
+  UniTensor ut_anon = UniTensor(bonds, {"a", "b"}, row_rank);
+  ASSERT_TRUE(ut_anon.name().empty());
+  ut_anon.Save(temp_file_path);
+
+  // 2) build a UniTensor with a non-empty name, then Load_ the anonymous payload into it.
+  UniTensor ut_named = UniTensor(bonds, {"a", "b"}, row_rank);
+  ut_named.set_name("stale_name");
+  ASSERT_EQ(ut_named.name(), "stale_name");
+  ut_named.Load_(temp_file_path);
+  EXPECT_TRUE(ut_named.name().empty())
+    << "stale UniTensor name leaked when loading a payload with empty name";
+  EXPECT_TRUE(AreEqUniTensor(ut_named, ut_anon))
+    << "Load_ should fully reconstruct the saved UniTensor";
+}
 
 /*=====test info=====
 describe:test truncate by label

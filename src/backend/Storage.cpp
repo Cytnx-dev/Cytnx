@@ -451,11 +451,10 @@ namespace cytnx {
                     "[ERROR] the total size of file is not an interval of assigned dtype.%s", "\n");
 
     // check count smaller than Nelem:
-    if (count < 0)
-      Nelem = Nbytes / Type.typeSize(dtype);
-    else {
-      cytnx_error_msg(count > Nelem, "[ERROR] count exceed the total # of elements %d in file.\n",
-                      Nelem);
+    Nelem = Nbytes / Type.typeSize(dtype);  // total elements in the file
+    if (count >= 0) {
+      cytnx_error_msg(static_cast<cytnx_uint64>(count) > Nelem,
+                      "[ERROR] count exceed the total # of elements %d in file.\n", Nelem);
       Nelem = count;
     }
 

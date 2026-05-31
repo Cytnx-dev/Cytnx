@@ -791,6 +791,10 @@ namespace cytnx {
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 666, "[ERROR] the object is not a cytnx Bond!%s", "\n");
 
+    this->_impl->_qnums.clear();
+    this->_impl->_degs.clear();
+    this->_impl->_syms.clear();
+
     int ver;
     f.read((char *)&ver, sizeof(int));
 
@@ -841,6 +845,8 @@ namespace cytnx {
       for (int j = 0; j < Nsym_in; j++) {
         this->_impl->_syms[j].from_binary(f);
       }
+    } else {
+      this->_impl->_syms.clear();
     }
   }
 
