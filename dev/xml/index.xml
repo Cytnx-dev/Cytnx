@@ -347,11 +347,16 @@
     <member refid="classcytnx_1_1UniTensor_1ab201df6580c4b3c912b2789f693a9172" kind="function"><name>get_blocks_</name></member>
     <member refid="classcytnx_1_1UniTensor_1a0586ff59c33eda6cc9fbb3ea25cb3aca" kind="function"><name>get_blocks_</name></member>
     <member refid="classcytnx_1_1UniTensor_1a9c894a11bd5e9a1d5c042c5bb61c8e48" kind="function"><name>put_block</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a0eaa545881f5de347199910555b9532f" kind="function"><name>put_block</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a3858de1d359d85ecdaa54bb7d73a75a3" kind="function"><name>put_block</name></member>
     <member refid="classcytnx_1_1UniTensor_1a9df943e88dec88c5ee1a9723797d9179" kind="function"><name>put_block</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a6e6e97bf7b3b051f13b3e531c6b07b6f" kind="function"><name>put_block</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a5771a65dbc78c563fd1556af159d3adb" kind="function"><name>put_block</name></member>
+    <member refid="classcytnx_1_1UniTensor_1addf4ec2c8db5c4172eb8bc5acb843665" kind="function"><name>put_block</name></member>
     <member refid="classcytnx_1_1UniTensor_1a79aa757a759a1427c6d0a9f525e3632b" kind="function"><name>put_block_</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a085299bccf586326e0b82b434255e3c1" kind="function"><name>put_block_</name></member>
     <member refid="classcytnx_1_1UniTensor_1a94e1b0c5abad291972ad29598cfd4bbd" kind="function"><name>put_block_</name></member>
-    <member refid="classcytnx_1_1UniTensor_1ac4c4270534260ebb9eb85ead458c9ef8" kind="function"><name>put_block_</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a6c19f2c2119009097a4b9f26151cc4aa" kind="function"><name>put_block_</name></member>
+    <member refid="classcytnx_1_1UniTensor_1ae9cda7e4b96ae82e7d8e4eea3b8d17f3" kind="function"><name>put_block_</name></member>
     <member refid="classcytnx_1_1UniTensor_1a2e2d7f3137bb1cfb26e6a19acbc9563e" kind="function"><name>get</name></member>
     <member refid="classcytnx_1_1UniTensor_1a467e637ee3f32199e16afef477625beb" kind="function"><name>operator[]</name></member>
     <member refid="classcytnx_1_1UniTensor_1a6ba0946b8addb3591c1b629c6273cbad" kind="function"><name>operator[]</name></member>
