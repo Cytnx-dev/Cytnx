@@ -12,82 +12,71 @@
 namespace cytnx {
   namespace linalg_internal {
 
-    void cuTrace_internal_cd(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                             const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                             const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_cd(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                             cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                              const std::vector<cytnx_uint64> &remain_rank_id,
-                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                             const cytnx_uint64 &ax2);
+                             const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                             cytnx_uint64 ax2);
 
-    void cuTrace_internal_cf(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                             const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                             const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_cf(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                             cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                              const std::vector<cytnx_uint64> &remain_rank_id,
-                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                             const cytnx_uint64 &ax2);
+                             const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                             cytnx_uint64 ax2);
 
-    void cuTrace_internal_d(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                            const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_d(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2);
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2);
 
-    void cuTrace_internal_f(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                            const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_f(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2);
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2);
 
-    void cuTrace_internal_u64(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                              const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                              const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_u64(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                              cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                               const std::vector<cytnx_uint64> &remain_rank_id,
-                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                              const cytnx_uint64 &ax2);
+                              const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                              cytnx_uint64 ax2);
 
-    void cuTrace_internal_i64(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                              const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                              const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_i64(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                              cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                               const std::vector<cytnx_uint64> &remain_rank_id,
-                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                              const cytnx_uint64 &ax2);
+                              const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                              cytnx_uint64 ax2);
 
-    void cuTrace_internal_u32(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                              const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                              const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_u32(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                              cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                               const std::vector<cytnx_uint64> &remain_rank_id,
-                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                              const cytnx_uint64 &ax2);
+                              const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                              cytnx_uint64 ax2);
 
-    void cuTrace_internal_i32(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                              const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                              const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_i32(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                              cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                               const std::vector<cytnx_uint64> &remain_rank_id,
-                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                              const cytnx_uint64 &ax2);
+                              const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                              cytnx_uint64 ax2);
 
-    void cuTrace_internal_u16(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                              const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                              const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_u16(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                              cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                               const std::vector<cytnx_uint64> &remain_rank_id,
-                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                              const cytnx_uint64 &ax2);
+                              const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                              cytnx_uint64 ax2);
 
-    void cuTrace_internal_i16(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                              const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                              const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_i16(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                              cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                               const std::vector<cytnx_uint64> &remain_rank_id,
-                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                              const cytnx_uint64 &ax2);
+                              const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                              cytnx_uint64 ax2);
 
-    void cuTrace_internal_b(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                            const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void cuTrace_internal_b(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2);
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2);
 
   }  // namespace linalg_internal
 

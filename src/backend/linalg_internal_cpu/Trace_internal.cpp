@@ -12,7 +12,7 @@ namespace cytnx {
   namespace linalg_internal {
 
     template <class T>
-    void _trace_2d(Tensor &out, const Tensor &Tn, const cytnx_uint64 &Ndiag) {
+    void _trace_2d(Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag) {
       T a = 0;
       T *rawdata = Tn.storage().data<T>();
       cytnx_uint64 Ldim = Tn.shape()[1];
@@ -21,11 +21,10 @@ namespace cytnx {
     }
 
     template <class T>
-    void _trace_nd(Tensor &out, const Tensor &Tn, const cytnx_uint64 &Ndiag,
-                   const cytnx_uint64 &Nelem, const std::vector<cytnx_uint64> &accu,
+    void _trace_nd(Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag, cytnx_uint64 Nelem,
+                   const std::vector<cytnx_uint64> &accu,
                    const std::vector<cytnx_uint64> &remain_rank_id,
-                   const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                   const cytnx_uint64 &ax2) {
+                   const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1, cytnx_uint64 ax2) {
       cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
 
       UniTensor UTn = UniTensor(Tn, false, 2);
@@ -50,12 +49,11 @@ namespace cytnx {
       // }
     }
 
-    void Trace_internal_cd(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                           const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                           const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_cd(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                           cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                            const std::vector<cytnx_uint64> &remain_rank_id,
-                           const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                           const cytnx_uint64 &ax2) {
+                           const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                           cytnx_uint64 ax2) {
       if (is_2d) {
         _trace_2d<cytnx_complex128>(out, Tn, Ndiag);
       } else {
@@ -63,12 +61,11 @@ namespace cytnx {
       }
     }
 
-    void Trace_internal_cf(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                           const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                           const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_cf(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                           cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                            const std::vector<cytnx_uint64> &remain_rank_id,
-                           const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                           const cytnx_uint64 &ax2) {
+                           const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                           cytnx_uint64 ax2) {
       if (is_2d) {
         _trace_2d<cytnx_complex64>(out, Tn, Ndiag);
       } else {
@@ -76,12 +73,11 @@ namespace cytnx {
       }
     }
 
-    void Trace_internal_d(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                          const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                          const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_d(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                          cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                           const std::vector<cytnx_uint64> &remain_rank_id,
-                          const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                          const cytnx_uint64 &ax2) {
+                          const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                          cytnx_uint64 ax2) {
       if (is_2d) {
         _trace_2d<cytnx_double>(out, Tn, Ndiag);
       } else {
@@ -89,12 +85,11 @@ namespace cytnx {
       }
     }
 
-    void Trace_internal_f(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                          const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                          const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_f(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                          cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                           const std::vector<cytnx_uint64> &remain_rank_id,
-                          const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                          const cytnx_uint64 &ax2) {
+                          const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                          cytnx_uint64 ax2) {
       if (is_2d) {
         _trace_2d<cytnx_float>(out, Tn, Ndiag);
       } else {
@@ -102,12 +97,11 @@ namespace cytnx {
       }
     }
 
-    void Trace_internal_u64(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                            const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_u64(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2) {
       if (is_2d) {
         _trace_2d<cytnx_uint64>(out, Tn, Ndiag);
       } else {
@@ -115,77 +109,71 @@ namespace cytnx {
       }
     }
 
-    void Trace_internal_i64(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_i64(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2) {
       if (is_2d) {
-        _trace_2d<cytnx_int64>(out, tn, ndiag);
+        _trace_2d<cytnx_int64>(out, Tn, Ndiag);
       } else {
-        _trace_nd<cytnx_int64>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
+        _trace_nd<cytnx_int64>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
       }
     }
 
-    void Trace_internal_u32(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_u32(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2) {
       if (is_2d) {
-        _trace_2d<cytnx_uint32>(out, tn, ndiag);
+        _trace_2d<cytnx_uint32>(out, Tn, Ndiag);
       } else {
-        _trace_nd<cytnx_uint32>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
+        _trace_nd<cytnx_uint32>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
       }
     }
 
-    void Trace_internal_i32(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_i32(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2) {
       if (is_2d) {
-        _trace_2d<cytnx_int32>(out, tn, ndiag);
+        _trace_2d<cytnx_int32>(out, Tn, Ndiag);
       } else {
-        _trace_nd<cytnx_int32>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
+        _trace_nd<cytnx_int32>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
       }
     }
 
-    void Trace_internal_u16(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_u16(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2) {
       if (is_2d) {
-        _trace_2d<cytnx_uint16>(out, tn, ndiag);
+        _trace_2d<cytnx_uint16>(out, Tn, Ndiag);
       } else {
-        _trace_nd<cytnx_uint16>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
+        _trace_nd<cytnx_uint16>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
       }
     }
 
-    void Trace_internal_i16(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_i16(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                            cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
+                            const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                            cytnx_uint64 ax2) {
       if (is_2d) {
-        _trace_2d<cytnx_int16>(out, tn, ndiag);
+        _trace_2d<cytnx_int16>(out, Tn, Ndiag);
       } else {
-        _trace_nd<cytnx_int16>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
+        _trace_nd<cytnx_int16>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
       }
     }
 
-    void Trace_internal_b(const bool &is_2d, Tensor &out, const Tensor &tn,
-                          const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                          const std::vector<cytnx_uint64> &accu,
+    void Trace_internal_b(bool is_2d, Tensor &out, const Tensor &Tn, cytnx_uint64 Ndiag,
+                          cytnx_uint64 Nelem, const std::vector<cytnx_uint64> &accu,
                           const std::vector<cytnx_uint64> &remain_rank_id,
-                          const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                          const cytnx_uint64 &ax2) {
+                          const std::vector<cytnx_int64> &shape, cytnx_uint64 ax1,
+                          cytnx_uint64 ax2) {
       cytnx_error_msg(true, "[internal][Trace] bool is not available. %s", "\n");
     }
 
