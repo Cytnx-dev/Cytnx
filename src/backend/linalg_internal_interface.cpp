@@ -354,7 +354,6 @@ namespace cytnx {
       Gemm_ii[Type.Double] = Gemm_internal_d;
       Gemm_ii[Type.Float] = Gemm_internal_f;
 
-
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
 

@@ -1659,101 +1659,101 @@ namespace cytnx {
               this->_blocks[a].permute_(inv_mapperL);
             }
           } else {
-          // fp/complex: use Gemm_Batch
-          // If the dtype of this and Rtn are different, we need to cast to the common dtype
-          if (Rtn->dtype() != common_dtype) {
-            BlockFermionicUniTensor *tmpp = Rtn->clone_meta(true, true);
-            tmpp->_blocks.resize(Rtn->_blocks.size());
-            for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
-              tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(common_dtype);
-            }
-            tmp_Rtn = tmpp;
-            tmp_rtn_is_casted = true;
-          }
-          // First select left block to do gemm
-          for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
-            cytnx_int64 comm_dim = 1;
-            // get the indices of right blocks that *can* contract with this->_blocks[a]
-            itoiR_idx = mp[itoiL_common[a]];
-            for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
-              comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
-            }
-            // permute&reshape this->_blocks[a]
-            this->_blocks[a].permute_(mapperL);
-            oldshapeL = this->_blocks[a].shape();
-            this->_blocks[a].reshape_({-1, comm_dim});
-            // Collect block pairs for this left block then call Gemm_Batch once.
-            // Fermionic sign flips are encoded in alpha (+1 or -1 per group).
-            vector<Tensor> batch_a, batch_b, batch_c;
-            vector<Scalar> batch_alpha, batch_beta;
-            vector<cytnx_int64> batch_targ_b;
-
-            // loop over all right blocks that can contract with this->_blocks[a]
-            for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
-              // get the index of the right block
-              cytnx_uint64 b = itoiR_idx[binx];
-              // permute&reshape Rtn->_blocks[b]
-              tmp_Rtn->_blocks[b].permute_(mapperR);
-              oldshapeR[b] = tmp_Rtn->_blocks[b].shape();
-              tmp_Rtn->_blocks[b].reshape_({comm_dim, -1});
-              // prepare to find the target block
-              Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
-              for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
-                Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
+            // fp/complex: use Gemm_Batch
+            // If the dtype of this and Rtn are different, we need to cast to the common dtype
+            if (Rtn->dtype() != common_dtype) {
+              BlockFermionicUniTensor *tmpp = Rtn->clone_meta(true, true);
+              tmpp->_blocks.resize(Rtn->_blocks.size());
+              for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
+                tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(common_dtype);
               }
-              for (cytnx_uint64 cc = non_comm_idx1.size();
-                   cc < non_comm_idx1.size() + non_comm_idx2.size(); cc++) {
-                Lgbuffer[cc] =
-                  tmp_Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
+              tmp_Rtn = tmpp;
+              tmp_rtn_is_casted = true;
+            }
+            // First select left block to do gemm
+            for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
+              cytnx_int64 comm_dim = 1;
+              // get the indices of right blocks that *can* contract with this->_blocks[a]
+              itoiR_idx = mp[itoiL_common[a]];
+              for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
+                comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
               }
-              // target block index
-              cytnx_int64 targ_b = mpC[Lgbuffer];
-              double beta = 1.0;
-              if (!reshaped[targ_b]) {
-                tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0],
-                                               (cytnx_int64)tmp_Rtn->_blocks[b].shape()[1]});
-                reshaped[targ_b] = true;
-                beta = 0.0;
+              // permute&reshape this->_blocks[a]
+              this->_blocks[a].permute_(mapperL);
+              oldshapeL = this->_blocks[a].shape();
+              this->_blocks[a].reshape_({-1, comm_dim});
+              // Collect block pairs for this left block then call Gemm_Batch once.
+              // Fermionic sign flips are encoded in alpha (+1 or -1 per group).
+              vector<Tensor> batch_a, batch_b, batch_c;
+              vector<Scalar> batch_alpha, batch_beta;
+              vector<cytnx_int64> batch_targ_b;
+
+              // loop over all right blocks that can contract with this->_blocks[a]
+              for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
+                // get the index of the right block
+                cytnx_uint64 b = itoiR_idx[binx];
+                // permute&reshape Rtn->_blocks[b]
+                tmp_Rtn->_blocks[b].permute_(mapperR);
+                oldshapeR[b] = tmp_Rtn->_blocks[b].shape();
+                tmp_Rtn->_blocks[b].reshape_({comm_dim, -1});
+                // prepare to find the target block
+                Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
+                for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
+                  Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
+                }
+                for (cytnx_uint64 cc = non_comm_idx1.size();
+                     cc < non_comm_idx1.size() + non_comm_idx2.size(); cc++) {
+                  Lgbuffer[cc] =
+                    tmp_Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
+                }
+                // target block index
+                cytnx_int64 targ_b = mpC[Lgbuffer];
+                double beta = 1.0;
+                if (!reshaped[targ_b]) {
+                  tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0],
+                                                 (cytnx_int64)tmp_Rtn->_blocks[b].shape()[1]});
+                  reshaped[targ_b] = true;
+                  beta = 0.0;
+                }
+                // fermionic sign goes into alpha (+1 or -1 per group)
+                double alpha = (signfliplhs[a] != signfliprhs[b]) ? -1.0 : 1.0;
+                batch_a.push_back(this->_blocks[a]);
+                batch_b.push_back(tmp_Rtn->_blocks[b]);
+                batch_c.push_back(tmp->_blocks[targ_b]);
+                batch_alpha.push_back(Scalar(alpha).astype(this->_blocks[a].dtype()));
+                batch_beta.push_back(Scalar(beta).astype(this->_blocks[a].dtype()));
+                batch_targ_b.push_back(targ_b);
               }
-              // fermionic sign goes into alpha (+1 or -1 per group)
-              double alpha = (signfliplhs[a] != signfliprhs[b]) ? -1.0 : 1.0;
-              batch_a.push_back(this->_blocks[a]);
-              batch_b.push_back(tmp_Rtn->_blocks[b]);
-              batch_c.push_back(tmp->_blocks[targ_b]);
-              batch_alpha.push_back(Scalar(alpha).astype(this->_blocks[a].dtype()));
-              batch_beta.push_back(Scalar(beta).astype(this->_blocks[a].dtype()));
-              batch_targ_b.push_back(targ_b);
-            }
-            if (!batch_a.empty()) {
-              vector<cytnx_int64> group_sizes(batch_a.size(), 1);
-              linalg::Gemm_Batch(batch_alpha, batch_a, batch_b, batch_beta, batch_c, group_sizes);
-              for (size_t i = 0; i < batch_c.size(); i++)
-                tmp->_blocks[batch_targ_b[i]] = batch_c[i];
-            }
-            // restore the shape&permutation of this->_blocks[a]
-            for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
-              cytnx_uint64 b = itoiR_idx[binx];
+              if (!batch_a.empty()) {
+                vector<cytnx_int64> group_sizes(batch_a.size(), 1);
+                linalg::Gemm_Batch(batch_alpha, batch_a, batch_b, batch_beta, batch_c, group_sizes);
+                for (size_t i = 0; i < batch_c.size(); i++)
+                  tmp->_blocks[batch_targ_b[i]] = batch_c[i];
+              }
+              // restore the shape&permutation of this->_blocks[a]
+              for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
+                cytnx_uint64 b = itoiR_idx[binx];
 
-              tmp_Rtn->_blocks[b].reshape_(oldshapeR[b]);
-              tmp_Rtn->_blocks[b].permute_(inv_mapperR);
+                tmp_Rtn->_blocks[b].reshape_(oldshapeR[b]);
+                tmp_Rtn->_blocks[b].permute_(inv_mapperR);
+              }
+
+              this->_blocks[a].reshape_(oldshapeL);
+              this->_blocks[a].permute_(inv_mapperL);
+            }
+            // restore the shape of tmp->_blocks
+            for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
+              tmp->_blocks[a].reshape_(oldshapeC[a]);
+              if (!reshaped[a]) {
+                // if targ_block is not result of any block contraction, set to zeros
+                tmp->_blocks[a].storage().set_zeros();
+              }
             }
 
-            this->_blocks[a].reshape_(oldshapeL);
-            this->_blocks[a].permute_(inv_mapperL);
-          }
-          // restore the shape of tmp->_blocks
-          for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
-            tmp->_blocks[a].reshape_(oldshapeC[a]);
-            if (!reshaped[a]) {
-              // if targ_block is not result of any block contraction, set to zeros
-              tmp->_blocks[a].storage().set_zeros();
+            // if Rtn dtype is casted, delete the tmp_Rtn
+            if (tmp_rtn_is_casted) {
+              delete tmp_Rtn;
             }
-          }
-
-          // if Rtn dtype is casted, delete the tmp_Rtn
-          if (tmp_rtn_is_casted) {
-            delete tmp_Rtn;
-          }
           }  // end else (common_dtype <= 4)
         }
   #else
