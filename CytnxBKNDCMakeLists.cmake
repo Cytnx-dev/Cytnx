@@ -109,6 +109,13 @@ if (USE_HPTT)
     unset(ENABLE_IBM)
     unset(FINE_TUNE)
 
+    # libhptt.a is linked into cytnx, which is in turn linked into the Python
+    # extension (a shared object), so its objects must be position-independent.
+    # The old ExternalProject_Add passed -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+    # explicitly; add_subdirectory only inherits the parent's value, so set it
+    # on the target directly as a safety net independent of the preset.
+    set_property(TARGET hptt_static PROPERTY POSITION_INDEPENDENT_CODE ON)
+
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
     message(STATUS " Build HPTT Support: YES")
     message(STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")
