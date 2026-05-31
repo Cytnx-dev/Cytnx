@@ -429,7 +429,7 @@
     <member refid="classcytnx_1_1UniTensor_1a118c7e66008dd037063e3e71604ebd74" kind="function"><name>get_qindices</name></member>
     <member refid="classcytnx_1_1UniTensor_1ae7525954cafa6cf69b4fc69dcabae4c3" kind="function"><name>get_itoi</name></member>
     <member refid="classcytnx_1_1UniTensor_1ae300c5f40fe1ec3ec841c91bdf9cb944" kind="function"><name>get_itoi</name></member>
-    <member refid="classcytnx_1_1UniTensor_1ae57b74d522ed9fe3deae2dc69575c50b" kind="function"><name>convert_from</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a0cad52c38726a58b9cdc3f4a99c6e8e7" kind="function"><name>convert_from</name></member>
     <member refid="classcytnx_1_1UniTensor_1a6ab0cc54674b9af5dd660cffafa70758" kind="function"><name>normal_</name></member>
     <member refid="classcytnx_1_1UniTensor_1a6a9ad3afce8d654957443d8f105b7cb8" kind="function"><name>uniform_</name></member>
     <member refid="classcytnx_1_1UniTensor_1ac093ae2d2c907e8e28367a09b4eab218" kind="function"><name>Load</name></member>
