@@ -115,6 +115,53 @@ TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_no_truncation) {
   }
 }
 
+/*=====test info=====
+describe:BlockFermionic truncated SVD: return_err must return the discarded singular values
+in descending order (return_err>1) or just the largest discarded value (return_err==1),
+matching the same contract as the Block (non-fermionic) path.
+====================*/
+TEST_F(linalg_Test, BkFermionicUt_Svd_truncate_return_err_returns_discarded_values) {
+  UniTensor fermi_T = make_square_fermionic({"a", "b"});
+  random::uniform_(fermi_T, -1.0, 1.0, 42);
+  ASSERT_EQ(fermi_T.uten_type(), UTenType.BlockFermionic);
+
+  std::vector<UniTensor> full = linalg::Svd_truncate(fermi_T, 999, 0, true, 0);
+  std::vector<UniTensor> trunc = linalg::Svd_truncate(fermi_T, 1, 0, true, 999);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_GE(trunc.size(), 4u);
+  ASSERT_GE(all_svals.shape()[0], trunc[0].shape()[0] + trunc[3].shape()[0]);
+  for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
+    EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
+  }
+
+  // return_err=1: single element equal to largest discarded
+  std::vector<UniTensor> trunc1 = linalg::Svd_truncate(fermi_T, 1, 0, true, 1);
+  ASSERT_EQ(trunc1.back().shape()[0], 1u);
+  EXPECT_EQ(trunc1.back().at({0}), trunc[3].at({0}));
+}
+
+TEST_F(linalg_Test, BkFermionicUt_Gesvd_truncate_return_err_returns_discarded_values) {
+  UniTensor fermi_T = make_square_fermionic({"a", "b"});
+  random::uniform_(fermi_T, -1.0, 1.0, 42);
+  ASSERT_EQ(fermi_T.uten_type(), UTenType.BlockFermionic);
+
+  std::vector<UniTensor> full = linalg::Gesvd_truncate(fermi_T, 999, 0, true, true, 0);
+  std::vector<UniTensor> trunc = linalg::Gesvd_truncate(fermi_T, 1, 0, true, true, 999);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_GE(trunc.size(), 4u);
+  ASSERT_GE(all_svals.shape()[0], trunc[0].shape()[0] + trunc[3].shape()[0]);
+  for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
+    EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
+  }
+
+  // return_err=1: single element equal to largest discarded
+  std::vector<UniTensor> trunc1 = linalg::Gesvd_truncate(fermi_T, 1, 0, true, true, 1);
+  ASSERT_EQ(trunc1.back().shape()[0], 1u);
+  EXPECT_EQ(trunc1.back().at({0}), trunc[3].at({0}));
+}
+
 // TEST_F(linalg_Test, BkUt_Svd_truncate3) {
 //   Bond I = Bond(BD_IN, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
 //   Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});

@@ -504,11 +504,10 @@ namespace cytnx {
         } else {
           // keep_dim < 1: per-block min_blockdim guarantees already cover the global cap, so
           // every value in Sall is dropped.
-          if (return_err == 1) {
-            // largest dropped singular value
-            outCyT.push_back(UniTensor(linalg::Max(Sall)));
-          } else if (return_err) {
-            outCyT.push_back(UniTensor(Sall));
+          if (return_err) {
+            Sall = algo::Sort(Sall);  // ascending; BuildBlockDiscardedSingularValues expects this
+            outCyT.push_back(
+              BuildBlockDiscardedSingularValues(Sall, Sall.shape()[0], return_err));
           }
         }
 
