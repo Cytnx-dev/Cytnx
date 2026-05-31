@@ -113,10 +113,13 @@ jobs:
         # the recipe's Python would clash with this env's Python.
         run: |
           mamba install -y conda-build
-          # --file writes only the rendered recipe (no solver/progress noise
-          # that piping stdout would mix in); --python pins a single variant so
-          # render emits one recipe instead of one per python in the config.
-          conda render conda_build/ --python "3.11" --file rendered-meta.yaml
+          # conda-build ships `conda-render` as a standalone console script
+          # (the `conda render` subcommand is not registered in recent
+          # conda-build). --file writes only the rendered recipe (no solver /
+          # progress noise that piping stdout would mix in); --python pins a
+          # single variant so it emits one recipe instead of one per python in
+          # the config.
+          conda-render conda_build/ --python "3.11" --file rendered-meta.yaml
           # Write one spec per line to conda-deps.txt (so `mamba install --file`
           # parses each line as a single MatchSpec — finalized specs like
           # "gxx_linux-64 12.3.0 h..." contain spaces and would word-split if
