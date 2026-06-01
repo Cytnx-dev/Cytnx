@@ -20,6 +20,18 @@ TEST_F(BlockFermionicUniTensorTest, SimpleTensorContract) {
 }
 
 /*=====test info=====
+describe:contraction with mixed dtypes (double lhs, float rhs); exercises
+         the #ifdef UNI_MKL dtype-cast path added with Gemm_Batch, including
+         fermionic sign flips encoded in alpha
+====================*/
+TEST_F(BlockFermionicUniTensorTest, ContractMixedDtype) {
+  UniTensor L = BFUT1.astype(Type.Double);
+  UniTensor R = BFUT2.astype(Type.Float);
+  // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32 (same as VectorContract; verifies sign flip preserved)
+  EXPECT_TRUE(abs(L.contract(R).item() - 32.0) < 1e-5);
+}
+
+/*=====test info=====
 describe:some elementwise linear algebra functions
 ====================*/
 TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {
@@ -324,4 +336,22 @@ TEST_F(BlockFermionicUniTensorTest, to_dense_non_diag) {
   Tp.to_dense_();
   EXPECT_TRUE(AreEqUniTensor(T, Tp));
   EXPECT_EQ(Tp.signflip(), T.signflip());
+}
+
+/*=====test info=====
+describe:Integer-dtype fermionic block contractions must not throw in MKL builds.
+         Gemm_Batch rejects dtype > 4; the Matmul fallback must be taken instead.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, ContractIntegerDtype) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2}, {Symmetry::FermionParity()});
+  UniTensor L = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Int64, Device.cpu, false);
+  UniTensor R = UniTensor({bi, bi.redirect()}, {"b", "c"}, 1, Type.Int64, Device.cpu, false);
+  L.at({0, 0}) = 1;
+  L.at({2, 2}) = 2;
+  R.at({0, 0}) = 3;
+  R.at({2, 2}) = 4;
+  UniTensor out;
+  EXPECT_NO_THROW(out = Contract(L, R));
+  EXPECT_EQ(int64_t(out.at({0, 0}).real()), 3);
+  EXPECT_EQ(int64_t(out.at({2, 2}).real()), 8);
 }

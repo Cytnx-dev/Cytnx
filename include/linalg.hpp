@@ -3108,40 +3108,24 @@ namespace cytnx {
      * This function performs tensor type check and type conversion, then call the corresponding
      * blas function.
      *
-     * @param[in] m_array array of cytnx_int64, each element is the number of rows of \p a_tensors
-     * @param[in] n_array array of cytnx_int64, each element is the number of columns of \p
-     * b_tensors
-     * @param[in] k_array array of cytnx_int64, each element is the number of columns of \p
-     * a_tensors and the number of rows of \p b_tensors
-     * @param[in] alpha_array array of Scalar, each element is the scalar \p alpha
-     * @param[in] a_tensors array of Tensor, each element is a rank-2 Tensor with shape
-     * (m_array[i],k_array[i])
-     * @param[in] b_tensors array of Tensor, each element is a rank-2 Tensor with shape
-     * (k_array[i],n_array[i])
-     * @param[in] beta_array array of Scalar, each element is the scalar \p beta
-     * @param[in,out] c_tensors array of Tensor, each element is a rank-2 Tensor with shape
-     * (m_array[i],n_array[i]), \b{must be properly initialized with the correct shape}.
-     * @param[in] group_count cytnx_int64, the number of groups
+     * Matrices are grouped into \p group_size.size() groups. All matrices within a group must
+     * share the same m, n, k dimensions; the dimensions are inferred from the first matrix of
+     * each group. One alpha and one beta apply uniformly to every matrix in a group (matching
+     * MKL's gemm_batch contract). To use different scalars per matrix, place each matrix in its
+     * own group of size 1.
+     *
+     * @param[in] alpha_array array of Scalar, one per group
+     * @param[in] a_tensors array of rank-2 Tensors (left operand)
+     * @param[in] b_tensors array of rank-2 Tensors (right operand)
+     * @param[in] beta_array array of Scalar, one per group
+     * @param[in,out] c_tensors array of rank-2 Tensors (output, must be pre-allocated with correct
+     * shape)
      * @param[in] group_size array of cytnx_int64, each element is the number of matrices in each
      * group
      */
-    void Gemm_Batch(const std::vector<cytnx_int64> &m_array,
-                    const std::vector<cytnx_int64> &n_array,
-                    const std::vector<cytnx_int64> &k_array, const std::vector<Scalar> &alpha_array,
-                    const std::vector<Tensor> &a_tensors, const std::vector<Tensor> &b_tensors,
-                    const std::vector<Scalar> &beta_array, std::vector<Tensor> &c_tensors,
-                    const cytnx_int64 group_count, const std::vector<cytnx_int64> &group_size);
-
-    ///@cond
-    void __Gemm_Batch(const std::vector<char> &transa_array, const std::vector<char> &transb_array,
-                      const std::vector<blas_int> &m_array, const std::vector<blas_int> &n_array,
-                      const std::vector<blas_int> &k_array, const std::vector<Scalar> &alpha_array,
-                      const void **a_array, const void **b_array,
-                      const std::vector<Scalar> &beta_array, void **c_array,
-                      const blas_int group_count, const std::vector<blas_int> &group_size,
-                      const unsigned int dtype, const int device);
-
-    ///@endcond
+    void Gemm_Batch(const std::vector<Scalar> &alpha_array, const std::vector<Tensor> &a_tensors,
+                    const std::vector<Tensor> &b_tensors, const std::vector<Scalar> &beta_array,
+                    std::vector<Tensor> &c_tensors, const std::vector<cytnx_int64> &group_size);
 
   }  // namespace linalg
 

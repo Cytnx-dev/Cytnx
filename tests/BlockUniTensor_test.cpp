@@ -1279,3 +1279,44 @@ TEST_F(BlockUniTensorTest, to_dense_non_diag) {
   Bp.to_dense_();
   EXPECT_TRUE(AreEqUniTensor(BUT4, Bp));
 }
+
+/*=====test info=====
+describe:contraction with mixed dtypes (double lhs, float rhs); exercises
+         the #ifdef UNI_MKL dtype-cast path added with Gemm_Batch
+====================*/
+TEST_F(BlockUniTensorTest, ContractMixedDtype) {
+  UniTensor L_d = UT_contract_L1.astype(Type.Double);
+  UniTensor R_f = UT_contract_R1.astype(Type.Float);
+  UniTensor L_ref = UT_contract_L1.astype(Type.Double);
+  UniTensor R_ref = UT_contract_R1.astype(Type.Double);
+  L_d.set_labels({"a", "b"});
+  R_f.set_labels({"b", "c"});
+  L_ref.set_labels({"a", "b"});
+  R_ref.set_labels({"b", "c"});
+  UniTensor out_mixed = L_d.contract(R_f);
+  UniTensor out_ref = L_ref.contract(R_ref);
+  auto outbks = out_mixed.get_blocks();
+  auto refbks = out_ref.get_blocks();
+  for (int i = 0; i < static_cast<int>(refbks.size()); i++) {
+    EXPECT_EQ(AreNearlyEqTensor(outbks[i], refbks[i], 1e-5), true);
+  }
+}
+
+/*=====test info=====
+describe:Integer-dtype block contractions must not throw in MKL builds.
+         Gemm_Batch rejects dtype > 4; the Matmul fallback must be taken instead.
+====================*/
+TEST_F(BlockUniTensorTest, ContractIntegerDtype) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2});
+  UniTensor L = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Int64, Device.cpu, false);
+  UniTensor R = UniTensor({bi, bi.redirect()}, {"b", "c"}, 1, Type.Int64, Device.cpu, false);
+  L.at({0, 0}) = 1;
+  L.at({2, 2}) = 2;
+  R.at({0, 0}) = 3;
+  R.at({2, 2}) = 4;
+  // Contract must not throw; result block [0,0]=1*3=3, block [2,2]=2*4=8
+  UniTensor out;
+  EXPECT_NO_THROW(out = Contract(L, R));
+  EXPECT_EQ(int64_t(out.at({0, 0}).real()), 3);
+  EXPECT_EQ(int64_t(out.at({2, 2}).real()), 8);
+}
