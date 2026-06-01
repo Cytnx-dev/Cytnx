@@ -5,7 +5,7 @@ using namespace cytnx;
 namespace BMTest_Svd_truncate {
 
   // DenseUniTensor
-  UniTensor ConstructDenseUT(const int D, const int dtype, const unsigned int device = Device.cpu) {
+  UniTensor ConstructDenseUT(const int D, const int dtype, const int device = Device.cpu) {
     auto bd_vi = Bond(D, BD_IN);
     auto bd_pi = Bond(2, BD_IN);
     auto bd_po = Bond(2, BD_OUT);

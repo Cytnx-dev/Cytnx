@@ -51,7 +51,7 @@ namespace cytnx {
     Tensor_impl() : _contiguous(true){};
 
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              int device = -1, const bool &init_zero = true);
+              int device = Device.cpu, const bool &init_zero = true);
     void Init(const Storage &in);
     // void Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
     // const unsigned int &dtype, int device);
