@@ -7486,24 +7486,12 @@ return = a\textbf{x}\textbf{y},
         </inbodydescription>
         <location file="include/linalg.hpp" line="3099" column="12" declfile="include/linalg.hpp" declline="3099" declcolumn="12"/>
       </memberdef>
-      <memberdef kind="function" id="namespacecytnx_1_1linalg_1a0f5ee0ee79524893101ca3871f9a4451" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6a5391acd57dd66914790575407dceaa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void cytnx::linalg::Gemm_Batch</definition>
-        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;m_array, const std::vector&lt; cytnx_int64 &gt; &amp;n_array, const std::vector&lt; cytnx_int64 &gt; &amp;k_array, const std::vector&lt; Scalar &gt; &amp;alpha_array, const std::vector&lt; Tensor &gt; &amp;a_tensors, const std::vector&lt; Tensor &gt; &amp;b_tensors, const std::vector&lt; Scalar &gt; &amp;beta_array, std::vector&lt; Tensor &gt; &amp;c_tensors, const cytnx_int64 group_count, const std::vector&lt; cytnx_int64 &gt; &amp;group_size)</argsstring>
+        <argsstring>(const std::vector&lt; Scalar &gt; &amp;alpha_array, const std::vector&lt; Tensor &gt; &amp;a_tensors, const std::vector&lt; Tensor &gt; &amp;b_tensors, const std::vector&lt; Scalar &gt; &amp;beta_array, std::vector&lt; Tensor &gt; &amp;c_tensors, const std::vector&lt; cytnx_int64 &gt; &amp;group_size)</argsstring>
         <name>Gemm_Batch</name>
         <qualifiedname>cytnx::linalg::Gemm_Batch</qualifiedname>
-        <param>
-          <type>const std::vector&lt; cytnx_int64 &gt; &amp;</type>
-          <declname>m_array</declname>
-        </param>
-        <param>
-          <type>const std::vector&lt; cytnx_int64 &gt; &amp;</type>
-          <declname>n_array</declname>
-        </param>
-        <param>
-          <type>const std::vector&lt; cytnx_int64 &gt; &amp;</type>
-          <declname>k_array</declname>
-        </param>
         <param>
           <type>const std::vector&lt; Scalar &gt; &amp;</type>
           <declname>alpha_array</declname>
@@ -7525,10 +7513,6 @@ return = a\textbf{x}\textbf{y},
           <declname>c_tensors</declname>
         </param>
         <param>
-          <type>const cytnx_int64</type>
-          <declname>group_count</declname>
-        </param>
-        <param>
           <type>const std::vector&lt; cytnx_int64 &gt; &amp;</type>
           <declname>group_size</declname>
         </param>
@@ -7538,36 +7522,13 @@ return = a\textbf{x}\textbf{y},
         </briefdescription>
         <detaileddescription>
 <para>see <ulink url="https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html">https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html</ulink> This function performs tensor type check and type conversion, then call the corresponding blas function.</para>
+<para>Matrices are grouped into <computeroutput>group_size.size()</computeroutput> groups. All matrices within a group must share the same m, n, k dimensions; the dimensions are inferred from the first matrix of each group. One alpha and one beta apply uniformly to every matrix in a group (matching MKL&apos;s gemm_batch contract). To use different scalars per matrix, place each matrix in its own group of size 1.</para>
 <para><parameterlist kind="param"><parameteritem>
-<parameternamelist>
-<parametername direction="in">m_array</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>array of cytnx_int64, each element is the number of rows of <computeroutput>a_tensors</computeroutput> </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
-<parameternamelist>
-<parametername direction="in">n_array</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>array of cytnx_int64, each element is the number of columns of <computeroutput>b_tensors</computeroutput> </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
-<parameternamelist>
-<parametername direction="in">k_array</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>array of cytnx_int64, each element is the number of columns of <computeroutput>a_tensors</computeroutput> and the number of rows of <computeroutput>b_tensors</computeroutput> </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
 <parameternamelist>
 <parametername direction="in">alpha_array</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>array of Scalar, each element is the scalar <computeroutput>alpha</computeroutput> </para>
+<para>array of Scalar, one per group </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7575,7 +7536,7 @@ return = a\textbf{x}\textbf{y},
 <parametername direction="in">a_tensors</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>array of <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, each element is a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with shape (m_array[i],k_array[i]) </para>
+<para>array of rank-2 Tensors (left operand) </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7583,7 +7544,7 @@ return = a\textbf{x}\textbf{y},
 <parametername direction="in">b_tensors</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>array of <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, each element is a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with shape (k_array[i],n_array[i]) </para>
+<para>array of rank-2 Tensors (right operand) </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7591,7 +7552,7 @@ return = a\textbf{x}\textbf{y},
 <parametername direction="in">beta_array</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>array of Scalar, each element is the scalar <computeroutput>beta</computeroutput> </para>
+<para>array of Scalar, one per group </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7599,15 +7560,7 @@ return = a\textbf{x}\textbf{y},
 <parametername direction="inout">c_tensors</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>array of <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, each element is a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with shape (m_array[i],n_array[i]), <bold></bold>{must be properly initialized with the correct shape}. </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
-<parameternamelist>
-<parametername direction="in">group_count</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>cytnx_int64, the number of groups </para>
+<para>array of rank-2 Tensors (output, must be pre-allocated with correct shape) </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7623,7 +7576,7 @@ return = a\textbf{x}\textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3128" column="10" declfile="include/linalg.hpp" declline="3128" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3126" column="10" declfile="include/linalg.hpp" declline="3126" declcolumn="10"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

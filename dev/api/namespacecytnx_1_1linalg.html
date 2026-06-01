@@ -499,10 +499,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ab781bbb25cc0f04ad700596d14da4596" id="r_ab781bbb25cc0f04ad700596d14da4596"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ab781bbb25cc0f04ad700596d14da4596">Gemm</a> (const Scalar &amp;a, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;x, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;y)</td></tr>
 <tr class="memdesc:ab781bbb25cc0f04ad700596d14da4596"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blas Gemm, performing \( a\textbf{x}\textbf{y} -&gt; \) return.  <br /></td></tr>
 <tr class="separator:ab781bbb25cc0f04ad700596d14da4596"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f5ee0ee79524893101ca3871f9a4451" id="r_a0f5ee0ee79524893101ca3871f9a4451"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a0f5ee0ee79524893101ca3871f9a4451">Gemm_Batch</a> (const std::vector&lt; cytnx_int64 &gt; &amp;m_array, const std::vector&lt; cytnx_int64 &gt; &amp;n_array, const std::vector&lt; cytnx_int64 &gt; &amp;k_array, const std::vector&lt; Scalar &gt; &amp;alpha_array, const std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;a_tensors, const std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;b_tensors, const std::vector&lt; Scalar &gt; &amp;beta_array, std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;c_tensors, const cytnx_int64 group_count, const std::vector&lt; cytnx_int64 &gt; &amp;group_size)</td></tr>
-<tr class="memdesc:a0f5ee0ee79524893101ca3871f9a4451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blas Gemm_Batch, performing many(batch) \( \textbf{c} = \alpha\textbf{a}\textbf{b} +
+<tr class="memitem:a6a5391acd57dd66914790575407dceaa" id="r_a6a5391acd57dd66914790575407dceaa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a6a5391acd57dd66914790575407dceaa">Gemm_Batch</a> (const std::vector&lt; Scalar &gt; &amp;alpha_array, const std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;a_tensors, const std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;b_tensors, const std::vector&lt; Scalar &gt; &amp;beta_array, std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt; &amp;c_tensors, const std::vector&lt; cytnx_int64 &gt; &amp;group_size)</td></tr>
+<tr class="memdesc:a6a5391acd57dd66914790575407dceaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blas Gemm_Batch, performing many(batch) \( \textbf{c} = \alpha\textbf{a}\textbf{b} +
 \beta\textbf{c} \), inplacely. You do not need to consider the row-major or column-major, just provide the correct shape.  <br /></td></tr>
-<tr class="separator:a0f5ee0ee79524893101ca3871f9a4451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a6a5391acd57dd66914790575407dceaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>linear algebra related functions. </p>
@@ -2566,8 +2566,8 @@ return = a\textbf{x}\textbf{y},
 
 </div>
 </div>
-<a id="a0f5ee0ee79524893101ca3871f9a4451" name="a0f5ee0ee79524893101ca3871f9a4451"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f5ee0ee79524893101ca3871f9a4451">&#9670;&#160;</a></span>Gemm_Batch()</h2>
+<a id="a6a5391acd57dd66914790575407dceaa" name="a6a5391acd57dd66914790575407dceaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a5391acd57dd66914790575407dceaa">&#9670;&#160;</a></span>Gemm_Batch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2575,24 +2575,6 @@ return = a\textbf{x}\textbf{y},
         <tr>
           <td class="memname">void cytnx::linalg::Gemm_Batch </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
-          <td class="paramname"><em>m_array</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
-          <td class="paramname"><em>n_array</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
-          <td class="paramname"><em>k_array</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const std::vector&lt; Scalar &gt; &amp;&#160;</td>
           <td class="paramname"><em>alpha_array</em>, </td>
         </tr>
@@ -2623,12 +2605,6 @@ return = a\textbf{x}\textbf{y},
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const cytnx_int64&#160;</td>
-          <td class="paramname"><em>group_count</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const std::vector&lt; cytnx_int64 &gt; &amp;&#160;</td>
           <td class="paramname"><em>group_size</em>&#160;</td>
         </tr>
@@ -2643,17 +2619,14 @@ return = a\textbf{x}\textbf{y},
 <p>Blas Gemm_Batch, performing many(batch) \( \textbf{c} = \alpha\textbf{a}\textbf{b} +
 \beta\textbf{c} \), inplacely. You do not need to consider the row-major or column-major, just provide the correct shape. </p>
 <p>see <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html">https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html</a> This function performs tensor type check and type conversion, then call the corresponding blas function.</p>
+<p>Matrices are grouped into <code>group_size.size()</code> groups. All matrices within a group must share the same m, n, k dimensions; the dimensions are inferred from the first matrix of each group. One alpha and one beta apply uniformly to every matrix in a group (matching MKL's gemm_batch contract). To use different scalars per matrix, place each matrix in its own group of size 1.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">m_array</td><td>array of cytnx_int64, each element is the number of rows of <code>a_tensors</code> </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">n_array</td><td>array of cytnx_int64, each element is the number of columns of <code>b_tensors</code> </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">k_array</td><td>array of cytnx_int64, each element is the number of columns of <code>a_tensors</code> and the number of rows of <code>b_tensors</code> </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">alpha_array</td><td>array of Scalar, each element is the scalar <code>alpha</code> </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">a_tensors</td><td>array of <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>, each element is a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> with shape (m_array[i],k_array[i]) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">b_tensors</td><td>array of <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>, each element is a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> with shape (k_array[i],n_array[i]) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">beta_array</td><td>array of Scalar, each element is the scalar <code>beta</code> </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">c_tensors</td><td>array of <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>, each element is a rank-2 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> with shape (m_array[i],n_array[i]), <b></b>{must be properly initialized with the correct shape}. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">group_count</td><td>cytnx_int64, the number of groups </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">alpha_array</td><td>array of Scalar, one per group </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">a_tensors</td><td>array of rank-2 Tensors (left operand) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">b_tensors</td><td>array of rank-2 Tensors (right operand) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">beta_array</td><td>array of Scalar, one per group </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">c_tensors</td><td>array of rank-2 Tensors (output, must be pre-allocated with correct shape) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">group_size</td><td>array of cytnx_int64, each element is the number of matrices in each group </td></tr>
   </table>
   </dd>

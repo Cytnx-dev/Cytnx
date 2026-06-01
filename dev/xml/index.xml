@@ -662,7 +662,7 @@
     <member refid="namespacecytnx_1_1linalg_1aad5bd110b48c053428e72ecceb2aa04d" kind="function"><name>Ger</name></member>
     <member refid="namespacecytnx_1_1linalg_1a2a4fdc352527d77235ff53d3694bf92c" kind="function"><name>Gemm_</name></member>
     <member refid="namespacecytnx_1_1linalg_1ab781bbb25cc0f04ad700596d14da4596" kind="function"><name>Gemm</name></member>
-    <member refid="namespacecytnx_1_1linalg_1a0f5ee0ee79524893101ca3871f9a4451" kind="function"><name>Gemm_Batch</name></member>
+    <member refid="namespacecytnx_1_1linalg_1a6a5391acd57dd66914790575407dceaa" kind="function"><name>Gemm_Batch</name></member>
   </compound>
   <compound refid="namespacecytnx_1_1operators" kind="namespace"><name>cytnx::operators</name>
     <member refid="namespacecytnx_1_1operators_1aeecc22df632adf78082dd92ef87eb8c3" kind="function"><name>Sz_shalf</name></member>

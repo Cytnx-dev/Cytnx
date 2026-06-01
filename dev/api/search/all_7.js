@@ -2,7 +2,7 @@ var searchData=
 [
   ['gemm_0',['Gemm',['../namespacecytnx_1_1linalg.html#ab781bbb25cc0f04ad700596d14da4596',1,'cytnx::linalg']]],
   ['gemm_5f_1',['Gemm_',['../namespacecytnx_1_1linalg.html#a2a4fdc352527d77235ff53d3694bf92c',1,'cytnx::linalg']]],
-  ['gemm_5fbatch_2',['Gemm_Batch',['../namespacecytnx_1_1linalg.html#a0f5ee0ee79524893101ca3871f9a4451',1,'cytnx::linalg']]],
+  ['gemm_5fbatch_2',['Gemm_Batch',['../namespacecytnx_1_1linalg.html#a6a5391acd57dd66914790575407dceaa',1,'cytnx::linalg']]],
   ['generator_2ehpp_3',['Generator.hpp',['../Generator_8hpp.html',1,'']]],
   ['ger_4',['Ger',['../namespacecytnx_1_1linalg.html#aad5bd110b48c053428e72ecceb2aa04d',1,'cytnx::linalg']]],
   ['gesvd_5',['gesvd',['../namespacecytnx_1_1linalg.html#a8ae32a5c874c9f5c1cf8cbbd59ef50bb',1,'cytnx::linalg::Gesvd(const Tensor &amp;Tin, const bool &amp;is_U=true, const bool &amp;is_vT=true)'],['../namespacecytnx_1_1linalg.html#a829b1cbf704ff5560e32473e71dd6ed1',1,'cytnx::linalg::Gesvd(const cytnx::UniTensor &amp;Tin, const bool &amp;is_U=true, const bool &amp;is_vT=true)']]],
