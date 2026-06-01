@@ -105,10 +105,11 @@ jobs:
         # conda-build can render, which is heavier than this job warrants.
         #
         # gtest is omitted on purpose (RUN_TESTS=OFF builds no gtest binary);
-        # OpenBLAS + LAPACKE match the openblas-cpu preset used below.
+        # OpenBLAS + LAPACKE match the openblas-cpu preset used below. ccache
+        # backs the CMAKE_*_COMPILER_LAUNCHER set in this job's env.
         run: |
           mamba install -y \
-            _openmp_mutex=*=*_llvm cmake make boost git compilers \
+            _openmp_mutex=*=*_llvm cmake make boost git compilers ccache \
             blas=*=openblas liblapacke arpack
 
       - name: Configure cytnx (openblas-cpu preset, USE_HPTT=ON)
