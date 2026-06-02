@@ -1,4 +1,6 @@
 #include "Trace_internal.hpp"
+#include "Tensor.hpp"
+#include "backend/Storage.hpp"
 #include "cytnx_error.hpp"
 
 #include "backend/linalg_internal_cpu/pairwise_sum.hpp"
@@ -31,9 +33,13 @@ namespace cytnx {
         for (auto d : out_shape) Nelem *= static_cast<cytnx_uint64>(d);
         const bool is_2d = out_shape.empty();
 
-        Tensor out = Tensor({is_2d ? cytnx_uint64{1} : Nelem}, Tn.dtype(), Tn.device());
-        out.storage().set_zeros();
+        // Fill a flat result Storage, then compose the output Tensor from it; the
+        // 2D trace produces a single element, the ND trace one element per
+        // remaining-rank multi-index.
+        Storage out_storage(is_2d ? cytnx_uint64{1} : Nelem, Tn.dtype(), Tn.device());
         if (Ndiag == 0 || Nelem == 0) {
+          out_storage.set_zeros();
+          Tensor out = Tensor::from_storage(out_storage);
           if (!is_2d) out.reshape_(out_shape);
           return out;
         }
@@ -42,11 +48,11 @@ namespace cytnx {
         const cytnx_uint64 diag_stride = strides[ax1] + strides[ax2];
         const cytnx_uint64 extent = (Ndiag - 1) * diag_stride + 1;
         const T *data = Tn.storage().data<T>();
+        T *out_data = out_storage.data<T>();
 
         if (is_2d) {
-          out.storage().at<T>(0) =
-            PairwiseSum(std::span<const T>(data, extent) | stride(diag_stride));
-          return out;
+          out_data[0] = PairwiseSum(std::span<const T>(data, extent) | stride(diag_stride));
+          return Tensor::from_storage(out_storage);
         }
 
         // Input stride for each surviving (output) axis, so the hot loop indexes a
@@ -60,7 +66,6 @@ namespace cytnx {
         // earlier axes on wrap) and adjusts base by the affected axes' strides. This
         // avoids the per-element division and modulo of decoding the flat index, and
         // needs no precomputed row-major accumulators.
-        T *out_data = out.storage().data<T>();
         std::vector<cytnx_uint64> index(out_shape.size(), 0);
         cytnx_uint64 base = 0;
         for (cytnx_uint64 i = 0; i < Nelem; ++i) {
@@ -74,6 +79,7 @@ namespace cytnx {
             base -= (static_cast<cytnx_uint64>(out_shape[x]) - 1) * out_strides[x];
           }
         }
+        Tensor out = Tensor::from_storage(out_storage);
         out.reshape_(out_shape);
         return out;
       }
