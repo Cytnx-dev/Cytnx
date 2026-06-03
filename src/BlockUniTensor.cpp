@@ -10,17 +10,16 @@
 #include <map>
 #include <boost/unordered_map.hpp>
 #include <stack>
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
 
 namespace cytnx {
   typedef Accessor ac;
-  void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
-                            const cytnx_int64 &rowrank, const unsigned int &dtype,
-                            const int &device, const bool &is_diag, const bool &no_alloc,
-                            const std::string &name) {
+  void BlockUniTensor::Init(const std::vector<Bond> &bonds,
+                            const std::vector<std::string> &in_labels, const cytnx_int64 &rowrank,
+                            const unsigned int &dtype, const int &device, const bool &is_diag,
+                            const bool &no_alloc, const std::string &name) {
     this->_name = name;
     // the entering is already check all the bonds have symmetry.
     //  need to check:
@@ -29,7 +28,7 @@ namespace cytnx {
 
     // check Symmetry for all bonds
     cytnx_uint32 N_symmetry = bonds[0].Nsym();
-    vector<Symmetry> tmpSyms = bonds[0].syms();
+    std::vector<Symmetry> tmpSyms = bonds[0].syms();
 
     cytnx_uint32 N_ket = 0;
     for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
@@ -82,14 +81,14 @@ namespace cytnx {
 
     // check labels:
     if (in_labels.size() == 0) {
-      for (cytnx_int64 i = 0; i < bonds.size(); i++) this->_labels.push_back(to_string(i));
+      for (cytnx_int64 i = 0; i < bonds.size(); i++) this->_labels.push_back(std::to_string(i));
 
     } else {
       // check bonds & labels dim
       cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
                       "[ERROR] labels must have same length as # of bonds.");
 
-      std::vector<string> tmp = vec_unique(in_labels);
+      std::vector<std::string> tmp = vec_unique(in_labels);
       cytnx_error_msg(tmp.size() != in_labels.size(),
                       "[ERROR] labels cannot contain duplicated elements.%s", "\n");
       this->_labels = in_labels;
@@ -118,10 +117,6 @@ namespace cytnx {
     // copy bonds, otherwise it will share objects:
     this->_bonds = vec_clone(bonds);
     this->_is_braket_form = this->_update_braket();
-
-    // vector<cytnx_uint64> blocklens;
-    // vector<vector<cytnx_uint64>> blocksizes;
-    // cytnx_uint64 totblocksize = 0;
 
     if (this->_is_diag) {
       for (int b = 0; b < this->_bonds[0].qnums().size(); b++) {
@@ -212,29 +207,29 @@ namespace cytnx {
     for (int i = 0; i < Total_line; i++) {
       // Lside:
       if (i < Nin) {
-        Lside[i] += "[" + to_string(qn_indices[i]) + "] ";
+        Lside[i] += "[" + std::to_string(qn_indices[i]) + "] ";
         for (int s = 0; s < bonds[0].Nsym(); s++) {
           Lside[i] += bonds[0]._impl->_syms[s].stype_str() + "(" +
-                      to_string(bonds[i]._impl->_qnums[qn_indices[i]][s]) + ")";
+                      std::to_string(bonds[i]._impl->_qnums[qn_indices[i]][s]) + ")";
         }
         if (Lmax < Lside[i].size()) Lmax = Lside[i].size();
 
-        MidL[i] += to_string(block.shape()[i]);
+        MidL[i] += std::to_string(block.shape()[i]);
         if (mL < MidL[i].size()) mL = MidL[i].size();
       }
 
       // Rside:
       if (i < Nout) {
-        Rside[i] += "[" + to_string(qn_indices[Nin + i]) + "] ";
+        Rside[i] += "[" + std::to_string(qn_indices[Nin + i]) + "] ";
         for (int s = 0; s < bonds[0].Nsym(); s++) {
           Rside[i] += bonds[0]._impl->_syms[s].stype_str() + "(" +
-                      to_string(bonds[Nin + i]._impl->_qnums[qn_indices[Nin + i]][s]) + ")";
+                      std::to_string(bonds[Nin + i]._impl->_qnums[qn_indices[Nin + i]][s]) + ")";
         }
         // check if is_diag = true:
         if (block.shape().size() == 1 && bonds.size() == 2)
-          MidR[i] += to_string(block.shape()[i]);
+          MidR[i] += std::to_string(block.shape()[i]);
         else
-          MidR[i] += to_string(block.shape()[Nin + i]);
+          MidR[i] += std::to_string(block.shape()[Nin + i]);
         if (mR < MidR[i].size()) mR = MidR[i].size();
       }
     }
@@ -242,13 +237,13 @@ namespace cytnx {
     // filling space:
     for (int i = 0; i < Total_line; i++) {
       if (Lside[i].size() < Lmax) {
-        Lside[i] += string(" ") * (Lmax - Lside[i].size());
+        Lside[i] += std::string(" ") * (Lmax - Lside[i].size());
       }
       if (MidL[i].size() < mL) {
-        MidL[i] += string(" ") * (mL - MidL[i].size());
+        MidL[i] += std::string(" ") * (mL - MidL[i].size());
       }
       if (MidR[i].size() < mR) {
-        MidR[i] += string(" ") * (mR - MidR[i].size());
+        MidR[i] += std::string(" ") * (mR - MidR[i].size());
       }
     }
 
@@ -256,8 +251,8 @@ namespace cytnx {
     //  3spacing, Lmax , 5 for arrow
     std::string empty_line =
       (std::string(" ") * (3 + Lmax + 5)) + "| " + std::string(" ") * (mL + 5 + mR) + " |";
-    os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
-    os << empty_line << endl;
+    os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << std::endl;
+    os << empty_line << std::endl;
 
     std::string bks;
     for (int i = 0; i < Total_line; i++) {
@@ -281,11 +276,11 @@ namespace cytnx {
         bks = "";
       }
 
-      os << bks << Rside[i] << endl;
-      os << empty_line << endl;
+      os << bks << Rside[i] << std::endl;
+      os << empty_line << std::endl;
     }
 
-    os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
+    os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << std::endl;
   }
   void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
     cytnx_error_msg(
@@ -303,12 +298,12 @@ namespace cytnx {
     for(int s=0;s<this->_inner_to_outer_idx[idx].size();s++){
         os << this->_inner_to_outer_idx[idx][s] << "\t";
     }
-    os << "}" << endl;
+    os << "}" << std::endl;
     os << "\t";
     for(int s=0;s<this->_bonds.size();s++){
         os << ((this->_bonds[s].type()>0)?"OUT":"IN") << "\t";
     }
-    os << endl;
+    os << std::endl;
     os << "  |-Qn for each axis:\n";
     for(int s=0;s<this->_bonds[0].Nsym();s++){
         os << " " <<this->_bonds[0]._impl->_syms[s].stype_str() << ":\t";
@@ -316,7 +311,7 @@ namespace cytnx {
             os << std::showpos <<
     this->_bonds[l]._impl->_qnums[this->_inner_to_outer_idx[idx][l]][s] << "\t";
         }
-        os << std::noshowpos << endl;
+        os << std::noshowpos << std::endl;
     }
     */
     os << " |- []   : Qn index \n";
@@ -327,9 +322,10 @@ namespace cytnx {
     if (full_info)
       os << this->_blocks[idx];
     else {
-      os << "  |-dtype:\t" << Type.getname(this->_blocks[idx].dtype()) << endl;
-      os << "  |-device:\t" << Device.getname(this->_blocks[idx].device()) << endl;
-      os << "  |-contiguous:\t" << (this->_blocks[idx].is_contiguous() ? "True" : "False") << endl;
+      os << "  |-dtype:\t" << Type.getname(this->_blocks[idx].dtype()) << std::endl;
+      os << "  |-device:\t" << Device.getname(this->_blocks[idx].device()) << std::endl;
+      os << "  |-contiguous:\t" << (this->_blocks[idx].is_contiguous() ? "True" : "False")
+         << std::endl;
       os << "  |-shape:\t";
       vec_print_simple(os, this->_blocks[idx].shape());
     }
@@ -356,7 +352,7 @@ namespace cytnx {
     os << "Symmetries: ";
     for(int s=0;s<this->_bonds[0].Nsym();s++)
         os << this->_bonds[0]._impl->_syms[s].stype_str() << " ";
-    os << endl;
+    os << std::endl;
     */
 
     // print each blocks with its qnum!
@@ -364,27 +360,6 @@ namespace cytnx {
       this->print_block(b, full_info);
     }
 
-    /*
-      auto tmp_qnums = in.get_blocks_qnums();
-      std::vector<Tensor> tmp = in.get_blocks_(true);
-      sprintf(buffer, "BLOCKS:: %s", "\n");
-      os << std::string(buffer);
-      os << "=============\n";
-
-      if (!in.is_contiguous()) {
-        cytnx_warning_msg(
-          true,
-          "[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks "
-          "appears here could be different than the current shape of UniTensor.%s",
-          "\n");
-      }
-      for (cytnx_uint64 i = 0; i < tmp.size(); i++) {
-        os << "Qnum:" << tmp_qnums[i] << std::endl;
-        os << tmp[i] << std::endl;
-        os << "=============\n";
-      }
-      os << "-------- end of print ---------\n";
-    */
     free(buffer);
   }
 
@@ -429,17 +404,17 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < vl; i++) {
       if (i < Nin) {
         if (Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
-        if (Space_Ldim_max < to_string(this->_bonds[i].dim()).size())
-          Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
+        if (Space_Ldim_max < std::to_string(this->_bonds[i].dim()).size())
+          Space_Ldim_max = std::to_string(this->_bonds[i].dim()).size();
       }
       if (i < Nout) {
-        if (Space_Rdim_max < to_string(this->_bonds[Nin + i].dim()).size())
-          Space_Rdim_max = to_string(this->_bonds[Nin + i].dim()).size();
+        if (Space_Rdim_max < std::to_string(this->_bonds[Nin + i].dim()).size())
+          Space_Rdim_max = std::to_string(this->_bonds[Nin + i].dim()).size();
       }
     }
-    string LallSpace = (string(" ") * (Space_Llabel_max + 3 + 1));
-    string MallSpace = string(" ") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
-    string M_dashes = string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
+    std::string LallSpace = (std::string(" ") * (Space_Llabel_max + 3 + 1));
+    std::string MallSpace = std::string(" ") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
+    std::string M_dashes = std::string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
 
     std::string tmpss;
     sprintf(buffer, "%s row %s col %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
@@ -459,8 +434,8 @@ namespace cytnx {
         memset(llbl, 0, sizeof(char) * BUFFsize);
         tmpss = this->_labels[i] + std::string(" ") * (Space_Llabel_max - this->_labels[i].size());
         sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
-        tmpss = to_string(this->_bonds[i].dim()) +
-                std::string(" ") * (Space_Ldim_max - to_string(this->_bonds[i].dim()).size());
+        tmpss = std::to_string(this->_bonds[i].dim()) +
+                std::string(" ") * (Space_Ldim_max - std::to_string(this->_bonds[i].dim()).size());
         sprintf(llbl, "%s", tmpss.c_str());
       } else {
         memset(l, 0, sizeof(char) * BUFFsize);
@@ -480,8 +455,9 @@ namespace cytnx {
 
         sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
 
-        tmpss = to_string(this->_bonds[Nin + i].dim()) +
-                std::string(" ") * (Space_Rdim_max - to_string(this->_bonds[Nin + i].dim()).size());
+        tmpss =
+          std::to_string(this->_bonds[Nin + i].dim()) +
+          std::string(" ") * (Space_Rdim_max - std::to_string(this->_bonds[Nin + i].dim()).size());
         sprintf(rlbl, "%s", tmpss.c_str());
 
       } else {
@@ -591,7 +567,7 @@ namespace cytnx {
 
     std::vector<cytnx_int64> mapper_i64;
     // cytnx_error_msg(true,"[Developing!]%s","\n");
-    std::vector<string>::iterator it;
+    std::vector<std::string>::iterator it;
     for (cytnx_int64 i = 0; i < mapper.size(); i++) {
       it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
       cytnx_error_msg(
@@ -659,7 +635,7 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
-    const std::vector<string> &new_labels) {
+    const std::vector<std::string> &new_labels) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
@@ -677,7 +653,7 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
-    const std::vector<string> &new_labels) {
+    const std::vector<std::string> &new_labels) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
@@ -695,7 +671,7 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
-                                                               const string &new_label) {
+                                                               const std::string &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
@@ -703,8 +679,8 @@ namespace cytnx {
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string &inx,
-                                                               const string &new_label) {
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const std::string &inx,
+                                                               const std::string &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
@@ -719,7 +695,7 @@ namespace cytnx {
     }
     BlockUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks.resize(this->_blocks.size());
-    for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
+    for (size_t i = 0; i < tmp->_blocks.size(); i++)
       tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
     tmp->_is_diag = false;
     boost::intrusive_ptr<UniTensor_base> out(tmp);
@@ -749,7 +725,7 @@ namespace cytnx {
       "\n");
 
     // get common labels:
-    std::vector<string> comm_labels;
+    std::vector<std::string> comm_labels;
     std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
 
@@ -758,7 +734,7 @@ namespace cytnx {
       BlockUniTensor *tmp = new BlockUniTensor();
       BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
       const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
-      std::vector<string> out_labels;
+      std::vector<std::string> out_labels;
       std::vector<Bond> out_bonds;
       cytnx_int64 out_rowrank;
 
@@ -911,7 +887,7 @@ namespace cytnx {
         BlockUniTensor *tmp = new BlockUniTensor();
         BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
         const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
-        std::vector<string> out_labels;
+        std::vector<std::string> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
 
@@ -1103,9 +1079,9 @@ namespace cytnx {
               oldshapeL = this->_blocks[a].shape();
               this->_blocks[a].reshape_({-1, comm_dim});
               // Collect block pairs for this left block then call Gemm_Batch once.
-              vector<Tensor> batch_a, batch_b, batch_c;
-              vector<Scalar> batch_alpha, batch_beta;
-              vector<cytnx_int64> batch_targ_b;
+              std::vector<Tensor> batch_a, batch_b, batch_c;
+              std::vector<Scalar> batch_alpha, batch_beta;
+              std::vector<cytnx_int64> batch_targ_b;
 
               // loop over all right blocks that can contract with this->_blocks[a]
               for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
@@ -1142,7 +1118,7 @@ namespace cytnx {
                 batch_targ_b.push_back(targ_b);
               }
               if (!batch_a.empty()) {
-                vector<cytnx_int64> group_sizes(batch_a.size(), 1);
+                std::vector<cytnx_int64> group_sizes(batch_a.size(), 1);
                 linalg::Gemm_Batch(batch_alpha, batch_a, batch_b, batch_beta, batch_c, group_sizes);
                 for (size_t i = 0; i < batch_c.size(); i++)
                   tmp->_blocks[batch_targ_b[i]] = batch_c[i];
