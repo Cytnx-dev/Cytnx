@@ -50,9 +50,9 @@ namespace cytnx {
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0; /* size of workspace */
+      std::size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0; /* size of workspace */
+      std::size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
@@ -161,9 +161,9 @@ namespace cytnx {
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0; /* size of workspace */
+      std::size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0; /* size of workspace */
+      std::size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
@@ -271,9 +271,9 @@ namespace cytnx {
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0; /* size of workspace */
+      std::size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0; /* size of workspace */
+      std::size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
@@ -380,9 +380,9 @@ namespace cytnx {
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0; /* size of workspace */
+      std::size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0; /* size of workspace */
+      std::size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :

@@ -65,8 +65,8 @@ namespace cytnx {
                     "\'(\' and \')\'");
 
     // check mismatch:
-    size_t lbrac_n = std::count(line.begin(), line.end(), '(');
-    size_t rbrac_n = std::count(line.begin(), line.end(), ')');
+    std::size_t lbrac_n = std::count(line.begin(), line.end(), '(');
+    std::size_t rbrac_n = std::count(line.begin(), line.end(), ')');
     cytnx_error_msg(lbrac_n != rbrac_n, "[ERROR][Gncon][Fromfile] parentheses mismatch.%s", "\n");
 
     // slice the line into pieces by parentheses and comma
@@ -301,7 +301,7 @@ namespace cytnx {
     this->CtTree.base_nodes.clear();
 
     // Create nodes using make_shared
-    for (size_t i = 0; i < this->names.size(); i++) {
+    for (std::size_t i = 0; i < this->names.size(); i++) {
       auto node = std::make_shared<Node>();
       node->name = this->names[i];
       this->CtTree.base_nodes.push_back(node);

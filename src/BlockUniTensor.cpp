@@ -695,7 +695,7 @@ namespace cytnx {
     }
     BlockUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks.resize(this->_blocks.size());
-    for (size_t i = 0; i < tmp->_blocks.size(); i++)
+    for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
       tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
     tmp->_is_diag = false;
     boost::intrusive_ptr<UniTensor_base> out(tmp);
@@ -1120,7 +1120,7 @@ namespace cytnx {
               if (!batch_a.empty()) {
                 std::vector<cytnx_int64> group_sizes(batch_a.size(), 1);
                 linalg::Gemm_Batch(batch_alpha, batch_a, batch_b, batch_beta, batch_c, group_sizes);
-                for (size_t i = 0; i < batch_c.size(); i++)
+                for (std::size_t i = 0; i < batch_c.size(); i++)
                   tmp->_blocks[batch_targ_b[i]] = batch_c[i];
               }
               // restore the shape&permutation of this->_blocks[a]

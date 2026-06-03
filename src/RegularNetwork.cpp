@@ -26,8 +26,8 @@ namespace cytnx {
                       "\'(\' and \')\'");
 
       // check mismatch:
-      size_t lbrac_n = std::count(line.begin(), line.end(), '(');
-      size_t rbrac_n = std::count(line.begin(), line.end(), ')');
+      std::size_t lbrac_n = std::count(line.begin(), line.end(), '(');
+      std::size_t rbrac_n = std::count(line.begin(), line.end(), ')');
       cytnx_error_msg(lbrac_n != rbrac_n, "[ERROR][Network][Fromfile] parentheses mismatch.%s",
                       "\n");
 
@@ -464,7 +464,7 @@ namespace cytnx {
     this->CtTree.base_nodes.clear();
 
     // Create base nodes properly
-    for (size_t i = 0; i < this->names.size(); i++) {
+    for (std::size_t i = 0; i < this->names.size(); i++) {
       auto node = std::make_shared<Node>();
       node->name = this->names[i];
       this->CtTree.base_nodes.push_back(node);
@@ -547,15 +547,15 @@ namespace cytnx {
     this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
     this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
     cytnx_int64 label_int = 0;
-    for (size_t i = 0; i < this->label_arr.size(); i++) {
+    for (std::size_t i = 0; i < this->label_arr.size(); i++) {
       this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
-      for (size_t j = 0; j < this->label_arr[i].size(); j++) {
+      for (std::size_t j = 0; j < this->label_arr[i].size(); j++) {
         labelmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], label_int));
         this->int_modes[i][j] = labelmap[this->label_arr[i][j]];
         label_int += 1;
       }
     }
-    for (size_t i = 0; i < TOUT_labels.size(); i++) {
+    for (std::size_t i = 0; i < TOUT_labels.size(); i++) {
       this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
     }
 
@@ -1042,7 +1042,7 @@ namespace cytnx {
     this->CtTree.base_nodes.clear();
 
     // Create nodes using make_shared
-    for (size_t i = 0; i < this->names.size(); i++) {
+    for (std::size_t i = 0; i < this->names.size(); i++) {
       auto node = std::make_shared<Node>();
       node->name = this->names[i];
       this->CtTree.base_nodes.push_back(node);
@@ -1107,15 +1107,15 @@ namespace cytnx {
     this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
     this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
     cytnx_int64 label_int = 0;
-    for (size_t i = 0; i < this->label_arr.size(); i++) {
+    for (std::size_t i = 0; i < this->label_arr.size(); i++) {
       this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
-      for (size_t j = 0; j < this->label_arr[i].size(); j++) {
+      for (std::size_t j = 0; j < this->label_arr[i].size(); j++) {
         labelmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], label_int));
         this->int_modes[i][j] = labelmap[this->label_arr[i][j]];
         label_int += 1;
       }
     }
-    for (size_t i = 0; i < TOUT_labels.size(); i++) {
+    for (std::size_t i = 0; i < TOUT_labels.size(); i++) {
       this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
     }
 

@@ -23,7 +23,7 @@ namespace cytnx {
     // std::vector<cudaDataType_t> type_mapper;
 
     // cuTensorNet version
-    size_t cuTensornetVersion;
+    std::size_t cuTensornetVersion;
 
     // GPU device
     int numDevices{0};
@@ -45,7 +45,7 @@ namespace cytnx {
     cutensornetNetworkDescriptor_t descNet;
 
     // mem info
-    size_t freeMem, totalMem;
+    std::size_t freeMem, totalMem;
     uint64_t workspaceLimit;
 
     // optimizer config

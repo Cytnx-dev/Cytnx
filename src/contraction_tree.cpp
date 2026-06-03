@@ -50,7 +50,7 @@ namespace cytnx {
     std::shared_ptr<Node> left, right;
     stack<char> operators;
     char topc;
-    size_t pos = 0;
+    std::size_t pos = 0;
     std::string tok;
 
     // evaluate each token, and construct the Contraction Tree.
