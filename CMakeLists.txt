@@ -7,7 +7,7 @@ message(STATUS "")
 # #####################################################################
 # ## CMAKE and CXX VERSION
 # #####################################################################
-cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_ARCHITECTURES
+cmake_minimum_required(VERSION 3.24) # 3.18+ required for cmake_language(EVAL CODE ...); 3.24 is a tested minimum
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 # Inria's morse_cmake provides an up-to-date FindLAPACKE (and helpers) that
@@ -185,7 +185,18 @@ project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
-  set(CMAKE_CUDA_ARCHITECTURES native)
+  # Default to a portable fat binary unless the caller picked architectures via
+  # -D, the cache, a preset's cacheVariables, or the CUDAARCHS environment
+  # variable. This must run before enable_language(CUDA): afterwards
+  # CMAKE_CUDA_ARCHITECTURES is never empty (CMake fills in its own default), so
+  # the "not specified" case can no longer be detected. enable_language(CUDA)
+  # reads CUDAARCHS on its own, so we only avoid shadowing it here, not copy it.
+  # The default embeds SASS for each supported real architecture (Volta sm_70 is
+  # the floor required by cuTENSOR/cuQuantum, up through Hopper sm_90) plus PTX
+  # of the newest (90-virtual) so the driver can JIT for newer/unknown GPUs.
+  if(NOT CMAKE_CUDA_ARCHITECTURES AND NOT DEFINED ENV{CUDAARCHS})
+    set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+  endif()
   enable_language(CUDA)
   # Disable generation of "--option-file" flag in compile_commands.json.
   # This workaround helps VSCode's cpptools extension correctly locate CUDA
