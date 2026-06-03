@@ -156,7 +156,7 @@ namespace cytnx {
     cout << "--------------------\n";
     cout << "[Symmetry]" << endl;
     cout << "type : Abelian, Z(" << this->n << ")" << endl;
-    cout << "combine rule : (Q1 + Q2)\%" << this->n << endl;
+    cout << "combine rule : (Q1 + Q2)%" << this->n << endl;
     cout << "reverse rule : Q*(-1) " << endl;
     cout << "--------------------\n";
   }
@@ -210,7 +210,7 @@ namespace cytnx {
     cout << "--------------------\n";
     cout << "[Symmetry]" << endl;
     cout << "type : fermionic, FermionParity" << endl;
-    cout << "combine rule : (Q1 + Q2)\2" << endl;
+    cout << "combine rule : (Q1 + Q2)%2" << endl;
     cout << "reverse rule : Q*(-1) " << endl;
     cout << "--------------------\n";
   }
