@@ -651,7 +651,7 @@ namespace cytnx {
     cytnx_uint64 idx;
     try {
       idx = this->name2pos.at(name);
-    } catch (std::out_of_range) {
+    } catch (const std::out_of_range &) {
       cytnx_error_msg(true,
                       "[ERROR][RegularNetwork][RmUniTensor] Cannot find the tensor name: [%s] in "
                       "current network.\n",
@@ -724,7 +724,7 @@ namespace cytnx {
     cytnx_uint64 idx;
     try {
       idx = this->name2pos.at(name);
-    } catch (std::out_of_range) {
+    } catch (const std::out_of_range &) {
       cytnx_error_msg(true,
                       "[ERROR][RegularNetwork][PutUniTensor] Cannot find the tensor name: [%s] in "
                       "current network.\n",
