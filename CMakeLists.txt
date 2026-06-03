@@ -7,7 +7,7 @@ message(STATUS "")
 # #####################################################################
 # ## CMAKE and CXX VERSION
 # #####################################################################
-cmake_minimum_required(VERSION 3.24) # 3.18+ required for cmake_language(EVAL CODE ...); 3.24 is a tested minimum
+cmake_minimum_required(VERSION 3.25) # 3.25 added CUDA device LTO via INTERPROCEDURAL_OPTIMIZATION
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 # Inria's morse_cmake provides an up-to-date FindLAPACKE (and helpers) that
