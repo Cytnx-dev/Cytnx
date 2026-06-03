@@ -151,12 +151,12 @@ namespace cytnx {
   }
 
   void cytnx::ZnSymmetry::print_info() const {
-    std::cout << "--------------------\n";
+    std::cout << "--------------------" << std::endl;
     std::cout << "[Symmetry]" << std::endl;
     std::cout << "type : Abelian, Z(" << this->n << ")" << std::endl;
-    std::cout << "combine rule : (Q1 + Q2)\%" << this->n << std::endl;
+    std::cout << "combine rule : (Q1 + Q2)%" << this->n << std::endl;
     std::cout << "reverse rule : Q*(-1) " << std::endl;
-    std::cout << "--------------------\n";
+    std::cout << "--------------------" << std::endl;
   }
 
   ///========================
@@ -205,12 +205,12 @@ namespace cytnx {
   }
 
   void cytnx::FermionParitySymmetry::print_info() const {
-    std::cout << "--------------------\n";
+    std::cout << "--------------------" << std::endl;
     std::cout << "[Symmetry]" << std::endl;
     std::cout << "type : fermionic, FermionParity" << std::endl;
-    std::cout << "combine rule : (Q1 + Q2)\2" << std::endl;
+    std::cout << "combine rule : (Q1 + Q2)%2" << std::endl;
     std::cout << "reverse rule : Q*(-1) " << std::endl;
-    std::cout << "--------------------\n";
+    std::cout << "--------------------" << std::endl;
   }
 
   ///=========================
