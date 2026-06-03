@@ -69,6 +69,13 @@ jobs:
         # below; the in-container CCACHE_DIR is set in the Build Wheels
         # step's env: block (and forwarded via environment-pass).
         echo "HOST_CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
+        # Reset the "first wheel build" marker once per run (after the cache is
+        # restored, before cibuildwheel). tools/validate_ccache_stats.py allows
+        # zero cache hits only for the first python-version build of a run; this
+        # ensures a marker carried over inside the cached CCACHE_DIR can't mask a
+        # genuine cache-miss failure on later runs.
+        mkdir -p "${HOME}/.ccache"
+        rm -f "${HOME}/.ccache/.cytnx_first_wheel_build_done"
 
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
