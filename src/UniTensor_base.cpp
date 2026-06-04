@@ -1,8 +1,10 @@
 #include "UniTensor.hpp"
+
+#include <string>
+
+#include "Network.hpp"
 #include "Tensor.hpp"
 #include "linalg.hpp"
-#include "Network.hpp"
-#include <string>
 
 #ifdef BACKEND_TORCH
 #else

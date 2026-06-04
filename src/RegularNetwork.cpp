@@ -1,3 +1,5 @@
+#include "Network.hpp"
+
 #include <algorithm>
 #include <iostream>
 #include <stack>
@@ -5,7 +7,6 @@
 
 #include "Device.hpp"
 #include "Generator.hpp"
-#include "Network.hpp"
 #include "search_tree.hpp"
 
 #ifdef BACKEND_TORCH
