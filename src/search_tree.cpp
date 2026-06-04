@@ -62,12 +62,12 @@ namespace cytnx {
 
   namespace OptimalTreeSolver {
     // Helper function to find connected components using DFS
-    void dfs(size_t node, const std::vector<IndexSet>& adjacencyMatrix, IndexSet& visited,
-             std::vector<size_t>& component) {
+    void dfs(std::size_t node, const std::vector<IndexSet>& adjacencyMatrix, IndexSet& visited,
+             std::vector<std::size_t>& component) {
       visited.set(node);
       component.push_back(node);
 
-      for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
+      for (std::size_t i = 0; i < adjacencyMatrix.size(); ++i) {
         if (adjacencyMatrix[node].test(i) && !visited.test(i)) {
           dfs(i, adjacencyMatrix, visited, component);
         }
@@ -75,14 +75,14 @@ namespace cytnx {
     }
 
     // Find connected components in the tensor network
-    std::vector<std::vector<size_t>> findConnectedComponents(
+    std::vector<std::vector<std::size_t>> findConnectedComponents(
       const std::vector<IndexSet>& adjacencyMatrix) {
-      std::vector<std::vector<size_t>> components;
+      std::vector<std::vector<std::size_t>> components;
       IndexSet visited;
 
-      for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
+      for (std::size_t i = 0; i < adjacencyMatrix.size(); ++i) {
         if (!visited.test(i)) {
-          std::vector<size_t> component;
+          std::vector<std::size_t> component;
           dfs(i, adjacencyMatrix, visited, component);
           components.push_back(component);
         }
@@ -100,20 +100,20 @@ namespace cytnx {
       // Initialize nodes with copies of input tensors
       std::vector<std::unique_ptr<PseudoUniTensor>> nodes;
       nodes.reserve(tensors.size());
-      for (size_t i = 0; i < tensors.size(); ++i) {
+      for (std::size_t i = 0; i < tensors.size(); ++i) {
         auto node = std::make_unique<PseudoUniTensor>(i);
         *node = tensors[i];
         node->ID = 1ULL << i;
         nodes.push_back(std::move(node));
       }
 
-      const size_t n = nodes.size();
+      const std::size_t n = nodes.size();
       // Build adjacency matrix with proper size
       std::vector<IndexSet> adjacencyMatrix(n);
 
       // Fill adjacency matrix
-      for (size_t i = 0; i < n; ++i) {
-        for (size_t j = i + 1; j < n; ++j) {
+      for (std::size_t i = 0; i < n; ++i) {
+        for (std::size_t j = i + 1; j < n; ++j) {
           // Find common labels
           vector<string> common_lbl;
           vector<cytnx_uint64> comm_idx1, comm_idx2;
@@ -137,17 +137,17 @@ namespace cytnx {
       for (const auto& component : components) {
         // Extract nodes for this component
         std::vector<std::unique_ptr<PseudoUniTensor>> component_nodes;
-        std::vector<size_t> remaining_indices = component;
+        std::vector<std::size_t> remaining_indices = component;
 
         while (remaining_indices.size() > 1) {
           // Find best contraction pair within component
-          size_t best_i = 0, best_j = 1;
+          std::size_t best_i = 0, best_j = 1;
           cytnx_float min_cost = std::numeric_limits<cytnx_float>::max();
 
-          for (size_t ii = 0; ii < remaining_indices.size(); ++ii) {
-            size_t i = remaining_indices.at(ii);
-            for (size_t jj = ii + 1; jj < remaining_indices.size(); ++jj) {
-              size_t j = remaining_indices.at(jj);
+          for (std::size_t ii = 0; ii < remaining_indices.size(); ++ii) {
+            std::size_t i = remaining_indices.at(ii);
+            for (std::size_t jj = ii + 1; jj < remaining_indices.size(); ++jj) {
+              std::size_t j = remaining_indices.at(jj);
               if (adjacencyMatrix[i].test(j)) {
                 cytnx_float cost = get_cost(*nodes[i], *nodes[j]);
                 if (cost < min_cost) {
@@ -175,7 +175,7 @@ namespace cytnx {
           remaining_indices.erase(remaining_indices.begin() + best_i);
 
           // Store result in original nodes vector
-          size_t new_idx = nodes.size();
+          std::size_t new_idx = nodes.size();
           nodes.push_back(std::move(result_ptr));
           remaining_indices.push_back(new_idx);
         }

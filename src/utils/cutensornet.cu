@@ -99,7 +99,7 @@ namespace cytnx {
   //   modesR.clear();
   //   tns.clear();
   //   modesIn.clear();
-  //   // // for (size_t i = 0; i < tmp_modes.size(); i++) {
+  //   // // for (std::size_t i = 0; i < tmp_modes.size(); i++) {
   //   //   tmp_modes[i].clear();
   //   //   tmp_extents[i].clear();
   //   // }
@@ -124,16 +124,16 @@ namespace cytnx {
     modesR = std::vector<int32_t>(labels.size());
     rawDataIn_d = std::vector<void *>(labels.size());
 
-    for (size_t i = 0; i < labels.size(); i++) {
+    for (std::size_t i = 0; i < labels.size(); i++) {
       tmp_modes[i] = std::vector<int32_t>(labels[i].size());
       tmp_extents[i] = std::vector<int64_t>(labels[i].size());
-      for (size_t j = 0; j < labels[i].size(); j++) {
+      for (std::size_t j = 0; j < labels[i].size(); j++) {
         tmp_modes[i][j] = (labels[i][labels[i].size() - 1 - j]);
       }
       modesIn[i] = tmp_modes[i].data();
       numModesIn[i] = labels[i].size();
     }
-    for (size_t i = 0; i < res_label.size(); i++) {
+    for (std::size_t i = 0; i < res_label.size(); i++) {
       modesR[i] = res_label[res_label.size() - 1 - i];
     }
     numInputs = labels.size();
@@ -143,7 +143,8 @@ namespace cytnx {
   void cutensornet::set_output_extents(std::vector<cytnx_uint64> &outshape) {
     extentR = std::vector<int64_t>(outshape.size());
     // reversed tranversal the labels and extents because cuTensor is column-major by default
-    for (size_t i = 0; i < outshape.size(); i++) extentR[i] = outshape[outshape.size() - 1 - i];
+    for (std::size_t i = 0; i < outshape.size(); i++)
+      extentR[i] = outshape[outshape.size() - 1 - i];
   }
 
   void cutensornet::setOutputMem(UniTensor &res) {
@@ -170,8 +171,8 @@ namespace cytnx {
 
   void cutensornet::set_extents(std::vector<UniTensor> &uts) {
     // reversed tranversal the labels and extents because cuTensor is column-major by default
-    for (size_t idx = 0; idx < numInputs; idx++) {
-      for (size_t j = 0; j < numModesIn[idx]; j++) {
+    for (std::size_t idx = 0; idx < numInputs; idx++) {
+      for (std::size_t j = 0; j < numModesIn[idx]; j++) {
         tmp_extents[idx][j] = uts[idx].shape()[numModesIn[idx] - 1 - j];
       }
       extentsIn[idx] = tmp_extents[idx].data();

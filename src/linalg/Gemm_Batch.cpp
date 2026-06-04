@@ -39,9 +39,9 @@ namespace cytnx {
                       "[Gemm_Batch] error, b_tensors.size() != total tensor count%s", "\n");
       cytnx_error_msg(c_tensors.size() != total_matrices,
                       "[Gemm_Batch] error, c_tensors.size() != total tensor count%s", "\n");
-      cytnx_error_msg(alpha_array.size() != static_cast<size_t>(group_count),
+      cytnx_error_msg(alpha_array.size() != static_cast<std::size_t>(group_count),
                       "[Gemm_Batch] error, alpha_array.size() != group_count%s", "\n");
-      cytnx_error_msg(beta_array.size() != static_cast<size_t>(group_count),
+      cytnx_error_msg(beta_array.size() != static_cast<std::size_t>(group_count),
                       "[Gemm_Batch] error, beta_array.size() != group_count%s", "\n");
 
       if (total_matrices == 0) return;

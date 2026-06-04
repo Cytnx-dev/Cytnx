@@ -50,7 +50,7 @@ namespace cytnx {
     std::shared_ptr<Node> left, right;
     stack<char> operators;
     char topc;
-    size_t pos = 0;
+    std::size_t pos = 0;
     std::string tok;
 
     // evaluate each token, and construct the Contraction Tree.
@@ -104,7 +104,7 @@ namespace cytnx {
         cytnx_uint64 idx;
         try {
           idx = name2pos.at(tok);
-        } catch (std::out_of_range) {
+        } catch (const std::out_of_range &) {
           cytnx_error_msg(true,
                           "[ERROR][ContractionTree][build_contraction_order_by_token] tokens "
                           "contain invalid TN name: %s ,which is not previously defined. \n",

@@ -28,7 +28,6 @@
   #include "cuda_runtime_api.h"
 #endif
 
-using namespace std;
 namespace cytnx {
   template <typename DType>
   void PrintValueAndSpace(std::ostream &os, const DType &value) {
@@ -449,7 +448,7 @@ namespace cytnx {
   template <typename DType>
   void StorageImplementation<DType>::print_elems() {
     DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
-    cout << "[ ";
+    std::cout << "[ ";
     for (unsigned long long cnt = 0; cnt < this->size_; cnt++) {
       PrintValueAndSpace(std::cout, elem_ptr_[cnt]);
     }
@@ -784,9 +783,9 @@ namespace cytnx {
     } else {
       ++this->size_;
     }
-    if constexpr (is_same_v<DType, cytnx_complex128>) {
+    if constexpr (std::is_same_v<DType, cytnx_complex128>) {
       this->at<DType>(this->size_ - 1) = complex128(value);
-    } else if constexpr (is_same_v<DType, cytnx_complex64>) {
+    } else if constexpr (std::is_same_v<DType, cytnx_complex64>) {
       this->at<DType>(this->size_ - 1) = complex64(value);
     } else {
       this->at<DType>(this->size_ - 1) = static_cast<DType>(value);
@@ -807,9 +806,9 @@ namespace cytnx {
 
   template <typename DType>
   void StorageImplementation<DType>::SetItem(cytnx_uint64 index, const Scalar &value) {
-    if constexpr (is_same_v<DType, cytnx_complex128>) {
+    if constexpr (std::is_same_v<DType, cytnx_complex128>) {
       this->at<DType>(index) = complex128(value);
-    } else if constexpr (is_same_v<DType, cytnx_complex64>) {
+    } else if constexpr (std::is_same_v<DType, cytnx_complex64>) {
       this->at<DType>(index) = complex64(value);
     } else {
       this->at<DType>(index) = static_cast<DType>(value);
