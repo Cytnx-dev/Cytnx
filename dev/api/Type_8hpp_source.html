@@ -143,7 +143,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">typedef</span> int64_t cytnx_int64;</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">typedef</span> int32_t cytnx_int32;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">typedef</span> int16_t cytnx_int16;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">typedef</span> <span class="keywordtype">size_t</span> cytnx_size_t;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">typedef</span> std::size_t cytnx_size_t;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">typedef</span> std::complex&lt;float&gt; cytnx_complex64;</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keyword">typedef</span> std::complex&lt;double&gt; cytnx_complex128;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">typedef</span> <span class="keywordtype">bool</span> cytnx_bool;</div>
@@ -210,22 +210,22 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Types&gt;</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keyword">struct </span>variant_index&lt;T, std::variant&lt;Types...&gt;&gt; {</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> value = std::variant_size_v&lt;std::variant&lt;Types...&gt;&gt;;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t value = std::variant_size_v&lt;std::variant&lt;Types...&gt;&gt;;</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  };</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Types&gt;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="keyword">struct </span>variant_index&lt;T, std::variant&lt;T, Types...&gt;&gt; {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> value = 0;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t value = 0;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  };</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> <a class="code hl_enumvalue" href="namespacecytnx.html#a252e0f32148cfe7b82ef6baa1c9068dea29f385de3cadb65a68c610cd36ea3480">U</a>, <span class="keyword">typename</span>... Types&gt;</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="keyword">struct </span>variant_index&lt;T, std::variant&lt;U, Types...&gt;&gt; {</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> value = 1 + variant_index&lt;T, std::variant&lt;Types...&gt;&gt;::value;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t value = 1 + variant_index&lt;T, std::variant&lt;Types...&gt;&gt;::value;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  };</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="comment">// helper template variable</span></div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> Variant&gt;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">size_t</span> variant_index_v = variant_index&lt;T, Variant&gt;::value;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t variant_index_v = variant_index&lt;T, Variant&gt;::value;</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keyword">namespace </span>internal {</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="comment">// type_size returns the sizeof(T) for the supported types. This is the same as</span></div>
