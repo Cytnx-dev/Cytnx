@@ -385,15 +385,20 @@ the layout the CUDA build presets assume.
 
 **Workaround: keep the apt package and add the missing path.** If you must build
 against the distribution package, create the directory ``nvlink`` searches and
-symlink the packaged ``libnvvm.so`` into it:
+symlink the packaged ``libnvvm`` library into it:
 
 .. code-block:: shell
 
+    $libnvvm_src=$(ls -1 /usr/lib/x86_64-linux-gnu/libnvvm.so* | sort -V | tail -1)
     $sudo mkdir -p /usr/lib/nvidia-cuda-toolkit/lib64
-    $sudo ln -s /usr/lib/x86_64-linux-gnu/libnvvm.so /usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so
+    $sudo ln -s "$libnvvm_src" /usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so
 
+The ``ls … | sort -V | tail -1`` picks the highest-version file present
+(``libnvvm.so.4``, ``libnvvm.so.4.0.0``, or an unversioned ``libnvvm.so``),
+so the command works regardless of whether the development symlink was installed.
 Then re-run the build. On non-x86_64 hosts the multiarch directory differs;
-locate the real library first with ``find /usr -name 'libnvvm.so*'``.
+locate the real library first with ``find /usr -name 'libnvvm.so*'`` and adjust
+``libnvvm_src`` accordingly.
 
 
 Check Cytnx version
