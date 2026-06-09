@@ -1,5 +1,12 @@
 name: Release to PyPI
 
+# Production release pipeline for the `cytnx` PyPI project. cibuildwheel
+# builds the wheels on every pull request and every push to
+# master/tags as a build-health check, but the wheels are only
+# published to production PyPI on `v*` tag pushes and manual
+# workflow_dispatch. Pull-request and master-push runs build and
+# discard the wheels.
+
 on:
   pull_request:
   push:
@@ -20,58 +27,48 @@ jobs:
         # newer images because Homebrew dylib minos can force a higher wheel
         # deployment target and break delocate compatibility for lower targets.
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel]
-    defaults:
-      run:
-        shell: bash -el {0}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       with:
         fetch-depth: 0
         submodules: recursive
 
-    # When re-running a PR job, GitHub Actions uses the merge commit created at
-    # the time of the original run, not a fresh merge with the latest target branch.
-    # This step ensures we always test against the most recent target branch.
     - name: Merge with latest target branch (pull_request only)
       if: github.event_name == 'pull_request'
+      # When re-running a PR job, GitHub Actions reuses the merge commit
+      # created at the time of the original run, not a fresh merge with the
+      # latest target branch. Re-merging here validates the release build
+      # against the current target branch. A committer identity is required
+      # because a non-fast-forward merge creates a merge commit.
       run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git fetch origin ${{ github.event.pull_request.base.ref }}
         git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
-        # Refresh submodules in case the merge moved any gitlinks (e.g. cmake_modules/morse_cmake).
+        # Refresh submodules in case the merge moved any gitlinks
+        # (e.g. cmake_modules/morse_cmake).
         git submodule update --init --recursive
 
-    - name: Cache Ccache Directory (pull_request)
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.ccache
-        key: ccache-wheel-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
-        restore-keys: |
-          ccache-wheel-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
-          ccache-wheel-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
-
-    - name: Cache Ccache Directory (push)
-      if: ${{ github.event_name == 'push' }}
-      uses: actions/cache@v4
+    - name: Cache Ccache Directory
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
       with:
         path: |
           ~/.ccache
         key: ccache-wheel-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ccache-wheel-${{ runner.os }}-${{ github.ref_name }}-
+          ccache-wheel-${{ runner.os }}-
 
     - name: Set Ccache Directory
       run: |
-        echo "Start building---------------------------------"
         # HOST_CCACHE_DIR is consumed only by the docker bind-mount source
         # below; the in-container CCACHE_DIR is set in the Build Wheels
         # step's env: block (and forwarded via environment-pass).
         echo "HOST_CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
 
     - name: Build Wheels
-      uses: pypa/cibuildwheel@v3.3.0
+      uses: pypa/cibuildwheel@63fd63b352a9a8bdcc24791c9dbee952ee9a8abc  # v3.3.0
       env:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
@@ -93,29 +90,29 @@ jobs:
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
 
-
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
       with:
         name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
         path: ./wheelhouse/*.whl
 
-  ReleaseTestPyPI:
-    name: ReleaseWheel-TestPyPI
+  ReleasePyPI:
+    name: ReleasePyPI
     needs: BuildWheel
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) }}
+    # BuildWheel runs on every trigger (PR and master push included) as a
+    # build-health check, but publishing to production PyPI happens only
+    # for `v*` tag pushes and manual dispatch.
+    if: ${{ (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
       with:
         pattern: cibw-wheels-*
         path: dist
         merge-multiple: true
 
-    - name: Publish package distributions to TestPyPI (pull_request and tag push)
-      if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) }}
-      uses: pypa/gh-action-pypi-publish@release/v1
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
       with:
-        repository-url: https://test.pypi.org/legacy/
         packages-dir: dist
