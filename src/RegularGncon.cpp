@@ -1,10 +1,11 @@
-#include <typeinfo>
 #include "Gncon.hpp"
 
-#include "search_tree.hpp"
-#include <stack>
 #include <algorithm>
 #include <iostream>
+#include <stack>
+#include <typeinfo>
+
+#include "search_tree.hpp"
 
 #ifdef BACKEND_TORCH
 #else

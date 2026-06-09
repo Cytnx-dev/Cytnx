@@ -1,5 +1,6 @@
-#include <typeinfo>
 #include "Network.hpp"
+
+#include <typeinfo>
 
 #include "linalg.hpp"
 

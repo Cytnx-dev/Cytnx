@@ -1,5 +1,6 @@
-#include <typeinfo>
 #include "Gncon.hpp"
+
+#include <typeinfo>
 
 #include "linalg.hpp"
 

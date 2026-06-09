@@ -1,4 +1,5 @@
 #include "stat.hpp"
+
 #include "Type.hpp"
 
 #ifdef BACKEND_TORCH
