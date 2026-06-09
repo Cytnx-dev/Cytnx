@@ -400,6 +400,17 @@ Then re-run the build. On non-x86_64 hosts the multiarch directory differs;
 locate the real library first with ``find /usr -name 'libnvvm.so*'`` and adjust
 ``libnvvm_src`` accordingly.
 
+**Alternative: disable device LTO.** If changing the toolkit layout is not
+practical, configure with ``-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF`` to skip
+device LTO entirely:
+
+.. code-block:: shell
+
+    $cmake --preset openblas-cuda -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF
+
+The build will complete without link-time optimizations, which trades a small
+runtime performance cost for compatibility with the unmodified apt package.
+
 
 Check Cytnx version
 *************************************
