@@ -1,192 +1,130 @@
 #include "Trace_internal.hpp"
+#include "Tensor.hpp"
+#include "backend/Storage.hpp"
 #include "cytnx_error.hpp"
-#include "backend/lapack_wrapper.hpp"
 
-#include "Generator.hpp"
-#include "utils/utils.hpp"
+#include "backend/linalg_internal_cpu/pairwise_sum.hpp"
+#include "backend/linalg_internal_cpu/stride_view.hpp"
 
-#include "UniTensor.hpp"
+#include <algorithm>
+#include <span>
 #include <vector>
 
 namespace cytnx {
   namespace linalg_internal {
+    namespace {
 
-    template <class T>
-    void _trace_2d(Tensor &out, const Tensor &Tn, const cytnx_uint64 &Ndiag) {
-      T a = 0;
-      T *rawdata = Tn.storage().data<T>();
-      cytnx_uint64 Ldim = Tn.shape()[1];
-      for (cytnx_uint64 i = 0; i < Ndiag; i++) a += rawdata[i * Ldim + i];
-      out.storage().at<T>(0) = a;
-    }
+      template <class T>
+      Tensor TraceImpl(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+        // Trace() validates upstream that ax1 != ax2 and shape[ax1] == shape[ax2],
+        // so their order is irrelevant: the diagonal stride and the set of
+        // surviving axes are symmetric in (ax1, ax2).
+        const auto &input_shape = Tn.shape();
+        const std::vector<cytnx_uint64> input_strides = Tn.strides();
+        const cytnx_uint64 diagonal_length = input_shape[ax1];
+        const cytnx_uint64 diagonal_stride = input_strides[ax1] + input_strides[ax2];
 
-    template <class T>
-    void _trace_nd(Tensor &out, const Tensor &Tn, const cytnx_uint64 &Ndiag,
-                   const cytnx_uint64 &Nelem, const std::vector<cytnx_uint64> &accu,
-                   const std::vector<cytnx_uint64> &remain_rank_id,
-                   const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                   const cytnx_uint64 &ax2) {
-      cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
+        // Build the reduced output shape and the matching per-surviving-axis input
+        // strides in a single pass over the surviving axes (no separate surviving-
+        // axis index list).
+        std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_
+        std::vector<cytnx_uint64> surviving_input_stride;
+        for (cytnx_uint64 axis = 0; axis < input_shape.size(); ++axis) {
+          if (axis != ax1 && axis != ax2) {
+            output_shape.push_back(static_cast<cytnx_int64>(input_shape[axis]));
+            surviving_input_stride.push_back(input_strides[axis]);
+          }
+        }
+        const cytnx_uint64 surviving_rank = surviving_input_stride.size();
+        cytnx_uint64 output_size = 1;
+        for (auto dim : output_shape) output_size *= static_cast<cytnx_uint64>(dim);
+        const bool output_is_scalar = surviving_rank == 0;
 
-      UniTensor UTn = UniTensor(Tn, false, 2);
-      I_UT.relabel_({UTn._impl->_labels[ax1], UTn._impl->_labels[ax2]});
+        // Fill a flat result Storage, then compose the output Tensor from it; the
+        // 2D trace produces a single element, higher-rank traces produce one
+        // element per surviving-axis multi-index.
+        Storage output_storage(output_is_scalar ? cytnx_uint64{1} : output_size, Tn.dtype(),
+                               Tn.device());
+        if (diagonal_length == 0 || output_size == 0) {
+          output_storage.set_zeros();
+          Tensor out = Tensor::from_storage(output_storage);
+          if (!output_is_scalar) out.reshape_(output_shape);
+          return out;
+        }
 
-      out = Contract(I_UT, UTn).get_block_();
+        const cytnx_uint64 diagonal_span = (diagonal_length - 1) * diagonal_stride + 1;
+        const T *input_data = Tn.storage().data<T>();
+        T *output_data = output_storage.data<T>();
 
-      // std::vector<cytnx_uint64> indexer(Tn.shape().size(), 0);
-      // cytnx_uint64 tmp;
-      // for (cytnx_uint64 i = 0; i < Nelem; i++) {
-      // tmp = i;
-      // // calculate indexer
-      // for (int x = 0; x < shape.size(); x++) {
-      // indexer[remain_rank_id[x]] = cytnx_uint64(tmp / accu[x]);
-      // tmp %= accu[x];
-      // }
+        if (output_is_scalar) {
+          output_data[0] =
+            PairwiseSum(std::span<const T>(input_data, diagonal_span) | stride(diagonal_stride));
+          return Tensor::from_storage(output_storage);
+        }
 
-      // for (cytnx_uint64 d = 0; d < Ndiag; d++) {
-      // indexer[ax1] = indexer[ax2] = d;
-      // out.storage().at<T>(i) += Tn.at<T>(indexer);
-      // }
-      // }
-    }
-
-    void Trace_internal_cd(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                           const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                           const std::vector<cytnx_uint64> &accu,
-                           const std::vector<cytnx_uint64> &remain_rank_id,
-                           const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                           const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_complex128>(out, Tn, Ndiag);
-      } else {
-        _trace_nd<cytnx_complex128>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
+        // Walk the output elements in row-major order, carrying the diagonal's
+        // start offset in the input on an odometer: each step bumps the last
+        // surviving-axis index (carrying into earlier axes on wrap) and adjusts the
+        // offset by the affected axes' input strides. This avoids the per-element
+        // division and modulo of decoding the flat index, and needs no precomputed
+        // row-major accumulators.
+        std::vector<cytnx_uint64> surviving_index(surviving_rank, 0);
+        cytnx_uint64 diagonal_start_offset = 0;
+        for (cytnx_uint64 output_index = 0; output_index < output_size; ++output_index) {
+          output_data[output_index] =
+            PairwiseSum(std::span<const T>(input_data + diagonal_start_offset, diagonal_span) |
+                        stride(diagonal_stride));
+          for (cytnx_uint64 axis = surviving_rank; axis-- > 0;) {
+            if (++surviving_index[axis] < static_cast<cytnx_uint64>(output_shape[axis])) {
+              diagonal_start_offset += surviving_input_stride[axis];
+              break;
+            }
+            surviving_index[axis] = 0;
+            diagonal_start_offset -=
+              (static_cast<cytnx_uint64>(output_shape[axis]) - 1) * surviving_input_stride[axis];
+          }
+        }
+        Tensor out = Tensor::from_storage(output_storage);
+        out.reshape_(output_shape);
+        return out;
       }
+
+    }  // namespace
+
+    Tensor Trace_internal_cd(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_complex128>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_cf(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_complex64>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_d(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_double>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_f(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_float>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_u64(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_uint64>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_i64(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_int64>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_u32(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_uint32>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_i32(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_int32>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_u16(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_uint16>(Tn, ax1, ax2);
+    }
+    Tensor Trace_internal_i16(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+      return TraceImpl<cytnx_int16>(Tn, ax1, ax2);
     }
 
-    void Trace_internal_cf(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                           const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                           const std::vector<cytnx_uint64> &accu,
-                           const std::vector<cytnx_uint64> &remain_rank_id,
-                           const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                           const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_complex64>(out, Tn, Ndiag);
-      } else {
-        _trace_nd<cytnx_complex64>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_d(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                          const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                          const std::vector<cytnx_uint64> &accu,
-                          const std::vector<cytnx_uint64> &remain_rank_id,
-                          const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                          const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_double>(out, Tn, Ndiag);
-      } else {
-        _trace_nd<cytnx_double>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_f(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                          const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                          const std::vector<cytnx_uint64> &accu,
-                          const std::vector<cytnx_uint64> &remain_rank_id,
-                          const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                          const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_float>(out, Tn, Ndiag);
-      } else {
-        _trace_nd<cytnx_float>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_u64(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                            const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
-                            const std::vector<cytnx_uint64> &accu,
-                            const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_uint64>(out, Tn, Ndiag);
-      } else {
-        _trace_nd<cytnx_uint64>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_i64(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
-                            const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_int64>(out, tn, ndiag);
-      } else {
-        _trace_nd<cytnx_int64>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_u32(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
-                            const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_uint32>(out, tn, ndiag);
-      } else {
-        _trace_nd<cytnx_uint32>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_i32(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
-                            const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_int32>(out, tn, ndiag);
-      } else {
-        _trace_nd<cytnx_int32>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_u16(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
-                            const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_uint16>(out, tn, ndiag);
-      } else {
-        _trace_nd<cytnx_uint16>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_i16(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                            const std::vector<cytnx_uint64> &accu,
-                            const std::vector<cytnx_uint64> &remain_rank_id,
-                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                            const cytnx_uint64 &ax2) {
-      if (is_2d) {
-        _trace_2d<cytnx_int16>(out, tn, ndiag);
-      } else {
-        _trace_nd<cytnx_int16>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-      }
-    }
-
-    void Trace_internal_b(const bool &is_2d, Tensor &out, const Tensor &tn,
-                          const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
-                          const std::vector<cytnx_uint64> &accu,
-                          const std::vector<cytnx_uint64> &remain_rank_id,
-                          const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
-                          const cytnx_uint64 &ax2) {
+    Tensor Trace_internal_b(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
       cytnx_error_msg(true, "[internal][Trace] bool is not available. %s", "\n");
+      return Tensor();
     }
 
   }  // namespace linalg_internal
