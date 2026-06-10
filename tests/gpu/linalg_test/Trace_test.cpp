@@ -129,6 +129,47 @@ namespace {
     }
   }
 
+  TEST(LinalgGpuTraceTest, BlockSizeBoundaries) {
+    // The launch sizes each block to its diagonal:
+    //   threads_per_block = min(round_up_to_warp(diagonal_length), 256).
+    // Walk diagonal lengths that straddle every sizing boundary -- sub-warp
+    // (1, 31 -> a 32-thread block), exactly one warp (32), one past a warp
+    // boundary (33 -> 64 threads), the 256-thread cap (255, 256), one past the
+    // cap (257 -> capped block, threads stride), and a multi-stride length
+    // (1024 -> 4 strides per thread). Each is a rank-2 trace, so it is a single
+    // block whose result must match the CPU pairwise reference exactly within
+    // tolerance; an off-by-one in the warp rounding, the per-warp shared-memory
+    // hand-off, or the single-warp early-return path would show up here.
+    for (cytnx_uint64 diagonal_length : {1u, 31u, 32u, 33u, 64u, 255u, 256u, 257u, 1024u}) {
+      auto cpu = cytnx::random::random_tensor({diagonal_length, diagonal_length}, -2.0, 2.0,
+                                              Device.cpu, 0, Type.Double);
+      auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
+      auto reference = cytnx::linalg::Trace(cpu, 0, 1);
+      EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu, reference, 1e-9))
+        << "diagonal_length=" << diagonal_length;
+    }
+  }
+
+  TEST(LinalgGpuTraceTest, ShortDiagonalsManyOutputs) {
+    // The many-blocks regime: {n, middle, n} traced over (0, 2) launches
+    // `middle` blocks, each sized to the short diagonal n. Covers a sub-warp
+    // diagonal (n = 2 -> 32-thread blocks), an exact warp (n = 32), and one
+    // past a warp boundary (n = 33 -> 64-thread blocks), each with enough
+    // output elements that block indexing -- not just the reduction -- is
+    // exercised.
+    struct Case {
+      cytnx_uint64 n, middle;
+    };
+    for (const auto& c : {Case{2, 1000}, Case{32, 500}, Case{33, 100}}) {
+      auto cpu =
+        cytnx::random::random_tensor({c.n, c.middle, c.n}, -2.0, 2.0, Device.cpu, 0, Type.Double);
+      auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 2);
+      auto reference = cytnx::linalg::Trace(cpu, 0, 2);
+      EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu, reference, 1e-9))
+        << "n=" << c.n << " middle=" << c.middle;
+    }
+  }
+
   TEST(LinalgGpuTraceTest, LargeDiagonalAccuracyBound) {
     // Upper bound the GPU's diagonal-sum accuracy at a large diagonal_length.
     // The current TraceDiagonalBlock accumulates serially per thread; a future
