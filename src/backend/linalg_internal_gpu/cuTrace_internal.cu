@@ -12,11 +12,22 @@ namespace cytnx {
   namespace linalg_internal {
     namespace {
 
-      constexpr int kTraceThreadsPerBlock = 512;
-      // The single-block tree reduction below halves the active thread count each
-      // step, which only covers every element when the block size is a power of two.
-      static_assert((kTraceThreadsPerBlock & (kTraceThreadsPerBlock - 1)) == 0,
-                    "kTraceThreadsPerBlock must be a power of two for the tree reduction.");
+      // Number of threads a GPU executes in lockstep (warpSize in the CUDA
+      // runtime). Fixed at 32 on every current NVIDIA architecture; the
+      // __shfl_down_sync reductions below assume this value.
+      constexpr int kWarpSize = 32;
+      // Cap on threads per block for the trace kernel. Each block is sized to
+      // its diagonal (rounded up to a whole warp) and saturates at this cap.
+      constexpr int kMaxTraceThreadsPerBlock = 256;
+      // Capacity of the shared array of per-warp partial sums: one slot per
+      // warp of a maximum-size block.
+      constexpr int kMaxTraceWarpsPerBlock = kMaxTraceThreadsPerBlock / kWarpSize;
+      static_assert(kMaxTraceThreadsPerBlock % kWarpSize == 0,
+                    "Blocks are sized in whole warps, so the cap must be a warp multiple.");
+      // The per-warp tree reduction below halves the active lane count each step,
+      // which only covers every lane when the warp size is a power of two.
+      static_assert((kWarpSize & (kWarpSize - 1)) == 0,
+                    "kWarpSize must be a power of two for the tree reduction.");
 
       // Maps a cytnx storage type to the device arithmetic type used inside the
       // kernels. Complex storage is bit-compatible with cuda::std::complex, which
@@ -37,50 +48,31 @@ namespace cytnx {
       template <class T>
       using TraceCudaTypeT = typename TraceCudaType<T>::type;
 
-      // Sums one diagonal: every thread strides over the diagonal_length entries
-      // starting at diagonal_start_offset (step diagonal_stride), then a
-      // shared-memory tree reduction combines the per-thread partials into the
-      // single *output_element. This is the whole computation for a rank-2 trace
-      // (one diagonal -> one scalar); the trace of higher-rank inputs runs one
-      // block per output element and calls this with that element's offset.
+      // value + (the value `reduction_stride` lanes higher in the warp). For real
+      // types this is a single __shfl_down_sync; complex storage is shuffled
+      // component-wise since __shfl_down_sync only moves scalar lanes. (Small
+      // integer types promote to int through the shuffle and truncate back, which
+      // preserves the modular-sum semantics the trace already has.)
       template <class T>
-      __device__ void TraceDiagonalBlock(T *output_element, const T *input_data,
-                                         cytnx_uint64 diagonal_start_offset,
-                                         cytnx_uint64 diagonal_length,
-                                         cytnx_uint64 diagonal_stride) {
-        __shared__ T block_partial_sums[kTraceThreadsPerBlock];
-        T thread_partial_sum = T(0);
-        for (cytnx_uint64 i = threadIdx.x; i < diagonal_length; i += blockDim.x)
-          thread_partial_sum += input_data[diagonal_start_offset + i * diagonal_stride];
-        block_partial_sums[threadIdx.x] = thread_partial_sum;
-        __syncthreads();
-
-        for (unsigned int reduction_stride = blockDim.x >> 1; reduction_stride > 0;
-             reduction_stride >>= 1) {
-          if (threadIdx.x < reduction_stride)
-            block_partial_sums[threadIdx.x] += block_partial_sums[threadIdx.x + reduction_stride];
-          __syncthreads();
-        }
-
-        if (threadIdx.x == 0) *output_element = block_partial_sums[0];
+      __device__ T WarpShuffleDownAdd(T value, int reduction_stride) {
+        return value + __shfl_down_sync(0xffffffff, value, reduction_stride);
+      }
+      template <class F>
+      __device__ cuda::std::complex<F> WarpShuffleDownAdd(cuda::std::complex<F> value,
+                                                          int reduction_stride) {
+        return cuda::std::complex<F>(
+          value.real() + __shfl_down_sync(0xffffffff, value.real(), reduction_stride),
+          value.imag() + __shfl_down_sync(0xffffffff, value.imag(), reduction_stride));
       }
 
-      // One block per output element. The block decodes its flat index into the
-      // surviving-axis multi-index, accumulating the input base offset from
-      // surviving_input_stride (the input stride of each surviving axis), then
-      // sums that element's diagonal via TraceDiagonalBlock. A rank-2 trace is
-      // the special case surviving_rank == 0 / output_size == 1: the decode loop
-      // is empty and the diagonal starts at offset 0, so the single block traces
-      // the whole matrix diagonal.
-      template <class T>
-      __global__ void TraceKernel(T *output_data, const T *input_data,
-                                  const cytnx_uint64 *surviving_shape,
-                                  const cytnx_uint64 *surviving_input_stride,
-                                  cytnx_uint64 surviving_rank, cytnx_uint64 output_size,
-                                  cytnx_uint64 diagonal_length, cytnx_uint64 diagonal_stride) {
-        cytnx_uint64 output_index = blockIdx.x;
-        if (output_index >= output_size) return;
-
+      // Decodes a flat output index into the input storage offset of that output
+      // element's diagonal start: walk the surviving axes, accumulating
+      // (index_along_axis * input_stride_of_axis). For a rank-2 trace
+      // (surviving_rank == 0) the loop is empty and the offset is 0.
+      __device__ cytnx_uint64 DecodeDiagonalStartOffset(cytnx_uint64 output_index,
+                                                        const cytnx_uint64 *surviving_shape,
+                                                        const cytnx_uint64 *surviving_input_stride,
+                                                        cytnx_uint64 surviving_rank) {
         cytnx_uint64 remaining_flat_index = output_index;
         cytnx_uint64 diagonal_start_offset = 0;
         for (cytnx_uint64 axis = surviving_rank; axis-- > 0;) {
@@ -88,8 +80,71 @@ namespace cytnx {
             (remaining_flat_index % surviving_shape[axis]) * surviving_input_stride[axis];
           remaining_flat_index /= surviving_shape[axis];
         }
-        TraceDiagonalBlock<T>(&output_data[output_index], input_data, diagonal_start_offset,
-                              diagonal_length, diagonal_stride);
+        return diagonal_start_offset;
+      }
+
+      // Sums one diagonal with the whole block (blockDim.x threads): each thread
+      // strides over the diagonal, each warp reduces its lanes with a warp-shuffle
+      // tree, the per-warp sums land in shared memory, and the first warp reduces
+      // those. Thread 0 returns the result. The reduction adapts to whatever
+      // blockDim.x the kernel was launched with -- the caller sizes blockDim per
+      // call to diagonal_length so a short diagonal never spawns idle warps.
+      template <class T>
+      __device__ T BlockTraceDiagonal(const T *input_data, cytnx_uint64 diagonal_start_offset,
+                                      cytnx_uint64 diagonal_length, cytnx_uint64 diagonal_stride) {
+        T thread_partial_sum = T(0);
+        for (cytnx_uint64 i = threadIdx.x; i < diagonal_length; i += blockDim.x)
+          thread_partial_sum += input_data[diagonal_start_offset + i * diagonal_stride];
+
+        // Reduce within each warp.
+        for (int reduction_stride = kWarpSize / 2; reduction_stride > 0; reduction_stride /= 2)
+          thread_partial_sum = WarpShuffleDownAdd(thread_partial_sum, reduction_stride);
+
+        const unsigned int warps_in_block = (blockDim.x + kWarpSize - 1) / kWarpSize;
+        if (warps_in_block == 1) {
+          // Single-warp launch: thread_partial_sum on lane 0 already holds the
+          // total. No shared memory or barrier needed.
+          return thread_partial_sum;
+        }
+
+        // Lane 0 of each warp publishes its warp's sum; the first warp reduces them.
+        __shared__ T warp_sums[kMaxTraceWarpsPerBlock];
+        const unsigned int lane = threadIdx.x % kWarpSize;
+        const unsigned int warp_in_block = threadIdx.x / kWarpSize;
+        if (lane == 0) warp_sums[warp_in_block] = thread_partial_sum;
+        __syncthreads();
+
+        T block_sum = T(0);
+        if (warp_in_block == 0) {
+          T v = (lane < warps_in_block) ? warp_sums[lane] : T(0);
+          for (int reduction_stride = kWarpSize / 2; reduction_stride > 0; reduction_stride /= 2)
+            v = WarpShuffleDownAdd(v, reduction_stride);
+          block_sum = v;
+        }
+        return block_sum;  // valid on thread 0
+      }
+
+      // One block per output element (blockIdx.x is the output index). The caller
+      // sizes blockDim per call so each block has roughly diagonal_length threads
+      // (rounded up to a warp, capped at kMaxTraceThreadsPerBlock): a short
+      // diagonal launches a small block (no idle warps), a long diagonal launches
+      // the maximum-size block (all threads working). A rank-2 trace
+      // (output_size == 1) is just one such block; many short-diagonal outputs
+      // launch many small blocks running concurrently across SMs.
+      template <class T>
+      __global__ void TraceKernel(T *output_data, const T *input_data,
+                                  const cytnx_uint64 *surviving_shape,
+                                  const cytnx_uint64 *surviving_input_stride,
+                                  cytnx_uint64 surviving_rank, cytnx_uint64 output_size,
+                                  cytnx_uint64 diagonal_length, cytnx_uint64 diagonal_stride) {
+        const cytnx_uint64 output_index = blockIdx.x;
+        if (output_index >= output_size) return;
+
+        const cytnx_uint64 diagonal_start_offset = DecodeDiagonalStartOffset(
+          output_index, surviving_shape, surviving_input_stride, surviving_rank);
+        T sum = BlockTraceDiagonal<T>(input_data, diagonal_start_offset, diagonal_length,
+                                      diagonal_stride);
+        if (threadIdx.x == 0) output_data[output_index] = sum;
       }
 
       template <class T>
@@ -152,8 +207,17 @@ namespace cytnx {
                        sizeof(cytnx_uint64) * surviving_rank, cudaMemcpyHostToDevice));
         }
 
-        // One block per output element (output_size == 1 for the rank-2 case).
-        TraceKernel<CudaT><<<output_size, kTraceThreadsPerBlock>>>(
+        // Size each block to its diagonal: diagonal_length is known here, so the
+        // block gets just enough threads to cover it (rounded up to a whole warp,
+        // capped at kMaxTraceThreadsPerBlock). A short diagonal launches a small
+        // block with no idle warps; a long diagonal gets the full-size block and
+        // each thread strides. One block per output element, so many short
+        // diagonals still reduce concurrently across SMs, and the rank-2 trace
+        // (output_size == 1) puts every thread of its single block on the one
+        // diagonal.
+        const cytnx_uint64 threads_per_block = std::min<cytnx_uint64>(
+          ((diagonal_length + kWarpSize - 1) / kWarpSize) * kWarpSize, kMaxTraceThreadsPerBlock);
+        TraceKernel<CudaT><<<output_size, threads_per_block>>>(
           reinterpret_cast<CudaT *>(output_storage.data()),
           reinterpret_cast<const CudaT *>(Tn.storage().data()), device_surviving_shape,
           device_surviving_input_stride, surviving_rank, output_size, diagonal_length,
