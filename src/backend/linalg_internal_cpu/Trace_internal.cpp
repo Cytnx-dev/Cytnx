@@ -15,38 +15,43 @@ namespace cytnx {
     namespace {
 
       template <class T>
-      Tensor TraceImpl(const Tensor &Tn, cytnx_uint64 a1, cytnx_uint64 a2) {
-        const cytnx_uint64 ax1 = std::min(a1, a2);
-        const cytnx_uint64 ax2 = std::max(a1, a2);
+      Tensor TraceImpl(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
+        // Trace() validates upstream that ax1 != ax2 and shape[ax1] == shape[ax2],
+        // so their order is irrelevant: the diagonal stride and the set of
+        // remaining axes are symmetric in (ax1, ax2).
         const auto &shape_in = Tn.shape();
-        const cytnx_uint64 Ndiag = shape_in[ax1];
+        const std::vector<cytnx_uint64> strides = Tn.strides();
+        const cytnx_uint64 n_diag = shape_in[ax1];
+        const cytnx_uint64 diag_stride = strides[ax1] + strides[ax2];
 
-        std::vector<cytnx_int64> out_shape;
-        std::vector<cytnx_uint64> remain_rank_id;
+        // Build the reduced output shape and the matching per-output-axis input
+        // strides in a single pass over the surviving axes (no separate
+        // remaining-axis index list).
+        std::vector<cytnx_int64> out_shape;  // reduced shape, for reshape_
+        std::vector<cytnx_uint64> out_strides;  // input stride of each surviving axis
         for (cytnx_uint64 i = 0; i < shape_in.size(); ++i) {
           if (i != ax1 && i != ax2) {
             out_shape.push_back(static_cast<cytnx_int64>(shape_in[i]));
-            remain_rank_id.push_back(i);
+            out_strides.push_back(strides[i]);
           }
         }
-        cytnx_uint64 Nelem = 1;
-        for (auto d : out_shape) Nelem *= static_cast<cytnx_uint64>(d);
-        const bool is_2d = out_shape.empty();
+        const cytnx_uint64 out_rank = out_strides.size();
+        cytnx_uint64 n_elem = 1;
+        for (auto dim : out_shape) n_elem *= static_cast<cytnx_uint64>(dim);
+        const bool is_2d = out_rank == 0;
 
         // Fill a flat result Storage, then compose the output Tensor from it; the
         // 2D trace produces a single element, the ND trace one element per
         // remaining-rank multi-index.
-        Storage out_storage(is_2d ? cytnx_uint64{1} : Nelem, Tn.dtype(), Tn.device());
-        if (Ndiag == 0 || Nelem == 0) {
+        Storage out_storage(is_2d ? cytnx_uint64{1} : n_elem, Tn.dtype(), Tn.device());
+        if (n_diag == 0 || n_elem == 0) {
           out_storage.set_zeros();
           Tensor out = Tensor::from_storage(out_storage);
           if (!is_2d) out.reshape_(out_shape);
           return out;
         }
 
-        const std::vector<cytnx_uint64> strides = Tn.strides();
-        const cytnx_uint64 diag_stride = strides[ax1] + strides[ax2];
-        const cytnx_uint64 extent = (Ndiag - 1) * diag_stride + 1;
+        const cytnx_uint64 extent = (n_diag - 1) * diag_stride + 1;
         const T *data = Tn.storage().data<T>();
         T *out_data = out_storage.data<T>();
 
@@ -55,22 +60,16 @@ namespace cytnx {
           return Tensor::from_storage(out_storage);
         }
 
-        // Input stride for each surviving (output) axis, so the hot loop indexes a
-        // flat array instead of going through remain_rank_id on every step.
-        std::vector<cytnx_uint64> out_strides(out_shape.size());
-        for (cytnx_uint64 x = 0; x < out_shape.size(); ++x)
-          out_strides[x] = strides[remain_rank_id[x]];
-
         // Walk the output elements in row-major order, carrying the input base
         // offset on an odometer: each step bumps the last axis index (carrying into
         // earlier axes on wrap) and adjusts base by the affected axes' strides. This
         // avoids the per-element division and modulo of decoding the flat index, and
         // needs no precomputed row-major accumulators.
-        std::vector<cytnx_uint64> index(out_shape.size(), 0);
+        std::vector<cytnx_uint64> index(out_rank, 0);
         cytnx_uint64 base = 0;
-        for (cytnx_uint64 i = 0; i < Nelem; ++i) {
+        for (cytnx_uint64 i = 0; i < n_elem; ++i) {
           out_data[i] = PairwiseSum(std::span<const T>(data + base, extent) | stride(diag_stride));
-          for (cytnx_uint64 x = out_shape.size(); x-- > 0;) {
+          for (cytnx_uint64 x = out_rank; x-- > 0;) {
             if (++index[x] < static_cast<cytnx_uint64>(out_shape[x])) {
               base += out_strides[x];
               break;
