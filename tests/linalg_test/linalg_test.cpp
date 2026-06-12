@@ -1,6 +1,8 @@
 #include "linalg_test.h"
 #include "test_tools.h"
 
+#include <complex>
+
 using namespace cytnx;
 using namespace testing;
 using namespace TestTools;
