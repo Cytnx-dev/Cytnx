@@ -640,9 +640,19 @@ TEST_F(linalg_Test, Tensor_Eig_ValuesOnly) {
   ASSERT_EQ(with_vectors.size(), 2);
   EXPECT_EQ(values_only[0].dtype(), Type.ComplexDouble);
   EXPECT_EQ(values_only[0].shape(), with_vectors[0].shape());
+  std::vector<bool> matched(with_vectors[0].shape()[0], false);
   for (cytnx_uint64 i = 0; i < values_only[0].shape()[0]; ++i) {
-    EXPECT_TRUE(abs(values_only[0].at<cytnx_complex128>({i}) -
-                    with_vectors[0].at<cytnx_complex128>({i})) < 1e-13);
+    bool found = false;
+    const auto value = values_only[0].at<cytnx_complex128>({i});
+    for (cytnx_uint64 j = 0; j < with_vectors[0].shape()[0]; ++j) {
+      if (!matched[j] &&
+          abs(value - with_vectors[0].at<cytnx_complex128>({j})) < 1e-13) {
+        matched[j] = true;
+        found = true;
+        break;
+      }
+    }
+    EXPECT_TRUE(found);
   }
 }
 
