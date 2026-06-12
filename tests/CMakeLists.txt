@@ -77,6 +77,14 @@ include(GoogleTest)
 gtest_discover_tests(test_main
                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+add_test(
+  NAME package_config_exports_linkable_target
+  COMMAND ${CMAKE_COMMAND}
+          -S ${CMAKE_CURRENT_SOURCE_DIR}/cmake/package_config_consumer
+          -B ${CMAKE_CURRENT_BINARY_DIR}/package_config_consumer
+          -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}
+)
+
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"

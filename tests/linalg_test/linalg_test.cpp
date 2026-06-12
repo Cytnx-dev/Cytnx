@@ -632,6 +632,20 @@ TEST_F(linalg_Test, Tensor_Eig_RowV) {
   EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < tol);
 }
 
+TEST_F(linalg_Test, Tensor_Eig_ValuesOnly) {
+  auto values_only = linalg::Eig(arange3x3cd, false);
+  auto with_vectors = linalg::Eig(arange3x3cd, true);
+
+  ASSERT_EQ(values_only.size(), 1);
+  ASSERT_EQ(with_vectors.size(), 2);
+  EXPECT_EQ(values_only[0].dtype(), Type.ComplexDouble);
+  EXPECT_EQ(values_only[0].shape(), with_vectors[0].shape());
+  for (cytnx_uint64 i = 0; i < values_only[0].shape()[0]; ++i) {
+    EXPECT_TRUE(abs(values_only[0].at<cytnx_complex128>({i}) -
+                    with_vectors[0].at<cytnx_complex128>({i})) < 1e-13);
+  }
+}
+
 TEST_F(linalg_Test, Tensor_Eigh) {
   auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
   auto res = linalg::Eigh(her);

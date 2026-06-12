@@ -1,5 +1,6 @@
 #include "Storage_test.h"
 
+#include <cstdio>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -230,4 +231,32 @@ TYPED_TEST(StoragePutValue, AppendWithReallocation) {
     EXPECT_GE(storage.capacity(), storage.size());
     EXPECT_EQ(storage.size(), 3);
   }
+}
+
+TEST_F(StorageTest, FromfileHonorsCount) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_count.bin";
+  std::remove(path.c_str());
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  Storage loaded = Storage::Fromfile(path, Type.Double, 2);
+  EXPECT_EQ(loaded.dtype(), Type.Double);
+  ASSERT_EQ(loaded.size(), 2);
+  EXPECT_DOUBLE_EQ(loaded.at<cytnx_double>(0), 1.0);
+  EXPECT_DOUBLE_EQ(loaded.at<cytnx_double>(1), 2.0);
+
+  std::remove(path.c_str());
+}
+
+TEST_F(StorageTest, FromfileRejectsCountLargerThanFile) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_oversized_count.bin";
+  std::remove(path.c_str());
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  EXPECT_THROW(Storage::Fromfile(path, Type.Double, 5), std::logic_error);
+
+  std::remove(path.c_str());
 }
