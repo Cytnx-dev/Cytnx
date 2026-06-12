@@ -645,8 +645,7 @@ TEST_F(linalg_Test, Tensor_Eig_ValuesOnly) {
     bool found = false;
     const auto value = values_only[0].at<cytnx_complex128>({i});
     for (cytnx_uint64 j = 0; j < with_vectors[0].shape()[0]; ++j) {
-      if (!matched[j] &&
-          abs(value - with_vectors[0].at<cytnx_complex128>({j})) < 1e-13) {
+      if (!matched[j] && std::abs(value - with_vectors[0].at<cytnx_complex128>({j})) < 1e-13) {
         matched[j] = true;
         found = true;
         break;
