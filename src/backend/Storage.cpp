@@ -217,7 +217,8 @@ namespace cytnx {
     } else {
       const cytnx_uint64 requested_count = static_cast<cytnx_uint64>(count);
       cytnx_error_msg(requested_count > total_elements,
-                      "[ERROR] count exceed the total # of elements %llu in file.\n",
+                      "[ERROR] count (%llu) exceeds the total # of elements (%llu) in file.\n",
+                      static_cast<unsigned long long>(requested_count),
                       static_cast<unsigned long long>(total_elements));
       Nelem = requested_count;
     }
