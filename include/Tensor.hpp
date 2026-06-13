@@ -375,14 +375,14 @@ namespace cytnx {
      * @param dtype[in] the data type of the binary file. This can be any of the type defined in
      *   cytnx::Type.
      * @param count[in] the number of elements to be loaded from the binary file. If set to -1,
-     *  all elements in the binary file will be loaded.
+     *  all elements in the binary file will be loaded. If set to 0, this returns an empty Tensor
+     *  with the requested dtype.
      * @return Tensor
      * @pre
      *  1. The @p dtype cannot be Type.Void.
      *  2. The @p dtype must be the same as the data type of the binary file.
-     *  3. The @p Nelem cannot be 0.
-     *  4. The @p Nelem cannot be larger than the number of elements in the binary file.
-     *  5. The file name @p fname must be valid.
+     *  3. The @p count cannot be larger than the number of elements in the binary file.
+     *  4. The file name @p fname must be valid.
      * @see cytnx::Tensor::Tofile
      */
     static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
