@@ -762,6 +762,64 @@ CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> 
 </div>
 </section>
 </section>
+<section id="build-troubleshooting">
+<h2>Build troubleshooting<a class="headerlink" href="#build-troubleshooting" title="Link to this heading">¶</a></h2>
+<section id="cuda-device-link-fails-with-elflink-linker-library-load-error">
+<h3>CUDA device link fails with <code class="docutils literal notranslate"><span class="pre">elfLink</span> <span class="pre">linker</span> <span class="pre">library</span> <span class="pre">load</span> <span class="pre">error</span></code><a class="headerlink" href="#cuda-device-link-fails-with-elflink-linker-library-load-error" title="Link to this heading">¶</a></h3>
+<p><strong>Symptom.</strong> A CUDA-enabled build (<code class="docutils literal notranslate"><span class="pre">-DUSE_CUDA=ON</span></code>) configures successfully,
+but the CUDA <em>device link</em> step aborts with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nvlink</span> <span class="n">fatal</span>   <span class="p">:</span> <span class="n">elfLink</span> <span class="n">linker</span> <span class="n">library</span> <span class="n">load</span> <span class="n">error</span>
+</pre></div>
+</div>
+<p>On non-Apple builds Cytnx turns on interprocedural optimization
+(<code class="docutils literal notranslate"><span class="pre">CMAKE_INTERPROCEDURAL_OPTIMIZATION</span></code>) which, together with CUDA separable
+compilation, enables CUDA <em>device</em> link-time optimization (<code class="docutils literal notranslate"><span class="pre">nvcc</span> <span class="pre">-dlto</span></code>). The
+device link step then asks <code class="docutils literal notranslate"><span class="pre">nvlink</span></code> to load the NVVM library, and the error
+above means it could not.</p>
+<p><strong>Cause.</strong> This is <em>not</em> caused by the empty <code class="docutils literal notranslate"><span class="pre">libpthread.a</span></code> / <code class="docutils literal notranslate"><span class="pre">librt.a</span></code> /
+<code class="docutils literal notranslate"><span class="pre">libdl.a</span></code> stub archives that glibc 2.34+ ships – those are tolerated by
+<code class="docutils literal notranslate"><span class="pre">nvlink</span></code>. It is a layout problem specific to the Debian/Ubuntu
+<code class="docutils literal notranslate"><span class="pre">nvidia-cuda-toolkit</span></code> apt package. That package installs <code class="docutils literal notranslate"><span class="pre">libnvvm.so</span></code> into
+the multiarch directory <code class="docutils literal notranslate"><span class="pre">/usr/lib/x86_64-linux-gnu/</span></code> but does not place it
+under the toolkit’s <code class="docutils literal notranslate"><span class="pre">lib64</span></code> directory, which is where <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> tells
+<code class="docutils literal notranslate"><span class="pre">nvlink</span></code> to look. <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> passes <code class="docutils literal notranslate"><span class="pre">-nvvmpath=/usr/lib/nvidia-cuda-toolkit</span></code>,
+so <code class="docutils literal notranslate"><span class="pre">nvlink</span></code> tries to open <code class="docutils literal notranslate"><span class="pre">/usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so</span></code>
+and finds nothing. Regular (non-LTO) device linking does not load NVVM, which is
+why the failure appears only once device LTO is enabled.</p>
+<p><strong>Fix (recommended): use a complete CUDA toolkit.</strong> Install CUDA from conda or
+NVIDIA’s official installer instead of the distribution’s
+<code class="docutils literal notranslate"><span class="pre">nvidia-cuda-toolkit</span></code> package, and make sure its <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> is first on
+<code class="docutils literal notranslate"><span class="pre">PATH</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda
+</pre></div>
+</div>
+<p>A toolkit laid out this way keeps <code class="docutils literal notranslate"><span class="pre">libnvvm.so</span></code> under <code class="docutils literal notranslate"><span class="pre">nvvm/lib64</span></code> where
+<code class="docutils literal notranslate"><span class="pre">nvlink</span></code> expects it, so device LTO works with no further action. This is also
+the layout the CUDA build presets assume.</p>
+<p><strong>Workaround: keep the apt package and add the missing path.</strong> If you must build
+against the distribution package, create the directory <code class="docutils literal notranslate"><span class="pre">nvlink</span></code> searches and
+symlink the packaged <code class="docutils literal notranslate"><span class="pre">libnvvm</span></code> library into it:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$libnvvm_src</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>-1<span class="w"> </span>/usr/lib/x86_64-linux-gnu/libnvvm.so*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-V<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span>
+<span class="nv">$sudo</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/lib/nvidia-cuda-toolkit/lib64
+<span class="nv">$sudo</span><span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$libnvvm_src</span><span class="s2">&quot;</span><span class="w"> </span>/usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">…</span> <span class="pre">|</span> <span class="pre">sort</span> <span class="pre">-V</span> <span class="pre">|</span> <span class="pre">tail</span> <span class="pre">-1</span></code> picks the highest-version file present
+(<code class="docutils literal notranslate"><span class="pre">libnvvm.so.4</span></code>, <code class="docutils literal notranslate"><span class="pre">libnvvm.so.4.0.0</span></code>, or an unversioned <code class="docutils literal notranslate"><span class="pre">libnvvm.so</span></code>),
+so the command works regardless of whether the development symlink was installed.
+Then re-run the build. On non-x86_64 hosts the multiarch directory differs;
+locate the real library first with <code class="docutils literal notranslate"><span class="pre">find</span> <span class="pre">/usr</span> <span class="pre">-name</span> <span class="pre">'libnvvm.so*'</span></code> and adjust
+<code class="docutils literal notranslate"><span class="pre">libnvvm_src</span></code> accordingly.</p>
+<p><strong>Alternative: disable device LTO.</strong> If changing the toolkit layout is not
+practical, configure with <code class="docutils literal notranslate"><span class="pre">-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF</span></code> to skip
+device LTO entirely:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$cmake</span><span class="w"> </span>--preset<span class="w"> </span>openblas-cuda<span class="w"> </span>-DCMAKE_INTERPROCEDURAL_OPTIMIZATION<span class="o">=</span>OFF
+</pre></div>
+</div>
+<p>The build will complete without link-time optimizations, which trades a small
+runtime performance cost for compatibility with the unmodified apt package.</p>
+</section>
+</section>
 <section id="check-cytnx-version">
 <h2>Check Cytnx version<a class="headerlink" href="#check-cytnx-version" title="Link to this heading">¶</a></h2>
 <p>The current version of the library can be printed by:</p>
@@ -849,6 +907,10 @@ CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> 
 <li><a class="reference internal" href="#compiling-process">Compiling process</a></li>
 <li><a class="reference internal" href="#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li><a class="reference internal" href="#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#build-troubleshooting">Build troubleshooting</a><ul>
+<li><a class="reference internal" href="#cuda-device-link-fails-with-elflink-linker-library-load-error">CUDA device link fails with <code class="docutils literal notranslate"><span class="pre">elfLink</span> <span class="pre">linker</span> <span class="pre">library</span> <span class="pre">load</span> <span class="pre">error</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#check-cytnx-version">Check Cytnx version</a></li>
