@@ -21,31 +21,12 @@ namespace cytnx {
     static T* get_obj_data_ptr(const T_ten& buffer, const cytnx_int32 bk_idx = 0) {
       if constexpr (std::is_same_v<T_ten, UniTensor>) {
         if (buffer.uten_type() == UTenType.Block || buffer.uten_type() == UTenType.BlockFermionic) {
-          if (buffer.device() == Device.cpu) {
-            return buffer.get_blocks_()[bk_idx].template ptr_as<T>();
-          } else {  // on cuda
-  #ifdef UNI_GPU
-            return reinterpret_cast<T*>(
-              buffer.get_blocks_()[bk_idx].template gpu_ptr_as<void>(false));
-  #endif
-          }
+          return buffer.get_blocks_()[bk_idx].template ptr_as<T>();
         } else if (buffer.uten_type() == UTenType.Dense) {
-          if (buffer.device() == Device.cpu) {
-            return buffer.get_block_().template ptr_as<T>();
-          } else {  // on cuda
-  #ifdef UNI_GPU
-            return reinterpret_cast<T*>(buffer.get_block_().template gpu_ptr_as<void>(false));
-  #endif
-          }
+          return buffer.get_block_().template ptr_as<T>();
         }
       } else if constexpr (std::is_same_v<T_ten, Tensor>) {
-        if (buffer.device() == Device.cpu) {
-          return buffer.template ptr_as<T>();
-        } else {  // cuda
-  #ifdef UNI_GPU
-          return reinterpret_cast<T*>(buffer.template gpu_ptr_as<void>(false));
-  #endif
-        }
+        return buffer.template ptr_as<T>();
       }
     }
 
@@ -357,17 +338,16 @@ namespace cytnx {
       }
 
       if (is_V) {
-        T* z_data_ptr = reinterpret_cast<T*>(z);
         if constexpr (std::is_same_v<T_ten, UniTensor>) {
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
-            T* z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
+            T* z_k_ptr = z + sorted_idx[ik] * dim;
             pass_data_UT<T, T_ten>(out[ik + 1], z_k_ptr, true);
           }
         } else if constexpr (std::is_same_v<T_ten, Tensor>) {
           T* tens_data = get_obj_data_ptr<T, T_ten>(out[1]);
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
             T* tmp_data = tens_data + ik * dim;
-            T* z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
+            T* z_k_ptr = z + sorted_idx[ik] * dim;
             if (Hop->device() == Device.cpu) {
               memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
             } else {
@@ -547,7 +527,6 @@ namespace cytnx {
       }
       if (is_V) {
         const T img_tol = std::numeric_limits<T>::epsilon() * 100;
-        T* z_data_ptr = reinterpret_cast<T*>(z);
         auto z_ptr_shifts = std::vector<cytnx_int64>(nconv, 0);
         cytnx_int64 tmp = 0;
         z_ptr_shifts.at(0) = tmp;
