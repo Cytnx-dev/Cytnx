@@ -275,3 +275,33 @@ TEST_F(StorageTest, FromfileRejectsCountLargerThanFile) {
 
   EXPECT_THROW(Storage::Fromfile(path, Type.Double, 5), std::logic_error);
 }
+
+TEST_F(StorageTest, FromfileCountZeroReturnsEmptyStorage) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_count_zero.bin";
+  std::remove(path.c_str());
+  const RemoveFileOnExit cleanup(path);
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  Storage loaded = Storage::Fromfile(path, Type.Double, 0);
+  EXPECT_EQ(loaded.dtype(), Type.Double);
+  EXPECT_EQ(loaded.size(), 0);
+}
+
+TEST_F(StorageTest, FromfileCountEqualsTotalElementsReadsAll) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_count_exact.bin";
+  std::remove(path.c_str());
+  const RemoveFileOnExit cleanup(path);
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  // count == total elements: explicit count should match count < 0 behaviour
+  Storage loaded_explicit = Storage::Fromfile(path, Type.Double, 4);
+  Storage loaded_default = Storage::Fromfile(path, Type.Double, -1);
+  ASSERT_EQ(loaded_explicit.size(), 4);
+  ASSERT_EQ(loaded_default.size(), 4);
+  for (cytnx_uint64 i = 0; i < 4; i++)
+    EXPECT_DOUBLE_EQ(loaded_explicit.at<cytnx_double>(i), loaded_default.at<cytnx_double>(i));
+}
