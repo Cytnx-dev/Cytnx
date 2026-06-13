@@ -264,7 +264,7 @@ namespace cytnx {
           } else {  // beta too small -> the norm of new vector too small. This vector cannot span
                     // the new dimension
             if (verbose) {
-              std::cout << "beta too small. Break." << i << std::endl;
+              std::cout << "beta too small. Break at iteration " << i << std::endl;
             }
             break;
           }
