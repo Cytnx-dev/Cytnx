@@ -209,13 +209,18 @@ namespace cytnx {
     cytnx_error_msg(Nbytes % Type.typeSize(dtype),
                     "[ERROR] the total size of file is not an interval of assigned dtype.%s", "\n");
 
+    const cytnx_uint64 total_elements = Nbytes / Type.typeSize(dtype);
+
     // check count smaller than Nelem:
-    if (count < 0)
-      Nelem = Nbytes / Type.typeSize(dtype);
-    else {
-      cytnx_error_msg(count > Nelem, "[ERROR] count exceed the total # of elements %d in file.\n",
-                      Nelem);
-      Nelem = count;
+    if (count < 0) {
+      Nelem = total_elements;
+    } else {
+      const cytnx_uint64 requested_count = static_cast<cytnx_uint64>(count);
+      cytnx_error_msg(requested_count > total_elements,
+                      "[ERROR] count (%llu) exceeds the total # of elements (%llu) in file.\n",
+                      static_cast<unsigned long long>(requested_count),
+                      static_cast<unsigned long long>(total_elements));
+      Nelem = requested_count;
     }
 
     f.open(fname, std::ios::in | std::ios::binary);
