@@ -229,7 +229,7 @@ namespace cytnx {
         const double beta_tol = 1.0e-6;
         std::vector<UniTensor> vs;
         cytnx_uint32 vec_len = Hop->nx();
-        cytnx_uint32 imp_maxiter = std::min(Maxiter, vec_len + 1);
+        cytnx_uint32 imp_maxiter = std::min(Maxiter, vec_len);
         Tensor Hp = zeros({imp_maxiter, imp_maxiter}, Hop->dtype(), Hop->device());
 
         Tensor B_mat;
@@ -303,6 +303,10 @@ namespace cytnx {
             }
             break;
           }
+        }
+        if (B_mat.dtype() == Type.Void) {
+          Hp_sub = resize_mat_internal(Hp, Vs.size(), Vs.size());
+          B_mat = linalg::ExpM(Hp_sub * tau);
         }
 
         // Let V_k be the n × (k + 1) matrix whose columns are v[0],...,v[k] respectively.

@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include <cmath>
+
 #include "test_tools.h"
 #include "cytnx.hpp"
 
@@ -42,6 +44,12 @@ namespace Lanczos_Exp_Ut_Test {
       tmp.relabel_(A.labels());
       return tmp;
     }
+  };
+
+  class OneDimScaleOp : public LinOp {
+   public:
+    OneDimScaleOp() : LinOp("mv", 1, Type.Double, Device.cpu) {}
+    UniTensor matvec(const UniTensor& A) override { return A * 3.0; }
   };
 
   // describe:Real type test
@@ -92,6 +100,20 @@ namespace Lanczos_Exp_Ut_Test {
     auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
     auto ans = GetAns(op.EffH, Tin, tau);
     auto err = static_cast<double>((x - ans).Norm().item().real());
+    EXPECT_TRUE(err <= crit);
+  }
+
+  TEST(Lanczos_Exp_Ut, OneDimensionalKrylovSpace) {
+    OneDimScaleOp op;
+    UniTensor Tin = UniTensor::zeros({1, 1}, {}, Type.Double, Device.cpu).set_rowrank_(1);
+    Tin.at({0, 0}) = 2.0;
+    const double crit = 1.0e-12;
+    const double tau = 0.2;
+
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
+    auto ans = Tin * std::exp(3.0 * tau);
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
     EXPECT_TRUE(err <= crit);
   }
 
