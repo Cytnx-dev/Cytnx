@@ -1,6 +1,8 @@
 #include "linalg_test.h"
 #include "test_tools.h"
 
+#include <complex>
+
 using namespace cytnx;
 using namespace testing;
 using namespace TestTools;
@@ -630,6 +632,29 @@ TEST_F(linalg_Test, Tensor_Eig_RowV) {
   auto vt = UniTensor(linalg::InvM(v.get_block()));
   vt.relabel_({"b", "j"});
   EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < tol);
+}
+
+TEST_F(linalg_Test, Tensor_Eig_ValuesOnly) {
+  auto values_only = linalg::Eig(arange3x3cd, false);
+  auto with_vectors = linalg::Eig(arange3x3cd, true);
+
+  ASSERT_EQ(values_only.size(), 1);
+  ASSERT_EQ(with_vectors.size(), 2);
+  EXPECT_EQ(values_only[0].dtype(), Type.ComplexDouble);
+  EXPECT_EQ(values_only[0].shape(), with_vectors[0].shape());
+  std::vector<bool> matched(with_vectors[0].shape()[0], false);
+  for (cytnx_uint64 i = 0; i < values_only[0].shape()[0]; ++i) {
+    bool found = false;
+    const auto value = values_only[0].at<cytnx_complex128>({i});
+    for (cytnx_uint64 j = 0; j < with_vectors[0].shape()[0]; ++j) {
+      if (!matched[j] && std::abs(value - with_vectors[0].at<cytnx_complex128>({j})) < 1e-13) {
+        matched[j] = true;
+        found = true;
+        break;
+      }
+    }
+    EXPECT_TRUE(found);
+  }
 }
 
 TEST_F(linalg_Test, Tensor_Eigh) {
