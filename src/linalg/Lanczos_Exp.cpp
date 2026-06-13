@@ -264,19 +264,9 @@ namespace cytnx {
           } else {  // beta too small -> the norm of new vector too small. This vector cannot span
                     // the new dimension
             if (verbose) {
-              std::cout << "beta too small, pick another vector." << i << std::endl;
+              std::cout << "beta too small. Break at iteration " << i << std::endl;
             }
-            // pick a new vector perpendicular to all vector in Vs
-            v = Gram_Schmidt_internal(Vs).relabel_(v.labels());
-            auto v_norm = Dot_internal(v, v);
-            // if the picked vector also too small, break and construct expH
-            if (abs(v_norm) <= beta_tol) {
-              if (verbose) {
-                std::cout << "All vector form the space. Break." << i << std::endl;
-              }
-              break;
-            }
-            v = v / v_norm;
+            break;
           }
           Vk.append(v.get_block_().contiguous());
           Vs.push_back(v);

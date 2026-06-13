@@ -11,7 +11,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
     class OneSiteOp(cytnx.LinOp):
         def __init__(self, L, M, R):
             self.anet = cytnx.Network()
-            d = L.shape()[0]
+            d = M.shape()[2]
             D1 = L.shape()[2]
             D2 = R.shape()[2]
             cytnx.LinOp.__init__(self, "mv", D1*D2*d, L.dtype(), R.device())
