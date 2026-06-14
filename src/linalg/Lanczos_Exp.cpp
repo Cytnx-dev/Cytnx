@@ -4,9 +4,11 @@
 #include "Tensor.hpp"
 #include "LinOp.hpp"
 
+#include <algorithm>
 #include <cfloat>
-#include <vector>
 #include <cmath>
+#include <limits>
+#include <vector>
 #include "UniTensor.hpp"
 #include "utils/vec_print.hpp"
 #include <iomanip>
@@ -20,6 +22,8 @@ namespace cytnx {
     using namespace std;
 
     namespace {
+      constexpr double kBetaBreakdownRoundoff = 100.0;
+
       // <A|B>
       Scalar Dot_internal(const UniTensor &A, const UniTensor &B) {
         return Contract(A.Dagger(), B).item();
@@ -42,6 +46,47 @@ namespace cytnx {
         }
         return u;
       }
+
+      double dtype_epsilon_internal(const unsigned int dtype) {
+        if (dtype == Type.Float || dtype == Type.ComplexFloat) {
+          return std::numeric_limits<float>::epsilon();
+        }
+        return std::numeric_limits<double>::epsilon();
+      }
+
+      double float_cvgcrit_floor_internal() {
+        return kBetaBreakdownRoundoff * std::numeric_limits<float>::epsilon();
+      }
+
+      unsigned int krylov_matrix_dtype_internal(const unsigned int dtype) {
+        if (dtype == Type.Float) {
+          return Type.Double;
+        }
+        if (dtype == Type.ComplexFloat) {
+          return Type.ComplexDouble;
+        }
+        return dtype;
+      }
+
+      unsigned int lanczos_exp_output_dtype_internal(const unsigned int op_dtype,
+                                                     const unsigned int out_dtype) {
+        if (op_dtype == Type.Float) {
+          return Type.is_complex(out_dtype) ? Type.ComplexFloat : Type.Float;
+        }
+        if (op_dtype == Type.ComplexFloat) {
+          return Type.ComplexFloat;
+        }
+        return out_dtype;
+      }
+
+      void cast_dense_output_internal(UniTensor &out, const unsigned int dtype) {
+        if (out.dtype() == dtype) {
+          return;
+        }
+        out = out.astype(dtype);
+      }
+
+      double scalar_abs_internal(const Scalar &s) { return static_cast<double>(s.abs()); }
 
       Tensor resize_mat_internal(const Tensor &src, const cytnx_uint64 r, const cytnx_uint64 c) {
         const auto min_r = std::min(r, src.shape()[0]);
@@ -226,11 +271,12 @@ namespace cytnx {
       void Lanczos_Exp_Ut_internal(UniTensor &out, LinOp *Hop, const UniTensor &T, Scalar tau,
                                    const double &CvgCrit, const unsigned int &Maxiter,
                                    const bool &verbose) {
-        const double beta_tol = 1.0e-6;
+        const double eps = dtype_epsilon_internal(Hop->dtype());
         std::vector<UniTensor> vs;
         cytnx_uint32 vec_len = Hop->nx();
         cytnx_uint32 imp_maxiter = std::min(Maxiter, vec_len);
-        Tensor Hp = zeros({imp_maxiter, imp_maxiter}, Hop->dtype(), Hop->device());
+        Tensor Hp = zeros({imp_maxiter, imp_maxiter}, krylov_matrix_dtype_internal(Hop->dtype()),
+                          Hop->device());
 
         Tensor B_mat;
         // prepare initial tensor and normalize
@@ -243,6 +289,8 @@ namespace cytnx {
         auto alpha = Dot_internal(wp, v);
         Hp.at({0, 0}) = alpha;
         auto w = (wp - alpha * v).relabel_(v.labels());
+        double beta_prev = 0.0;
+        double beta_breakdown_scale = std::max(scalar_abs_internal(alpha), 1.0);
 
         // prepare U
         auto Vk_shape = v.shape();
@@ -259,24 +307,18 @@ namespace cytnx {
           }
           auto beta = std::sqrt(double(Dot_internal(w, w).real()));
           v_old = v.clone();
-          if (beta > beta_tol) {
+          auto local_scale = scalar_abs_internal(alpha) + std::abs(beta) + std::abs(beta_prev);
+          beta_breakdown_scale = std::max(beta_breakdown_scale, std::max(local_scale, 1.0));
+          auto beta_breakdown =
+            kBetaBreakdownRoundoff * eps * beta_breakdown_scale * std::sqrt(static_cast<double>(i));
+          if (beta > beta_breakdown) {
             v = (w / beta).relabel_(v.labels());
           } else {  // beta too small -> the norm of new vector too small. This vector cannot span
                     // the new dimension
             if (verbose) {
-              std::cout << "beta too small, pick another vector." << i << std::endl;
+              std::cout << "beta too small. Break at iteration " << i << std::endl;
             }
-            // pick a new vector perpendicular to all vector in Vs
-            v = Gram_Schmidt_internal(Vs).relabel_(v.labels());
-            auto v_norm = Dot_internal(v, v);
-            // if the picked vector also too small, break and construct expH
-            if (abs(v_norm) <= beta_tol) {
-              if (verbose) {
-                std::cout << "All vector form the space. Break." << i << std::endl;
-              }
-              break;
-            }
-            v = v / v_norm;
+            break;
           }
           Vk.append(v.get_block_().contiguous());
           Vs.push_back(v);
@@ -286,6 +328,7 @@ namespace cytnx {
           alpha = Dot_internal(wp, v);
           Hp.at({(cytnx_uint64)i, (cytnx_uint64)i}) = alpha;
           w = (wp - alpha * v - beta * v_old).relabel_(v.labels());
+          beta_prev = beta;
 
           // Converge check
           Hp_sub = resize_mat_internal(Hp, i + 1, i + 1);
@@ -354,6 +397,8 @@ namespace cytnx {
         out = Contracts({T, VkDag_ut, B}, "", true);
         out = Contract(out, Vk_ut);
         out.set_rowrank_(v.rowrank());
+        cast_dense_output_internal(out,
+                                   lanczos_exp_output_dtype_internal(Hop->dtype(), out.dtype()));
       }
     }  // unnamed namespace
 
@@ -362,7 +407,8 @@ namespace cytnx {
                           const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose) {
       // check device:
       cytnx_error_msg(Hop->device() != Device.cpu,
-                      "[ERROR][Lanczos_Exp] Lanczos_Exp still not sopprot cuda devices.%s", "\n");
+                      "[ERROR][Lanczos_Exp] Lanczos_Exp still does not support cuda devices.%s",
+                      "\n");
       // check type:
       cytnx_error_msg(!Type.is_float(Hop->dtype()),
                       "[ERROR][Lanczos_Exp] Lanczos_Exp can only accept operator with "
@@ -387,13 +433,14 @@ namespace cytnx {
       double _cvgcrit = CvgCrit;
 
       if (Hop->dtype() == Type.Float || Hop->dtype() == Type.ComplexFloat) {
-        if (_cvgcrit < 1.0e-7) {
-          _cvgcrit = 1.0e-7;
+        const double cvgcrit_floor = float_cvgcrit_floor_internal();
+        if (_cvgcrit < cvgcrit_floor) {
+          _cvgcrit = cvgcrit_floor;
           cytnx_warning_msg(
-            _cvgcrit < 1.0e-7,
-            "[WARNING][Lanczos_Exp] for float precision type, CvgCrit cannot exceed "
-            "it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s",
-            "\n");
+            true,
+            "[WARNING][Lanczos_Exp] for float precision type, CvgCrit cannot be smaller "
+            "than %.8e, and is automatically raised to this value.%s",
+            cvgcrit_floor, "\n");
         }
       }
 
