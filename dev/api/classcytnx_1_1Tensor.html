@@ -1923,7 +1923,7 @@ Shape : (3,4,5)
   <table class="params">
     <tr><td class="paramname">fname[in]</td><td>the file name of the binary file. </td></tr>
     <tr><td class="paramname">dtype[in]</td><td>the data type of the binary file. This can be any of the type defined in cytnx::Type. </td></tr>
-    <tr><td class="paramname">count[in]</td><td>the number of elements to be loaded from the binary file. If set to -1, all elements in the binary file will be loaded. </td></tr>
+    <tr><td class="paramname">count[in]</td><td>the number of elements to be loaded from the binary file. If set to -1, all elements in the binary file will be loaded. If set to 0, this returns an empty <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> with the requested dtype. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1931,8 +1931,7 @@ Shape : (3,4,5)
 <dl class="section pre"><dt>Precondition</dt><dd><ol type="1">
 <li>The <code>dtype</code> cannot be Type.Void.</li>
 <li>The <code>dtype</code> must be the same as the data type of the binary file.</li>
-<li>The <code>Nelem</code> cannot be 0.</li>
-<li>The <code>Nelem</code> cannot be larger than the number of elements in the binary file.</li>
+<li>The <code>count</code> cannot be larger than the number of elements in the binary file.</li>
 <li>The file name <code>fname</code> must be valid. </li>
 </ol>
 </dd></dl>

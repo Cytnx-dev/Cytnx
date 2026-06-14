@@ -3929,7 +3929,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
 <parametername>count[in]</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the number of elements to be loaded from the binary file. If set to -1, all elements in the binary file will be loaded. </para>
+<para>the number of elements to be loaded from the binary file. If set to -1, all elements in the binary file will be loaded. If set to 0, this returns an empty <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with the requested dtype. </para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
@@ -3938,8 +3938,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
 <simplesect kind="pre"><para><orderedlist>
 <listitem><para>The <computeroutput>dtype</computeroutput> cannot be Type.Void.</para>
 </listitem><listitem><para>The <computeroutput>dtype</computeroutput> must be the same as the data type of the binary file.</para>
-</listitem><listitem><para>The <computeroutput>Nelem</computeroutput> cannot be 0.</para>
-</listitem><listitem><para>The <computeroutput>Nelem</computeroutput> cannot be larger than the number of elements in the binary file.</para>
+</listitem><listitem><para>The <computeroutput>count</computeroutput> cannot be larger than the number of elements in the binary file.</para>
 </listitem><listitem><para>The file name <computeroutput>fname</computeroutput> must be valid. </para>
 </listitem></orderedlist>
 </para>
