@@ -189,7 +189,6 @@ namespace cytnx {
   Storage Storage::Fromfile(const std::string &fname, const unsigned int &dtype,
                             const cytnx_int64 &count) {
     cytnx_error_msg(dtype == Type.Void, "[ERROR] Cannot have Void dtype.%s", "\n");
-    cytnx_error_msg(count == 0, "[ERROR] count cannot be zero!%s", "\n");
 
     Storage out;
     cytnx_uint64 Nbytes;
@@ -295,9 +294,9 @@ namespace cytnx {
   }
 
   void Storage::_Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem) {
-    // before enter this func, makesure
+    // Before entering this function, ensure:
     // 1. dtype is not void.
-    // 2. the Nelement is consistent and smaller than the file size, and should not be zero!
+    // 2. Nelem is consistent and no larger than the file size.
 
     // check:
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
