@@ -146,7 +146,7 @@
     <member refid="classcytnx_1_1Tensor_1aee8c0febe1794bd79edc52f2caac9cc3" kind="function"><name>Init</name></member>
     <member refid="classcytnx_1_1Tensor_1a1b1568fca101fb372411927b5c5ba9d4" kind="function"><name>Tensor</name></member>
     <member refid="classcytnx_1_1Tensor_1a7eea4022389527d198177cb9c1b914c9" kind="function"><name>ptr</name></member>
-    <member refid="classcytnx_1_1Tensor_1ad397c46661fcdb7c5f6b5ea7ce77ccff" kind="function"><name>ptr_as</name></member>
+    <member refid="classcytnx_1_1Tensor_1abc93d724ebbd66306585c9ab558736d8" kind="function"><name>ptr_as</name></member>
     <member refid="classcytnx_1_1Tensor_1a4472af6f8e825a13440e832bf82fb627" kind="function"><name>dtype</name></member>
     <member refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kind="function"><name>device</name></member>
     <member refid="classcytnx_1_1Tensor_1a9e09106c7529e8be90caa52e1541e498" kind="function"><name>dtype_str</name></member>

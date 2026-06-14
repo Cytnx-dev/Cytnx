@@ -695,6 +695,27 @@ These low-level APIs require using an <strong>Accessor</strong> object.</p>
 <p class="admonition-title">Tip</p>
 <p>If your code makes frequent use of get/set elements, using the low-level API can reduce the overhead.</p>
 </div>
+</section>
+<section id="raw-pointer-access-c-only">
+<h2><span class="section-number">3.3.4. </span>Raw pointer access (C++ only)<a class="headerlink" href="#raw-pointer-access-c-only" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Tensor::ptr_as&lt;T&gt;()</span></code> and <code class="docutils literal notranslate"><span class="pre">Tensor::gpu_ptr_as&lt;T&gt;()</span></code> expose the raw storage
+address of a Tensor. They are intended for low-level library code and should be
+used with care.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">ptr_as&lt;T&gt;()</span></code> when <code class="docutils literal notranslate"><span class="pre">T</span></code> is the logical Cytnx element type of the Tensor.
+This is the correct accessor for ordinary C++ code and for raw memory-copy
+interfaces such as <code class="docutils literal notranslate"><span class="pre">memcpy</span></code> or <code class="docutils literal notranslate"><span class="pre">cudaMemcpy</span></code>. For complex tensors, the logical
+type is <code class="docutils literal notranslate"><span class="pre">std::complex&lt;double&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">std::complex&lt;float&gt;</span></code>.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">gpu_ptr_as&lt;T&gt;()</span></code> only when passing Tensor storage to CUDA APIs that require
+CUDA ABI element types. For complex tensors, this means <code class="docutils literal notranslate"><span class="pre">cuDoubleComplex</span></code> or
+<code class="docutils literal notranslate"><span class="pre">cuComplex</span></code>.</p>
+<p>Both accessors return the same underlying storage address. The difference is the
+dtype mapping they validate before returning it:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ptr_as&lt;T&gt;()</span></code> checks <code class="docutils literal notranslate"><span class="pre">T</span></code> against the normal Cytnx type list.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gpu_ptr_as&lt;T&gt;()</span></code> checks <code class="docutils literal notranslate"><span class="pre">T</span></code> against the CUDA type list.</p></li>
+</ul>
+<p>If a function only needs an address for a byte copy, keep the typed pointer from
+<code class="docutils literal notranslate"><span class="pre">ptr_as&lt;T&gt;()</span></code> and pass it directly to the copy routine.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -759,6 +780,7 @@ These low-level APIs require using an <strong>Accessor</strong> object.</p>
 <li><a class="reference internal" href="#get-elements">3.3.1. Get elements</a></li>
 <li><a class="reference internal" href="#set-elements">3.3.2. Set elements</a></li>
 <li><a class="reference internal" href="#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
+<li><a class="reference internal" href="#raw-pointer-access-c-only">3.3.4. Raw pointer access (C++ only)</a></li>
 </ul>
 </li>
 </ul>
