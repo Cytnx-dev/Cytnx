@@ -575,14 +575,14 @@ namespace cytnx {
      *     to current Storage with specified dtype and number of elements.
      * @param[in] fname file name
      * @param[in] dtype the data type of the binary file. See cytnx::Type.
-     * @param[in] Nelem the number of elements you want to load from the binary file. If
-     *   \p Nelem is -1, then it will load all the elements in the binary file.
+     * @param[in] count the number of elements you want to load from the binary file. If
+     *   \p count is -1, then it will load all the elements in the binary file. If \p count is 0,
+     *   this returns an empty Storage with the requested dtype.
      * @pre
      *  1. The @p dtype cannot be Type.Void.
      *  2. The @p dtype must be the same as the data type of the binary file.
-     *  3. The @p Nelem cannot be 0.
-     *  4. The @p Nelem cannot be larger than the number of elements in the binary file.
-     *  5. The file name @p fname must be valid.
+     *  3. The @p count cannot be larger than the number of elements in the binary file.
+     *  4. The file name @p fname must be valid.
      *
      * @see Tofile(const std::string &fname) const
      */
