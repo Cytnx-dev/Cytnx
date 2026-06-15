@@ -24,11 +24,12 @@
   var currentSlug = buildRootParts[buildRootParts.length - 1];
   var relAfterSlug = pathParts.slice(buildRootParts.length).join('/');
 
-  // The stable release is the highest-numbered version entry; non-numeric
-  // slugs such as "dev" are ignored.
+  // The stable release is the highest full "MAJOR.MINOR.PATCH" version entry.
+  // The anchored regex means the "dev" alias and prerelease slugs such as
+  // "1.2.0rc1" return null and are never chosen as stable.
   function parseVersion(v) {
-    var m = /^(\d+)(?:\.(\d+))?(?:\.(\d+))?/.exec(v);
-    return m ? [+m[1], +(m[2] || 0), +(m[3] || 0)] : null;
+    var m = /^(\d+)\.(\d+)\.(\d+)$/.exec(v);
+    return m ? [+m[1], +m[2], +m[3]] : null;
   }
   function newer(a, b) { return (a[0] - b[0]) || (a[1] - b[1]) || (a[2] - b[2]); }
   function latestRelease(entries) {

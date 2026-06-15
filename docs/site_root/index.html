@@ -8,11 +8,12 @@
 // source of truth, so this file needs no per-release edit.
 (function () {
   function go(slug) { window.location.replace(slug + '/'); }
-  // Parse a "MAJOR.MINOR.PATCH" slug into a comparable array; non-numeric
-  // slugs such as "dev" return null and are ignored.
+  // Parse a full "MAJOR.MINOR.PATCH" slug into a comparable array. The regex
+  // is anchored at both ends, so the "dev" alias and prerelease slugs such as
+  // "1.2.0rc1" return null and are never chosen as the stable release.
   function parseVersion(v) {
-    var m = /^(\d+)(?:\.(\d+))?(?:\.(\d+))?/.exec(v);
-    return m ? [+m[1], +(m[2] || 0), +(m[3] || 0)] : null;
+    var m = /^(\d+)\.(\d+)\.(\d+)$/.exec(v);
+    return m ? [+m[1], +m[2], +m[3]] : null;
   }
   function newer(a, b) { return (a[0] - b[0]) || (a[1] - b[1]) || (a[2] - b[2]); }
   function latestRelease(entries) {
