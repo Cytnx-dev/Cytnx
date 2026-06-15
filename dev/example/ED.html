@@ -351,8 +351,10 @@
 <script>
 (function () {
   // The deployed site lays each version out under <site_root>/<slug>/...,
-  // where <slug> is "dev", "stable", or a release like "0.10.0". The same
-  // versions.json lives at <site_root>/versions.json and lists every slug.
+  // where <slug> is "dev" or a release like "0.10.0". The same versions.json
+  // lives at <site_root>/versions.json and lists every slug. The
+  // highest-numbered release is labelled "<name> (stable)" in the switcher,
+  // so there is no separate "stable" entry to maintain.
   // Use Sphinx's `pagename` (the page's path under `docs/source/`, no
   // extension) to peel the version slug off the URL: the URL always ends
   // with `<slug>/<pagename>.html`, regardless of any repo-name prefix or
@@ -366,19 +368,40 @@
   var currentSlug = buildRootParts[buildRootParts.length - 1];
   var relAfterSlug = pathParts.slice(buildRootParts.length).join('/');
 
+  // The stable release is the highest full "MAJOR.MINOR.PATCH" version entry.
+  // The anchored regex means the "dev" alias and prerelease slugs such as
+  // "1.2.0rc1" return null and are never chosen as stable.
+  function parseVersion(v) {
+    var m = /^(\d+)\.(\d+)\.(\d+)$/.exec(v);
+    return m ? [+m[1], +m[2], +m[3]] : null;
+  }
+  function newer(a, b) { return (a[0] - b[0]) || (a[1] - b[1]) || (a[2] - b[2]); }
+  function latestRelease(entries) {
+    var best = null, bestVer = null;
+    entries.forEach(function (e) {
+      if (!e || !e.version) { return; }
+      var ver = parseVersion(e.version);
+      if (ver && (!bestVer || newer(ver, bestVer) > 0)) {
+        bestVer = ver; best = e.version;
+      }
+    });
+    return best;
+  }
+
   fetch(siteRoot + 'versions.json', { cache: 'no-store' })
     .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function (entries) {
       var container = document.getElementById('cytnx-version-switcher');
       if (!container) { return; }
       var list = container.querySelector('ul');
+      var stable = latestRelease(entries);
       entries.forEach(function (entry) {
         var li = document.createElement('li');
         li.className = 'toctree-l1';
         var a = document.createElement('a');
         a.className = 'reference';
         a.href = siteRoot + entry.version + '/' + relAfterSlug;
-        a.textContent = entry.name;
+        a.textContent = entry.version === stable ? entry.name + ' (stable)' : entry.name;
         if (entry.version === currentSlug) {
           li.classList.add('current');
           a.setAttribute('aria-current', 'page');
