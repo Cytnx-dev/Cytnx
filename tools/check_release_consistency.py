@@ -110,7 +110,7 @@ def main() -> None:
         errors.append(
             f"version.cmake is {cmake_version} but docs/site_root/versions.json "
             f'has no entry with "version": "{cmake_version}". Add '
-            f'{{"name": "v{cmake_version}", "version": "{cmake_version}"}} so the '
+            f'{{"name": "{cmake_version}", "version": "{cmake_version}"}} so the '
             f"docs for this release are reachable from the version switcher."
         )
 

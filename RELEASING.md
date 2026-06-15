@@ -37,11 +37,11 @@ so that metadata must already be right when the tag is created:
 1. **Bump `version.cmake`** to the new `MAJOR.MINOR.PATCH`.
 
 2. **Add the docs slug to `docs/site_root/versions.json`.** Insert an entry
-   whose `version` (the URL slug) is the numeric version with **no leading
-   `v`**, and whose `name` is the label shown in the switcher:
+   whose `version` (the URL slug) and `name` (the switcher label) are both the
+   numeric version with **no leading `v`**:
 
    ```json
-   { "name": "v1.2.0", "version": "1.2.0" }
+   { "name": "1.2.0", "version": "1.2.0" }
    ```
 
    Keep the permanent `dev` and `stable` entries. `stable` is the alias
