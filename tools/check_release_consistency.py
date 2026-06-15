@@ -57,7 +57,13 @@ def read_cmake_version() -> str:
     text = VERSION_CMAKE.read_text()
     parts = []
     for field in ("MAJOR", "MINOR", "PATCH"):
-        match = re.search(rf"set\(\w*VERSION_{field}\s+(\d+)\)", text)
+        # Mirror the exact pattern scikit-build-core uses in pyproject.toml's
+        # [tool.scikit-build.metadata.version] block to read version.cmake, so
+        # this check accepts precisely what the build accepts. Keeping it strict
+        # -- case-sensitive `set(`, a CYTNX_-style prefix, a bare integer with
+        # no quotes -- means a version.cmake the build itself cannot parse fails
+        # here too, rather than being green-lit by a more permissive regex.
+        match = re.search(rf"set\(\w+?VERSION_{field}\s+(\d+)\)", text)
         if not match:
             sys.exit(f"could not parse {field} version from {VERSION_CMAKE}")
         parts.append(match.group(1))
