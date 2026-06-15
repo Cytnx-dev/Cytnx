@@ -71,7 +71,17 @@ def read_slugs() -> list[str]:
         sys.exit(f"could not read {VERSIONS_JSON}: {exc}")
     if not isinstance(entries, list):
         sys.exit(f"{VERSIONS_JSON} must contain a JSON array")
-    return [str(entry.get("version", "")) for entry in entries]
+    slugs = []
+    for i, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            sys.exit(f"{VERSIONS_JSON} entry {i} is not a JSON object")
+        if "name" not in entry or "version" not in entry:
+            sys.exit(
+                f'{VERSIONS_JSON} entry {i} must have both "name" and "version" '
+                f"(the switcher renders both fields)"
+            )
+        slugs.append(str(entry["version"]))
+    return slugs
 
 
 def looks_like_v_prefixed_release(slug: str) -> bool:
