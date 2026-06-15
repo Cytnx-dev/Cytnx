@@ -15,7 +15,7 @@ Release) fans out to three workflows:
 | -------------------------- | ------------------------------------------------------------------------- |
 | `release_pypi.yml`         | Builds wheels and publishes `cytnx X.Y.Z` to PyPI                         |
 | `conda_build_release.yml`  | Builds and uploads the conda package                                      |
-| `docs.yml`                 | Publishes the Sphinx docs to `gh-pages/X.Y.Z/` and refreshes `gh-pages/stable/` |
+| `docs.yml`                 | Publishes the Sphinx docs to `gh-pages/X.Y.Z/` and updates the `gh-pages/stable/` permalink |
 
 Two of these read version metadata from the repository at the tagged commit,
 so that metadata must already be right when the tag is created:
@@ -44,9 +44,11 @@ so that metadata must already be right when the tag is created:
    { "name": "1.2.0", "version": "1.2.0" }
    ```
 
-   Keep the permanent `dev` and `stable` entries. `stable` is the alias
-   `docs.yml` keeps pointed at the most recent release and is where the
-   documentation root redirects, so it never needs a per-release edit.
+   Keep the `dev` entry. There is no separate `stable` entry to maintain:
+   the switcher automatically labels the highest-numbered release `(stable)`
+   and the documentation root redirects to it, so adding the new release entry
+   is all that is needed. (`gh-pages/stable/` still exists as a permalink to
+   the latest release docs, maintained by `docs.yml`.)
 
 3. **Open steps 1 and 2 as a release-prep pull request and merge it.** The
    `Release metadata consistency` workflow checks that `version.cmake` and
@@ -71,6 +73,6 @@ already passed — so publishing the release is the last action, not the first.
 ## After publishing
 
 - Once the `docs.yml` run finishes, confirm `https://cytnx-dev.github.io/Cytnx/X.Y.Z/`
-  resolves and that the version switcher lists the new release.
+  resolves and that the version switcher lists the new release, marked `(stable)`.
 - Once `release_pypi.yml` finishes, confirm `pip install cytnx==X.Y.Z`
   resolves.
