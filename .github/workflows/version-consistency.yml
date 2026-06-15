@@ -1,0 +1,34 @@
+name: Release metadata consistency
+
+# Guards the release metadata exactly the way the release workflows consume
+# it. version.cmake feeds the PyPI/conda package version (via
+# scikit-build-core), and docs/site_root/versions.json must list the docs
+# slug for the version being shipped -- numeric, matching the tag with its
+# leading "v" stripped, the directory docs.yml publishes to gh-pages.
+#
+# Running on pull_request makes a release-prep PR fail before it is merged
+# if version.cmake or versions.json is missing the new version or uses a
+# "v"-prefixed docs slug. Running on the v* tag push is the safety net at
+# release time.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      - name: Check version.cmake / versions.json consistency
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            python3 tools/check_release_consistency.py --tag "${GITHUB_REF#refs/tags/}"
+          else
+            python3 tools/check_release_consistency.py
+          fi
