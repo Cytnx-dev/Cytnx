@@ -1,0 +1,860 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="indexpage" kind="page">
+    <compoundname>index</compoundname>
+    <title>Cytnx</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><anchor id="index_1md_dox"/> <heading level="1">Feature:</heading>
+</para>
+<para><heading level="2">Python x C++</heading>
+</para>
+<para>Benefit from both side. One can do simple prototype on python side and easy transfer to C++ with small effort!</para>
+<para><programlisting filename=".cpp"><codeline><highlight class="comment">//<sp/>c++<sp/>version:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><ref refid="classcytnx_1_1Tensor" kindref="compound">cytnx::Tensor</ref><sp/>A({3,4,5},cytnx::Type.Double,<ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device</ref>.cpu)</highlight></codeline>
+</programlisting></para>
+<para><programlisting filename=".py"><codeline><highlight class="comment">#<sp/>python<sp/>version:</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">import</highlight><highlight class="normal"><sp/>cytnx</highlight></codeline>
+<codeline><highlight class="normal">A<sp/>=<sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">cytnx.Tensor</ref>([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</highlight></codeline>
+</programlisting></para>
+<para><heading level="2">1. All the Storage and Tensor have mulitple type support.</heading>
+</para>
+<para>Avaliable types are : (please refer to <ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type </ref>)</para>
+<para><table rows="12" cols="3"><row>
+<entry thead="yes"><para>cytnx type   </para>
+</entry><entry thead="yes"><para>c++ type   </para>
+</entry><entry thead="yes"><para>Type object    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_double   </para>
+</entry><entry thead="no"><para>double   </para>
+</entry><entry thead="no"><para>Type.Double    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_float   </para>
+</entry><entry thead="no"><para>float   </para>
+</entry><entry thead="no"><para>Type.Float    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_uint64   </para>
+</entry><entry thead="no"><para>uint64_t   </para>
+</entry><entry thead="no"><para>Type.Uint64    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_uint32   </para>
+</entry><entry thead="no"><para>uint32_t   </para>
+</entry><entry thead="no"><para>Type.Uint32    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_uint16   </para>
+</entry><entry thead="no"><para>uint16_t   </para>
+</entry><entry thead="no"><para>Type.Uint16    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_int64   </para>
+</entry><entry thead="no"><para>int64_t   </para>
+</entry><entry thead="no"><para>Type.Int64    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_int32   </para>
+</entry><entry thead="no"><para>int32_t   </para>
+</entry><entry thead="no"><para>Type.Int32    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_int16   </para>
+</entry><entry thead="no"><para>int16_t   </para>
+</entry><entry thead="no"><para>Type.Int16    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_complex128   </para>
+</entry><entry thead="no"><para>std::complex&lt;double&gt;   </para>
+</entry><entry thead="no"><para>Type.ComplexDouble    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_complex64   </para>
+</entry><entry thead="no"><para>std::complex&lt;float&gt;   </para>
+</entry><entry thead="no"><para>Type.ComplexFloat    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>cytnx_bool   </para>
+</entry><entry thead="no"><para>bool   </para>
+</entry><entry thead="no"><para>Type.Bool   </para>
+</entry></row>
+</table>
+</para>
+<para><heading level="2">2. Multiple devices support.</heading>
+</para>
+<para><itemizedlist>
+<listitem><para>simple moving btwn CPU and GPU (see <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device </ref> and below)</para>
+</listitem></itemizedlist>
+</para>
+<para><heading level="1">Objects:</heading>
+</para>
+<para><itemizedlist>
+<listitem><para>Storage [Python binded]</para>
+</listitem><listitem><para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor </ref> [Python binded]</para>
+</listitem><listitem><para><ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref> [Python binded]</para>
+</listitem><listitem><para><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor </ref> [C++ only]</para>
+</listitem><listitem><para><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry </ref> [Python binded]</para>
+</listitem><listitem><para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor </ref> [Python binded]</para>
+</listitem><listitem><para><ref refid="classcytnx_1_1Network" kindref="compound">Network </ref> [Python binded]</para>
+</listitem></itemizedlist>
+</para>
+<para><heading level="1">linear algebra functions:</heading>
+</para>
+<para>See <ref refid="namespacecytnx_1_1linalg" kindref="compound">cytnx::linalg </ref> for further details <table rows="49" cols="7"><row>
+<entry thead="yes"><para>func   </para>
+</entry><entry thead="yes"><para>inplace   </para>
+</entry><entry thead="yes"><para>CPU   </para>
+</entry><entry thead="yes"><para>GPU   </para>
+</entry><entry thead="yes"><para>callby Tensor   </para>
+</entry><entry thead="yes"><para>Tensor   </para>
+</entry><entry thead="yes"><para>UniTensor    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Add   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a2744949ae1bbbef4a852b11153617b5d" kindref="member">Add_</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1aafd7446e798d34427d4e6a9571861111" kindref="member">Add</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1af36e9e20e4c7d74f2f6f838902482d98" kindref="member">Add</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ac61bd0f99306496fae81f8601fa4070c" kindref="member">Add</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Sub   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1aff0275bf4752791ebc51b3f02b456115" kindref="member">Sub_</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a4648eef7874bad42d6d7b15fb1598644" kindref="member">Sub</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a78477b25b3eed121847f1a13b878a925" kindref="member">Sub</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a9918295b0d2d78fa475390e91ccbf57b" kindref="member">Sub</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Mul   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a9eb8827f29f8932c24d8315017b7c7e2" kindref="member">Mul_</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a443885c8f02ab5352d81255e4650cf32" kindref="member">Mul</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a2fc49876b7b53f6f6e97ce70f475f636" kindref="member">Mul</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a8705f85e347439577708173ab963f909" kindref="member">Mul</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Div   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a7e079fdaf9bb56c21e1300dbf08e7223" kindref="member">Div_</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1add04fc004ccab102743f3e392f6bb482" kindref="member">Div</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1abc1940e0e7364299ea1481c81003ba13" kindref="member">Div</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1affc6138760ac67505ae194edf14525e8" kindref="member">Div</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Mod   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1ae41aecc16a039a59e2902a31e8eea243" kindref="member">Mod</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ab8ac85bd0291ab12523eec073aef1fa3" kindref="member">Mod</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a56d73db3d0cdd3a2ca5ed5f88f0738ff" kindref="member">Mod</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Cpr   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1aeee6153da17147b82857e342e2a35c52" kindref="member">Cpr</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aea125f2928934007725809426bb77e38" kindref="member">Cpr</ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>+,+=   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a84d7c47ea4cdb206a8ad70b8b3783876" kindref="member">+=</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a84d7c47ea4cdb206a8ad70b8b3783876" kindref="member">+=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1a067e7063e7cc7a80c9c91d8998ab7134" kindref="member">+</ref>,<ref refid="classcytnx_1_1Tensor_1a84d7c47ea4cdb206a8ad70b8b3783876" kindref="member">+=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1ad1f97cdff6a9825441592b906d8ae330" kindref="member">+</ref>,<ref refid="classcytnx_1_1UniTensor_1a165f096bd0b248c9a96da1db287e1bf7" kindref="member">+=</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>-,-=   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a22b227a075c948ca2f8ac2aad8974190" kindref="member">-=</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a22b227a075c948ca2f8ac2aad8974190" kindref="member">-=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1a5a476408cdb97a10fa2330a5d6b4934c" kindref="member">-</ref>,<ref refid="classcytnx_1_1Tensor_1a22b227a075c948ca2f8ac2aad8974190" kindref="member">-=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1a64cab629757608840015fd955f53f961" kindref="member">-</ref>,<ref refid="classcytnx_1_1UniTensor_1aa750cf27fca09d332c3af8a47c177d50" kindref="member">-=</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>*,*=   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a0409dea9e50793f689eba740638b86a1" kindref="member">*=</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a0409dea9e50793f689eba740638b86a1" kindref="member">*=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1ad579dd62bafd8261a0192a108b0f4b1b" kindref="member">*</ref>,<ref refid="classcytnx_1_1Tensor_1a0409dea9e50793f689eba740638b86a1" kindref="member">*=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1a0b23c5c933bf53cc25b8e94bf0e8cd80" kindref="member">*</ref>,<ref refid="classcytnx_1_1UniTensor_1a027a174c6e9cda2116a7cfbdcec8f9ba" kindref="member">*=</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>/,/=   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a09164f6960b922ee005a6039a64a773b" kindref="member">/=</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a09164f6960b922ee005a6039a64a773b" kindref="member">/=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1aa12ec2394a750ba7e4c29799ec4bd53e" kindref="member">/</ref>,<ref refid="classcytnx_1_1Tensor_1a09164f6960b922ee005a6039a64a773b" kindref="member">/=</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1adf098bf65b5c3fb990065f0df05d087c" kindref="member">/</ref>,<ref refid="classcytnx_1_1UniTensor_1a05c0070bc928da52ea57b555d0ccf6e5" kindref="member">/=</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Svd   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a984552dc556723647a7aa26789504388" kindref="member">Svd</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a330151ef7e84a8169d6871cc08fa14d4" kindref="member">Svd</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a49a33a99468fba6213383b2f83ee7716" kindref="member">Svd</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Gesvd   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a8ae32a5c874c9f5c1cf8cbbd59ef50bb" kindref="member">Gesvd</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a829b1cbf704ff5560e32473e71dd6ed1" kindref="member">Gesvd</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Svd_truncate   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a0525c8197d0d441586467676bf814e90" kindref="member">Svd_truncate</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aab83b0d368d074fe93ae9ae55dd37766" kindref="member">Svd_truncate</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Gesvd_truncate   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a002709e89db060b9004412a6f0510600" kindref="member">Gesvd_truncate</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a680fe65e25efe7650aa5f2c8bfa06e83" kindref="member">Gesvd_truncate</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>InvM   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ac414e561888051c1fbacde18c9039fbf" kindref="member">InvM_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a0cd186f9e001ee836ef4712eca40f049" kindref="member">InvM </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1af819d2fc4522d2a6287aa16dfbe3f787" kindref="member">InvM </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a62fe45ce80ab5cd5fd9a4c7718270468" kindref="member">InvM </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Inv   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1acae5e14ab0cf35a1a713b92444850f89" kindref="member">Inv_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a42984fbfc14c73716c88b871161cf490" kindref="member">Inv </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a6b7c861f65e3ee03c246887c64c405ff" kindref="member">Inv </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Conj   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1adc3233bf8bc3eb6a435340f912412801" kindref="member">Conj_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a89af177fad9c00c3d09d2c587de2d77a" kindref="member">Conj </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a470d0886432554a35ecaf961451c0806" kindref="member">Conj </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a15851ab7204c9314a0c3cee1b7c4f3bf" kindref="member">Conj </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Exp   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aaab08439dde94ee87939d07933ede6e3" kindref="member">Exp_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1aa85b2277ea048c00bef949fc2e7091db" kindref="member">Exp </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aac38382cbc0e8202411c96a0ff636471" kindref="member">Exp </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Expf   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a5de1faf71c76cdc6b7fa5ba3a3e21bbb" kindref="member">Expf_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a5831918722e5d18f4eaf37834b8fbf77" kindref="member">Expf </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Eigh   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a5eaf4c8f99f9776e4461a1f676345ae5" kindref="member">Eigh</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a63fb9c9751ff27d22f84a52a876cc6fc" kindref="member">Eigh</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a9f15e25a4048a604b9f5ed243443bf80" kindref="member">Eigh</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>ExpH   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1af116da0421730edbcba17cda953f13b6" kindref="member">ExpH </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ae394378db613a244ad518504047669c0" kindref="member">ExpH </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>ExpM   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a0d4b1c10f01b98fd738af6ac3abd7021" kindref="member">ExpM </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ad5c478aa9da366c15ec7a2351dc99d93" kindref="member">ExpM </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Matmul   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a53feb441b4b1bd263714ed33e093728f" kindref="member">Matmul </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Diag   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a5913f0bdd6cc130aeb927f42a874a149" kindref="member">Diag </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Tensordot   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a242f1b9c1ee7938ba050121773ab4b55" kindref="member">Tensordot </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Outer   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a3e8edc89fdabb9c0f9b342198a31798b" kindref="member">Outer </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Vectordot   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aa69a91a5651fce55380cf800c6030d73" kindref="member">Vectordot </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Tridiag   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a5a502c7d0a6a46f0e695f211a42ab9dc" kindref="member">Tridiag </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Kron   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1abc22428de7f69d2afc9a27fca76bfe15" kindref="member">Kron </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Norm   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a7889abcab99ca9800c0cbccbd6767819" kindref="member">Norm</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a9cd2be179860bb4742ebe320fa063680" kindref="member">Norm </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a00e435cae51f9e3a9b5506d328b8d118" kindref="member">Norm </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Dot   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a215dbfd2aa7ef898450de7afff726bca" kindref="member">Dot </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Eig   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a243ceac5dc7d4a8c983b0e7693b97489" kindref="member">Eig</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aac143f3d5a9255d4e71b9ada3cdf9566" kindref="member">Eig</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Pow   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a269ef291355dfee4421fa55ad0247aad" kindref="member">Pow_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1ac5bd2525bacc3713694a063074538e20" kindref="member">Pow </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a2919ef6c163a54360071c286df3fb92e" kindref="member">Pow </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a855ef5046319e5630ff34e1748278aed" kindref="member">Pow </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Abs   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a30687e6240a889c04637b33ef90c2525" kindref="member">Abs_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a312a8b7b963199a98e59d9f6a97c32e6" kindref="member">Abs </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a3ded6435c7b47eb348d03783bfe72611" kindref="member">Abs </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Qr   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1af22616b7e35f13b775f2423d19e9ffe7" kindref="member">Qr </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a194461432b34c60984a02569a4d9c903" kindref="member">Qr </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Qdr   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a49f6c1a406ac0a3446ea8c9423587dd8" kindref="member">Qdr </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ac3a4d9f746e4d05555de50ac9fca9a77" kindref="member">Qdr </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Det   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a5fd73573057cda064a77f69c927a45dc" kindref="member">Det </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Min   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1af540bb4dc6887bf29289722101899a57" kindref="member">Min</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a25b5f2fdfb550aabc9cc41daa963e1fb" kindref="member">Min</ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Max   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1adb752367adea78b251e5a584276c1f40" kindref="member">Max</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a93ef263824e2dcdab4832ea628959d19" kindref="member">Max</ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Sum   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a24855027b29b1777946617f480bc5014" kindref="member">Sum</ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Trace   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="classcytnx_1_1Tensor_1a8d2f499d0c79e4c46909d2341c374723" kindref="member">Trace</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a02d7105bf16d23128687ba92fb231b54" kindref="member">Trace</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ad5acb5c8d20b164b52affdd2e747e46b" kindref="member">Trace </ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Matmul_dg   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1af2e6723dc80031eb28fc10cc19826dda" kindref="member">Matmul_dg </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Tensordot_dg   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ac77faf8e0c0153e1890610a6e21f36af" kindref="member">Tensordot_dg </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Lstsq   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a59fdd5725d0fe8c422dfe602629d34d7" kindref="member">Lstsq</ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Axpy   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a414b247231f107dc34e52d221b615a99" kindref="member">Axpy_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aa65387e1199b5b0feb6ecaca3a7ab976" kindref="member">Axpy </ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Ger   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aad5bd110b48c053428e72ecceb2aa04d" kindref="member">Ger</ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Gemm   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a2a4fdc352527d77235ff53d3694bf92c" kindref="member">Gemm_</ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1ab781bbb25cc0f04ad700596d14da4596" kindref="member">Gemm</ref>   </para>
+</entry><entry thead="no"><para>x    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Gemm_Batch   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="" kindref="compound">Gemm_Batch</ref>   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry></row>
+</table>
+</para>
+<para><bold>iterative solver:</bold> <table rows="4" cols="5"><row>
+<entry thead="yes"><para>func   </para>
+</entry><entry thead="yes"><para>CPU   </para>
+</entry><entry thead="yes"><para>GPU   </para>
+</entry><entry thead="yes"><para>Tensor   </para>
+</entry><entry thead="yes"><para>UniTensor    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Lanczos   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a91b798c44c9479338b03e13f73284b3f" kindref="member">Lanczos</ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a3e6acd25ef7cadc9b06d1c8190f13cd0" kindref="member">Lanczos</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Lanczos_Exp   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a74e4c9a9cfe97d7ca523012078a3f5e1" kindref="member">Lanczos_Exp</ref>    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Arnoldi   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="" kindref="compound">Arnoli</ref>   </para>
+</entry><entry thead="no"><para><ref refid="" kindref="compound">Arnoli</ref>   </para>
+</entry></row>
+</table>
+</para>
+<para><heading level="1">Container Generators</heading>
+</para>
+<para>Tensor: <ref refid="namespacecytnx_1ab8a79a03fb0465f3eb2641017f3f1755" kindref="member">zeros()</ref>, <ref refid="namespacecytnx_1a83fb7bbe73368751a0d0f535d4a10a33" kindref="member">ones()</ref>, <ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">arange()</ref>, <ref refid="namespacecytnx_1af8aa7e619c030f80c54e4d26b576484b" kindref="member">identity()</ref>, <ref refid="namespacecytnx_1affbd9073156ce86d5e5c03742603c631" kindref="member">eye()</ref>,</para>
+<para><heading level="1">Physics Category</heading>
+</para>
+<para>Tensor: <ref refid="namespacecytnx_1_1physics_1a9f018f04ccd068e899a8fcfe2e9b82d4" kindref="member">spin(),</ref> <ref refid="namespacecytnx_1_1physics_1a1c6ebefa40751712dfb8976b015f48d6" kindref="member">pauli()</ref></para>
+<para><heading level="1">Random</heading>
+</para>
+<para>See <ref refid="namespacecytnx_1_1random" kindref="compound">cytnx::random </ref> for further details</para>
+<para><table rows="5" cols="6"><row>
+<entry thead="yes"><para>func   </para>
+</entry><entry thead="yes"><para>UniTensor   </para>
+</entry><entry thead="yes"><para>Tensor   </para>
+</entry><entry thead="yes"><para>Storage   </para>
+</entry><entry thead="yes"><para>CPU   </para>
+</entry><entry thead="yes"><para>GPU    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>^normal   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1afc0908ae0a3f7224a06f4e2cb5161c74" kindref="member">normal</ref>   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>^uniform   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1a526bd27b4f67395742c5633c2f8343de" kindref="member">uniform</ref>   </para>
+</entry><entry thead="no"><para>x   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>*normal_   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1ac1f51aa39149f407b9e9b5aaa1964e91" kindref="member">normal_ </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1a104df82fa7e6ae683463324443dfd07d" kindref="member">normal_ </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1a41ed636f5c24eacbf4460c468ec8eaf3" kindref="member">normal_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>*uniform_   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1acd72bde9159b9345b77c1b972396ec27" kindref="member">uniform_ </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1a30714c12a0d05d267ec1934f30b1e0a9" kindref="member">uniform_ </ref>   </para>
+</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1random_1a4338fa831047fbf286059f55cdba7a87" kindref="member">uniform_ </ref>   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry><entry thead="no"><para>✓   </para>
+</entry></row>
+</table>
+</para>
+<para><computeroutput>*</computeroutput> this is initializer</para>
+<para><computeroutput>^</computeroutput> this is generator</para>
+<para><simplesect kind="note"><para>The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.</para>
+</simplesect>
+<heading level="1">conda install</heading>
+</para>
+<para><bold>[Currently Linux only]</bold></para>
+<para>without CUDA<itemizedlist>
+<listitem><para>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx</para>
+</listitem></itemizedlist>
+</para>
+<para>with CUDA<itemizedlist>
+<listitem><para>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx_cuda</para>
+</listitem></itemizedlist>
+</para>
+<para><heading level="1">Some snippets:</heading>
+</para>
+<para><heading level="2">Storage</heading>
+</para>
+<para><itemizedlist>
+<listitem><para>Memory container with GPU/CPU support. Type conversions (type casting between Storages) and moving between devices easily possible.</para>
+</listitem><listitem><para>Generic type object, the behavior is very similar to Python. <programlisting filename=".cpp"><codeline><highlight class="normal">Storage<sp/>A(400,<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordflow">for</highlight><highlight class="normal">(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>i=0;i&lt;400;i++)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>A.at&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&gt;(i)<sp/>=<sp/>i;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Storage<sp/>B<sp/>=<sp/>A;<sp/></highlight><highlight class="comment">//<sp/>A<sp/>and<sp/>B<sp/>share<sp/>same<sp/>memory,<sp/>this<sp/>is<sp/>similar<sp/>to<sp/>Python</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Storage<sp/>C<sp/>=<sp/>A.to(<ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cuda+0);</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+<para><heading level="2">Tensor</heading>
+</para>
+<para><itemizedlist>
+<listitem><para>A tensor, API very similar to numpy and pytorch.</para>
+</listitem><listitem><para>Simple moving btwn CPU and GPU: <programlisting filename=".cpp"><codeline><highlight class="normal">Tensor<sp/>A({3,4},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double,<ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cpu);<sp/></highlight><highlight class="comment">//<sp/>create<sp/>tensor<sp/>on<sp/>CPU<sp/>(default)</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>B({3,4},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double,<ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cuda+0);<sp/></highlight><highlight class="comment">//<sp/>create<sp/>tensor<sp/>on<sp/>GPU<sp/>with<sp/>gpu-id=0</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>C<sp/>=<sp/>B;<sp/></highlight><highlight class="comment">//<sp/>C<sp/>and<sp/>B<sp/>share<sp/>same<sp/>memory.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>move<sp/>A<sp/>to<sp/>GPU</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>D<sp/>=<sp/>A.to(<ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cuda+0);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>inplace<sp/>move<sp/>A<sp/>to<sp/>GPU</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A.to_(<ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cuda+0);</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>Type conversion possible: <programlisting filename=".cpp"><codeline><highlight class="normal">Tensor<sp/>A({3,4},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>B<sp/>=<sp/>A.astype(<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Uint64);<sp/></highlight><highlight class="comment">//<sp/>cast<sp/>double<sp/>to<sp/>uint64_t</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>Virtual swap and permute. All the permute and swap operations do not change the underlying memory immediately. Minimized cost of moving elements.</para>
+</listitem><listitem><para>Use <computeroutput>contiguous()</computeroutput> when needed to actually move the memory layout. <programlisting filename=".cpp"><codeline><highlight class="normal">Tensor<sp/>A({3,4,5,2},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
+<codeline><highlight class="normal">A.permute_(0,3,1,2);<sp/></highlight><highlight class="comment">//<sp/>this<sp/>will<sp/>not<sp/>change<sp/>the<sp/>memory,<sp/>only<sp/>the<sp/>shape<sp/>info<sp/>is<sp/>changed.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/></highlight><highlight class="comment">//<sp/>false</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">A.contiguous_();<sp/></highlight><highlight class="comment">//<sp/>call<sp/>contiguous()<sp/>to<sp/>actually<sp/>move<sp/>the<sp/>memory.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/></highlight><highlight class="comment">//<sp/>this<sp/>will<sp/>be<sp/>true!</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>Access single element using <computeroutput>.at</computeroutput> <programlisting filename=".cpp"><codeline><highlight class="normal">Tensor<sp/>A({3,4,5},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>val<sp/>=<sp/>A.at&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&gt;(0,2,2);</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para>Access elements similar to Python slices: <programlisting filename=".cpp"><codeline><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>Accessor<sp/>ac;</highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>A({3,4,5},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>out<sp/>=<sp/>A(0,</highlight><highlight class="stringliteral">&quot;:&quot;</highlight><highlight class="normal">,</highlight><highlight class="stringliteral">&quot;1:4&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>equivalent<sp/>to<sp/>Python:<sp/>out<sp/>=<sp/>A[0,:,1:4]</highlight></codeline>
+</programlisting></para>
+</listitem></itemizedlist>
+</para>
+<para><heading level="2">UniTensor</heading>
+</para>
+<para><itemizedlist>
+<listitem><para>Extension of Tensor, specifically designed for Tensor network simulations.</para>
+</listitem><listitem><para><computeroutput>UniTensor</computeroutput> is a tensor with additional information such as <computeroutput>Bond</computeroutput>, <computeroutput>Symmetry</computeroutput> and <computeroutput>labels</computeroutput>. With these information, one can easily implement the tensor contraction. <programlisting filename=".c"><codeline><highlight class="normal"><sp/>++</highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>A({3,4,5},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
+<codeline><highlight class="normal">UniTensor<sp/>tA<sp/>=<sp/>UniTensor(A);<sp/></highlight><highlight class="comment">//<sp/>convert<sp/>directly.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">UniTensor<sp/>tB<sp/>=<sp/>UniTensor({Bond(3),Bond(4),Bond(5)},{});<sp/></highlight><highlight class="comment">//<sp/>init<sp/>from<sp/>scratch.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>Relabel<sp/>the<sp/>tensor<sp/>and<sp/>then<sp/>contract.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">tA.relabel_({</highlight><highlight class="stringliteral">&quot;common_1&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;common_2&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;out_a&quot;</highlight><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">tB.relabel_({</highlight><highlight class="stringliteral">&quot;common_1&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;common_2&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;out_b&quot;</highlight><highlight class="normal">});</highlight></codeline>
+<codeline><highlight class="normal">UniTensor<sp/>out<sp/>=<sp/><ref refid="namespacecytnx_1a6bf4d5dbc0c159db72ff3019ca8125f5" kindref="member">cytnx::Contract</ref>(tA,tB);</highlight></codeline>
+<codeline><highlight class="normal">tA.print_diagram();</highlight></codeline>
+<codeline><highlight class="normal">tB.print_diagram();</highlight></codeline>
+<codeline><highlight class="normal">out.print_diagram();</highlight></codeline>
+</programlisting> Output: <programlisting><codeline><highlight class="normal">-----------------------</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Name<sp/>:</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Rank<sp/>:<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">block_form<sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">is_diag<sp/><sp/><sp/><sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>device<sp/><sp/><sp/>:<sp/>cytnx<sp/>device:<sp/>CPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>common_1<sp/>____|<sp/>3<sp/><sp/><sp/><sp/><sp/>4<sp/>|____<sp/>common_2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal">-----------------------</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Name<sp/>:</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Rank<sp/>:<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">block_form<sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">is_diag<sp/><sp/><sp/><sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>device<sp/><sp/><sp/>:<sp/>cytnx<sp/>device:<sp/>CPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>common_1<sp/>____|<sp/>3<sp/><sp/><sp/><sp/><sp/>4<sp/>|____<sp/>common_2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_b</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal">-----------------------</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Name<sp/>:</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Rank<sp/>:<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">block_form<sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">is_diag<sp/><sp/><sp/><sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>device<sp/><sp/><sp/>:<sp/>cytnx<sp/>device:<sp/>CPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>--------</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_b</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>--------</highlight></codeline>
+</programlisting></para>
+</listitem><listitem><para><computeroutput>UniTensor</computeroutput> supports <computeroutput>Block</computeroutput> form, which is useful if the physical system has a symmetry. See <ulink url="https://cytnx-dev.github.io/Cytnx/">user guide</ulink> for more details.</para>
+</listitem></itemizedlist>
+</para>
+<para><hruler/>
+ <heading level="1">Developers &amp; Maintainers</heading>
+</para>
+<para><table rows="2" cols="3"><row>
+<entry thead="yes"><para>Creator and Project manager   </para>
+</entry><entry thead="yes"><para>Affiliation   </para>
+</entry><entry thead="yes"><para>Email    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Kai-Hsin Wu   </para>
+</entry><entry thead="no"><para>Boston Univ., USA   </para>
+</entry><entry thead="no"><para><ulink url="mailto:kaihsinwu@gmail.com">kaihsinwu@gmail.com</ulink>   </para>
+</entry></row>
+</table>
+<linebreak/>
+ <table rows="7" cols="3"><row>
+<entry thead="yes"><para>Developers   </para>
+</entry><entry thead="yes"><para>Affiliation   </para>
+</entry><entry thead="yes"><para>Roles    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Chang-Teng Lin   </para>
+</entry><entry thead="no"><para>NTU, Taiwan   </para>
+</entry><entry thead="no"><para>major maintainer and developer    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Ke Hsu   </para>
+</entry><entry thead="no"><para>NTU, Taiwan   </para>
+</entry><entry thead="no"><para>major maintainer and developer    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Ivana Gyro   </para>
+</entry><entry thead="no"><para>NTU, Taiwan   </para>
+</entry><entry thead="no"><para>major maintainer and developer    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Hao-Ti Hung   </para>
+</entry><entry thead="no"><para>NTU, Taiwan   </para>
+</entry><entry thead="no"><para>documentation and linalg    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Ying-Jer Kao   </para>
+</entry><entry thead="no"><para>NTU, Taiwan   </para>
+</entry><entry thead="no"><para>setuptool, cmake    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Manuel Schneider   </para>
+</entry><entry thead="no"><para>NYCU, Taiwan   </para>
+</entry><entry thead="no"><para>developer   </para>
+</entry></row>
+</table>
+</para>
+<para><heading level="1">Contributors</heading>
+</para>
+<para><table rows="9" cols="2"><row>
+<entry thead="yes"><para>Contributors   </para>
+</entry><entry thead="yes"><para>Affiliation    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>PoChung Chen   </para>
+</entry><entry thead="no"><para>NTHU, Taiwan    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Chia-Min Chung   </para>
+</entry><entry thead="no"><para>NYCU, Taiwan    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Ian McCulloch   </para>
+</entry><entry thead="no"><para>NTHU, Taiwan    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Yen-Hsin Wu   </para>
+</entry><entry thead="no"><para>NTU, Taiwan    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Po-Kwan Wu   </para>
+</entry><entry thead="no"><para>OSU, USA    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Wen-Han Kao   </para>
+</entry><entry thead="no"><para>UMN, USA    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Yu-Hsueh Chen   </para>
+</entry><entry thead="no"><para>NTU, Taiwan    </para>
+</entry></row>
+<row>
+<entry thead="no"><para>Yu-Cheng Lin   </para>
+</entry><entry thead="no"><para>NTU, Taiwan   </para>
+</entry></row>
+</table>
+</para>
+<para><heading level="1">References</heading>
+</para>
+<para><itemizedlist>
+<listitem><para>Paper: <ulink url="https://arxiv.org/abs/2401.01921">https://arxiv.org/abs/2401.01921</ulink></para>
+</listitem><listitem><para>Example/DMRG: <ulink url="https://www.tensors.net/dmrg">https://www.tensors.net/dmrg</ulink></para>
+</listitem><listitem><para>hptt library: <ulink url="https://github.com/springer13/hptt">https://github.com/springer13/hptt</ulink> </para>
+</listitem></itemizedlist>
+</para>
+    </detaileddescription>
+    <location file="dox.md"/>
+  </compounddef>
+</doxygen>

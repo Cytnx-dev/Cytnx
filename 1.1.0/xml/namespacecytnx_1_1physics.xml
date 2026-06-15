@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacecytnx_1_1physics" kind="namespace" language="C++">
+    <compoundname>cytnx::physics</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacecytnx_1_1physics_1a9f018f04ccd068e899a8fcfe2e9b82d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::physics::spin</definition>
+        <argsstring>(const cytnx_double &amp;S, const std::string &amp;Comp, const int &amp;device=Device.cpu)</argsstring>
+        <name>spin</name>
+        <qualifiedname>cytnx::physics::spin</qualifiedname>
+        <param>
+          <type>const cytnx_double &amp;</type>
+          <declname>S</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>Comp</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>create Spin-S representation matrix. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>S</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Spin index. should be multiple of 1/2. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>Comp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Component of Spin, it can be &apos;x&apos;, &apos;y&apos; and &apos;z&apos; </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Physics.hpp" line="31" column="12" declfile="include/Physics.hpp" declline="31" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1physics_1a1c6ebefa40751712dfb8976b015f48d6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::physics::pauli</definition>
+        <argsstring>(const std::string &amp;Comp, const int &amp;device=Device.cpu)</argsstring>
+        <name>pauli</name>
+        <qualifiedname>cytnx::physics::pauli</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>Comp</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <briefdescription>
+<para>create Pauli matrix. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>Comp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the Component of Spin, it can be &apos;x&apos;, &apos;y&apos; and &apos;z&apos; </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device </ref></para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Physics.hpp" line="48" column="12" declfile="include/Physics.hpp" declline="48" declcolumn="12"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/Physics.hpp" line="18" column="3"/>
+  </compounddef>
+</doxygen>
