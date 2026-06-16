@@ -9,6 +9,8 @@
 #include <fstream>
 #include "utils/dynamic_arg_resolver.hpp"
 #include "Accessor.hpp"
+#include "mdspan.hpp"
+#include <array>
 #include <utility>
 #include <vector>
 #include <initializer_list>
@@ -524,6 +526,74 @@ namespace cytnx {
                       this->dtype(), Type_class::getname(this->dtype()).c_str(),
                       Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
       return static_cast<T *>(this->_impl->_storage._impl->data());
+    }
+
+    /**
+     * @brief Return a non-owning typed mdspan view of the Tensor storage.
+     *
+     * The returned view preserves the Tensor's current logical layout, including non-contiguous
+     * permutations, using a `stdex::layout_stride` mapping. The Tensor storage must outlive the
+     * returned mdspan. The template type and rank must match the Tensor dtype and rank.
+     */
+    template <typename T, std::size_t Rank>
+    auto as_mdspan() const {
+      using element_type = std::remove_cv_t<T>;
+      using extents_type = stdex::dextents<std::size_t, Rank>;
+      using mapping_type = typename stdex::layout_stride::template mapping<extents_type>;
+
+      cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<element_type>,
+                      "[ERROR] Attempt to convert dtype %d (%s) to mdspan of type %s",
+                      this->dtype(), Type_class::getname(this->dtype()).c_str(),
+                      Type_class::getname(Type_class::cy_typeid_v<element_type>).c_str());
+      cytnx_error_msg(
+        this->rank() != Rank, "[ERROR] Attempt to view rank-%llu Tensor as rank-%llu mdspan.%s",
+        static_cast<unsigned long long>(this->rank()), static_cast<unsigned long long>(Rank), "\n");
+
+      std::array<std::size_t, Rank> extents{};
+      std::array<std::size_t, Rank> strides{};
+      for (std::size_t i = 0; i < Rank; ++i) {
+        extents[i] = static_cast<std::size_t>(this->_impl->_shape[i]);
+      }
+      std::size_t step = 1;
+      for (std::size_t i = Rank; i-- > 0;) {
+        const std::size_t axis = static_cast<std::size_t>(this->_impl->_invmapper[i]);
+        cytnx_error_msg(axis >= Rank, "[ERROR] Invalid Tensor mapper metadata.%s", "\n");
+        strides[axis] = step;
+        step *= extents[axis];
+      }
+
+      return stdex::mdspan<T, extents_type, stdex::layout_stride>(
+        this->ptr_as<T>(), mapping_type(extents_type(extents), strides));
+    }
+
+    /**
+     * @brief Return a non-owning typed layout-right mdspan view of this Tensor.
+     *
+     * This is a mutating function: it first calls `contiguous_()`, so a non-contiguous Tensor may
+     * receive new contiguous storage. The returned view then uses `stdex::layout_right`, matching
+     * Cytnx's default row-major contiguous Tensor layout. The Tensor storage must outlive the
+     * returned mdspan. The template type and rank must match the Tensor dtype and rank.
+     */
+    template <typename T, std::size_t Rank>
+    auto as_right_mdspan() {
+      using element_type = std::remove_cv_t<T>;
+      using extents_type = stdex::dextents<std::size_t, Rank>;
+
+      cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<element_type>,
+                      "[ERROR] Attempt to convert dtype %d (%s) to mdspan of type %s",
+                      this->dtype(), Type_class::getname(this->dtype()).c_str(),
+                      Type_class::getname(Type_class::cy_typeid_v<element_type>).c_str());
+      cytnx_error_msg(
+        this->rank() != Rank, "[ERROR] Attempt to view rank-%llu Tensor as rank-%llu mdspan.%s",
+        static_cast<unsigned long long>(this->rank()), static_cast<unsigned long long>(Rank), "\n");
+      this->contiguous_();
+
+      std::array<std::size_t, Rank> extents{};
+      for (std::size_t i = 0; i < Rank; ++i) {
+        extents[i] = static_cast<std::size_t>(this->_impl->_shape[i]);
+      }
+      return stdex::mdspan<T, extents_type, stdex::layout_right>(this->ptr_as<T>(),
+                                                                 extents_type(extents));
     }
 
   #ifdef UNI_GPU

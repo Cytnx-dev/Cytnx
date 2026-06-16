@@ -205,6 +205,76 @@ TEST_F(TensorTest, permute) {
   EXPECT_THROW(Tensor({0}, Type.Double, Device.cpu, true), std::logic_error);
 }
 
+TEST_F(TensorTest, as_mdspan_contiguous_tensor) {
+  Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
+
+  auto view = tensor.as_mdspan<cytnx_double, 3>();
+
+  EXPECT_EQ(view.rank(), 3);
+  EXPECT_EQ(view.extent(0), 2);
+  EXPECT_EQ(view.extent(1), 3);
+  EXPECT_EQ(view.extent(2), 4);
+  EXPECT_EQ(view.stride(0), 12);
+  EXPECT_EQ(view.stride(1), 4);
+  EXPECT_EQ(view.stride(2), 1);
+  EXPECT_EQ(view(1, 2, 3), tensor.at<cytnx_double>({1, 2, 3}));
+
+  view(1, 2, 3) = 99;
+  EXPECT_EQ(tensor.at<cytnx_double>({1, 2, 3}), 99);
+}
+
+TEST_F(TensorTest, as_mdspan_permuted_tensor_uses_mapper_strides) {
+  Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
+  Tensor permuted = tensor.permute({1, 2, 0});
+
+  auto view = permuted.as_mdspan<cytnx_double, 3>();
+
+  EXPECT_EQ(view.extent(0), 3);
+  EXPECT_EQ(view.extent(1), 4);
+  EXPECT_EQ(view.extent(2), 2);
+  EXPECT_EQ(view.stride(0), 4);
+  EXPECT_EQ(view.stride(1), 1);
+  EXPECT_EQ(view.stride(2), 12);
+  EXPECT_EQ(view(1, 2, 0), tensor.at<cytnx_double>({0, 1, 2}));
+
+  view(2, 3, 1) = 123;
+  EXPECT_EQ(tensor.at<cytnx_double>({1, 2, 3}), 123);
+}
+
+TEST_F(TensorTest, as_right_mdspan_returns_layout_right_view) {
+  Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
+
+  auto view = tensor.as_right_mdspan<cytnx_double, 3>();
+
+  EXPECT_EQ(view.extent(0), 2);
+  EXPECT_EQ(view.extent(1), 3);
+  EXPECT_EQ(view.extent(2), 4);
+  EXPECT_EQ(view.stride(0), 12);
+  EXPECT_EQ(view.stride(1), 4);
+  EXPECT_EQ(view.stride(2), 1);
+  EXPECT_EQ(view(1, 2, 3), tensor.at<cytnx_double>({1, 2, 3}));
+}
+
+TEST_F(TensorTest, as_right_mdspan_makes_permuted_tensor_contiguous) {
+  Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
+  Tensor permuted = tensor.permute({1, 2, 0});
+
+  auto view = permuted.as_right_mdspan<cytnx_double, 3>();
+
+  EXPECT_TRUE(permuted.is_contiguous());
+  EXPECT_EQ(view.extent(0), 3);
+  EXPECT_EQ(view.extent(1), 4);
+  EXPECT_EQ(view.extent(2), 2);
+  EXPECT_EQ(view.stride(0), 8);
+  EXPECT_EQ(view.stride(1), 2);
+  EXPECT_EQ(view.stride(2), 1);
+  EXPECT_EQ(view(2, 3, 1), tensor.at<cytnx_double>({1, 2, 3}));
+
+  view(2, 3, 1) = 321;
+  EXPECT_EQ(permuted.at<cytnx_double>({2, 3, 1}), 321);
+  EXPECT_EQ(tensor.at<cytnx_double>({1, 2, 3}), 23);
+}
+
 TEST_F(TensorTest, get) {
   Tensor tmp = tzero3456(":", ":", ":", ":");
   EXPECT_EQ(tmp.shape().size(), 4);

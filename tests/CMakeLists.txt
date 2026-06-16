@@ -22,6 +22,7 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  mdspan_test.cpp
   Storage_test.cpp
   search_tree_test.cpp
   utils_test/vec_concatenate.cpp
