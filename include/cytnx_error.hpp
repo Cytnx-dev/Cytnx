@@ -1,13 +1,16 @@
 #ifndef CYTNX_CYTNX_ERROR_H_
 #define CYTNX_CYTNX_ERROR_H_
 
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <stdarg.h>
 
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #if defined(__has_include)
   #if __has_include(<execinfo.h>)
@@ -24,62 +27,99 @@
   #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
 
-#define cytnx_error_msg(is_true, format, ...)                                               \
-  {                                                                                         \
-    if (is_true)                                                                            \
-      error_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (is_true), (format), __VA_ARGS__); \
+namespace cytnx_error_detail {
+
+  static inline std::string format_message(char const *format, va_list args) {
+    if (format == nullptr) {
+      return {};
+    }
+
+    va_list count_args;
+    va_copy(count_args, args);
+    const int count = std::vsnprintf(nullptr, 0, format, count_args);
+    va_end(count_args);
+    if (count < 0) {
+      return std::string("[formatting failed] ") + format;
+    }
+
+    std::vector<char> buffer(static_cast<std::size_t>(count) + 1);
+    const int written = std::vsnprintf(buffer.data(), buffer.size(), format, args);
+    if (written < 0) {
+      return std::string("[formatting failed] ") + format;
+    }
+    return std::string(buffer.data(), static_cast<std::size_t>(written));
   }
-static inline void error_msg(char const *const func, const char *const file, int const line,
-                             bool is_true, char const *format, ...) {
-  // try {
-  if (is_true) {
-    va_list args;
-    char output_str[1024];
-    char msg[512];
-    va_start(args, format);
-    vsprintf(msg, format, args);
-    sprintf(output_str, "\n# Cytnx error occur at %s\n# error: %s\n# file : %s (%d)", func, msg,
-            file, line);
-    va_end(args);
-    // std::cerr << output_str << std::endl;
-    std::cerr << output_str << std::endl;
+
+  static inline std::string format_report(char const *kind, char const *func, char const *file,
+                                          int line, const std::string &message) {
+    std::ostringstream out;
+    out << "\n# Cytnx " << kind << " occur at " << func << "\n# " << kind << ": " << message
+        << "\n# file : " << file << " (" << line << ")";
+    return out.str();
+  }
+
+  static inline void print_stack_trace() {
 #if CYTNX_HAS_EXECINFO
     std::cerr << "Stack trace:" << std::endl;
     void *array[10];
-    std::size_t size;
-    size = backtrace(array, 10);
+    const std::size_t size = backtrace(array, 10);
     char **strings = backtrace_symbols(array, size);
-    for (std::size_t i = 0; i < size; i++) {
-      std::cerr << strings[i] << std::endl;
+    if (strings != nullptr) {
+      for (std::size_t i = 0; i < size; i++) {
+        std::cerr << strings[i] << std::endl;
+      }
+      free(strings);
     }
-    free(strings);
 #else
     std::cerr << "Stack trace is unavailable on this platform/compiler." << std::endl;
 #endif
-    throw std::logic_error(output_str);
   }
-  // } catch (const char *output_msg) {
-  //   std::cerr << output_msg << std::endl;
-  // }
-}
-#define cytnx_warning_msg(is_true, format, ...)                                               \
+
+}  // namespace cytnx_error_detail
+
+#define cytnx_error(format, ...) \
+  { error_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (format)__VA_OPT__(, ) __VA_ARGS__); }
+#define cytnx_error_if(is_true, format, ...)                                                  \
   {                                                                                           \
-    if (is_true)                                                                              \
-      warning_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (is_true), (format), __VA_ARGS__); \
+    if (is_true) {                                                                            \
+      error_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (format)__VA_OPT__(, ) __VA_ARGS__); \
+    }                                                                                         \
   }
+#define cytnx_error_msg(is_true, format, ...) \
+  cytnx_error_if(is_true, format __VA_OPT__(, ) __VA_ARGS__)
+static inline void error_msg(char const *const func, const char *const file, int const line,
+                             char const *format, ...) {
+  va_list args;
+  va_start(args, format);
+  const std::string message = cytnx_error_detail::format_message(format, args);
+  va_end(args);
+
+  const std::string output_str =
+    cytnx_error_detail::format_report("error", func, file, line, message);
+  std::cerr << output_str << std::endl;
+  cytnx_error_detail::print_stack_trace();
+  throw std::logic_error(output_str);
+}
+#define cytnx_warning(format, ...) \
+  { warning_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (format)__VA_OPT__(, ) __VA_ARGS__); }
+#define cytnx_warning_if(is_true, format, ...)                                                  \
+  {                                                                                             \
+    if (is_true) {                                                                              \
+      warning_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (format)__VA_OPT__(, ) __VA_ARGS__); \
+    }                                                                                           \
+  }
+#define cytnx_warning_msg(is_true, format, ...) \
+  cytnx_warning_if(is_true, format __VA_OPT__(, ) __VA_ARGS__)
 static inline void warning_msg(char const *const func, const char *const file, int const line,
-                               bool is_true, char const *format, ...) {
-  if (is_true) {
-    va_list args;
-    char output_str[1024];
-    char msg[512];
-    va_start(args, format);
-    vsprintf(msg, format, args);
-    sprintf(output_str, "\n# Cytnx warning occur at %s\n# warning: %s\n# file : %s (%d)", func, msg,
-            file, line);
-    va_end(args);
-    std::cerr << output_str << std::endl;
-  }
+                               char const *format, ...) {
+  va_list args;
+  va_start(args, format);
+  const std::string message = cytnx_error_detail::format_message(format, args);
+  va_end(args);
+
+  const std::string output_str =
+    cytnx_error_detail::format_report("warning", func, file, line, message);
+  std::cerr << output_str << std::endl;
 }
 
 #if defined(UNI_GPU)
