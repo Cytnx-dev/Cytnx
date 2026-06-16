@@ -13,6 +13,7 @@ namespace {
   using cytnx::make_right_tensor_t;
   using cytnx::make_tensor_t;
   using cytnx::Tensor;
+  using cytnx::to_tensor;
   using cytnx::Type;
   using cytnx::stdex::layout_right;
   using cytnx::stdex::layout_stride;
@@ -86,6 +87,49 @@ namespace {
     EXPECT_EQ(deleter->storage().get(), tensor._impl->storage()._impl.get());
     EXPECT_EQ(deleter->storage()->dtype(), Type.Double);
     EXPECT_EQ(deleter->storage()->device(), Device.cpu);
+  }
+
+  TEST(TensorTTest, ToTensorSharesContiguousStorage) {
+    Tensor tensor = arange(2 * 3).reshape({2, 3});
+    auto view = make_tensor_t<cytnx_double, 2>(tensor);
+
+    Tensor round_trip = to_tensor(view);
+
+    EXPECT_EQ(round_trip.shape(), tensor.shape());
+    EXPECT_TRUE(round_trip.is_contiguous());
+    EXPECT_EQ(round_trip.at<cytnx_double>({1, 2}), 5);
+
+    round_trip.at<cytnx_double>({1, 2}) = 42;
+    EXPECT_EQ(tensor.at<cytnx_double>({1, 2}), 42);
+  }
+
+  TEST(TensorTTest, ToTensorSharesPermutedStorage) {
+    Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
+    Tensor permuted = tensor.permute({1, 2, 0});
+    auto view = make_tensor_t<cytnx_double, 3>(permuted);
+
+    Tensor round_trip = to_tensor(view);
+
+    EXPECT_EQ(round_trip.shape(), permuted.shape());
+    EXPECT_FALSE(round_trip.is_contiguous());
+    EXPECT_EQ(round_trip.at<cytnx_double>({2, 3, 1}), tensor.at<cytnx_double>({1, 2, 3}));
+
+    round_trip.at<cytnx_double>({2, 3, 1}) = 55;
+    EXPECT_EQ(tensor.at<cytnx_double>({1, 2, 3}), 55);
+  }
+
+  TEST(TensorTTest, ToTensorRejectsNonPermutationStrides) {
+    Tensor tensor = arange(10);
+    auto base = make_tensor_t<cytnx_double, 1>(tensor);
+
+    using extents_type = cytnx::stdex::dextents<std::size_t, 2>;
+    using mapping_type = layout_stride::mapping<extents_type>;
+    using view_type = cytnx::stdex::mdspan<cytnx_double, extents_type, layout_stride>;
+
+    view_type gapped_view(base.data(), mapping_type(extents_type(2, 3), {4, 1}));
+    HostTensorT<cytnx_double, 2, layout_stride> gapped(base.owner(), gapped_view);
+
+    EXPECT_THROW(to_tensor(gapped), std::logic_error);
   }
 
   TEST(TensorTTest, RejectsWrongDtypeAndRank) {

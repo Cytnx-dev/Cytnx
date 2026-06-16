@@ -19,9 +19,17 @@
 #include <type_traits>
 #include <utility>
 #include <variant>
+#include <vector>
 
 namespace cytnx {
 
+  /**
+   * @brief Shared typed owner for the data pointer used by TensorT.
+   *
+   * This is currently backed by a `std::shared_ptr<T>`. For views created from legacy `Tensor`, the
+   * shared pointer aliases the Tensor storage and uses a deleter that keeps the legacy storage
+   * reference count alive.
+   */
   template <class T>
   class data_owner {
    public:
@@ -38,6 +46,13 @@ namespace cytnx {
     std::shared_ptr<T> data_;
   };
 
+  /**
+   * @brief Typed, ranked Tensor view with shared ownership of its data pointer.
+   *
+   * `TensorT` is intended as an internal kernel-facing representation. The element type, rank,
+   * access policy, and layout are part of the C++ type, while `owner()` keeps the pointed-to data
+   * alive independently of any legacy `Tensor` object used to create the view.
+   */
   template <class T, std::size_t Rank, class Access, class Layout = stdex::layout_stride>
   class TensorT {
    public:
@@ -98,6 +113,13 @@ namespace cytnx {
 
   namespace tensor_t_detail {
 
+    /**
+     * @brief Deleter used when a TensorT view aliases legacy Cytnx Storage.
+     *
+     * The deleter does not delete the raw pointer directly. It captures the legacy intrusive
+     * storage handle so the allocation stays alive for the lifetime of the typed shared pointer.
+     * `std::get_deleter` can recover this object for no-copy conversion back to legacy `Tensor`.
+     */
     template <typename T>
     class legacy_storage_deleter {
      public:
@@ -156,6 +178,55 @@ namespace cytnx {
       return data_owner<T>(std::shared_ptr<T>(data, legacy_storage_deleter<T>(std::move(storage))));
     }
 
+    template <typename T>
+    boost::intrusive_ptr<Storage_base> legacy_storage_from_owner(const data_owner<T> &owner) {
+      auto *deleter = std::get_deleter<legacy_storage_deleter<T>>(owner.shared_ptr());
+      cytnx_error_msg(deleter == nullptr,
+                      "[ERROR] Cannot create a Tensor view from TensorT without legacy storage.%s",
+                      "\n");
+      return deleter->storage();
+    }
+
+    /**
+     * @brief Return the logical axes ordered by physical contiguous memory order.
+     *
+     * This only accepts stride patterns that are exactly a contiguous row-major layout up to a
+     * permutation of axes. General strided or offset views are not representable by current Cytnx
+     * Tensor mapper metadata and are rejected.
+     */
+    template <class TensorView>
+    std::vector<cytnx_uint64> memory_order_from_strides(const TensorView &view) {
+      constexpr std::size_t rank = TensorView::rank();
+      cytnx_error_msg(rank == 0, "[ERROR] Cannot convert rank-0 TensorT to Tensor.%s", "\n");
+
+      std::array<bool, rank> used{};
+      std::vector<cytnx_uint64> inner_to_outer;
+      inner_to_outer.reserve(rank);
+
+      std::size_t expected_stride = 1;
+      for (std::size_t step = 0; step < rank; ++step) {
+        bool found = false;
+        for (std::size_t axis = 0; axis < rank; ++axis) {
+          if (!used[axis] && view.stride(axis) == expected_stride) {
+            used[axis] = true;
+            inner_to_outer.push_back(static_cast<cytnx_uint64>(axis));
+            expected_stride *= view.extent(axis);
+            found = true;
+            break;
+          }
+        }
+        cytnx_error_msg(!found, "[ERROR] TensorT strides are not a contiguous permutation.%s",
+                        "\n");
+      }
+
+      std::vector<cytnx_uint64> memory_order;
+      memory_order.reserve(rank);
+      for (std::size_t i = inner_to_outer.size(); i-- > 0;) {
+        memory_order.push_back(inner_to_outer[i]);
+      }
+      return memory_order;
+    }
+
   }  // namespace tensor_t_detail
 
   /**
@@ -197,6 +268,38 @@ namespace cytnx {
     auto owner = tensor_t_detail::owner_from_tensor<T>(tensor);
     view_type view(owner.get(), extents_type(extents));
     return TensorT<T, Rank, Access, stdex::layout_right>(std::move(owner), view, access);
+  }
+
+  /**
+   * @brief Create a legacy Tensor sharing the storage owned by a TensorT view.
+   *
+   * This bridge is only available for TensorT objects backed by legacy Cytnx storage. The mdspan
+   * layout must be exactly representable by Cytnx's current contiguous-or-permuted-contiguous
+   * Tensor metadata; otherwise this function throws.
+   */
+  template <typename T, std::size_t Rank, class Access, class Layout>
+  Tensor to_tensor(const TensorT<T, Rank, Access, Layout> &view) {
+    auto storage = tensor_t_detail::legacy_storage_from_owner(view.owner());
+    cytnx_error_msg(storage->device() != view.device(),
+                    "[ERROR] TensorT access device does not match legacy storage device.%s", "\n");
+
+    const auto memory_order = tensor_t_detail::memory_order_from_strides(view);
+
+    std::vector<cytnx_int64> memory_shape;
+    memory_shape.reserve(Rank);
+    for (const auto axis : memory_order) {
+      memory_shape.push_back(static_cast<cytnx_int64>(view.extent(axis)));
+    }
+
+    std::vector<cytnx_uint64> perm(Rank);
+    for (std::size_t physical_axis = 0; physical_axis < Rank; ++physical_axis) {
+      perm[memory_order[physical_axis]] = static_cast<cytnx_uint64>(physical_axis);
+    }
+
+    Tensor out = Tensor::from_storage(Storage(storage));
+    out = out.reshape(memory_shape);
+    out = out.permute(perm);
+    return out;
   }
 
 }  // namespace cytnx
