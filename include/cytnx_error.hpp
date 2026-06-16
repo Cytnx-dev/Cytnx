@@ -1,9 +1,11 @@
 #ifndef CYTNX_CYTNX_ERROR_H_
 #define CYTNX_CYTNX_ERROR_H_
 
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <cctype>
 #include <cstring>
 
 #include <iostream>
@@ -78,6 +80,17 @@ namespace cytnx_error_detail {
 #endif
   }
 
+  static inline bool stack_trace_setting_enabled(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(),
+                   [](unsigned char ch) { return static_cast<char>(std::tolower(ch)); });
+    return !(value == "0" || value == "false" || value == "off" || value == "no");
+  }
+
+  static inline bool stack_trace_enabled() {
+    const char *setting = std::getenv("CYTNX_STACKTRACE");
+    return setting == nullptr || stack_trace_setting_enabled(std::string(setting));
+  }
+
 }  // namespace cytnx_error_detail
 
 #define cytnx_error(format, ...) \
@@ -100,7 +113,9 @@ static inline void error_msg(char const *const func, const char *const file, int
   const std::string output_str =
     cytnx_error_detail::format_report("error", func, file, line, message);
   std::cerr << output_str << std::endl;
-  cytnx_error_detail::print_stack_trace();
+  if (cytnx_error_detail::stack_trace_enabled()) {
+    cytnx_error_detail::print_stack_trace();
+  }
   throw std::logic_error(output_str);
 }
 #define cytnx_warning(format, ...) \
