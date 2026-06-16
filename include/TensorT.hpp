@@ -97,6 +97,11 @@ namespace cytnx {
   template <class T, std::size_t Rank, class Layout = stdex::layout_stride>
   using HostTensorT = TensorT<T, Rank, host_access, Layout>;
 
+#ifdef UNI_GPU
+  template <class T, std::size_t Rank, class Layout = stdex::layout_stride>
+  using CudaTensorT = TensorT<T, Rank, cuda_access, Layout>;
+#endif
+
   template <class T, class Access, class Layout = stdex::layout_stride>
   using VectorT = TensorT<T, 1, Access, Layout>;
 
@@ -107,7 +112,7 @@ namespace cytnx {
   using TensorDeviceT = std::variant<HostTensorT<T, Rank, Layout>
 #ifdef UNI_GPU
                                      ,
-                                     TensorT<T, Rank, cuda_access, Layout>
+                                     CudaTensorT<T, Rank, Layout>
 #endif
                                      >;
 
