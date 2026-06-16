@@ -37,7 +37,7 @@ Tensor myfunc(const Tensor &Tin) {
 class MyOp2 : public LinOp {
  public:
   Tensor H;
-  MyOp2() : LinOp("mv", 0, Type.Double, Device.cpu) {  // invoke base class constructor!
+  MyOp2() : LinOp(0, Type.Double, Device.cpu) {  // invoke base class constructor!
     auto T = arange(100).reshape(10, 10);
     T = T + T.permute(1, 0);
     print(linalg::Eigh(T));

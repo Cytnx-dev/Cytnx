@@ -141,7 +141,7 @@ In the previous example we overloaded **matvec** with a simple Python loop. When
 .. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_sparse_csr.py
     :language: python
     :linenos:
-    :emphasize-lines: 12-15, 21
+    :emphasize-lines: 14-17, 23
 
 Output >>
 
@@ -152,30 +152,8 @@ The matrix-vector product now runs entirely in scipy's optimized sparse kernels;
 
 In :ref:`Lanczos solver`, we will see how we can benefit from the LinOp class by passing this object to Cytnx's iterative solver. This way the eigenvalue problem can be solved efficiently with our customized linear operator.
 
-
-Deprecated: prestoring elements with "mv_elem"
-***********************************************
-
-.. deprecated:: 1.1.0
-    The **"mv_elem"** type, together with **set_elem**, is deprecated and will be removed in a
-    future release. Construct the operator with type **"mv"** and overload **matvec** instead (as
-    shown above). Constructing a ``LinOp`` with ``"mv_elem"`` now emits a deprecation warning.
-
-Earlier versions provided a **"mv_elem"** constructor type that let users pre-store the indices and values of the non-zero elements with **set_elem**, leaving the LinOp class to build **matvec** internally. Despite its original intent, this path is **not** an optimization: it stores each element individually and evaluates the product element-by-element through scalar tensor indexing, which is considerably slower than a hand-written **matvec** and slower than a real sparse kernel such as the CSR example above. It also only accepts dense ``Tensor`` inputs, and the internal product ignores the ``device`` and ``nx`` declared in the constructor. It is shown here for reference only:
-
-* In Python:
-
-.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_sparse_mv_elem.py
-    :language: python
-    :linenos:
-    :emphasize-lines: 6-7
-
-Output >>
-
-.. literalinclude:: ../../../code/python/outputs/guide_itersol_LinOp_sparse_mv_elem.out
-    :language: text
-
-Instead of overloading **matvec**, this uses the **set_elem** member function to register the indices and values of the non-zero elements; the same operator expressed with a proper sparse structure is shown in the previous section.
+.. note::
+    **Removed: the** ``"mv_elem"`` **option.** Earlier versions provided a ``"mv_elem"`` constructor type, together with a ``set_elem`` method, that let you pre-store individual non-zero elements and have ``LinOp`` assemble the matrix-vector product internally. It was deprecated in 1.1.0 and has now been removed. To migrate, construct the operator with its domain dimension ``nx`` (the legacy ``"mv"`` type argument is still accepted but is now optional) and override ``matvec`` as shown above; for a sparse operator, delegate to a real sparse structure such as ``scipy.sparse`` (see the CSR example above). Constructing a ``LinOp`` with ``"mv_elem"`` now raises an error.
 
 
 

@@ -372,9 +372,6 @@ def test_guide_itersol_LinOp_matvec(capsys):
 def test_guide_itersol_LinOp_sparse_mv(capsys):
     excute_and_output('guide_itersol_LinOp_sparse_mv', capsys)
 
-def test_guide_itersol_LinOp_sparse_mv_elem(capsys):
-    excute_and_output('guide_itersol_LinOp_sparse_mv_elem', capsys)
-
 def test_guide_itersol_LinOp_sparse_csr(capsys):
     excute_and_output('guide_itersol_LinOp_sparse_csr', capsys)
 

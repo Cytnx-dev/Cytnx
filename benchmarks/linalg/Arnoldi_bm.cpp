@@ -18,7 +18,7 @@ namespace BMTest_Arnoldi {
 
   TMOp::TMOp(const int& d, const int& D, const cytnx_uint64& in_nx, const unsigned int& in_dtype,
              const int& in_device)
-      : LinOp("mv", in_nx, in_dtype, in_device) {
+      : LinOp(in_nx, in_dtype, in_device) {
     std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D)};
     A = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("A")

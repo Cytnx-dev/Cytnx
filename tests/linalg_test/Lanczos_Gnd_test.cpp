@@ -11,7 +11,7 @@ namespace {
    public:
     OneSiteOp(const int d = 2, const int D = 5, const int dw = 3,
               const unsigned int dtype = Type.Double, const int& device = Device.cpu)
-        : LinOp("mv", D * D * d, dtype, device) {
+        : LinOp(D * D * d, dtype, device) {
       if (!Type.is_float(dtype)) return;
       std::vector<UniTensor> LRO = CreateLRO(D, d, dw);
       L_ = LRO[0];
@@ -82,7 +82,7 @@ namespace {
 
   class MyOp : public LinOp {
    public:
-    MyOp() : LinOp("mv", 27) {}
+    MyOp() : LinOp(27) {}
 
     UniTensor matvec(const UniTensor& v) override {
       Tensor tA = arange(27 * 27).reshape(27, 27);
@@ -96,7 +96,7 @@ namespace {
   class MyOp2 : public LinOp {
    public:
     UniTensor H;
-    MyOp2(int dim) : LinOp("mv", dim) {
+    MyOp2(int dim) : LinOp(dim) {
       Tensor A = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_A.cytn");
       Tensor B = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_B.cytn");
       Tensor C = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_C.cytn");
@@ -340,7 +340,7 @@ TEST(Lanczos_Ut, err_crit_negative) {
 
 // 2-7, test nx not match
 TEST(Lanczos_Ut, nx_not_match) {
-  LinOp op = LinOp("mv", 30);
+  LinOp op = LinOp(30);
   double low = -1.0, high = 1.0;
   int D = 5, d = 2;
   UniTensor psi = UniTensor::uniform({D, d, D}, low, high);

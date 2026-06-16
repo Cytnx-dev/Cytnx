@@ -3,7 +3,7 @@ class MyOp : public LinOp {
  public:
   double AddConst;
 
-  MyOp(double aconst) : LinOp("mv", 4, Type.Double, Device.cpu) {  // invoke base class constructor!
+  MyOp(double aconst) : LinOp(4, Type.Double, Device.cpu) {  // invoke base class constructor!
     this->AddConst = aconst;
   }
 

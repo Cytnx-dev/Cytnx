@@ -3,10 +3,10 @@ from scipy.sparse import csr_matrix
 import cytnx
 
 
-# The same sparse operator as above (A[1,100]=4 and A[100,1]=7 in a 1000x1000
-# matrix), but now stored in a real sparse format (scipy CSR) instead of
-# pre-storing the elements through the deprecated "mv_elem" path. We construct
-# the LinOp with type "mv" and override matvec().
+# A sparse operator A (shape 1000x1000) with only two non-zero elements,
+# A[1,100]=4 and A[100,1]=7, stored in a real sparse format (scipy CSR). We
+# inherit LinOp and override matvec(); any sparse representation can be used
+# inside matvec().
 class Oper(cytnx.LinOp):
     def __init__(self):
         cytnx.LinOp.__init__(self, "mv", 1000, cytnx.Type.Double, cytnx.Device.cpu)

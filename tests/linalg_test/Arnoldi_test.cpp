@@ -20,7 +20,7 @@ namespace {
     Tensor matvec(const Tensor& v) override { return (linalg::Dot(opMat, v)); }
     void InitVec();
   };
-  MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype) : LinOp("mv", in_nx, in_dtype) {
+  MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype) : LinOp(in_nx, in_dtype) {
     opMat = zeros({in_nx, in_nx}, this->dtype(), this->device());
     if (Type.is_float(this->dtype())) {
       random::normal_(opMat, 0.0, 1.0, 0);

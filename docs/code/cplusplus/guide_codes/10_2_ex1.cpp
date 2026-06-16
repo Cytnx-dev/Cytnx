@@ -1,7 +1,7 @@
 using namespace cytnx;
 class MyOp : public LinOp {
  public:
-  MyOp() : LinOp("mv", 6) {
+  MyOp() : LinOp(6) {
     // Create Hermitian Matrix
     A = arange(36).reshape(6, 6);
     A += A.permute(1, 0);

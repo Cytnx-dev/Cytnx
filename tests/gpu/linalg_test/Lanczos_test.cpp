@@ -19,7 +19,7 @@ namespace {
     friend class CheckOp;
   };
   MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype, const int& in_device)
-      : LinOp("mv", in_nx, in_dtype, in_device) {
+      : LinOp(in_nx, in_dtype, in_device) {
     opMat = zeros({in_nx, in_nx}, this->dtype(), this->device());
     if (Type.is_float(this->dtype())) {
       random::normal_(opMat, 0.0, 1.0, 0);
@@ -39,7 +39,7 @@ namespace {
     Tensor opMat;
     Tensor T_init;
     MatOp* op;
-    CheckOp(MatOp* in_op) : op(in_op), LinOp("mv", in_op->nx(), in_op->dtype(), Device.cpu) {
+    CheckOp(MatOp* in_op) : op(in_op), LinOp(in_op->nx(), in_op->dtype(), Device.cpu) {
       opMat = op->opMat.to(Device.cpu);
       T_init = op->T_init.to(Device.cpu);
     }

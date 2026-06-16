@@ -45,7 +45,7 @@ namespace {
   };
   TMOp::TMOp(const int& d, const int& D, const cytnx_uint64& in_nx, const unsigned int& in_dtype,
              const int& in_device)
-      : LinOp("mv", in_nx, in_dtype, in_device) {
+      : LinOp(in_nx, in_dtype, in_device) {
     std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D)};
     A = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("A")
@@ -71,7 +71,7 @@ namespace {
   class MyOp2 : public LinOp {
    public:
     UniTensor H;
-    MyOp2(int dim) : LinOp("mv", dim) {
+    MyOp2(int dim) : LinOp(dim) {
       Bond lan_I = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
       Bond lan_J = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
       H = UniTensor({lan_I, lan_J});

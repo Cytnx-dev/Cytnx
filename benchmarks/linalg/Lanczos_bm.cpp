@@ -7,7 +7,7 @@ namespace BMTest_Lanczos {
    public:
     OneSiteOp(const int d = 2, const int D = 5, const int dw = 3,
               const unsigned int dtype = Type.Double, const int& device = Device.cpu)
-        : LinOp("mv", D * D * d, dtype, device) {
+        : LinOp(D * D * d, dtype, device) {
       if (!Type.is_float(dtype)) return;
       std::vector<UniTensor> LRO = CreateLRO(D, d, dw);
       L_ = LRO[0];

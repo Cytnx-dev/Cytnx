@@ -24,7 +24,7 @@ namespace Lanczos_Exp_Ut_Test {
    public:
     OneSiteOp(const int d, const int D, const unsigned int dtype = Type.Double,
               const int& device = Device.cpu)
-        : LinOp("mv", D * d * D, dtype, device) {
+        : LinOp(D * d * D, dtype, device) {
       EffH = CreateOneSiteEffHam(d, D, dtype, device);
     }
     UniTensor EffH;
@@ -51,14 +51,14 @@ namespace Lanczos_Exp_Ut_Test {
 
   class OneDimScaleOp : public LinOp {
    public:
-    OneDimScaleOp() : LinOp("mv", 1, Type.Double, Device.cpu) {}
+    OneDimScaleOp() : LinOp(1, Type.Double, Device.cpu) {}
     UniTensor matvec(const UniTensor& A) override { return A * 3.0; }
   };
 
   class SmallResidualOp : public LinOp {
    public:
     explicit SmallResidualOp(const double coupling, const unsigned int dtype = Type.Double)
-        : LinOp("mv", 3, dtype, Device.cpu), coupling_(coupling) {}
+        : LinOp(3, dtype, Device.cpu), coupling_(coupling) {}
 
     UniTensor matvec(const UniTensor& A) override {
       auto out = UniTensor::zeros(A.shape(), A.labels(), A.dtype(), A.device());
@@ -74,7 +74,7 @@ namespace Lanczos_Exp_Ut_Test {
 
   class TwoDimMixingOp : public LinOp {
    public:
-    TwoDimMixingOp() : LinOp("mv", 2, Type.Double, Device.cpu) {}
+    TwoDimMixingOp() : LinOp(2, Type.Double, Device.cpu) {}
 
     UniTensor matvec(const UniTensor& A) override {
       auto out = UniTensor::zeros(A.shape(), A.labels(), A.dtype(), A.device());

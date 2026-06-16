@@ -27,7 +27,7 @@ namespace cytnx {
       int counter;
       Hxx_new(std::vector<UniTensor> functArgs, const std::vector<UniTensor> &ortho_mps,
               const double &weight, const cytnx_int64 &dtype, const cytnx_int64 &device)
-          : LinOp("mv", 0 /*doesn't matter for UniTensor as ipt*/, dtype, device) {
+          : LinOp(0 /*doesn't matter for UniTensor as ipt*/, dtype, device) {
         UniTensor &L = functArgs[0];
         UniTensor &M1 = functArgs[1];
         UniTensor &M2 = functArgs[2];
@@ -72,7 +72,7 @@ namespace cytnx {
       Hxx(const cytnx_uint64 &psidim, std::vector<UniTensor> functArgs,
           const std::vector<Tensor> &ortho_mps, const double &weight, const cytnx_int64 &dtype,
           const cytnx_int64 &device)
-          : LinOp("mv", psidim, dtype, device) {
+          : LinOp(psidim, dtype, device) {
         UniTensor &L = functArgs[0];
         UniTensor &M1 = functArgs[1];
         UniTensor &M2 = functArgs[2];

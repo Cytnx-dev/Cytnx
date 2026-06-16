@@ -42,125 +42,25 @@ class PyLinOp : public LinOp {
   }
 };
 
-  // set_elem belongs to the deprecated "mv_elem" path. The bindings below are kept so the
-  // deprecated API stays callable from Python (where constructing with "mv_elem" emits a runtime
-  // deprecation warning); the compile-time deprecation warnings from referencing LinOp::set_elem
-  // here are intentionally silenced to keep the build output clean.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #elif defined(_MSC_VER)
-    #pragma warning(push)
-    #pragma warning(disable : 4996)
-  #endif
 void linop_binding(py::module &m) {
   py::class_<LinOp, PyLinOp>(m, "LinOp")
-    .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &>(),
+    .def(py::init<const cytnx_uint64 &, const int &, const int &>(), py::arg("nx"),
+         py::arg("dtype") = (int)Type.Double, py::arg("device") = (int)Device.cpu)
+    // Python-only backwards-compatibility shim accepting the legacy leading `type` argument. This
+    // stays in the bindings indefinitely. It constructs via the plain LinOp(nx, ...) ctor (rather
+    // than the deprecated C++ string ctor) so the binding compiles warning-free; `type` must be
+    // "mv" (anything else, including the removed "mv_elem", is a hard error).
+    .def(py::init([](const std::string &type, const cytnx_uint64 &nx, const int &dtype,
+                     const int &device) {
+           cytnx_error_msg(
+             type != "mv",
+             "[ERROR][LinOp] the only supported type is \"mv\"; the \"mv_elem\" path "
+             "has been removed. Construct with LinOp(nx, ...) and override matvec().%s",
+             "\n");
+           return PyLinOp(nx, dtype, device);
+         }),
          py::arg("type"), py::arg("nx"), py::arg("dtype") = (int)Type.Double,
          py::arg("device") = (int)Device.cpu)
-    .def("set_elem", &LinOp::set_elem<cytnx_complex128>, py::arg("i"), py::arg("j"),
-         py::arg("elem"), py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_complex64>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_double>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_float>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_int64>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_uint64>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_int32>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_uint32>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_int16>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_uint16>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_bool>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<std::complex<double>> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_complex128>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<std::complex<float>> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_complex64>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<double> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_double>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<float> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_float>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<int64_t> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_int64>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<uint64_t> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_uint64>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<int32_t> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_int32>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<uint32_t> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_uint32>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<int16_t> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_int16>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<uint16_t> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_uint16>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-    .def(
-      "set_elem",
-      [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<bool> elem, const bool check_exists) {
-        self.set_elem(i, j, static_cast<cytnx::cytnx_bool>(elem), check_exists);
-      },
-      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
-
-    //.def("__call__",[](cytnx::LinOp &self, const cytnx_uint64 &i, const cytnx_uint64 &j){
-    //        return Tensor(self(i,j));
-    //})
     .def(
       "matvec", [](LinOp &self, const Tensor &Tin) -> Tensor { return self.matvec(Tin); },
       py::arg("Tin"))
@@ -172,20 +72,8 @@ void linop_binding(py::module &m) {
     .def("device", &LinOp::device)
     .def("dtype", &LinOp::dtype)
     .def("nx", &LinOp::nx)
-    .def(
-      "__repr__",
-      [](cytnx::LinOp &self) -> std::string {
-        self._print();
-        return std::string("");
-      },
-      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
 
     ;  // end of object
 }
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #elif defined(_MSC_VER)
-    #pragma warning(pop)
-  #endif
 
 #endif
