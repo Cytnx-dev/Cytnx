@@ -55,9 +55,7 @@ namespace cytnx {
       }
       using dynamic_extents_type = std::array<index_type, rank_dynamic()>;
 
-      constexpr extents() noexcept {
-        static_assert(rank_dynamic() == 0, "default construction requires no dynamic extents");
-      }
+      constexpr extents() noexcept = default;
 
       template <class... IndexTypes,
                 std::enable_if_t<sizeof...(IndexTypes) == rank_dynamic(), int> = 0>

@@ -15,6 +15,7 @@
 #endif
 
 #include "Tensor.hpp"
+#include "TensorT.hpp"
 #include "Generator.hpp"
 #include "Physics.hpp"
 #include "algo.hpp"
