@@ -43,8 +43,8 @@ namespace cytnx {
 
     /**
     @brief Linear Operator class for iterative solvers.
-    @param type the type of operator, currently it can only be "mv" (matvec) or "mv_elem" (matvec
-    with pre-store element)
+    @param type the type of operator. Use "mv" (matvec) and override matvec(). The "mv_elem"
+    (matvec with pre-stored elements) type is **deprecated**; see the note below.
     @param nx the last dimension of operator, this should be the dimension of the input vector when
     "mv_elem" is used.
     @param dtype the Operator's dtype. Note that this should match the input/output Tensor's dtype.
@@ -54,6 +54,12 @@ namespace cytnx {
         1. the device and dtype should be set. This should be the same as the input and output
     vectors. by default, we assume custom_f take input and output vector to be on CPU and Double
     type.
+
+    @deprecated The "mv_elem" type, together with set_elem() and operator()(i, j), is deprecated
+    and will be removed in a future release. It stores individual non-zero elements and computes
+    the matrix-vector product element-by-element, which is far slower than a hand-written matvec.
+    Instead, construct with type "mv" and override matvec() to implement the linear map directly
+    (which can use any sparse structure you like).
 
     ## Details:
         The LinOp class is a class that defines a custom Linear operation acting on a Tensor or
@@ -71,6 +77,11 @@ namespace cytnx {
           const int &device = Device.cpu) {
       if (type == "mv") {
       } else if (type == "mv_elem") {
+        cytnx_warning_msg(
+          true,
+          "[DEPRECATED][LinOp] the \"mv_elem\" type is deprecated and will be removed in a future "
+          "release. Construct with type \"mv\" and override matvec() instead.%s",
+          "\n");
       } else
         cytnx_error_msg(type != "mv",
                         "[ERROR][LinOp] currently only type=\"mv\" (matvec) can be used.%s", "\n");
@@ -94,9 +105,16 @@ namespace cytnx {
         }
     };
     */
+    /**
+    @deprecated Part of the deprecated "mv_elem" path. Override matvec() with a type "mv" LinOp
+    instead.
+    */
     template <class T>
-    void set_elem(const cytnx_uint64 &i, const cytnx_uint64 &j, const T &elem,
-                  const bool check_exists = true) {
+    [[deprecated(
+      "The \"mv_elem\" path (set_elem) is deprecated; construct a type \"mv\" LinOp and override "
+      "matvec() instead.")]] void
+      set_elem(const cytnx_uint64 &i, const cytnx_uint64 &j, const T &elem,
+               const bool check_exists = true) {
       this->_elems_it = this->_elems.find(i);
       if (this->_elems_it == this->_elems.end()) {
         // not exists:
@@ -115,7 +133,14 @@ namespace cytnx {
         ie.append(elem);
       }
     };
-    Tensor::Tproxy operator()(const cytnx_uint64 &i, const cytnx_uint64 &j) {
+    /**
+    @deprecated Part of the deprecated "mv_elem" path. Override matvec() with a type "mv" LinOp
+    instead.
+    */
+    [[deprecated(
+      "The \"mv_elem\" path (operator()(i, j)) is deprecated; construct a type \"mv\" LinOp and "
+      "override matvec() instead.")]] Tensor::Tproxy
+      operator()(const cytnx_uint64 &i, const cytnx_uint64 &j) {
       //[Note that this can only call by mv_elem]
       // if the element is not exists, it will create one.
       this->_elems_it = this->_elems.find(i);

@@ -132,11 +132,36 @@ Output >>
     In this example, we use the python API. C++ can be used similarly.
 
 
-Prestore/preconstruct sparse elements
-****************************************
-In the previous example, we showed how to construct a linear operator by overloading the **matvec** member function of the LinOp class. This is straight forward and simple, but in cases where the custom mapping contains many for-loops, handling them in Python is not optimal for performance reasons.
+Store the operator in a real sparse data structure
+****************************************************
+In the previous example we overloaded **matvec** with a simple Python loop. When the operator is genuinely sparse, the recommended approach is to keep it in an established sparse format and let a dedicated library perform the matrix-vector product inside **matvec**. For example, using `scipy.sparse <https://docs.scipy.org/doc/scipy/reference/sparse.html>`_ in the CSR format, a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) and ONLY two non-zero elements A[1,100]=4 and A[100,1]=7 can be written as:
 
-Since v0.6.3a, the option **"mv_elem"** is available in the constructor of the LinOp class. It allows users to pre-store the indices and values of the non-zero elements, similar to the standard sparse storage structure. If this is used, Cytnx handles the internal structure and optimizes the matvec performance. Again, let's use the previous example: a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) and ONLY two non-zero elements A[1,100]=4 and A[100,1]=7.
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_sparse_csr.py
+    :language: python
+    :linenos:
+    :emphasize-lines: 12-15, 21
+
+Output >>
+
+.. literalinclude:: ../../../code/python/outputs/guide_itersol_LinOp_sparse_csr.out
+    :language: text
+
+The matrix-vector product now runs entirely in scipy's optimized sparse kernels; no dense :math:`1000\times1000` matrix is ever formed. Any sparse representation can be used this way -- we only convert between the cytnx ``Tensor`` and a numpy array at the boundary via ``Tensor.numpy()`` and ``cytnx.from_numpy()``.
+
+In :ref:`Lanczos solver`, we will see how we can benefit from the LinOp class by passing this object to Cytnx's iterative solver. This way the eigenvalue problem can be solved efficiently with our customized linear operator.
+
+
+Deprecated: prestoring elements with "mv_elem"
+***********************************************
+
+.. deprecated:: 1.1.0
+    The **"mv_elem"** type, together with **set_elem**, is deprecated and will be removed in a
+    future release. Construct the operator with type **"mv"** and overload **matvec** instead (as
+    shown above). Constructing a ``LinOp`` with ``"mv_elem"`` now emits a deprecation warning.
+
+Earlier versions provided a **"mv_elem"** constructor type that let users pre-store the indices and values of the non-zero elements with **set_elem**, leaving the LinOp class to build **matvec** internally. Despite its original intent, this path is **not** an optimization: it stores each element individually and evaluates the product element-by-element through scalar tensor indexing, which is considerably slower than a hand-written **matvec** and slower than a real sparse kernel such as the CSR example above. It also only accepts dense ``Tensor`` inputs, and the internal product ignores the ``device`` and ``nx`` declared in the constructor. It is shown here for reference only:
 
 * In Python:
 
@@ -150,9 +175,7 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_itersol_LinOp_sparse_mv_elem.out
     :language: text
 
-Notice that instead of overloading the **matvec** function, we use the **set_elem** member function in the LinOp class to set the indices and values of the elements. This information is then stored internally in the LinOp class, and we let the LinOp class provide and optimize **matvec**.
-
-In :ref:`Lanczos solver`, we will see how we can benefit from the LinOp class by passing this object to Cytnx's iterative solver. This way the eigenvalue problem can be solved efficiently with our customized linear operator.
+Instead of overloading **matvec**, this uses the **set_elem** member function to register the indices and values of the non-zero elements; the same operator expressed with a proper sparse structure is shown in the previous section.
 
 
 

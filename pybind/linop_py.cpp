@@ -42,6 +42,14 @@ class PyLinOp : public LinOp {
   }
 };
 
+  // set_elem belongs to the deprecated "mv_elem" path. The bindings below are kept so the
+  // deprecated API stays callable from Python (where constructing with "mv_elem" emits a runtime
+  // deprecation warning); the compile-time deprecation warnings from referencing LinOp::set_elem
+  // here are intentionally silenced to keep the build output clean.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
 void linop_binding(py::module &m) {
   py::class_<LinOp, PyLinOp>(m, "LinOp")
     .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &>(),
@@ -171,5 +179,8 @@ void linop_binding(py::module &m) {
 
     ;  // end of object
 }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
 
 #endif
