@@ -43,7 +43,10 @@ namespace cytnx_error_detail {
     }
 
     std::vector<char> buffer(static_cast<std::size_t>(count) + 1);
-    const int written = std::vsnprintf(buffer.data(), buffer.size(), format, args);
+    va_list write_args;
+    va_copy(write_args, args);
+    const int written = std::vsnprintf(buffer.data(), buffer.size(), format, write_args);
+    va_end(write_args);
     if (written < 0) {
       return std::string("[formatting failed] ") + format;
     }
