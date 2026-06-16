@@ -29,6 +29,8 @@ namespace cytnx {
 
     inline int access_device(cuda_access access) { return access.device; }
 
+    inline bool access_accepts_device(cuda_access, int device) { return device >= Device.cuda; }
+
   }  // namespace tensor_t_detail
 
 }  // namespace cytnx

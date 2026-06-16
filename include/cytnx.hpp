@@ -16,6 +16,7 @@
 
 #include "Tensor.hpp"
 #include "TensorT.hpp"
+#include "TensorT_traits.hpp"
 #include "Generator.hpp"
 #include "Physics.hpp"
 #include "algo.hpp"

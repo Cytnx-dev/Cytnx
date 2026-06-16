@@ -2,21 +2,43 @@
 
 #include "Generator.hpp"
 #include "TensorT.hpp"
+#include "TensorT_traits.hpp"
 
 namespace {
 
   using cytnx::arange;
+  using cytnx::ComplexTensor;
   using cytnx::cytnx_double;
   using cytnx::Device;
   using cytnx::host_access;
   using cytnx::HostTensorT;
   using cytnx::make_right_tensor_t;
+  using cytnx::make_tensor;
   using cytnx::make_tensor_t;
+  using cytnx::NumericTensor;
+  using cytnx::RealTensor;
   using cytnx::Tensor;
   using cytnx::to_tensor;
   using cytnx::Type;
   using cytnx::stdex::layout_right;
   using cytnx::stdex::layout_stride;
+
+  static_assert(cytnx::RealScalar<cytnx::cytnx_float>);
+  static_assert(cytnx::RealScalar<cytnx::cytnx_double>);
+  static_assert(!cytnx::RealScalar<cytnx::cytnx_complex64>);
+  static_assert(cytnx::ComplexScalar<cytnx::cytnx_complex64>);
+  static_assert(cytnx::ComplexScalar<cytnx::cytnx_complex128>);
+  static_assert(!cytnx::ComplexScalar<cytnx::cytnx_double>);
+  static_assert(cytnx::NumericScalar<cytnx::cytnx_float>);
+  static_assert(cytnx::NumericScalar<cytnx::cytnx_complex128>);
+
+#ifdef UNI_GPU
+  static_assert(std::variant_size_v<NumericTensor<2>> == 8);
+  static_assert(std::variant_size_v<RealTensor<2>> == 4);
+#else
+  static_assert(std::variant_size_v<NumericTensor<2>> == 4);
+  static_assert(std::variant_size_v<RealTensor<2>> == 2);
+#endif
 
   TEST(TensorTTest, MakeTensorTPreservesPermutedStrides) {
     Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
@@ -130,6 +152,63 @@ namespace {
     HostTensorT<cytnx_double, 2, layout_stride> gapped(base.owner(), gapped_view);
 
     EXPECT_THROW(to_tensor(gapped), std::logic_error);
+  }
+
+  TEST(TensorTTest, GenericVariantFactoryDispatchesDtypeToLayoutRightHostViews) {
+    Tensor real = arange(2 * 3).reshape({2, 3});
+    auto real_view = make_tensor<RealTensor<2>>(real);
+    ASSERT_TRUE((std::holds_alternative<HostTensorT<cytnx_double, 2, layout_right>>(real_view)));
+
+    Tensor complex({2, 3}, Type.ComplexFloat);
+    auto complex_view = make_tensor<ComplexTensor<2>>(complex);
+    ASSERT_TRUE(
+      (std::holds_alternative<HostTensorT<cytnx::cytnx_complex64, 2, layout_right>>(complex_view)));
+
+    auto numeric_view = make_tensor<NumericTensor<2>>(complex);
+    ASSERT_TRUE(
+      (std::holds_alternative<HostTensorT<cytnx::cytnx_complex64, 2, layout_right>>(numeric_view)));
+  }
+
+  TEST(TensorTTest, GenericVariantFactoryWorksWithCustomVariant) {
+    using CustomTensor = std::variant<HostTensorT<cytnx_double, 3, layout_stride>,
+                                      HostTensorT<cytnx::cytnx_complex128, 3, layout_stride>>;
+
+    Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
+    Tensor permuted = tensor.permute({1, 2, 0});
+
+    auto variant = make_tensor<CustomTensor>(permuted);
+
+    ASSERT_TRUE((std::holds_alternative<HostTensorT<cytnx_double, 3, layout_stride>>(variant)));
+    auto &view = std::get<HostTensorT<cytnx_double, 3, layout_stride>>(variant);
+    EXPECT_EQ(view.extent(0), 3);
+    EXPECT_EQ(view.extent(1), 4);
+    EXPECT_EQ(view.extent(2), 2);
+    EXPECT_EQ(view.stride(0), 4);
+    EXPECT_EQ(view.stride(1), 1);
+    EXPECT_EQ(view.stride(2), 12);
+
+    Tensor wrong_rank = arange(2 * 3).reshape({2, 3});
+    EXPECT_THROW((make_tensor<CustomTensor>(wrong_rank)), std::logic_error);
+  }
+
+  TEST(TensorTTest, GenericVariantFactoryDoesNotMutateConstInputForLayoutRight) {
+    Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});
+    Tensor permuted = tensor.permute({1, 2, 0});
+    const Tensor &input = permuted;
+
+    auto variant = make_tensor<NumericTensor<3>>(input);
+
+    ASSERT_TRUE((std::holds_alternative<HostTensorT<cytnx_double, 3, layout_right>>(variant)));
+    EXPECT_FALSE(permuted.is_contiguous());
+
+    auto &view = std::get<HostTensorT<cytnx_double, 3, layout_right>>(variant);
+    EXPECT_EQ(view.extent(0), 3);
+    EXPECT_EQ(view.extent(1), 4);
+    EXPECT_EQ(view.extent(2), 2);
+    EXPECT_EQ(view(2, 3, 1), tensor.at<cytnx_double>({1, 2, 3}));
+
+    view(2, 3, 1) = 99;
+    EXPECT_EQ(tensor.at<cytnx_double>({1, 2, 3}), 23);
   }
 
   TEST(TensorTTest, RejectsWrongDtypeAndRank) {
