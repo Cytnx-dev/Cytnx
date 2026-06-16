@@ -49,6 +49,9 @@ class PyLinOp : public LinOp {
   #if defined(__GNUC__) || defined(__clang__)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #elif defined(_MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable : 4996)
   #endif
 void linop_binding(py::module &m) {
   py::class_<LinOp, PyLinOp>(m, "LinOp")
@@ -181,6 +184,8 @@ void linop_binding(py::module &m) {
 }
   #if defined(__GNUC__) || defined(__clang__)
     #pragma GCC diagnostic pop
+  #elif defined(_MSC_VER)
+    #pragma warning(pop)
   #endif
 
 #endif

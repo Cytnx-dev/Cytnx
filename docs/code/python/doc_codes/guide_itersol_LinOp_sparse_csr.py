@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.sparse import csr_matrix
+import cytnx
 
 
 # The same sparse operator as above (A[1,100]=4 and A[100,1]=7 in a 1000x1000
