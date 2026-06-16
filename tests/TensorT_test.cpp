@@ -74,6 +74,20 @@ namespace {
     EXPECT_EQ(view(1, 2), 77);
   }
 
+  TEST(TensorTTest, LegacyStorageCanBeRecoveredFromOwnerDeleter) {
+    Tensor tensor = arange(2 * 3).reshape({2, 3});
+
+    auto view = make_tensor_t<cytnx_double, 2>(tensor);
+    auto *deleter = std::get_deleter<cytnx::tensor_t_detail::legacy_storage_deleter<cytnx_double>>(
+      view.owner().shared_ptr());
+
+    ASSERT_NE(deleter, nullptr);
+    ASSERT_TRUE(static_cast<bool>(deleter->storage()));
+    EXPECT_EQ(deleter->storage().get(), tensor._impl->storage()._impl.get());
+    EXPECT_EQ(deleter->storage()->dtype(), Type.Double);
+    EXPECT_EQ(deleter->storage()->device(), Device.cpu);
+  }
+
   TEST(TensorTTest, RejectsWrongDtypeAndRank) {
     Tensor tensor = arange(2 * 3).reshape({2, 3});
 

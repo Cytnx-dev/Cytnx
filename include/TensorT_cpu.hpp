@@ -25,6 +25,8 @@ namespace cytnx {
       return {};
     }
 
+    inline int access_device(host_access) { return Device.cpu; }
+
   }  // namespace tensor_t_detail
 
 }  // namespace cytnx

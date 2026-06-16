@@ -27,6 +27,8 @@ namespace cytnx {
       return cuda_access{device};
     }
 
+    inline int access_device(cuda_access access) { return access.device; }
+
   }  // namespace tensor_t_detail
 
 }  // namespace cytnx

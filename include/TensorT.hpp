@@ -15,29 +15,27 @@
 
 #include <array>
 #include <cstddef>
+#include <memory>
 #include <type_traits>
 #include <utility>
 #include <variant>
 
 namespace cytnx {
 
-  class storage_owner {
+  template <class T>
+  class data_owner {
    public:
-    storage_owner() = default;
-    explicit storage_owner(boost::intrusive_ptr<Storage_base> storage)
-        : storage_(std::move(storage)) {}
+    data_owner() = default;
+    explicit data_owner(std::shared_ptr<T> data) : data_(std::move(data)) {}
 
-    Storage_base *get() const noexcept { return storage_.get(); }
-    Storage_base &operator*() const noexcept { return *storage_; }
-    Storage_base *operator->() const noexcept { return storage_.get(); }
-    explicit operator bool() const noexcept { return static_cast<bool>(storage_); }
+    T *get() const noexcept { return data_.get(); }
+    T *operator->() const noexcept { return data_.get(); }
+    explicit operator bool() const noexcept { return static_cast<bool>(data_); }
 
-    unsigned int dtype() const { return storage_->dtype(); }
-    int device() const { return storage_->device(); }
-    unsigned long long size() const { return storage_->size(); }
+    const std::shared_ptr<T> &shared_ptr() const noexcept { return data_; }
 
    private:
-    boost::intrusive_ptr<Storage_base> storage_;
+    std::shared_ptr<T> data_;
   };
 
   template <class T, std::size_t Rank, class Access, class Layout = stdex::layout_stride>
@@ -48,13 +46,13 @@ namespace cytnx {
     using layout_type = Layout;
     using extents_type = stdex::dextents<std::size_t, Rank>;
     using view_type = stdex::mdspan<T, extents_type, Layout>;
-    using storage_type = storage_owner;
+    using owner_type = data_owner<T>;
 
     static constexpr std::size_t rank() noexcept { return Rank; }
 
     TensorT() = default;
-    TensorT(storage_type storage, view_type view, Access access = Access{})
-        : storage_(std::move(storage)), view_(view), access_(access) {}
+    TensorT(owner_type owner, view_type view, Access access = Access{})
+        : owner_(std::move(owner)), view_(view), access_(access) {}
 
     std::size_t extent(std::size_t axis) const noexcept { return view_.extent(axis); }
     std::size_t stride(std::size_t axis) const noexcept { return view_.stride(axis); }
@@ -64,11 +62,11 @@ namespace cytnx {
     T *data_handle() const noexcept { return view_.data_handle(); }
 
     const view_type &view() const noexcept { return view_; }
-    const storage_type &storage() const noexcept { return storage_; }
+    const owner_type &owner() const noexcept { return owner_; }
     const Access &access() const noexcept { return access_; }
 
-    unsigned int dtype() const { return storage_.dtype(); }
-    int device() const { return storage_.device(); }
+    static constexpr unsigned int dtype() { return Type_class::cy_typeid_v<std::remove_cv_t<T>>; }
+    int device() const { return tensor_t_detail::access_device(access_); }
 
     template <class... Indices>
     T &operator()(Indices... indices) const noexcept {
@@ -76,7 +74,7 @@ namespace cytnx {
     }
 
    private:
-    storage_type storage_;
+    owner_type owner_;
     view_type view_;
     [[no_unique_address]] Access access_{};
   };
@@ -99,6 +97,21 @@ namespace cytnx {
                                      >;
 
   namespace tensor_t_detail {
+
+    template <typename T>
+    class legacy_storage_deleter {
+     public:
+      legacy_storage_deleter() = default;
+      explicit legacy_storage_deleter(boost::intrusive_ptr<Storage_base> storage)
+          : storage_(std::move(storage)) {}
+
+      void operator()(T *) noexcept { storage_.reset(); }
+
+      const boost::intrusive_ptr<Storage_base> &storage() const noexcept { return storage_; }
+
+     private:
+      boost::intrusive_ptr<Storage_base> storage_;
+    };
 
     template <typename T, std::size_t Rank>
     void check_tensor_type_and_rank(const Tensor &tensor) {
@@ -136,8 +149,11 @@ namespace cytnx {
       return strides;
     }
 
-    inline storage_owner storage_from_tensor(const Tensor &tensor) {
-      return storage_owner(tensor._impl->storage()._impl);
+    template <typename T>
+    data_owner<T> owner_from_tensor(Tensor &tensor) {
+      auto storage = tensor._impl->storage()._impl;
+      T *data = tensor.ptr_as<T>();
+      return data_owner<T>(std::shared_ptr<T>(data, legacy_storage_deleter<T>(std::move(storage))));
     }
 
   }  // namespace tensor_t_detail
@@ -158,9 +174,9 @@ namespace cytnx {
     auto access = tensor_t_detail::make_access<Access>(tensor.device());
     const auto extents = tensor_t_detail::extents_from_tensor<Rank>(tensor);
     const auto strides = tensor_t_detail::strides_from_tensor<Rank>(tensor, extents);
-    auto storage = tensor_t_detail::storage_from_tensor(tensor);
-    view_type view(tensor.ptr_as<T>(), mapping_type(extents_type(extents), strides));
-    return TensorT<T, Rank, Access, stdex::layout_stride>(std::move(storage), view, access);
+    auto owner = tensor_t_detail::owner_from_tensor<T>(tensor);
+    view_type view(owner.get(), mapping_type(extents_type(extents), strides));
+    return TensorT<T, Rank, Access, stdex::layout_stride>(std::move(owner), view, access);
   }
 
   /**
@@ -178,9 +194,9 @@ namespace cytnx {
     auto access = tensor_t_detail::make_access<Access>(tensor.device());
     tensor.contiguous_();
     const auto extents = tensor_t_detail::extents_from_tensor<Rank>(tensor);
-    auto storage = tensor_t_detail::storage_from_tensor(tensor);
-    view_type view(tensor.ptr_as<T>(), extents_type(extents));
-    return TensorT<T, Rank, Access, stdex::layout_right>(std::move(storage), view, access);
+    auto owner = tensor_t_detail::owner_from_tensor<T>(tensor);
+    view_type view(owner.get(), extents_type(extents));
+    return TensorT<T, Rank, Access, stdex::layout_right>(std::move(owner), view, access);
   }
 
 }  // namespace cytnx
