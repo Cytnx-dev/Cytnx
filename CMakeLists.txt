@@ -233,6 +233,7 @@ ENDIF ()
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)
+target_compile_features(cytnx PUBLIC cxx_std_20)
 
 target_include_directories(cytnx
   PRIVATE
