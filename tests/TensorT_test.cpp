@@ -4,6 +4,8 @@
 #include "TensorT.hpp"
 #include "TensorT_traits.hpp"
 
+#include <array>
+
 namespace {
 
   using cytnx::arange;
@@ -39,6 +41,44 @@ namespace {
   static_assert(std::variant_size_v<NumericTensor<2>> == 4);
   static_assert(std::variant_size_v<RealTensor<2>> == 2);
 #endif
+
+  TEST(TensorTTest, DirectAllocationCreatesOwnedContiguousStrideView) {
+    HostTensorT<cytnx_double, 2> matrix({2, 3});
+
+    static_assert(std::is_same_v<decltype(matrix), HostTensorT<cytnx_double, 2, layout_stride>>);
+    EXPECT_EQ(matrix.dtype(), Type.Double);
+    EXPECT_EQ(matrix.device(), Device.cpu);
+    EXPECT_EQ(matrix.extent(0), 2);
+    EXPECT_EQ(matrix.extent(1), 3);
+    EXPECT_EQ(matrix.stride(0), 3);
+    EXPECT_EQ(matrix.stride(1), 1);
+    EXPECT_EQ(matrix.required_span_size(), 6);
+    EXPECT_TRUE(static_cast<bool>(matrix.owner()));
+    EXPECT_EQ(matrix(1, 2), 0);
+
+    matrix(1, 2) = 17;
+    EXPECT_EQ(matrix(1, 2), 17);
+    EXPECT_THROW(to_tensor(matrix), std::logic_error);
+  }
+
+  TEST(TensorTTest, DirectAllocationSupportsLayoutRightAndArrayExtents) {
+    HostTensorT<cytnx_double, 3, layout_right> tensor(std::array<std::size_t, 3>{2, 3, 4});
+
+    EXPECT_EQ(tensor.extent(0), 2);
+    EXPECT_EQ(tensor.extent(1), 3);
+    EXPECT_EQ(tensor.extent(2), 4);
+    EXPECT_EQ(tensor.stride(0), 12);
+    EXPECT_EQ(tensor.stride(1), 4);
+    EXPECT_EQ(tensor.stride(2), 1);
+    EXPECT_EQ(tensor.required_span_size(), 24);
+
+    tensor(1, 2, 3) = 29;
+    EXPECT_EQ(tensor(1, 2, 3), 29);
+  }
+
+  TEST(TensorTTest, DirectAllocationRejectsWrongNumberOfInitializerExtents) {
+    EXPECT_THROW((HostTensorT<cytnx_double, 2>({2, 3, 4})), std::logic_error);
+  }
 
   TEST(TensorTTest, MakeTensorTPreservesPermutedStrides) {
     Tensor tensor = arange(2 * 3 * 4).reshape({2, 3, 4});

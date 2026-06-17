@@ -13,8 +13,11 @@
 
 #include "boost/smart_ptr/intrusive_ptr.hpp"
 
+#include <algorithm>
 #include <array>
+#include <concepts>
 #include <cstddef>
+#include <initializer_list>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -61,6 +64,7 @@ namespace cytnx {
     using layout_type = Layout;
     using extents_type = stdex::dextents<std::size_t, Rank>;
     using view_type = stdex::mdspan<T, extents_type, Layout>;
+    using mapping_type = typename view_type::mapping_type;
     using owner_type = data_owner<T>;
 
     static constexpr std::size_t rank() noexcept { return Rank; }
@@ -68,6 +72,12 @@ namespace cytnx {
     TensorT() = default;
     TensorT(owner_type owner, view_type view, Access access = Access{})
         : owner_(std::move(owner)), view_(view), access_(access) {}
+    explicit TensorT(const std::array<std::size_t, Rank> &extents, Access access = Access{})
+      requires std::same_as<Access, host_access>
+        : TensorT(allocate(extents), access) {}
+    explicit TensorT(std::initializer_list<std::size_t> extents, Access access = Access{})
+      requires std::same_as<Access, host_access>
+        : TensorT(extents_from_list(extents), access) {}
 
     std::size_t extent(std::size_t axis) const noexcept { return view_.extent(axis); }
     std::size_t stride(std::size_t axis) const noexcept { return view_.stride(axis); }
@@ -89,6 +99,51 @@ namespace cytnx {
     }
 
    private:
+    struct allocated_view {
+      owner_type owner;
+      view_type view;
+    };
+
+    explicit TensorT(allocated_view allocated, Access access)
+        : owner_(std::move(allocated.owner)), view_(allocated.view), access_(access) {}
+
+    static std::array<std::size_t, Rank> extents_from_list(
+      std::initializer_list<std::size_t> extents) {
+      cytnx_error_msg(extents.size() != Rank,
+                      "[ERROR] TensorT rank-%llu allocation received %llu extents.%s",
+                      static_cast<unsigned long long>(Rank),
+                      static_cast<unsigned long long>(extents.size()), "\n");
+      std::array<std::size_t, Rank> out{};
+      std::copy(extents.begin(), extents.end(), out.begin());
+      return out;
+    }
+
+    static mapping_type make_contiguous_mapping(const std::array<std::size_t, Rank> &extents) {
+      const extents_type md_extents(extents);
+      if constexpr (std::same_as<Layout, stdex::layout_right>) {
+        return mapping_type(md_extents);
+      } else if constexpr (std::same_as<Layout, stdex::layout_stride>) {
+        std::array<std::size_t, Rank> strides{};
+        std::size_t step = 1;
+        for (std::size_t i = Rank; i-- > 0;) {
+          strides[i] = step;
+          step *= extents[i];
+        }
+        return mapping_type(md_extents, strides);
+      } else {
+        static_assert(
+          std::same_as<Layout, stdex::layout_right> || std::same_as<Layout, stdex::layout_stride>,
+          "Unsupported TensorT layout for direct allocation");
+      }
+    }
+
+    static allocated_view allocate(const std::array<std::size_t, Rank> &extents) {
+      const mapping_type mapping = make_contiguous_mapping(extents);
+      auto owner = owner_type(
+        std::shared_ptr<T>(new T[mapping.required_span_size()](), std::default_delete<T[]>()));
+      return allocated_view{owner, view_type(owner.get(), mapping)};
+    }
+
     owner_type owner_;
     view_type view_;
     [[no_unique_address]] Access access_{};
