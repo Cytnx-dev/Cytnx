@@ -1,5 +1,5 @@
-#ifndef CYTNX_TENSORT_GPU_HPP_
-#define CYTNX_TENSORT_GPU_HPP_
+#ifndef CYTNX_TENSORT_GPU_H_
+#define CYTNX_TENSORT_GPU_H_
 
 #ifndef UNI_GPU
   #error "TensorT_gpu.hpp requires UNI_GPU"
@@ -35,4 +35,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // CYTNX_TENSORT_GPU_HPP_
+#endif  // CYTNX_TENSORT_GPU_H_

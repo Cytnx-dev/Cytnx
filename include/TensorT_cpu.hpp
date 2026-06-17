@@ -1,5 +1,5 @@
-#ifndef CYTNX_TENSORT_CPU_HPP_
-#define CYTNX_TENSORT_CPU_HPP_
+#ifndef CYTNX_TENSORT_CPU_H_
+#define CYTNX_TENSORT_CPU_H_
 
 #include "Device.hpp"
 #include "cytnx_error.hpp"
@@ -33,4 +33,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // CYTNX_TENSORT_CPU_HPP_
+#endif  // CYTNX_TENSORT_CPU_H_

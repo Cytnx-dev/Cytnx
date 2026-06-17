@@ -1,5 +1,5 @@
-#ifndef CYTNX_TENSORT_TRAITS_HPP_
-#define CYTNX_TENSORT_TRAITS_HPP_
+#ifndef CYTNX_TENSORT_TRAITS_H_
+#define CYTNX_TENSORT_TRAITS_H_
 
 #include "TensorT.hpp"
 #include "Type.hpp"
@@ -167,4 +167,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // CYTNX_TENSORT_TRAITS_HPP_
+#endif  // CYTNX_TENSORT_TRAITS_H_

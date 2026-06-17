@@ -1,5 +1,5 @@
-#ifndef CYTNX_TENSORT_HPP_
-#define CYTNX_TENSORT_HPP_
+#ifndef CYTNX_TENSORT_H_
+#define CYTNX_TENSORT_H_
 
 #include "Tensor.hpp"
 #include "TensorT_cpu.hpp"
@@ -390,4 +390,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // CYTNX_TENSORT_HPP_
+#endif  // CYTNX_TENSORT_H_

@@ -1,5 +1,5 @@
-#ifndef CYTNX_MDSPAN_HPP_
-#define CYTNX_MDSPAN_HPP_
+#ifndef CYTNX_MDSPAN_H_
+#define CYTNX_MDSPAN_H_
 
 #include <array>
 #include <cassert>
@@ -246,4 +246,4 @@ namespace cytnx {
   }  // namespace stdex
 }  // namespace cytnx
 
-#endif  // CYTNX_MDSPAN_HPP_
+#endif  // CYTNX_MDSPAN_H_
