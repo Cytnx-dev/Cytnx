@@ -66,11 +66,13 @@ namespace cytnx {
           : dynamic_extents_(dynamic_extents) {}
 
       static constexpr std::size_t static_extent(rank_type r) noexcept {
+        static_assert(rank() > 0, "rank-0 extents have no static extents");
         constexpr std::array<std::size_t, rank()> values{Extents...};
         return values[r];
       }
 
       constexpr index_type extent(rank_type r) const noexcept {
+        static_assert(rank() > 0, "rank-0 extents have no extents");
         constexpr std::array<std::size_t, rank()> values{Extents...};
         rank_type dynamic_index = 0;
         for (rank_type i = 0; i < r; ++i) {

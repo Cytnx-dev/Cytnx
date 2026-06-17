@@ -359,27 +359,33 @@ namespace cytnx {
    */
   template <typename T, std::size_t Rank, class Access, class Layout>
   Tensor to_tensor(const TensorT<T, Rank, Access, Layout> &view) {
-    auto storage = tensor_t_detail::legacy_storage_from_owner(view.owner());
-    cytnx_error_msg(storage->device() != view.device(),
-                    "[ERROR] TensorT access device does not match legacy storage device.%s", "\n");
+    if constexpr (Rank == 0) {
+      cytnx_error_msg(true, "[ERROR] Cannot convert rank-0 TensorT to legacy Tensor.%s", "\n");
+      return Tensor();
+    } else {
+      auto storage = tensor_t_detail::legacy_storage_from_owner(view.owner());
+      cytnx_error_msg(storage->device() != view.device(),
+                      "[ERROR] TensorT access device does not match legacy storage device.%s",
+                      "\n");
 
-    const auto memory_order = tensor_t_detail::memory_order_from_strides(view);
+      const auto memory_order = tensor_t_detail::memory_order_from_strides(view);
 
-    std::vector<cytnx_int64> memory_shape;
-    memory_shape.reserve(Rank);
-    for (const auto axis : memory_order) {
-      memory_shape.push_back(static_cast<cytnx_int64>(view.extent(axis)));
+      std::vector<cytnx_int64> memory_shape;
+      memory_shape.reserve(Rank);
+      for (const auto axis : memory_order) {
+        memory_shape.push_back(static_cast<cytnx_int64>(view.extent(axis)));
+      }
+
+      std::vector<cytnx_uint64> perm(Rank);
+      for (std::size_t physical_axis = 0; physical_axis < Rank; ++physical_axis) {
+        perm[memory_order[physical_axis]] = static_cast<cytnx_uint64>(physical_axis);
+      }
+
+      Tensor out = Tensor::from_storage(Storage(storage));
+      out = out.reshape(memory_shape);
+      out = out.permute(perm);
+      return out;
     }
-
-    std::vector<cytnx_uint64> perm(Rank);
-    for (std::size_t physical_axis = 0; physical_axis < Rank; ++physical_axis) {
-      perm[memory_order[physical_axis]] = static_cast<cytnx_uint64>(physical_axis);
-    }
-
-    Tensor out = Tensor::from_storage(Storage(storage));
-    out = out.reshape(memory_shape);
-    out = out.permute(perm);
-    return out;
   }
 
 }  // namespace cytnx
