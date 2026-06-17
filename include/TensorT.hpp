@@ -73,11 +73,15 @@ namespace cytnx {
     TensorT(owner_type owner, view_type view, Access access = Access{})
         : owner_(std::move(owner)), view_(view), access_(access) {}
     explicit TensorT(const std::array<std::size_t, Rank> &extents, Access access = Access{})
-      requires std::same_as<Access, host_access>
-        : TensorT(allocate(extents), access) {}
+        : TensorT(allocate(extents), access) {
+      static_assert(std::same_as<Access, host_access>,
+                    "Direct TensorT allocation currently supports host_access only");
+    }
     explicit TensorT(std::initializer_list<std::size_t> extents, Access access = Access{})
-      requires std::same_as<Access, host_access>
-        : TensorT(extents_from_list(extents), access) {}
+        : TensorT(extents_from_list(extents), access) {
+      static_assert(std::same_as<Access, host_access>,
+                    "Direct TensorT allocation currently supports host_access only");
+    }
 
     std::size_t extent(std::size_t axis) const noexcept { return view_.extent(axis); }
     std::size_t stride(std::size_t axis) const noexcept { return view_.stride(axis); }
