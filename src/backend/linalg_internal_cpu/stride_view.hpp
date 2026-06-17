@@ -163,6 +163,10 @@ namespace cytnx {
     /// @code
     /// std::span<const T>(data, extent) | stride(diag_stride)
     /// @endcode
+    ///
+    /// TODO(C++23): replace this whole header with @c std::views::stride. The
+    /// pipe form @c r | stride(k) is chosen to match @c std::views::stride so
+    /// call sites stay unchanged across the swap.
     inline stride_closure stride(std::size_t step) { return stride_closure{step}; }
 
   }  // namespace linalg_internal
