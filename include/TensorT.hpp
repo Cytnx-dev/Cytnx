@@ -72,6 +72,11 @@ namespace cytnx {
     TensorT() = default;
     TensorT(owner_type owner, view_type view, Access access = Access{})
         : owner_(std::move(owner)), view_(view), access_(access) {}
+    explicit TensorT(const T &value, Access access = Access{}) requires(Rank == 0)
+        : TensorT(allocate_scalar(value), access) {
+      static_assert(std::same_as<Access, host_access>,
+                    "Direct TensorT allocation currently supports host_access only");
+    }
     explicit TensorT(const std::array<std::size_t, Rank> &extents, Access access = Access{})
         : TensorT(allocate(extents), access) {
       static_assert(std::same_as<Access, host_access>,
@@ -86,6 +91,9 @@ namespace cytnx {
     std::size_t extent(std::size_t axis) const noexcept { return view_.extent(axis); }
     std::size_t stride(std::size_t axis) const noexcept { return view_.stride(axis); }
     std::size_t required_span_size() const noexcept { return view_.required_span_size(); }
+    std::size_t size() const noexcept requires(Rank == 1) { return extent(0); }
+    std::size_t rows() const noexcept requires(Rank == 2) { return extent(0); }
+    std::size_t cols() const noexcept requires(Rank == 2) { return extent(1); }
 
     T *data() const noexcept { return view_.data_handle(); }
     T *data_handle() const noexcept { return view_.data_handle(); }
@@ -96,6 +104,7 @@ namespace cytnx {
 
     static constexpr unsigned int dtype() { return Type_class::cy_typeid_v<std::remove_cv_t<T>>; }
     int device() const { return tensor_t_detail::access_device(access_); }
+    T &value() const noexcept requires(Rank == 0) { return view_(); }
 
     template <class... Indices>
     T &operator()(Indices... indices) const noexcept {
@@ -146,6 +155,13 @@ namespace cytnx {
       auto owner = owner_type(
         std::shared_ptr<T>(new T[mapping.required_span_size()](), std::default_delete<T[]>()));
       return allocated_view{owner, view_type(owner.get(), mapping)};
+    }
+
+    static allocated_view allocate_scalar(const T &value) {
+      std::array<std::size_t, Rank> extents{};
+      allocated_view allocated = allocate(extents);
+      allocated.view() = value;
+      return allocated;
     }
 
     owner_type owner_;

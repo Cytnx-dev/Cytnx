@@ -8,11 +8,7 @@
 #include "Device.hpp"
 #include "Type.hpp"
 
-#ifdef BACKEND_TORCH
-  #include "backend_torch/Type_convert.hpp"  // maybe we dont need this?
-#else
-  #include "backend/Storage.hpp"
-#endif
+#include "backend/Storage.hpp"
 
 #include "Tensor.hpp"
 #include "TensorT.hpp"
@@ -32,10 +28,7 @@
 #include "Network.hpp"
 #include "Bond.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-  #include "backend/Scalar.hpp"
-#endif
+#include "backend/Scalar.hpp"
 
 #include "LinOp.hpp"
 #include "utils/is.hpp"

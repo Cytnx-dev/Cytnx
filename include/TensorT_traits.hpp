@@ -13,14 +13,12 @@ namespace cytnx {
 
   /// Element type concept for the supported real floating-point TensorT scalar types.
   template <class T>
-  concept RealScalar =
-    std::same_as<std::remove_cv_t<T>, cytnx_float> ||
+  concept RealScalar = std::same_as<std::remove_cv_t<T>, cytnx_float> ||
     std::same_as<std::remove_cv_t<T>, cytnx_double>;
 
   /// Element type concept for the supported complex floating-point TensorT scalar types.
   template <class T>
-  concept ComplexScalar =
-    std::same_as<std::remove_cv_t<T>, cytnx_complex64> ||
+  concept ComplexScalar = std::same_as<std::remove_cv_t<T>, cytnx_complex64> ||
     std::same_as<std::remove_cv_t<T>, cytnx_complex128>;
 
   /// Element type concept for supported real or complex floating-point TensorT scalar types.

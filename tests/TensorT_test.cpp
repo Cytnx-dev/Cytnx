@@ -50,6 +50,8 @@ namespace {
     EXPECT_EQ(matrix.device(), Device.cpu);
     EXPECT_EQ(matrix.extent(0), 2);
     EXPECT_EQ(matrix.extent(1), 3);
+    EXPECT_EQ(matrix.rows(), 2);
+    EXPECT_EQ(matrix.cols(), 3);
     EXPECT_EQ(matrix.stride(0), 3);
     EXPECT_EQ(matrix.stride(1), 1);
     EXPECT_EQ(matrix.required_span_size(), 6);
@@ -59,6 +61,17 @@ namespace {
     matrix(1, 2) = 17;
     EXPECT_EQ(matrix(1, 2), 17);
     EXPECT_THROW(to_tensor(matrix), std::logic_error);
+  }
+
+  TEST(TensorTTest, DirectAllocationSupportsRankOneSize) {
+    HostTensorT<cytnx_double, 1> vector({5});
+
+    EXPECT_EQ(vector.extent(0), 5);
+    EXPECT_EQ(vector.size(), 5);
+    EXPECT_EQ(vector.required_span_size(), 5);
+
+    vector(4) = 12;
+    EXPECT_EQ(vector(4), 12);
   }
 
   TEST(TensorTTest, DirectAllocationSupportsLayoutRightAndArrayExtents) {
@@ -74,6 +87,26 @@ namespace {
 
     tensor(1, 2, 3) = 29;
     EXPECT_EQ(tensor(1, 2, 3), 29);
+  }
+
+  TEST(TensorTTest, DirectAllocationSupportsRankZeroScalars) {
+    HostTensorT<cytnx_double, 0> zero(std::array<std::size_t, 0>{});
+
+    static_assert(decltype(zero)::rank() == 0);
+    EXPECT_EQ(zero.dtype(), Type.Double);
+    EXPECT_EQ(zero.device(), Device.cpu);
+    EXPECT_EQ(zero.required_span_size(), 1);
+    EXPECT_TRUE(static_cast<bool>(zero.owner()));
+    EXPECT_EQ(zero(), 0);
+
+    zero() = 11;
+    EXPECT_EQ(zero.value(), 11);
+
+    HostTensorT<cytnx_double, 0> scalar(3.5);
+    EXPECT_EQ(scalar(), 3.5);
+    scalar.value() = 4.5;
+    EXPECT_EQ(scalar(), 4.5);
+    EXPECT_THROW(to_tensor(scalar), std::logic_error);
   }
 
   TEST(TensorTTest, DirectAllocationRejectsWrongNumberOfInitializerExtents) {
