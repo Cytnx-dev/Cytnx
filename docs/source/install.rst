@@ -25,7 +25,6 @@ In the following we show how to install Cytnx with conda.
 
     1. We do not support a native Windows package at this stage. If you are using Windows OS, please use WSL.
 
-
 * For MacOS:
 
     Please build from source, currently 0.9+ does not have conda package support.

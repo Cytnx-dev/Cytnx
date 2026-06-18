@@ -85,7 +85,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
 .. Note::
 
-    1. The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
+    The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
 
 
 2. Install the following dependencies:
