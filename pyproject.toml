@@ -15,7 +15,7 @@ description = "A tensor network library"
 readme = "Readme.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["tensor", "network", "physics"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",

@@ -37,7 +37,7 @@ In addition, you might want to install the following optional dependencies if yo
 
 [Python API]
 
-* python >= 3.9
+* python >= 3.10
 * pybind11 >= 3.0.0
 * python-graphviz
 * graphviz
@@ -69,7 +69,7 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.9 _openmp_mutex=*=*_llvm
+    $conda create --name cytnx _openmp_mutex=*=*_llvm
     $conda activate cytnx
     $conda upgrade --all
 
@@ -79,14 +79,13 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.9 llvm-openmp
+    $conda create --name cytnx llvm-openmp
     $conda activate cytnx
     $conda upgrade --all
 
 .. Note::
 
-    1. The python=3.9 indicates the Python version you want to use. Generally, Cytnx is tested with 3.9+. You can replace this with the version you want to use.
-    2. The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
+    1. The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
 
 
 2. Install the following dependencies:
