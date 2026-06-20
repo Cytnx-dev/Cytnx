@@ -211,6 +211,8 @@ namespace BMTest_Trace {
     ->Args({1024, 16})                                       \
     ->Args({2048, 16})                                       \
     ->Args({4096, 8})                                        \
+    ->Args({64, 2048})                                       \
+    ->Args({32, 8192})                                       \
     ->Unit(benchmark::kMicrosecond);                         \
   BENCHMARK_TEMPLATE(BM_Trace_Matvec_3D_Template, TypeEnum)  \
     ->Name("BM_Trace_Matvec_3D_" #TypeName)                  \
@@ -219,6 +221,8 @@ namespace BMTest_Trace {
     ->Args({1024, 16})                                       \
     ->Args({2048, 16})                                       \
     ->Args({4096, 8})                                        \
+    ->Args({64, 2048})                                       \
+    ->Args({32, 8192})                                       \
     ->Unit(benchmark::kMicrosecond);
 
 #define REGISTER_TRACE_2D_BENCHMARK(TypeName, TypeEnum)      \
