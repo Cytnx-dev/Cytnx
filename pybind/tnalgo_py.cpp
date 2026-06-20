@@ -52,7 +52,7 @@ void tnalgo_binding(py::module &m) {
     .def("c_S_mvleft", &tn_algo::MPS::S_mvleft)
     .def("c_S_mvright", &tn_algo::MPS::S_mvright)
     .def(
-      "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },
+      "Save", [](tn_algo::MPS &self, const std::string &fname) { self.Save(fname); },
       py::arg("fname"))
     .def_static(
       "Load", [](const std::string &fname) { return cytnx::tn_algo::MPS::Load(fname); },
