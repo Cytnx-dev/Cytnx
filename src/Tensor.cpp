@@ -5,6 +5,7 @@
 
 #include "linalg.hpp"
 #include "utils/is.hpp"
+#include "utils/checked_cast.hpp"
 #include "Type.hpp"
 
 using namespace std;
@@ -907,17 +908,17 @@ namespace cytnx {
     return is(this->_impl->storage(), rhs.storage());
   }
 
-  std::vector<cytnx_uint64> Tensor::strides() const {
+  std::vector<cytnx_int64> Tensor::strides() const {
     // The storage is laid out contiguously in memory order; _invmapper[i] gives
     // the logical axis sitting at memory position i (innermost last). The stride
     // of a logical axis is the product of the memory-order extents inside it.
     const std::vector<cytnx_uint64> &shape = this->_impl->shape();
     const std::vector<cytnx_uint64> &invmapper = this->_impl->invmapper();
     const cytnx_uint64 rank = shape.size();
-    std::vector<cytnx_uint64> out(rank);
+    std::vector<cytnx_int64> out(rank);
     cytnx_uint64 step = 1;
     for (cytnx_int64 i = static_cast<cytnx_int64>(rank) - 1; i >= 0; i--) {
-      out[invmapper[i]] = step;
+      out[invmapper[i]] = cytnx::internal::CheckedCastToInt64(step, "stride");
       step *= shape[invmapper[i]];
     }
     return out;

@@ -21,8 +21,9 @@ namespace {
     std::vector<cytnx::cytnx_uint64> idx(shape.size(), 0);
     std::function<void(std::size_t)> recurse = [&](std::size_t axis) {
       if (axis == shape.size()) {
-        cytnx::cytnx_uint64 offset = 0;
-        for (std::size_t a = 0; a < shape.size(); ++a) offset += idx[a] * strides[a];
+        cytnx::cytnx_int64 offset = 0;
+        for (std::size_t a = 0; a < shape.size(); ++a)
+          offset += static_cast<cytnx::cytnx_int64>(idx[a]) * strides[a];
         EXPECT_EQ(tensor.at<T>(idx), tensor.storage().at<T>(offset));
       } else {
         for (idx[axis] = 0; idx[axis] < shape[axis]; ++idx[axis]) recurse(axis + 1);

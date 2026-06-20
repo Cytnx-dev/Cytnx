@@ -2,11 +2,13 @@
 #include "Tensor.hpp"
 #include "backend/Storage.hpp"
 #include "cytnx_error.hpp"
+#include "utils/checked_cast.hpp"
 
 #include "backend/linalg_internal_cpu/pairwise_sum.hpp"
 #include "backend/linalg_internal_cpu/stride_view.hpp"
 
 #include <algorithm>
+#include <iterator>
 #include <span>
 #include <vector>
 
@@ -19,28 +21,32 @@ namespace cytnx {
         // Trace() validates upstream that ax1 != ax2 and shape[ax1] == shape[ax2],
         // so their order is irrelevant: the diagonal stride and the set of
         // surviving axes are symmetric in (ax1, ax2).
-        const auto &input_shape = Tn.shape();
-        const std::vector<cytnx_uint64> input_strides = Tn.strides();
-        const cytnx_uint64 diagonal_length = input_shape[ax1];
-        const cytnx_uint64 diagonal_stride = input_strides[ax1] + input_strides[ax2];
+        //
+        // Every index/extent below is kept as a single signed type (cytnx_int64)
+        // so the odometer wrap-around step
+        // (diagonal_start_offset -= (output_shape[axis] - 1) * stride) stays
+        // arithmetic on one type without casts.
+        const std::vector<cytnx_uint64> &input_shape = Tn.shape();
+        const std::vector<cytnx_int64> input_strides = Tn.strides();
+        const cytnx_int64 diagonal_length =
+          internal::CheckedCastToInt64(input_shape[ax1], "input_shape[ax1]");
+        const cytnx_int64 diagonal_stride = input_strides[ax1] + input_strides[ax2];
 
         // Build the reduced output shape and the matching per-surviving-axis input
         // strides in a single pass over the surviving axes (no separate surviving-
-        // axis index list). The output indices and the per-surviving-axis strides
-        // are kept signed so the odometer wrap-around step
-        // (diagonal_start_offset -= (output_shape[axis] - 1) * stride) stays
-        // arithmetic on a single signed type without casts.
+        // axis index list).
         std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_
         std::vector<cytnx_int64> surviving_input_stride;
         for (cytnx_uint64 axis = 0; axis < input_shape.size(); ++axis) {
           if (axis != ax1 && axis != ax2) {
-            output_shape.push_back(static_cast<cytnx_int64>(input_shape[axis]));
-            surviving_input_stride.push_back(static_cast<cytnx_int64>(input_strides[axis]));
+            output_shape.push_back(
+              internal::CheckedCastToInt64(input_shape[axis], "input_shape[axis]"));
+            surviving_input_stride.push_back(input_strides[axis]);
           }
         }
-        const cytnx_int64 surviving_rank = static_cast<cytnx_int64>(surviving_input_stride.size());
+        const cytnx_int64 surviving_rank = std::ssize(surviving_input_stride);
         cytnx_int64 output_size = 1;
-        for (auto dim : output_shape) output_size *= dim;
+        for (cytnx_int64 dim : output_shape) output_size *= dim;
         const bool output_is_scalar = surviving_rank == 0;
 
         // Fill a flat result Storage, then compose the output Tensor from it; the
@@ -56,7 +62,7 @@ namespace cytnx {
           return out;
         }
 
-        const cytnx_uint64 diagonal_span = (diagonal_length - 1) * diagonal_stride + 1;
+        const cytnx_int64 diagonal_span = (diagonal_length - 1) * diagonal_stride + 1;
         const T *input_data = Tn.storage().data<T>();
         T *output_data = output_storage.data<T>();
 
@@ -72,7 +78,7 @@ namespace cytnx {
         // offset by the affected axes' input strides. This avoids the per-element
         // division and modulo of decoding the flat index, and needs no precomputed
         // row-major accumulators.
-        std::vector<cytnx_int64> surviving_index(static_cast<std::size_t>(surviving_rank), 0);
+        std::vector<cytnx_int64> surviving_index(surviving_rank, 0);
         cytnx_int64 diagonal_start_offset = 0;
         for (cytnx_int64 output_index = 0; output_index < output_size; ++output_index) {
           output_data[output_index] =
