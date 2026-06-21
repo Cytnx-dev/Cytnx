@@ -45,17 +45,18 @@ namespace cytnx {
     }
 
     Scalar RegularMPS::norm() const {
-      UniTensor L;
+      // Accumulate the <psi|psi> left environment site by site. L carries two
+      // open legs, "a" on the ket and "b" on the bra, living on the current
+      // virtual bond; it is seeded as the 1x1 identity on the trivial left
+      // boundary. For each rank-3 site tensor [left, phys, right] the ket leg
+      // contracts onto "a", the bra leg onto "b", and the physical legs onto
+      // each other, leaving the next virtual bond open as the new {a, b}.
+      UniTensor L = UniTensor(ones({1, 1}), false, 1).relabel({"a", "b"});
       for (auto Ai : this->_TNs) {
-        if (L.uten_type() == UTenType.Void) {
-          auto tA = Ai.relabel({"0", "1", "2"});
-          L = Contract(tA, tA.Dagger().relabel("0", "-2"));
-        } else {
-          L.relabel_({"2", "-2"});
-          auto tA = Ai.relabel({"2", "3", "4"});
-          L = Contract(tA, L);
-          L = Contract(L, tA.Dagger().relabel({"-4", "-2", "3"}));
-        }
+        auto tA = Ai.relabel({"a", "p", "r"});
+        auto tAc = Ai.Conj().relabel({"b", "p", "rc"});
+        L = Contract(Contract(L, tA), tAc);  // {a, b} -> {r, rc}
+        L.relabel_({"a", "b"});
       }
       return L.Trace().item();
     }
