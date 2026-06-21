@@ -49,12 +49,14 @@ coverage = [
 ]
 # Convenience aggregate for contributors and CI:
 #     pip install --editable .[dev]
-# pulls everything needed to build, run the test suite, and collect
-# both Python and C++ coverage. Build-time deps (scikit-build-core,
+# pulls everything needed to build, run the test suite, collect both
+# Python and C++ coverage, and regenerate the committed PEP 561 type
+# stubs with `tools/generate_stubs.py`. Build-time deps (scikit-build-core,
 # pybind11) come from `[build-system].requires` automatically.
 dev = [
     "cytnx[test]",
     "cytnx[coverage]",
+    "pybind11-stubgen",
 ]
 docs = [
     "sphinx>=7.4.7",
