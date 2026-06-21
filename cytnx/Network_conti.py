@@ -29,7 +29,7 @@ def Drawnet_notag(opt_name,tn_names, edges_info,dangling_infos,figsize=[6,5],eng
     #print(edges_info)
     ## edges! contracted:
     for i in edges_info:
-        g.edge(i[0],i[1],label="%d"%(i[2]))
+        g.edge(i[0],i[1],label="%s"%(i[2]))
 
 
     ## edges! non-contracted:
@@ -86,6 +86,6 @@ def Diagram(self,outname=None,figsize=[6,5],engine="circo"):
     dangling_edges = []
     for i in range(len(rtnl)):
         for j in range(len(rtnl[i])):
-            dangling_edges.append(("%d"%(rtnl[i][j]),tn_names[i]))
+            dangling_edges.append(("%s"%(rtnl[i][j]),tn_names[i]))
 
     return Drawnet_notag(OUT_fn,tn_names,edge_info,dangling_edges,figsize,engine=engine)
