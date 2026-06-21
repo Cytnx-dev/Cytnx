@@ -199,7 +199,7 @@ libcytnx.a: $(ALLOBJS)
 #	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 #	#$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
-pyobj: ncon_py.o pycytnx.o generator_py.o storage_py.o tensor_py.o symmetry_py.o bond_py.o network_py.o linop_py.o unitensor_py.o linalg_py.o algo_py.o physics_related_py.o random_py.o tnalgo_py.o scalar_py.o
+pyobj: ncon_py.o pycytnx.o generator_py.o storage_py.o tensor_py.o symmetry_py.o bond_py.o network_py.o linop_py.o unitensor_py.o linalg_py.o algo_py.o physics_related_py.o random_py.o scalar_py.o
 	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $(ALLOBJS) $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
 
@@ -234,8 +234,6 @@ scalar_py.o: pybind/scalar_py.cpp
 random_py.o: pybind/random_py.cpp
 	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@
 physics_related_py.o: pybind/physics_related_py.cpp
-	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@
-tnalgo_py.o: pybind/tnalgo_py.cpp
 	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@
 
 doc :
