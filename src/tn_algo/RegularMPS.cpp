@@ -200,6 +200,18 @@ namespace cytnx {
      }
      */
 
+    // Canonical per-site labels assigned by RegularMPS::Init: site k carries
+    // {2k, 2k+1, 2k+2}, so neighbouring sites share their virtual-bond label
+    // (site k's right label 2k+2 equals site k+1's left label). Every routine
+    // that rebuilds a site tensor through linalg::Svd restores these labels
+    // afterwards. This keeps the MPS in a predictable labelling and, crucially,
+    // stops Svd's fixed "_aux_L"/"_aux_R" bond labels from surviving into the
+    // next decomposition, where the reused generic label would collide and trip
+    // set_labels' duplicate check (issue #920).
+    static std::vector<std::string> _site_labels(const cytnx_int64 &k) {
+      return {to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)};
+    }
+
     void RegularMPS::Into_Lortho() {
       if (this->S_loc == this->_TNs.size()) return;
 
@@ -215,9 +227,12 @@ namespace cytnx {
         this->_TNs[p] = out[1];
         auto vt = out[2];
         this->_TNs[p + 1] = Contract(Contract(s, vt), this->_TNs[p + 1]);
+        this->_TNs[p].relabel_(_site_labels(p));
+        this->_TNs[p + 1].relabel_(_site_labels(p + 1));
       }
       auto out = linalg::Svd(this->_TNs.back(), true);
       this->_TNs.back() = out[1];
+      this->_TNs.back().relabel_(_site_labels(this->_TNs.size() - 1));
       this->S_loc = this->_TNs.size();
     }
 
@@ -228,7 +243,7 @@ namespace cytnx {
         this->S_loc += 1;
         return;
       } else {
-        this->_TNs[this->S_loc].set_rowrank(2);
+        this->_TNs[this->S_loc].set_rowrank_(2);
         auto out = linalg::Svd(this->_TNs[this->S_loc]);
         auto s = out[0];
         this->_TNs[this->S_loc] = out[1];
@@ -236,7 +251,9 @@ namespace cytnx {
         // boundary:
         if (this->S_loc != this->_TNs.size() - 1) {
           this->_TNs[this->S_loc + 1] = Contract(Contract(s, vt), this->_TNs[this->S_loc + 1]);
+          this->_TNs[this->S_loc + 1].relabel_(_site_labels(this->S_loc + 1));
         }
+        this->_TNs[this->S_loc].relabel_(_site_labels(this->S_loc));
         this->S_loc += 1;
       }
     }
@@ -248,7 +265,7 @@ namespace cytnx {
         this->S_loc -= 1;
         return;
       } else {
-        this->_TNs[this->S_loc].set_rowrank(1);
+        this->_TNs[this->S_loc].set_rowrank_(1);
         auto out = linalg::Svd(this->_TNs[this->S_loc]);
         auto s = out[0];
         auto u = out[1];
@@ -257,7 +274,9 @@ namespace cytnx {
         // boundary:
         if (this->S_loc != 0) {
           this->_TNs[this->S_loc - 1] = Contract(this->_TNs[this->S_loc - 1], Contract(u, s));
+          this->_TNs[this->S_loc - 1].relabel_(_site_labels(this->S_loc - 1));
         }
+        this->_TNs[this->S_loc].relabel_(_site_labels(this->S_loc));
         this->S_loc -= 1;
       }
     }
