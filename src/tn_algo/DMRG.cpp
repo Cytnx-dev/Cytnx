@@ -33,8 +33,8 @@ namespace cytnx {
         UniTensor &M2 = functArgs[2];
         UniTensor &R = functArgs[3];
 
-        this->anet.FromString({"psi: -1,-2;-3,-4", "L: ;-5,-1,0", "R: ;-7,-4,3", "M1: ;-5,-6,-2,1",
-                               "M2: ;-6,-7,-3,2", "TOUT: 0,1;2,3"});
+        this->anet.FromString({"psi: -1,-2,-3,-4", "L: -5,-1,0", "R: -7,-4,3", "M1: -5,-6,-2,1",
+                               "M2: -6,-7,-3,2", "TOUT: 0,1;2,3"});
         this->anet.PutUniTensor("M2", M2);
         this->anet.PutUniTensors({"L", "M1", "R"}, {L, M1, R});
 
@@ -47,7 +47,7 @@ namespace cytnx {
         auto lbls = v.labels();
 
         this->anet.PutUniTensor("psi", v);
-        UniTensor out = this->anet.Launch(true);  // get_block_ without copy
+        UniTensor out = this->anet.Launch();  // get_block_ without copy
 
         // shifted ortho state:
         for (cytnx_int64 ir = 0; ir < this->ortho_mps.size(); ir++) {
@@ -80,8 +80,8 @@ namespace cytnx {
 
         std::vector<cytnx_int64> pshape = vec_cast<cytnx_uint64, cytnx_int64>(
           {L.shape()[1], M1.shape()[2], M2.shape()[2], R.shape()[1]});
-        this->anet.FromString({"psi: ;-1,-2,-3,-4", "L: ;-5,-1,0", "R: ;-7,-4,3", "M1: ;-5,-6,-2,1",
-                               "M2: ;-6,-7,-3,2", "TOUT: ;0,1,2,3"});
+        this->anet.FromString({"psi: -1,-2,-3,-4", "L: -5,-1,0", "R: -7,-4,3", "M1: -5,-6,-2,1",
+                               "M2: -6,-7,-3,2", "TOUT: ;0,1,2,3"});
         this->anet.PutUniTensor("M2", M2);
         this->anet.PutUniTensors({"L", "M1", "R"}, {L, M1, R});
 
@@ -97,7 +97,7 @@ namespace cytnx {
         auto psi_u = UniTensor(v_, false, 0);  // ## share memory, no copy
         psi_u.reshape_(this->shapes);
         this->anet.PutUniTensor("psi", psi_u);
-        Tensor out = this->anet.Launch(true).get_block_();  // get_block_ without copy
+        Tensor out = this->anet.Launch().get_block_();  // get_block_ without copy
         out.flatten_();  // only change meta, without copy.
 
         // shifted ortho state:
@@ -137,6 +137,16 @@ namespace cytnx {
 
     //----------------------------
 
+    // Canonical per-site MPS labels (see RegularMPS::Init): site k carries
+    // {2k, 2k+1, 2k+2}, so neighbouring sites share their virtual-bond label.
+    // Restoring these after each Svd_truncate keeps the chain consistent and
+    // stops linalg::Svd's fixed "_aux_L"/"_aux_R" bond labels from surviving
+    // into the next decomposition, where the reused label would collide and
+    // abort the sweep with a duplicated-label error (issue #920).
+    static std::vector<std::string> mps_site_labels(const cytnx_int64 &k) {
+      return {to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)};
+    }
+
     void DMRG_impl::initialize() {
       // initialize everything
       // 1. setting env:
@@ -168,18 +178,15 @@ namespace cytnx {
       this->LR.back() = R0;
       this->mps.Into_Lortho();
 
+      // anet = cytnx.Network("L_AMAH.net")
+      auto Lnet = Network();
+      Lnet.FromString(
+        {"L: -2,-1,-3", "A: -1,-4,1", "M: -2,0,-4,-5", "A_Conj: -3,-5,2", "TOUT: ;0,1,2"});
       for (int p = 0; p < this->mps.size() - 1; p++) {
-        // this->mps.S_mvright();
-        // anet = cytnx.Network("L_AMAH.net")
-        // anet.PutUniTensors(["L","A","A_Conj","M"],[self.LR[p],self.mps.A[p],self.mps.A[p].Conj(),self.mpo.get_op(p)],is_clone=False);
-
-        // hard coded the network:
-        auto Lenv = this->LR[p].relabel({"-2", "-1", "-3"});
-        auto tA = this->mps.data()[p].relabel({"-1", "-4", "1"});
-        auto tAc = this->mps.data()[p].Conj();
-        tAc.relabel_({"-3", "-5", "2"});
-        auto M = this->mpo.get_op(p).relabel({"-2", "0", "-4", "-5"});
-        this->LR[p + 1] = Network::Contract({Lenv, tA, tAc, M}, ";0,1,2").Launch(true);
+        Lnet.PutUniTensors(
+          {"L", "A", "A_Conj", "M"},
+          {this->LR[p], this->mps.data()[p], this->mps.data()[p].Conj(), this->mpo.get_op(p)});
+        this->LR[p + 1] = Lnet.Launch();
       }
       // this->mps.S_mvright();
 
@@ -204,13 +211,13 @@ namespace cytnx {
 
         // anet = cytnx.Network("hL_AMAH.net")
         auto anet = Network();
-        anet.FromString({"hL: ;-1,-2", "Av: -1,-4;1", "Ap: -2,-4;2", "TOUT: ;1,2"});
+        anet.FromString({"hL: -1,-2", "Av: -1,-4,1", "Ap: -2,-4,2", "TOUT: ;1,2"});
         for (cytnx_int64 p = 0; p < this->mps.size() - 1; p++) {
           // anet.PutUniTensors(["hL","Av","Ap"],[hLR[p],self.mps.A[p],omps.A[p].Conj()],is_clone=False);
 
           anet.PutUniTensors({"hL", "Av", "Ap"},
                              {hLR[p], this->mps.data()[p], omps.data()[p].Conj()});
-          hLR[p + 1] = anet.Launch(true);
+          hLR[p + 1] = anet.Launch();
         }
       }
 
@@ -271,17 +278,17 @@ namespace cytnx {
         // anet = cytnx.Network("hL_AA_hR.net");
         auto anet = Network();
         anet.FromString({
-          "hL: ;-1,1",
-          "psi: ;1,2,3,4",
-          "hR: ;-2,4",
+          "hL: -1,1",
+          "psi: 1,2,3,4",
+          "hR: -2,4",
           "TOUT: ;-1,2,3,-2",
         });
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
-          opsi.set_rowrank(0);
+          opsi.set_rowrank_(0);
           anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
-          auto out = anet.Launch(true).get_block_();
+          auto out = anet.Launch().get_block_();
           omps.push_back(out);
           omps.back().flatten_();
         }
@@ -302,42 +309,47 @@ namespace cytnx {
         auto s = outU[0];
         this->mps.data()[p] = outU[1];
         this->mps.data()[p + 1] = outU[2];
+        // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
+        // survive into the next site's decomposition (issue #920).
+        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
         s.relabel_(slabel);
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
+        this->mps.data()[p].relabel_(mps_site_labels(p));
         this->mps.S_loc() = p;
 
         // update LR from right to left:
         // anet = cytnx.Network("R_AMAH.net")
         anet.FromString(
-          {"R: ;-2,-1,-3", "B: 1;-4,-1", "M: ;0,-2,-4,-5", "B_Conj: 2;-5,-3", "TOUT: ;0,1,2"});
+          {"R: -2,-1,-3", "B: 1,-4,-1", "M: 0,-2,-4,-5", "B_Conj: 2,-5,-3", "TOUT: ;0,1,2"});
 
         anet.PutUniTensors({"R", "B", "M", "B_Conj"},
                            {this->LR[p + 2], this->mps.data()[p + 1], this->mpo.get_op(p + 1),
                             this->mps.data()[p + 1].Conj()});
-        this->LR[p + 1] = anet.Launch(true);
+        this->LR[p + 1] = anet.Launch();
 
         // update hLR from right to left for excited states:
         // anet = cytnx.Network("hR_AMAH.net")
-        anet.FromString({"hR: ;-1,-2", "Bv: 1;-4,-1", "Bp: 2,-4;-2", "TOUT: ;1,2"});
+        anet.FromString({"hR: -1,-2", "Bv: 1,-4,-1", "Bp: 2,-4,-2", "TOUT: ;1,2"});
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
           anet.PutUniTensors({"hR", "Bv", "Bp"}, {this->hLRs[ip][p + 2], this->mps.data()[p + 1],
                                                   omps.data()[p + 1].Conj()});
-          this->hLRs[ip][p + 1] = anet.Launch(true);
+          this->hLRs[ip][p + 1] = anet.Launch();
         }
         // print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
         if (verbose) std::cout << "Energy: " << std::setprecision(13) << Entemp << std::endl;
 
       }  // r->l
 
-      this->mps.data()[0].set_rowrank(1);
+      this->mps.data()[0].set_rowrank_(1);
       auto tout = linalg::Svd(this->mps.data()[0], true);
       this->mps.data()[0] = tout[2];
+      this->mps.data()[0].relabel_(mps_site_labels(0));
       this->mps.S_loc() = -1;
 
       // a.2 Optimize from left-to-right:
@@ -386,17 +398,17 @@ namespace cytnx {
         // anet = cytnx.Network("hL_AA_hR.net");
         auto anet = Network();
         anet.FromString({
-          "hL: ;-1,1",
-          "psi: ;1,2,3,4",
-          "hR: ;-2,4",
+          "hL: -1,1",
+          "psi: 1,2,3,4",
+          "hR: -2,4",
           "TOUT: ;-1,2,3,-2",
         });
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
-          opsi.set_rowrank(0);
+          opsi.set_rowrank_(0);
           anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
-          omps.push_back(anet.Launch(true).get_block_());
+          omps.push_back(anet.Launch().get_block_());
           omps.back().flatten_();
         }
 
@@ -416,6 +428,9 @@ namespace cytnx {
         this->mps.data()[p] = outU[1];
         this->mps.data()[p + 1] = outU[2];
         // s,self.mps.A[p],self.mps.A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
+        // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
+        // survive into the next site's decomposition (issue #920).
+        this->mps.data()[p].relabel_(mps_site_labels(p));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
@@ -423,33 +438,35 @@ namespace cytnx {
 
         this->mps.data()[p + 1] =
           Contract(s, this->mps.data()[p + 1]);  // absorb s into next neighbor.
+        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
         this->mps.S_loc() = p + 1;
 
         // anet = cytnx.Network("L_AMAH.net");
         anet.FromString(
-          {"L: ;-2,-1,-3", "A: -1,-4;1", "M: ;-2,0,-4,-5", "A_Conj: -3,-5;2", "TOUT: ;0,1,2"});
+          {"L: -2,-1,-3", "A: -1,-4,1", "M: -2,0,-4,-5", "A_Conj: -3,-5,2", "TOUT: ;0,1,2"});
 
         anet.PutUniTensors(
           {"L", "A", "A_Conj", "M"},
           {this->LR[p], this->mps.data()[p], this->mps.data()[p].Conj(), this->mpo.get_op(p)});
-        this->LR[p + 1] = anet.Launch(true);
+        this->LR[p + 1] = anet.Launch();
 
         // update hLR when calculate excited state:
         // anet = cytnx.Network("hL_AMAH.net");
-        anet.FromString({"hL: ;-1,-2", "Av: -1,-4;1", "Ap: -2,-4;2", "TOUT: ;1,2"});
+        anet.FromString({"hL: -1,-2", "Av: -1,-4,1", "Ap: -2,-4,2", "TOUT: ;1,2"});
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
           anet.PutUniTensors({"hL", "Av", "Ap"},
                              {this->hLRs[ip][p], this->mps.data()[p], omps.data()[p].Conj()});
-          this->hLRs[ip][p + 1] = anet.Launch(true);
+          this->hLRs[ip][p + 1] = anet.Launch();
         }
         // print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
         if (verbose) std::cout << "Energy: " << std::setprecision(13) << Entemp << std::endl;
       }
 
-      this->mps.data().back().set_rowrank(2);
+      this->mps.data().back().set_rowrank_(2);
       tout = linalg::Svd(this->mps.data().back(), true);  // last one.
       this->mps.data().back() = tout[1];
+      this->mps.data().back().relabel_(mps_site_labels(this->mps.data().size() - 1));
       this->mps.S_loc() = this->mps.data().size();
 
       return Entemp;
@@ -506,22 +523,22 @@ namespace cytnx {
         // anet = cytnx.Network("hL_AA_hR.net");
         auto anet = Network();
         anet.FromString({
-          "hL: ;-1,1",
-          "psi: ;1,2,3,4",
-          "hR: ;-2,4",
+          "hL: -1,1",
+          "psi: 1,2,3,4",
+          "hR: -2,4",
           "TOUT: -1,2;3,-2",
         });
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
-          opsi.set_rowrank(0);
+          opsi.set_rowrank_(0);
           anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
-          auto out = anet.Launch(true);
+          auto out = anet.Launch();
           omps.push_back(out);
           // omps.back().flatten_();
         }
 
-        psi.set_rowrank(2);
+        psi.set_rowrank_(2);
         auto out = optimize_psi_new(
           psi, {this->LR[p], this->mpo.get_op(p), this->mpo.get_op(p + 1), this->LR[p + 2]}, maxit,
           krydim, omps, this->weight);
@@ -539,42 +556,47 @@ namespace cytnx {
         auto s = outU[0];
         this->mps.data()[p] = outU[1];
         this->mps.data()[p + 1] = outU[2];
+        // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
+        // survive into the next site's decomposition (issue #920).
+        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
         s.relabel_(slabel);
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
+        this->mps.data()[p].relabel_(mps_site_labels(p));
         this->mps.S_loc() = p;
 
         // update LR from right to left:
         // anet = cytnx.Network("R_AMAH.net")
         anet.FromString(
-          {"R: ;-2,-1,-3", "B: 1;-4,-1", "M: ;0,-2,-4,-5", "B_Conj: 2;-5,-3", "TOUT: ;0,1,2"});
+          {"R: -2,-1,-3", "B: 1,-4,-1", "M: 0,-2,-4,-5", "B_Conj: 2,-5,-3", "TOUT: ;0,1,2"});
 
         anet.PutUniTensors({"R", "B", "M", "B_Conj"},
                            {this->LR[p + 2], this->mps.data()[p + 1], this->mpo.get_op(p + 1),
                             this->mps.data()[p + 1].Conj()});
-        this->LR[p + 1] = anet.Launch(true);
+        this->LR[p + 1] = anet.Launch();
 
         // update hLR from right to left for excited states:
         // anet = cytnx.Network("hR_AMAH.net")
-        anet.FromString({"hR: ;-1,-2", "Bv: 1;-4,-1", "Bp: 2,-4;-2", "TOUT: ;1,2"});
+        anet.FromString({"hR: -1,-2", "Bv: 1,-4,-1", "Bp: 2,-4,-2", "TOUT: ;1,2"});
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
           anet.PutUniTensors({"hR", "Bv", "Bp"}, {this->hLRs[ip][p + 2], this->mps.data()[p + 1],
                                                   omps.data()[p + 1].Conj()});
-          this->hLRs[ip][p + 1] = anet.Launch(true);
+          this->hLRs[ip][p + 1] = anet.Launch();
         }
         // print('Sweep[r->l]: %d/%d, Loc:%d,Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
         if (verbose) std::cout << "Energy: " << std::setprecision(13) << Entemp << std::endl;
 
       }  // r->l
 
-      this->mps.data()[0].set_rowrank(1);
+      this->mps.data()[0].set_rowrank_(1);
       auto tout = linalg::Svd(this->mps.data()[0], true);
       this->mps.data()[0] = tout[2];
+      this->mps.data()[0].relabel_(mps_site_labels(0));
       this->mps.S_loc() = -1;
 
       // a.2 Optimize from left-to-right:
@@ -622,21 +644,21 @@ namespace cytnx {
         // anet = cytnx.Network("hL_AA_hR.net");
         auto anet = Network();
         anet.FromString({
-          "hL: ;-1,1",
-          "psi: ;1,2,3,4",
-          "hR: ;-2,4",
+          "hL: -1,1",
+          "psi: 1,2,3,4",
+          "hR: -2,4",
           "TOUT: -1,2;3,-2",
         });
 
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
-          opsi.set_rowrank(0);
+          opsi.set_rowrank_(0);
           anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
-          omps.push_back(anet.Launch(true));
+          omps.push_back(anet.Launch());
           // omps.back().flatten_();
         }
 
-        psi.set_rowrank(2);
+        psi.set_rowrank_(2);
         auto out = optimize_psi_new(
           psi, {this->LR[p], this->mpo.get_op(p), this->mpo.get_op(p + 1), this->LR[p + 2]}, maxit,
           krydim, omps, this->weight);
@@ -651,6 +673,9 @@ namespace cytnx {
         this->mps.data()[p] = outU[1];
         this->mps.data()[p + 1] = outU[2];
         // s,self.mps.A[p],self.mps.A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
+        // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
+        // survive into the next site's decomposition (issue #920).
+        this->mps.data()[p].relabel_(mps_site_labels(p));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
@@ -658,33 +683,35 @@ namespace cytnx {
 
         this->mps.data()[p + 1] =
           Contract(s, this->mps.data()[p + 1]);  // absorb s into next neighbor.
+        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
         this->mps.S_loc() = p + 1;
 
         // anet = cytnx.Network("L_AMAH.net");
         anet.FromString(
-          {"L: ;-2,-1,-3", "A: -1,-4;1", "M: ;-2,0,-4,-5", "A_Conj: -3,-5;2", "TOUT: ;0,1,2"});
+          {"L: -2,-1,-3", "A: -1,-4,1", "M: -2,0,-4,-5", "A_Conj: -3,-5,2", "TOUT: ;0,1,2"});
 
         anet.PutUniTensors(
           {"L", "A", "A_Conj", "M"},
           {this->LR[p], this->mps.data()[p], this->mps.data()[p].Conj(), this->mpo.get_op(p)});
-        this->LR[p + 1] = anet.Launch(true);
+        this->LR[p + 1] = anet.Launch();
 
         // update hLR when calculate excited state:
         // anet = cytnx.Network("hL_AMAH.net");
-        anet.FromString({"hL: ;-1,-2", "Av: -1,-4;1", "Ap: -2,-4;2", "TOUT: ;1,2"});
+        anet.FromString({"hL: -1,-2", "Av: -1,-4,1", "Ap: -2,-4,2", "TOUT: ;1,2"});
         for (cytnx_int64 ip = 0; ip < this->ortho_mps.size(); ip++) {
           auto omps = this->ortho_mps[ip];
           anet.PutUniTensors({"hL", "Av", "Ap"},
                              {this->hLRs[ip][p], this->mps.data()[p], omps.data()[p].Conj()});
-          this->hLRs[ip][p + 1] = anet.Launch(true);
+          this->hLRs[ip][p + 1] = anet.Launch();
         }
         // print('Sweep[l->r]: %d of %d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
         if (verbose) std::cout << "Energy: " << std::setprecision(13) << Entemp << std::endl;
       }
 
-      this->mps.data().back().set_rowrank(2);
+      this->mps.data().back().set_rowrank_(2);
       tout = linalg::Svd(this->mps.data().back(), true);  // last one.
       this->mps.data().back() = tout[1];
+      this->mps.data().back().relabel_(mps_site_labels(this->mps.data().size() - 1));
       this->mps.S_loc() = this->mps.data().size();
 
       return Entemp;
