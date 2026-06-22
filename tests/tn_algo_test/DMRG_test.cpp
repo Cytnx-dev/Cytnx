@@ -1,4 +1,6 @@
 #include <cmath>
+#include <iostream>
+#include <sstream>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -135,6 +137,34 @@ namespace {
 
     double exact = TfimTest::ExactGroundEnergy(num_sites, coupling, field);
     EXPECT_NEAR(energy, exact, 1e-6) << "DMRG energy " << energy << " vs exact " << exact;
+  }
+
+  // sweep() and sweepv2() guard their per-step progress logging behind
+  // `if (verbose)`. Every other test passes verbose=false, leaving those
+  // branches untaken. Drive a tiny system with verbose=true to exercise them;
+  // std::cout is redirected to a local buffer so the logging does not pollute
+  // the test output.
+  TEST(DMRG, VerboseLoggingRuns) {
+    int num_sites = 3;
+    cytnx::tn_algo::MPO mpo = BuildTfimMpo(num_sites, 1.0, 0.5);
+
+    cytnx::tn_algo::MPS mps_sweep(num_sites, 2, 8);
+    cytnx::tn_algo::DMRG dmrg_sweep(mpo, mps_sweep);
+    dmrg_sweep.initialize();
+
+    cytnx::tn_algo::MPS mps_sweepv2(num_sites, 2, 8);
+    cytnx::tn_algo::DMRG dmrg_sweepv2(mpo, mps_sweepv2);
+    dmrg_sweepv2.initialize();
+
+    std::ostringstream sink;
+    std::streambuf *saved_cout = std::cout.rdbuf(sink.rdbuf());
+    EXPECT_NO_THROW({
+      for (int sweep = 0; sweep < 2; sweep++) dmrg_sweep.sweep(/*verbose=*/true, 100, 4);
+      for (int sweep = 0; sweep < 2; sweep++) dmrg_sweepv2.sweepv2(/*verbose=*/true, 100, 4);
+    });
+    std::cout.rdbuf(saved_cout);
+
+    EXPECT_FALSE(sink.str().empty()) << "verbose=true produced no progress logging";
   }
 
 }  // namespace
