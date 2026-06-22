@@ -137,16 +137,6 @@ namespace cytnx {
 
     //----------------------------
 
-    // Canonical per-site MPS labels (see RegularMPS::Init): site k carries
-    // {2k, 2k+1, 2k+2}, so neighbouring sites share their virtual-bond label.
-    // Restoring these after each Svd_truncate keeps the chain consistent and
-    // stops linalg::Svd's fixed "_aux_L"/"_aux_R" bond labels from surviving
-    // into the next decomposition, where the reused label would collide and
-    // abort the sweep with a duplicated-label error (issue #920).
-    static std::vector<std::string> mps_site_labels(const cytnx_int64 &k) {
-      return {to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)};
-    }
-
     void DMRG_impl::initialize() {
       // initialize everything
       // 1. setting env:
@@ -178,8 +168,7 @@ namespace cytnx {
       this->LR.back() = R0;
       this->mps.Into_Lortho();
 
-      // anet = cytnx.Network("L_AMAH.net")
-      auto Lnet = Network();
+      Network Lnet;
       Lnet.FromString(
         {"L: -2,-1,-3", "A: -1,-4,1", "M: -2,0,-4,-5", "A_Conj: -3,-5,2", "TOUT: ;0,1,2"});
       for (int p = 0; p < this->mps.size() - 1; p++) {
@@ -288,7 +277,7 @@ namespace cytnx {
           auto opsi = Contract(this->ortho_mps[ip].data()[p], this->ortho_mps[ip].data()[p + 1]);
           opsi.set_rowrank_(0);
           anet.PutUniTensors({"hL", "psi", "hR"}, {this->hLRs[ip][p], opsi, this->hLRs[ip][p + 2]});
-          auto out = anet.Launch().get_block_();
+          Tensor out = anet.Launch().get_block_();
           omps.push_back(out);
           omps.back().flatten_();
         }
@@ -311,14 +300,14 @@ namespace cytnx {
         this->mps.data()[p + 1] = outU[2];
         // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
         // survive into the next site's decomposition (issue #920).
-        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
+        this->mps.data()[p + 1].relabel_(CanonicalSiteLabels(p + 1));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
         s.relabel_(slabel);
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
-        this->mps.data()[p].relabel_(mps_site_labels(p));
+        this->mps.data()[p].relabel_(CanonicalSiteLabels(p));
         this->mps.S_loc() = p;
 
         // update LR from right to left:
@@ -349,7 +338,7 @@ namespace cytnx {
       this->mps.data()[0].set_rowrank_(1);
       auto tout = linalg::Svd(this->mps.data()[0], true);
       this->mps.data()[0] = tout[2];
-      this->mps.data()[0].relabel_(mps_site_labels(0));
+      this->mps.data()[0].relabel_(CanonicalSiteLabels(0));
       this->mps.S_loc() = -1;
 
       // a.2 Optimize from left-to-right:
@@ -430,7 +419,7 @@ namespace cytnx {
         // s,self.mps.A[p],self.mps.A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
         // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
         // survive into the next site's decomposition (issue #920).
-        this->mps.data()[p].relabel_(mps_site_labels(p));
+        this->mps.data()[p].relabel_(CanonicalSiteLabels(p));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
@@ -438,7 +427,7 @@ namespace cytnx {
 
         this->mps.data()[p + 1] =
           Contract(s, this->mps.data()[p + 1]);  // absorb s into next neighbor.
-        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
+        this->mps.data()[p + 1].relabel_(CanonicalSiteLabels(p + 1));
         this->mps.S_loc() = p + 1;
 
         // anet = cytnx.Network("L_AMAH.net");
@@ -466,7 +455,7 @@ namespace cytnx {
       this->mps.data().back().set_rowrank_(2);
       tout = linalg::Svd(this->mps.data().back(), true);  // last one.
       this->mps.data().back() = tout[1];
-      this->mps.data().back().relabel_(mps_site_labels(this->mps.data().size() - 1));
+      this->mps.data().back().relabel_(CanonicalSiteLabels(this->mps.data().size() - 1));
       this->mps.S_loc() = this->mps.data().size();
 
       return Entemp;
@@ -558,14 +547,14 @@ namespace cytnx {
         this->mps.data()[p + 1] = outU[2];
         // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
         // survive into the next site's decomposition (issue #920).
-        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
+        this->mps.data()[p + 1].relabel_(CanonicalSiteLabels(p + 1));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
         s.relabel_(slabel);
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
-        this->mps.data()[p].relabel_(mps_site_labels(p));
+        this->mps.data()[p].relabel_(CanonicalSiteLabels(p));
         this->mps.S_loc() = p;
 
         // update LR from right to left:
@@ -596,7 +585,7 @@ namespace cytnx {
       this->mps.data()[0].set_rowrank_(1);
       auto tout = linalg::Svd(this->mps.data()[0], true);
       this->mps.data()[0] = tout[2];
-      this->mps.data()[0].relabel_(mps_site_labels(0));
+      this->mps.data()[0].relabel_(CanonicalSiteLabels(0));
       this->mps.S_loc() = -1;
 
       // a.2 Optimize from left-to-right:
@@ -675,7 +664,7 @@ namespace cytnx {
         // s,self.mps.A[p],self.mps.A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
         // restore canonical labels so the Svd "_aux_L"/"_aux_R" bonds do not
         // survive into the next site's decomposition (issue #920).
-        this->mps.data()[p].relabel_(mps_site_labels(p));
+        this->mps.data()[p].relabel_(CanonicalSiteLabels(p));
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
@@ -683,7 +672,7 @@ namespace cytnx {
 
         this->mps.data()[p + 1] =
           Contract(s, this->mps.data()[p + 1]);  // absorb s into next neighbor.
-        this->mps.data()[p + 1].relabel_(mps_site_labels(p + 1));
+        this->mps.data()[p + 1].relabel_(CanonicalSiteLabels(p + 1));
         this->mps.S_loc() = p + 1;
 
         // anet = cytnx.Network("L_AMAH.net");
@@ -711,7 +700,7 @@ namespace cytnx {
       this->mps.data().back().set_rowrank_(2);
       tout = linalg::Svd(this->mps.data().back(), true);  // last one.
       this->mps.data().back() = tout[1];
-      this->mps.data().back().relabel_(mps_site_labels(this->mps.data().size() - 1));
+      this->mps.data().back().relabel_(CanonicalSiteLabels(this->mps.data().size() - 1));
       this->mps.S_loc() = this->mps.data().size();
 
       return Entemp;
