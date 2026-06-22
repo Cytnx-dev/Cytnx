@@ -49,9 +49,9 @@ namespace TfimTest {
     auto Z = PauliZ();
     auto X = PauliX();
     auto W = zeros({3, 3, 2, 2});
-    auto put = [&](int a, int b, const Tensor& op) {
-      for (int s = 0; s < 2; s++)
-        for (int t = 0; t < 2; t++) W.at<double>({a, b, s, t}) = op.at<double>({s, t});
+    auto put = [&](cytnx_uint64 a, cytnx_uint64 b, const Tensor& op) {
+      for (cytnx_uint64 s = 0; s < 2; s++)
+        for (cytnx_uint64 t = 0; t < 2; t++) W.at<double>({a, b, s, t}) = op.at<double>({s, t});
     };
     put(0, 0, I);
     put(0, 1, Z);
