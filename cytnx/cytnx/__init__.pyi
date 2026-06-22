@@ -4617,33 +4617,33 @@ def Contract(TNs: collections.abc.Sequence[UniTensor], order: str = '', optimal:
     ...
 def Contracts(TNs: collections.abc.Sequence[UniTensor], order: str = '', optimal: bool = True) -> UniTensor:
     ...
-def _from_numpy(arg0: typing_extensions.Buffer) -> typing.Any:
+def _from_numpy(arg0: typing_extensions.Buffer) -> Tensor:
     ...
 @typing.overload
-def arange(size: typing.SupportsInt | typing.SupportsIndex) -> typing.Any:
+def arange(size: typing.SupportsInt | typing.SupportsIndex) -> Tensor:
     ...
 @typing.overload
-def arange(start: typing.SupportsFloat | typing.SupportsIndex, end: typing.SupportsFloat | typing.SupportsIndex, step: typing.SupportsFloat | typing.SupportsIndex = 1.0, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def arange(start: typing.SupportsFloat | typing.SupportsIndex, end: typing.SupportsFloat | typing.SupportsIndex, step: typing.SupportsFloat | typing.SupportsIndex = 1.0, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
-def eye(Dim: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def eye(Dim: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
-def identity(Dim: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def identity(Dim: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
-def linspace(start: typing.SupportsFloat | typing.SupportsIndex, end: typing.SupportsFloat | typing.SupportsIndex, Nelem: typing.SupportsInt | typing.SupportsIndex, endpoint: bool = True, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def linspace(start: typing.SupportsFloat | typing.SupportsIndex, end: typing.SupportsFloat | typing.SupportsIndex, Nelem: typing.SupportsInt | typing.SupportsIndex, endpoint: bool = True, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
 def ncon(tensor_list_in: collections.abc.Sequence[UniTensor], connect_list_in: collections.abc.Sequence[collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex]], check_network: bool = False, optimize: bool = False, cont_order: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex] = [], out_labels: collections.abc.Sequence[str] = []) -> UniTensor:
     ...
 @typing.overload
-def ones(size: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def ones(size: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
 @typing.overload
-def ones(size: typing.Any, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def ones(size: typing.Any, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
 @typing.overload
-def zeros(size: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def zeros(size: typing.SupportsInt | typing.SupportsIndex, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
 @typing.overload
-def zeros(size: typing.Any, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> typing.Any:
+def zeros(size: typing.Any, dtype: typing.SupportsInt | typing.SupportsIndex = 3, device: typing.SupportsInt | typing.SupportsIndex = -1) -> Tensor:
     ...
 BD_BRA: bondType  # value = <bondType.BD_BRA: 1>
 BD_IN: bondType  # value = <bondType.BD_KET: -1>
