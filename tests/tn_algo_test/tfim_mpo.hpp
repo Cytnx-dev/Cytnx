@@ -1,6 +1,7 @@
 #ifndef CYTNX_TESTS_TN_ALGO_TFIM_MPO_H_
 #define CYTNX_TESTS_TN_ALGO_TFIM_MPO_H_
 
+#include <algorithm>
 #include <vector>
 #include <string>
 
@@ -90,15 +91,27 @@ namespace TfimTest {
     return hamiltonian;
   }
 
-  // Lowest eigenvalue of the dense Hamiltonian (exact ground-state energy).
-  inline double ExactGroundEnergy(int num_sites, double coupling, double field) {
+  // Eigenvalues of the dense Hamiltonian, sorted from lowest to highest.
+  inline std::vector<double> SortedEigenvalues(int num_sites, double coupling, double field) {
     cytnx::Tensor hamiltonian = DenseHamiltonian(num_sites, coupling, field);
     std::vector<cytnx::Tensor> eigh = cytnx::linalg::Eigh(hamiltonian, false);  // eigenvalues only
     cytnx::Tensor eigenvalues = eigh[0];
-    double ground_energy = eigenvalues.at<double>({0});
-    for (cytnx::cytnx_uint64 i = 1; i < eigenvalues.shape()[0]; i++)
-      ground_energy = std::min(ground_energy, eigenvalues.at<double>({i}));
-    return ground_energy;
+    std::vector<double> values(eigenvalues.shape()[0]);
+    for (cytnx::cytnx_uint64 i = 0; i < eigenvalues.shape()[0]; i++)
+      values[i] = eigenvalues.at<double>({i});
+    std::sort(values.begin(), values.end());
+    return values;
+  }
+
+  // Lowest eigenvalue of the dense Hamiltonian (exact ground-state energy).
+  inline double ExactGroundEnergy(int num_sites, double coupling, double field) {
+    return SortedEigenvalues(num_sites, coupling, field).front();
+  }
+
+  // Second-lowest eigenvalue of the dense Hamiltonian (exact first-excited-state
+  // energy).
+  inline double ExactFirstExcitedEnergy(int num_sites, double coupling, double field) {
+    return SortedEigenvalues(num_sites, coupling, field).at(1);
   }
 
 }  // namespace TfimTest
