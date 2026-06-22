@@ -6,9 +6,8 @@
 
 using namespace cytnx;
 using namespace cytnx::tn_algo;
-using namespace testing;
 
-namespace MPSTest {
+namespace {
 
   // Contract a rank-3 MPS site tensor A (shape [left, phys, right], rowrank 2)
   // with its own conjugate over the (left, phys) indices. For a left-orthonormal
@@ -156,4 +155,4 @@ namespace MPSTest {
     EXPECT_NEAR(double(mps.norm()), n_before, 1e-12);
   }
 
-}  // namespace MPSTest
+}  // namespace
