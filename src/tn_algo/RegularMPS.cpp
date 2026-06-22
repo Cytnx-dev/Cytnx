@@ -50,8 +50,10 @@ namespace cytnx {
       // virtual bond; it is seeded as the 1x1 identity on the trivial left
       // boundary. For each rank-3 site tensor [left, phys, right] the ket leg
       // contracts onto "a", the bra leg onto "b", and the physical legs onto
-      // each other, leaving the next virtual bond open as the new {a, b}.
-      UniTensor L = UniTensor(ones({1, 1}), false, 1).relabel({"a", "b"});
+      // each other, leaving the next virtual bond open as the new {a, b}. Seed
+      // L on the same device as the MPS so the contractions stay on-device.
+      int device = this->_TNs.empty() ? Device.cpu : this->_TNs[0].device();
+      UniTensor L = UniTensor(ones({1, 1}, Type.Double, device), false, 1).relabel({"a", "b"});
       for (auto Ai : this->_TNs) {
         auto tA = Ai.relabel({"a", "p", "r"});
         auto tAc = Ai.Conj().relabel({"b", "p", "rc"});
