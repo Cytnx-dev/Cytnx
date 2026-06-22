@@ -6,14 +6,11 @@
 #include "cytnx.hpp"
 #include "tn_algo_test/tfim_mpo.hpp"
 
-using namespace cytnx;
-using namespace cytnx::tn_algo;
-
 namespace {
 
-  MPO BuildTfimMpo(int num_sites, double coupling, double field) {
-    MPO mpo;
-    UniTensor bulk = TfimTest::MakeMpoTensor(coupling, field);
+  cytnx::tn_algo::MPO BuildTfimMpo(int num_sites, double coupling, double field) {
+    cytnx::tn_algo::MPO mpo;
+    cytnx::UniTensor bulk = TfimTest::MakeMpoTensor(coupling, field);
     for (int site = 0; site < num_sites; site++) mpo.append(bulk);
     return mpo;
   }
@@ -25,12 +22,12 @@ namespace {
   TEST(DMRG, GroundStateEnergyMatchesExact) {
     int num_sites = 6;
     double coupling = 1.0, field = 0.5;
-    cytnx_uint64 bond_dim = 16;
+    cytnx::cytnx_uint64 bond_dim = 16;
 
-    MPO mpo = BuildTfimMpo(num_sites, coupling, field);
-    MPS mps(num_sites, 2, bond_dim);
+    cytnx::tn_algo::MPO mpo = BuildTfimMpo(num_sites, coupling, field);
+    cytnx::tn_algo::MPS mps(num_sites, 2, bond_dim);
 
-    DMRG dmrg(mpo, mps);
+    cytnx::tn_algo::DMRG dmrg(mpo, mps);
     dmrg.initialize();
 
     double energy = 0.0;
@@ -46,12 +43,12 @@ namespace {
   TEST(DMRG, GroundStateEnergyMatchesExactV2) {
     int num_sites = 6;
     double coupling = 1.0, field = 0.5;
-    cytnx_uint64 bond_dim = 16;
+    cytnx::cytnx_uint64 bond_dim = 16;
 
-    MPO mpo = BuildTfimMpo(num_sites, coupling, field);
-    MPS mps(num_sites, 2, bond_dim);
+    cytnx::tn_algo::MPO mpo = BuildTfimMpo(num_sites, coupling, field);
+    cytnx::tn_algo::MPS mps(num_sites, 2, bond_dim);
 
-    DMRG dmrg(mpo, mps);
+    cytnx::tn_algo::DMRG dmrg(mpo, mps);
     dmrg.initialize();
 
     double energy = 0.0;
@@ -68,12 +65,12 @@ namespace {
   TEST(DMRG, GroundStateEnergyCriticalPoint) {
     int num_sites = 8;
     double coupling = 1.0, field = 1.0;  // critical TFIM
-    cytnx_uint64 bond_dim = 24;
+    cytnx::cytnx_uint64 bond_dim = 24;
 
-    MPO mpo = BuildTfimMpo(num_sites, coupling, field);
-    MPS mps(num_sites, 2, bond_dim);
+    cytnx::tn_algo::MPO mpo = BuildTfimMpo(num_sites, coupling, field);
+    cytnx::tn_algo::MPS mps(num_sites, 2, bond_dim);
 
-    DMRG dmrg(mpo, mps);
+    cytnx::tn_algo::DMRG dmrg(mpo, mps);
     dmrg.initialize();
 
     double energy = 0.0;

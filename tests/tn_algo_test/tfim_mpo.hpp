@@ -44,14 +44,13 @@ namespace TfimTest {
 
   // The single reusable bulk MPO tensor with legs [vL, vR, phys_out, phys_in].
   inline cytnx::UniTensor MakeMpoTensor(double coupling, double field) {
-    using namespace cytnx;
-    Tensor identity = Identity();
-    Tensor pauli_z = PauliZ();
-    Tensor pauli_x = PauliX();
-    Tensor w = zeros({3, 3, 2, 2});
-    auto put = [&](cytnx_uint64 row, cytnx_uint64 col, const Tensor& op) {
-      for (cytnx_uint64 out_index = 0; out_index < 2; out_index++)
-        for (cytnx_uint64 in_index = 0; in_index < 2; in_index++)
+    cytnx::Tensor identity = Identity();
+    cytnx::Tensor pauli_z = PauliZ();
+    cytnx::Tensor pauli_x = PauliX();
+    cytnx::Tensor w = cytnx::zeros({3, 3, 2, 2});
+    auto put = [&](cytnx::cytnx_uint64 row, cytnx::cytnx_uint64 col, const cytnx::Tensor &op) {
+      for (cytnx::cytnx_uint64 out_index = 0; out_index < 2; out_index++)
+        for (cytnx::cytnx_uint64 in_index = 0; in_index < 2; in_index++)
           w.at<double>({row, col, out_index, in_index}) = op.at<double>({out_index, in_index});
     };
     put(0, 0, identity);
@@ -59,20 +58,19 @@ namespace TfimTest {
     put(0, 2, -field * pauli_x);
     put(1, 2, -coupling * pauli_z);
     put(2, 2, identity);
-    return UniTensor(w, /*is_diag=*/false, /*rowrank=*/0);
+    return cytnx::UniTensor(w, /*is_diag=*/false, /*rowrank=*/0);
   }
 
   // Embed a per-site operator map into the full 2^num_sites dimensional Hilbert
   // space by a chain of Kronecker products (site 0 is the most significant index).
   inline cytnx::Tensor Embed(int num_sites,
-                             const std::vector<std::pair<int, cytnx::Tensor>>& site_operators) {
-    using namespace cytnx;
-    Tensor embedded = ones({1, 1});  // 1x1 identity seed
+                             const std::vector<std::pair<int, cytnx::Tensor>> &site_operators) {
+    cytnx::Tensor embedded = cytnx::ones({1, 1});  // 1x1 identity seed
     for (int site = 0; site < num_sites; site++) {
-      Tensor site_operator = Identity();
-      for (const auto& placement : site_operators)
+      cytnx::Tensor site_operator = Identity();
+      for (const auto &placement : site_operators)
         if (placement.first == site) site_operator = placement.second;
-      embedded = linalg::Kron(embedded, site_operator);
+      embedded = cytnx::linalg::Kron(embedded, site_operator);
     }
     return embedded;
   }
@@ -80,10 +78,9 @@ namespace TfimTest {
   // Dense 2^num_sites x 2^num_sites Hamiltonian assembled directly from Pauli
   // operators.
   inline cytnx::Tensor DenseHamiltonian(int num_sites, double coupling, double field) {
-    using namespace cytnx;
-    cytnx_uint64 dimension = 1;
+    cytnx::cytnx_uint64 dimension = 1;
     for (int site = 0; site < num_sites; site++) dimension *= 2;
-    Tensor hamiltonian = zeros({dimension, dimension});
+    cytnx::Tensor hamiltonian = cytnx::zeros({dimension, dimension});
     for (int site = 0; site + 1 < num_sites; site++) {
       hamiltonian += (-coupling) * Embed(num_sites, {{site, PauliZ()}, {site + 1, PauliZ()}});
     }
@@ -95,12 +92,11 @@ namespace TfimTest {
 
   // Lowest eigenvalue of the dense Hamiltonian (exact ground-state energy).
   inline double ExactGroundEnergy(int num_sites, double coupling, double field) {
-    using namespace cytnx;
-    Tensor hamiltonian = DenseHamiltonian(num_sites, coupling, field);
-    std::vector<Tensor> eigh = linalg::Eigh(hamiltonian, false);  // eigenvalues only
-    Tensor eigenvalues = eigh[0];
+    cytnx::Tensor hamiltonian = DenseHamiltonian(num_sites, coupling, field);
+    std::vector<cytnx::Tensor> eigh = cytnx::linalg::Eigh(hamiltonian, false);  // eigenvalues only
+    cytnx::Tensor eigenvalues = eigh[0];
     double ground_energy = eigenvalues.at<double>({0});
-    for (cytnx_uint64 i = 1; i < eigenvalues.shape()[0]; i++)
+    for (cytnx::cytnx_uint64 i = 1; i < eigenvalues.shape()[0]; i++)
       ground_energy = std::min(ground_energy, eigenvalues.at<double>({i}));
     return ground_energy;
   }
