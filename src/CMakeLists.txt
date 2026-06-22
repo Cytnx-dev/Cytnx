@@ -44,7 +44,6 @@ add_subdirectory(algo)
 add_subdirectory(stat)
 add_subdirectory(utils)
 add_subdirectory(random)
-add_subdirectory(tn_algo)
 
 if(BACKEND_TORCH)
   add_subdirectory(backend_torch)
