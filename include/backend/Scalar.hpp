@@ -2529,17 +2529,8 @@ namespace cytnx {
 
       // When used to set elems:
       Sproxy &operator=(const Scalar &rc);
-      Sproxy &operator=(const cytnx_complex128 &rc);
-      Sproxy &operator=(const cytnx_complex64 &rc);
-      Sproxy &operator=(const cytnx_double &rc);
-      Sproxy &operator=(const cytnx_float &rc);
-      Sproxy &operator=(const cytnx_uint64 &rc);
-      Sproxy &operator=(const cytnx_int64 &rc);
-      Sproxy &operator=(const cytnx_uint32 &rc);
-      Sproxy &operator=(const cytnx_int32 &rc);
-      Sproxy &operator=(const cytnx_uint16 &rc);
-      Sproxy &operator=(const cytnx_int16 &rc);
-      Sproxy &operator=(const cytnx_bool &rc);
+      template <CytnxType T>
+      Sproxy &operator=(const T &rc);
 
       Sproxy &operator=(const Sproxy &rc);
 
@@ -2562,39 +2553,11 @@ namespace cytnx {
     /// @brief default constructor
     Scalar() : _impl(new Scalar_base()){};
 
-    // init!!
-    /// @brief init a Scalar with a cytnx::cytnx_complex128
-    Scalar(const cytnx_complex128 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_complex64
-    Scalar(const cytnx_complex64 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_double
-    Scalar(const cytnx_double &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_float
-    Scalar(const cytnx_float &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_uint64
-    Scalar(const cytnx_uint64 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_int64
-    Scalar(const cytnx_int64 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_uint32
-    Scalar(const cytnx_uint32 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_int32
-    Scalar(const cytnx_int32 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_uint16
-    Scalar(const cytnx_uint16 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_int16
-    Scalar(const cytnx_int16 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
-
-    /// @brief init a Scalar with a cytnx::cytnx_bool
-    Scalar(const cytnx_bool &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    /// @brief init a Scalar with any supported cytnx element type.
+    template <CytnxType T>
+    Scalar(const T &in) : _impl(new Scalar_base()) {
+      this->Init_by_number(in);
+    }
 
     /**
      * @brief Get the max value of the Scalar with the given \p dtype.
@@ -2650,49 +2613,11 @@ namespace cytnx {
 
     // specialization of init:
     ///@cond
-    void Init_by_number(const cytnx_complex128 &in) {
+    template <CytnxType T>
+    void Init_by_number(const T &in) {
       if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new ComplexDoubleScalar(in);
-    };
-    void Init_by_number(const cytnx_complex64 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new ComplexFloatScalar(in);
-    };
-    void Init_by_number(const cytnx_double &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new DoubleScalar(in);
-    }
-    void Init_by_number(const cytnx_float &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new FloatScalar(in);
-    }
-    void Init_by_number(const cytnx_int64 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Int64Scalar(in);
-    }
-    void Init_by_number(const cytnx_uint64 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Uint64Scalar(in);
-    }
-    void Init_by_number(const cytnx_int32 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Int32Scalar(in);
-    }
-    void Init_by_number(const cytnx_uint32 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Uint32Scalar(in);
-    }
-    void Init_by_number(const cytnx_int16 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Int16Scalar(in);
-    }
-    void Init_by_number(const cytnx_uint16 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Uint16Scalar(in);
-    }
-    void Init_by_number(const cytnx_bool &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new BoolScalar(in);
+      this->_impl = __ScII.UScIInit[Type.cy_typeid(in)]();
+      this->_impl->assign_selftype(in);
     }
 
     // The copy constructor
@@ -2705,97 +2630,17 @@ namespace cytnx {
 
     /// @brief The copy assignment of the Scalar class.
     Scalar &operator=(const Scalar &rhs) {
+      if (this == &rhs) return *this;
+
       if (this->_impl != nullptr) delete this->_impl;
 
       this->_impl = rhs._impl->copy();
       return *this;
     };
 
-    // copy assignment [Number]:
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_complex128 \p rhs.
-     */
-    Scalar &operator=(const cytnx_complex128 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_complex64 \p rhs.
-     */
-    Scalar &operator=(const cytnx_complex64 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_double \p rhs.
-     */
-    Scalar &operator=(const cytnx_double &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_float \p rhs.
-     */
-    Scalar &operator=(const cytnx_float &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_uint64 \p rhs.
-     */
-    Scalar &operator=(const cytnx_uint64 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_int64 \p rhs.
-     */
-    Scalar &operator=(const cytnx_int64 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_uint32 \p rhs.
-     */
-    Scalar &operator=(const cytnx_uint32 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_int32 \p rhs.
-     */
-    Scalar &operator=(const cytnx_int32 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_uint16 \p rhs.
-     */
-    Scalar &operator=(const cytnx_uint16 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_int16 \p rhs.
-     */
-    Scalar &operator=(const cytnx_int16 &rhs) {
-      this->Init_by_number(rhs);
-      return *this;
-    }
-
-    /** @brief The copy assignment operator of the Scalar class with a given number
-     * cytnx::cytnx_bool \p rhs.
-     */
-    Scalar &operator=(const cytnx_bool &rhs) {
+    /// @brief The copy assignment operator with any supported cytnx element type.
+    template <CytnxType T>
+    Scalar &operator=(const T &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
@@ -2844,6 +2689,68 @@ namespace cytnx {
      * @brief Get the dtype of the Scalar (see cytnx::Type for more details).
      */
     int dtype() const { return this->_impl->_dtype; }
+
+    static bool is_integer_dtype(const int &dtype) {
+      return dtype == Type.Int64 || dtype == Type.Uint64 || dtype == Type.Int32 ||
+             dtype == Type.Uint32 || dtype == Type.Int16 || dtype == Type.Uint16;
+    }
+
+    static bool is_signed_integer_dtype(const int &dtype) {
+      return dtype == Type.Int64 || dtype == Type.Int32 || dtype == Type.Int16;
+    }
+
+    static bool is_unsigned_integer_dtype(const int &dtype) {
+      return dtype == Type.Uint64 || dtype == Type.Uint32 || dtype == Type.Uint16;
+    }
+
+    static bool has_mixed_signed_unsigned_integer_dtypes(const int &lhs_dtype,
+                                                         const int &rhs_dtype) {
+      return (is_signed_integer_dtype(lhs_dtype) && is_unsigned_integer_dtype(rhs_dtype)) ||
+             (is_unsigned_integer_dtype(lhs_dtype) && is_signed_integer_dtype(rhs_dtype));
+    }
+
+    void ensure_arithmetic_result_dtype_is_supported(const char *op) const {
+      cytnx_error_msg(
+        is_integer_dtype(this->dtype()) || this->dtype() == Type.Bool,
+        "[ERROR] Scalar %s with integer or bool result dtype is disabled because integer "
+        "Scalar arithmetic currently preserves the destination dtype and can silently truncate "
+        "or use integer division. Cast to a floating or complex dtype first.%s",
+        op, "\n");
+    }
+
+    void ensure_arithmetic_operand_dtype_is_supported(const char *op, const int &rhs_dtype) const {
+      cytnx_error_msg(this->dtype() == Type.Bool,
+                      "[ERROR] Scalar %s with bool result dtype is disabled.%s", op, "\n");
+      cytnx_error_msg(
+        is_integer_dtype(this->dtype()) && rhs_dtype != this->dtype(),
+        "[ERROR] Scalar %s with mixed integer result dtype is disabled because integer Scalar "
+        "arithmetic currently preserves the destination dtype and can silently truncate or use "
+        "integer division. Cast to a floating or complex dtype first.%s",
+        op, "\n");
+    }
+
+    void ensure_binary_arithmetic_dtypes_are_supported(const char *op, const int &lhs_dtype,
+                                                       const int &rhs_dtype) const {
+      cytnx_error_msg(this->dtype() == Type.Bool,
+                      "[ERROR] Scalar %s with bool result dtype is disabled.%s", op, "\n");
+      cytnx_error_msg(
+        is_integer_dtype(this->dtype()) &&
+          has_mixed_signed_unsigned_integer_dtypes(lhs_dtype, rhs_dtype),
+        "[ERROR] Scalar %s with mixed signed/unsigned integer result dtype is disabled because "
+        "Scalar integer promotion is not reliable for mixed signedness. Cast to a floating or "
+        "complex dtype first.%s",
+        op, "\n");
+    }
+
+    void ensure_comparison_dtypes_are_supported(const char *op, const int &lhs_dtype,
+                                                const int &rhs_dtype) const {
+      cytnx_error_msg(
+        has_mixed_signed_unsigned_integer_dtypes(lhs_dtype, rhs_dtype),
+        "[ERROR] Scalar %s with mixed signed/unsigned integer operands is disabled because "
+        "Scalar integer promotion is not reliable for mixed signedness. Cast to a floating or "
+        "complex dtype first.%s",
+        op, "\n");
+    }
 
     // print()
     /**
@@ -2894,50 +2801,74 @@ namespace cytnx {
     ///@brief The addition assignment operator of the Scalar class with a given number (template).
     template <class T>
     void operator+=(const T &rc) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place addition", Type.cy_typeid(rc));
       this->_impl->iadd(rc);
     }
 
     ///@brief The addition assignment operator of the Scalar class with a given Scalar.
-    void operator+=(const Scalar &rhs) { this->_impl->iadd(rhs._impl); }
+    void operator+=(const Scalar &rhs) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place addition", rhs.dtype());
+      this->_impl->iadd(rhs._impl);
+    }
 
     ///@brief The subtraction assignment operator of the Scalar class with a given number
     ///(template).
     template <class T>
     void operator-=(const T &rc) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place subtraction",
+                                                         Type.cy_typeid(rc));
       this->_impl->isub(rc);
     }
 
     ///@brief The subtraction assignment operator of the Scalar class with a given Scalar.
-    void operator-=(const Scalar &rhs) { this->_impl->isub(rhs._impl); }
+    void operator-=(const Scalar &rhs) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place subtraction", rhs.dtype());
+      this->_impl->isub(rhs._impl);
+    }
     template <class T>
 
     ///@brief The multiplication assignment operator of the Scalar class with a given number
     ///(template).
     void operator*=(const T &rc) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place multiplication",
+                                                         Type.cy_typeid(rc));
       this->_impl->imul(rc);
     }
 
     ///@brief The multiplication assignment operator of the Scalar class with a given Scalar.
-    void operator*=(const Scalar &rhs) { this->_impl->imul(rhs._impl); }
+    void operator*=(const Scalar &rhs) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place multiplication", rhs.dtype());
+      this->_impl->imul(rhs._impl);
+    }
     template <class T>
 
     /**
      * @brief The division assignment operator of the Scalar class with a given number (template).
      */
     void operator/=(const T &rc) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place division", Type.cy_typeid(rc));
       this->_impl->idiv(rc);
     }
 
     /**
      * @brief The division assignment operator of the Scalar class with a given Scalar.
      */
-    void operator/=(const Scalar &rhs) { this->_impl->idiv(rhs._impl); }
+    void operator/=(const Scalar &rhs) {
+      this->ensure_arithmetic_operand_dtype_is_supported("in-place division", rhs.dtype());
+      this->_impl->idiv(rhs._impl);
+    }
 
     /// @brief Set the Scalar to absolute value. (inplace)
-    void iabs() { this->_impl->iabs(); }
+    void iabs() {
+      this->ensure_arithmetic_result_dtype_is_supported("absolute value");
+      this->_impl->iabs();
+    }
 
     /// @brief Set the Scalar to square root. (inplace)
-    void isqrt() { this->_impl->isqrt(); }
+    void isqrt() {
+      this->ensure_arithmetic_result_dtype_is_supported("square root");
+      this->_impl->isqrt();
+    }
 
     /**
      * @brief The member function to get the absolute value of the Scalar.
@@ -2947,6 +2878,7 @@ namespace cytnx {
      */
     Scalar abs() const {
       Scalar out = *this;
+      out.ensure_arithmetic_result_dtype_is_supported("absolute value");
       out._impl->iabs();
       return out.real();
     }
@@ -2959,6 +2891,7 @@ namespace cytnx {
      */
     Scalar sqrt() const {
       Scalar out = *this;
+      out.ensure_arithmetic_result_dtype_is_supported("square root");
       out._impl->isqrt();
       return out;
     }
@@ -2974,6 +2907,7 @@ namespace cytnx {
     bool less(const T &rc) const {
       Scalar tmp;
       int rid = Type.cy_typeid(rc);
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rid);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
         return tmp._impl->less(rc);
@@ -2990,6 +2924,7 @@ namespace cytnx {
      */
     bool less(const Scalar &rhs) const {
       Scalar tmp;
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rhs.dtype());
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
         return tmp._impl->less(rhs._impl);
@@ -3011,6 +2946,7 @@ namespace cytnx {
     bool leq(const T &rc) const {
       Scalar tmp;
       int rid = Type.cy_typeid(rc);
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rid);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
         return !(tmp._impl->greater(rc));
@@ -3027,6 +2963,7 @@ namespace cytnx {
      */
     bool leq(const Scalar &rhs) const {
       Scalar tmp;
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rhs.dtype());
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
         return !(tmp._impl->greater(rhs._impl));
@@ -3046,6 +2983,7 @@ namespace cytnx {
     bool greater(const T &rc) const {
       Scalar tmp;
       int rid = Type.cy_typeid(rc);
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rid);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
         return tmp._impl->greater(rc);
@@ -3062,6 +3000,7 @@ namespace cytnx {
      */
     bool greater(const Scalar &rhs) const {
       Scalar tmp;
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rhs.dtype());
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
         return tmp._impl->greater(rhs._impl);
@@ -3083,6 +3022,7 @@ namespace cytnx {
     bool geq(const T &rc) const {
       Scalar tmp;
       int rid = Type.cy_typeid(rc);
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rid);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
         return !(tmp._impl->less(rc));
@@ -3099,6 +3039,7 @@ namespace cytnx {
      */
     bool geq(const Scalar &rhs) const {
       Scalar tmp;
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rhs.dtype());
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
         return !(tmp._impl->less(rhs._impl));
@@ -3119,6 +3060,7 @@ namespace cytnx {
     bool eq(const T &rc) const {
       Scalar tmp;
       int rid = Type.cy_typeid(rc);
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rid);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
         return tmp._impl->eq(rc);
@@ -3153,6 +3095,7 @@ namespace cytnx {
      */
     bool eq(const Scalar &rhs) const {
       Scalar tmp;
+      this->ensure_comparison_dtypes_are_supported("comparison", this->dtype(), rhs.dtype());
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
         return tmp._impl->eq(rhs._impl);
@@ -3190,6 +3133,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("addition", this->dtype(), rid);
       out._impl->iadd(rc);
       return out;
     }
@@ -3205,6 +3149,7 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("addition", this->dtype(), rhs.dtype());
       out._impl->iadd(rhs._impl);
       return out;
     }
@@ -3224,6 +3169,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("multiplication", this->dtype(), rid);
       out._impl->imul(rc);
       return out;
     }
@@ -3239,6 +3185,8 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("multiplication", this->dtype(),
+                                                        rhs.dtype());
       out._impl->imul(rhs._impl);
       return out;
     }
@@ -3258,6 +3206,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("subtraction", this->dtype(), rid);
       out._impl->isub(rc);
       return out;
     }
@@ -3273,6 +3222,7 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("subtraction", this->dtype(), rhs.dtype());
       out._impl->isub(rhs._impl);
       return out;
     }
@@ -3292,6 +3242,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("division", this->dtype(), rid);
       out._impl->idiv(rc);
       return out;
     }
@@ -3307,6 +3258,7 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
+      out.ensure_binary_arithmetic_dtypes_are_supported("division", this->dtype(), rhs.dtype());
       out._impl->idiv(rhs._impl);
       return out;
     }
