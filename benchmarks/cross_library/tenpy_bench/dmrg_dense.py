@@ -12,7 +12,9 @@ from tenpy.algorithms import dmrg
 from tenpy.models.spins import SpinChain
 from tenpy.networks.mps import MPS
 
-from common.metrics import CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit
+from common.metrics import (
+    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, time_limit,
+)
 from common.model import HEISENBERG_J, N_SWEEPS, STEP_TIMEOUT_SEC, param_grid
 
 
@@ -42,7 +44,10 @@ def run_one(chi, L, dmrg_chi_max=None):
 
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
+    done = completed_keys(out_csv, "chi", "L")
     for chi, L in param_grid():
+        if (str(chi), str(L)) in done:
+            continue
         try:
             with time_limit(STEP_TIMEOUT_SEC):
                 step_time, peak_mem_mb, energy = run_one(chi, L)

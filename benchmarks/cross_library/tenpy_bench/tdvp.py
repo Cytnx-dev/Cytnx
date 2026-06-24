@@ -17,7 +17,9 @@ from tenpy.algorithms import tebd
 from tenpy.models.tf_ising import TFIChain
 from tenpy.networks.mps import MPS
 
-from common.metrics import CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit
+from common.metrics import (
+    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, time_limit,
+)
 from common.model import STEP_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS, param_grid
 
 
@@ -46,7 +48,10 @@ def run_one(chi, L):
 
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
+    done = completed_keys(out_csv, "chi", "L")
     for chi, L in param_grid():
+        if (str(chi), str(L)) in done:
+            continue
         try:
             with time_limit(STEP_TIMEOUT_SEC):
                 step_time, peak_mem_mb, energy = run_one(chi, L)

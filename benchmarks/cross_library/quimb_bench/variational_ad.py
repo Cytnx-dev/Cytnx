@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import quimb.tensor as qtn
 
 from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block,
+    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block,
     jax_gpu_timed_block, time_limit, torch_gpu_timed_block,
 )
 from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
@@ -134,10 +134,13 @@ def run_one_torch(chi, L):
 
 def main(out_csv, backends):
     writer = CSVResultWriter(out_csv)
+    done = completed_keys(out_csv, "backend", "chi", "L")
     runners = {"jax": run_one_jax, "torch": run_one_torch}
     for backend in backends:
         run_one = runners[backend]
         for chi, L in param_grid():
+            if (backend, str(chi), str(L)) in done:
+                continue
             try:
                 with time_limit(STEP_TIMEOUT_SEC):
                     step_time, peak_mem_mb, energy_val = run_one(chi, L)

@@ -24,7 +24,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import cytnx
 
 from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, cytnx_gpu_timed_block, time_limit,
+    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, cytnx_gpu_timed_block,
+    time_limit,
 )
 from common.model import HEISENBERG_J, LANCZOS_MAXITER, N_SWEEPS, STEP_TIMEOUT_SEC, param_grid
 
@@ -219,7 +220,10 @@ def run_one(chi, L):
 
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
+    done = completed_keys(out_csv, "chi", "L")
     for chi, L in param_grid():
+        if (str(chi), str(L)) in done:
+            continue
         try:
             with time_limit(STEP_TIMEOUT_SEC):
                 step_time, peak_mem_mb, energy = run_one(chi, L)

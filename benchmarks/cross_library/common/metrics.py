@@ -87,6 +87,19 @@ class CSVResultWriter:
             writer.writerow(asdict(measurement))
 
 
+def completed_keys(path, *fields):
+    """Return the set of `fields`-tuples already present in the CSV at `path`,
+    so a benchmark script killed partway through (e.g. by a container
+    reclaim) can resume from the next (chi, L) point on its next run instead
+    of redoing every step from scratch. Values are returned as the raw
+    strings read from the CSV; compare against `str(chi)`/`str(L)`/etc."""
+    if not os.path.exists(path):
+        return set()
+    with open(path, newline="") as f:
+        reader = csv.DictReader(f)
+        return {tuple(row[field] for field in fields) for row in reader}
+
+
 @contextmanager
 def cpu_timed_block():
     """Measure wall-clock time and peak (tracemalloc + RSS-delta) memory of

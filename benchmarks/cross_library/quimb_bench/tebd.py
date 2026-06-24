@@ -14,7 +14,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import quimb.tensor as qtn
 
 from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit, torch_gpu_timed_block,
+    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, time_limit,
+    torch_gpu_timed_block,
 )
 from common.model import STEP_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS, param_grid
 
@@ -47,7 +48,10 @@ def run_one(chi, L):
 
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
+    done = completed_keys(out_csv, "chi", "L")
     for chi, L in param_grid():
+        if (str(chi), str(L)) in done:
+            continue
         try:
             with time_limit(STEP_TIMEOUT_SEC):
                 step_time, peak_mem_mb, energy = run_one(chi, L)
