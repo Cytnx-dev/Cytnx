@@ -33,8 +33,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import cytnx
 
-from common.metrics import CSVResultWriter, StepMeasurement, cpu_timed_block, cytnx_gpu_timed_block
-from common.model import HEISENBERG_J, N_GRAD_STEPS, param_grid
+from common.metrics import (
+    CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, cytnx_gpu_timed_block, time_limit,
+)
+from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 LEARNING_RATE = 1e-3
@@ -166,7 +168,12 @@ def run_one(chi, L):
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
     for chi, L in param_grid():
-        step_time, peak_mem_mb = run_one(chi, L)
+        try:
+            with time_limit(STEP_TIMEOUT_SEC):
+                step_time, peak_mem_mb = run_one(chi, L)
+        except StepTimeoutError:
+            print(f"[cytnx/variational_manual_grad] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
+            continue
         writer.write(StepMeasurement(
             library="cytnx", algorithm="variational_manual_grad", symmetry="dense",
             device=DEVICE, backend="manual-grad", L=L, chi=chi,

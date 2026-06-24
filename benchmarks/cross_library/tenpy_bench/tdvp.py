@@ -17,8 +17,8 @@ from tenpy.algorithms import tebd
 from tenpy.models.tf_ising import TFIChain
 from tenpy.networks.mps import MPS
 
-from common.metrics import CSVResultWriter, StepMeasurement, cpu_timed_block
-from common.model import TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS, param_grid
+from common.metrics import CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit
+from common.model import STEP_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS, param_grid
 
 
 def run_one(chi, L):
@@ -46,7 +46,12 @@ def run_one(chi, L):
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
     for chi, L in param_grid():
-        step_time, peak_mem_mb = run_one(chi, L)
+        try:
+            with time_limit(STEP_TIMEOUT_SEC):
+                step_time, peak_mem_mb = run_one(chi, L)
+        except StepTimeoutError:
+            print(f"[tenpy/tebd_quench] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
+            continue
         writer.write(StepMeasurement(
             library="tenpy", algorithm="tebd_quench", symmetry="dense",
             device="cpu", backend="numpy", L=L, chi=chi,

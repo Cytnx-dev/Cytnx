@@ -13,8 +13,8 @@ from tenpy.algorithms import dmrg
 from tenpy.models.spins import SpinChain
 from tenpy.networks.mps import MPS
 
-from common.metrics import CSVResultWriter, StepMeasurement, cpu_timed_block
-from common.model import HEISENBERG_J, N_SWEEPS, param_grid
+from common.metrics import CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit
+from common.model import HEISENBERG_J, N_SWEEPS, STEP_TIMEOUT_SEC, param_grid
 
 
 def run_one(chi, L):
@@ -45,7 +45,12 @@ def run_one(chi, L):
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
     for chi, L in param_grid():
-        step_time, peak_mem_mb = run_one(chi, L)
+        try:
+            with time_limit(STEP_TIMEOUT_SEC):
+                step_time, peak_mem_mb = run_one(chi, L)
+        except StepTimeoutError:
+            print(f"[tenpy/dmrg_symmetric] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
+            continue
         writer.write(StepMeasurement(
             library="tenpy", algorithm="dmrg_symmetric", symmetry="u1",
             device="cpu", backend="numpy", L=L, chi=chi,

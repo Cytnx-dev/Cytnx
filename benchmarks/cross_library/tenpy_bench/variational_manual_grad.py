@@ -35,8 +35,8 @@ from tenpy.models.spins import SpinChain
 from tenpy.networks.mps import MPS
 from tenpy.networks.mpo import MPOEnvironment
 
-from common.metrics import CSVResultWriter, StepMeasurement, cpu_timed_block
-from common.model import HEISENBERG_J, N_GRAD_STEPS, param_grid
+from common.metrics import CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit
+from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
 
 LEARNING_RATE = 1e-3
 
@@ -80,7 +80,12 @@ def run_one(chi, L):
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
     for chi, L in param_grid():
-        step_time, peak_mem_mb = run_one(chi, L)
+        try:
+            with time_limit(STEP_TIMEOUT_SEC):
+                step_time, peak_mem_mb = run_one(chi, L)
+        except StepTimeoutError:
+            print(f"[tenpy/variational_manual_grad] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
+            continue
         writer.write(StepMeasurement(
             library="tenpy", algorithm="variational_manual_grad", symmetry="dense",
             device="cpu", backend="manual-grad", L=L, chi=chi,

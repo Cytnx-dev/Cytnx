@@ -28,10 +28,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import quimb.tensor as qtn
 
 from common.metrics import (
-    CSVResultWriter, StepMeasurement, cpu_timed_block,
-    jax_gpu_timed_block, torch_gpu_timed_block,
+    CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block,
+    jax_gpu_timed_block, time_limit, torch_gpu_timed_block,
 )
-from common.model import HEISENBERG_J, N_GRAD_STEPS, param_grid
+from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
 
 LEARNING_RATE = 1e-3
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code paths below
@@ -135,7 +135,13 @@ def main(out_csv, backends):
     for backend in backends:
         run_one = runners[backend]
         for chi, L in param_grid():
-            step_time, peak_mem_mb = run_one(chi, L)
+            try:
+                with time_limit(STEP_TIMEOUT_SEC):
+                    step_time, peak_mem_mb = run_one(chi, L)
+            except StepTimeoutError:
+                print(f"[quimb/variational_ad/{backend}] chi={chi} L={L} "
+                      f"skipped (exceeded {STEP_TIMEOUT_SEC}s)")
+                continue
             writer.write(StepMeasurement(
                 library="quimb", algorithm="variational_ad", symmetry="dense",
                 device=DEVICE, backend=backend, L=L, chi=chi,

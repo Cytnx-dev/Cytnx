@@ -40,6 +40,11 @@ N_GRAD_STEPS = 20
 # between the Cytnx and quimb dense-DMRG implementations.
 LANCZOS_MAXITER = 4
 
+# Per-(chi, L) wall-clock budget. Points that exceed this are skipped rather
+# than measured, so a handful of slow large-chi/large-L points don't dominate
+# the suite's total run time.
+STEP_TIMEOUT_SEC = 120
+
 
 def param_grid():
     """Yield every (chi, L) pair in the shared sweep grid."""

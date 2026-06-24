@@ -31,8 +31,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import symmray as sr
 
-from common.metrics import CSVResultWriter, StepMeasurement, cpu_timed_block
-from common.model import HEISENBERG_J, N_SWEEPS, TFIM_DT, param_grid
+from common.metrics import CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit
+from common.model import HEISENBERG_J, N_SWEEPS, STEP_TIMEOUT_SEC, TFIM_DT, param_grid
 
 # Symmray block-sparse arrays are built on top of a plain NumPy/CuPy array
 # per charge-block; selecting "cupy" here would move every block to the GPU
@@ -94,7 +94,12 @@ def run_one(chi, L):
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
     for chi, L in param_grid():
-        step_time, peak_mem_mb = run_one(chi, L)
+        try:
+            with time_limit(STEP_TIMEOUT_SEC):
+                step_time, peak_mem_mb = run_one(chi, L)
+        except StepTimeoutError:
+            print(f"[quimb/dmrg_symmetric] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
+            continue
         writer.write(StepMeasurement(
             library="quimb", algorithm="dmrg_symmetric", symmetry="u1",
             device="cpu", backend="symmray", L=L, chi=chi,

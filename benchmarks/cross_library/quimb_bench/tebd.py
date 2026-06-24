@@ -13,8 +13,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import quimb.tensor as qtn
 
-from common.metrics import CSVResultWriter, StepMeasurement, cpu_timed_block, torch_gpu_timed_block
-from common.model import TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS, param_grid
+from common.metrics import (
+    CSVResultWriter, StepMeasurement, StepTimeoutError, cpu_timed_block, time_limit, torch_gpu_timed_block,
+)
+from common.model import STEP_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS, param_grid
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
@@ -44,7 +46,12 @@ def run_one(chi, L):
 def main(out_csv):
     writer = CSVResultWriter(out_csv)
     for chi, L in param_grid():
-        step_time, peak_mem_mb = run_one(chi, L)
+        try:
+            with time_limit(STEP_TIMEOUT_SEC):
+                step_time, peak_mem_mb = run_one(chi, L)
+        except StepTimeoutError:
+            print(f"[quimb/tebd_quench] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
+            continue
         writer.write(StepMeasurement(
             library="quimb", algorithm="tebd_quench", symmetry="dense",
             device=DEVICE, backend="numpy" if DEVICE == "cpu" else "torch",

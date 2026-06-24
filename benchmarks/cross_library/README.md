@@ -57,7 +57,10 @@ L_VALUES   = [20, 50, 100, 200]
 ```
 
 Every benchmark script runs all `len(CHI_VALUES) * len(L_VALUES)` points and
-writes one CSV row per point.
+writes one CSV row per point, except points that exceed the per-point wall-clock
+budget `STEP_TIMEOUT_SEC` (120s by default) — those are skipped (no CSV row,
+logged to stdout) rather than measured, so a few slow large-chi/large-L points
+don't dominate the suite's total run time.
 
 ## CPU vs. GPU
 

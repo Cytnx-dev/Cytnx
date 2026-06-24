@@ -18,6 +18,7 @@ import csv
 import gc
 import os
 import resource
+import signal
 import sys
 import time
 import tracemalloc
@@ -26,6 +27,30 @@ from dataclasses import dataclass, asdict
 
 # ru_maxrss is reported in KB on Linux but in bytes on macOS (Darwin).
 _RU_MAXRSS_TO_MB = 1024.0 * 1024.0 if sys.platform == "darwin" else 1024.0
+
+
+class StepTimeoutError(Exception):
+    """Raised by `time_limit` when a benchmark step exceeds its time budget."""
+
+
+@contextmanager
+def time_limit(seconds):
+    """Abort the wrapped block with StepTimeoutError if it runs past `seconds`.
+
+    Implemented via SIGALRM, so it can only interrupt at points where control
+    returns to the Python interpreter (e.g. between calls into a C/C++/BLAS
+    extension); a single very long C call will not be cut short mid-call.
+    Unix-only (SIGALRM is not available on Windows).
+    """
+    def _raise(signum, frame):
+        raise StepTimeoutError(f"step exceeded {seconds}s timeout")
+    previous_handler = signal.signal(signal.SIGALRM, _raise)
+    signal.alarm(seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, previous_handler)
 
 
 @dataclass
