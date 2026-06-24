@@ -33,7 +33,7 @@ from common.metrics import (
 )
 from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
 
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 0.1
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code paths below
 
 
@@ -74,12 +74,7 @@ def run_one_jax(chi, L):
 
     def grad_step(arrays):
         g = grad_fn(arrays)
-        new_arrays = []
-        for a, ga in zip(arrays, g):
-            gnorm = jnp.linalg.norm(ga)
-            direction = jnp.where(gnorm > 1e-12, ga / gnorm, ga)
-            a_new = a - LEARNING_RATE * direction
-            new_arrays.append(a_new)
+        new_arrays = [a - LEARNING_RATE * ga for a, ga in zip(arrays, g)]
         # Rescale the whole state by a single global factor derived from
         # <psi|psi>, distributed evenly across all L tensors, rather than
         # normalizing each tensor independently -- the MPS is not in
@@ -134,9 +129,7 @@ def run_one_torch(chi, L):
         new_arrays = []
         with torch.no_grad():
             for a in arrays:
-                gnorm = a.grad.norm()
-                direction = a.grad / gnorm if gnorm > 1e-12 else a.grad
-                a_new = a - LEARNING_RATE * direction
+                a_new = a - LEARNING_RATE * a.grad
                 new_arrays.append(a_new)
             # Rescale the whole state by a single global factor derived from
             # <psi|psi>, distributed evenly across all L tensors, rather than

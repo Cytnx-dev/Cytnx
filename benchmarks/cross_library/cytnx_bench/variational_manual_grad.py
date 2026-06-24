@@ -40,7 +40,7 @@ from common.metrics import (
 from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 0.1
 
 _L_UPDATE_NET = ["L: -2,-1,-3", "A: -1,-4,1", "M: -2,0,-4,-5", "A_Conj: -3,-5,2", "TOUT: 0,1,2"]
 _R_UPDATE_NET = ["R: -2,-1,-3", "B: 1,-4,-1", "M: 0,-2,-4,-5", "B_Conj: 2,-5,-3", "TOUT: 0,1,2"]
@@ -153,9 +153,7 @@ def run_one(chi, L):
             norm_sq = cytnx.Contract(theta_dag, theta).item()
             energy = cytnx.Contract(theta_dag, h_theta).item() / norm_sq
             grad = 2 * (h_theta - energy * theta)
-            grad_norm = grad.Norm().item()
-            direction = grad / grad_norm if grad_norm > 1e-12 else grad
-            new_theta = theta - LEARNING_RATE * direction
+            new_theta = theta - LEARNING_RATE * grad
             new_theta = new_theta / new_theta.Norm().item()
             # Cytnx arithmetic ops reset UniTensor labels to the default
             # ['0','1',...] sequence rather than preserving theta's labels,

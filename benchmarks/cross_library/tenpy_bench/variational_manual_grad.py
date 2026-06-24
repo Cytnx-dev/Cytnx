@@ -15,8 +15,18 @@ where H_eff,i is the effective one-site Hamiltonian obtained by
 contracting the MPO with the left/right boundary environments around site
 i -- exactly the operator TeNPy's own DMRG engine builds for its local
 Lanczos solve. We reuse TeNPy's `OneSiteH.matvec` to evaluate H_eff,i(A_i)
-(this is a *contraction*, not automatic differentiation), then take a
-normalized gradient-descent step and renormalize.
+(this is a *contraction*, not automatic differentiation), then take an
+unnormalized gradient-descent step and renormalize.
+
+Each updated site is immediately QR-left-canonicalized and the leftover
+upper-triangular factor is folded into the next (not-yet-visited) site's
+tensor before that site's theta is read out, mirroring the per-site
+re-gauging that `dmrg_dense.py`'s effective Hamiltonian already assumes.
+`MPOEnvironment`'s LP/RP caches are populated lazily, so they pick up the
+newly re-gauged tensors as the sweep reaches each site without having to
+be rebuilt by hand. A single trailing `psi.canonical_form()` call restores
+TeNPy's right-canonical 'B' form everywhere for the next sweep's lazy
+environment caching to remain valid.
 
 This gradient form is specific to TeNPy's `np_conserved` tensor objects
 and contraction routines, written independently of the closed-form
@@ -40,7 +50,7 @@ from common.metrics import (
 )
 from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
 
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 0.1
 
 
 def run_one(chi, L):
@@ -56,19 +66,25 @@ def run_one(chi, L):
     def grad_step():
         env = MPOEnvironment(psi, M.H_MPO, psi)
         energy = None
+        R = None
         for i0 in range(L):
-            eff = OneSiteH(env, i0)
             theta = psi.get_theta(i0, n=1)
+            if R is not None:
+                theta = npc.tensordot(R, theta, axes=["vR", "vL"])
+            eff = OneSiteH(env, i0)
             h_theta = eff.matvec(theta)
             norm_sq = npc.inner(theta, theta, axes="range", do_conj=True)
             energy = npc.inner(theta, h_theta, axes="range", do_conj=True) / norm_sq
             grad = 2 * (h_theta - energy * theta)
-            grad_norm = npc.norm(grad)
-            direction = grad / grad_norm if grad_norm > 1e-12 else grad
-            new_theta = theta - LEARNING_RATE * direction
-            new_theta /= npc.norm(new_theta)
+            new_theta = theta - LEARNING_RATE * grad
             new_theta.ireplace_label("p0", "p")
-            psi.set_B(i0, new_theta, form="Th")
+            if i0 < L - 1:
+                combined = new_theta.combine_legs(["vL", "p"], qconj=+1)
+                Q, R = npc.qr(combined, inner_labels=["vR", "vL"])
+                psi.set_B(i0, Q.split_legs(0), form="A")
+            else:
+                new_theta /= npc.norm(new_theta)
+                psi.set_B(i0, new_theta, form="B")
         psi.canonical_form()
         return energy.real
 
