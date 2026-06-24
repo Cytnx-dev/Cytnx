@@ -46,6 +46,19 @@ class _Hxx(cytnx.LinOp):
         return out
 
 
+def _stored_numel(ut):
+    # BlockUniTensor.shape() returns each bond's nominal (sum-of-sectors) extent,
+    # not the element count actually stored in the nonzero charge blocks, so the
+    # active dimension of a block-sparse psi must be summed from its own blocks.
+    total = 0
+    for block in ut.get_blocks_():
+        n = 1
+        for d in block.shape():
+            n *= d
+        total += n
+    return total
+
+
 def _optimize_psi(psi, functArgs, maxit, device):
     L, M1, M2, R = functArgs
     anet = cytnx.Network()
@@ -56,7 +69,7 @@ def _optimize_psi(psi, functArgs, maxit, device):
                       "M2: -6,-7,-3,2",
                       "TOUT: 0,1;2,3"])
     anet.PutUniTensors(["L", "M1", "M2", "R"], [L, M1, M2, R])
-    H = _Hxx(anet, psi.shape()[0] * psi.shape()[1] * psi.shape()[2] * psi.shape()[3], device)
+    H = _Hxx(anet, _stored_numel(psi), device)
     energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=1e-12, Tin=psi)
     return psivec, energy[0].item()
 
