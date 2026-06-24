@@ -49,7 +49,7 @@ def _optimize_psi(psi, functArgs, maxit, device):
                       "TOUT: 0,1;2,3"])
     anet.PutUniTensors(["L", "M1", "M2", "R"], [L, M1, M2, R])
     H = _Hxx(anet, psi.shape()[0] * psi.shape()[1] * psi.shape()[2] * psi.shape()[3], device)
-    energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=9999999999, Tin=psi)
+    energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=1e-12, Tin=psi)
     return psivec, energy[0].item()
 
 
