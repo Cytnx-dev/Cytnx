@@ -7,10 +7,11 @@ C allocator and are visible to RSS but not always to tracemalloc; small
 Python-object overhead is the opposite).
 
 GPU memory is measured via the backend's own peak-allocator counter
-(`torch.cuda.max_memory_allocated`, `cupy`'s memory pool, or JAX's device
-memory stats) since host-side RSS does not reflect device allocations.
-These GPU helpers are written for completeness but are not exercised in
-this environment, which has no GPU.
+(`torch.cuda.max_memory_allocated` or JAX's device memory stats) since
+host-side RSS does not reflect device allocations. Cytnx has no such
+counter exposed to Python, so `cytnx_gpu_timed_block` reports peak_mem_mb
+as 0.0. These GPU helpers are written for completeness but are not
+exercised in this environment, which has no GPU.
 """
 
 import csv
@@ -130,11 +131,10 @@ def jax_gpu_timed_block():
 
 @contextmanager
 def cytnx_gpu_timed_block():
-    """GPU analogue of cpu_timed_block for Cytnx's CUDA backend. Cytnx
-    allocates GPU memory through its own cached allocator (see
-    src/Device.cpp); peak usage is read back via cytnx.cytnx_memory_usage()
-    style device queries where available. Not exercised in this
-    environment (no GPU available)."""
+    """GPU analogue of cpu_timed_block for Cytnx's CUDA backend. Cytnx has
+    no peak-allocator counter exposed to Python, so peak_mem_mb is reported
+    as 0.0 here -- see the comment at the assignment below. Not exercised
+    in this environment (no GPU available)."""
     import cytnx
 
     cytnx.cudaDeviceSynchronize()
@@ -146,6 +146,7 @@ def cytnx_gpu_timed_block():
         cytnx.cudaDeviceSynchronize()
         t1 = time.perf_counter()
         result["time_sec"] = t1 - t0
-        # cytnx exposes per-device memory accounting through cytnx.Device;
-        # fall back to 0 if the installed version does not expose it.
-        result["peak_mem_mb"] = getattr(cytnx, "cudaMemGetInfo", lambda: (0, 0))()[0] / (1024.0**2)
+        # cytnx has no peak-allocator counter exposed to Python (unlike
+        # torch.cuda.max_memory_allocated); cudaMemGetInfo only reports
+        # current free/total memory, not a peak, so it cannot substitute.
+        result["peak_mem_mb"] = 0.0
