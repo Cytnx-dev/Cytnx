@@ -17,10 +17,14 @@ import csv
 import gc
 import os
 import resource
+import sys
 import time
 import tracemalloc
 from contextlib import contextmanager
 from dataclasses import dataclass, asdict
+
+# ru_maxrss is reported in KB on Linux but in bytes on macOS (Darwin).
+_RU_MAXRSS_TO_MB = 1024.0 * 1024.0 if sys.platform == "darwin" else 1024.0
 
 
 @dataclass
@@ -75,7 +79,7 @@ def cpu_timed_block():
         _, peak_tracemalloc = tracemalloc.get_traced_memory()
         tracemalloc.stop()
         rss_after = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        rss_delta_mb = max(0.0, (rss_after - rss_before) / 1024.0)
+        rss_delta_mb = max(0.0, (rss_after - rss_before) / _RU_MAXRSS_TO_MB)
         tracemalloc_mb = peak_tracemalloc / (1024.0 * 1024.0)
         result["time_sec"] = t1 - t0
         # ru_maxrss is a high-water mark for the whole process, so it only
