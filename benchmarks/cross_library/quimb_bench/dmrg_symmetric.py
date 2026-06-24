@@ -68,6 +68,22 @@ def heisenberg_two_site_gate(dt):
     )
 
 
+def _heisenberg_two_site_op():
+    """Plain (non-exponentiated) two-site Heisenberg coupling, for computing
+    <psi|H|psi> via `local_expectation` -- not used to evolve `psi`."""
+    phys = [1, -1]
+    h_dense = (HEISENBERG_J / 4.0) * np.array([
+        [1, 0, 0, 0],
+        [0, -1, 2, 0],
+        [0, 2, -1, 0],
+        [0, 0, 0, 1],
+    ], dtype=float)
+    return sr.U1Array.from_dense(
+        h_dense.reshape(2, 2, 2, 2), index_maps=[phys, phys, phys, phys],
+        duals=[False, False, True, True],
+    )
+
+
 def run_one(chi, L):
     gate = heisenberg_two_site_gate(TFIM_DT)
     # Alternate site charges so the half-filled (Neel-like) total-Sz=0
@@ -88,7 +104,17 @@ def run_one(chi, L):
         for _ in range(N_SWEEPS):
             block_sparse_sweep()
     step_time = r["time_sec"] / N_SWEEPS
-    return step_time, r["peak_mem_mb"]
+    # Not a converged ground energy (see module docstring: this script runs
+    # imaginary-time evolution of a random state, not a real DMRG search) --
+    # reported only as the Heisenberg-bond energy of whatever state the
+    # block-sparse sweep reached, for sanity-checking against itself across
+    # runs, not for cross-library ground-energy comparison.
+    h_op = _heisenberg_two_site_op()
+    energy = sum(
+        psi.local_expectation_exact(h_op, where=(i, i + 1))
+        for i in range(L - 1)
+    )
+    return step_time, r["peak_mem_mb"], energy
 
 
 def main(out_csv):
@@ -96,17 +122,17 @@ def main(out_csv):
     for chi, L in param_grid():
         try:
             with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb = run_one(chi, L)
+                step_time, peak_mem_mb, energy = run_one(chi, L)
         except StepTimeoutError:
             print(f"[quimb/dmrg_symmetric] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
             continue
         writer.write(StepMeasurement(
             library="quimb", algorithm="dmrg_symmetric", symmetry="u1",
             device="cpu", backend="symmray", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb,
+            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
         ))
         print(f"[quimb/dmrg_symmetric] chi={chi} L={L} "
-              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB")
+              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
 
 
 if __name__ == "__main__":

@@ -40,7 +40,9 @@ def run_one(chi, L):
         for _ in range(TFIM_N_STEPS):
             tebd.step(order=2, dt=TFIM_DT)
     step_time = r["time_sec"] / TFIM_N_STEPS
-    return step_time, r["peak_mem_mb"]
+    H_mpo = qtn.MPO_ham_ising(L, j=TFIM_J, bx=TFIM_HX_FINAL, cyclic=False)
+    energy = tebd.pt.H @ (H_mpo.apply(tebd.pt))
+    return step_time, r["peak_mem_mb"], float(energy.real)
 
 
 def main(out_csv):
@@ -48,17 +50,17 @@ def main(out_csv):
     for chi, L in param_grid():
         try:
             with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb = run_one(chi, L)
+                step_time, peak_mem_mb, energy = run_one(chi, L)
         except StepTimeoutError:
             print(f"[quimb/tebd_quench] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
             continue
         writer.write(StepMeasurement(
             library="quimb", algorithm="tebd_quench", symmetry="dense",
             device=DEVICE, backend="numpy" if DEVICE == "cpu" else "torch",
-            L=L, chi=chi, step_time_sec=step_time, peak_mem_mb=peak_mem_mb,
+            L=L, chi=chi, step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
         ))
         print(f"[quimb/tebd_quench] chi={chi} L={L} "
-              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB")
+              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
 
 
 if __name__ == "__main__":

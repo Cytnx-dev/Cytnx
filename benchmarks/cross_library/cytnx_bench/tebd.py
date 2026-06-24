@@ -72,11 +72,63 @@ def _build_mps(L, chi, device):
     return A, lbls
 
 
+def _build_mpo(J, hx):
+    D = 3
+    Sz = cytnx.physics.pauli("z").real()
+    Sx = cytnx.physics.pauli("x").real()
+    eye = cytnx.eye(2)
+
+    M = cytnx.zeros([D, D, 2, 2])
+    M[0, 0] = eye
+    M[0, 1] = Sz
+    M[0, 2] = -hx * Sx
+    M[1, 2] = -J * Sz
+    M[D - 1, D - 1] = eye
+    M = cytnx.UniTensor(M, 0).set_name("MPO")
+
+    L0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("L0")
+    R0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("R0")
+    L0[0, 0, 0] = 1.0
+    R0[D - 1, 0, 0] = 1.0
+    return M, L0, R0
+
+
+def _energy(A, M, L0, R0, device):
+    if device == "gpu":
+        M = M.to(cytnx.Device.cuda)
+        L0 = L0.to(cytnx.Device.cuda)
+        R0 = R0.to(cytnx.Device.cuda)
+
+    anet = cytnx.Network()
+    anet.FromString(["L: -2,-1,-3",
+                      "A: -1,-4,1",
+                      "M: -2,0,-4,-5",
+                      "A_Conj: -3,-5,2",
+                      "TOUT: 0,1,2"])
+    LR = L0
+    for p in range(len(A)):
+        anet.PutUniTensors(["L", "A", "A_Conj", "M"],
+                            [LR, A[p], A[p].Dagger().permute_(A[p].labels()), M])
+        LR = anet.Launch()
+    energy = cytnx.Contract(LR, R0).item()
+
+    norm_net = cytnx.Network()
+    norm_net.FromString(["L: -2,-1", "A: -1,1,-3", "A_Conj: -2,1,-4", "TOUT: -4,-3"])
+    NL = cytnx.UniTensor(cytnx.ones([1, 1]))
+    for p in range(len(A)):
+        norm_net.PutUniTensors(["L", "A", "A_Conj"],
+                                [NL, A[p], A[p].Dagger().permute_(A[p].labels())])
+        NL = norm_net.Launch()
+    norm2 = NL.item()
+    return (energy / norm2).real
+
+
 def run_one(chi, L):
     device = "gpu" if DEVICE == "gpu" else "cpu"
     d = 2
     A, lbls = _build_mps(L, chi, device)
     gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
+    M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL)
 
     def sweep():
         for p in range(L - 1):
@@ -100,7 +152,8 @@ def run_one(chi, L):
         for _ in range(TFIM_N_STEPS):
             sweep()
     step_time = r["time_sec"] / TFIM_N_STEPS
-    return step_time, r["peak_mem_mb"]
+    energy = _energy(A, M, L0, R0, device)
+    return step_time, r["peak_mem_mb"], energy
 
 
 def main(out_csv):
@@ -108,17 +161,17 @@ def main(out_csv):
     for chi, L in param_grid():
         try:
             with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb = run_one(chi, L)
+                step_time, peak_mem_mb, energy = run_one(chi, L)
         except StepTimeoutError:
             print(f"[cytnx/tebd_quench] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
             continue
         writer.write(StepMeasurement(
             library="cytnx", algorithm="tebd_quench", symmetry="dense",
             device=DEVICE, backend="cytnx", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb,
+            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
         ))
         print(f"[cytnx/tebd_quench] chi={chi} L={L} "
-              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB")
+              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
 
 
 if __name__ == "__main__":

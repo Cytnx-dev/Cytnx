@@ -81,7 +81,8 @@ def run_one_jax(chi, L):
         for _ in range(N_GRAD_STEPS):
             arrays = grad_step(arrays)
     step_time = r["time_sec"] / N_GRAD_STEPS
-    return step_time, r["peak_mem_mb"]
+    final_energy = float(energy(arrays))
+    return step_time, r["peak_mem_mb"], final_energy
 
 
 def run_one_torch(chi, L):
@@ -126,7 +127,9 @@ def run_one_torch(chi, L):
         for _ in range(N_GRAD_STEPS):
             arrays = grad_step(arrays)
     step_time = r["time_sec"] / N_GRAD_STEPS
-    return step_time, r["peak_mem_mb"]
+    with torch.no_grad():
+        final_energy = float(energy(arrays))
+    return step_time, r["peak_mem_mb"], final_energy
 
 
 def main(out_csv, backends):
@@ -137,7 +140,7 @@ def main(out_csv, backends):
         for chi, L in param_grid():
             try:
                 with time_limit(STEP_TIMEOUT_SEC):
-                    step_time, peak_mem_mb = run_one(chi, L)
+                    step_time, peak_mem_mb, energy_val = run_one(chi, L)
             except StepTimeoutError:
                 print(f"[quimb/variational_ad/{backend}] chi={chi} L={L} "
                       f"skipped (exceeded {STEP_TIMEOUT_SEC}s)")
@@ -145,10 +148,10 @@ def main(out_csv, backends):
             writer.write(StepMeasurement(
                 library="quimb", algorithm="variational_ad", symmetry="dense",
                 device=DEVICE, backend=backend, L=L, chi=chi,
-                step_time_sec=step_time, peak_mem_mb=peak_mem_mb,
+                step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy_val,
             ))
             print(f"[quimb/variational_ad/{backend}] chi={chi} L={L} "
-                  f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB")
+                  f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy_val:.6f}")
 
 
 if __name__ == "__main__":

@@ -146,13 +146,14 @@ def run_one(chi, L):
         LR[p + 1].set_name(f"LR{p+1}")
 
     def sweep():
+        energy = None
         for p in range(L - 2, -1, -1):
             dim_l = A[p].shape()[0]
             dim_r = A[p + 1].shape()[2]
             d = A[p].shape()[1]
             new_dim = min(dim_l * d, dim_r * d, chi)
             psi = cytnx.Contract(A[p], A[p + 1])
-            psi, _ = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
+            psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
             s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
             A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
@@ -181,7 +182,7 @@ def run_one(chi, L):
             d = A[p].shape()[1]
             new_dim = min(dim_l * d, dim_r * d, chi)
             psi = cytnx.Contract(A[p], A[p + 1])
-            psi, _ = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
+            psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
             s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
             A[p].relabel_(lbls[p])
@@ -205,13 +206,15 @@ def run_one(chi, L):
         A[-1].set_rowrank_(2)
         _, A[-1] = cytnx.linalg.Gesvd(A[-1], is_U=True, is_vT=False)
         A[-1].set_name(f"A{L-1}").relabel_(lbls[-1])
+        return energy
 
     timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
+    energy = None
     with timed_block() as r:
         for _ in range(N_SWEEPS):
-            sweep()
+            energy = sweep()
     step_time = r["time_sec"] / N_SWEEPS
-    return step_time, r["peak_mem_mb"]
+    return step_time, r["peak_mem_mb"], energy
 
 
 def main(out_csv):
@@ -219,17 +222,17 @@ def main(out_csv):
     for chi, L in param_grid():
         try:
             with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb = run_one(chi, L)
+                step_time, peak_mem_mb, energy = run_one(chi, L)
         except StepTimeoutError:
             print(f"[cytnx/dmrg_symmetric] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
             continue
         writer.write(StepMeasurement(
             library="cytnx", algorithm="dmrg_symmetric", symmetry="u1",
             device=DEVICE, backend="cytnx", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb,
+            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
         ))
         print(f"[cytnx/dmrg_symmetric] chi={chi} L={L} "
-              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB")
+              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
 
 
 if __name__ == "__main__":

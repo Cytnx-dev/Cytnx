@@ -64,6 +64,9 @@ class StepMeasurement:
     chi: int
     step_time_sec: float
     peak_mem_mb: float
+    # Physical result reached at this point (DMRG/TEBD/variational energy),
+    # so it can be diffed across libraries straight from the CSV.
+    answer: float
 
 
 class CSVResultWriter:

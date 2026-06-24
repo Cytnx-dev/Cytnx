@@ -37,7 +37,7 @@ def run_one(chi, L, dmrg_chi_max=None):
         E, psi = eng.run()
     n_sweeps = eng.sweep_stats["sweep"][-1] if eng.sweep_stats["sweep"] else N_SWEEPS
     step_time = r["time_sec"] / max(1, n_sweeps)
-    return step_time, r["peak_mem_mb"]
+    return step_time, r["peak_mem_mb"], E
 
 
 def main(out_csv):
@@ -45,17 +45,17 @@ def main(out_csv):
     for chi, L in param_grid():
         try:
             with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb = run_one(chi, L)
+                step_time, peak_mem_mb, energy = run_one(chi, L)
         except StepTimeoutError:
             print(f"[tenpy/dmrg_dense] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
             continue
         writer.write(StepMeasurement(
             library="tenpy", algorithm="dmrg_dense", symmetry="dense",
             device="cpu", backend="numpy", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb,
+            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
         ))
         print(f"[tenpy/dmrg_dense] chi={chi} L={L} "
-              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB")
+              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
 
 
 if __name__ == "__main__":

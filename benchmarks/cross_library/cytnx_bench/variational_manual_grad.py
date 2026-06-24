@@ -158,11 +158,12 @@ def run_one(chi, L):
         return energy
 
     timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
+    energy = None
     with timed_block() as r:
         for _ in range(N_GRAD_STEPS):
-            grad_step()
+            energy = grad_step()
     step_time = r["time_sec"] / N_GRAD_STEPS
-    return step_time, r["peak_mem_mb"]
+    return step_time, r["peak_mem_mb"], energy
 
 
 def main(out_csv):
@@ -170,17 +171,17 @@ def main(out_csv):
     for chi, L in param_grid():
         try:
             with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb = run_one(chi, L)
+                step_time, peak_mem_mb, energy = run_one(chi, L)
         except StepTimeoutError:
             print(f"[cytnx/variational_manual_grad] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
             continue
         writer.write(StepMeasurement(
             library="cytnx", algorithm="variational_manual_grad", symmetry="dense",
             device=DEVICE, backend="manual-grad", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb,
+            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
         ))
         print(f"[cytnx/variational_manual_grad] chi={chi} L={L} "
-              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB")
+              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
 
 
 if __name__ == "__main__":
