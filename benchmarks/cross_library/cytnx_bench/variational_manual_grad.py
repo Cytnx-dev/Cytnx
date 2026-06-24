@@ -92,18 +92,22 @@ def _build_mps(L, chi, device):
         dim3 = min(min(chi, dim1 * d), d ** (L - k - 1))
         A[k] = cytnx.UniTensor.normal([dim1, d, dim3], 0., 1.).set_rowrank_(2)
         A[k].relabel_(lbls[k]).set_name(f"A{k}")
-    # Left-to-right QR/SVD sweep + final renormalization: a cheap initial
-    # gauge fix (not required for correctness of the gradient itself, but
-    # keeps the starting tensors well-conditioned).
-    for p in range(L - 1):
-        s, A[p], vt = cytnx.linalg.Gesvd(A[p])
-        A[p + 1] = cytnx.Contract(cytnx.Contract(s, vt), A[p + 1])
-        A[p].relabel_(lbls[p]).set_name(f"A{p}")
-        A[p + 1].relabel_(lbls[p + 1]).set_name(f"A{p+1}")
-    A[-1] = A[-1] / A[-1].Norm().item()
+    _canonicalize_right(A, lbls, L)
     if device == "gpu":
         A = [a.to(cytnx.Device.cuda) for a in A]
     return A, lbls
+
+
+def _canonicalize_right(A, lbls, L):
+    for p in range(L - 1, 0, -1):
+        A[p].set_rowrank_(1)
+        s, u, vt = cytnx.linalg.Gesvd(A[p])
+        A[p] = vt
+        A[p - 1] = cytnx.Contract(A[p - 1], cytnx.Contract(u, s))
+        A[p].relabel_(lbls[p]).set_name(f"A{p}")
+        A[p - 1].relabel_(lbls[p - 1]).set_name(f"A{p-1}")
+    A[0] = A[0] / A[0].Norm().item()
+    A[0].relabel_(lbls[0]).set_name("A0")
 
 
 def _update_L(L_env, A_new, M):
@@ -153,9 +157,31 @@ def run_one(chi, L):
             direction = grad / grad_norm if grad_norm > 1e-12 else grad
             new_theta = theta - LEARNING_RATE * direction
             new_theta = new_theta / new_theta.Norm().item()
-            A[p] = new_theta
+            # Cytnx arithmetic ops reset UniTensor labels to the default
+            # ['0','1',...] sequence rather than preserving theta's labels,
+            # so new_theta must be relabeled back to the site's real bond
+            # names before any Gesvd split -- otherwise the split-off bond
+            # leg carries the wrong label and silently fails to contract
+            # with A[p+1]'s matching leg.
+            new_theta.relabel_(lbls[p])
+            if p < L - 1:
+                # Push the orthogonality center forward (left-canonicalize the
+                # just-updated site) so that H_eff at the next site is built
+                # against a properly left-orthonormal left environment, as the
+                # Rayleigh-quotient shortcut `energy = <theta|H_eff|theta>`
+                # requires.
+                new_theta.set_rowrank_(2)
+                s, A[p], vt = cytnx.linalg.Gesvd(new_theta)
+                A[p + 1] = cytnx.Contract(cytnx.Contract(s, vt), A[p + 1])
+                A[p + 1].relabel_(lbls[p + 1]).set_name(f"A{p+1}")
+            else:
+                A[p] = new_theta
             A[p].set_name(f"A{p}").relabel_(lbls[p])
             L_env = _update_L(L_env, A[p], M)
+        # Restore the right-canonical gauge (all sites right-orthonormal
+        # except A[0]) so the next sweep's R_env precomputation and
+        # Rayleigh-quotient shortcut remain valid.
+        _canonicalize_right(A, lbls, L)
         return energy
 
     timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
