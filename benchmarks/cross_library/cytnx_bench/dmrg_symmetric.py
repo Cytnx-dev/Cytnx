@@ -18,6 +18,7 @@ cannot be exercised in this environment (no GPU).
 """
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -109,125 +110,127 @@ def _build_mpo(J, q):
 
 
 def run_one(chi, L):
-    device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
-    M, L0, R0, bd_phys = _build_mpo(HEISENBERG_J, TARGET_Q)
-    if DEVICE == "gpu":
-        M = M.to(device)
-        L0 = L0.to(device)
-        R0 = R0.to(device)
+    timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
+    energy = None
+    with timed_block() as r:
+        device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
+        M, L0, R0, bd_phys = _build_mpo(HEISENBERG_J, TARGET_Q)
+        if DEVICE == "gpu":
+            M = M.to(device)
+            L0 = L0.to(device)
+            R0 = R0.to(device)
 
-    A = [None for _ in range(L)]
-    qcntr = 0
-    cq = 1 if qcntr <= TARGET_Q else -1
-    qcntr += cq
-
-    VbdL = cytnx.Bond(cytnx.BD_KET, [[0]], [1])
-    A[0] = cytnx.UniTensor([VbdL, bd_phys.redirect(), cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])]) \
-        .set_rowrank_(2).set_name("A0")
-    A[0].get_block_()[0] = 1
-
-    lbls = [["0", "1", "2"]]
-    for k in range(1, L):
-        B1 = A[k - 1].bonds()[2].redirect()
-        B2 = A[k - 1].bonds()[1]
+        A = [None for _ in range(L)]
+        qcntr = 0
         cq = 1 if qcntr <= TARGET_Q else -1
         qcntr += cq
-        B3 = cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])
 
-        A[k] = cytnx.UniTensor([B1, B2, B3]).set_rowrank_(2).set_name(f"A{k}")
-        lbl = [str(2 * k), str(2 * k + 1), str(2 * k + 2)]
-        A[k].relabel_(lbl)
-        A[k].get_block_()[0] = 1
-        lbls.append(lbl)
+        VbdL = cytnx.Bond(cytnx.BD_KET, [[0]], [1])
+        A[0] = cytnx.UniTensor([VbdL, bd_phys.redirect(), cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])]) \
+            .set_rowrank_(2).set_name("A0")
+        A[0].get_block_()[0] = 1
 
-    if DEVICE == "gpu":
-        A = [a.to(device) for a in A]
+        lbls = [["0", "1", "2"]]
+        for k in range(1, L):
+            B1 = A[k - 1].bonds()[2].redirect()
+            B2 = A[k - 1].bonds()[1]
+            cq = 1 if qcntr <= TARGET_Q else -1
+            qcntr += cq
+            B3 = cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])
 
-    LR = [None for _ in range(L + 1)]
-    LR[0] = L0
-    LR[-1] = R0
+            A[k] = cytnx.UniTensor([B1, B2, B3]).set_rowrank_(2).set_name(f"A{k}")
+            lbl = [str(2 * k), str(2 * k + 1), str(2 * k + 2)]
+            A[k].relabel_(lbl)
+            A[k].get_block_()[0] = 1
+            lbls.append(lbl)
 
-    anet = cytnx.Network()
-    anet.FromString(["L: -2,-1,-3",
-                      "A: -1,-4,1",
-                      "M: -2,0,-4,-5",
-                      "A_Conj: -3,-5,2",
-                      "TOUT: 0;1,2"])
-    for p in range(L - 1):
-        anet.PutUniTensors(["L", "A", "A_Conj", "M"],
-                            [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
-        LR[p + 1] = anet.Launch()
-        LR[p + 1].set_name(f"LR{p+1}")
+        if DEVICE == "gpu":
+            A = [a.to(device) for a in A]
 
-    def sweep():
-        energy = None
-        for p in range(L - 2, -1, -1):
-            dim_l = A[p].shape()[0]
-            dim_r = A[p + 1].shape()[2]
-            d = A[p].shape()[1]
-            new_dim = min(dim_l * d, dim_r * d, chi)
-            psi = cytnx.Contract(A[p], A[p + 1])
-            psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
-            psi.set_rowrank_(2)
-            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
-            A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
-            s = s / s.Norm().item()
-            A[p] = cytnx.Contract(A[p], s)
-            A[p].set_name(f"A{p}").relabel_(lbls[p])
+        LR = [None for _ in range(L + 1)]
+        LR[0] = L0
+        LR[-1] = R0
 
-            anet = cytnx.Network()
-            anet.FromString(["R: -2,-1,-3",
-                              "B: 1,-4,-1",
-                              "M: 0,-2,-4,-5",
-                              "B_Conj: 2,-5,-3",
-                              "TOUT: 0;1,2"])
-            anet.PutUniTensors(["R", "B", "M", "B_Conj"],
-                                [LR[p + 2], A[p + 1], M, A[p + 1].Dagger().permute_(A[p + 1].labels())])
-            LR[p + 1] = anet.Launch()
-            LR[p + 1].set_name(f"LR{p+1}")
-
-        A[0].set_rowrank_(1)
-        _, A[0] = cytnx.linalg.Gesvd(A[0], is_U=False, is_vT=True)
-        A[0].relabel_(lbls[0])
-
+        anet = cytnx.Network()
+        anet.FromString(["L: -2,-1,-3",
+                          "A: -1,-4,1",
+                          "M: -2,0,-4,-5",
+                          "A_Conj: -3,-5,2",
+                          "TOUT: 0;1,2"])
         for p in range(L - 1):
-            dim_l = A[p].shape()[0]
-            dim_r = A[p + 1].shape()[2]
-            d = A[p].shape()[1]
-            new_dim = min(dim_l * d, dim_r * d, chi)
-            psi = cytnx.Contract(A[p], A[p + 1])
-            psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
-            psi.set_rowrank_(2)
-            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
-            A[p].relabel_(lbls[p])
-            s = s / s.Norm().item()
-            A[p + 1] = cytnx.Contract(s, A[p + 1])
-            A[p + 1].relabel_(lbls[p + 1])
-            A[p].set_name(f"A{p}")
-            A[p + 1].set_name(f"A{p+1}")
-
-            anet = cytnx.Network()
-            anet.FromString(["L: -2,-1,-3",
-                              "A: -1,-4,1",
-                              "M: -2,0,-4,-5",
-                              "A_Conj: -3,-5,2",
-                              "TOUT: 0;1,2"])
             anet.PutUniTensors(["L", "A", "A_Conj", "M"],
                                 [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
             LR[p + 1] = anet.Launch()
             LR[p + 1].set_name(f"LR{p+1}")
 
-        A[-1].set_rowrank_(2)
-        _, A[-1] = cytnx.linalg.Gesvd(A[-1], is_U=True, is_vT=False)
-        A[-1].set_name(f"A{L-1}").relabel_(lbls[-1])
-        return energy
+        def sweep():
+            energy = None
+            for p in range(L - 2, -1, -1):
+                dim_l = A[p].shape()[0]
+                dim_r = A[p + 1].shape()[2]
+                d = A[p].shape()[1]
+                new_dim = min(dim_l * d, dim_r * d, chi)
+                psi = cytnx.Contract(A[p], A[p + 1])
+                psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
+                psi.set_rowrank_(2)
+                s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
+                A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
+                s = s / s.Norm().item()
+                A[p] = cytnx.Contract(A[p], s)
+                A[p].set_name(f"A{p}").relabel_(lbls[p])
 
-    timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
-    energy = None
-    with timed_block() as r:
+                anet = cytnx.Network()
+                anet.FromString(["R: -2,-1,-3",
+                                  "B: 1,-4,-1",
+                                  "M: 0,-2,-4,-5",
+                                  "B_Conj: 2,-5,-3",
+                                  "TOUT: 0;1,2"])
+                anet.PutUniTensors(["R", "B", "M", "B_Conj"],
+                                    [LR[p + 2], A[p + 1], M, A[p + 1].Dagger().permute_(A[p + 1].labels())])
+                LR[p + 1] = anet.Launch()
+                LR[p + 1].set_name(f"LR{p+1}")
+
+            A[0].set_rowrank_(1)
+            _, A[0] = cytnx.linalg.Gesvd(A[0], is_U=False, is_vT=True)
+            A[0].relabel_(lbls[0])
+
+            for p in range(L - 1):
+                dim_l = A[p].shape()[0]
+                dim_r = A[p + 1].shape()[2]
+                d = A[p].shape()[1]
+                new_dim = min(dim_l * d, dim_r * d, chi)
+                psi = cytnx.Contract(A[p], A[p + 1])
+                psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
+                psi.set_rowrank_(2)
+                s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
+                A[p].relabel_(lbls[p])
+                s = s / s.Norm().item()
+                A[p + 1] = cytnx.Contract(s, A[p + 1])
+                A[p + 1].relabel_(lbls[p + 1])
+                A[p].set_name(f"A{p}")
+                A[p + 1].set_name(f"A{p+1}")
+
+                anet = cytnx.Network()
+                anet.FromString(["L: -2,-1,-3",
+                                  "A: -1,-4,1",
+                                  "M: -2,0,-4,-5",
+                                  "A_Conj: -3,-5,2",
+                                  "TOUT: 0;1,2"])
+                anet.PutUniTensors(["L", "A", "A_Conj", "M"],
+                                    [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
+                LR[p + 1] = anet.Launch()
+                LR[p + 1].set_name(f"LR{p+1}")
+
+            A[-1].set_rowrank_(2)
+            _, A[-1] = cytnx.linalg.Gesvd(A[-1], is_U=True, is_vT=False)
+            A[-1].set_name(f"A{L-1}").relabel_(lbls[-1])
+            return energy
+
+        t0 = time.perf_counter()
         for _ in range(N_SWEEPS):
             energy = sweep()
-    step_time = r["time_sec"] / N_SWEEPS
+        loop_time = time.perf_counter() - t0
+    step_time = loop_time / N_SWEEPS
     return step_time, r["peak_mem_mb"], energy
 
 

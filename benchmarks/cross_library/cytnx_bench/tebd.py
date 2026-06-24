@@ -23,6 +23,7 @@ exercised in this environment (no GPU).
 """
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -125,35 +126,37 @@ def _energy(A, M, L0, R0, device):
 
 
 def run_one(chi, L):
-    device = "gpu" if DEVICE == "gpu" else "cpu"
-    d = 2
-    A, lbls = _build_mps(L, chi, device)
-    gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
-    M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL)
-
-    def sweep():
-        for p in range(L - 1):
-            psi = cytnx.Contract(A[p], A[p + 1])
-            g = gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
-            psi = cytnx.Contract(psi, g)
-            psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
-            psi.relabel_([lbls[p][0], lbls[p][1], lbls[p + 1][1], lbls[p + 1][2]])
-            psi.set_rowrank_(2)
-            dim_l = A[p].shape()[0]
-            dim_r = A[p + 1].shape()[2]
-            new_dim = min(dim_l * d, dim_r * d, chi)
-            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
-            s = s / s.Norm().item()
-            A[p + 1] = cytnx.Contract(s, A[p + 1])
-            A[p].set_name(f"A{p}").relabel_(lbls[p])
-            A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
-
     timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
     with timed_block() as r:
+        device = "gpu" if DEVICE == "gpu" else "cpu"
+        d = 2
+        A, lbls = _build_mps(L, chi, device)
+        gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
+        M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL)
+
+        def sweep():
+            for p in range(L - 1):
+                psi = cytnx.Contract(A[p], A[p + 1])
+                g = gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
+                psi = cytnx.Contract(psi, g)
+                psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
+                psi.relabel_([lbls[p][0], lbls[p][1], lbls[p + 1][1], lbls[p + 1][2]])
+                psi.set_rowrank_(2)
+                dim_l = A[p].shape()[0]
+                dim_r = A[p + 1].shape()[2]
+                new_dim = min(dim_l * d, dim_r * d, chi)
+                s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
+                s = s / s.Norm().item()
+                A[p + 1] = cytnx.Contract(s, A[p + 1])
+                A[p].set_name(f"A{p}").relabel_(lbls[p])
+                A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
+
+        t0 = time.perf_counter()
         for _ in range(TFIM_N_STEPS):
             sweep()
-    step_time = r["time_sec"] / TFIM_N_STEPS
-    energy = _energy(A, M, L0, R0, device)
+        loop_time = time.perf_counter() - t0
+        energy = _energy(A, M, L0, R0, device)
+    step_time = loop_time / TFIM_N_STEPS
     return step_time, r["peak_mem_mb"], energy
 
 

@@ -9,6 +9,7 @@ cannot be exercised in this environment (no GPU).
 """
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -33,11 +34,13 @@ def build(chi, L):
 
 
 def run_one(chi, L):
-    dmrg = build(chi, L)
     timed_block = torch_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
     with timed_block() as r:
+        dmrg = build(chi, L)
+        t0 = time.perf_counter()
         dmrg.solve(tol=1e-6, max_sweeps=N_SWEEPS, verbosity=0)
-    step_time = r["time_sec"] / N_SWEEPS
+        loop_time = time.perf_counter() - t0
+    step_time = loop_time / N_SWEEPS
     return step_time, r["peak_mem_mb"], dmrg.energy
 
 

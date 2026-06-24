@@ -8,6 +8,7 @@ in this environment (no GPU).
 """
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -35,14 +36,16 @@ def build(chi, L):
 
 
 def run_one(chi, L):
-    tebd = build(chi, L)
     timed_block = torch_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
     with timed_block() as r:
+        tebd = build(chi, L)
+        t0 = time.perf_counter()
         for _ in range(TFIM_N_STEPS):
             tebd.step(order=2, dt=TFIM_DT)
-    step_time = r["time_sec"] / TFIM_N_STEPS
-    H_mpo = qtn.MPO_ham_ising(L, j=TFIM_J, bx=TFIM_HX_FINAL, cyclic=False)
-    energy = tebd.pt.H @ (H_mpo.apply(tebd.pt))
+        loop_time = time.perf_counter() - t0
+        H_mpo = qtn.MPO_ham_ising(L, j=TFIM_J, bx=TFIM_HX_FINAL, cyclic=False)
+        energy = tebd.pt.H @ (H_mpo.apply(tebd.pt))
+    step_time = loop_time / TFIM_N_STEPS
     return step_time, r["peak_mem_mb"], float(energy.real)
 
 

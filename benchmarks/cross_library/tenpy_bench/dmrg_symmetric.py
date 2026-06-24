@@ -6,6 +6,7 @@ is the library's flagship optimization for abelian symmetries. CPU only.
 """
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -20,27 +21,29 @@ from common.model import HEISENBERG_J, N_SWEEPS, STEP_TIMEOUT_SEC, param_grid
 
 
 def run_one(chi, L):
-    model_params = dict(
-        L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
-        bc_MPS="finite", conserve="Sz",
-    )
-    M = SpinChain(model_params)
-    # Total Sz=0 sector (Neel state), required for a conserve='Sz' MPS.
-    product_state = (["up", "down"] * (L // 2 + 1))[:L]
-    psi = MPS.from_product_state(M.lat.mps_sites(), product_state, bc=M.lat.bc_MPS)
-
-    dmrg_params = {
-        "mixer": True,
-        "trunc_params": {"chi_max": chi, "svd_min": 1e-10},
-        "max_sweeps": N_SWEEPS,
-        "combine": True,
-    }
-    eng = dmrg.TwoSiteDMRGEngine(psi, M, dmrg_params)
-
     with cpu_timed_block() as r:
+        model_params = dict(
+            L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
+            bc_MPS="finite", conserve="Sz",
+        )
+        M = SpinChain(model_params)
+        # Total Sz=0 sector (Neel state), required for a conserve='Sz' MPS.
+        product_state = (["up", "down"] * (L // 2 + 1))[:L]
+        psi = MPS.from_product_state(M.lat.mps_sites(), product_state, bc=M.lat.bc_MPS)
+
+        dmrg_params = {
+            "mixer": True,
+            "trunc_params": {"chi_max": chi, "svd_min": 1e-10},
+            "max_sweeps": N_SWEEPS,
+            "combine": True,
+        }
+        eng = dmrg.TwoSiteDMRGEngine(psi, M, dmrg_params)
+
+        t0 = time.perf_counter()
         E, psi = eng.run()
+        loop_time = time.perf_counter() - t0
     n_sweeps = eng.sweep_stats["sweep"][-1] if eng.sweep_stats["sweep"] else N_SWEEPS
-    step_time = r["time_sec"] / max(1, n_sweeps)
+    step_time = loop_time / max(1, n_sweeps)
     return step_time, r["peak_mem_mb"], E
 
 

@@ -36,6 +36,7 @@ only.
 """
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -54,45 +55,47 @@ LEARNING_RATE = 0.1
 
 
 def run_one(chi, L):
-    M = SpinChain(dict(
-        L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
-        bc_MPS="finite", conserve=None,
-    ))
-    sites = M.lat.mps_sites()
-    product_state = (["up", "down"] * (L // 2 + 1))[:L]
-    psi = MPS.from_random_unitary_evolution(sites, chi, product_state, form="B")
-    psi.canonical_form()
-
-    def grad_step():
-        env = MPOEnvironment(psi, M.H_MPO, psi)
-        energy = None
-        R = None
-        for i0 in range(L):
-            theta = psi.get_theta(i0, n=1)
-            if R is not None:
-                theta = npc.tensordot(R, theta, axes=["vR", "vL"])
-            eff = OneSiteH(env, i0)
-            h_theta = eff.matvec(theta)
-            norm_sq = npc.inner(theta, theta, axes="range", do_conj=True)
-            energy = npc.inner(theta, h_theta, axes="range", do_conj=True) / norm_sq
-            grad = 2 * (h_theta - energy * theta)
-            new_theta = theta - LEARNING_RATE * grad
-            new_theta.ireplace_label("p0", "p")
-            if i0 < L - 1:
-                combined = new_theta.combine_legs(["vL", "p"], qconj=+1)
-                Q, R = npc.qr(combined, inner_labels=["vR", "vL"])
-                psi.set_B(i0, Q.split_legs(0), form="A")
-            else:
-                new_theta /= npc.norm(new_theta)
-                psi.set_B(i0, new_theta, form="B")
-        psi.canonical_form()
-        return energy.real
-
-    energy = None
     with cpu_timed_block() as r:
+        M = SpinChain(dict(
+            L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
+            bc_MPS="finite", conserve=None,
+        ))
+        sites = M.lat.mps_sites()
+        product_state = (["up", "down"] * (L // 2 + 1))[:L]
+        psi = MPS.from_random_unitary_evolution(sites, chi, product_state, form="B")
+        psi.canonical_form()
+
+        def grad_step():
+            env = MPOEnvironment(psi, M.H_MPO, psi)
+            energy = None
+            R = None
+            for i0 in range(L):
+                theta = psi.get_theta(i0, n=1)
+                if R is not None:
+                    theta = npc.tensordot(R, theta, axes=["vR", "vL"])
+                eff = OneSiteH(env, i0)
+                h_theta = eff.matvec(theta)
+                norm_sq = npc.inner(theta, theta, axes="range", do_conj=True)
+                energy = npc.inner(theta, h_theta, axes="range", do_conj=True) / norm_sq
+                grad = 2 * (h_theta - energy * theta)
+                new_theta = theta - LEARNING_RATE * grad
+                new_theta.ireplace_label("p0", "p")
+                if i0 < L - 1:
+                    combined = new_theta.combine_legs(["vL", "p"], qconj=+1)
+                    Q, R = npc.qr(combined, inner_labels=["vR", "vL"])
+                    psi.set_B(i0, Q.split_legs(0), form="A")
+                else:
+                    new_theta /= npc.norm(new_theta)
+                    psi.set_B(i0, new_theta, form="B")
+            psi.canonical_form()
+            return energy.real
+
+        energy = None
+        t0 = time.perf_counter()
         for _ in range(N_GRAD_STEPS):
             energy = grad_step()
-    step_time = r["time_sec"] / N_GRAD_STEPS
+        loop_time = time.perf_counter() - t0
+    step_time = loop_time / N_GRAD_STEPS
     return step_time, r["peak_mem_mb"], energy
 
 

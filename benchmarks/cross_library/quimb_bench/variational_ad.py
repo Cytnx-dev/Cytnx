@@ -22,6 +22,7 @@ but cannot be exercised in this environment (no GPU).
 """
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -47,105 +48,108 @@ def run_one_jax(chi, L):
     import jax
     import jax.numpy as jnp
 
-    psi, H = _build(chi, L)
-    if DEVICE == "gpu":
-        device = jax.devices("gpu")[0]
-    else:
-        device = jax.devices("cpu")[0]
-    arrays = tuple(jax.device_put(jnp.asarray(a), device) for a in psi.arrays)
-    H.apply_to_arrays(lambda x: jax.device_put(jnp.asarray(x), device))
-
-    def energy(arrays):
-        p = psi.copy()
-        for i, a in enumerate(arrays):
-            p[i].modify(data=a)
-        num = p.H @ (H.apply(p))
-        den = p.H @ p
-        return jnp.real(num / den)
-
-    def norm_sq(arrays):
-        p = psi.copy()
-        for i, a in enumerate(arrays):
-            p[i].modify(data=a)
-        return jnp.real(p.H @ p)
-
-    grad_fn = jax.jit(jax.grad(energy)) if DEVICE == "cpu" else jax.grad(energy)
     timed_block = jax_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
-
-    def grad_step(arrays):
-        g = grad_fn(arrays)
-        new_arrays = [a - LEARNING_RATE * ga for a, ga in zip(arrays, g)]
-        # Rescale the whole state by a single global factor derived from
-        # <psi|psi>, distributed evenly across all L tensors, rather than
-        # normalizing each tensor independently -- the MPS is not in
-        # canonical form here, so per-tensor normalization does not keep
-        # the contracted <psi|psi> close to 1.
-        scale = norm_sq(tuple(new_arrays)) ** (-1.0 / (2 * len(new_arrays)))
-        new_arrays = [a * scale for a in new_arrays]
-        return tuple(new_arrays)
-
     with timed_block() as r:
+        psi, H = _build(chi, L)
+        if DEVICE == "gpu":
+            device = jax.devices("gpu")[0]
+        else:
+            device = jax.devices("cpu")[0]
+        arrays = tuple(jax.device_put(jnp.asarray(a), device) for a in psi.arrays)
+        H.apply_to_arrays(lambda x: jax.device_put(jnp.asarray(x), device))
+
+        def energy(arrays):
+            p = psi.copy()
+            for i, a in enumerate(arrays):
+                p[i].modify(data=a)
+            num = p.H @ (H.apply(p))
+            den = p.H @ p
+            return jnp.real(num / den)
+
+        def norm_sq(arrays):
+            p = psi.copy()
+            for i, a in enumerate(arrays):
+                p[i].modify(data=a)
+            return jnp.real(p.H @ p)
+
+        grad_fn = jax.jit(jax.grad(energy)) if DEVICE == "cpu" else jax.grad(energy)
+
+        def grad_step(arrays):
+            g = grad_fn(arrays)
+            new_arrays = [a - LEARNING_RATE * ga for a, ga in zip(arrays, g)]
+            # Rescale the whole state by a single global factor derived from
+            # <psi|psi>, distributed evenly across all L tensors, rather than
+            # normalizing each tensor independently -- the MPS is not in
+            # canonical form here, so per-tensor normalization does not keep
+            # the contracted <psi|psi> close to 1.
+            scale = norm_sq(tuple(new_arrays)) ** (-1.0 / (2 * len(new_arrays)))
+            new_arrays = [a * scale for a in new_arrays]
+            return tuple(new_arrays)
+
+        t0 = time.perf_counter()
         for _ in range(N_GRAD_STEPS):
             arrays = grad_step(arrays)
-    step_time = r["time_sec"] / N_GRAD_STEPS
-    final_energy = float(energy(arrays))
+        loop_time = time.perf_counter() - t0
+        final_energy = float(energy(arrays))
+    step_time = loop_time / N_GRAD_STEPS
     return step_time, r["peak_mem_mb"], final_energy
 
 
 def run_one_torch(chi, L):
     import torch
 
-    psi, H = _build(chi, L)
-    torch_device = "cuda" if DEVICE == "gpu" else "cpu"
-    arrays = [
-        torch.as_tensor(a, dtype=torch.float64, device=torch_device).clone().requires_grad_(True)
-        for a in psi.arrays
-    ]
-    H.apply_to_arrays(lambda x: torch.tensor(x, dtype=torch.float64, device=torch_device))
-
-    def energy(arrays):
-        p = psi.copy()
-        for i, a in enumerate(arrays):
-            p[i].modify(data=a)
-        num = p.H @ (H.apply(p))
-        den = p.H @ p
-        e = num / den
-        return torch.real(e) if torch.is_complex(e) else e
-
     timed_block = torch_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
-
-    def norm_sq(arrays):
-        p = psi.copy()
-        for i, a in enumerate(arrays):
-            p[i].modify(data=a)
-        return p.H @ p
-
-    def grad_step(arrays):
-        for a in arrays:
-            if a.grad is not None:
-                a.grad = None
-        e = energy(arrays)
-        e.backward()
-        new_arrays = []
-        with torch.no_grad():
-            for a in arrays:
-                a_new = a - LEARNING_RATE * a.grad
-                new_arrays.append(a_new)
-            # Rescale the whole state by a single global factor derived from
-            # <psi|psi>, distributed evenly across all L tensors, rather than
-            # normalizing each tensor independently -- the MPS is not in
-            # canonical form here, so per-tensor normalization does not keep
-            # the contracted <psi|psi> close to 1.
-            scale = norm_sq(new_arrays) ** (-1.0 / (2 * len(new_arrays)))
-            new_arrays = [(a * scale).clone().requires_grad_(True) for a in new_arrays]
-        return new_arrays
-
     with timed_block() as r:
+        psi, H = _build(chi, L)
+        torch_device = "cuda" if DEVICE == "gpu" else "cpu"
+        arrays = [
+            torch.as_tensor(a, dtype=torch.float64, device=torch_device).clone().requires_grad_(True)
+            for a in psi.arrays
+        ]
+        H.apply_to_arrays(lambda x: torch.tensor(x, dtype=torch.float64, device=torch_device))
+
+        def energy(arrays):
+            p = psi.copy()
+            for i, a in enumerate(arrays):
+                p[i].modify(data=a)
+            num = p.H @ (H.apply(p))
+            den = p.H @ p
+            e = num / den
+            return torch.real(e) if torch.is_complex(e) else e
+
+        def norm_sq(arrays):
+            p = psi.copy()
+            for i, a in enumerate(arrays):
+                p[i].modify(data=a)
+            return p.H @ p
+
+        def grad_step(arrays):
+            for a in arrays:
+                if a.grad is not None:
+                    a.grad = None
+            e = energy(arrays)
+            e.backward()
+            new_arrays = []
+            with torch.no_grad():
+                for a in arrays:
+                    a_new = a - LEARNING_RATE * a.grad
+                    new_arrays.append(a_new)
+                # Rescale the whole state by a single global factor derived from
+                # <psi|psi>, distributed evenly across all L tensors, rather than
+                # normalizing each tensor independently -- the MPS is not in
+                # canonical form here, so per-tensor normalization does not keep
+                # the contracted <psi|psi> close to 1.
+                scale = norm_sq(new_arrays) ** (-1.0 / (2 * len(new_arrays)))
+                new_arrays = [(a * scale).clone().requires_grad_(True) for a in new_arrays]
+            return new_arrays
+
+        t0 = time.perf_counter()
         for _ in range(N_GRAD_STEPS):
             arrays = grad_step(arrays)
-    step_time = r["time_sec"] / N_GRAD_STEPS
-    with torch.no_grad():
-        final_energy = float(energy(arrays))
+        loop_time = time.perf_counter() - t0
+        with torch.no_grad():
+            final_energy = float(energy(arrays))
+    step_time = loop_time / N_GRAD_STEPS
     return step_time, r["peak_mem_mb"], final_energy
 
 

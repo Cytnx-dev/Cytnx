@@ -87,35 +87,37 @@ def _heisenberg_two_site_op():
 
 
 def run_one(chi, L):
-    gate = heisenberg_two_site_gate(TFIM_DT)
-    # Alternate site charges so the half-filled (Neel-like) total-Sz=0
-    # sector is reachable at the bond dimensions in our sweep grid.
-    psi = sr.MPS_abelian_rand(
-        "U1", L=L, bond_dim=chi, phys_dim=PHYS_CHARGE_MAP, seed=0,
-        site_charge=lambda i: 1 if i % 2 == 0 else -1,
-    )
-    if ARRAY_BACKEND != "numpy":
-        import cupy as cp
-        psi.apply_to_arrays(lambda x: cp.asarray(x))
-
-    def block_sparse_sweep():
-        for i in range(L - 1):
-            psi.gate_split_(gate, where=(i, i + 1), max_bond=chi, cutoff=1e-10)
-
     with cpu_timed_block() as r:
+        gate = heisenberg_two_site_gate(TFIM_DT)
+        # Alternate site charges so the half-filled (Neel-like) total-Sz=0
+        # sector is reachable at the bond dimensions in our sweep grid.
+        psi = sr.MPS_abelian_rand(
+            "U1", L=L, bond_dim=chi, phys_dim=PHYS_CHARGE_MAP, seed=0,
+            site_charge=lambda i: 1 if i % 2 == 0 else -1,
+        )
+        if ARRAY_BACKEND != "numpy":
+            import cupy as cp
+            psi.apply_to_arrays(lambda x: cp.asarray(x))
+
+        def block_sparse_sweep():
+            for i in range(L - 1):
+                psi.gate_split_(gate, where=(i, i + 1), max_bond=chi, cutoff=1e-10)
+
+        t0 = time.perf_counter()
         for _ in range(N_SWEEPS):
             block_sparse_sweep()
-    step_time = r["time_sec"] / N_SWEEPS
-    # Not a converged ground energy (see module docstring: this script runs
-    # imaginary-time evolution of a random state, not a real DMRG search) --
-    # reported only as the Heisenberg-bond energy of whatever state the
-    # block-sparse sweep reached, for sanity-checking against itself across
-    # runs, not for cross-library ground-energy comparison.
-    h_op = _heisenberg_two_site_op()
-    energy = sum(
-        psi.local_expectation_exact(h_op, where=(i, i + 1))
-        for i in range(L - 1)
-    )
+        loop_time = time.perf_counter() - t0
+        # Not a converged ground energy (see module docstring: this script runs
+        # imaginary-time evolution of a random state, not a real DMRG search) --
+        # reported only as the Heisenberg-bond energy of whatever state the
+        # block-sparse sweep reached, for sanity-checking against itself across
+        # runs, not for cross-library ground-energy comparison.
+        h_op = _heisenberg_two_site_op()
+        energy = sum(
+            psi.local_expectation_exact(h_op, where=(i, i + 1))
+            for i in range(L - 1)
+        )
+    step_time = loop_time / N_SWEEPS
     return step_time, r["peak_mem_mb"], energy
 
 
