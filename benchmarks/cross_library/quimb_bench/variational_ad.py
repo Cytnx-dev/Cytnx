@@ -63,6 +63,12 @@ def run_one_jax(chi, L):
         den = p.H @ p
         return jnp.real(num / den)
 
+    def norm_sq(arrays):
+        p = psi.copy()
+        for i, a in enumerate(arrays):
+            p[i].modify(data=a)
+        return jnp.real(p.H @ p)
+
     grad_fn = jax.jit(jax.grad(energy)) if DEVICE == "cpu" else jax.grad(energy)
     timed_block = jax_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
 
@@ -73,8 +79,14 @@ def run_one_jax(chi, L):
             gnorm = jnp.linalg.norm(ga)
             direction = jnp.where(gnorm > 1e-12, ga / gnorm, ga)
             a_new = a - LEARNING_RATE * direction
-            a_new = a_new / jnp.linalg.norm(a_new)
             new_arrays.append(a_new)
+        # Rescale the whole state by a single global factor derived from
+        # <psi|psi>, distributed evenly across all L tensors, rather than
+        # normalizing each tensor independently -- the MPS is not in
+        # canonical form here, so per-tensor normalization does not keep
+        # the contracted <psi|psi> close to 1.
+        scale = norm_sq(tuple(new_arrays)) ** (-1.0 / (2 * len(new_arrays)))
+        new_arrays = [a * scale for a in new_arrays]
         return tuple(new_arrays)
 
     with timed_block() as r:
@@ -107,6 +119,12 @@ def run_one_torch(chi, L):
 
     timed_block = torch_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
 
+    def norm_sq(arrays):
+        p = psi.copy()
+        for i, a in enumerate(arrays):
+            p[i].modify(data=a)
+        return p.H @ p
+
     def grad_step(arrays):
         for a in arrays:
             if a.grad is not None:
@@ -119,8 +137,14 @@ def run_one_torch(chi, L):
                 gnorm = a.grad.norm()
                 direction = a.grad / gnorm if gnorm > 1e-12 else a.grad
                 a_new = a - LEARNING_RATE * direction
-                a_new = a_new / a_new.norm()
-                new_arrays.append(a_new.clone().requires_grad_(True))
+                new_arrays.append(a_new)
+            # Rescale the whole state by a single global factor derived from
+            # <psi|psi>, distributed evenly across all L tensors, rather than
+            # normalizing each tensor independently -- the MPS is not in
+            # canonical form here, so per-tensor normalization does not keep
+            # the contracted <psi|psi> close to 1.
+            scale = norm_sq(new_arrays) ** (-1.0 / (2 * len(new_arrays)))
+            new_arrays = [(a * scale).clone().requires_grad_(True) for a in new_arrays]
         return new_arrays
 
     with timed_block() as r:
