@@ -9,17 +9,12 @@ cannot be exercised in this environment (no GPU).
 """
 import os
 import sys
-import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import quimb.tensor as qtn
 
-from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, time_limit,
-    torch_gpu_timed_block,
-)
-from common.model import HEISENBERG_J, N_SWEEPS, STEP_TIMEOUT_SEC, param_grid
+from common.model import HEISENBERG_J, N_SWEEPS
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
@@ -34,37 +29,6 @@ def build(chi, L):
 
 
 def run_one(chi, L):
-    timed_block = torch_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
-    with timed_block() as r:
-        dmrg = build(chi, L)
-        t0 = time.perf_counter()
-        dmrg.solve(tol=1e-6, max_sweeps=N_SWEEPS, verbosity=0)
-        loop_time = time.perf_counter() - t0
-    step_time = loop_time / N_SWEEPS
-    return step_time, r["peak_mem_mb"], dmrg.energy
-
-
-def main(out_csv):
-    writer = CSVResultWriter(out_csv)
-    done = completed_keys(out_csv, "chi", "L")
-    for chi, L in param_grid():
-        if (str(chi), str(L)) in done:
-            continue
-        try:
-            with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb, energy = run_one(chi, L)
-        except StepTimeoutError:
-            print(f"[quimb/dmrg_dense] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
-            continue
-        writer.write(StepMeasurement(
-            library="quimb", algorithm="dmrg_dense", symmetry="dense",
-            device=DEVICE, backend="numpy" if DEVICE == "cpu" else "torch",
-            L=L, chi=chi, step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
-        ))
-        print(f"[quimb/dmrg_dense] chi={chi} L={L} "
-              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
-
-
-if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else "results/quimb_dmrg_dense.csv"
-    main(out)
+    dmrg = build(chi, L)
+    dmrg.solve(tol=1e-6, max_sweeps=N_SWEEPS, verbosity=0)
+    return dmrg.energy

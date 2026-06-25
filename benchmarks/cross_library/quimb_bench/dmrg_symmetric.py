@@ -22,7 +22,6 @@ ARRAY_BACKEND below but cannot be exercised in this environment (no GPU).
 """
 import os
 import sys
-import time
 
 import numpy as np
 from scipy.linalg import expm
@@ -31,10 +30,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import symmray as sr
 
-from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, time_limit,
-)
-from common.model import HEISENBERG_J, N_SWEEPS, STEP_TIMEOUT_SEC, TFIM_DT, param_grid
+from common.model import HEISENBERG_J, N_SWEEPS, TFIM_DT
 
 # Symmray block-sparse arrays are built on top of a plain NumPy/CuPy array
 # per charge-block; selecting "cupy" here would move every block to the GPU
@@ -87,61 +83,31 @@ def _heisenberg_two_site_op():
 
 
 def run_one(chi, L):
-    with cpu_timed_block() as r:
-        gate = heisenberg_two_site_gate(TFIM_DT)
-        # Alternate site charges so the half-filled (Neel-like) total-Sz=0
-        # sector is reachable at the bond dimensions in our sweep grid.
-        psi = sr.MPS_abelian_rand(
-            "U1", L=L, bond_dim=chi, phys_dim=PHYS_CHARGE_MAP, seed=0,
-            site_charge=lambda i: 1 if i % 2 == 0 else -1,
-        )
-        if ARRAY_BACKEND != "numpy":
-            import cupy as cp
-            psi.apply_to_arrays(lambda x: cp.asarray(x))
+    gate = heisenberg_two_site_gate(TFIM_DT)
+    # Alternate site charges so the half-filled (Neel-like) total-Sz=0
+    # sector is reachable at the bond dimensions in our sweep grid.
+    psi = sr.MPS_abelian_rand(
+        "U1", L=L, bond_dim=chi, phys_dim=PHYS_CHARGE_MAP, seed=0,
+        site_charge=lambda i: 1 if i % 2 == 0 else -1,
+    )
+    if ARRAY_BACKEND != "numpy":
+        import cupy as cp
+        psi.apply_to_arrays(lambda x: cp.asarray(x))
 
-        def block_sparse_sweep():
-            for i in range(L - 1):
-                psi.gate_split_(gate, where=(i, i + 1), max_bond=chi, cutoff=1e-10)
+    def block_sparse_sweep():
+        for i in range(L - 1):
+            psi.gate_split_(gate, where=(i, i + 1), max_bond=chi, cutoff=1e-10)
 
-        t0 = time.perf_counter()
-        for _ in range(N_SWEEPS):
-            block_sparse_sweep()
-        loop_time = time.perf_counter() - t0
-        # Not a converged ground energy (see module docstring: this script runs
-        # imaginary-time evolution of a random state, not a real DMRG search) --
-        # reported only as the Heisenberg-bond energy of whatever state the
-        # block-sparse sweep reached, for sanity-checking against itself across
-        # runs, not for cross-library ground-energy comparison.
-        h_op = _heisenberg_two_site_op()
-        energy = sum(
-            psi.local_expectation_exact(h_op, where=(i, i + 1))
-            for i in range(L - 1)
-        )
-    step_time = loop_time / N_SWEEPS
-    return step_time, r["peak_mem_mb"], energy
-
-
-def main(out_csv):
-    writer = CSVResultWriter(out_csv)
-    done = completed_keys(out_csv, "chi", "L")
-    for chi, L in param_grid():
-        if (str(chi), str(L)) in done:
-            continue
-        try:
-            with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb, energy = run_one(chi, L)
-        except StepTimeoutError:
-            print(f"[quimb/dmrg_symmetric] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
-            continue
-        writer.write(StepMeasurement(
-            library="quimb", algorithm="dmrg_symmetric", symmetry="u1",
-            device="cpu", backend="symmray", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
-        ))
-        print(f"[quimb/dmrg_symmetric] chi={chi} L={L} "
-              f"time/sweep={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
-
-
-if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else "results/quimb_dmrg_symmetric.csv"
-    main(out)
+    for _ in range(N_SWEEPS):
+        block_sparse_sweep()
+    # Not a converged ground energy (see module docstring: this script runs
+    # imaginary-time evolution of a random state, not a real DMRG search) --
+    # reported only as the Heisenberg-bond energy of whatever state the
+    # block-sparse sweep reached, for sanity-checking against itself across
+    # runs, not for cross-library ground-energy comparison.
+    h_op = _heisenberg_two_site_op()
+    energy = sum(
+        psi.local_expectation_exact(h_op, where=(i, i + 1))
+        for i in range(L - 1)
+    )
+    return energy

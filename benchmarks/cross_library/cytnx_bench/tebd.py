@@ -23,17 +23,12 @@ exercised in this environment (no GPU).
 """
 import os
 import sys
-import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import cytnx
 
-from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, cytnx_gpu_timed_block,
-    time_limit,
-)
-from common.model import STEP_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS, param_grid
+from common.model import TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
@@ -126,61 +121,29 @@ def _energy(A, M, L0, R0, device):
 
 
 def run_one(chi, L):
-    timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
-    with timed_block() as r:
-        device = "gpu" if DEVICE == "gpu" else "cpu"
-        d = 2
-        A, lbls = _build_mps(L, chi, device)
-        gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
-        M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL)
+    device = "gpu" if DEVICE == "gpu" else "cpu"
+    d = 2
+    A, lbls = _build_mps(L, chi, device)
+    gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
+    M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL)
 
-        def sweep():
-            for p in range(L - 1):
-                psi = cytnx.Contract(A[p], A[p + 1])
-                g = gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
-                psi = cytnx.Contract(psi, g)
-                psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
-                psi.relabel_([lbls[p][0], lbls[p][1], lbls[p + 1][1], lbls[p + 1][2]])
-                psi.set_rowrank_(2)
-                dim_l = A[p].shape()[0]
-                dim_r = A[p + 1].shape()[2]
-                new_dim = min(dim_l * d, dim_r * d, chi)
-                s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
-                s = s / s.Norm().item()
-                A[p + 1] = cytnx.Contract(s, A[p + 1])
-                A[p].set_name(f"A{p}").relabel_(lbls[p])
-                A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
+    def sweep():
+        for p in range(L - 1):
+            psi = cytnx.Contract(A[p], A[p + 1])
+            g = gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
+            psi = cytnx.Contract(psi, g)
+            psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
+            psi.relabel_([lbls[p][0], lbls[p][1], lbls[p + 1][1], lbls[p + 1][2]])
+            psi.set_rowrank_(2)
+            dim_l = A[p].shape()[0]
+            dim_r = A[p + 1].shape()[2]
+            new_dim = min(dim_l * d, dim_r * d, chi)
+            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
+            s = s / s.Norm().item()
+            A[p + 1] = cytnx.Contract(s, A[p + 1])
+            A[p].set_name(f"A{p}").relabel_(lbls[p])
+            A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
 
-        t0 = time.perf_counter()
-        for _ in range(TFIM_N_STEPS):
-            sweep()
-        loop_time = time.perf_counter() - t0
-        energy = _energy(A, M, L0, R0, device)
-    step_time = loop_time / TFIM_N_STEPS
-    return step_time, r["peak_mem_mb"], energy
-
-
-def main(out_csv):
-    writer = CSVResultWriter(out_csv)
-    done = completed_keys(out_csv, "chi", "L")
-    for chi, L in param_grid():
-        if (str(chi), str(L)) in done:
-            continue
-        try:
-            with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb, energy = run_one(chi, L)
-        except StepTimeoutError:
-            print(f"[cytnx/tebd_quench] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
-            continue
-        writer.write(StepMeasurement(
-            library="cytnx", algorithm="tebd_quench", symmetry="dense",
-            device=DEVICE, backend="cytnx", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
-        ))
-        print(f"[cytnx/tebd_quench] chi={chi} L={L} "
-              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
-
-
-if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else "results/cytnx_tebd.csv"
-    main(out)
+    for _ in range(TFIM_N_STEPS):
+        sweep()
+    return _energy(A, M, L0, R0, device)

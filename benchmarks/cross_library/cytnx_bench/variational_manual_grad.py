@@ -28,17 +28,12 @@ exercised in this environment (no GPU).
 """
 import os
 import sys
-import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import cytnx
 
-from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, cytnx_gpu_timed_block,
-    time_limit,
-)
-from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
+from common.model import HEISENBERG_J, N_GRAD_STEPS
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 LEARNING_RATE = 0.1
@@ -135,86 +130,55 @@ def _h_eff(theta, L_env, R_env, M):
 
 
 def run_one(chi, L):
-    timed_block = cytnx_gpu_timed_block if DEVICE == "gpu" else cpu_timed_block
-    with timed_block() as r:
-        device = "gpu" if DEVICE == "gpu" else "cpu"
-        M, L0, R0 = _build_mpo(HEISENBERG_J, device)
-        A, lbls = _build_mps(L, chi, device)
+    device = "gpu" if DEVICE == "gpu" else "cpu"
+    M, L0, R0 = _build_mpo(HEISENBERG_J, device)
+    A, lbls = _build_mps(L, chi, device)
 
-        def grad_step():
-            R_env = [None] * (L + 1)
-            R_env[L] = R0
-            for p in range(L - 1, 0, -1):
-                R_env[p] = _update_R(R_env[p + 1], A[p], M)
+    def grad_step():
+        R_env = [None] * (L + 1)
+        R_env[L] = R0
+        for p in range(L - 1, 0, -1):
+            R_env[p] = _update_R(R_env[p + 1], A[p], M)
 
-            L_env = L0
-            energy = None
-            for p in range(L):
-                theta = A[p]
-                h_theta = _h_eff(theta, L_env, R_env[p + 1], M)
-                theta_dag = theta.Dagger().permute_(theta.labels())
-                norm_sq = cytnx.Contract(theta_dag, theta).item()
-                energy = cytnx.Contract(theta_dag, h_theta).item() / norm_sq
-                grad = 2 * (h_theta - energy * theta)
-                new_theta = theta - LEARNING_RATE * grad
-                new_theta = new_theta / new_theta.Norm().item()
-                # Cytnx arithmetic ops reset UniTensor labels to the default
-                # ['0','1',...] sequence rather than preserving theta's labels,
-                # so new_theta must be relabeled back to the site's real bond
-                # names before any Gesvd split -- otherwise the split-off bond
-                # leg carries the wrong label and silently fails to contract
-                # with A[p+1]'s matching leg.
-                new_theta.relabel_(lbls[p])
-                if p < L - 1:
-                    # Push the orthogonality center forward (left-canonicalize the
-                    # just-updated site) so that H_eff at the next site is built
-                    # against a properly left-orthonormal left environment, as the
-                    # Rayleigh-quotient shortcut `energy = <theta|H_eff|theta>`
-                    # requires.
-                    new_theta.set_rowrank_(2)
-                    s, A[p], vt = cytnx.linalg.Gesvd(new_theta)
-                    A[p + 1] = cytnx.Contract(cytnx.Contract(s, vt), A[p + 1])
-                    A[p + 1].relabel_(lbls[p + 1]).set_name(f"A{p+1}")
-                else:
-                    A[p] = new_theta
-                A[p].set_name(f"A{p}").relabel_(lbls[p])
-                L_env = _update_L(L_env, A[p], M)
-            # Restore the right-canonical gauge (all sites right-orthonormal
-            # except A[0]) so the next sweep's R_env precomputation and
-            # Rayleigh-quotient shortcut remain valid.
-            _canonicalize_right(A, lbls, L)
-            return energy
-
+        L_env = L0
         energy = None
-        t0 = time.perf_counter()
-        for _ in range(N_GRAD_STEPS):
-            energy = grad_step()
-        loop_time = time.perf_counter() - t0
-    step_time = loop_time / N_GRAD_STEPS
-    return step_time, r["peak_mem_mb"], energy
+        for p in range(L):
+            theta = A[p]
+            h_theta = _h_eff(theta, L_env, R_env[p + 1], M)
+            theta_dag = theta.Dagger().permute_(theta.labels())
+            norm_sq = cytnx.Contract(theta_dag, theta).item()
+            energy = cytnx.Contract(theta_dag, h_theta).item() / norm_sq
+            grad = 2 * (h_theta - energy * theta)
+            new_theta = theta - LEARNING_RATE * grad
+            new_theta = new_theta / new_theta.Norm().item()
+            # Cytnx arithmetic ops reset UniTensor labels to the default
+            # ['0','1',...] sequence rather than preserving theta's labels,
+            # so new_theta must be relabeled back to the site's real bond
+            # names before any Gesvd split -- otherwise the split-off bond
+            # leg carries the wrong label and silently fails to contract
+            # with A[p+1]'s matching leg.
+            new_theta.relabel_(lbls[p])
+            if p < L - 1:
+                # Push the orthogonality center forward (left-canonicalize the
+                # just-updated site) so that H_eff at the next site is built
+                # against a properly left-orthonormal left environment, as the
+                # Rayleigh-quotient shortcut `energy = <theta|H_eff|theta>`
+                # requires.
+                new_theta.set_rowrank_(2)
+                s, A[p], vt = cytnx.linalg.Gesvd(new_theta)
+                A[p + 1] = cytnx.Contract(cytnx.Contract(s, vt), A[p + 1])
+                A[p + 1].relabel_(lbls[p + 1]).set_name(f"A{p+1}")
+            else:
+                A[p] = new_theta
+            A[p].set_name(f"A{p}").relabel_(lbls[p])
+            L_env = _update_L(L_env, A[p], M)
+        # Restore the right-canonical gauge (all sites right-orthonormal
+        # except A[0]) so the next sweep's R_env precomputation and
+        # Rayleigh-quotient shortcut remain valid.
+        _canonicalize_right(A, lbls, L)
+        return energy
 
-
-def main(out_csv):
-    writer = CSVResultWriter(out_csv)
-    done = completed_keys(out_csv, "chi", "L")
-    for chi, L in param_grid():
-        if (str(chi), str(L)) in done:
-            continue
-        try:
-            with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb, energy = run_one(chi, L)
-        except StepTimeoutError:
-            print(f"[cytnx/variational_manual_grad] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
-            continue
-        writer.write(StepMeasurement(
-            library="cytnx", algorithm="variational_manual_grad", symmetry="dense",
-            device=DEVICE, backend="manual-grad", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
-        ))
-        print(f"[cytnx/variational_manual_grad] chi={chi} L={L} "
-              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
-
-
-if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else "results/cytnx_variational.csv"
-    main(out)
+    energy = None
+    for _ in range(N_GRAD_STEPS):
+        energy = grad_step()
+    return energy

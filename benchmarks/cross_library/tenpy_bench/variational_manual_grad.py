@@ -36,7 +36,6 @@ only.
 """
 import os
 import sys
-import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -46,80 +45,47 @@ from tenpy.models.spins import SpinChain
 from tenpy.networks.mps import MPS
 from tenpy.networks.mpo import MPOEnvironment
 
-from common.metrics import (
-    CSVResultWriter, StepMeasurement, StepTimeoutError, completed_keys, cpu_timed_block, time_limit,
-)
-from common.model import HEISENBERG_J, N_GRAD_STEPS, STEP_TIMEOUT_SEC, param_grid
+from common.model import HEISENBERG_J, N_GRAD_STEPS
 
 LEARNING_RATE = 0.1
 
 
 def run_one(chi, L):
-    with cpu_timed_block() as r:
-        M = SpinChain(dict(
-            L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
-            bc_MPS="finite", conserve=None,
-        ))
-        sites = M.lat.mps_sites()
-        product_state = (["up", "down"] * (L // 2 + 1))[:L]
-        psi = MPS.from_random_unitary_evolution(sites, chi, product_state, form="B")
-        psi.canonical_form()
+    M = SpinChain(dict(
+        L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
+        bc_MPS="finite", conserve=None,
+    ))
+    sites = M.lat.mps_sites()
+    product_state = (["up", "down"] * (L // 2 + 1))[:L]
+    psi = MPS.from_random_unitary_evolution(sites, chi, product_state, form="B")
+    psi.canonical_form()
 
-        def grad_step():
-            env = MPOEnvironment(psi, M.H_MPO, psi)
-            energy = None
-            R = None
-            for i0 in range(L):
-                theta = psi.get_theta(i0, n=1)
-                if R is not None:
-                    theta = npc.tensordot(R, theta, axes=["vR", "vL"])
-                eff = OneSiteH(env, i0)
-                h_theta = eff.matvec(theta)
-                norm_sq = npc.inner(theta, theta, axes="range", do_conj=True)
-                energy = npc.inner(theta, h_theta, axes="range", do_conj=True) / norm_sq
-                grad = 2 * (h_theta - energy * theta)
-                new_theta = theta - LEARNING_RATE * grad
-                new_theta.ireplace_label("p0", "p")
-                if i0 < L - 1:
-                    combined = new_theta.combine_legs(["vL", "p"], qconj=+1)
-                    Q, R = npc.qr(combined, inner_labels=["vR", "vL"])
-                    psi.set_B(i0, Q.split_legs(0), form="A")
-                else:
-                    new_theta /= npc.norm(new_theta)
-                    psi.set_B(i0, new_theta, form="B")
-            psi.canonical_form()
-            return energy.real
-
+    def grad_step():
+        env = MPOEnvironment(psi, M.H_MPO, psi)
         energy = None
-        t0 = time.perf_counter()
-        for _ in range(N_GRAD_STEPS):
-            energy = grad_step()
-        loop_time = time.perf_counter() - t0
-    step_time = loop_time / N_GRAD_STEPS
-    return step_time, r["peak_mem_mb"], energy
+        R = None
+        for i0 in range(L):
+            theta = psi.get_theta(i0, n=1)
+            if R is not None:
+                theta = npc.tensordot(R, theta, axes=["vR", "vL"])
+            eff = OneSiteH(env, i0)
+            h_theta = eff.matvec(theta)
+            norm_sq = npc.inner(theta, theta, axes="range", do_conj=True)
+            energy = npc.inner(theta, h_theta, axes="range", do_conj=True) / norm_sq
+            grad = 2 * (h_theta - energy * theta)
+            new_theta = theta - LEARNING_RATE * grad
+            new_theta.ireplace_label("p0", "p")
+            if i0 < L - 1:
+                combined = new_theta.combine_legs(["vL", "p"], qconj=+1)
+                Q, R = npc.qr(combined, inner_labels=["vR", "vL"])
+                psi.set_B(i0, Q.split_legs(0), form="A")
+            else:
+                new_theta /= npc.norm(new_theta)
+                psi.set_B(i0, new_theta, form="B")
+        psi.canonical_form()
+        return energy.real
 
-
-def main(out_csv):
-    writer = CSVResultWriter(out_csv)
-    done = completed_keys(out_csv, "chi", "L")
-    for chi, L in param_grid():
-        if (str(chi), str(L)) in done:
-            continue
-        try:
-            with time_limit(STEP_TIMEOUT_SEC):
-                step_time, peak_mem_mb, energy = run_one(chi, L)
-        except StepTimeoutError:
-            print(f"[tenpy/variational_manual_grad] chi={chi} L={L} skipped (exceeded {STEP_TIMEOUT_SEC}s)")
-            continue
-        writer.write(StepMeasurement(
-            library="tenpy", algorithm="variational_manual_grad", symmetry="dense",
-            device="cpu", backend="manual-grad", L=L, chi=chi,
-            step_time_sec=step_time, peak_mem_mb=peak_mem_mb, answer=energy,
-        ))
-        print(f"[tenpy/variational_manual_grad] chi={chi} L={L} "
-              f"time/step={step_time:.4f}s peak_mem={peak_mem_mb:.1f}MB energy={energy:.6f}")
-
-
-if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else "results/tenpy_variational.csv"
-    main(out)
+    energy = None
+    for _ in range(N_GRAD_STEPS):
+        energy = grad_step()
+    return energy
