@@ -21,27 +21,26 @@ run_one_torch = _variational_ad.run_one_torch
 
 CHI = 16
 L = 20
-REFERENCE_ENERGY_JAX = -8.344500541687012
-REFERENCE_ENERGY_TORCH = -8.34450185868216
+
+BACKEND_CASES = [
+    pytest.param(run_one_jax, -8.344500541687012, id="jax"),
+    pytest.param(run_one_torch, -8.34450185868216, id="torch"),
+]
+BACKEND_MEMORY_CASES = [
+    pytest.param(run_one_jax, -8.344500541687012, marks=pytest.mark.limit_memory("800 MB"), id="jax"),
+    pytest.param(run_one_torch, -8.34450185868216, marks=pytest.mark.limit_memory("100 MB"), id="torch"),
+]
 
 
-def test_variational_ad_jax_benchmark(benchmark):
-    *_, energy = benchmark.pedantic(run_one_jax, args=(CHI, L), rounds=1, iterations=1)
-    assert energy == pytest.approx(REFERENCE_ENERGY_JAX, rel=1e-4)
+@pytest.mark.parametrize("chi,length", [(CHI, L)])
+@pytest.mark.parametrize("run_one,reference_energy", BACKEND_CASES)
+def test_variational_ad_benchmark(benchmark, run_one, reference_energy, chi, length):
+    *_, energy = benchmark.pedantic(run_one, args=(chi, length), rounds=1, iterations=1)
+    assert energy == pytest.approx(reference_energy, rel=1e-4)
 
 
-@pytest.mark.limit_memory("800 MB")
-def test_variational_ad_jax_memory():
-    *_, energy = run_one_jax(CHI, L)
-    assert energy == pytest.approx(REFERENCE_ENERGY_JAX, rel=1e-4)
-
-
-def test_variational_ad_torch_benchmark(benchmark):
-    *_, energy = benchmark.pedantic(run_one_torch, args=(CHI, L), rounds=1, iterations=1)
-    assert energy == pytest.approx(REFERENCE_ENERGY_TORCH, rel=1e-4)
-
-
-@pytest.mark.limit_memory("100 MB")
-def test_variational_ad_torch_memory():
-    *_, energy = run_one_torch(CHI, L)
-    assert energy == pytest.approx(REFERENCE_ENERGY_TORCH, rel=1e-4)
+@pytest.mark.parametrize("chi,length", [(CHI, L)])
+@pytest.mark.parametrize("run_one,reference_energy", BACKEND_MEMORY_CASES)
+def test_variational_ad_memory(run_one, reference_energy, chi, length):
+    *_, energy = run_one(chi, length)
+    assert energy == pytest.approx(reference_energy, rel=1e-4)

@@ -19,12 +19,14 @@ L = 20
 REFERENCE_ENERGY = 4.750010689839629
 
 
-def test_tebd_benchmark(benchmark):
-    *_, energy = benchmark.pedantic(run_one, args=(CHI, L), rounds=1, iterations=1)
+@pytest.mark.parametrize("chi,length", [(CHI, L)])
+def test_tebd_benchmark(benchmark, chi, length):
+    *_, energy = benchmark.pedantic(run_one, args=(chi, length), rounds=1, iterations=1)
     assert float(energy) == pytest.approx(REFERENCE_ENERGY, rel=1e-6)
 
 
 @pytest.mark.limit_memory("60 MB")
-def test_tebd_memory():
-    *_, energy = run_one(CHI, L)
+@pytest.mark.parametrize("chi,length", [(CHI, L)])
+def test_tebd_memory(chi, length):
+    *_, energy = run_one(chi, length)
     assert float(energy) == pytest.approx(REFERENCE_ENERGY, rel=1e-6)

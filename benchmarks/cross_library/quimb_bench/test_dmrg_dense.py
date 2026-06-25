@@ -19,12 +19,14 @@ L = 20
 REFERENCE_ENERGY = -8.682468366990161
 
 
-def test_dmrg_dense_benchmark(benchmark):
-    *_, energy = benchmark.pedantic(run_one, args=(CHI, L), rounds=1, iterations=1)
+@pytest.mark.parametrize("chi,length", [(CHI, L)])
+def test_dmrg_dense_benchmark(benchmark, chi, length):
+    *_, energy = benchmark.pedantic(run_one, args=(chi, length), rounds=1, iterations=1)
     assert float(energy) == pytest.approx(REFERENCE_ENERGY, rel=1e-4)
 
 
 @pytest.mark.limit_memory("80 MB")
-def test_dmrg_dense_memory():
-    *_, energy = run_one(CHI, L)
+@pytest.mark.parametrize("chi,length", [(CHI, L)])
+def test_dmrg_dense_memory(chi, length):
+    *_, energy = run_one(chi, length)
     assert float(energy) == pytest.approx(REFERENCE_ENERGY, rel=1e-4)
