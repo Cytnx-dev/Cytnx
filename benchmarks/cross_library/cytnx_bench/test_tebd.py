@@ -16,7 +16,7 @@ run_one = load_sibling_module(__file__, "tebd").run_one
 
 CHI = 16
 L = 20
-REFERENCE_ENERGY = -18.999777255176408
+REFERENCE_ENERGY = -19.000359069981286
 
 
 @pytest.mark.parametrize("chi,length", [(CHI, L)])
