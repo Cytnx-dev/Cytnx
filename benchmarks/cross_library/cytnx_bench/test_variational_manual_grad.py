@@ -9,16 +9,9 @@ and only take a fixed, small number of gradient-descent steps rather than
 running to convergence, so the reached energy is more sensitive to the
 random starting point.
 """
-import os
-import sys
-
 import pytest
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
-from common.import_util import load_sibling_module
-
-run_one = load_sibling_module(__file__, "variational_manual_grad").run_one
+from . import variational_manual_grad
 
 CHI = 16
 L = 20
@@ -27,12 +20,12 @@ REFERENCE_ENERGY = -8.682468442899435
 
 @pytest.mark.parametrize("chi,length", [(CHI, L)])
 def test_variational_manual_grad_benchmark(benchmark, chi, length):
-    *_, energy = benchmark.pedantic(run_one, args=(chi, length), rounds=1, iterations=1)
+    energy = benchmark.pedantic(variational_manual_grad.run_one, args=(chi, length), rounds=1, iterations=1)
     assert energy == pytest.approx(REFERENCE_ENERGY, rel=1e-2)
 
 
 @pytest.mark.limit_memory("20 MB")
 @pytest.mark.parametrize("chi,length", [(CHI, L)])
 def test_variational_manual_grad_memory(chi, length):
-    *_, energy = run_one(chi, length)
+    energy = variational_manual_grad.run_one(chi, length)
     assert energy == pytest.approx(REFERENCE_ENERGY, rel=1e-2)
