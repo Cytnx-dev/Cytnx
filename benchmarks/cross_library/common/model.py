@@ -44,10 +44,3 @@ LANCZOS_MAXITER = 4
 # than measured, so a handful of slow large-chi/large-L points don't dominate
 # the suite's total run time.
 STEP_TIMEOUT_SEC = 120
-
-
-def param_grid():
-    """Yield every (chi, L) pair in the shared sweep grid."""
-    for L in L_VALUES:
-        for chi in CHI_VALUES:
-            yield chi, L
