@@ -27,8 +27,8 @@ TFIM_N_STEPS = 40
 # chain length L. This is the axis pair the user asked to scan in order to
 # expose the memory (~O(L * chi^2) for an MPS) and speed (~O(L * chi^3) for
 # a DMRG/TDVP local update) tradeoffs.
-CHI_VALUES = [16, 32, 64, 128, 256]
-L_VALUES = [20, 50, 100, 200]
+CHI_VALUES = [16, 32, 64]
+L_VALUES = [20, 30, 50]
 
 # Number of DMRG sweeps / gradient steps measured per (chi, L) point. Kept
 # small because we only need a handful of steps to get a stable per-step
