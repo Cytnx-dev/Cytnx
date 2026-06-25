@@ -96,6 +96,26 @@ Each benchmark script can also be run standalone, e.g.:
 python cytnx_bench/dmrg_dense.py results/cytnx_dmrg_dense.csv
 ```
 
+## pytest-benchmark / pytest-memray regression tests
+
+Each of the 12 scripts also has a sibling `test_<name>.py` exercising its
+`run_one(chi, L)` at a single small (chi, L) point through
+`pytest-benchmark`'s `benchmark.pedantic`, plus a `pytest.approx` assertion on
+the returned energy so a wrong physical answer fails the test rather than
+silently shipping a bad timing number. These are separate from the
+exploratory sweep above (`run_all.py`/`param_grid()`): a fixed, small grid
+chosen for CI-friendly runtime, not the full benchmark grid.
+
+```sh
+pip install -e '.[benchmark]'
+
+# Timing (skips the @pytest.mark.limit_memory tests, which require --memray):
+pytest --benchmark-only benchmarks/cross_library
+
+# Memory (pytest-memray instruments every test, including the timing ones):
+pytest --memray benchmarks/cross_library
+```
+
 ## Output format
 
 Every script writes rows of (see `common/metrics.py:StepMeasurement`):

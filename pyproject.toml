@@ -38,6 +38,11 @@ test = [
 coverage = [
     "gcovr",
 ]
+# Timing/memory regression harness for `benchmarks/cross_library/`.
+benchmark = [
+    "pytest-benchmark",
+    "pytest-memray",
+]
 # Convenience aggregate for contributors and CI:
 #     pip install --editable .[dev]
 # pulls everything needed to build, run the test suite, and collect
