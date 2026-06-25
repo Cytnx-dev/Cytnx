@@ -26,22 +26,22 @@ REFERENCE_ENERGY_TORCH = -8.34450185868216
 
 
 def test_variational_ad_jax_benchmark(benchmark):
-    _step_time, _peak_mem_mb, energy = benchmark.pedantic(run_one_jax, args=(CHI, L), rounds=1, iterations=1)
+    *_, energy = benchmark.pedantic(run_one_jax, args=(CHI, L), rounds=1, iterations=1)
     assert energy == pytest.approx(REFERENCE_ENERGY_JAX, rel=1e-4)
 
 
 @pytest.mark.limit_memory("800 MB")
 def test_variational_ad_jax_memory():
-    _step_time, _peak_mem_mb, energy = run_one_jax(CHI, L)
+    *_, energy = run_one_jax(CHI, L)
     assert energy == pytest.approx(REFERENCE_ENERGY_JAX, rel=1e-4)
 
 
 def test_variational_ad_torch_benchmark(benchmark):
-    _step_time, _peak_mem_mb, energy = benchmark.pedantic(run_one_torch, args=(CHI, L), rounds=1, iterations=1)
+    *_, energy = benchmark.pedantic(run_one_torch, args=(CHI, L), rounds=1, iterations=1)
     assert energy == pytest.approx(REFERENCE_ENERGY_TORCH, rel=1e-4)
 
 
 @pytest.mark.limit_memory("100 MB")
 def test_variational_ad_torch_memory():
-    _step_time, _peak_mem_mb, energy = run_one_torch(CHI, L)
+    *_, energy = run_one_torch(CHI, L)
     assert energy == pytest.approx(REFERENCE_ENERGY_TORCH, rel=1e-4)

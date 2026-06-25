@@ -24,11 +24,11 @@ REFERENCE_ENERGY = -0.564136128480123
 
 
 def test_dmrg_symmetric_benchmark(benchmark):
-    _step_time, _peak_mem_mb, energy = benchmark.pedantic(run_one, args=(CHI, L), rounds=1, iterations=1)
+    *_, energy = benchmark.pedantic(run_one, args=(CHI, L), rounds=1, iterations=1)
     assert float(energy) == pytest.approx(REFERENCE_ENERGY, rel=1e-6)
 
 
 @pytest.mark.limit_memory("700 MB")
 def test_dmrg_symmetric_memory():
-    _step_time, _peak_mem_mb, energy = run_one(CHI, L)
+    *_, energy = run_one(CHI, L)
     assert float(energy) == pytest.approx(REFERENCE_ENERGY, rel=1e-6)

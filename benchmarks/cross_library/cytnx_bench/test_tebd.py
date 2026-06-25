@@ -20,11 +20,11 @@ REFERENCE_ENERGY = -18.999777255176408
 
 
 def test_tebd_benchmark(benchmark):
-    _step_time, _peak_mem_mb, energy = benchmark.pedantic(run_one, args=(CHI, L), rounds=1, iterations=1)
+    *_, energy = benchmark.pedantic(run_one, args=(CHI, L), rounds=1, iterations=1)
     assert energy == pytest.approx(REFERENCE_ENERGY, rel=1e-6)
 
 
 @pytest.mark.limit_memory("20 MB")
 def test_tebd_memory():
-    _step_time, _peak_mem_mb, energy = run_one(CHI, L)
+    *_, energy = run_one(CHI, L)
     assert energy == pytest.approx(REFERENCE_ENERGY, rel=1e-6)
