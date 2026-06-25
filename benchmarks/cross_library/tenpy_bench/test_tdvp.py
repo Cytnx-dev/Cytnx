@@ -8,9 +8,19 @@ all three libraries. See the project report's algorithm-class 2 for the
 TDVP variant, which would only change the `tebd.TEBDEngine` line below to
 `tdvp.TDVPEngine`.) CPU only.
 
+`TFIChain`'s `init_terms` builds H = -J*sum(Sigmax_i Sigmax_{i+1}) -
+g*sum(Sigmaz_i), i.e. the coupling and field axes are swapped relative to
+`cytnx_bench/test_tebd.py`'s H = -hx*sum(PauliX_i) - J*sum(PauliZ_i
+PauliZ_{i+1}) (coupling on Z, field on X). To prepare the same physical
+initial state as cytnx's (a product state aligned along the coupling
+axis), the per-site state here must be a Sigmax eigenstate, not a
+Sigmaz eigenstate -- `["up"]*L` (a Sigmaz eigenstate, TeNPy's field axis)
+would instead start aligned with the field, a different physical setup.
+
 Run timing with `pytest --benchmark-only test_tdvp.py`, memory with
 `pytest --memray test_tdvp.py`.
 """
+import numpy as np
 import pytest
 
 from tenpy.algorithms import tebd
@@ -20,24 +30,25 @@ from tenpy.networks.mps import MPS
 from common.model import CHI_VALUES, L_VALUES, STEP_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS
 
 REFERENCE_ENERGIES = {
-    (16, 20): -9.999703943479117,
-    (16, 30): -14.999670104523107,
-    (16, 50): -24.99960242661104,
-    (32, 20): -9.999703943478044,
-    (32, 30): -14.999670104521112,
-    (32, 50): -24.999602426607083,
-    (64, 20): -9.999703943478044,
-    (64, 30): -14.999670104521112,
-    (64, 50): -24.999602426607083,
+    (16, 20): -19.00014659257969,
+    (16, 30): -29.000162658620344,
+    (16, 50): -49.00019479070228,
+    (32, 20): -19.00014659257974,
+    (32, 30): -29.000162658620344,
+    (32, 50): -49.000194790702395,
+    (64, 20): -19.00014659257974,
+    (64, 30): -29.000162658620344,
+    (64, 50): -49.000194790702395,
 }
 
 
 def run_one(chi, L):
     model_params = dict(L=L, J=TFIM_J, g=TFIM_HX_FINAL, bc_MPS="finite", conserve=None)
     M = TFIChain(model_params)
-    # Start fully polarized along x (paramagnetic ground state of the
-    # pre-quench Hamiltonian at large field) then quench to g=TFIM_HX_FINAL.
-    psi = MPS.from_product_state(M.lat.mps_sites(), ["up"] * L, bc=M.lat.bc_MPS)
+    # Sigmax eigenstate -- aligned with TeNPy's coupling axis, matching
+    # cytnx's computational-basis state along its own coupling axis.
+    plus_x = np.array([1.0, 1.0]) / np.sqrt(2)
+    psi = MPS.from_product_state(M.lat.mps_sites(), [plus_x] * L, bc=M.lat.bc_MPS)
 
     tebd_params = {
         "N_steps": 1,
