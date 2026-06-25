@@ -17,8 +17,7 @@ in workload.
 
 All four classes share the model/parameter definitions in `common/model.py`
 (`HEISENBERG_J`, `TFIM_J`/`TFIM_HX_INITIAL`/`TFIM_HX_FINAL`/`TFIM_DT`, the
-`(CHI_VALUES, L_VALUES)` grid) and the timing/memory helpers in
-`common/metrics.py`.
+`(CHI_VALUES, L_VALUES)` grid).
 
 ### Gradient computation in class 3
 
@@ -56,18 +55,19 @@ CHI_VALUES = [16, 32, 64, 128, 256]
 L_VALUES   = [20, 50, 100, 200]
 ```
 
-Every benchmark script runs all `len(CHI_VALUES) * len(L_VALUES)` points and
-writes one CSV row per point, except points that exceed the per-point wall-clock
-budget `STEP_TIMEOUT_SEC` (120s by default) — those are skipped (no CSV row,
-logged to stdout) rather than measured, so a few slow large-chi/large-L points
-don't dominate the suite's total run time.
+Each `test_<name>.py` has a `test_<name>_sweep` test parametrized over all
+`len(CHI_VALUES) * len(L_VALUES)` points. Every point is bounded by the
+per-point wall-clock budget `STEP_TIMEOUT_SEC` (120s by default, enforced via
+`pytest-timeout`), so a single slow large-chi/large-L point fails on its own
+rather than hanging the rest of the run — see "pytest-benchmark /
+pytest-memray regression tests" below for how to run an individual point.
 
 ## CPU vs. GPU
 
 - **TeNPy**: CPU only (TeNPy itself has no GPU backend).
 - **quimb**: CPU and GPU paths are both implemented for the AD benchmark
-  (`variational_ad.py --backend jax|torch|both`); the DMRG/TEBD scripts also
-  carry a `DEVICE = "gpu"` switch.
+  (`variational_ad.py`'s `run_one_jax`/`run_one_torch`); the DMRG/TEBD scripts
+  also carry a `DEVICE = "gpu"` switch.
 - **Cytnx**: every script has a `DEVICE` module-level flag (`"cpu"` or
   `"gpu"`); the GPU path moves every MPS/MPO `UniTensor` to
   `cytnx.Device.cuda` before the sweep/step.
@@ -79,54 +79,51 @@ to exercise them on a CUDA-capable machine.
 
 ## Running the suite
 
+The whole suite is pytest-native: every `run_one(chi, L)` is exercised through
+a sibling `test_<name>.py`, both at a single regression point and across the
+full `(chi, L)` grid. There is no separate orchestration script.
+
 ```sh
-pip install tenpy quimb cytnx jax torch matplotlib pandas
+pip install tenpy quimb cytnx jax torch
+pip install -e '.[benchmark]'   # pytest-benchmark, pytest-memray, pytest-timeout
 
 cd benchmarks/cross_library
-python run_all.py                     # run every library/algorithm, write results/*.csv
-python run_all.py --only cytnx quimb  # restrict to a subset
-python run_all.py --skip tenpy        # skip libraries you don't have installed
 
-python plot_results.py                # read results/*.csv, write results/plots/*.png
+# Single fixed (chi, L) regression point per script, with a pytest.approx
+# assertion on the returned energy:
+python3 -m pytest --benchmark-only -q   # timing (skips the limit_memory tests)
+python3 -m pytest --memray -q           # memory (instruments every test)
+
+# Full (chi, L) sweep grid (no fixed-energy assertion, just a finiteness
+# check; each point is independently bounded by STEP_TIMEOUT_SEC via
+# pytest-timeout). Run the whole grid for one script:
+python3 -m pytest cytnx_bench/test_dmrg.py::test_dmrg_sweep --benchmark-only -q
+
+# Or call pytest one point at a time, which doubles as a resume mechanism if
+# a run gets interrupted partway through the grid:
+python3 -m pytest "cytnx_bench/test_dmrg.py::test_dmrg_sweep[dense-16-20]" --benchmark-only -q
 ```
 
-Each benchmark script can also be run standalone, e.g.:
+Each benchmark module can also be imported and driven directly, e.g.
+`from cytnx_bench import dmrg_dense; dmrg_dense.run_one(chi=16, L=20)`.
 
-```sh
-python cytnx_bench/dmrg_dense.py results/cytnx_dmrg_dense.csv
-```
+Run from `benchmarks/cross_library` (not the repo root) with `python3 -m
+pytest` (not the bare `pytest` command) so that `cytnx`/`quimb`/`tenpy`
+resolve to your installed packages rather than colliding with the repo's
+source tree.
 
 ## pytest-benchmark / pytest-memray regression tests
 
-Each of the 12 scripts also has a sibling `test_<name>.py` exercising its
+Each of the 12 scripts has a sibling `test_<name>.py` exercising its
 `run_one(chi, L)` at a single small (chi, L) point through
 `pytest-benchmark`'s `benchmark.pedantic`, plus a `pytest.approx` assertion on
 the returned energy so a wrong physical answer fails the test rather than
-silently shipping a bad timing number. These are separate from the
-exploratory sweep above (`run_all.py`/`param_grid()`): a fixed, small grid
-chosen for CI-friendly runtime, not the full benchmark grid.
+silently shipping a bad timing number.
 
-```sh
-pip install -e '.[benchmark]'
-
-# Timing (skips the @pytest.mark.limit_memory tests, which require --memray):
-pytest --benchmark-only benchmarks/cross_library
-
-# Memory (pytest-memray instruments every test, including the timing ones):
-pytest --memray benchmarks/cross_library
-```
-
-## Output format
-
-Every script writes rows of (see `common/metrics.py:StepMeasurement`):
-
-| field | meaning |
-|---|---|
-| `library` | `tenpy`, `quimb`, or `cytnx` |
-| `algorithm` | `dmrg_dense`, `dmrg_symmetric`, `tebd_quench`, `variational_manual_grad`, or `variational_ad` |
-| `symmetry` | `dense` or `u1` |
-| `device` | `cpu` or `gpu` |
-| `backend` | e.g. `cytnx`, `manual-grad`, `jax`, `torch` |
-| `L`, `chi` | chain length, bond dimension for this data point |
-| `step_time_sec` | wall-clock time per DMRG sweep / TEBD step / gradient step |
-| `peak_mem_mb` | peak memory for that block (CPU: max of tracemalloc and RSS delta; GPU: backend's peak-allocator counter) |
+The same file's `test_<name>_sweep` test instead scans the full
+`common.model.param_grid()` (chi, L) grid, asserting only that the energy is
+finite (`math.isfinite`); the result is recorded via
+`benchmark.extra_info["energy"]` rather than asserted against a reference
+value, since these points are a speed/memory survey, not a correctness check.
+Pass `--benchmark-json=out.json` to capture `extra_info` (and the timing
+statistics) for every point in one file.
