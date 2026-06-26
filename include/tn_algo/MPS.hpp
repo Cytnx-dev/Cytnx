@@ -23,6 +23,21 @@ namespace cytnx {
   namespace tn_algo {
 
     /// @cond
+    // Canonical bond/physical labels for site `site` of a finite MPS:
+    // {"_<2k>", "_<2k+1>", "_<2k+2>"}. Adjacent sites share their virtual-bond
+    // label (site k's right label "_<2k+2>" equals site k+1's left label), and
+    // every label carries the "_" prefix reserved for cytnx-internal labels so it
+    // cannot collide with user-assigned labels on the exposed site tensors. The
+    // orthogonalization routines restore these labels after each linalg::Svd so
+    // Svd's fixed "_aux_L"/"_aux_R" bonds do not survive into the next
+    // decomposition and trip set_labels' duplicate check (issue #920).
+    inline std::vector<std::string> CanonicalSiteLabels(cytnx_int64 site) {
+      return {"_" + std::to_string(2 * site), "_" + std::to_string(2 * site + 1),
+              "_" + std::to_string(2 * site + 2)};
+    }
+    /// @endcond
+
+    /// @cond
     class MPSType_class {
      public:
       enum : int {

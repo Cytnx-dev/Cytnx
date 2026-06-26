@@ -45,17 +45,21 @@ namespace cytnx {
     }
 
     Scalar RegularMPS::norm() const {
-      UniTensor L;
-      for (auto Ai : this->_TNs) {
-        if (L.uten_type() == UTenType.Void) {
-          auto tA = Ai.relabel({"0", "1", "2"});
-          L = Contract(tA, tA.Dagger().relabel("0", "-2"));
-        } else {
-          L.relabel_({"2", "-2"});
-          auto tA = Ai.relabel({"2", "3", "4"});
-          L = Contract(tA, L);
-          L = Contract(L, tA.Dagger().relabel({"-4", "-2", "3"}));
-        }
+      // Accumulate the <psi|psi> left environment site by site. L carries two
+      // open legs, "_a" on the ket and "_b" on the bra, living on the current
+      // virtual bond; it is seeded as the 1x1 identity on the trivial left
+      // boundary. For each rank-3 site tensor [left, phys, right] the ket leg
+      // contracts onto "_a", the bra leg onto "_b", and the physical legs onto
+      // each other, leaving the next virtual bond open as the new {_a, _b}. Seed
+      // L on the same device as the MPS so the contractions stay on-device.
+      int device = this->_TNs.empty() ? Device.cpu : this->_TNs[0].device();
+      UniTensor L = UniTensor(ones({1, 1}, Type.Double, device), /*is_diag=*/false, /*rowrank=*/1)
+                      .relabel({"_a", "_b"});
+      for (const UniTensor &Ai : this->_TNs) {
+        UniTensor tA = Ai.relabel({"_a", "_p", "_r"});
+        UniTensor tAc = Ai.Conj().relabel({"_b", "_p", "_rc"});
+        L = Contract(Contract(L, tA), tAc);  // {_a, _b} -> {_r, _rc}
+        L.relabel_({"_a", "_b"});
       }
       return L.Trace().item();
     }
@@ -76,6 +80,7 @@ namespace cytnx {
       this->_TNs.resize(N);
       this->_TNs[0] = UniTensor(
         cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])}, 0., 1.), false, 2);
+      this->_TNs[0].relabel_(CanonicalSiteLabels(0));
       cytnx_uint64 dim1, dim2, dim3;
 
       cytnx_uint64 DR = 1;
@@ -105,7 +110,7 @@ namespace cytnx {
           dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)), DR);
         }
         this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3}, 0., 1., -1), false, 2);
-        this->_TNs[k].relabel_({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
+        this->_TNs[k].relabel_(CanonicalSiteLabels(k));
       }
       this->S_loc = -1;
       this->Into_Lortho();
@@ -134,6 +139,7 @@ namespace cytnx {
       this->_TNs[0] = UniTensor(cytnx::zeros({1, vphys_dim[0], min(chi, vphys_dim[0])}), false, 2);
       this->_TNs[0].get_block_()(":", select[0], ":") =
         random::normal({1, this->_TNs[0].shape()[2]}, 0., 1.);
+      this->_TNs[0].relabel_(CanonicalSiteLabels(0));
 
       cytnx_uint64 dim1, dim2, dim3;
 
@@ -166,7 +172,7 @@ namespace cytnx {
         this->_TNs[k].get_block_()(":", select[k]) = random::normal({dim1, dim3}, 0., 1.);
 
         // this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
-        this->_TNs[k].relabel_({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
+        this->_TNs[k].relabel_(CanonicalSiteLabels(k));
       }
       this->S_loc = -1;
       this->Into_Lortho();
@@ -214,9 +220,12 @@ namespace cytnx {
         this->_TNs[p] = out[1];
         auto vt = out[2];
         this->_TNs[p + 1] = Contract(Contract(s, vt), this->_TNs[p + 1]);
+        this->_TNs[p].relabel_(CanonicalSiteLabels(p));
+        this->_TNs[p + 1].relabel_(CanonicalSiteLabels(p + 1));
       }
       auto out = linalg::Svd(this->_TNs.back(), true);
       this->_TNs.back() = out[1];
+      this->_TNs.back().relabel_(CanonicalSiteLabels(this->_TNs.size() - 1));
       this->S_loc = this->_TNs.size();
     }
 
@@ -227,7 +236,7 @@ namespace cytnx {
         this->S_loc += 1;
         return;
       } else {
-        this->_TNs[this->S_loc].set_rowrank(2);
+        this->_TNs[this->S_loc].set_rowrank_(2);
         auto out = linalg::Svd(this->_TNs[this->S_loc]);
         auto s = out[0];
         this->_TNs[this->S_loc] = out[1];
@@ -235,7 +244,9 @@ namespace cytnx {
         // boundary:
         if (this->S_loc != this->_TNs.size() - 1) {
           this->_TNs[this->S_loc + 1] = Contract(Contract(s, vt), this->_TNs[this->S_loc + 1]);
+          this->_TNs[this->S_loc + 1].relabel_(CanonicalSiteLabels(this->S_loc + 1));
         }
+        this->_TNs[this->S_loc].relabel_(CanonicalSiteLabels(this->S_loc));
         this->S_loc += 1;
       }
     }
@@ -247,7 +258,7 @@ namespace cytnx {
         this->S_loc -= 1;
         return;
       } else {
-        this->_TNs[this->S_loc].set_rowrank(1);
+        this->_TNs[this->S_loc].set_rowrank_(1);
         auto out = linalg::Svd(this->_TNs[this->S_loc]);
         auto s = out[0];
         auto u = out[1];
@@ -256,7 +267,9 @@ namespace cytnx {
         // boundary:
         if (this->S_loc != 0) {
           this->_TNs[this->S_loc - 1] = Contract(this->_TNs[this->S_loc - 1], Contract(u, s));
+          this->_TNs[this->S_loc - 1].relabel_(CanonicalSiteLabels(this->S_loc - 1));
         }
+        this->_TNs[this->S_loc].relabel_(CanonicalSiteLabels(this->S_loc));
         this->S_loc -= 1;
       }
     }

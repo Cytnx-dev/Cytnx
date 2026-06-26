@@ -46,6 +46,9 @@ add_executable(
   linalg_test/stride_view_test.cpp
   linalg_test/sum_test.cpp
   linalg_test/Vectordot_test.cpp
+  tn_algo_test/MPS_test.cpp
+  tn_algo_test/MPO_test.cpp
+  tn_algo_test/DMRG_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp
