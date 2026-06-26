@@ -63,19 +63,19 @@ def _optimize_psi(psi, L, M1, M2, R, maxit, device):
     return psivec, energy[0].item()
 
 
-def _build_mpo(J):
+def _build_mpo(J, device):
     d = 2
     D = 5
-    Sp = cytnx.zeros([d, d])
+    Sp = cytnx.zeros([d, d], device=device)
     Sp[0, 1] = 1.0  # S+: |down> -> |up>
-    Sm = cytnx.zeros([d, d])
+    Sm = cytnx.zeros([d, d], device=device)
     Sm[1, 0] = 1.0  # S-: |up> -> |down>
-    Sz = cytnx.zeros([d, d])
+    Sz = cytnx.zeros([d, d], device=device)
     Sz[0, 0] = 0.5
     Sz[1, 1] = -0.5
-    eye = cytnx.eye(d)
+    eye = cytnx.eye(d, device=device)
 
-    M = cytnx.zeros([D, D, d, d])
+    M = cytnx.zeros([D, D, d, d], device=device)
     M[0, 0] = eye
     M[D - 1, D - 1] = eye
     M[0, 1] = Sp
@@ -86,8 +86,8 @@ def _build_mpo(J):
     M[3, D - 1] = J * Sz
     M = cytnx.UniTensor(M, 0).set_name("MPO")
 
-    L0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("L0")
-    R0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("R0")
+    L0 = cytnx.UniTensor.zeros([D, 1, 1], device=device).set_rowrank_(0).set_name("L0")
+    R0 = cytnx.UniTensor.zeros([D, 1, 1], device=device).set_rowrank_(0).set_name("R0")
     L0[0, 0, 0] = 1.0
     R0[D - 1, 0, 0] = 1.0
     return M, L0, R0
@@ -96,28 +96,20 @@ def _build_mpo(J):
 def run_one(chi, L):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     d = 2
-    M, L0, R0 = _build_mpo(HEISENBERG_J)
-    if DEVICE == "gpu":
-        M = M.to(device)
-        L0 = L0.to(device)
-        R0 = R0.to(device)
+    M, L0, R0 = _build_mpo(HEISENBERG_J, device)
 
     A = [None for _ in range(L)]
-    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1.).set_rowrank_(2)
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., device=device).set_rowrank_(2)
     A[0].relabel_(["0", "1", "2"]).set_name("A0")
-    if DEVICE == "gpu":
-        A[0] = A[0].to(device)
 
     lbls = [["0", "1", "2"]]
     for k in range(1, L):
         dim1 = A[k - 1].shape()[2]
         dim2 = d
         dim3 = min(min(chi, A[k - 1].shape()[2] * d), d ** (L - k - 1))
-        A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3], 0., 1.).set_rowrank_(2).set_name(f"A{k}")
+        A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3], 0., 1., device=device).set_rowrank_(2).set_name(f"A{k}")
         lbl = [str(2 * k), str(2 * k + 1), str(2 * k + 2)]
         A[k].relabel_(lbl)
-        if DEVICE == "gpu":
-            A[k] = A[k].to(device)
         lbls.append(lbl)
 
     LR = [None for _ in range(L + 1)]

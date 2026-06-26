@@ -81,12 +81,12 @@ def _optimize_psi(psi, L, M1, M2, R, maxit, device):
     return psivec, energy[0].item()
 
 
-def _build_mpo(J, q):
+def _build_mpo(J, q, device):
     D = 5
     bd_inner = cytnx.Bond(cytnx.BD_KET, [[0], [2], [-2], [0], [0]], [1, 1, 1, 1, 1])
     bd_phys = cytnx.Bond(cytnx.BD_KET, [[1], [-1]], [1, 1])
 
-    M = cytnx.UniTensor([bd_inner, bd_inner.redirect(), bd_phys, bd_phys.redirect()]) \
+    M = cytnx.UniTensor([bd_inner, bd_inner.redirect(), bd_phys, bd_phys.redirect()], device=device) \
         .set_rowrank_(2).set_name("MPO")
 
     M.set_elem([0, 0, 0, 0], 1)
@@ -106,9 +106,9 @@ def _build_mpo(J, q):
 
     VbdL = cytnx.Bond(cytnx.BD_KET, [[0]], [1])
     VbdR = cytnx.Bond(cytnx.BD_KET, [[q]], [1])
-    L0 = cytnx.UniTensor([bd_inner.redirect(), VbdL.redirect(), VbdL]) \
+    L0 = cytnx.UniTensor([bd_inner.redirect(), VbdL.redirect(), VbdL], device=device) \
         .set_rowrank_(1).set_name("L0")
-    R0 = cytnx.UniTensor([bd_inner, VbdR, VbdR.redirect()]) \
+    R0 = cytnx.UniTensor([bd_inner, VbdR, VbdR.redirect()], device=device) \
         .set_rowrank_(1).set_name("R0")
     L0.set_elem([0, 0, 0], 1)
     R0.set_elem([D - 1, 0, 0], 1)
@@ -117,11 +117,7 @@ def _build_mpo(J, q):
 
 def run_one(chi, L):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
-    M, L0, R0, bd_phys = _build_mpo(HEISENBERG_J, TARGET_Q)
-    if DEVICE == "gpu":
-        M = M.to(device)
-        L0 = L0.to(device)
-        R0 = R0.to(device)
+    M, L0, R0, bd_phys = _build_mpo(HEISENBERG_J, TARGET_Q, device)
 
     A = [None for _ in range(L)]
     qcntr = 0
@@ -129,7 +125,7 @@ def run_one(chi, L):
     qcntr += cq
 
     VbdL = cytnx.Bond(cytnx.BD_KET, [[0]], [1])
-    A[0] = cytnx.UniTensor([VbdL, bd_phys.redirect(), cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])]) \
+    A[0] = cytnx.UniTensor([VbdL, bd_phys.redirect(), cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])], device=device) \
         .set_rowrank_(2).set_name("A0")
     A[0].get_block_()[0] = 1
 
@@ -141,14 +137,11 @@ def run_one(chi, L):
         qcntr += cq
         B3 = cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])
 
-        A[k] = cytnx.UniTensor([B1, B2, B3]).set_rowrank_(2).set_name(f"A{k}")
+        A[k] = cytnx.UniTensor([B1, B2, B3], device=device).set_rowrank_(2).set_name(f"A{k}")
         lbl = [str(2 * k), str(2 * k + 1), str(2 * k + 2)]
         A[k].relabel_(lbl)
         A[k].get_block_()[0] = 1
         lbls.append(lbl)
-
-    if DEVICE == "gpu":
-        A = [a.to(device) for a in A]
 
     LR = [None for _ in range(L + 1)]
     LR[0] = L0

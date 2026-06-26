@@ -84,16 +84,16 @@ _N_EFF_NET = ["L: -1,0", "psi: -1,1,-2", "R: -2,2", "TOUT: 0,1,2"]
 def _build_mpo(J, device):
     d = 2
     D = 5
-    Sp = cytnx.zeros([d, d])
+    Sp = cytnx.zeros([d, d], device=device)
     Sp[0, 1] = 1.0  # S+: |down> -> |up>
-    Sm = cytnx.zeros([d, d])
+    Sm = cytnx.zeros([d, d], device=device)
     Sm[1, 0] = 1.0  # S-: |up> -> |down>
-    Sz = cytnx.zeros([d, d])
+    Sz = cytnx.zeros([d, d], device=device)
     Sz[0, 0] = 0.5
     Sz[1, 1] = -0.5
-    eye = cytnx.eye(d)
+    eye = cytnx.eye(d, device=device)
 
-    M = cytnx.zeros([D, D, d, d])
+    M = cytnx.zeros([D, D, d, d], device=device)
     M[0, 0] = eye
     M[D - 1, D - 1] = eye
     M[0, 1] = Sp
@@ -104,14 +104,10 @@ def _build_mpo(J, device):
     M[3, D - 1] = J * Sz
     M = cytnx.UniTensor(M, 0).set_name("MPO")
 
-    L0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("L0")
-    R0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("R0")
+    L0 = cytnx.UniTensor.zeros([D, 1, 1], device=device).set_rowrank_(0).set_name("L0")
+    R0 = cytnx.UniTensor.zeros([D, 1, 1], device=device).set_rowrank_(0).set_name("R0")
     L0[0, 0, 0] = 1.0
     R0[D - 1, 0, 0] = 1.0
-    if device == "gpu":
-        M = M.to(cytnx.Device.cuda)
-        L0 = L0.to(cytnx.Device.cuda)
-        R0 = R0.to(cytnx.Device.cuda)
     return M, L0, R0
 
 
@@ -119,16 +115,14 @@ def _build_mps(L, chi, device):
     d = 2
     A = [None] * L
     lbls = [[str(2 * k), str(2 * k + 1), str(2 * k + 2)] for k in range(L)]
-    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0).set_rowrank_(2)
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0, device=device).set_rowrank_(2)
     A[0].relabel_(lbls[0]).set_name("A0")
     for k in range(1, L):
         dim1 = A[k - 1].shape()[2]
         dim3 = min(min(chi, dim1 * d), d ** (L - k - 1))
-        A[k] = cytnx.UniTensor.normal([dim1, d, dim3], 0., 1., seed=k).set_rowrank_(2)
+        A[k] = cytnx.UniTensor.normal([dim1, d, dim3], 0., 1., seed=k, device=device).set_rowrank_(2)
         A[k].relabel_(lbls[k]).set_name(f"A{k}")
     _canonicalize_right(A, lbls, L)
-    if device == "gpu":
-        A = [a.to(cytnx.Device.cuda) for a in A]
     return A, lbls
 
 
@@ -202,16 +196,13 @@ def _n_eff(nets, theta, LN_env, RN_env):
 
 
 def run_one(chi, L):
-    device = "gpu" if DEVICE == "gpu" else "cpu"
+    device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     M, L0, R0 = _build_mpo(HEISENBERG_J, device)
     A, lbls = _build_mps(L, chi, device)
-    LN0 = cytnx.UniTensor.zeros([1, 1]).set_rowrank_(0)
+    LN0 = cytnx.UniTensor.zeros([1, 1], device=device).set_rowrank_(0)
     LN0[0, 0] = 1.0
-    RN0 = cytnx.UniTensor.zeros([1, 1]).set_rowrank_(0)
+    RN0 = cytnx.UniTensor.zeros([1, 1], device=device).set_rowrank_(0)
     RN0[0, 0] = 1.0
-    if device == "gpu":
-        LN0 = LN0.to(cytnx.Device.cuda)
-        RN0 = RN0.to(cytnx.Device.cuda)
     nets = _Networks()
 
     def grad_step(A):

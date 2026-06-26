@@ -46,18 +46,15 @@ REFERENCE_ENERGIES = {
 
 
 def _build_gate(J, hx, dt, w_left, w_right, device):
-    Sz = cytnx.physics.pauli("z").real()
-    Sx = cytnx.physics.pauli("x").real()
-    I = cytnx.eye(2)
+    Sz = cytnx.physics.pauli("z", device=device).real()
+    Sx = cytnx.physics.pauli("x", device=device).real()
+    I = cytnx.eye(2, device=device)
     TFterm = w_left * cytnx.linalg.Kron(Sx, I) + w_right * cytnx.linalg.Kron(I, Sx)
     ZZterm = cytnx.linalg.Kron(Sz, Sz)
     H = -hx * TFterm - J * ZZterm
     eH = cytnx.linalg.ExpH(H, -1j * dt)
     eH.reshape_(2, 2, 2, 2)
-    gate = cytnx.UniTensor(eH)
-    if device == "gpu":
-        gate = gate.to(cytnx.Device.cuda)
-    return gate
+    return cytnx.UniTensor(eH)
 
 
 def _build_gates(L, J, hx, dt, device):
@@ -74,20 +71,18 @@ def _build_mps(L, chi, device):
     A = [None] * L
     lbls = [[str(2 * k), str(2 * k + 1), str(2 * k + 2)] for k in range(L)]
     for k in range(L):
-        A[k] = cytnx.UniTensor.zeros([1, d, 1]).set_rowrank_(2).relabel_(lbls[k]).set_name(f"A{k}")
+        A[k] = cytnx.UniTensor.zeros([1, d, 1], device=device).set_rowrank_(2).relabel_(lbls[k]).set_name(f"A{k}")
         A[k].set_elem([0, 0, 0], 1.0)
-        if device == "gpu":
-            A[k] = A[k].to(cytnx.Device.cuda)
     return A, lbls
 
 
-def _build_mpo(J, hx):
+def _build_mpo(J, hx, device):
     D = 3
-    Sz = cytnx.physics.pauli("z").real()
-    Sx = cytnx.physics.pauli("x").real()
-    eye = cytnx.eye(2)
+    Sz = cytnx.physics.pauli("z", device=device).real()
+    Sx = cytnx.physics.pauli("x", device=device).real()
+    eye = cytnx.eye(2, device=device)
 
-    M = cytnx.zeros([D, D, 2, 2])
+    M = cytnx.zeros([D, D, 2, 2], device=device)
     M[0, 0] = eye
     M[0, 1] = Sz
     M[0, 2] = -hx * Sx
@@ -95,19 +90,14 @@ def _build_mpo(J, hx):
     M[D - 1, D - 1] = eye
     M = cytnx.UniTensor(M, 0).set_name("MPO")
 
-    L0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("L0")
-    R0 = cytnx.UniTensor.zeros([D, 1, 1]).set_rowrank_(0).set_name("R0")
+    L0 = cytnx.UniTensor.zeros([D, 1, 1], device=device).set_rowrank_(0).set_name("L0")
+    R0 = cytnx.UniTensor.zeros([D, 1, 1], device=device).set_rowrank_(0).set_name("R0")
     L0[0, 0, 0] = 1.0
     R0[D - 1, 0, 0] = 1.0
     return M, L0, R0
 
 
 def _energy(A, M, L0, R0, device):
-    if device == "gpu":
-        M = M.to(cytnx.Device.cuda)
-        L0 = L0.to(cytnx.Device.cuda)
-        R0 = R0.to(cytnx.Device.cuda)
-
     anet = cytnx.Network()
     anet.FromString(["L: -2,-1,-3",
                       "A: -1,-4,1",
@@ -123,7 +113,7 @@ def _energy(A, M, L0, R0, device):
 
     norm_net = cytnx.Network()
     norm_net.FromString(["L: -2,-1", "A: -1,1,-3", "A_Conj: -2,1,-4", "TOUT: -4,-3"])
-    NL = cytnx.UniTensor(cytnx.ones([1, 1]))
+    NL = cytnx.UniTensor(cytnx.ones([1, 1], device=device))
     for p in range(len(A)):
         norm_net.PutUniTensors(["L", "A", "A_Conj"],
                                 [NL, A[p], A[p].Dagger().permute_(A[p].labels())])
@@ -133,11 +123,11 @@ def _energy(A, M, L0, R0, device):
 
 
 def run_one(chi, L):
-    device = "gpu" if DEVICE == "gpu" else "cpu"
+    device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     d = 2
     A, lbls = _build_mps(L, chi, device)
     gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
-    M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL)
+    M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL, device)
 
     def sweep():
         for p in range(L - 1):
