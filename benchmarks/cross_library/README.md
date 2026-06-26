@@ -121,9 +121,10 @@ cd benchmarks/cross_library
 # point:
 python3 -m pytest --benchmark-only -q
 
-# Memory, at the single canonical (chi=16, L=20) point each limit_memory
-# test is pinned to:
-python3 -m pytest --memray -q
+# Memory only: --memray instruments every collected test, so select just
+# the memory tests with the cytnx_memory marker (registered in
+# pyproject.toml, applied to every *_memory test in this directory):
+python3 -m pytest --memray -m cytnx_memory -q
 
 # Run the whole grid for one script:
 python3 -m pytest cytnx_bench/test_dmrg_dense.py --benchmark-only -q
