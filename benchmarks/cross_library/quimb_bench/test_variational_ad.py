@@ -4,31 +4,40 @@ automatic differentiation of the Rayleigh quotient
 
     E(psi) = <psi|H|psi> / <psi|psi>
 
-with respect to every MPS tensor simultaneously. `run_one_jax`/`run_one_torch`
-exercise quimb's AD-based optimization on the JAX and PyTorch array backends
-respectively.
+with respect to every MPS tensor simultaneously: one gradient step is
+taken on every MPS tensor at once (no orthogonality center, no per-step
+canonicalization), followed by a single global rescale derived from the
+new `<psi|psi>` and distributed evenly across all L tensors.
+`run_one_jax`/`run_one_torch` exercise quimb's AD-based optimization on the
+JAX and PyTorch array backends respectively.
 
-This is quimb's natural counterpart to the manual analytic gradient used in
-the TeNPy (`tenpy_bench/test_variational_manual_grad.py`) and Cytnx
-(`cytnx_bench/test_variational_manual_grad.py`) benchmarks: those two
-libraries have no autodiff backend, so they evaluate the closed-form
-gradient `dE/dA_i* = 2*(H_eff,i(A_i) - E*A_i)` by hand. quimb's MPS/MPO
-tensors are plain JAX/PyTorch arrays under the hood (via autoray dispatch),
-so here we let the backend's own autodiff differentiate straight through
-the full `<psi|H|psi>` and `<psi|psi>` tensor-network contractions instead.
+TeNPy (`tenpy_bench/test_variational_manual_grad.py`) and Cytnx
+(`cytnx_bench/test_variational_manual_grad.py`) run this same whole-network
+update; having no autodiff backend, they evaluate the closed-form gradient
 
-Unlike the manual-gradient sweeps, which update one MPS tensor at a time
-through an orthogonality center (so a single sweep over all L sites makes
-L one-site updates), this benchmark takes one gradient step on every MPS
-tensor simultaneously per iteration. That "all sites, no canonical form"
-update moves the state far less per iteration than a one-site sweep does,
-so it needs both a larger learning rate and many more iterations than the
-manual-gradient sweeps to land in the same energy neighborhood within the
-shared `STEP_TIMEOUT_SEC` budget. `LEARNING_RATE`/`N_GRAD_STEPS_AD` (the
-latter scaling with `L`, since a longer chain needs proportionally more
-whole-state updates to converge as far) were picked by checking, at every
-(chi, L) grid point, that the resulting energy lands within the `rel=2e-2`
-tolerance used below while comfortably inside the timeout.
+    dE/dA_i* = (2 / den) * (H_eff,i(A_i) - E * N_eff,i(A_i))
+
+by hand instead, where `den = <psi|psi>` and `N_eff,i` is the
+no-MPO analogue of `H_eff,i` (needed because the tensors away from site i
+are not isometric under this update, unlike in a one-site sweep). quimb's
+MPS/MPO tensors are plain JAX/PyTorch arrays under the hood (via autoray
+dispatch), so here we let the backend's own autodiff differentiate straight
+through the full `<psi|H|psi>` and `<psi|psi>` contractions instead of
+deriving that gradient by hand.
+
+This whole-network update moves the state far less per iteration than a
+one-site sweep does, so it needs both a larger learning rate and many more
+iterations to reach a comparable energy neighborhood; `LEARNING_RATE` and
+the local `_n_grad_steps(L)` helper (scaling with `L`, since a longer chain
+needs proportionally more whole-state updates to converge as far) are
+shared with the TeNPy/Cytnx benchmarks. They were picked by checking, at
+every (chi, L) grid point, that the resulting energy lands within the
+`rel=2e-2` tolerance used below while comfortably inside the timeout. Since
+this update is a much weaker optimizer than a one-site sweep, its converged
+energy is sensitive to each library's own initial-state construction and
+RNG, so the `rel=2e-2` tolerance is wider than the tight per-library
+tolerances used elsewhere in this suite -- it is not expected to shrink as
+the manual-gradient benchmarks are made more precise.
 
 GPU code paths are written for both backends (`device="cuda"` placement)
 but cannot be exercised in this environment (no GPU).

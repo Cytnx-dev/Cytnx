@@ -30,30 +30,46 @@ All four classes share the model/parameter definitions in `common/model.py`
 
 ### Gradient computation in class 3
 
+All three libraries run the same optimization algorithm: one gradient step
+of the Rayleigh quotient `E(psi) = <psi|H|psi>/<psi|psi>` is taken on every
+MPS tensor simultaneously (no orthogonality center, no per-step
+canonicalization), followed by a single global rescale derived from the
+new `<psi|psi>` and distributed evenly across all `L` tensors. Only the
+gradient-computation method differs.
+
 quimb has a native autodiff path (JAX or PyTorch arrays under the hood), so
 `quimb_bench/test_variational_ad.py` differentiates `<psi|H|psi>/<psi|psi>`
 directly through the backend's `grad`/`backward`.
 
 TeNPy and Cytnx have no autodiff backend. Each gets its own hand-derived
-analytic gradient of the same Rayleigh quotient with respect to a single MPS
-tensor `A_i` (all other tensors held fixed):
+analytic gradient of the same Rayleigh quotient with respect to every MPS
+tensor `A_i` simultaneously:
 
 ```
-dE/dA_i* = 2 * (H_eff,i(A_i) - E * A_i)
+dE/dA_i* = (2 / den) * (H_eff,i(A_i) - E * N_eff,i(A_i))
 ```
 
-where `H_eff,i` is the effective one-site Hamiltonian built from the L/R
-boundary environments around site `i`. The TeNPy and Cytnx implementations
-of this formula are written independently (`np_conserved` contractions vs.
+where `den = <psi|psi>`, `H_eff,i` is the effective one-site Hamiltonian
+built from the L/R H-boundary environments around site `i`, and `N_eff,i`
+is the analogous contraction with trivial (no-MPO) norm-boundary
+environments. The norm-environment term is necessary because, with every
+tensor updated at once and no canonicalization step, the tensors away from
+site `i` are not isometric, so `N_eff,i` does not collapse to `A_i` as it
+would in a one-site sweep. All four environment sets (H-left, H-right,
+norm-left, norm-right) are rebuilt from scratch every gradient step, since
+every tensor changes simultaneously. The TeNPy and Cytnx implementations of
+this formula are written independently (`np_conserved` contractions vs.
 Cytnx `UniTensor`/`Network`/`Contract`), not via a shared abstraction, since
 the point of the benchmark is to compare each library's own primitives.
-Both implementations evaluate the local Rayleigh quotient without enforcing
-strict mixed-canonical gauge on neighboring tensors, so the per-site energy
-is only an approximation to the global `<psi|H|psi>/<psi|psi>`; this was
-validated by checking that the local energy decreases monotonically over
-gradient steps, not by exact-diagonalization matching (unlike classes 1 and
-2, which are ED-validated — see the docstrings in `test_dmrg_dense.py`/
-`test_tebd.py` for details).
+
+This whole-network update is a weaker optimizer than a one-site sweep, so
+its converged energy is sensitive to each library's own initial-state
+construction and RNG; correctness is validated by checking that each
+library's own implementation lands close to its own reference energy
+(tight per-library tolerance), not by comparing energies across libraries
+or by exact-diagonalization matching (unlike classes 1 and 2, which are
+ED-validated — see the docstrings in `test_dmrg_dense.py`/`test_tebd.py`
+for details).
 
 ## Parameter grid
 

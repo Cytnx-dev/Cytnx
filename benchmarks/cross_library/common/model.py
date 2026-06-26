@@ -30,11 +30,10 @@ TFIM_N_STEPS = 40
 CHI_VALUES = [16, 32, 64]
 L_VALUES = [20, 30, 50]
 
-# Number of DMRG sweeps / gradient steps measured per (chi, L) point. Kept
-# small because we only need a handful of steps to get a stable per-step
-# timing and peak-memory estimate, not a converged ground state.
+# Number of DMRG sweeps measured per (chi, L) point. Kept small because we
+# only need a handful of sweeps to get a stable per-sweep timing and
+# peak-memory estimate, not a converged ground state.
 N_SWEEPS = 3
-N_GRAD_STEPS = 20
 
 # Number of Lanczos iterations for the local two-site eigensolver, shared
 # between the Cytnx and quimb dense-DMRG implementations.

@@ -3,54 +3,61 @@ gradient descent on the MPS tensors of the 1D Heisenberg chain, with a
 hand-derived (manual) gradient instead of automatic differentiation.
 
 TeNPy has no autodiff backend, so the gradient of the Rayleigh quotient
+
     E(psi) = <psi|H|psi> / <psi|psi>
-with respect to a single MPS tensor A_i (holding all other tensors fixed)
-is computed analytically rather than via backprop. For an MPS tensor that
-sits at the orthogonality center of a mixed-canonical gauge, the standard
-result is
 
-    dE/dA_i* = 2 * (H_eff,i(A_i) - E * A_i)
+with respect to every MPS tensor simultaneously is computed analytically
+rather than via backprop. This is TeNPy's counterpart to quimb's
+`run_one_jax`/`run_one_torch` (`quimb_bench/test_variational_ad.py`), which
+differentiate straight through the same whole-network contraction with the
+backend's own autodiff. Like quimb's benchmark, every MPS tensor is updated
+from a single gradient step taken simultaneously, with no orthogonality
+center and no per-step canonicalization -- only a single global rescale
+derived from the new `<psi|psi>` is applied after each step, distributed
+evenly across all L tensors. Because the surrounding tensors are not kept
+isometric, the gradient needs both an H-environment term (the effective
+one-site Hamiltonian, as in a one-site sweep) and a norm-environment term:
 
-where H_eff,i is the effective one-site Hamiltonian obtained by
-contracting the MPO with the left/right boundary environments around site
-i. We build the environment-update and effective-Hamiltonian contractions
-by hand with `tenpy.linalg.np_conserved.tensordot` calls on plain lists of
-`Array` tensors -- mirroring the Cytnx benchmark's `Network`-based
-`_update_L`/`_update_R`/`_h_eff` (`cytnx_bench/test_variational_manual_grad.py`)
-rather than going through `tenpy.networks.mps.MPS`/`MPOEnvironment`. Two of
-TeNPy's `MPS`-class conveniences are unsound for this manual sweep: (1)
-`MPS.get_theta(i, n=1)` ignores any `formL`/`formR` argument and always
-requests TeNPy's fully-symmetric form, silently double-applying a gauge
-factor whenever the caller has already folded a leftover QR/SVD factor
-into the read-out tensor; (2) every `MPOEnvironment` lazy LP/RP
-recomputation calls `ket.get_B(i, form='A'/'B')` unconditionally, which
-rescales the stored tensor through `psi.S` -- consistent only if `psi.S`
-exactly tracks a strict Vidal-form relationship, an invariant a hand-rolled
-per-site gradient step does not maintain. Working with raw `Array` tensors
-sidesteps both: `update_L`/`update_R`/`h_eff` below are plain tensor
-contractions with no implicit form-dependent rescaling.
+    dE/dA_i* = (2 / den) * (H_eff,i(A_i) - E * N_eff,i(A_i))
+
+where `den = <psi|psi>`, `H_eff,i` contracts the MPO with the left/right
+H-environments around site i, and `N_eff,i` is the analogous contraction
+with trivial (no-MPO) norm-environments. `N_eff,i` only collapses to `A_i`
+when the rest of the chain is isometric (the one-site-sweep case); here it
+does not, so it is computed explicitly via `update_L_N`/`update_R_N`/
+`n_eff`. All four environment sets (`LH`, `RH`, `LN`, `RN`) are rebuilt
+from scratch every gradient step, since every tensor changes at once and
+no sweep-order incremental reuse is possible.
+
+We build every contraction by hand with `tenpy.linalg.np_conserved.tensordot`
+calls on plain lists of `Array` tensors -- mirroring the Cytnx benchmark's
+`Network`-based `_update_L`/`_update_R`/`_h_eff`/`_update_L_N`/`_update_R_N`/
+`_n_eff` (`cytnx_bench/test_variational_manual_grad.py`) rather than going
+through `tenpy.networks.mps.MPS`/`MPOEnvironment`, since neither of those
+classes assumes the non-canonical, simultaneously-updated state this
+algorithm produces.
 
 The initial MPS is also built the same way as the Cytnx benchmark: i.i.d.
 normal-random site tensors (same per-site bond-dimension formula and
 per-site `seed`), right-canonicalized via a chain of SVDs
-(`canonicalize_right`) -- not TeNPy's `MPS.from_random_unitary_evolution`
-from a Neel-like product state, which stays much closer to a product
-state after only a few two-site random gates and converges far more
-slowly under gradient descent at the shared `LEARNING_RATE`/`N_GRAD_STEPS`
-budget. `MPOEnvironment.init_LP(0)`/`init_RP(L-1)` (which depend only on
-the trivial-boundary structure of `H_MPO`, not on any particular state)
-still supply the boundary vectors.
-
-Each updated site is immediately left-canonicalized (SVD into U, with S*Vh
-folded into the next not-yet-visited site), exactly as in the Cytnx
-benchmark; `canonicalize_right` restores an all-right-canonical gauge
-(except A[0]) at the end of every sweep, mirroring Cytnx's
-`_canonicalize_right`. CPU only.
+(`canonicalize_right`) purely to fix a well-defined starting point -- not
+TeNPy's `MPS.from_random_unitary_evolution` from a Neel-like product state,
+which stays much closer to a product state after only a few two-site
+random gates and converges far more slowly under gradient descent.
+`MPOEnvironment.init_LP(0)`/`init_RP(L-1)` (which depend only on the
+trivial-boundary structure of `H_MPO`, not on any particular state) still
+supply the H-environment boundary vectors; the norm-environment boundaries
+are the corresponding bond-dimension-1 scalar identities. CPU only.
 
 Run timing with `pytest --benchmark-only test_variational_manual_grad.py`,
 memory with `pytest --memray test_variational_manual_grad.py`. The initial
-MPS is seeded (per-site `np.random.RandomState(seed)`), so a tight
-tolerance is appropriate.
+MPS is seeded (per-site `np.random.RandomState(seed)`). Unlike a one-site
+sweep -- a strong local optimizer whose converged energy is largely
+insensitive to small initial-state differences -- this whole-network
+update is a weaker optimizer whose converged energy is sensitive to the
+initial state, so (as with quimb's AD benchmark) a tight per-library
+self-consistency tolerance is still used, but no cross-library energy
+comparison is expected to land as close as the one-site-sweep designs do.
 """
 import numpy as np
 import pytest
@@ -60,20 +67,25 @@ from tenpy.models.spins import SpinChain
 from tenpy.networks.mps import MPS
 from tenpy.networks.mpo import MPOEnvironment
 
-from common.model import CHI_VALUES, HEISENBERG_J, L_VALUES, N_GRAD_STEPS, STEP_TIMEOUT_SEC
+from common.model import CHI_VALUES, HEISENBERG_J, L_VALUES, STEP_TIMEOUT_SEC
 
-LEARNING_RATE = 0.1
+LEARNING_RATE = 0.5
+
+
+def _n_grad_steps(L):
+    return 8 * L
+
 
 REFERENCE_ENERGIES = {
-    (16, 20): -8.68246845559462,
-    (16, 30): -13.111313297814329,
-    (16, 50): -21.971572169443398,
-    (32, 20): -8.682473317775269,
-    (32, 30): -13.11135548954557,
-    (32, 50): -21.972106252821092,
-    (64, 20): -8.682473333622692,
-    (64, 30): -13.111355749012512,
-    (64, 50): -21.972110271827823,
+    (16, 20): -8.67160693635544,
+    (16, 30): -13.094234734927348,
+    (16, 50): -21.94394809820539,
+    (32, 20): -8.674622771089668,
+    (32, 30): -13.09947631043835,
+    (32, 50): -21.954795152613357,
+    (64, 20): -8.67665261172479,
+    (64, 30): -13.103427625375156,
+    (64, 50): -21.960829029634567,
 }
 
 
@@ -95,6 +107,26 @@ def h_eff(theta, LP, RP, W_i):
     t = npc.tensordot(LP, theta, axes=['vR', 'vL'])
     t = npc.tensordot(W_i, t, axes=[['wL', 'p0*'], ['wR', 'p0']])
     t = npc.tensordot(t, RP, axes=[['wR', 'vR'], ['wL', 'vL']])
+    t.ireplace_labels(['vR*', 'vL*'], ['vL', 'vR'])
+    t.itranspose(['vL', 'p0', 'vR'])
+    return t
+
+
+def update_L_N(LP, A_i):
+    LP = npc.tensordot(LP, A_i, axes=('vR', 'vL'))
+    LP = npc.tensordot(A_i.conj(), LP, axes=(['p0*', 'vL*'], ['p0', 'vR*']))
+    return LP
+
+
+def update_R_N(RP, A_i):
+    RP = npc.tensordot(A_i, RP, axes=('vR', 'vL'))
+    RP = npc.tensordot(RP, A_i.conj(), axes=(['p0', 'vL*'], ['p0*', 'vR*']))
+    return RP
+
+
+def n_eff(theta, LP, RP):
+    t = npc.tensordot(LP, theta, axes=['vR', 'vL'])
+    t = npc.tensordot(t, RP, axes=['vR', 'vL'])
     t.ireplace_labels(['vR*', 'vL*'], ['vL', 'vR'])
     t.itranspose(['vL', 'p0', 'vR'])
     return t
@@ -142,41 +174,51 @@ def run_one(chi, L):
     env0 = MPOEnvironment(psi0, M.H_MPO, psi0)
     L0 = env0.init_LP(0)
     R0 = env0.init_RP(L - 1)
+    LN0 = npc.Array.from_ndarray_trivial(np.array([[1.0]]), labels=['vR*', 'vR'])
+    RN0 = npc.Array.from_ndarray_trivial(np.array([[1.0]]), labels=['vL*', 'vL'])
 
     A = _build_mps(L, chi)
 
-    def grad_step():
-        Renv = [None] * (L + 1)
-        Renv[L] = R0
-        for p in range(L - 1, 0, -1):
-            Renv[p] = update_R(Renv[p + 1], A[p], Ws[p])
-        Lenv = L0
-        energy = None
+    def grad_step(A):
+        LH = [None] * (L + 1)
+        LH[0] = L0
         for p in range(L):
-            theta = A[p]
-            ht = h_eff(theta, Lenv, Renv[p + 1], Ws[p])
-            norm_sq = npc.inner(theta, theta, axes='labels', do_conj=True)
-            energy = npc.inner(theta, ht, axes='labels', do_conj=True) / norm_sq
-            grad = 2 * (ht - energy * theta)
-            new_theta = theta - LEARNING_RATE * grad
-            new_theta /= npc.norm(new_theta)
-            if p < L - 1:
-                mat = new_theta.combine_legs(['vL', 'p0'], qconj=+1)
-                u, s, vh = npc.svd(mat, inner_labels=['vR', 'vL'])
-                u = u.split_legs(0)
-                s_arr = npc.diag(s, vh.get_leg('vL'), labels=['vL', 'vR'])
-                A[p] = u
-                A[p + 1] = npc.tensordot(npc.tensordot(s_arr, vh, axes=['vR', 'vL']), A[p + 1], axes=['vR', 'vL'])
-                A[p + 1].itranspose(['vL', 'p0', 'vR'])
-            else:
-                A[p] = new_theta
-            Lenv = update_L(Lenv, A[p], Ws[p])
-        canonicalize_right(A, L)
-        return energy.real
+            LH[p + 1] = update_L(LH[p], A[p], Ws[p])
+        RH = [None] * (L + 1)
+        RH[L] = R0
+        for p in range(L - 1, -1, -1):
+            RH[p] = update_R(RH[p + 1], A[p], Ws[p])
+        LN = [None] * (L + 1)
+        LN[0] = LN0
+        for p in range(L):
+            LN[p + 1] = update_L_N(LN[p], A[p])
+        RN = [None] * (L + 1)
+        RN[L] = RN0
+        for p in range(L - 1, -1, -1):
+            RN[p] = update_R_N(RN[p + 1], A[p])
+
+        num = LH[L].to_ndarray().reshape(-1)[-1]
+        den = LN[L].to_ndarray().item()
+        energy = num / den
+
+        new_A = [None] * L
+        for p in range(L):
+            ht = h_eff(A[p], LH[p], RH[p + 1], Ws[p])
+            nt = n_eff(A[p], LN[p], RN[p + 1])
+            grad = (2.0 / den) * (ht - energy * nt)
+            new_A[p] = A[p] - LEARNING_RATE * grad
+
+        LNn = LN0
+        for p in range(L):
+            LNn = update_L_N(LNn, new_A[p])
+        den_new = LNn.to_ndarray().item()
+        scale = den_new ** (-1.0 / (2 * L))
+        new_A = [a * scale for a in new_A]
+        return new_A, energy.real
 
     energy = None
-    for _ in range(N_GRAD_STEPS):
-        energy = grad_step()
+    for _ in range(_n_grad_steps(L)):
+        A, energy = grad_step(A)
     return energy
 
 

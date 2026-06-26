@@ -3,57 +3,82 @@ gradient descent on the MPS tensors of the 1D Heisenberg chain, with a
 hand-derived (manual) gradient instead of automatic differentiation.
 
 Cytnx has no autodiff backend, so the gradient of the Rayleigh quotient
+
     E(psi) = <psi|H|psi> / <psi|psi>
-with respect to a single MPS tensor A_i (holding all other tensors fixed)
-is computed analytically rather than via backprop:
 
-    dE/dA_i* = 2 * (H_eff,i(A_i) - E * A_i)
+with respect to every MPS tensor simultaneously is computed analytically
+rather than via backprop. This is Cytnx's counterpart to quimb's
+`run_one_jax`/`run_one_torch` (`quimb_bench/test_variational_ad.py`), which
+differentiate straight through the same whole-network contraction with the
+backend's own autodiff. Like quimb's benchmark, every MPS tensor is updated
+from a single gradient step taken simultaneously, with no orthogonality
+center and no per-step canonicalization -- only a single global rescale
+derived from the new `<psi|psi>` is applied after each step, distributed
+evenly across all L tensors. Because the surrounding tensors are not kept
+isometric, the gradient needs both an H-environment term (the effective
+one-site Hamiltonian, as in a one-site sweep) and a norm-environment term:
 
-where H_eff,i is the effective one-site Hamiltonian obtained by contracting
-the MPO with the left/right boundary environments around site i. H_eff,i is
-built here from Cytnx's own `UniTensor`/`Network`/`Contract` primitives,
-reusing the same bond-dimension-5 Heisenberg MPO and L/R environment-update
-`Network` definitions as `test_dmrg_dense.py` (those networks already
-operate on a single MPS tensor plus its conjugate, so they apply unchanged
-to a one-site sweep). Right environments for not-yet-visited sites are
-computed once per gradient sweep and left environments are updated
-incrementally as the sweep passes each site -- this is a *contraction*, not
-automatic differentiation, and is written independently of the closed-form
-gradient used in the TeNPy (`tenpy_bench/test_variational_manual_grad.py`,
-`np_conserved` contractions) and quimb (`quimb_bench/test_variational_ad.py`,
-real autodiff) benchmarks.
+    dE/dA_i* = (2 / den) * (H_eff,i(A_i) - E * N_eff,i(A_i))
+
+where `den = <psi|psi>`, `H_eff,i` contracts the MPO with the left/right
+H-environments around site i, and `N_eff,i` is the analogous contraction
+with trivial (no-MPO) norm-environments. `N_eff,i` only collapses to `A_i`
+when the rest of the chain is isometric (the one-site-sweep case); here it
+does not, so it is computed explicitly via the `_LN_UPDATE_NET`/
+`_RN_UPDATE_NET`/`_N_EFF_NET` Cytnx `Network` definitions below, which are
+the same `_L_UPDATE_NET`/`_R_UPDATE_NET`/`_HEFF_NET` contractions with the
+MPO leg dropped. All four environment sets (H-left, H-right, norm-left,
+norm-right) are rebuilt from scratch every gradient step, since every
+tensor changes at once and no sweep-order incremental reuse is possible.
 
 CPU and GPU code paths are both written; the GPU path moves every MPS/MPO
-UniTensor to `cytnx.Device.cuda` before the gradient sweep. It cannot be
+UniTensor to `cytnx.Device.cuda` before the gradient step. It cannot be
 exercised in this environment (no GPU).
 
 Run timing with `pytest --benchmark-only test_variational_manual_grad.py`,
-memory with `pytest --memray test_variational_manual_grad.py`.
+memory with `pytest --memray test_variational_manual_grad.py`. The initial
+MPS is seeded (per-site `cytnx.UniTensor.normal(..., seed=k)`). Unlike a
+one-site sweep -- a strong local optimizer whose converged energy is
+largely insensitive to small initial-state differences -- this
+whole-network update is a weaker optimizer whose converged energy is
+sensitive to the initial state, so (as with quimb's AD benchmark) a tight
+per-library self-consistency tolerance is still used, but no cross-library
+energy comparison is expected to land as close as the one-site-sweep
+designs do.
 """
 import pytest
 
 import cytnx
 
-from common.model import CHI_VALUES, HEISENBERG_J, L_VALUES, N_GRAD_STEPS, STEP_TIMEOUT_SEC
+from common.model import CHI_VALUES, HEISENBERG_J, L_VALUES, STEP_TIMEOUT_SEC
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
-LEARNING_RATE = 0.1
+LEARNING_RATE = 0.5
+
+
+def _n_grad_steps(L):
+    return 8 * L
+
 
 REFERENCE_ENERGIES = {
-    (16, 20): -8.682468455146315,
-    (16, 30): -13.111313399023222,
-    (16, 50): -21.971715188684332,
-    (32, 20): -8.682473317623886,
-    (32, 30): -13.111355507543065,
-    (32, 50): -21.972106247315416,
-    (64, 20): -8.68247333435864,
-    (64, 30): -13.111355758459972,
-    (64, 50): -21.97211027152718,
+    (16, 20): -8.669390762907128,
+    (16, 30): -13.093516691905897,
+    (16, 50): -21.945283123631583,
+    (32, 20): -8.674290703078219,
+    (32, 30): -13.100972670479699,
+    (32, 50): -21.953298655520914,
+    (64, 20): -8.67676882878297,
+    (64, 30): -13.103318241859627,
+    (64, 50): -21.96029731572234,
 }
 
 _L_UPDATE_NET = ["L: -2,-1,-3", "A: -1,-4,1", "M: -2,0,-4,-5", "A_Conj: -3,-5,2", "TOUT: 0,1,2"]
 _R_UPDATE_NET = ["R: -2,-1,-3", "B: 1,-4,-1", "M: 0,-2,-4,-5", "B_Conj: 2,-5,-3", "TOUT: 0,1,2"]
 _HEFF_NET = ["psi: -1,-2,-3", "L: -4,-1,0", "R: -5,-3,2", "M: -4,-5,-2,1", "TOUT: 0,1;2"]
+
+_LN_UPDATE_NET = ["L: -1,-2", "A: -1,-3,0", "A_Conj: -2,-3,1", "TOUT: 0,1"]
+_RN_UPDATE_NET = ["R: -1,-2", "B: 0,-3,-1", "B_Conj: 1,-3,-2", "TOUT: 0,1"]
+_N_EFF_NET = ["L: -1,0", "psi: -1,1,-2", "R: -2,2", "TOUT: 0,1,2"]
 
 
 def _build_mpo(J, device):
@@ -119,25 +144,59 @@ def _canonicalize_right(A, lbls, L):
     A[0].relabel_(lbls[0]).set_name("A0")
 
 
-def _update_L(L_env, A_new, M):
-    net = cytnx.Network()
-    net.FromString(_L_UPDATE_NET)
-    net.PutUniTensors(["L", "A", "A_Conj", "M"], [L_env, A_new, A_new.Dagger().permute_(A_new.labels()), M])
-    return net.Launch()
+class _Networks:
+    """Caches one parsed `cytnx.Network` per static contraction topology used
+    in `run_one`'s gradient step, since `FromString` re-parses the topology
+    string on every call -- with `8 * L` whole-network gradient steps and
+    O(L) such contractions per step, re-parsing on every call dominates the
+    runtime at large L. Each `Network` is built once and refilled via
+    `PutUniTensors`/`Launch` on every reuse."""
+
+    def __init__(self):
+        self.l_update = cytnx.Network()
+        self.l_update.FromString(_L_UPDATE_NET)
+        self.r_update = cytnx.Network()
+        self.r_update.FromString(_R_UPDATE_NET)
+        self.heff = cytnx.Network()
+        self.heff.FromString(_HEFF_NET)
+        self.ln_update = cytnx.Network()
+        self.ln_update.FromString(_LN_UPDATE_NET)
+        self.rn_update = cytnx.Network()
+        self.rn_update.FromString(_RN_UPDATE_NET)
+        self.n_eff = cytnx.Network()
+        self.n_eff.FromString(_N_EFF_NET)
 
 
-def _update_R(R_env, B_new, M):
-    net = cytnx.Network()
-    net.FromString(_R_UPDATE_NET)
-    net.PutUniTensors(["R", "B", "M", "B_Conj"], [R_env, B_new, M, B_new.Dagger().permute_(B_new.labels())])
-    return net.Launch()
+def _update_L(nets, L_env, A_new, A_conj, M):
+    nets.l_update.PutUniTensors(["L", "A", "A_Conj", "M"], [L_env, A_new, A_conj, M])
+    return nets.l_update.Launch()
 
 
-def _h_eff(theta, L_env, R_env, M):
-    net = cytnx.Network()
-    net.FromString(_HEFF_NET)
-    net.PutUniTensors(["psi", "L", "R", "M"], [theta, L_env, R_env, M])
-    out = net.Launch()
+def _update_R(nets, R_env, B_new, B_conj, M):
+    nets.r_update.PutUniTensors(["R", "B", "M", "B_Conj"], [R_env, B_new, M, B_conj])
+    return nets.r_update.Launch()
+
+
+def _h_eff(nets, theta, L_env, R_env, M):
+    nets.heff.PutUniTensors(["psi", "L", "R", "M"], [theta, L_env, R_env, M])
+    out = nets.heff.Launch()
+    out.relabel_(theta.labels())
+    return out
+
+
+def _update_L_N(nets, LN_env, A_new, A_conj):
+    nets.ln_update.PutUniTensors(["L", "A", "A_Conj"], [LN_env, A_new, A_conj])
+    return nets.ln_update.Launch()
+
+
+def _update_R_N(nets, RN_env, B_new, B_conj):
+    nets.rn_update.PutUniTensors(["R", "B", "B_Conj"], [RN_env, B_new, B_conj])
+    return nets.rn_update.Launch()
+
+
+def _n_eff(nets, theta, LN_env, RN_env):
+    nets.n_eff.PutUniTensors(["L", "psi", "R"], [LN_env, theta, RN_env])
+    out = nets.n_eff.Launch()
     out.relabel_(theta.labels())
     return out
 
@@ -146,54 +205,61 @@ def run_one(chi, L):
     device = "gpu" if DEVICE == "gpu" else "cpu"
     M, L0, R0 = _build_mpo(HEISENBERG_J, device)
     A, lbls = _build_mps(L, chi, device)
+    LN0 = cytnx.UniTensor.zeros([1, 1]).set_rowrank_(0)
+    LN0[0, 0] = 1.0
+    RN0 = cytnx.UniTensor.zeros([1, 1]).set_rowrank_(0)
+    RN0[0, 0] = 1.0
+    if device == "gpu":
+        LN0 = LN0.to(cytnx.Device.cuda)
+        RN0 = RN0.to(cytnx.Device.cuda)
+    nets = _Networks()
 
-    def grad_step():
-        R_env = [None] * (L + 1)
-        R_env[L] = R0
-        for p in range(L - 1, 0, -1):
-            R_env[p] = _update_R(R_env[p + 1], A[p], M)
+    def grad_step(A):
+        A_conj = [a.Dagger().permute_(a.labels()) for a in A]
 
-        L_env = L0
-        energy = None
+        LH = [None] * (L + 1)
+        LH[0] = L0
         for p in range(L):
-            theta = A[p]
-            h_theta = _h_eff(theta, L_env, R_env[p + 1], M)
-            theta_dag = theta.Dagger().permute_(theta.labels())
-            norm_sq = cytnx.Contract(theta_dag, theta).item()
-            energy = cytnx.Contract(theta_dag, h_theta).item() / norm_sq
-            grad = 2 * (h_theta - energy * theta)
-            new_theta = theta - LEARNING_RATE * grad
-            new_theta = new_theta / new_theta.Norm().item()
-            # Cytnx arithmetic ops reset UniTensor labels to the default
-            # ['0','1',...] sequence rather than preserving theta's labels,
-            # so new_theta must be relabeled back to the site's real bond
-            # names before any Gesvd split -- otherwise the split-off bond
-            # leg carries the wrong label and silently fails to contract
-            # with A[p+1]'s matching leg.
-            new_theta.relabel_(lbls[p])
-            if p < L - 1:
-                # Push the orthogonality center forward (left-canonicalize the
-                # just-updated site) so that H_eff at the next site is built
-                # against a properly left-orthonormal left environment, as the
-                # Rayleigh-quotient shortcut `energy = <theta|H_eff|theta>`
-                # requires.
-                new_theta.set_rowrank_(2)
-                s, A[p], vt = cytnx.linalg.Gesvd(new_theta)
-                A[p + 1] = cytnx.Contract(cytnx.Contract(s, vt), A[p + 1])
-                A[p + 1].relabel_(lbls[p + 1]).set_name(f"A{p+1}")
-            else:
-                A[p] = new_theta
-            A[p].set_name(f"A{p}").relabel_(lbls[p])
-            L_env = _update_L(L_env, A[p], M)
-        # Restore the right-canonical gauge (all sites right-orthonormal
-        # except A[0]) so the next sweep's R_env precomputation and
-        # Rayleigh-quotient shortcut remain valid.
-        _canonicalize_right(A, lbls, L)
-        return energy
+            LH[p + 1] = _update_L(nets, LH[p], A[p], A_conj[p], M)
+        RH = [None] * (L + 1)
+        RH[L] = R0
+        for p in range(L - 1, -1, -1):
+            RH[p] = _update_R(nets, RH[p + 1], A[p], A_conj[p], M)
+        LN = [None] * (L + 1)
+        LN[0] = LN0
+        for p in range(L):
+            LN[p + 1] = _update_L_N(nets, LN[p], A[p], A_conj[p])
+        RN = [None] * (L + 1)
+        RN[L] = RN0
+        for p in range(L - 1, -1, -1):
+            RN[p] = _update_R_N(nets, RN[p + 1], A[p], A_conj[p])
+
+        D = LH[L].shape()[0]
+        num = LH[L][D - 1, 0, 0].item()
+        den = LN[L][0, 0].item()
+        energy = num / den
+
+        new_A = [None] * L
+        for p in range(L):
+            ht = _h_eff(nets, A[p], LH[p], RH[p + 1], M)
+            nt = _n_eff(nets, A[p], LN[p], RN[p + 1])
+            grad = (2.0 / den) * (ht - energy * nt)
+            new_A[p] = A[p] - LEARNING_RATE * grad
+            new_A[p].relabel_(lbls[p]).set_name(f"A{p}")
+
+        LNn = LN0
+        for p in range(L):
+            LNn = _update_L_N(nets, LNn, new_A[p], new_A[p].Dagger().permute_(new_A[p].labels()))
+        den_new = LNn[0, 0].item()
+        scale = den_new ** (-1.0 / (2 * L))
+        new_A = [a * scale for a in new_A]
+        for p in range(L):
+            new_A[p].relabel_(lbls[p]).set_name(f"A{p}")
+        return new_A, energy
 
     energy = None
-    for _ in range(N_GRAD_STEPS):
-        energy = grad_step()
+    for _ in range(_n_grad_steps(L)):
+        A, energy = grad_step(A)
     return energy
 
 
