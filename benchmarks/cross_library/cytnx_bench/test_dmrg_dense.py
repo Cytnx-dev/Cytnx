@@ -49,8 +49,7 @@ class _Hxx(cytnx.LinOp):
         return out
 
 
-def _optimize_psi(psi, functArgs, maxit, device):
-    L, M1, M2, R = functArgs
+def _optimize_psi(psi, L, M1, M2, R, maxit, device):
     anet = cytnx.Network()
     anet.FromString(["psi: -1,-2,-3,-4",
                       "L: -5,-1,0",
@@ -154,7 +153,7 @@ def run_one(chi, L):
             dim_r = A[p + 1].shape()[2]
             new_dim = min(dim_l * d, dim_r * d, chi)
             psi = cytnx.Contract(A[p], A[p + 1])
-            psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
+            psi, energy = _optimize_psi(psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
             s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
             A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
@@ -182,7 +181,7 @@ def run_one(chi, L):
             dim_r = A[p + 1].shape()[2]
             new_dim = min(dim_l * d, dim_r * d, chi)
             psi = cytnx.Contract(A[p], A[p + 1])
-            psi, energy = _optimize_psi(psi, (LR[p], M, M, LR[p + 2]), LANCZOS_MAXITER, device)
+            psi, energy = _optimize_psi(psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
             s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
             A[p].set_name(f"A{p}").relabel_(lbls[p])
