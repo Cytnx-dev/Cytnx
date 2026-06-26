@@ -120,12 +120,12 @@ def run_one(chi, L):
     M, L0, R0, bd_phys = _build_mpo(HEISENBERG_J, TARGET_Q, device)
 
     A = [None for _ in range(L)]
-    qcntr = 0
-    cq = 1 if qcntr <= TARGET_Q else -1
-    qcntr += cq
+    running_charge = 0
+    charge_step = 1 if running_charge <= TARGET_Q else -1
+    running_charge += charge_step
 
     VbdL = cytnx.Bond(cytnx.BD_KET, [[0]], [1])
-    A[0] = cytnx.UniTensor([VbdL, bd_phys.redirect(), cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])], device=device) \
+    A[0] = cytnx.UniTensor([VbdL, bd_phys.redirect(), cytnx.Bond(cytnx.BD_BRA, [[running_charge]], [1])], device=device) \
         .set_rowrank_(2).set_name("A0")
     A[0].get_block_()[0] = 1
 
@@ -133,9 +133,9 @@ def run_one(chi, L):
     for k in range(1, L):
         B1 = A[k - 1].bonds()[2].redirect()
         B2 = A[k - 1].bonds()[1]
-        cq = 1 if qcntr <= TARGET_Q else -1
-        qcntr += cq
-        B3 = cytnx.Bond(cytnx.BD_BRA, [[qcntr]], [1])
+        charge_step = 1 if running_charge <= TARGET_Q else -1
+        running_charge += charge_step
+        B3 = cytnx.Bond(cytnx.BD_BRA, [[running_charge]], [1])
 
         A[k] = cytnx.UniTensor([B1, B2, B3], device=device).set_rowrank_(2).set_name(f"A{k}")
         lbl = [str(2 * k), str(2 * k + 1), str(2 * k + 2)]
