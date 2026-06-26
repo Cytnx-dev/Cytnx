@@ -462,14 +462,13 @@ Note that both Python API and C++ API will be installed together regardless of w
 <li><p>For linux/WSL:</p></li>
 </ul>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
-<span class="linenos">2</span><span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--channel<span class="w"> </span>conda-forge<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span><span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
+<span class="linenos">2</span><span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--channel<span class="w"> </span>conda-forge<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
 <li><p>We do not support a native Windows package at this stage. If you are using Windows OS, please use WSL.</p></li>
-<li><p>Currently, the supported Python versions are updated to: linux –  3.9+; MacOS-osx64 – 3.9+ (no conda support). You can change the python=* argument to the version you like.</p></li>
 </ol>
 </div>
 <ul>

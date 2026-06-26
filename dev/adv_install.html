@@ -481,7 +481,7 @@
 </ul>
 <p>[Python API]</p>
 <ul class="simple">
-<li><p>python &gt;= 3.9</p></li>
+<li><p>python &gt;= 3.10</p></li>
 <li><p>pybind11 &gt;= 3.0.0</p></li>
 <li><p>python-graphviz</p></li>
 <li><p>graphviz</p></li>
@@ -510,7 +510,7 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <li><p>For Linux/WSL:</p></li>
 </ul>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
-<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span><span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
+<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
 <span class="nv">$conda</span><span class="w"> </span>activate<span class="w"> </span>cytnx
 <span class="nv">$conda</span><span class="w"> </span>upgrade<span class="w"> </span>--all
 </pre></div>
@@ -519,17 +519,14 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <li><p>For MacOS:</p></li>
 </ul>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
-<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span>llvm-openmp
+<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span>llvm-openmp
 <span class="nv">$conda</span><span class="w"> </span>activate<span class="w"> </span>cytnx
 <span class="nv">$conda</span><span class="w"> </span>upgrade<span class="w"> </span>--all
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ol class="arabic simple">
-<li><p>The python=3.9 indicates the Python version you want to use. Generally, Cytnx is tested with 3.9+. You can replace this with the version you want to use.</p></li>
-<li><p>The last line is updating all the libraries such that they are all dependent on the conda-forge channel.</p></li>
-</ol>
+<p>The last line is updating all the libraries such that they are all dependent on the conda-forge channel.</p>
 </div>
 <ol class="arabic simple" start="2">
 <li><p>Install the following dependencies:</p></li>
