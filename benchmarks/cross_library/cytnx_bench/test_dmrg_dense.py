@@ -218,7 +218,7 @@ def run_one(chi, L):
 def test_dmrg_dense_benchmark(benchmark, bond_dim, num_sites):
     energy = benchmark.pedantic(run_one, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory
@@ -226,4 +226,4 @@ def test_dmrg_dense_benchmark(benchmark, bond_dim, num_sites):
 @pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
 def test_dmrg_dense_memory(bond_dim, num_sites):
     energy = run_one(bond_dim, num_sites)
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
