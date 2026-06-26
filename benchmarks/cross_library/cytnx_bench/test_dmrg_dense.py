@@ -213,15 +213,16 @@ def run_one(chi, L):
 
 
 @pytest.mark.timeout(STEP_TIMEOUT_SEC)
-@pytest.mark.parametrize("length", L_VALUES)
-@pytest.mark.parametrize("chi", CHI_VALUES)
-def test_dmrg_dense_benchmark(benchmark, chi, length):
-    energy = benchmark.pedantic(run_one, args=(chi, length), rounds=1, iterations=1)
+@pytest.mark.parametrize("chain_length", L_VALUES)
+@pytest.mark.parametrize("bond_dim", CHI_VALUES)
+def test_dmrg_dense_benchmark(benchmark, bond_dim, chain_length):
+    energy = benchmark.pedantic(run_one, args=(bond_dim, chain_length), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(chi, length)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, chain_length)], rel=1e-4)
 
 
-@pytest.mark.limit_memory("20 MB")
-def test_dmrg_dense_memory():
-    energy = run_one(16, 20)
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(16, 20)], rel=1e-4)
+@pytest.mark.parametrize("chain_length", L_VALUES)
+@pytest.mark.parametrize("bond_dim", CHI_VALUES)
+def test_dmrg_dense_memory(bond_dim, chain_length):
+    energy = run_one(bond_dim, chain_length)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, chain_length)], rel=1e-4)
