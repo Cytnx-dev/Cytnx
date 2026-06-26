@@ -67,7 +67,7 @@ from tenpy.models.spins import SpinChain
 from tenpy.networks.mps import MPS
 from tenpy.networks.mpo import MPOEnvironment
 
-from common.model import CHI_VALUES, HEISENBERG_J, L_VALUES, STEP_TIMEOUT_SEC
+from common.model import BOND_DIM_VALUES, HEISENBERG_J, NUM_SITES_VALUES, GRID_POINT_TIMEOUT_SEC
 
 LEARNING_RATE = 0.5
 
@@ -222,13 +222,13 @@ def run_one(chi, L):
     return energy
 
 
-@pytest.mark.timeout(STEP_TIMEOUT_SEC)
-@pytest.mark.parametrize("length", L_VALUES)
-@pytest.mark.parametrize("chi", CHI_VALUES)
-def test_variational_manual_grad_benchmark(benchmark, chi, length):
-    energy = benchmark.pedantic(run_one, args=(chi, length), rounds=1, iterations=1)
+@pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_variational_manual_grad_benchmark(benchmark, bond_dim, num_sites):
+    energy = benchmark.pedantic(run_one, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = float(energy)
-    assert float(energy) == pytest.approx(REFERENCE_ENERGIES[(chi, length)], rel=1e-6)
+    assert float(energy) == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory

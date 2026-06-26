@@ -19,7 +19,7 @@ import pytest
 
 import cytnx
 
-from common.model import CHI_VALUES, HEISENBERG_J, LANCZOS_MAXITER, L_VALUES, N_SWEEPS, STEP_TIMEOUT_SEC
+from common.model import BOND_DIM_VALUES, HEISENBERG_J, LANCZOS_MAXITER, NUM_SITES_VALUES, N_SWEEPS, GRID_POINT_TIMEOUT_SEC
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
@@ -212,18 +212,18 @@ def run_one(chi, L):
     return energy
 
 
-@pytest.mark.timeout(STEP_TIMEOUT_SEC)
-@pytest.mark.parametrize("chain_length", L_VALUES)
-@pytest.mark.parametrize("bond_dim", CHI_VALUES)
-def test_dmrg_dense_benchmark(benchmark, bond_dim, chain_length):
-    energy = benchmark.pedantic(run_one, args=(bond_dim, chain_length), rounds=1, iterations=1)
+@pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_dmrg_dense_benchmark(benchmark, bond_dim, num_sites):
+    energy = benchmark.pedantic(run_one, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, chain_length)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
 
 
 @pytest.mark.cytnx_memory
-@pytest.mark.parametrize("chain_length", L_VALUES)
-@pytest.mark.parametrize("bond_dim", CHI_VALUES)
-def test_dmrg_dense_memory(bond_dim, chain_length):
-    energy = run_one(bond_dim, chain_length)
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, chain_length)], rel=1e-4)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_dmrg_dense_memory(bond_dim, num_sites):
+    energy = run_one(bond_dim, num_sites)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)

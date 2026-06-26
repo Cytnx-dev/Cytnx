@@ -45,7 +45,7 @@ from scipy.linalg import expm
 
 import quimb.tensor as qtn
 
-from common.model import CHI_VALUES, HEISENBERG_J, L_VALUES, N_SWEEPS, STEP_TIMEOUT_SEC
+from common.model import BOND_DIM_VALUES, HEISENBERG_J, NUM_SITES_VALUES, N_SWEEPS, GRID_POINT_TIMEOUT_SEC
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
@@ -171,13 +171,13 @@ def run_one_symmetric(chi, L):
     return energy
 
 
-@pytest.mark.timeout(STEP_TIMEOUT_SEC)
-@pytest.mark.parametrize("length", L_VALUES)
-@pytest.mark.parametrize("chi", CHI_VALUES)
-def test_dmrg_dense_benchmark(benchmark, chi, length):
-    energy = benchmark.pedantic(run_one_dense, args=(chi, length), rounds=1, iterations=1)
+@pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_dmrg_dense_benchmark(benchmark, bond_dim, num_sites):
+    energy = benchmark.pedantic(run_one_dense, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = float(energy)
-    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(chi, length)], rel=1e-4)
+    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
 
 
 @pytest.mark.cytnx_memory
@@ -187,13 +187,13 @@ def test_dmrg_dense_memory():
     assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(16, 20)], rel=1e-4)
 
 
-@pytest.mark.timeout(STEP_TIMEOUT_SEC)
-@pytest.mark.parametrize("length", L_VALUES)
-@pytest.mark.parametrize("chi", CHI_VALUES)
-def test_dmrg_symmetric_benchmark(benchmark, chi, length):
-    energy = benchmark.pedantic(run_one_symmetric, args=(chi, length), rounds=1, iterations=1)
+@pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_dmrg_symmetric_benchmark(benchmark, bond_dim, num_sites):
+    energy = benchmark.pedantic(run_one_symmetric, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = float(energy)
-    assert float(energy) == pytest.approx(SYMMETRIC_REFERENCE_ENERGIES[(chi, length)], rel=2e-2)
+    assert float(energy) == pytest.approx(SYMMETRIC_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
 
 
 @pytest.mark.cytnx_memory

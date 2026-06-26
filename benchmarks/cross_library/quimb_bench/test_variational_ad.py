@@ -50,7 +50,7 @@ import pytest
 
 import quimb.tensor as qtn
 
-from common.model import CHI_VALUES, HEISENBERG_J, L_VALUES, STEP_TIMEOUT_SEC
+from common.model import BOND_DIM_VALUES, HEISENBERG_J, NUM_SITES_VALUES, GRID_POINT_TIMEOUT_SEC
 
 LEARNING_RATE = 0.5
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code paths below
@@ -186,13 +186,13 @@ def run_one_torch(chi, L):
         return float(energy(arrays))
 
 
-@pytest.mark.timeout(STEP_TIMEOUT_SEC)
-@pytest.mark.parametrize("length", L_VALUES)
-@pytest.mark.parametrize("chi", CHI_VALUES)
-def test_variational_ad_jax_benchmark(benchmark, chi, length):
-    energy = benchmark.pedantic(run_one_jax, args=(chi, length), rounds=1, iterations=1)
+@pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_variational_ad_jax_benchmark(benchmark, bond_dim, num_sites):
+    energy = benchmark.pedantic(run_one_jax, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(chi, length)], rel=2e-2)
+    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
 
 
 @pytest.mark.cytnx_memory
@@ -202,13 +202,13 @@ def test_variational_ad_jax_memory():
     assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(16, 20)], rel=2e-2)
 
 
-@pytest.mark.timeout(STEP_TIMEOUT_SEC)
-@pytest.mark.parametrize("length", L_VALUES)
-@pytest.mark.parametrize("chi", CHI_VALUES)
-def test_variational_ad_torch_benchmark(benchmark, chi, length):
-    energy = benchmark.pedantic(run_one_torch, args=(chi, length), rounds=1, iterations=1)
+@pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_variational_ad_torch_benchmark(benchmark, bond_dim, num_sites):
+    energy = benchmark.pedantic(run_one_torch, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(chi, length)], rel=2e-2)
+    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
 
 
 @pytest.mark.cytnx_memory

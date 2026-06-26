@@ -2,9 +2,9 @@
 
 Compares **TeNPy**, **quimb**, and **Cytnx** on the same four classes of
 tensor-network algorithm, using the same physical models and the same
-`(chi, L)` parameter grid for every library, so that speed and peak-memory
-differences reflect implementation/library choices rather than differences
-in workload.
+`(bond_dim, num_sites)` parameter grid for every library, so that speed and
+peak-memory differences reflect implementation/library choices rather than
+differences in workload.
 
 ## Algorithm classes
 
@@ -26,7 +26,7 @@ comparable across libraries — see the docstring in that file.
 
 All four classes share the model/parameter definitions in `common/model.py`
 (`HEISENBERG_J`, `TFIM_J`/`TFIM_HX_INITIAL`/`TFIM_HX_FINAL`/`TFIM_DT`, the
-`(CHI_VALUES, L_VALUES)` grid).
+`(BOND_DIM_VALUES, NUM_SITES_VALUES)` grid).
 
 ### Gradient computation in class 3
 
@@ -73,21 +73,22 @@ for details).
 
 ## Parameter grid
 
-`common/model.py` defines the `(chi, L)` grid shared by every script:
+`common/model.py` defines the `(bond_dim, num_sites)` grid shared by every
+script:
 
 ```
-CHI_VALUES = [16, 32, 64]
-L_VALUES   = [20, 30, 50]
+BOND_DIM_VALUES  = [16, 32, 64]
+NUM_SITES_VALUES = [20, 30, 50]
 ```
 
 Each `test_<name>.py` parametrizes its benchmark test over the full
-Cartesian product of `CHI_VALUES` and `L_VALUES` (9 points), via two stacked
-`@pytest.mark.parametrize` decorators — one over `chi`, one over `length`.
-Every point is bounded by the per-point wall-clock budget `STEP_TIMEOUT_SEC`
-(120s by default, enforced via `pytest-timeout`), so a single slow
-large-chi/large-L point fails on its own rather than hanging the rest of the
-run — see "pytest-benchmark / pytest-memray regression tests" below for how
-to run an individual point.
+Cartesian product of `BOND_DIM_VALUES` and `NUM_SITES_VALUES` (9 points), via
+two stacked `@pytest.mark.parametrize` decorators — one over `bond_dim`, one
+over `num_sites`. Every point is bounded by the per-point wall-clock budget
+`GRID_POINT_TIMEOUT_SEC` (120s by default, enforced via `pytest-timeout`), so
+a single slow large-bond_dim/large-num_sites point fails on its own rather
+than hanging the rest of the run — see "pytest-benchmark / pytest-memray
+regression tests" below for how to run an individual point.
 
 ## CPU vs. GPU
 
@@ -107,8 +108,9 @@ to exercise them on a CUDA-capable machine.
 ## Running the suite
 
 The whole suite is pytest-native: each script's `run_one(chi, L)` lives in
-its `test_<name>.py` file, exercised across the full `(chi, L)` grid. There
-is no separate orchestration script and no standalone algorithm modules.
+its `test_<name>.py` file, exercised across the full `(bond_dim, num_sites)`
+grid. There is no separate orchestration script and no standalone algorithm
+modules.
 
 ```sh
 pip install tenpy quimb cytnx jax torch
@@ -116,9 +118,9 @@ pip install -e '.[benchmark]'   # pytest-benchmark, pytest-memray, pytest-timeou
 
 cd benchmarks/cross_library
 
-# Full (chi, L) grid, timing only (skips the limit_memory tests), with a
-# pytest.approx assertion against a precomputed reference energy at every
-# point:
+# Full (bond_dim, num_sites) grid, timing only (skips the memory tests),
+# with a pytest.approx assertion against a precomputed reference energy at
+# every point:
 python3 -m pytest --benchmark-only -q
 
 # Memory only: --memray instruments every collected test, so select just
@@ -142,12 +144,13 @@ source tree.
 ## pytest-benchmark / pytest-memray regression tests
 
 Each of the 12 `test_<name>.py` files exercises its `run_one(chi, L)` across
-the full `(chi, L)` grid through `pytest-benchmark`'s `benchmark.pedantic`,
-asserting the returned energy against a `REFERENCE_ENERGIES[(chi, length)]`
-dict via `pytest.approx`, so a wrong physical answer fails the test rather
-than silently shipping a bad timing number. The result is also recorded via
-`benchmark.extra_info["energy"]`; pass `--benchmark-json=out.json` to capture
-it (and the timing statistics) for every point in one file.
+the full `(bond_dim, num_sites)` grid through `pytest-benchmark`'s
+`benchmark.pedantic`, asserting the returned energy against a
+`REFERENCE_ENERGIES[(bond_dim, num_sites)]` dict via `pytest.approx`, so a
+wrong physical answer fails the test rather than silently shipping a bad
+timing number. The result is also recorded via `benchmark.extra_info["energy"]`;
+pass `--benchmark-json=out.json` to capture it (and the timing statistics)
+for every point in one file.
 
 The same file's `test_<name>_memory` test takes no parameters — it calls
 `run_one` directly (no `benchmark` fixture, so pytest-benchmark's overhead
