@@ -195,6 +195,7 @@ def test_variational_ad_jax_benchmark(benchmark, chi, length):
     assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(chi, length)], rel=2e-2)
 
 
+@pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("800 MB")
 def test_variational_ad_jax_memory():
     energy = run_one_jax(16, 20)
@@ -210,6 +211,7 @@ def test_variational_ad_torch_benchmark(benchmark, chi, length):
     assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(chi, length)], rel=2e-2)
 
 
+@pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("100 MB")
 def test_variational_ad_torch_memory():
     energy = run_one_torch(16, 20)

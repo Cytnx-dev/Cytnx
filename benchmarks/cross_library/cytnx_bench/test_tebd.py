@@ -170,6 +170,7 @@ def test_tebd_benchmark(benchmark, chi, length):
     assert energy == pytest.approx(REFERENCE_ENERGIES[(chi, length)], rel=1e-6)
 
 
+@pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("20 MB")
 def test_tebd_memory():
     energy = run_one(16, 20)

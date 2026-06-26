@@ -77,6 +77,11 @@ Documentation = "https://cytnx-dev.github.io/Cytnx/"
 Repository = "https://github.com/Cytnx-dev/Cytnx.git"
 Issues = "https://github.com/Cytnx-dev/Cytnx/issues"
 
+[tool.pytest.ini_options]
+markers = [
+    "cytnx_memory: peak-memory measurement in benchmarks/cross_library/ (selected by --memray; see benchmarks/cross_library/conftest.py)",
+]
+
 [tool.scikit-build]
 minimum-version = "0.11"
 wheel.packages = ["cytnx"]

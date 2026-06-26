@@ -180,6 +180,7 @@ def test_dmrg_dense_benchmark(benchmark, chi, length):
     assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(chi, length)], rel=1e-4)
 
 
+@pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("80 MB")
 def test_dmrg_dense_memory():
     energy = run_one_dense(16, 20)
@@ -195,6 +196,7 @@ def test_dmrg_symmetric_benchmark(benchmark, chi, length):
     assert float(energy) == pytest.approx(SYMMETRIC_REFERENCE_ENERGIES[(chi, length)], rel=2e-2)
 
 
+@pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("700 MB")
 def test_dmrg_symmetric_memory():
     energy = run_one_symmetric(16, 20)

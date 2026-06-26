@@ -221,6 +221,7 @@ def test_dmrg_dense_benchmark(benchmark, bond_dim, chain_length):
     assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, chain_length)], rel=1e-4)
 
 
+@pytest.mark.cytnx_memory
 @pytest.mark.parametrize("chain_length", L_VALUES)
 @pytest.mark.parametrize("bond_dim", CHI_VALUES)
 def test_dmrg_dense_memory(bond_dim, chain_length):

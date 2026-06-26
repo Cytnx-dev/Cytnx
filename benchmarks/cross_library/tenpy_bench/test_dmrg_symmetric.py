@@ -58,6 +58,7 @@ def test_dmrg_symmetric_benchmark(benchmark, chi, length):
     assert energy == pytest.approx(REFERENCE_ENERGIES[(chi, length)], rel=1e-4)
 
 
+@pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("40 MB")
 def test_dmrg_symmetric_memory():
     energy = run_one(16, 20)
