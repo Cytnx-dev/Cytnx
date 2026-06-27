@@ -197,9 +197,11 @@ def test_variational_ad_jax_benchmark(benchmark, bond_dim, num_sites):
 
 @pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("800 MB")
-def test_variational_ad_jax_memory():
-    energy = run_one_jax(16, 20)
-    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(16, 20)], rel=2e-2)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_variational_ad_jax_memory(bond_dim, num_sites):
+    energy = run_one_jax(bond_dim, num_sites)
+    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
 
 
 @pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
@@ -212,7 +214,9 @@ def test_variational_ad_torch_benchmark(benchmark, bond_dim, num_sites):
 
 
 @pytest.mark.cytnx_memory
-@pytest.mark.limit_memory("100 MB")
-def test_variational_ad_torch_memory():
-    energy = run_one_torch(16, 20)
-    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(16, 20)], rel=2e-2)
+@pytest.mark.limit_memory("400 MB")
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_variational_ad_torch_memory(bond_dim, num_sites):
+    energy = run_one_torch(bond_dim, num_sites)
+    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)

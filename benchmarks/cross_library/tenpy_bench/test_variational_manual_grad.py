@@ -232,7 +232,9 @@ def test_variational_manual_grad_benchmark(benchmark, bond_dim, num_sites):
 
 
 @pytest.mark.cytnx_memory
-@pytest.mark.limit_memory("40 MB")
-def test_variational_manual_grad_memory():
-    energy = run_one(16, 20)
-    assert float(energy) == pytest.approx(REFERENCE_ENERGIES[(16, 20)], rel=1e-6)
+@pytest.mark.limit_memory("80 MB")
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_variational_manual_grad_memory(bond_dim, num_sites):
+    energy = run_one(bond_dim, num_sites)
+    assert float(energy) == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)

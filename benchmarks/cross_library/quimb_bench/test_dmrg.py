@@ -181,10 +181,12 @@ def test_dmrg_dense_benchmark(benchmark, bond_dim, num_sites):
 
 
 @pytest.mark.cytnx_memory
-@pytest.mark.limit_memory("80 MB")
-def test_dmrg_dense_memory():
-    energy = run_one_dense(16, 20)
-    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(16, 20)], rel=1e-4)
+@pytest.mark.limit_memory("130 MB")
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_dmrg_dense_memory(bond_dim, num_sites):
+    energy = run_one_dense(bond_dim, num_sites)
+    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
 
 
 @pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
@@ -198,6 +200,8 @@ def test_dmrg_symmetric_benchmark(benchmark, bond_dim, num_sites):
 
 @pytest.mark.cytnx_memory
 @pytest.mark.limit_memory("700 MB")
-def test_dmrg_symmetric_memory():
-    energy = run_one_symmetric(16, 20)
-    assert float(energy) == pytest.approx(SYMMETRIC_REFERENCE_ENERGIES[(16, 20)], rel=2e-2)
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_dmrg_symmetric_memory(bond_dim, num_sites):
+    energy = run_one_symmetric(bond_dim, num_sites)
+    assert float(energy) == pytest.approx(SYMMETRIC_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
