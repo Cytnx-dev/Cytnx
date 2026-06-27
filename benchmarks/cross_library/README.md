@@ -12,7 +12,7 @@ differences in workload.
 |---|-------|-------|--------------------------|
 | 1 | Finite two-site DMRG, dense | 1D spin-1/2 Heisenberg chain, no symmetry | `tenpy_bench/test_dmrg_dense.py`, `quimb_bench/test_dmrg.py`, `cytnx_bench/test_dmrg_dense.py` |
 | 1' | Finite two-site DMRG, block-sparse | Same chain, U(1) total-Sz conserved | `tenpy_bench/test_dmrg_symmetric.py`, `quimb_bench/test_dmrg.py`, `cytnx_bench/test_dmrg_symmetric.py` |
-| 2 | Real-time evolution after a field quench (TEBD/TDVP) | 1D transverse-field Ising chain | `tenpy_bench/test_tdvp.py`, `quimb_bench/test_tebd.py`, `cytnx_bench/test_tebd.py` |
+| 2 | Real-time evolution after a field quench (TEBD) | 1D transverse-field Ising chain | `tenpy_bench/test_tebd.py`, `quimb_bench/test_tebd.py`, `cytnx_bench/test_tebd.py` |
 | 3 | Variational MPS ground-state search by gradient descent | Same Heisenberg chain as class 1 | `tenpy_bench/test_variational_manual_grad.py`, `quimb_bench/test_variational_ad.py`, `cytnx_bench/test_variational_manual_grad.py` |
 
 Each script's `run_one(chi, L)` lives directly in its `test_*.py` file

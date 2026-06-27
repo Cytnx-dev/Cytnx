@@ -17,8 +17,8 @@ axis), the per-site state here must be a Sigmax eigenstate, not a
 Sigmaz eigenstate -- `["up"]*L` (a Sigmaz eigenstate, TeNPy's field axis)
 would instead start aligned with the field, a different physical setup.
 
-Run timing with `pytest --benchmark-only test_tdvp.py`, memory with
-`pytest --memray test_tdvp.py`.
+Run timing with `pytest --benchmark-only test_tebd.py`, memory with
+`pytest --memray test_tebd.py`.
 """
 import numpy as np
 import pytest
@@ -67,14 +67,16 @@ def run_one(chi, L):
 @pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
 @pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
 @pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
-def test_tdvp_benchmark(benchmark, bond_dim, num_sites):
+def test_tebd_benchmark(benchmark, bond_dim, num_sites):
     energy = benchmark.pedantic(run_one, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = float(energy)
     assert float(energy) == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory
-@pytest.mark.limit_memory("40 MB")
-def test_tdvp_memory():
-    energy = run_one(16, 20)
-    assert float(energy) == pytest.approx(REFERENCE_ENERGIES[(16, 20)], rel=1e-6)
+@pytest.mark.limit_memory("90 MB")
+@pytest.mark.parametrize("num_sites", NUM_SITES_VALUES)
+@pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
+def test_tebd_memory(bond_dim, num_sites):
+    energy = run_one(bond_dim, num_sites)
+    assert float(energy) == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
