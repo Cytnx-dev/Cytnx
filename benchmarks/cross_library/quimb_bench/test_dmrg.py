@@ -49,10 +49,19 @@ from common.model import BOND_DIM_VALUES, HEISENBERG_J, NUM_SITES_VALUES, N_SWEE
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
-# Symmray block-sparse arrays are built on top of a plain NumPy/CuPy array
-# per charge-block; selecting "cupy" here would move every block to the GPU
-# (mirrors quimb's usual `psi.apply_to_arrays(lambda x: cp.asarray(x))`
-# pattern). Left as "numpy" because this environment has no GPU.
+# Symmray block-sparse arrays are built on top of a plain array per
+# charge-block, so this selects which array library backs every block of
+# `psi` (and the gate/operator it's contracted against) in
+# `run_one_symmetric`. "numpy" is fastest across the full (bond_dim,
+# num_sites) grid -- "torch" lands the same energies but runs consistently
+# ~1.5-2x slower at every grid point, since this workload is dominated by
+# thousands of small per-bond gate/SVD calls where torch's dispatch
+# overhead outweighs any kernel speedup. "jax" is not a viable alternative
+# at all: its per-call tracing overhead is so large that a single grid
+# point did not finish in several minutes, vs. seconds for numpy/torch.
+# "cupy" moves every block to the GPU (mirrors quimb's usual
+# `psi.apply_to_arrays(lambda x: cp.asarray(x))` pattern) but cannot be
+# exercised in this environment (no GPU).
 ARRAY_BACKEND = "numpy"
 
 PHYS_CHARGE_MAP = {1: 1, -1: 1}  # spin-up -> charge +1, spin-down -> charge -1
@@ -99,6 +108,22 @@ def run_one_dense(chi, L):
     return dmrg.energy
 
 
+def _convert_backend(arr):
+    """Move a U1Array's underlying blocks to ARRAY_BACKEND's array type."""
+    if ARRAY_BACKEND == "numpy":
+        return arr
+    if ARRAY_BACKEND == "cupy":
+        import cupy as cp
+        arr.apply_to_arrays(lambda x: cp.asarray(x))
+    elif ARRAY_BACKEND == "torch":
+        import torch
+        arr.apply_to_arrays(lambda x: torch.as_tensor(x))
+    elif ARRAY_BACKEND == "jax":
+        import jax.numpy as jnp
+        arr.apply_to_arrays(lambda x: jnp.asarray(x))
+    return arr
+
+
 def _heisenberg_two_site_gate(dt):
     """Charge-conserving exp(-dt * J * S_i.S_j) two-site gate as a U1Array.
 
@@ -118,10 +143,11 @@ def _heisenberg_two_site_gate(dt):
         [0, 0, 0, 1],
     ], dtype=float)
     gate_dense = expm(-dt * h_dense).reshape(2, 2, 2, 2)
-    return sr.U1Array.from_dense(
+    gate = sr.U1Array.from_dense(
         gate_dense, index_maps=[phys, phys, phys, phys],
         duals=[False, False, True, True],
     )
+    return _convert_backend(gate)
 
 
 def _heisenberg_two_site_op():
@@ -134,10 +160,11 @@ def _heisenberg_two_site_op():
         [0, 2, -1, 0],
         [0, 0, 0, 1],
     ], dtype=float)
-    return sr.U1Array.from_dense(
+    op = sr.U1Array.from_dense(
         h_dense.reshape(2, 2, 2, 2), index_maps=[phys, phys, phys, phys],
         duals=[False, False, True, True],
     )
+    return _convert_backend(op)
 
 
 def run_one_symmetric(chi, L):
@@ -147,9 +174,7 @@ def run_one_symmetric(chi, L):
         "U1", L=L, bond_dim=chi, phys_dim=PHYS_CHARGE_MAP, seed=0,
         site_charge=lambda i: 1 if i % 2 == 0 else -1,
     )
-    if ARRAY_BACKEND != "numpy":
-        import cupy as cp
-        psi.apply_to_arrays(lambda x: cp.asarray(x))
+    _convert_backend(psi)
 
     gates = {dt: _heisenberg_two_site_gate(dt) for dt in set(ITE_DT_SCHEDULE)}
 
