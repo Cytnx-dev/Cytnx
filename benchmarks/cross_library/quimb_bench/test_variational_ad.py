@@ -116,6 +116,7 @@ def run_one_jax(chi, L):
         return jnp.real(p.H @ p)
 
     grad_fn = jax.jit(jax.grad(energy)) if DEVICE == "cpu" else jax.grad(energy)
+    norm_sq_fn = jax.jit(norm_sq) if DEVICE == "cpu" else norm_sq
 
     def grad_step(arrays):
         g = grad_fn(arrays)
@@ -125,7 +126,7 @@ def run_one_jax(chi, L):
         # normalizing each tensor independently -- the MPS is not in
         # canonical form here, so per-tensor normalization does not keep
         # the contracted <psi|psi> close to 1.
-        scale = norm_sq(tuple(new_arrays)) ** (-1.0 / (2 * len(new_arrays)))
+        scale = norm_sq_fn(tuple(new_arrays)) ** (-1.0 / (2 * len(new_arrays)))
         new_arrays = [a * scale for a in new_arrays]
         return tuple(new_arrays)
 
