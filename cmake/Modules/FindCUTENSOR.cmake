@@ -30,18 +30,52 @@ message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}" )
 if(EXISTS "${CUTENSOR_ROOT}/lib")
   set(CUTNLIB_DIR "lib/")
 endif()
-if((${CUDAToolkit_VERSION_MAJOR} LESS_EQUAL 10))
-  set(CUTNLIB_DIR "${CUTNLIB_DIR}10.2")
-elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 11) AND (${CUDAToolkit_VERSION_MAJOR} LESS 12) AND (${CUDAToolkit_VERSION_MINOR} LESS_EQUAL 0))
-  set(CUTNLIB_DIR "${CUTNLIB_DIR}11.0")
-elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 11) AND (${CUDAToolkit_VERSION_MAJOR} LESS 12) AND (${CUDAToolkit_VERSION_MINOR} GREATER_EQUAL 1))
-  set(CUTNLIB_DIR "${CUTNLIB_DIR}11")
-elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 12))
-  set(CUTNLIB_DIR "${CUTNLIB_DIR}12")
+# Cytnx requires CUDA >= 12 (enforced in CMakeLists.txt). Use the toolkit major
+# version as the cuTENSOR library subdir (lib/12, lib/13, ...) so both CUDA 12
+# and 13 resolve correctly, matching the 1.x-tarball / apt version-subdir
+# layout. The older lib/10.2 and lib/11 branches were removed as dead code. For
+# the cuTENSOR 2.x flat lib/ layout and apt multiarch paths, see issue #946.
+if(${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 12)
+  set(CUTNLIB_DIR "${CUTNLIB_DIR}${CUDAToolkit_VERSION_MAJOR}")
+else()
+  message(FATAL_ERROR
+    "cuTENSOR support requires CUDA >= 12, but CUDAToolkit_VERSION_MAJOR is "
+    "'${CUDAToolkit_VERSION_MAJOR}'.")
 endif()
 
 set(CUTENSOR_LIBRARY_DIRS ${CUTENSOR_ROOT}/${CUTNLIB_DIR})
 set(CUTENSOR_INCLUDE_DIRS ${CUTENSOR_ROOT}/include)
+
+# Require cuTENSOR >= 2.0. The version macros (CUTENSOR_MAJOR/MINOR/PATCH) live
+# in cutensor.h (older releases) or cutensor/types.h (newer ones); read whichever
+# defines them and fail early on the 1.x API, which Cytnx no longer supports.
+set(_cutensor_version_header "")
+foreach(_hdr "${CUTENSOR_INCLUDE_DIRS}/cutensor.h" "${CUTENSOR_INCLUDE_DIRS}/cutensor/types.h")
+  if(EXISTS "${_hdr}")
+    file(STRINGS "${_hdr}" _cutensor_major_line REGEX "^#define[ \t]+CUTENSOR_MAJOR[ \t]+[0-9]+")
+    if(_cutensor_major_line)
+      set(_cutensor_version_header "${_hdr}")
+      break()
+    endif()
+  endif()
+endforeach()
+
+if(_cutensor_version_header)
+  file(STRINGS "${_cutensor_version_header}" _cutensor_minor_line REGEX "^#define[ \t]+CUTENSOR_MINOR[ \t]+[0-9]+")
+  string(REGEX REPLACE ".*CUTENSOR_MAJOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MAJOR "${_cutensor_major_line}")
+  string(REGEX REPLACE ".*CUTENSOR_MINOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MINOR "${_cutensor_minor_line}")
+  set(CUTENSOR_VERSION "${CUTENSOR_VERSION_MAJOR}.${CUTENSOR_VERSION_MINOR}")
+  message(STATUS "cuTENSOR version: ${CUTENSOR_VERSION} (from ${_cutensor_version_header})")
+  if(CUTENSOR_VERSION_MAJOR LESS 2)
+    message(FATAL_ERROR
+      "cuTENSOR >= 2.0 is required, but found ${CUTENSOR_VERSION} in "
+      "${CUTENSOR_ROOT}. Install cuTENSOR 2.x and point CUTENSOR_ROOT at it.")
+  endif()
+else()
+  message(WARNING
+    "Could not determine the cuTENSOR version from headers under "
+    "${CUTENSOR_INCLUDE_DIRS}; Cytnx requires cuTENSOR >= 2.0.")
+endif()
 
 # set libs:
 find_library(
@@ -60,6 +94,17 @@ find_library(
 )
 message(STATUS "CUTENSOR_LIB: ${CUTENSOR_LIB}")
 message(STATUS "CUTENSORMg_LIB: ${CUTENSORMg_LIB}")
-set(CUTENSOR_LIBRARIES "${CUTENSOR_LIB};${CUTENSORMg_LIB}")
-message(STATUS "ok")
-set(CUTENSOR_FOUND TRUE)
+set(CUTENSOR_LIBRARIES "")
+if(CUTENSOR_LIB)
+    list(APPEND CUTENSOR_LIBRARIES "${CUTENSOR_LIB}")
+endif()
+if(CUTENSORMg_LIB)
+    list(APPEND CUTENSOR_LIBRARIES "${CUTENSORMg_LIB}")
+endif()
+
+# CUTENSOR_FOUND must reflect whether the core library was actually located:
+# the main cutensor lib is mandatory, cutensorMg is optional. Setting it
+# unconditionally would let a NOTFOUND silently pass the caller's REQUIRED check.
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(CUTENSOR
+  REQUIRED_VARS CUTENSOR_LIB CUTENSOR_INCLUDE_DIRS)
