@@ -135,6 +135,9 @@ if(USE_CUDA)
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
 
     enable_language(CUDA)
+    # CUDA toolkit version is validated at the top level (CMakeLists.txt, before
+    # enable_language) so the architecture defaults can adapt to it; this call
+    # re-uses that cached result.
     find_package(CUDAToolkit REQUIRED)
     if(NOT DEFINED CMAKE_CUDA_STANDARD)
         set(CMAKE_CUDA_STANDARD 20)
@@ -231,8 +234,12 @@ if(USE_CUDA)
 
 
     message( STATUS " Build CUDA Support: YES")
-    message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
-    message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
+    # Use the modern CUDAToolkit_* variables: the legacy FindCUDA variables
+    # (CUDA_VERSION_STRING / CUDA_TOOLKIT_ROOT_DIR) are not set by
+    # find_package(CUDAToolkit) and would print blank.
+    message( STATUS "  - CUDA Version: ${CUDAToolkit_VERSION}")
+    message( STATUS "  - CUDA Toolkit bin dir: ${CUDAToolkit_BIN_DIR}")
+    message( STATUS "  - CUDA compiler (nvcc): ${CMAKE_CUDA_COMPILER}")
     message( STATUS "  - Internal macro switch: GPU/CUDA")
     FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_GPU\n" "")
     message( STATUS "  - Cudatoolkit include dir: ${CUDAToolkit_INCLUDE_DIRS}")

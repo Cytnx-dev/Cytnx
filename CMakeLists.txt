@@ -195,19 +195,87 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 # #####################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
+# #####################################################################
+# ## HOST COMPILER REQUIREMENT
+# #####################################################################
+# Cytnx targets C++20 (CMAKE_CXX_STANDARD 20). The GCC floor is 13: earlier
+# releases lack the C++20 library/feature support the codebase relies on. Only
+# enforce this for GNU; Clang/AppleClang are validated separately on macOS.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13)
+  message(FATAL_ERROR
+    "GCC >= 13 is required (C++20 support), but found GCC "
+    "${CMAKE_CXX_COMPILER_VERSION} at ${CMAKE_CXX_COMPILER}.\n"
+    "Install GCC 13+ and point CMake at it, e.g. "
+    "-DCMAKE_CXX_COMPILER=g++-13 (and -DCMAKE_C_COMPILER=gcc-13), "
+    "or set the CXX/CC environment variables.")
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
+  # Resolve the CUDA toolkit up front (before enable_language) so we can both
+  # enforce the version requirement early and choose an architecture list the
+  # toolkit can actually compile. find_package(CUDAToolkit) does not require the
+  # CUDA language to be enabled; the later find_package in CytnxBKNDCMakeLists
+  # re-uses this cached result.
+  find_package(CUDAToolkit QUIET)
+
+  # enable_language(CUDA) finds the compiler ONLY via CMAKE_CUDA_COMPILER, the
+  # CUDACXX environment variable, or nvcc on PATH -- it does not reuse the
+  # toolkit located above. Catch the "no usable nvcc" case here with an
+  # actionable message instead of CMake's terse "No CMAKE_CUDA_COMPILER could be
+  # found". Skip the check when the user pinned a compiler explicitly.
+  if(NOT CUDAToolkit_FOUND OR (NOT CUDAToolkit_NVCC_EXECUTABLE
+      AND NOT CMAKE_CUDA_COMPILER AND NOT DEFINED ENV{CUDACXX}))
+    message(FATAL_ERROR
+      "USE_CUDA is ON but no usable CUDA compiler (nvcc) could be found.\n"
+      "enable_language(CUDA) searches only CMAKE_CUDA_COMPILER, the CUDACXX "
+      "environment variable, and nvcc on PATH; it does not reuse the libraries "
+      "found by find_package(CUDAToolkit), so installed CUDA runtime/dev "
+      "packages alone are not enough.\n"
+      "Do one of the following, then delete the build directory (a stale "
+      "CMakeCache.txt caches the failed detection) and re-configure:\n"
+      "  * pass -DCMAKE_CUDA_COMPILER=/path/to/nvcc "
+      "(e.g. /usr/local/cuda-12/bin/nvcc), or\n"
+      "  * export CUDACXX=/path/to/nvcc, or\n"
+      "  * put the CUDA bin directory first on PATH "
+      "(export PATH=/usr/local/cuda-12/bin:$PATH).")
+  endif()
+
+  # CUDA requirement: >= 12.0, with 12.x and 13.x explicitly supported. The
+  # 12.0 floor comes from device-side C++20 (nvcc gained -std=c++20 in CUDA
+  # 12.0; 11.x tops out at C++17), matching CMAKE_CUDA_STANDARD 20. Fail early
+  # with an actionable message instead of a cryptic later C++20/arch error.
+  if(CUDAToolkit_VERSION_MAJOR LESS 12)
+    message(FATAL_ERROR
+      "CUDA Toolkit >= 12.0 is required (device-side C++20 support), but found "
+      "${CUDAToolkit_VERSION} at ${CUDAToolkit_BIN_DIR}.\n"
+      "Install CUDA 12 or 13 and select it with "
+      "-DCMAKE_CUDA_COMPILER=/path/to/cuda-12+/bin/nvcc (or set CUDACXX / put "
+      "the desired nvcc first on PATH).")
+  elseif(CUDAToolkit_VERSION_MAJOR GREATER 13)
+    message(WARNING
+      "CUDA Toolkit ${CUDAToolkit_VERSION} is newer than the versions Cytnx is "
+      "tested against (12.x and 13.x). The build will proceed; please report "
+      "any issues.")
+  endif()
+  message(STATUS " CUDA Toolkit: ${CUDAToolkit_VERSION} (supported: 12.x, 13.x)")
+
   # Default to a portable fat binary unless the caller picked architectures via
   # -D, the cache, a preset's cacheVariables, or the CUDAARCHS environment
   # variable. This must run before enable_language(CUDA): afterwards
   # CMAKE_CUDA_ARCHITECTURES is never empty (CMake fills in its own default), so
   # the "not specified" case can no longer be detected. enable_language(CUDA)
   # reads CUDAARCHS on its own, so we only avoid shadowing it here, not copy it.
-  # The default embeds SASS for each supported real architecture (Volta sm_70 is
-  # the floor required by cuTENSOR/cuQuantum, up through Hopper sm_90) plus PTX
-  # of the newest (90-virtual) so the driver can JIT for newer/unknown GPUs.
+  # The default embeds SASS for each supported real architecture plus PTX of the
+  # newest (90-virtual) so the driver can JIT for newer/unknown GPUs. CUDA 13.0
+  # removed offline support for compute capability < 7.5, so Volta sm_70 is only
+  # included for CUDA 12.x.
   if(NOT CMAKE_CUDA_ARCHITECTURES AND NOT DEFINED ENV{CUDAARCHS})
-    set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+    if(CUDAToolkit_VERSION_MAJOR GREATER_EQUAL 13)
+      set(CMAKE_CUDA_ARCHITECTURES 75-real 80-real 86-real 89-real 90-real 90-virtual)
+    else()
+      set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+    endif()
   endif()
   enable_language(CUDA)
   # Disable generation of "--option-file" flag in compile_commands.json.
