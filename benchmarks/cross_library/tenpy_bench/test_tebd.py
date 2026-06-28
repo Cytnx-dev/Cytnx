@@ -10,12 +10,12 @@ TDVP variant, which would only change the `tebd.TEBDEngine` line below to
 
 `TFIChain`'s `init_terms` builds H = -J*sum(Sigmax_i Sigmax_{i+1}) -
 g*sum(Sigmaz_i), i.e. the coupling and field axes are swapped relative to
-`cytnx_bench/test_tebd.py`'s H = -hx*sum(PauliX_i) - J*sum(PauliZ_i
-PauliZ_{i+1}) (coupling on Z, field on X). To prepare the same physical
-initial state as cytnx's (a product state aligned along the coupling
-axis), the per-site state here must be a Sigmax eigenstate, not a
-Sigmaz eigenstate -- `["up"]*L` (a Sigmaz eigenstate, TeNPy's field axis)
-would instead start aligned with the field, a different physical setup.
+`cytnx_bench/test_tebd.py`'s and `quimb_bench/test_tebd.py`'s H =
+-hx*sum(PauliX_i) - J*sum(PauliZ_i PauliZ_{i+1}) (coupling on Z, field on
+X). `_TFIChainZCoupling` below overrides `init_terms` to swap the two
+Pauli operators back, so this script's Hamiltonian uses the same axis
+convention as the other two libraries and all three can start from the
+literal same Sigmaz computational-basis ("up") product state.
 
 Run timing with `pytest --benchmark-only test_tebd.py`, memory with
 `pytest --memray test_tebd.py`.
@@ -28,6 +28,22 @@ from tenpy.models.tf_ising import TFIChain
 from tenpy.networks.mps import MPS
 
 from common.model import BOND_DIM_VALUES, NUM_SITES_VALUES, GRID_POINT_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS
+
+
+class _TFIChainZCoupling(TFIChain):
+    """TFIChain with the coupling on Sigmaz and the field on Sigmax, matching
+    cytnx_bench/test_tebd.py's and quimb_bench/test_tebd.py's H =
+    -hx*sum(X_i) - J*sum(Z_i Z_{i+1}) convention instead of TFIChain's own
+    H = -J*sum(X_i X_{i+1}) - g*sum(Z_i)."""
+
+    def init_terms(self, model_params):
+        J = np.asarray(model_params.get('J', 1.0, 'real_or_array'))
+        g = np.asarray(model_params.get('g', 1.0, 'real_or_array'))
+        for u in range(len(self.lat.unit_cell)):
+            self.add_onsite(-g, u, 'Sigmax')
+        for u1, u2, dx in self.lat.pairs['nearest_neighbors']:
+            self.add_coupling(-J, u1, 'Sigmaz', u2, 'Sigmaz', dx)
+
 
 REFERENCE_ENERGIES = {
     (16, 20): -19.00014659257969,
@@ -44,11 +60,11 @@ REFERENCE_ENERGIES = {
 
 def run_one(chi, L):
     model_params = dict(L=L, J=TFIM_J, g=TFIM_HX_FINAL, bc_MPS="finite", conserve=None)
-    M = TFIChain(model_params)
-    # Sigmax eigenstate -- aligned with TeNPy's coupling axis, matching
-    # cytnx's computational-basis state along its own coupling axis.
-    plus_x = np.array([1.0, 1.0]) / np.sqrt(2)
-    psi = MPS.from_product_state(M.lat.mps_sites(), [plus_x] * L, bc=M.lat.bc_MPS)
+    M = _TFIChainZCoupling(model_params)
+    # Sigmaz "up" eigenstate -- the same computational-basis product state
+    # used by cytnx_bench/test_tebd.py and quimb_bench/test_tebd.py.
+    up = np.array([1.0, 0.0])
+    psi = MPS.from_product_state(M.lat.mps_sites(), [up] * L, bc=M.lat.bc_MPS)
 
     tebd_params = {
         "N_steps": 1,
