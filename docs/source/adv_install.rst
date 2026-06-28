@@ -29,9 +29,9 @@ In addition, you might want to install the following optional dependencies if yo
 
 [CUDA]
 
-* Nvidia cuda library v10+
+* Nvidia CUDA toolkit >= 12.0 (12.x and 13.x supported)
 * Nvidia cuDNN library
-* Nvidia cuTensor library
+* Nvidia cuTENSOR library >= 2.0
 * Nvidia cuQuantum library
 
 
@@ -154,6 +154,40 @@ Similarly, cuqauantum (compile option -DUSE_CUTENSOR=ON), requires:
 .. code-block:: shell
 
     $conda install -c nvidia cuquantum
+
+.. important::
+
+    **If you install cuTENSOR and/or cuQuantum from NVIDIA tarballs**
+    (instead of conda), you must configure two separate paths -- one for the
+    build and one for runtime:
+
+    1. **Build time** -- point CMake at the extracted directories so the
+       libraries are found during configuration:
+
+       .. code-block:: shell
+
+           $export CUTENSOR_ROOT=/path/to/libcutensor-<version>
+           $export CUQUANTUM_ROOT=/path/to/cuquantum-<version>
+
+    2. **Runtime** -- the dynamic loader must also find the shared libraries
+       when you ``import cytnx`` (or run a C++ binary). Tarball libraries live
+       outside the system loader's default search path, and unlike conda they
+       are **not** registered with ``ldconfig``, so add their library
+       directories to ``LD_LIBRARY_PATH``:
+
+       .. code-block:: shell
+
+           $export LD_LIBRARY_PATH=$CUTENSOR_ROOT/lib:$CUQUANTUM_ROOT/lib:$LD_LIBRARY_PATH
+
+       For cuTENSOR 2.x tarballs the libraries sit directly under ``lib/``, so
+       the path above is sufficient. Older cuTENSOR 1.x tarballs instead use a
+       per-CUDA subdirectory (``lib/<cuda-major>``, e.g. ``lib/12``); use that
+       path if you are on the legacy layout. If ``LD_LIBRARY_PATH`` is not set
+       up, importing/running Cytnx fails with ``error while loading shared
+       libraries: libcutensor.so... cannot open shared object file``, or
+       silently binds to a mismatched system copy of the library if one is
+       present. Add these ``export`` lines to your shell profile (e.g.
+       ``~/.bashrc``) to make them persistent.
 
 **Option B. Install dependencies via system package manager**
 
