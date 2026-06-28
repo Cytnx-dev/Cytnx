@@ -35,9 +35,31 @@ validated against exact diagonalization here, since Cytnx's is hand-rolled
 for this benchmark and quimb's symmetric variant isn't a ground-state
 search) to its own convergence across the full (bond_dim, num_sites) grid,
 prints the resulting ground energies as dict literals, and reports how far
-each test_*.py file's hardcoded REFERENCE_ENERGIES (computed from only 3
-sweeps, per common/model.py's N_SWEEPS) sits from that converged value.
+each dense/symmetric-DMRG test_*.py file's hardcoded REFERENCE_ENERGIES
+(computed from only 3 sweeps, per common/model.py's N_SWEEPS) sits from
+that converged value.
+
+This mode also reports drift for the TEBD and variational-gradient-descent
+benchmarks, even though neither has a "ground truth" in the DMRG sense: a
+real-time-evolved expectation value (TEBD) or a non-canonicalized
+whole-network gradient descent (variational) has no single converged
+answer to validate against, only the literal recipe each test_*.py file
+runs. Since cytnx_bench's and tenpy_bench's TEBD scripts share the same
+initial product state and Trotter order (quimb_bench's too, for TEBD), and
+cytnx_bench's and tenpy_bench's variational scripts share the same
+per-site-seeded initial MPS and analytic-gradient formula, those shared
+recipes are expected to land on (TEBD, looser tolerance, since the bond-term
+grouping still differs) or very near (variational) the same energy -- so
+TeNPy's own `run_one(chi, L)` from `tenpy_bench/test_tebd.py` and
+`tenpy_bench/test_variational_manual_grad.py` is reused here as the
+comparison anchor, the same role TeNPy's DMRG plays for the dense/symmetric
+case above. quimb_bench/test_variational_ad.py is excluded from the
+variational comparison: per its own docstring it uses a different
+random-MPS construction and differentiates via autodiff instead of the
+analytic gradient cytnx/tenpy share, so it has no reason to land near their
+result.
 """
+import importlib.util
 import os
 import sys
 
@@ -48,6 +70,25 @@ sys.path.insert(0, os.path.dirname(__file__))
 from common.model import (
     BOND_DIM_VALUES, HEISENBERG_J, NUM_SITES_VALUES, TFIM_DT, TFIM_HX_FINAL, TFIM_J,
 )
+
+_CROSS_LIBRARY_DIR = os.path.dirname(__file__)
+
+
+def _load_module(rel_path, unique_name):
+    """Load a test_*.py file under a guaranteed-unique module name.
+
+    cytnx_bench/, tenpy_bench/, and quimb_bench/ each contain a file named
+    e.g. test_tebd.py; importing all three via sys.path manipulation makes
+    every `import test_tebd` after the first resolve to the same cached
+    sys.modules entry instead of three distinct modules. Loading by file
+    path under a unique name sidesteps that collision.
+    """
+    path = os.path.join(_CROSS_LIBRARY_DIR, rel_path)
+    spec = importlib.util.spec_from_file_location(unique_name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[unique_name] = module
+    spec.loader.exec_module(module)
+    return module
 
 L = 8
 CHI_EXACT = 2 ** (L // 2)
@@ -386,14 +427,38 @@ def _tenpy_dmrg_ground_truth(L, chi, conserve):
     return e
 
 
+def _tenpy_tebd_canonical(L, chi):
+    """Re-run tenpy_bench/test_tebd.py's own run_one(chi, L): the literal
+    quench recipe (initial state, Trotter order, step count) shared with
+    cytnx_bench's and quimb_bench's TEBD benchmarks, used here as the
+    comparison anchor since TEBD has no converged "ground truth" to run to
+    instead (see module docstring)."""
+    mod = _load_module("tenpy_bench/test_tebd.py", "_canonical_tenpy_tebd")
+    return mod.run_one(chi, L)
+
+
+def _tenpy_variational_canonical(L, chi):
+    """Re-run tenpy_bench/test_variational_manual_grad.py's own
+    run_one(chi, L): the same per-site-seeded initial MPS and analytic
+    gradient formula cytnx_bench's variational benchmark shares, used here
+    as the comparison anchor since this whole-network gradient descent has
+    no converged "ground truth" to run to instead (see module docstring)."""
+    mod = _load_module("tenpy_bench/test_variational_manual_grad.py", "_canonical_tenpy_variational")
+    return mod.run_one(chi, L)
+
+
 def generate_reference_energies():
     """Print TeNPy-converged ground energies across the full (bond_dim,
     num_sites) grid, for comparison against the 3-sweep REFERENCE_ENERGIES
-    fingerprints hardcoded in each test_*.py file (those use common/model.py's
-    N_SWEEPS=3, kept small for fast, stable timing -- not chosen for
-    ground-state convergence). This does not overwrite those files; it prints
-    dict literals plus a relative-difference report so a maintainer can judge
-    whether any fingerprint has drifted away from the true ground energy.
+    fingerprints hardcoded in each dense/symmetric-DMRG test_*.py file (those
+    use common/model.py's N_SWEEPS=3, kept small for fast, stable timing --
+    not chosen for ground-state convergence). Also prints TeNPy's own TEBD
+    and variational-gradient-descent energies across the same grid, used as
+    the comparison anchor for those two algorithm classes (see module
+    docstring for why neither has a true "ground truth" to generate
+    instead). This does not overwrite any test_*.py file; it prints dict
+    literals plus a relative-difference report so a maintainer can judge how
+    far each hardcoded fingerprint sits from its anchor.
     """
     print(f"=== TeNPy ground-truth reference energies (max_sweeps={GROUND_TRUTH_MAX_SWEEPS}) ===")
     ground_truth = {}
@@ -407,22 +472,34 @@ def generate_reference_energies():
         for key, e in energies.items():
             print(f"    {key}: {e!r},")
         print("}")
+
+    print("\n=== TeNPy anchor energies for TEBD/variational (not a ground truth -- see docstring) ===")
+    for label, canonical_fn in [("tebd", _tenpy_tebd_canonical), ("variational", _tenpy_variational_canonical)]:
+        energies = {}
+        for L in NUM_SITES_VALUES:
+            for chi in BOND_DIM_VALUES:
+                energies[(chi, L)] = canonical_fn(L, chi)
+        ground_truth[label] = energies
+        print(f"\nANCHOR_{label.upper()}_ENERGIES = {{")
+        for key, e in energies.items():
+            print(f"    {key}: {e!r},")
+        print("}")
     return ground_truth
 
 
 def _report_reference_drift(ground_truth):
     """Compare each test_*.py file's hardcoded REFERENCE_ENERGIES against the
     matching ground_truth dict produced by generate_reference_energies()."""
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "cytnx_bench"))
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "tenpy_bench"))
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "quimb_bench"))
-    import test_dmrg_dense as cytnx_dmrg_dense
-    import test_dmrg_symmetric as cytnx_dmrg_symmetric
-    sys.path.remove(os.path.join(os.path.dirname(__file__), "cytnx_bench"))
-    import test_dmrg_dense as tenpy_dmrg_dense
-    import test_dmrg_symmetric as tenpy_dmrg_symmetric
-    sys.path.remove(os.path.join(os.path.dirname(__file__), "tenpy_bench"))
-    import test_dmrg as quimb_dmrg
+    cytnx_dmrg_dense = _load_module("cytnx_bench/test_dmrg_dense.py", "_drift_cytnx_dmrg_dense")
+    cytnx_dmrg_symmetric = _load_module("cytnx_bench/test_dmrg_symmetric.py", "_drift_cytnx_dmrg_symmetric")
+    cytnx_tebd = _load_module("cytnx_bench/test_tebd.py", "_drift_cytnx_tebd")
+    cytnx_variational = _load_module("cytnx_bench/test_variational_manual_grad.py", "_drift_cytnx_variational")
+    tenpy_dmrg_dense = _load_module("tenpy_bench/test_dmrg_dense.py", "_drift_tenpy_dmrg_dense")
+    tenpy_dmrg_symmetric = _load_module("tenpy_bench/test_dmrg_symmetric.py", "_drift_tenpy_dmrg_symmetric")
+    tenpy_tebd = _load_module("tenpy_bench/test_tebd.py", "_drift_tenpy_tebd")
+    tenpy_variational = _load_module("tenpy_bench/test_variational_manual_grad.py", "_drift_tenpy_variational")
+    quimb_dmrg = _load_module("quimb_bench/test_dmrg.py", "_drift_quimb_dmrg")
+    quimb_tebd = _load_module("quimb_bench/test_tebd.py", "_drift_quimb_tebd")
 
     sources = {
         "dense": [
@@ -434,14 +511,27 @@ def _report_reference_drift(ground_truth):
             ("cytnx_bench/test_dmrg_symmetric.py", cytnx_dmrg_symmetric.REFERENCE_ENERGIES),
             ("tenpy_bench/test_dmrg_symmetric.py", tenpy_dmrg_symmetric.REFERENCE_ENERGIES),
         ],
+        "tebd": [
+            ("cytnx_bench/test_tebd.py", cytnx_tebd.REFERENCE_ENERGIES),
+            ("tenpy_bench/test_tebd.py", tenpy_tebd.REFERENCE_ENERGIES),
+            ("quimb_bench/test_tebd.py", quimb_tebd.REFERENCE_ENERGIES),
+        ],
+        # quimb_bench/test_variational_ad.py is excluded: per its own
+        # docstring it uses a different random-MPS construction and
+        # differentiates via autodiff instead of the analytic gradient
+        # cytnx/tenpy share, so it has no reason to land near their anchor.
+        "variational": [
+            ("cytnx_bench/test_variational_manual_grad.py", cytnx_variational.REFERENCE_ENERGIES),
+            ("tenpy_bench/test_variational_manual_grad.py", tenpy_variational.REFERENCE_ENERGIES),
+        ],
     }
-    print("\n=== drift vs. TeNPy ground truth ===")
+    print("\n=== drift vs. TeNPy ground truth/anchor ===")
     for label, files in sources.items():
         for path, energies in files:
             for key, e in energies.items():
                 e_gt = ground_truth[label][key]
                 rel_diff = abs(e - e_gt) / abs(e_gt)
-                print(f"  {path:35s} {key} = {e:+.8f}  (ground truth {e_gt:+.8f}, rel diff={rel_diff:.2e})")
+                print(f"  {path:40s} {key} = {e:+.8f}  (anchor {e_gt:+.8f}, rel diff={rel_diff:.2e})")
 
 
 def main():
