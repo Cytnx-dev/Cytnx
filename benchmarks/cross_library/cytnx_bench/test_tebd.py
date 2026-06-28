@@ -3,17 +3,22 @@ transverse-field Ising chain after a field quench, using a hand-rolled TEBD
 sweep built from Cytnx's own `UniTensor`/`Contract`/`Svd_truncate` API (Cytnx
 has no built-in TEBD engine, unlike TeNPy/quimb).
 
-Each Trotter layer applies the two-site gate exp(-i*dt*h_bond) to every bond
-in a single strictly sequential left-to-right sweep (bond 0, then 1, ...,
-then L-2), absorbing the post-SVD singular-value tensor into the
-not-yet-visited (right) neighbor every time so the orthogonality center
-moves forward with the sweep -- a fixed absorption side regardless of sweep
-direction breaks the canonical gauge between already-updated and
-not-yet-updated tensors. The on-site field term -hx*Sx is split between the
-two bond gates that touch each site (half-weight on interior bonds, full
-weight on the two chain-boundary bonds) so that summing the per-bond gates'
-field contributions over a full sweep reproduces -hx*sum(Sx_i) exactly once
-per site rather than twice for interior sites. The initial state is the
+Each Trotter step is the symmetric (Strang) product exp(-i*dt/2*h_{L-2})...
+exp(-i*dt/2*h_0) * exp(-i*dt/2*h_0)...exp(-i*dt/2*h_{L-2}) -- a forward
+left-to-right half-step sweep over every bond followed by a backward
+right-to-left half-step sweep over every bond, each absorbing the post-SVD
+singular-value tensor into the not-yet-visited neighbor (right on the
+forward pass, left on the backward pass) so the orthogonality center moves
+with the sweep direction. This palindromic forward/backward composition is
+second-order accurate in dt for an arbitrary ordered decomposition of H
+into bond terms h_p, matching the order=2 even/odd Suzuki-Trotter splitting
+used by `tenpy_bench/test_tebd.py` and `quimb_bench/test_tebd.py` in
+accuracy order, though not in the specific grouping of bond terms. The
+on-site field term -hx*Sx is split between the two bond gates that touch
+each site (half-weight on interior bonds, full weight on the two
+chain-boundary bonds) so that summing the per-bond gates' field
+contributions over a full sweep reproduces -hx*sum(Sx_i) exactly once per
+site rather than twice for interior sites. The initial state is the
 all-spin-down product state, evolved directly under the post-quench
 Hamiltonian (matching the `quimb_bench/tebd.py` convention).
 
@@ -33,15 +38,15 @@ from common.model import BOND_DIM_VALUES, NUM_SITES_VALUES, GRID_POINT_TIMEOUT_S
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
 REFERENCE_ENERGIES = {
-    (16, 20): -19.000018311640396,
-    (16, 30): -29.000323620758877,
-    (16, 50): -48.999734696718065,
-    (32, 20): -19.00054144092803,
-    (32, 30): -29.000858382002303,
-    (32, 50): -49.001490111377464,
-    (64, 20): -19.00053910007698,
-    (64, 30): -29.00087851007468,
-    (64, 50): -49.0015587524382,
+    (16, 20): -19.0002116253495,
+    (16, 30): -29.000296405051223,
+    (16, 50): -49.00046596445489,
+    (32, 20): -19.000211625349483,
+    (32, 30): -29.000296405051227,
+    (32, 50): -49.00046596445477,
+    (64, 20): -19.000211625349483,
+    (64, 30): -29.000296405051227,
+    (64, 50): -49.00046596445477,
 }
 
 
@@ -129,7 +134,7 @@ def run_one(chi, L):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     d = 2
     A, lbls = _build_mps(L, chi, device)
-    base_gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
+    base_gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT / 2, device)
     # Bond labels are fixed by _build_mps and restored after every truncation
     # below, so each gate only ever needs to be relabeled once, not on every
     # Trotter step.
@@ -137,19 +142,29 @@ def run_one(chi, L):
              for p in range(L - 1)]
     M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL, device)
 
+    def apply_gate(p):
+        psi = cytnx.Contract(A[p], A[p + 1])
+        psi = cytnx.Contract(psi, gates[p])
+        psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
+        psi.relabel_([lbls[p][0], lbls[p][1], lbls[p + 1][1], lbls[p + 1][2]])
+        psi.set_rowrank_(2)
+        dim_l = A[p].shape()[0]
+        dim_r = A[p + 1].shape()[2]
+        new_dim = min(dim_l * d, dim_r * d, chi)
+        s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim, err=SVD_CUTOFF)
+        return s
+
     def sweep():
         for p in range(L - 1):
-            psi = cytnx.Contract(A[p], A[p + 1])
-            psi = cytnx.Contract(psi, gates[p])
-            psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
-            psi.relabel_([lbls[p][0], lbls[p][1], lbls[p + 1][1], lbls[p + 1][2]])
-            psi.set_rowrank_(2)
-            dim_l = A[p].shape()[0]
-            dim_r = A[p + 1].shape()[2]
-            new_dim = min(dim_l * d, dim_r * d, chi)
-            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim, err=SVD_CUTOFF)
+            s = apply_gate(p)
             s = s / s.Norm().item()
             A[p + 1] = cytnx.Contract(s, A[p + 1])
+            A[p].set_name(f"A{p}").relabel_(lbls[p])
+            A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
+        for p in range(L - 2, -1, -1):
+            s = apply_gate(p)
+            s = s / s.Norm().item()
+            A[p] = cytnx.Contract(A[p], s)
             A[p].set_name(f"A{p}").relabel_(lbls[p])
             A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
 
