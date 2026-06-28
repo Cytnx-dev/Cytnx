@@ -35,8 +35,17 @@ NUM_SITES_VALUES = [20, 30, 50]
 # and peak-memory estimate, not a converged ground state.
 N_SWEEPS = 3
 
-# Number of Lanczos iterations for the local two-site eigensolver, shared
-# between the Cytnx and quimb dense-DMRG implementations.
+# Number of Lanczos iterations for Cytnx's local two-site eigensolver
+# (cytnx_bench/test_dmrg_{dense,symmetric}.py). quimb's DMRG2 and TeNPy's
+# TwoSiteDMRGEngine run their own local eigensolver to its native default
+# convergence instead (quimb's scipy-eigsh-backed solver has no maxiter set
+# by default; TeNPy's Lanczos defaults to N_max=20) -- neither library is
+# capped to match this value. This asymmetry is intentional: each library is
+# left to use its own local-eigensolve convergence behavior rather than
+# forcing an artificial cap that has no natural meaning outside Cytnx's
+# Lanczos call, and validate_correctness.py's --generate-references mode
+# confirms all three still converge to the same ground-state energy despite
+# the differing per-bond eigensolver budgets.
 LANCZOS_MAXITER = 4
 
 # Per-(bond_dim, num_sites) wall-clock budget. Points that exceed this are
