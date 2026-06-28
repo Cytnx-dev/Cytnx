@@ -58,19 +58,19 @@ REFERENCE_ENERGIES = {
 }
 
 
-def run_one(chi, L):
-    model_params = dict(L=L, J=TFIM_J, g=TFIM_HX_FINAL, bc_MPS="finite", conserve=None)
+def run_one(bond_dim, num_sites):
+    model_params = dict(L=num_sites, J=TFIM_J, g=TFIM_HX_FINAL, bc_MPS="finite", conserve=None)
     M = _TFIChainZCoupling(model_params)
     # Sigmaz "up" eigenstate -- the same computational-basis product state
     # used by cytnx_bench/test_tebd.py and quimb_bench/test_tebd.py.
     up = np.array([1.0, 0.0])
-    psi = MPS.from_product_state(M.lat.mps_sites(), [up] * L, bc=M.lat.bc_MPS)
+    psi = MPS.from_product_state(M.lat.mps_sites(), [up] * num_sites, bc=M.lat.bc_MPS)
 
     tebd_params = {
         "N_steps": 1,
         "dt": TFIM_DT,
         "order": 2,
-        "trunc_params": {"chi_max": chi, "svd_min": 1e-10},
+        "trunc_params": {"chi_max": bond_dim, "svd_min": 1e-10},
     }
     eng = tebd.TEBDEngine(psi, M, tebd_params)
 

@@ -14,7 +14,7 @@ backend's own autodiff. Like quimb's benchmark, every MPS tensor is updated
 from a single gradient step taken simultaneously, with no orthogonality
 center and no per-step canonicalization -- only a single global rescale
 derived from the new `<psi|psi>` is applied after each step, distributed
-evenly across all L tensors. Because the surrounding tensors are not kept
+evenly across all num_sites tensors. Because the surrounding tensors are not kept
 isometric, the gradient needs both an H-environment term (the effective
 one-site Hamiltonian, as in a one-site sweep) and a norm-environment term:
 
@@ -44,7 +44,7 @@ per-site `seed`), right-canonicalized via a chain of SVDs
 TeNPy's `MPS.from_random_unitary_evolution` from a Neel-like product state,
 which stays much closer to a product state after only a few two-site
 random gates and converges far more slowly under gradient descent.
-`MPOEnvironment.init_LP(0)`/`init_RP(L-1)` (which depend only on the
+`MPOEnvironment.init_LP(0)`/`init_RP(num_sites-1)` (which depend only on the
 trivial-boundary structure of `H_MPO`, not on any particular state) still
 supply the H-environment boundary vectors; the norm-environment boundaries
 are the corresponding bond-dimension-1 scalar identities. CPU only.
@@ -72,8 +72,8 @@ from common.model import BOND_DIM_VALUES, HEISENBERG_J, NUM_SITES_VALUES, GRID_P
 LEARNING_RATE = 0.5
 
 
-def _n_grad_steps(L):
-    return 8 * L
+def _n_grad_steps(num_sites):
+    return 8 * num_sites
 
 
 REFERENCE_ENERGIES = {
@@ -140,19 +140,19 @@ def _random_trivial(shape, seed, labels, qconjs=(1, 1, -1)):
     return npc.Array.from_ndarray(data, legs, labels=labels)
 
 
-def _build_mps(L, chi, d=2):
-    A = [None] * L
-    A[0] = _random_trivial([1, d, min(chi, d)], 0, ['vL', 'p0', 'vR'])
-    for k in range(1, L):
+def _build_mps(num_sites, bond_dim, d=2):
+    A = [None] * num_sites
+    A[0] = _random_trivial([1, d, min(bond_dim, d)], 0, ['vL', 'p0', 'vR'])
+    for k in range(1, num_sites):
         dim1 = A[k - 1].get_leg('vR').ind_len
-        dim3 = min(min(chi, dim1 * d), d ** (L - k - 1))
+        dim3 = min(min(bond_dim, dim1 * d), d ** (num_sites - k - 1))
         A[k] = _random_trivial([dim1, d, dim3], k, ['vL', 'p0', 'vR'])
-    canonicalize_right(A, L)
+    canonicalize_right(A, num_sites)
     return A
 
 
-def canonicalize_right(A, L):
-    for p in range(L - 1, 0, -1):
+def canonicalize_right(A, num_sites):
+    for p in range(num_sites - 1, 0, -1):
         mat = A[p].combine_legs(['p0', 'vR'], qconj=-1)
         u, s, vh = npc.svd(mat, inner_labels=['vR', 'vL'])
         vh = vh.split_legs(1)
@@ -163,61 +163,61 @@ def canonicalize_right(A, L):
     A[0] /= npc.norm(A[0])
 
 
-def run_one(chi, L):
+def run_one(bond_dim, num_sites):
     M = SpinChain(dict(
-        L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
+        L=num_sites, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
         bc_MPS="finite", conserve=None,
     ))
-    Ws = [M.H_MPO.get_W(i).replace_labels(['p', 'p*'], ['p0', 'p0*']) for i in range(L)]
+    Ws = [M.H_MPO.get_W(i).replace_labels(['p', 'p*'], ['p0', 'p0*']) for i in range(num_sites)]
     sites = M.lat.mps_sites()
-    psi0 = MPS.from_product_state(sites, ["up"] * L, bc="finite")
+    psi0 = MPS.from_product_state(sites, ["up"] * num_sites, bc="finite")
     env0 = MPOEnvironment(psi0, M.H_MPO, psi0)
     L0 = env0.init_LP(0)
-    R0 = env0.init_RP(L - 1)
+    R0 = env0.init_RP(num_sites - 1)
     LN0 = npc.Array.from_ndarray_trivial(np.array([[1.0]]), labels=['vR*', 'vR'])
     RN0 = npc.Array.from_ndarray_trivial(np.array([[1.0]]), labels=['vL*', 'vL'])
 
-    A = _build_mps(L, chi)
+    A = _build_mps(num_sites, bond_dim)
 
     def grad_step(A):
-        LH = [None] * (L + 1)
+        LH = [None] * (num_sites + 1)
         LH[0] = L0
-        for p in range(L):
+        for p in range(num_sites):
             LH[p + 1] = update_L(LH[p], A[p], Ws[p])
-        RH = [None] * (L + 1)
-        RH[L] = R0
-        for p in range(L - 1, -1, -1):
+        RH = [None] * (num_sites + 1)
+        RH[num_sites] = R0
+        for p in range(num_sites - 1, -1, -1):
             RH[p] = update_R(RH[p + 1], A[p], Ws[p])
-        LN = [None] * (L + 1)
+        LN = [None] * (num_sites + 1)
         LN[0] = LN0
-        for p in range(L):
+        for p in range(num_sites):
             LN[p + 1] = update_L_N(LN[p], A[p])
-        RN = [None] * (L + 1)
-        RN[L] = RN0
-        for p in range(L - 1, -1, -1):
+        RN = [None] * (num_sites + 1)
+        RN[num_sites] = RN0
+        for p in range(num_sites - 1, -1, -1):
             RN[p] = update_R_N(RN[p + 1], A[p])
 
-        num = LH[L].to_ndarray().reshape(-1)[-1]
-        den = LN[L].to_ndarray().item()
+        num = LH[num_sites].to_ndarray().reshape(-1)[-1]
+        den = LN[num_sites].to_ndarray().item()
         energy = num / den
 
-        new_A = [None] * L
-        for p in range(L):
+        new_A = [None] * num_sites
+        for p in range(num_sites):
             ht = h_eff(A[p], LH[p], RH[p + 1], Ws[p])
             nt = n_eff(A[p], LN[p], RN[p + 1])
             grad = (2.0 / den) * (ht - energy * nt)
             new_A[p] = A[p] - LEARNING_RATE * grad
 
         LNn = LN0
-        for p in range(L):
+        for p in range(num_sites):
             LNn = update_L_N(LNn, new_A[p])
         den_new = LNn.to_ndarray().item()
-        scale = den_new ** (-1.0 / (2 * L))
+        scale = den_new ** (-1.0 / (2 * num_sites))
         new_A = [a * scale for a in new_A]
         return new_A, energy.real
 
     energy = None
-    for _ in range(_n_grad_steps(L)):
+    for _ in range(_n_grad_steps(num_sites)):
         A, energy = grad_step(A)
     return energy
 

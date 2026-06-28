@@ -27,18 +27,18 @@ REFERENCE_ENERGIES = {
 }
 
 
-def run_one(chi, L, dmrg_chi_max=None):
+def run_one(bond_dim, num_sites, dmrg_chi_max=None):
     model_params = dict(
-        L=L, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
+        L=num_sites, S=0.5, Jx=HEISENBERG_J, Jy=HEISENBERG_J, Jz=HEISENBERG_J,
         bc_MPS="finite", conserve=None,
     )
     M = SpinChain(model_params)
-    product_state = (["up", "down"] * (L // 2 + 1))[:L]
+    product_state = (["up", "down"] * (num_sites // 2 + 1))[:num_sites]
     psi = MPS.from_product_state(M.lat.mps_sites(), product_state, bc=M.lat.bc_MPS)
 
     dmrg_params = {
         "mixer": True,
-        "trunc_params": {"chi_max": dmrg_chi_max or chi, "svd_min": 1e-10},
+        "trunc_params": {"chi_max": dmrg_chi_max or bond_dim, "svd_min": 1e-10},
         "max_sweeps": N_SWEEPS,
         "combine": True,
     }

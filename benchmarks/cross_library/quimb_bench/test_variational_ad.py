@@ -7,7 +7,7 @@ automatic differentiation of the Rayleigh quotient
 with respect to every MPS tensor simultaneously: one gradient step is
 taken on every MPS tensor at once (no orthogonality center, no per-step
 canonicalization), followed by a single global rescale derived from the
-new `<psi|psi>` and distributed evenly across all L tensors.
+new `<psi|psi>` and distributed evenly across all num_sites tensors.
 `run_one_jax`/`run_one_torch` exercise quimb's AD-based optimization on the
 JAX and PyTorch array backends respectively.
 
@@ -28,10 +28,11 @@ deriving that gradient by hand.
 This whole-network update moves the state far less per iteration than a
 one-site sweep does, so it needs both a larger learning rate and many more
 iterations to reach a comparable energy neighborhood; `LEARNING_RATE` and
-the local `_n_grad_steps(L)` helper (scaling with `L`, since a longer chain
-needs proportionally more whole-state updates to converge as far) are
-shared with the TeNPy/Cytnx benchmarks. They were picked by checking, at
-every (chi, L) grid point, that the resulting energy lands within the
+the local `_n_grad_steps(num_sites)` helper (scaling with `num_sites`,
+since a longer chain needs proportionally more whole-state updates to
+converge as far) are shared with the TeNPy/Cytnx benchmarks. They were
+picked by checking, at every (bond_dim, num_sites) grid point, that the
+resulting energy lands within the
 `rel=2e-2` tolerance used below while comfortably inside the timeout. Since
 this update is a much weaker optimizer than a one-site sweep, its converged
 energy is sensitive to each library's own initial-state construction and
@@ -79,21 +80,21 @@ TORCH_REFERENCE_ENERGIES = {
 }
 
 
-def _build(chi, L):
-    psi = qtn.MPS_rand_state(L, bond_dim=chi, dtype="float64", seed=0)
-    H = qtn.MPO_ham_heis(L, j=HEISENBERG_J, cyclic=False)
+def _build(bond_dim, num_sites):
+    psi = qtn.MPS_rand_state(num_sites, bond_dim=bond_dim, dtype="float64", seed=0)
+    H = qtn.MPO_ham_heis(num_sites, j=HEISENBERG_J, cyclic=False)
     return psi, H
 
 
-def _n_grad_steps(L):
-    return 8 * L
+def _n_grad_steps(num_sites):
+    return 8 * num_sites
 
 
-def run_one_jax(chi, L):
+def run_one_jax(bond_dim, num_sites):
     import jax
     import jax.numpy as jnp
 
-    psi, H = _build(chi, L)
+    psi, H = _build(bond_dim, num_sites)
     if DEVICE == "gpu":
         device = jax.devices("gpu")[0]
     else:
@@ -122,7 +123,7 @@ def run_one_jax(chi, L):
         g = grad_fn(arrays)
         new_arrays = [a - LEARNING_RATE * ga for a, ga in zip(arrays, g)]
         # Rescale the whole state by a single global factor derived from
-        # <psi|psi>, distributed evenly across all L tensors, rather than
+        # <psi|psi>, distributed evenly across all num_sites tensors, rather than
         # normalizing each tensor independently -- the MPS is not in
         # canonical form here, so per-tensor normalization does not keep
         # the contracted <psi|psi> close to 1.
@@ -130,15 +131,15 @@ def run_one_jax(chi, L):
         new_arrays = [a * scale for a in new_arrays]
         return tuple(new_arrays)
 
-    for _ in range(_n_grad_steps(L)):
+    for _ in range(_n_grad_steps(num_sites)):
         arrays = grad_step(arrays)
     return float(energy(arrays))
 
 
-def run_one_torch(chi, L):
+def run_one_torch(bond_dim, num_sites):
     import torch
 
-    psi, H = _build(chi, L)
+    psi, H = _build(bond_dim, num_sites)
     torch_device = "cuda" if DEVICE == "gpu" else "cpu"
     arrays = [
         torch.as_tensor(a, dtype=torch.float64, device=torch_device).clone().requires_grad_(True)
@@ -173,7 +174,7 @@ def run_one_torch(chi, L):
                 a_new = a - LEARNING_RATE * a.grad
                 new_arrays.append(a_new)
             # Rescale the whole state by a single global factor derived from
-            # <psi|psi>, distributed evenly across all L tensors, rather than
+            # <psi|psi>, distributed evenly across all num_sites tensors, rather than
             # normalizing each tensor independently -- the MPS is not in
             # canonical form here, so per-tensor normalization does not keep
             # the contracted <psi|psi> close to 1.
@@ -181,7 +182,7 @@ def run_one_torch(chi, L):
             new_arrays = [(a * scale).clone().requires_grad_(True) for a in new_arrays]
         return new_arrays
 
-    for _ in range(_n_grad_steps(L)):
+    for _ in range(_n_grad_steps(num_sites)):
         arrays = grad_step(arrays)
     with torch.no_grad():
         return float(energy(arrays))

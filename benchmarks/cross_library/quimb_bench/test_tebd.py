@@ -43,23 +43,23 @@ REFERENCE_ENERGIES = {
 }
 
 
-def build(chi, L):
-    H = qtn.ham_1d_ising(L, j=ISING_J, bx=ISING_BX, cyclic=False)
-    psi0 = qtn.MPS_computational_state("0" * L)
+def build(bond_dim, num_sites):
+    H = qtn.ham_1d_ising(num_sites, j=ISING_J, bx=ISING_BX, cyclic=False)
+    psi0 = qtn.MPS_computational_state("0" * num_sites)
     if DEVICE == "gpu":
         import torch
         psi0.apply_to_arrays(lambda x: torch.as_tensor(x, device="cuda"))
     tebd = qtn.TEBD(psi0, H, dt=TFIM_DT, progbar=False)
     tebd.split_opts["cutoff"] = 1e-10
-    tebd.split_opts["max_bond"] = chi
+    tebd.split_opts["max_bond"] = bond_dim
     return tebd
 
 
-def run_one(chi, L):
-    tebd = build(chi, L)
+def run_one(bond_dim, num_sites):
+    tebd = build(bond_dim, num_sites)
     for _ in range(TFIM_N_STEPS):
         tebd.step(order=2, dt=TFIM_DT)
-    H_mpo = qtn.MPO_ham_ising(L, j=ISING_J, bx=ISING_BX, cyclic=False)
+    H_mpo = qtn.MPO_ham_ising(num_sites, j=ISING_J, bx=ISING_BX, cyclic=False)
     energy = tebd.pt.H @ (H_mpo.apply(tebd.pt))
     return float(energy.real)
 

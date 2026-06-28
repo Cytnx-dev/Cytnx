@@ -25,11 +25,12 @@ their own (different) sweep algorithm. `ITE_DT_SCHEDULE` anneals dt from
 0.3 down to 0.02 across zigzag (forward then backward) sweeps over every
 bond, renormalizing once per full zigzag pass; this uses the same
 "contract + truncate" cost structure as a real two-site DMRG/TEBD sweep
-(large-chi/large-L dominated by the same O(chi^3) SVD and O(chi^2 * d^2)
-gate contraction) so the time/memory metrics remain comparable, while the
-reported energy now converges to the same Heisenberg ground energy as
+(large-bond_dim/large-num_sites dominated by the same O(chi^3) SVD and
+O(chi^2 * d^2) gate contraction) so the time/memory metrics remain
+comparable, while the reported energy now converges to the same Heisenberg
+ground energy as
 `cytnx_bench/test_dmrg_symmetric.py`/`tenpy_bench/test_dmrg_symmetric.py`
-at every (chi, L) grid point (matched to within the `rel=1e-2` tolerance
+at every (bond_dim, num_sites) grid point (matched to within the `rel=1e-2` tolerance
 used for `SYMMETRIC_REFERENCE_ENERGIES`, looser than the dense/symmetric
 DMRG benchmarks' `rel=1e-4` since ITE over a finite total imaginary time
 is itself an approximation to the true ground state, not just a
@@ -93,17 +94,17 @@ SYMMETRIC_REFERENCE_ENERGIES = {
 ITE_DT_SCHEDULE = [0.3] * 15 + [0.2] * 15 + [0.1] * 20 + [0.05] * 30 + [0.02] * 80
 
 
-def build_dense(chi, L):
-    H = qtn.MPO_ham_heis(L, j=HEISENBERG_J, cyclic=False)
+def build_dense(bond_dim, num_sites):
+    H = qtn.MPO_ham_heis(num_sites, j=HEISENBERG_J, cyclic=False)
     if DEVICE == "gpu":
         import torch
         H.apply_to_arrays(lambda x: torch.as_tensor(x, device="cuda"))
-    dmrg = qtn.DMRG2(H, bond_dims=[chi], cutoffs=1e-10)
+    dmrg = qtn.DMRG2(H, bond_dims=[bond_dim], cutoffs=1e-10)
     return dmrg
 
 
-def run_one_dense(chi, L):
-    dmrg = build_dense(chi, L)
+def run_one_dense(bond_dim, num_sites):
+    dmrg = build_dense(bond_dim, num_sites)
     dmrg.solve(tol=1e-6, max_sweeps=N_SWEEPS, verbosity=0)
     return dmrg.energy
 
@@ -167,11 +168,11 @@ def _heisenberg_two_site_op():
     return _convert_backend(op)
 
 
-def run_one_symmetric(chi, L):
+def run_one_symmetric(bond_dim, num_sites):
     # Alternate site charges so the half-filled (Neel-like) total-Sz=0
     # sector is reachable at the bond dimensions in our sweep grid.
     psi = sr.MPS_abelian_rand(
-        "U1", L=L, bond_dim=chi, phys_dim=PHYS_CHARGE_MAP, seed=0,
+        "U1", L=num_sites, bond_dim=bond_dim, phys_dim=PHYS_CHARGE_MAP, seed=0,
         site_charge=lambda i: 1 if i % 2 == 0 else -1,
     )
     _convert_backend(psi)
@@ -180,10 +181,10 @@ def run_one_symmetric(chi, L):
 
     def zigzag_pass(dt):
         gate = gates[dt]
-        for i in range(L - 1):
-            psi.gate_split_(gate, where=(i, i + 1), max_bond=chi, cutoff=1e-10)
-        for i in range(L - 2, -1, -1):
-            psi.gate_split_(gate, where=(i, i + 1), max_bond=chi, cutoff=1e-10)
+        for i in range(num_sites - 1):
+            psi.gate_split_(gate, where=(i, i + 1), max_bond=bond_dim, cutoff=1e-10)
+        for i in range(num_sites - 2, -1, -1):
+            psi.gate_split_(gate, where=(i, i + 1), max_bond=bond_dim, cutoff=1e-10)
         psi.normalize()
 
     for dt in ITE_DT_SCHEDULE:
@@ -191,7 +192,7 @@ def run_one_symmetric(chi, L):
     h_op = _heisenberg_two_site_op()
     energy = sum(
         psi.local_expectation_exact(h_op, where=(i, i + 1))
-        for i in range(L - 1)
+        for i in range(num_sites - 1)
     )
     return energy
 

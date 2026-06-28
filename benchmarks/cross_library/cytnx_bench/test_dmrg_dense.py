@@ -6,7 +6,7 @@ isotropic Heisenberg coupling J*S_i.S_j = (J/2)*(S+_i S-_j + S-_i S+_j) +
 J*Sz_i Sz_j, and a textbook two-site DMRG sweep (local eigensolve via
 Cytnx's `LinOp` + `Lanczos`, truncation via `Svd_truncate`) adapted from
 `example/DMRG/dmrg_two_sites_dense.py`. The MPO was verified against exact
-diagonalization for small chains (L=4,6) before being used here.
+diagonalization for small chains (num_sites=4,6) before being used here.
 
 CPU and GPU code paths are both written; the GPU path moves every MPS/MPO
 UniTensor to `cytnx.Device.cuda` before the sweep. It cannot be exercised in
@@ -117,26 +117,26 @@ def _build_mpo(J, device):
     return M, L0, R0
 
 
-def run_one(chi, L):
+def run_one(bond_dim, num_sites):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     d = 2
     M, L0, R0 = _build_mpo(HEISENBERG_J, device)
 
-    A = [None for _ in range(L)]
-    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., device=device).set_rowrank_(2)
+    A = [None for _ in range(num_sites)]
+    A[0] = cytnx.UniTensor.normal([1, d, min(bond_dim, d)], 0., 1., device=device).set_rowrank_(2)
     A[0].relabel_(["0", "1", "2"]).set_name("A0")
 
     lbls = [["0", "1", "2"]]
-    for k in range(1, L):
+    for k in range(1, num_sites):
         dim1 = A[k - 1].shape()[2]
         dim2 = d
-        dim3 = min(min(chi, A[k - 1].shape()[2] * d), d ** (L - k - 1))
+        dim3 = min(min(bond_dim, A[k - 1].shape()[2] * d), d ** (num_sites - k - 1))
         A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3], 0., 1., device=device).set_rowrank_(2).set_name(f"A{k}")
         lbl = [str(2 * k), str(2 * k + 1), str(2 * k + 2)]
         A[k].relabel_(lbl)
         lbls.append(lbl)
 
-    LR = [None for _ in range(L + 1)]
+    LR = [None for _ in range(num_sites + 1)]
     LR[0] = L0
     LR[-1] = R0
 
@@ -144,7 +144,7 @@ def run_one(chi, L):
     l_update_net = _l_update_network()
     r_update_net = _r_update_network()
 
-    for p in range(L - 1):
+    for p in range(num_sites - 1):
         s, A[p], vt = cytnx.linalg.Gesvd(A[p])
         A[p + 1] = cytnx.Contract(cytnx.Contract(s, vt), A[p + 1])
         A[p].set_name(f"A{p}")
@@ -158,14 +158,14 @@ def run_one(chi, L):
         A[p + 1].relabel_(lbls[p + 1])
 
     _, A[-1] = cytnx.linalg.Gesvd(A[-1], is_U=True, is_vT=False)
-    A[-1].set_name(f"A{L-1}").relabel_(lbls[-1])
+    A[-1].set_name(f"A{num_sites-1}").relabel_(lbls[-1])
 
     def sweep():
         energy = None
-        for p in range(L - 2, -1, -1):
+        for p in range(num_sites - 2, -1, -1):
             dim_l = A[p].shape()[0]
             dim_r = A[p + 1].shape()[2]
-            new_dim = min(dim_l * d, dim_r * d, chi)
+            new_dim = min(dim_l * d, dim_r * d, bond_dim)
             psi = cytnx.Contract(A[p], A[p + 1])
             psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
@@ -184,10 +184,10 @@ def run_one(chi, L):
         _, A[0] = cytnx.linalg.Gesvd(A[0], is_U=False, is_vT=True)
         A[0].set_name("A0").relabel_(lbls[0])
 
-        for p in range(L - 1):
+        for p in range(num_sites - 1):
             dim_l = A[p].shape()[0]
             dim_r = A[p + 1].shape()[2]
-            new_dim = min(dim_l * d, dim_r * d, chi)
+            new_dim = min(dim_l * d, dim_r * d, bond_dim)
             psi = cytnx.Contract(A[p], A[p + 1])
             psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
@@ -204,7 +204,7 @@ def run_one(chi, L):
 
         A[-1].set_rowrank_(2)
         _, A[-1] = cytnx.linalg.Gesvd(A[-1], is_U=True, is_vT=False)
-        A[-1].set_name(f"A{L-1}").relabel_(lbls[-1])
+        A[-1].set_name(f"A{num_sites-1}").relabel_(lbls[-1])
         return energy
 
     energy = None

@@ -14,7 +14,7 @@ backend's own autodiff. Like quimb's benchmark, every MPS tensor is updated
 from a single gradient step taken simultaneously, with no orthogonality
 center and no per-step canonicalization -- only a single global rescale
 derived from the new `<psi|psi>` is applied after each step, distributed
-evenly across all L tensors. Because the surrounding tensors are not kept
+evenly across all num_sites tensors. Because the surrounding tensors are not kept
 isometric, the gradient needs both an H-environment term (the effective
 one-site Hamiltonian, as in a one-site sweep) and a norm-environment term:
 
@@ -56,8 +56,8 @@ DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 LEARNING_RATE = 0.5
 
 
-def _n_grad_steps(L):
-    return 8 * L
+def _n_grad_steps(num_sites):
+    return 8 * num_sites
 
 
 REFERENCE_ENERGIES = {
@@ -102,23 +102,23 @@ def _build_mpo(J, device):
     return M, L0, R0
 
 
-def _build_mps(L, chi, device):
+def _build_mps(num_sites, bond_dim, device):
     d = 2
-    A = [None] * L
-    lbls = [[str(2 * k), str(2 * k + 1), str(2 * k + 2)] for k in range(L)]
-    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0, device=device).set_rowrank_(2)
+    A = [None] * num_sites
+    lbls = [[str(2 * k), str(2 * k + 1), str(2 * k + 2)] for k in range(num_sites)]
+    A[0] = cytnx.UniTensor.normal([1, d, min(bond_dim, d)], 0., 1., seed=0, device=device).set_rowrank_(2)
     A[0].relabel_(lbls[0]).set_name("A0")
-    for k in range(1, L):
+    for k in range(1, num_sites):
         dim1 = A[k - 1].shape()[2]
-        dim3 = min(min(chi, dim1 * d), d ** (L - k - 1))
+        dim3 = min(min(bond_dim, dim1 * d), d ** (num_sites - k - 1))
         A[k] = cytnx.UniTensor.normal([dim1, d, dim3], 0., 1., seed=k, device=device).set_rowrank_(2)
         A[k].relabel_(lbls[k]).set_name(f"A{k}")
-    _canonicalize_right(A, lbls, L)
+    _canonicalize_right(A, lbls, num_sites)
     return A, lbls
 
 
-def _canonicalize_right(A, lbls, L):
-    for p in range(L - 1, 0, -1):
+def _canonicalize_right(A, lbls, num_sites):
+    for p in range(num_sites - 1, 0, -1):
         A[p].set_rowrank_(1)
         s, u, vt = cytnx.linalg.Gesvd(A[p])
         A[p] = vt
@@ -132,9 +132,10 @@ def _canonicalize_right(A, lbls, L):
 class _Networks:
     """Caches one parsed `cytnx.Network` per static contraction topology used
     in `run_one`'s gradient step, since `FromString` re-parses the topology
-    string on every call -- with `8 * L` whole-network gradient steps and
-    O(L) such contractions per step, re-parsing on every call dominates the
-    runtime at large L. Each `Network` is built once and refilled via
+    string on every call -- with `8 * num_sites` whole-network gradient steps
+    and O(num_sites) such contractions per step, re-parsing on every call
+    dominates the runtime at large num_sites. Each `Network` is built once and
+    refilled via
     `PutUniTensors`/`Launch` on every reuse."""
 
     L_UPDATE_NET = ["L: -2,-1,-3", "A: -1,-4,1", "M: -2,0,-4,-5", "A_Conj: -3,-5,2", "TOUT: 0,1,2"]
@@ -188,10 +189,10 @@ class _Networks:
         return out
 
 
-def run_one(chi, L):
+def run_one(bond_dim, num_sites):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     M, L0, R0 = _build_mpo(HEISENBERG_J, device)
-    A, lbls = _build_mps(L, chi, device)
+    A, lbls = _build_mps(num_sites, bond_dim, device)
     LN0 = cytnx.UniTensor.zeros([1, 1], device=device).set_rowrank_(0)
     LN0[0, 0] = 1.0
     RN0 = cytnx.UniTensor.zeros([1, 1], device=device).set_rowrank_(0)
@@ -201,30 +202,30 @@ def run_one(chi, L):
     def grad_step(A):
         A_conj = [a.Dagger().permute_(a.labels()) for a in A]
 
-        LH = [None] * (L + 1)
+        LH = [None] * (num_sites + 1)
         LH[0] = L0
-        for p in range(L):
+        for p in range(num_sites):
             LH[p + 1] = nets.update_L(LH[p], A[p], A_conj[p], M)
-        RH = [None] * (L + 1)
-        RH[L] = R0
-        for p in range(L - 1, -1, -1):
+        RH = [None] * (num_sites + 1)
+        RH[num_sites] = R0
+        for p in range(num_sites - 1, -1, -1):
             RH[p] = nets.update_R(RH[p + 1], A[p], A_conj[p], M)
-        LN = [None] * (L + 1)
+        LN = [None] * (num_sites + 1)
         LN[0] = LN0
-        for p in range(L):
+        for p in range(num_sites):
             LN[p + 1] = nets.update_L_N(LN[p], A[p], A_conj[p])
-        RN = [None] * (L + 1)
-        RN[L] = RN0
-        for p in range(L - 1, -1, -1):
+        RN = [None] * (num_sites + 1)
+        RN[num_sites] = RN0
+        for p in range(num_sites - 1, -1, -1):
             RN[p] = nets.update_R_N(RN[p + 1], A[p], A_conj[p])
 
-        D = LH[L].shape()[0]
-        num = LH[L][D - 1, 0, 0].item()
-        den = LN[L][0, 0].item()
+        D = LH[num_sites].shape()[0]
+        num = LH[num_sites][D - 1, 0, 0].item()
+        den = LN[num_sites][0, 0].item()
         energy = num / den
 
-        new_A = [None] * L
-        for p in range(L):
+        new_A = [None] * num_sites
+        for p in range(num_sites):
             ht = nets.h_eff(A[p], LH[p], RH[p + 1], M)
             nt = nets.n_eff(A[p], LN[p], RN[p + 1])
             grad = (2.0 / den) * (ht - energy * nt)
@@ -232,17 +233,17 @@ def run_one(chi, L):
             new_A[p].relabel_(lbls[p]).set_name(f"A{p}")
 
         LNn = LN0
-        for p in range(L):
+        for p in range(num_sites):
             LNn = nets.update_L_N(LNn, new_A[p], new_A[p].Dagger().permute_(new_A[p].labels()))
         den_new = LNn[0, 0].item()
-        scale = den_new ** (-1.0 / (2 * L))
+        scale = den_new ** (-1.0 / (2 * num_sites))
         new_A = [a * scale for a in new_A]
-        for p in range(L):
+        for p in range(num_sites):
             new_A[p].relabel_(lbls[p]).set_name(f"A{p}")
         return new_A, energy
 
     energy = None
-    for _ in range(_n_grad_steps(L)):
+    for _ in range(_n_grad_steps(num_sites)):
         A, energy = grad_step(A)
     return energy
 

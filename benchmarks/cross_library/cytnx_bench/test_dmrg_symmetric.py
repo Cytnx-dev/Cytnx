@@ -9,7 +9,7 @@ bookkeeping convention of `example/DMRG/dmrg_two_sites_U1.py` (a leg with
 Cytnx bond-type `BD_KET` contributes +charge and `BD_BRA` contributes
 -charge to the zero-sum constraint at every nonzero MPO block). The
 resulting symmetric MPO was verified against exact diagonalization for
-small chains (L=4,6), matching the dense-mode MPO in `test_dmrg_dense.py`
+small chains (num_sites=4,6), matching the dense-mode MPO in `test_dmrg_dense.py`
 to machine precision, before being used here.
 
 CPU and GPU code paths are both written; the GPU path moves every
@@ -139,11 +139,11 @@ def _build_mpo(J, q, device):
     return M, L0, R0, bd_phys
 
 
-def run_one(chi, L):
+def run_one(bond_dim, num_sites):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     M, L0, R0, bd_phys = _build_mpo(HEISENBERG_J, TARGET_Q, device)
 
-    A = [None for _ in range(L)]
+    A = [None for _ in range(num_sites)]
     running_charge = 0
     charge_step = 1 if running_charge <= TARGET_Q else -1
     running_charge += charge_step
@@ -154,7 +154,7 @@ def run_one(chi, L):
     A[0].get_block_()[0] = 1
 
     lbls = [["0", "1", "2"]]
-    for k in range(1, L):
+    for k in range(1, num_sites):
         B1 = A[k - 1].bonds()[2].redirect()
         B2 = A[k - 1].bonds()[1]
         charge_step = 1 if running_charge <= TARGET_Q else -1
@@ -167,7 +167,7 @@ def run_one(chi, L):
         A[k].get_block_()[0] = 1
         lbls.append(lbl)
 
-    LR = [None for _ in range(L + 1)]
+    LR = [None for _ in range(num_sites + 1)]
     LR[0] = L0
     LR[-1] = R0
 
@@ -175,7 +175,7 @@ def run_one(chi, L):
     l_update_net = _l_update_network()
     r_update_net = _r_update_network()
 
-    for p in range(L - 1):
+    for p in range(num_sites - 1):
         l_update_net.PutUniTensors(["L", "A", "A_Conj", "M"],
                                     [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
         LR[p + 1] = l_update_net.Launch()
@@ -183,11 +183,11 @@ def run_one(chi, L):
 
     def sweep():
         energy = None
-        for p in range(L - 2, -1, -1):
+        for p in range(num_sites - 2, -1, -1):
             dim_l = A[p].shape()[0]
             dim_r = A[p + 1].shape()[2]
             d = A[p].shape()[1]
-            new_dim = min(dim_l * d, dim_r * d, chi)
+            new_dim = min(dim_l * d, dim_r * d, bond_dim)
             psi = cytnx.Contract(A[p], A[p + 1])
             psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
@@ -206,11 +206,11 @@ def run_one(chi, L):
         _, A[0] = cytnx.linalg.Gesvd(A[0], is_U=False, is_vT=True)
         A[0].relabel_(lbls[0])
 
-        for p in range(L - 1):
+        for p in range(num_sites - 1):
             dim_l = A[p].shape()[0]
             dim_r = A[p + 1].shape()[2]
             d = A[p].shape()[1]
-            new_dim = min(dim_l * d, dim_r * d, chi)
+            new_dim = min(dim_l * d, dim_r * d, bond_dim)
             psi = cytnx.Contract(A[p], A[p + 1])
             psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
@@ -229,7 +229,7 @@ def run_one(chi, L):
 
         A[-1].set_rowrank_(2)
         _, A[-1] = cytnx.linalg.Gesvd(A[-1], is_U=True, is_vT=False)
-        A[-1].set_name(f"A{L-1}").relabel_(lbls[-1])
+        A[-1].set_name(f"A{num_sites-1}").relabel_(lbls[-1])
         return energy
 
     energy = None
