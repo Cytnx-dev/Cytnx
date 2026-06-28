@@ -58,12 +58,15 @@ def _build_gate(J, hx, dt, w_left, w_right, device):
 
 
 def _build_gates(L, J, hx, dt, device):
-    gates = []
-    for p in range(L - 1):
-        w_left = 1.0 if p == 0 else 0.5
-        w_right = 1.0 if p == L - 2 else 0.5
-        gates.append(_build_gate(J, hx, dt, w_left, w_right, device))
-    return gates
+    # Every interior bond (0 < p < L-2) shares the same (0.5, 0.5) on-site-field
+    # split, so only the two boundary bonds need a distinct exp(-i*dt*h_bond);
+    # the single interior gate is reused across all interior bonds.
+    if L == 2:
+        return [_build_gate(J, hx, dt, 1.0, 1.0, device)]
+    left_gate = _build_gate(J, hx, dt, 1.0, 0.5, device)
+    right_gate = _build_gate(J, hx, dt, 0.5, 1.0, device)
+    interior_gate = _build_gate(J, hx, dt, 0.5, 0.5, device) if L > 3 else None
+    return [left_gate] + [interior_gate] * (L - 3) + [right_gate]
 
 
 def _build_mps(L, chi, device):
@@ -126,14 +129,18 @@ def run_one(chi, L):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     d = 2
     A, lbls = _build_mps(L, chi, device)
-    gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
+    base_gates = _build_gates(L, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
+    # Bond labels are fixed by _build_mps and restored after every truncation
+    # below, so each gate only ever needs to be relabeled once, not on every
+    # Trotter step.
+    gates = [base_gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
+             for p in range(L - 1)]
     M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL, device)
 
     def sweep():
         for p in range(L - 1):
             psi = cytnx.Contract(A[p], A[p + 1])
-            g = gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
-            psi = cytnx.Contract(psi, g)
+            psi = cytnx.Contract(psi, gates[p])
             psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
             psi.relabel_([lbls[p][0], lbls[p][1], lbls[p + 1][1], lbls[p + 1][2]])
             psi.set_rowrank_(2)
