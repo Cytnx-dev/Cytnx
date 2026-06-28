@@ -2,7 +2,7 @@ from .utils import *
 from cytnx import *
 # from typing import List
 # Use beartype to check the type of arguments
-from beartype.typing import List, Union
+from beartype.typing import List
 
 @add_method(Bond)
 def redirect_(self):
@@ -16,7 +16,13 @@ def redirect_(self):
 _c_getDegeneracy = Bond.getDegeneracy
 
 @add_method(Bond)
-def getDegeneracy(self, qnum: Union[List[int], Qs], return_indices: bool = False):
+def getDegeneracy(self, qnum: List[int], return_indices: bool = False):
+    """Return the degeneracy associated with the given quantum number(s).
+
+    ``qnum`` may be a list of ints or a ``cytnx.Qs`` object. By default only
+    the degeneracy is returned; pass ``return_indices=True`` to also get the
+    list of matching block indices as a ``(degeneracy, indices)`` tuple.
+    """
     if not return_indices:
         return _c_getDegeneracy(self, qnum)
     inds: List[int] = []
