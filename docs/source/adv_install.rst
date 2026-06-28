@@ -379,6 +379,61 @@ In the case that Cytnx is installed locally from binary build, not from anaconda
 Build troubleshooting
 *************************************
 
+Choosing between CUDA 12 and CUDA 13 when both are installed
+-------------------------------------------------------------------------------------
+
+Cytnx supports both CUDA 12.x and 13.x. If more than one CUDA toolkit is present
+(for example CUDA 12 installed via ``apt`` and CUDA 13 unpacked under
+``/usr/local/cuda-13``), you must select the one to build against; otherwise
+CMake picks up whichever ``nvcc`` it finds first on ``PATH``, which may not be
+the one you intended. There are two independent things to pin -- the **build**
+toolkit and the **runtime** libraries.
+
+**1. Build time -- select the compiler.** ``enable_language(CUDA)`` finds the
+compiler only from ``CMAKE_CUDA_COMPILER``, the ``CUDACXX`` environment
+variable, or ``nvcc`` on ``PATH`` (it does *not* reuse the libraries found by
+``find_package(CUDAToolkit)``). Point it at the toolkit you want -- the rest of
+the toolkit (libraries, headers, version) is then derived from that ``nvcc``:
+
+.. code-block:: shell
+
+    # Use CUDA 13:
+    $cmake -S . -B build -DUSE_CUDA=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda-13/bin/nvcc
+
+    # ...or use CUDA 12:
+    $cmake -S . -B build -DUSE_CUDA=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda-12/bin/nvcc
+
+Equivalent alternatives are ``export CUDACXX=/usr/local/cuda-13/bin/nvcc`` or
+putting the desired ``bin`` directory first on ``PATH``
+(``export PATH=/usr/local/cuda-13/bin:$PATH``). For the ``pip`` build, pass it
+through scikit-build-core:
+
+.. code-block:: shell
+
+    $pip install . --config-settings=cmake.args="-DUSE_CUDA=ON;-DCMAKE_CUDA_COMPILER=/usr/local/cuda-13/bin/nvcc"
+
+The configure output reports the resolved toolkit (``CUDA Version``,
+``CUDA Toolkit bin dir``, ``CUDA compiler (nvcc)``) -- check these match the
+version you intended. CMake caches the detected compiler, so if you previously
+configured with the wrong one, delete the build directory before reconfiguring;
+a stale ``CMakeCache.txt`` keeps the old choice.
+
+**2. Runtime -- match the shared libraries.** Selecting the compiler does not
+control which CUDA runtime libraries are loaded at run time. The dynamic loader
+resolves ``libcudart.so.<major>`` (and cuTENSOR/cuQuantum, etc.) via
+``LD_LIBRARY_PATH``, then the ``ldconfig`` cache. If a different major version is
+registered with ``ldconfig`` (commonly the ``apt`` copy under
+``/usr/lib/x86_64-linux-gnu``), it can be loaded instead of the toolkit you
+built against, causing version-skew crashes. To force the matching runtime, put
+its library directory first:
+
+.. code-block:: shell
+
+    $export LD_LIBRARY_PATH=/usr/local/cuda-13/lib64:$LD_LIBRARY_PATH
+
+(Adjust the path to the toolkit you built against; append the cuTENSOR/cuQuantum
+``lib`` directories too if you enabled them -- see the tarball note above.)
+
 CUDA device link fails with ``elfLink linker library load error``
 -------------------------------------------------------------------------------------
 
