@@ -48,6 +48,12 @@ N_SWEEPS = 3
 # the differing per-bond eigensolver budgets.
 LANCZOS_MAXITER = 4
 
+# SVD truncation magnitude cutoff, matching TeNPy's svd_min and quimb's
+# cutoffs (both 1e-10 in this suite's dmrg/tebd scripts): singular values
+# below this threshold are discarded even if the bond-dimension cap isn't
+# reached. Passed to Cytnx's Svd_truncate via its `err` argument.
+SVD_CUTOFF = 1e-10
+
 # Per-(bond_dim, num_sites) wall-clock budget. Points that exceed this are
 # skipped rather than measured, so a handful of slow large-bond_dim/
 # large-num_sites points don't dominate the suite's total run time.

@@ -28,20 +28,20 @@ import pytest
 
 import cytnx
 
-from common.model import BOND_DIM_VALUES, NUM_SITES_VALUES, GRID_POINT_TIMEOUT_SEC, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS
+from common.model import BOND_DIM_VALUES, NUM_SITES_VALUES, GRID_POINT_TIMEOUT_SEC, SVD_CUTOFF, TFIM_DT, TFIM_HX_FINAL, TFIM_J, TFIM_N_STEPS
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
 REFERENCE_ENERGIES = {
-    (16, 20): -19.000359069981286,
-    (16, 30): -28.999909822622687,
-    (16, 50): -48.9994338138508,
-    (32, 20): -19.000634976726793,
-    (32, 30): -29.00076260540032,
-    (32, 50): -49.00137490785111,
-    (64, 20): -19.0005361684381,
-    (64, 30): -29.000882075567542,
-    (64, 50): -49.001545912461594,
+    (16, 20): -19.000018311640396,
+    (16, 30): -29.000323620758877,
+    (16, 50): -48.999734696718065,
+    (32, 20): -19.00054144092803,
+    (32, 30): -29.000858382002303,
+    (32, 50): -49.001490111377464,
+    (64, 20): -19.00053910007698,
+    (64, 30): -29.00087851007468,
+    (64, 50): -49.0015587524382,
 }
 
 
@@ -147,7 +147,7 @@ def run_one(chi, L):
             dim_l = A[p].shape()[0]
             dim_r = A[p + 1].shape()[2]
             new_dim = min(dim_l * d, dim_r * d, chi)
-            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
+            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim, err=SVD_CUTOFF)
             s = s / s.Norm().item()
             A[p + 1] = cytnx.Contract(s, A[p + 1])
             A[p].set_name(f"A{p}").relabel_(lbls[p])

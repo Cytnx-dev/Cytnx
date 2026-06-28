@@ -19,7 +19,7 @@ import pytest
 
 import cytnx
 
-from common.model import BOND_DIM_VALUES, HEISENBERG_J, LANCZOS_MAXITER, NUM_SITES_VALUES, N_SWEEPS, GRID_POINT_TIMEOUT_SEC
+from common.model import BOND_DIM_VALUES, HEISENBERG_J, LANCZOS_MAXITER, NUM_SITES_VALUES, N_SWEEPS, GRID_POINT_TIMEOUT_SEC, SVD_CUTOFF
 
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
@@ -169,7 +169,7 @@ def run_one(chi, L):
             psi = cytnx.Contract(A[p], A[p + 1])
             psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
-            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
+            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim, err=SVD_CUTOFF)
             A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
             s = s / s.Norm().item()
             A[p] = cytnx.Contract(A[p], s)
@@ -191,7 +191,7 @@ def run_one(chi, L):
             psi = cytnx.Contract(A[p], A[p + 1])
             psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
-            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
+            s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim, err=SVD_CUTOFF)
             A[p].set_name(f"A{p}").relabel_(lbls[p])
             s = s / s.Norm().item()
             A[p + 1] = cytnx.Contract(s, A[p + 1])
