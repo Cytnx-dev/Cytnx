@@ -3,25 +3,22 @@ transverse-field Ising chain after a field quench, using a hand-rolled TEBD
 sweep built from Cytnx's own `UniTensor`/`Contract`/`Svd_truncate` API (Cytnx
 has no built-in TEBD engine, unlike TeNPy/quimb).
 
-Each Trotter step is the symmetric (Strang) product
-exp(-i*dt/2*h_{num_sites-2})...exp(-i*dt/2*h_0) *
-exp(-i*dt/2*h_0)...exp(-i*dt/2*h_{num_sites-2}) -- a forward
-left-to-right half-step sweep over every bond followed by a backward
-right-to-left half-step sweep over every bond, each absorbing the post-SVD
-singular-value tensor into the not-yet-visited neighbor (right on the
-forward pass, left on the backward pass) so the orthogonality center moves
-with the sweep direction. This palindromic forward/backward composition is
-second-order accurate in dt for an arbitrary ordered decomposition of H
-into bond terms h_p, matching the order=2 even/odd Suzuki-Trotter splitting
-used by `tenpy_bench/test_tebd.py` and `quimb_bench/test_tebd.py` in
-accuracy order, though not in the specific grouping of bond terms. The
-on-site field term -hx*Sx is split between the two bond gates that touch
-each site (half-weight on interior bonds, full weight on the two
-chain-boundary bonds) so that summing the per-bond gates' field
-contributions over a full sweep reproduces -hx*sum(Sx_i) exactly once per
-site rather than twice for interior sites. The initial state is the
-all-spin-down product state, evolved directly under the post-quench
-Hamiltonian (matching the `quimb_bench/tebd.py` convention).
+Each Trotter step is the same even/odd Suzuki-Trotter (Strang) splitting
+TeNPy's `TEBDEngine` (order=2) uses internally: writing the bond terms
+h_p (p = 0..num_sites-2) as H_even = sum over even p, H_odd = sum over odd
+p (bonds of the same parity never share a site, so every gate within one
+group commutes with every other gate in that group and can be applied in
+any order with no extra Trotter error), one step is
+exp(-i*dt/2*H_even) * exp(-i*dt*H_odd) * exp(-i*dt/2*H_even). The on-site
+field term -hx*Sx is split between the two bond gates that touch each site
+(half-weight on interior bonds, full weight on the two chain-boundary
+bonds) so that summing the per-bond gates' field contributions over one
+full even+odd step reproduces -hx*sum(Sx_i) exactly once per site rather
+than twice for interior sites; this split is independent of which group a
+bond falls into; only the dt passed to `_build_gates` differs between the
+two sub-steps. The initial state is the all-spin-down product state,
+evolved directly under the post-quench Hamiltonian (matching the
+`quimb_bench/tebd.py` convention).
 
 CPU and GPU code paths are both written; the GPU path moves every MPS
 UniTensor and the gate to `cytnx.Device.cuda` before stepping. It cannot be
@@ -39,15 +36,15 @@ from common.model import BOND_DIM_VALUES, NUM_SITES_VALUES, GRID_POINT_TIMEOUT_S
 DEVICE = "cpu"  # set to "gpu" to exercise the (untested) GPU code path below
 
 REFERENCE_ENERGIES = {
-    (16, 20): -19.0002116253495,
-    (16, 30): -29.000296405051223,
-    (16, 50): -49.00046596445489,
-    (32, 20): -19.000211625349483,
-    (32, 30): -29.000296405051227,
-    (32, 50): -49.00046596445477,
-    (64, 20): -19.000211625349483,
-    (64, 30): -29.000296405051227,
-    (64, 50): -49.00046596445477,
+    (16, 20): -19.000253478862355,
+    (16, 30): -28.99996982305337,
+    (16, 50): -48.99944000650076,
+    (32, 20): -19.000146442249463,
+    (32, 30): -29.000157629985154,
+    (32, 50): -49.00020127330093,
+    (64, 20): -19.000146553733153,
+    (64, 30): -29.000162610180396,
+    (64, 50): -49.000194070018004,
 }
 
 
@@ -136,15 +133,24 @@ def run_one(bond_dim, num_sites):
     device = cytnx.Device.cuda if DEVICE == "gpu" else cytnx.Device.cpu
     d = 2
     A, lbls = _build_mps(num_sites, bond_dim, device)
-    base_gates = _build_gates(num_sites, TFIM_J, TFIM_HX_FINAL, TFIM_DT / 2, device)
     # Bond labels are fixed by _build_mps and restored after every truncation
     # below, so each gate only ever needs to be relabeled once, not on every
-    # Trotter step.
-    gates = [base_gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
-             for p in range(num_sites - 1)]
+    # Trotter step. Two gate sets are needed -- exp(-i*dt/2*h_p) for the
+    # even-p bonds (applied at the start and end of every step) and
+    # exp(-i*dt*h_p) for the odd-p bonds (applied once, in between) -- see
+    # module docstring.
+    half_base_gates = _build_gates(num_sites, TFIM_J, TFIM_HX_FINAL, TFIM_DT / 2, device)
+    full_base_gates = _build_gates(num_sites, TFIM_J, TFIM_HX_FINAL, TFIM_DT, device)
+    half_gates = [half_base_gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
+                  for p in range(num_sites - 1)]
+    full_gates = [full_base_gates[p].clone().relabel_(["_o0", "_o1", lbls[p][1], lbls[p + 1][1]])
+                  for p in range(num_sites - 1)]
     M, L0, R0 = _build_mpo(TFIM_J, TFIM_HX_FINAL, device)
 
-    def apply_gate(p):
+    even_bonds = list(range(0, num_sites - 1, 2))
+    odd_bonds = list(range(1, num_sites - 1, 2))
+
+    def apply_gate(p, gates):
         psi = cytnx.Contract(A[p], A[p + 1])
         psi = cytnx.Contract(psi, gates[p])
         psi.permute_([lbls[p][0], "_o0", "_o1", lbls[p + 1][2]])
@@ -156,22 +162,26 @@ def run_one(bond_dim, num_sites):
         s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim, err=SVD_CUTOFF)
         return s
 
-    def sweep():
-        for p in range(num_sites - 1):
-            s = apply_gate(p)
+    def apply_group(bonds, gates):
+        # Bonds in the same parity group never share a site, so they can be
+        # applied in any order with no extra Trotter error; the post-SVD
+        # singular-value tensor is absorbed into the right neighbor purely
+        # as a fixed convention (no later gate in this group touches either
+        # neighbor, so the choice doesn't affect the resulting state).
+        for p in bonds:
+            s = apply_gate(p, gates)
             s = s / s.Norm().item()
             A[p + 1] = cytnx.Contract(s, A[p + 1])
             A[p].set_name(f"A{p}").relabel_(lbls[p])
             A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
-        for p in range(num_sites - 2, -1, -1):
-            s = apply_gate(p)
-            s = s / s.Norm().item()
-            A[p] = cytnx.Contract(A[p], s)
-            A[p].set_name(f"A{p}").relabel_(lbls[p])
-            A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
+
+    def trotter_step():
+        apply_group(even_bonds, half_gates)
+        apply_group(odd_bonds, full_gates)
+        apply_group(even_bonds, half_gates)
 
     for _ in range(TFIM_N_STEPS):
-        sweep()
+        trotter_step()
     return _energy(A, M, L0, R0, device)
 
 
