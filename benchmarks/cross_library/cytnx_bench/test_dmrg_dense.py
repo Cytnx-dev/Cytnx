@@ -49,7 +49,7 @@ class _Hxx(cytnx.LinOp):
         return out
 
 
-def _optimize_psi(psi, L, M1, M2, R, maxit, device):
+def _h_eff_network():
     anet = cytnx.Network()
     anet.FromString(["psi: -1,-2,-3,-4",
                       "L: -5,-1,0",
@@ -57,6 +57,30 @@ def _optimize_psi(psi, L, M1, M2, R, maxit, device):
                       "M1: -5,-6,-2,1",
                       "M2: -6,-7,-3,2",
                       "TOUT: 0,1;2,3"])
+    return anet
+
+
+def _l_update_network():
+    anet = cytnx.Network()
+    anet.FromString(["L: -2,-1,-3",
+                      "A: -1,-4,1",
+                      "M: -2,0,-4,-5",
+                      "A_Conj: -3,-5,2",
+                      "TOUT: 0,1,2"])
+    return anet
+
+
+def _r_update_network():
+    anet = cytnx.Network()
+    anet.FromString(["R: -2,-1,-3",
+                      "B: 1,-4,-1",
+                      "M: 0,-2,-4,-5",
+                      "B_Conj: 2,-5,-3",
+                      "TOUT: 0;1,2"])
+    return anet
+
+
+def _optimize_psi(anet, psi, L, M1, M2, R, maxit, device):
     anet.PutUniTensors(["L", "M1", "M2", "R"], [L, M1, M2, R])
     H = _Hxx(anet, psi.shape()[0] * psi.shape()[1] * psi.shape()[2] * psi.shape()[3], device)
     energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=1e-12, Tin=psi)
@@ -116,21 +140,19 @@ def run_one(chi, L):
     LR[0] = L0
     LR[-1] = R0
 
+    h_eff_net = _h_eff_network()
+    l_update_net = _l_update_network()
+    r_update_net = _r_update_network()
+
     for p in range(L - 1):
         s, A[p], vt = cytnx.linalg.Gesvd(A[p])
         A[p + 1] = cytnx.Contract(cytnx.Contract(s, vt), A[p + 1])
         A[p].set_name(f"A{p}")
         A[p + 1].set_name(f"A{p+1}")
 
-        anet = cytnx.Network()
-        anet.FromString(["L: -2,-1,-3",
-                          "A: -1,-4,1",
-                          "M: -2,0,-4,-5",
-                          "A_Conj: -3,-5,2",
-                          "TOUT: 0,1,2"])
-        anet.PutUniTensors(["L", "A", "A_Conj", "M"],
-                            [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
-        LR[p + 1] = anet.Launch()
+        l_update_net.PutUniTensors(["L", "A", "A_Conj", "M"],
+                                    [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
+        LR[p + 1] = l_update_net.Launch()
         LR[p + 1].set_name(f"LR{p+1}")
         A[p].relabel_(lbls[p])
         A[p + 1].relabel_(lbls[p + 1])
@@ -145,7 +167,7 @@ def run_one(chi, L):
             dim_r = A[p + 1].shape()[2]
             new_dim = min(dim_l * d, dim_r * d, chi)
             psi = cytnx.Contract(A[p], A[p + 1])
-            psi, energy = _optimize_psi(psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
+            psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
             s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
             A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
@@ -153,15 +175,9 @@ def run_one(chi, L):
             A[p] = cytnx.Contract(A[p], s)
             A[p].set_name(f"A{p}").relabel_(lbls[p])
 
-            anet = cytnx.Network()
-            anet.FromString(["R: -2,-1,-3",
-                              "B: 1,-4,-1",
-                              "M: 0,-2,-4,-5",
-                              "B_Conj: 2,-5,-3",
-                              "TOUT: 0;1,2"])
-            anet.PutUniTensors(["R", "B", "M", "B_Conj"],
-                                [LR[p + 2], A[p + 1], M, A[p + 1].Dagger().permute_(A[p + 1].labels())])
-            LR[p + 1] = anet.Launch()
+            r_update_net.PutUniTensors(["R", "B", "M", "B_Conj"],
+                                        [LR[p + 2], A[p + 1], M, A[p + 1].Dagger().permute_(A[p + 1].labels())])
+            LR[p + 1] = r_update_net.Launch()
             LR[p + 1].set_name(f"LR{p+1}")
 
         A[0].set_rowrank_(1)
@@ -173,7 +189,7 @@ def run_one(chi, L):
             dim_r = A[p + 1].shape()[2]
             new_dim = min(dim_l * d, dim_r * d, chi)
             psi = cytnx.Contract(A[p], A[p + 1])
-            psi, energy = _optimize_psi(psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
+            psi, energy = _optimize_psi(h_eff_net, psi, LR[p], M, M, LR[p + 2], LANCZOS_MAXITER, device)
             psi.set_rowrank_(2)
             s, A[p], A[p + 1] = cytnx.linalg.Svd_truncate(psi, new_dim)
             A[p].set_name(f"A{p}").relabel_(lbls[p])
@@ -181,15 +197,9 @@ def run_one(chi, L):
             A[p + 1] = cytnx.Contract(s, A[p + 1])
             A[p + 1].set_name(f"A{p+1}").relabel_(lbls[p + 1])
 
-            anet = cytnx.Network()
-            anet.FromString(["L: -2,-1,-3",
-                              "A: -1,-4,1",
-                              "M: -2,0,-4,-5",
-                              "A_Conj: -3,-5,2",
-                              "TOUT: 0,1,2"])
-            anet.PutUniTensors(["L", "A", "A_Conj", "M"],
-                                [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
-            LR[p + 1] = anet.Launch()
+            l_update_net.PutUniTensors(["L", "A", "A_Conj", "M"],
+                                        [LR[p], A[p], A[p].Dagger().permute_(A[p].labels()), M])
+            LR[p + 1] = l_update_net.Launch()
             LR[p + 1].set_name(f"LR{p+1}")
 
         A[-1].set_rowrank_(2)
