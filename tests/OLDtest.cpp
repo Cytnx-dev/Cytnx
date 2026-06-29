@@ -5,7 +5,6 @@
 #include <type_traits>
 #include "hptt.h"
 // #include "cutt.h"
-using namespace std;
 using namespace cytnx;
 
 typedef cytnx::Accessor ac;
@@ -72,7 +71,7 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps,
   Scalar E;
   for (int xi = 0; xi < Nsweeps; xi++) {
     E = model.sweep();
-    cout << "sweep " << xi << "/" << Nsweeps << " | Enr: " << E << endl;
+    std::cout << "sweep " << xi << "/" << Nsweeps << " | Enr: " << E << std::endl;
   }
   return E;
 }
@@ -160,22 +159,22 @@ int main(int argc, char *argv[]) {
   auto X1c = X1.contiguous();
   auto X2c = X2.contiguous();
 
-  cout << X1c + X2c << endl;
-  cout << X1c.is_contiguous() << X2c.is_contiguous() << endl;
+  std::cout << X1c + X2c << std::endl;
+  std::cout << X1c.is_contiguous() << X2c.is_contiguous() << std::endl;
 
   X1c += X2c;
 
   X1 += X2;
 
-  cout << X1 << endl;
-  cout << X2 << endl;
+  std::cout << X1 << std::endl;
+  std::cout << X2 << std::endl;
   auto idd = vec_range(5);
-  cout << X1._impl->invmapper() << endl;
-  cout << X1._impl->mapper() << endl;
+  std::cout << X1._impl->invmapper() << std::endl;
+  std::cout << X1._impl->mapper() << std::endl;
 
-  cout << X2._impl->invmapper() << endl;
-  cout << X2._impl->mapper() << endl;
-  cout << vec_map(idd, X2._impl->invmapper()) << endl;
+  std::cout << X2._impl->invmapper() << std::endl;
+  std::cout << X2._impl->mapper() << std::endl;
+  std::cout << vec_map(idd, X2._impl->invmapper()) << std::endl;
 
   return 0;
 
@@ -219,7 +218,7 @@ int main(int argc, char *argv[]) {
   auto tn1 = zeros(4);
   auto tn3 = zeros(7);
 
-  cout << algo::Concatenate(tn1, tn3);
+  std::cout << algo::Concatenate(tn1, tn3);
 
   return 0;
 

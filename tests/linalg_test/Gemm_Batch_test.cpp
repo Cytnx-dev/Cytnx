@@ -30,7 +30,7 @@ namespace cytnx {
 
     // ── Tensor helpers ───────────────────────────────────────────────────────────
 
-    // Build a (rows×cols) Tensor of the given dtype from a flat row-major vector<double>.
+    // Build a (rows×cols) Tensor of the given dtype from a flat row-major std::vector<double>.
     Tensor MakeTensor(int rows, int cols, unsigned int dtype, const std::vector<double>& data) {
       Tensor t = zeros({(cytnx_uint64)rows, (cytnx_uint64)cols}, dtype, Device.cpu);
       for (cytnx_uint64 i = 0; i < (cytnx_uint64)rows; i++)
