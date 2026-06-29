@@ -1,9 +1,8 @@
-#include <typeinfo>
 #include "Network.hpp"
 
-#include "linalg.hpp"
+#include <typeinfo>
 
-using namespace std;
+#include "linalg.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -38,11 +37,11 @@ namespace cytnx {
   void Network_base::RmUniTensor(const cytnx_uint64 &idx) {
     cytnx_error_msg(true, "[ERROR][Network][RmUniTensor] call from uninitialized network.%s", "\n");
   }
-  void Network_base::RmUniTensors(const std::vector<string> &names) {
+  void Network_base::RmUniTensors(const std::vector<std::string> &names) {
     cytnx_error_msg(true, "[ERROR][Network][RmUniTensors] call from uninitialized network.%s",
                     "\n");
   }
-  void Network_base::PutUniTensors(const std::vector<string> &names,
+  void Network_base::PutUniTensors(const std::vector<std::string> &names,
                                    const std::vector<UniTensor> &utensors) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensors] call from uninitialized network.%s",
                     "\n");
@@ -82,9 +81,9 @@ namespace cytnx {
     return nullptr;
   }
   void Network_base::PrintNet(std::ostream &os) {
-    os << "        [Empty Network]" << endl;
+    os << "        [Empty Network]" << std::endl;
     os << "--- Please Load Network file ---\n";
-    os << endl;
+    os << std::endl;
   }
 
 };  // namespace cytnx

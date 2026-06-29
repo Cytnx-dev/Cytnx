@@ -1,9 +1,21 @@
 #include "linalg_test.h"
 #include "test_tools.h"
 
+#include <complex>
+
 using namespace cytnx;
 using namespace testing;
 using namespace TestTools;
+
+namespace {
+  Tensor SortedBlockSingularValues(const UniTensor &S) {
+    Tensor all_svals = S.get_block_(0);
+    for (cytnx_int64 i = 1; i < S.Nblocks(); i++) {
+      all_svals = algo::Concatenate(all_svals, S.get_block_(i));
+    }
+    return algo::Sort(all_svals);
+  }
+}  // namespace
 
 TEST_F(linalg_Test, BkUt_Svd_truncate1) {
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
@@ -26,6 +38,130 @@ TEST_F(linalg_Test, BkUt_Svd_truncate2) {
   for (size_t i = 0; i < vnm_S.size(); i++) EXPECT_TRUE(vnm_S[i] > 1e-1);
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
+}
+
+TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_returns_discarded_values) {
+  std::vector<UniTensor> full = linalg::Svd_truncate(svd_T, 999, 0, true, 0);
+  std::vector<UniTensor> trunc = linalg::Svd_truncate(svd_T, 5, 0, true, 999);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_EQ(full.size(), 3);
+  ASSERT_EQ(trunc.size(), 4);
+  ASSERT_EQ(trunc[0].shape()[0], 5);
+  ASSERT_EQ(all_svals.shape()[0], 400);
+  ASSERT_EQ(trunc[3].shape()[0], all_svals.shape()[0] - trunc[0].shape()[0]);
+
+  for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
+    EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
+  }
+}
+
+TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_returns_discarded_values) {
+  std::vector<UniTensor> full = linalg::Gesvd_truncate(svd_T, 999, 0, true, true, 0);
+  std::vector<UniTensor> trunc = linalg::Gesvd_truncate(svd_T, 5, 0, true, true, 999);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_EQ(full.size(), 3);
+  ASSERT_EQ(trunc.size(), 4);
+  ASSERT_EQ(trunc[0].shape()[0], 5);
+  ASSERT_EQ(all_svals.shape()[0], 400);
+  ASSERT_EQ(trunc[3].shape()[0], all_svals.shape()[0] - trunc[0].shape()[0]);
+
+  for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
+    EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
+  }
+}
+
+TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_one_returns_first_discarded_value) {
+  std::vector<UniTensor> full = linalg::Svd_truncate(svd_T, 999, 0, true, 0);
+  std::vector<UniTensor> trunc = linalg::Svd_truncate(svd_T, 5, 0, true, 1);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_EQ(full.size(), 3);
+  ASSERT_EQ(trunc.size(), 4);
+  ASSERT_EQ(trunc[3].shape()[0], 1);
+  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - trunc[0].shape()[0] - 1}), trunc[3].at({0}));
+}
+
+TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_one_returns_first_discarded_value) {
+  std::vector<UniTensor> full = linalg::Gesvd_truncate(svd_T, 999, 0, true, true, 0);
+  std::vector<UniTensor> trunc = linalg::Gesvd_truncate(svd_T, 5, 0, true, true, 1);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_EQ(full.size(), 3);
+  ASSERT_EQ(trunc.size(), 4);
+  ASSERT_EQ(trunc[3].shape()[0], 1);
+  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - trunc[0].shape()[0] - 1}), trunc[3].at({0}));
+}
+
+/*=====test info=====
+describe:When keepdim >= total singular values (smidx == 0), nothing is dropped. return_err
+must still return a one-element zero tensor rather than crashing or returning garbage.
+====================*/
+TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_no_truncation) {
+  // keepdim=999 keeps everything; both return_err=1 and return_err=2 must produce {1} x {0.0}
+  for (unsigned int re : {1u, 2u}) {
+    std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 999, 0, true, re);
+    ASSERT_EQ(res.size(), 4u) << "return_err=" << re;
+    ASSERT_EQ(res[3].shape()[0], 1u) << "return_err=" << re;
+    EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+  }
+}
+
+TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_no_truncation) {
+  for (unsigned int re : {1u, 2u}) {
+    std::vector<UniTensor> res = linalg::Gesvd_truncate(svd_T, 999, 0, true, true, re);
+    ASSERT_EQ(res.size(), 4u) << "return_err=" << re;
+    ASSERT_EQ(res[3].shape()[0], 1u) << "return_err=" << re;
+    EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+  }
+}
+
+/*=====test info=====
+describe:BlockFermionic truncated SVD: return_err must return the discarded singular values
+in descending order (return_err>1) or just the largest discarded value (return_err==1),
+matching the same contract as the Block (non-fermionic) path.
+====================*/
+TEST_F(linalg_Test, BkFermionicUt_Svd_truncate_return_err_returns_discarded_values) {
+  UniTensor fermi_T = make_square_fermionic({"a", "b"});
+  random::uniform_(fermi_T, -1.0, 1.0, 42);
+  ASSERT_EQ(fermi_T.uten_type(), UTenType.BlockFermionic);
+
+  std::vector<UniTensor> full = linalg::Svd_truncate(fermi_T, 999, 0, true, 0);
+  std::vector<UniTensor> trunc = linalg::Svd_truncate(fermi_T, 1, 0, true, 999);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_GE(trunc.size(), 4u);
+  ASSERT_GE(all_svals.shape()[0], trunc[0].shape()[0] + trunc[3].shape()[0]);
+  for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
+    EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
+  }
+
+  // return_err=1: single element equal to largest discarded
+  std::vector<UniTensor> trunc1 = linalg::Svd_truncate(fermi_T, 1, 0, true, 1);
+  ASSERT_EQ(trunc1.back().shape()[0], 1u);
+  EXPECT_EQ(trunc1.back().at({0}), trunc[3].at({0}));
+}
+
+TEST_F(linalg_Test, BkFermionicUt_Gesvd_truncate_return_err_returns_discarded_values) {
+  UniTensor fermi_T = make_square_fermionic({"a", "b"});
+  random::uniform_(fermi_T, -1.0, 1.0, 42);
+  ASSERT_EQ(fermi_T.uten_type(), UTenType.BlockFermionic);
+
+  std::vector<UniTensor> full = linalg::Gesvd_truncate(fermi_T, 999, 0, true, true, 0);
+  std::vector<UniTensor> trunc = linalg::Gesvd_truncate(fermi_T, 1, 0, true, true, 999);
+  Tensor all_svals = SortedBlockSingularValues(full[0]);
+
+  ASSERT_GE(trunc.size(), 4u);
+  ASSERT_GE(all_svals.shape()[0], trunc[0].shape()[0] + trunc[3].shape()[0]);
+  for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
+    EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
+  }
+
+  // return_err=1: single element equal to largest discarded
+  std::vector<UniTensor> trunc1 = linalg::Gesvd_truncate(fermi_T, 1, 0, true, true, 1);
+  ASSERT_EQ(trunc1.back().shape()[0], 1u);
+  EXPECT_EQ(trunc1.back().at({0}), trunc[3].at({0}));
 }
 
 // TEST_F(linalg_Test, BkUt_Svd_truncate3) {
@@ -496,6 +632,29 @@ TEST_F(linalg_Test, Tensor_Eig_RowV) {
   auto vt = UniTensor(linalg::InvM(v.get_block()));
   vt.relabel_({"b", "j"});
   EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < tol);
+}
+
+TEST_F(linalg_Test, Tensor_Eig_ValuesOnly) {
+  auto values_only = linalg::Eig(arange3x3cd, false);
+  auto with_vectors = linalg::Eig(arange3x3cd, true);
+
+  ASSERT_EQ(values_only.size(), 1);
+  ASSERT_EQ(with_vectors.size(), 2);
+  EXPECT_EQ(values_only[0].dtype(), Type.ComplexDouble);
+  EXPECT_EQ(values_only[0].shape(), with_vectors[0].shape());
+  std::vector<bool> matched(with_vectors[0].shape()[0], false);
+  for (cytnx_uint64 i = 0; i < values_only[0].shape()[0]; ++i) {
+    bool found = false;
+    const auto value = values_only[0].at<cytnx_complex128>({i});
+    for (cytnx_uint64 j = 0; j < with_vectors[0].shape()[0]; ++j) {
+      if (!matched[j] && std::abs(value - with_vectors[0].at<cytnx_complex128>({j})) < 1e-13) {
+        matched[j] = true;
+        found = true;
+        break;
+      }
+    }
+    EXPECT_TRUE(found);
+  }
 }
 
 TEST_F(linalg_Test, Tensor_Eigh) {

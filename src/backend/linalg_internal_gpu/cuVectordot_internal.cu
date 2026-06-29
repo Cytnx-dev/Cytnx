@@ -238,7 +238,7 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &Lin,
                                   const boost::intrusive_ptr<Storage_base> &Rin,
                                   const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][cuVectordot_internal_i64][FATAL Invalid internal call.] No internal "
                       "function for vectordot of int64 type.%s",
                       "\n");
@@ -247,7 +247,7 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &Lin,
                                   const boost::intrusive_ptr<Storage_base> &Rin,
                                   const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][cuVectordot_internal_u64][FATAL Invalid internal call.] No internal "
                       "function for vectordot of uint64 type.%s",
                       "\n");
@@ -256,7 +256,7 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &Lin,
                                   const boost::intrusive_ptr<Storage_base> &Rin,
                                   const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][cuVectordot_internal_i32][FATAL Invalid internal call.] No internal "
                       "function for vectordot of int32 type.%s",
                       "\n");
@@ -265,7 +265,7 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &Lin,
                                   const boost::intrusive_ptr<Storage_base> &Rin,
                                   const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][cuVectordot_internal_u32][FATAL Invalid internal call.] No internal "
                       "function for vectordot of uint32 type.%s",
                       "\n");
@@ -274,7 +274,7 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &Lin,
                                   const boost::intrusive_ptr<Storage_base> &Rin,
                                   const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][cuVectordot_internal_i16][FATAL Invalid internal call.] No internal "
                       "function for vectordot of int16 type.%s",
                       "\n");
@@ -283,7 +283,7 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &Lin,
                                   const boost::intrusive_ptr<Storage_base> &Rin,
                                   const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][cuVectordot_internal_u16][FATAL Invalid internal call.] No internal "
                       "function for vectordot of uint16 type.%s",
                       "\n");
@@ -292,7 +292,7 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][cuVectordot_internal_b][FATAL Invalid internal call.] No internal "
                       "function for vectordot of bool type.%s",
                       "\n");

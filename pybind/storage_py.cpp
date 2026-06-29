@@ -35,7 +35,7 @@ void storage_binding(py::module &m) {
            }
 
            // calculate stride:
-           size_t type_size = Type.typeSize(tmpIN.dtype());
+           std::size_t type_size = Type.typeSize(tmpIN.dtype());
            std::vector<ssize_t> stride(1, type_size);
            std::vector<ssize_t> shape(1, tmpIN.size());
 

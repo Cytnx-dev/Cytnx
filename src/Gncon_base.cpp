@@ -1,9 +1,8 @@
-#include <typeinfo>
 #include "Gncon.hpp"
 
-#include "linalg.hpp"
+#include <typeinfo>
 
-using namespace std;
+#include "linalg.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -29,7 +28,7 @@ namespace cytnx {
   void Gncon_base::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
     cytnx_error_msg(true, "[ERROR][Gncon][PutUniTensor] call from uninitialize Gncon.%s", "\n");
   }
-  void Gncon_base::PutUniTensors(const std::vector<string> &names,
+  void Gncon_base::PutUniTensors(const std::vector<std::string> &names,
                                  const std::vector<UniTensor> &utensors) {
     cytnx_error_msg(true, "[ERROR][Gncon][PutUniTensors] call from uninitialize Gncon.%s", "\n");
   }
@@ -49,9 +48,9 @@ namespace cytnx {
     return nullptr;
   }
   void Gncon_base::PrintNet(std::ostream &os) {
-    os << "        [Empty Gncon]" << endl;
+    os << "        [Empty Gncon]" << std::endl;
     os << "--- Please Load Gncon file ---\n";
-    os << endl;
+    os << std::endl;
   }
 
 }  // namespace cytnx

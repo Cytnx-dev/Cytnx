@@ -37,7 +37,7 @@ In addition, you might want to install the following optional dependencies if yo
 
 [Python API]
 
-* python >= 3.9
+* python >= 3.10
 * pybind11 >= 3.0.0
 * python-graphviz
 * graphviz
@@ -69,7 +69,7 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.9 _openmp_mutex=*=*_llvm
+    $conda create --name cytnx _openmp_mutex=*=*_llvm
     $conda activate cytnx
     $conda upgrade --all
 
@@ -79,14 +79,13 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.9 llvm-openmp
+    $conda create --name cytnx llvm-openmp
     $conda activate cytnx
     $conda upgrade --all
 
 .. Note::
 
-    1. The python=3.9 indicates the Python version you want to use. Generally, Cytnx is tested with 3.9+. You can replace this with the version you want to use.
-    2. The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
+    The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
 
 
 2. Install the following dependencies:
@@ -340,6 +339,76 @@ In the case that Cytnx is installed locally from binary build, not from anaconda
 .. Note::
 
     CYTNX_ROOT is the path where Cytnx is installed from binary build.
+
+
+Build troubleshooting
+*************************************
+
+CUDA device link fails with ``elfLink linker library load error``
+-------------------------------------------------------------------------------------
+
+**Symptom.** A CUDA-enabled build (``-DUSE_CUDA=ON``) configures successfully,
+but the CUDA *device link* step aborts with::
+
+    nvlink fatal   : elfLink linker library load error
+
+On non-Apple builds Cytnx turns on interprocedural optimization
+(``CMAKE_INTERPROCEDURAL_OPTIMIZATION``) which, together with CUDA separable
+compilation, enables CUDA *device* link-time optimization (``nvcc -dlto``). The
+device link step then asks ``nvlink`` to load the NVVM library, and the error
+above means it could not.
+
+**Cause.** This is *not* caused by the empty ``libpthread.a`` / ``librt.a`` /
+``libdl.a`` stub archives that glibc 2.34+ ships -- those are tolerated by
+``nvlink``. It is a layout problem specific to the Debian/Ubuntu
+``nvidia-cuda-toolkit`` apt package. That package installs ``libnvvm.so`` into
+the multiarch directory ``/usr/lib/x86_64-linux-gnu/`` but does not place it
+under the toolkit's ``lib64`` directory, which is where ``nvcc`` tells
+``nvlink`` to look. ``nvcc`` passes ``-nvvmpath=/usr/lib/nvidia-cuda-toolkit``,
+so ``nvlink`` tries to open ``/usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so``
+and finds nothing. Regular (non-LTO) device linking does not load NVVM, which is
+why the failure appears only once device LTO is enabled.
+
+**Fix (recommended): use a complete CUDA toolkit.** Install CUDA from conda or
+NVIDIA's official installer instead of the distribution's
+``nvidia-cuda-toolkit`` package, and make sure its ``nvcc`` is first on
+``PATH``:
+
+.. code-block:: shell
+
+    $conda install -c nvidia cuda
+
+A toolkit laid out this way keeps ``libnvvm.so`` under ``nvvm/lib64`` where
+``nvlink`` expects it, so device LTO works with no further action. This is also
+the layout the CUDA build presets assume.
+
+**Workaround: keep the apt package and add the missing path.** If you must build
+against the distribution package, create the directory ``nvlink`` searches and
+symlink the packaged ``libnvvm`` library into it:
+
+.. code-block:: shell
+
+    $libnvvm_src=$(ls -1 /usr/lib/x86_64-linux-gnu/libnvvm.so* | sort -V | tail -1)
+    $sudo mkdir -p /usr/lib/nvidia-cuda-toolkit/lib64
+    $sudo ln -s "$libnvvm_src" /usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so
+
+The ``ls … | sort -V | tail -1`` picks the highest-version file present
+(``libnvvm.so.4``, ``libnvvm.so.4.0.0``, or an unversioned ``libnvvm.so``),
+so the command works regardless of whether the development symlink was installed.
+Then re-run the build. On non-x86_64 hosts the multiarch directory differs;
+locate the real library first with ``find /usr -name 'libnvvm.so*'`` and adjust
+``libnvvm_src`` accordingly.
+
+**Alternative: disable device LTO.** If changing the toolkit layout is not
+practical, configure with ``-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF`` to skip
+device LTO entirely:
+
+.. code-block:: shell
+
+    $cmake --preset openblas-cuda -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF
+
+The build will complete without link-time optimizations, which trades a small
+runtime performance cost for compatibility with the unmodified apt package.
 
 
 Check Cytnx version

@@ -6,20 +6,20 @@ from tdvp1_dense import *
 from numpy import linalg as LA
 
 def test_tdvp1_dense():
-    #prepare random MPS
-    Nsites = 20 # Number of sites
-    chi = 16 # MPS bond dimension
+    # Prepare a deterministic product state with overlap on both local Sz eigenstates.
+    Nsites = 8 # Number of sites
+    chi = 2 # MPS bond dimension
     d = 2
-    MPS_rand = prepare_rand_init_MPS(Nsites, chi, d)
+    MPS_x = prepare_x_init_MPS(Nsites, chi, d)
 
     # simulate ground state by imaginary time evolution by tdvp
     J = 0.0
     Jz = 0.0
     hx = 0.0
     hz = -1.0
-    tau = -0.5j
-    time_step = 20
+    tau = -1.0j
+    time_step = 10
     # prepare up state
-    As, Es = tdvp1_XXZmodel_dense(J, Jz, hx, hz, MPS_rand, chi, tau, time_step)
+    As, Es = tdvp1_XXZmodel_dense(J, Jz, hx, hz, MPS_x, chi, tau, time_step)
     error = np.abs(Es[-1]-(-1.0*Nsites))
     assert error < 1e-6

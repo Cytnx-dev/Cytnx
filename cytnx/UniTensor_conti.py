@@ -252,6 +252,6 @@ def at(self, labels:List[str], locator:List[int]):
 
 
 @add_method(UniTensor)
-def convert_from(self, Tin, force=False, tol = 1e-14):
+def convert_from(self, Tin, force=False, tol = 0):
     self.cfrom(Tin,force,tol);
     return self

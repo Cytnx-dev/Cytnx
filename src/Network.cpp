@@ -1,9 +1,8 @@
-#include <typeinfo>
 #include "Network.hpp"
 
-#include "linalg.hpp"
+#include <typeinfo>
 
-using namespace std;
+#include "linalg.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -11,12 +10,12 @@ using namespace std;
 namespace cytnx {
   std::string NetworkType_class::getname(const int& nwrktype_id) {
     if (nwrktype_id == this->Regular) {
-      return string("Regular");
+      return std::string("Regular");
     } else if (nwrktype_id == this->Fermion) {
-      return string("Fermion");
+      return std::string("Fermion");
     } else {
       cytnx_error_msg(true, "%s", "[ERROR] invalid nwrktype_id");
-      return string("");
+      return std::string("");
     }
     // extend more in here!!
   }

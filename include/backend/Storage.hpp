@@ -121,7 +121,7 @@ namespace cytnx {
         cytnx_error_msg(typeid(T) != typeid(cytnx_bool), "%s",
                         "[ERROR _Init_byptr_safe type not match]");
       } else {
-        cytnx_error_msg(1, "[FATAL] ERROR%s", "\n");
+        cytnx_error_msg(true, "[FATAL] ERROR%s", "\n");
       }
 
       this->_Init_byptr((void *)rawptr, len_in);
@@ -594,13 +594,13 @@ namespace cytnx {
      * @param[in] fname file name
      * @param[in] dtype the data type of the binary file. See cytnx.Type.
      * @param[in] count the number of elements you want to load from the binary file. If
-     *   \p count is -1, then it will load all the elements in the binary file.
+     *   \p count is -1, then it will load all the elements in the binary file. If \p count is 0,
+     *   this returns an empty Storage with the requested dtype.
      * @param[in] device the device on which the data will be loaded.
      *  1. The @p dtype cannot be Type.Void.
      *  2. The @p dtype must be the same as the data type of the binary file.
-     *  3. The @p count cannot be 0.
-     *  4. The @p count cannot be larger than the number of elements in the binary file.
-     *  5. The file name @p fname must be valid.
+     *  3. The @p count cannot be larger than the number of elements in the binary file.
+     *  4. The file name @p fname must be valid.
      *
      * @see Tofile(const std::string &fname) const
      */
@@ -888,7 +888,7 @@ namespace cytnx {
     void _from_vector(const std::vector<T> &vin, const int device = Device.cpu) {
       // auto dispatch:
       // check:
-      cytnx_error_msg(1, "[FATAL] ERROR unsupport type%s", "\n");
+      cytnx_error_msg(true, "[FATAL] ERROR unsupport type%s", "\n");
       // this->_impl->Init(vin.size(),device);
       // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
     }

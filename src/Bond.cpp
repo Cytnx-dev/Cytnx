@@ -628,7 +628,7 @@ namespace cytnx {
     } else if (bin.type() == bondType::BD_KET) {
       os << "type: | IN (KET)> " << std::endl;
     } else {
-      cytnx_error_msg(1, "%s", "[ERROR] internal error.");
+      cytnx_error_msg(true, "%s", "[ERROR] internal error.");
     }
     // os << bin.get_syms().size() << endl;
 

@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace cytnx {
 
   namespace {
@@ -49,24 +47,24 @@ namespace cytnx {
   }
 
   bool cytnx::Symmetry_base::check_qnum(const cytnx_int64 &qnum) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
     return false;
   }
   bool cytnx::Symmetry_base::check_qnums(const std::vector<cytnx_int64> &qnums) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
     return false;
   }
   void cytnx::Symmetry_base::combine_rule_(std::vector<cytnx_int64> &out,
                                            const std::vector<cytnx_int64> &inL,
                                            const std::vector<cytnx_int64> &inR) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
   void cytnx::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
                                            const cytnx_int64 &inR, const bool &is_reverse) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
   void cytnx::Symmetry_base::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
   fermionParity cytnx::Symmetry_base::get_fermion_parity(const cytnx_int64 &in_qnum) const {
@@ -74,11 +72,11 @@ namespace cytnx {
   }
 
   void cytnx::Symmetry_base::print_info() const {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
   std::string cytnx::Symmetry_base::stype_str() const {
-    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
   ///=========================
@@ -103,12 +101,12 @@ namespace cytnx {
   void cytnx::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) { out = in * -1; }
 
   void cytnx::U1Symmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : Abelian, U1" << endl;
-    cout << "combine rule : Q1 + Q2" << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+    std::cout << "--------------------\n";
+    std::cout << "[Symmetry]" << std::endl;
+    std::cout << "type : Abelian, U1" << std::endl;
+    std::cout << "combine rule : Q1 + Q2" << std::endl;
+    std::cout << "reverse rule : Q*(-1) " << std::endl;
+    std::cout << "--------------------\n";
   }
 
   ///========================
@@ -153,12 +151,12 @@ namespace cytnx {
   }
 
   void cytnx::ZnSymmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : Abelian, Z(" << this->n << ")" << endl;
-    cout << "combine rule : (Q1 + Q2)\%" << this->n << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+    std::cout << "--------------------" << std::endl;
+    std::cout << "[Symmetry]" << std::endl;
+    std::cout << "type : Abelian, Z(" << this->n << ")" << std::endl;
+    std::cout << "combine rule : (Q1 + Q2)%" << this->n << std::endl;
+    std::cout << "reverse rule : Q*(-1) " << std::endl;
+    std::cout << "--------------------" << std::endl;
   }
 
   ///========================
@@ -196,7 +194,7 @@ namespace cytnx {
   }
 
   fermionParity cytnx::FermionParitySymmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
-    // vector<fermionParity> out(this->n);
+    // std::vector<fermionParity> out(this->n);
     if (in_qnum == 0)
       return EVEN;
     else if (in_qnum == 1)
@@ -207,12 +205,12 @@ namespace cytnx {
   }
 
   void cytnx::FermionParitySymmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : fermionic, FermionParity" << endl;
-    cout << "combine rule : (Q1 + Q2)\2" << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+    std::cout << "--------------------" << std::endl;
+    std::cout << "[Symmetry]" << std::endl;
+    std::cout << "type : fermionic, FermionParity" << std::endl;
+    std::cout << "combine rule : (Q1 + Q2)%2" << std::endl;
+    std::cout << "reverse rule : Q*(-1) " << std::endl;
+    std::cout << "--------------------" << std::endl;
   }
 
   ///=========================
@@ -241,7 +239,7 @@ namespace cytnx {
   }
 
   fermionParity cytnx::FermionNumberSymmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
-    // vector<fermionParity> out(this->n);
+    // std::vector<fermionParity> out(this->n);
     if (in_qnum % 2 == 0)
       return EVEN;
     else
@@ -249,28 +247,28 @@ namespace cytnx {
   }
 
   void cytnx::FermionNumberSymmetry::print_info() const {
-    cout << "--------------------\n";
-    cout << "[Symmetry]" << endl;
-    cout << "type : fermionic, FermionNumber" << endl;
-    cout << "combine rule : Q1 + Q2" << endl;
-    cout << "reverse rule : Q*(-1) " << endl;
-    cout << "--------------------\n";
+    std::cout << "--------------------\n";
+    std::cout << "[Symmetry]" << std::endl;
+    std::cout << "type : fermionic, FermionNumber" << std::endl;
+    std::cout << "combine rule : Q1 + Q2" << std::endl;
+    std::cout << "reverse rule : Q*(-1) " << std::endl;
+    std::cout << "--------------------\n";
   }
 
   //==================================================
 
   void cytnx::Symmetry::Save(const std::string &fname) const {
-    fstream f;
+    std::fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
+      f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     } else {
       // add filename extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cysym'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
+      f.open((fname + ".cysym"), std::ios::out | std::ios::trunc | std::ios::binary);
     }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -278,7 +276,7 @@ namespace cytnx {
     this->to_binary(f);
     f.close();
   }
-  void cytnx::Symmetry::Save(const char *fname) const { this->Save(string(fname)); }
+  void cytnx::Symmetry::Save(const char *fname) const { this->Save(std::string(fname)); }
 
   cytnx::Symmetry cytnx::Symmetry::Load(const std::string &fname) {
     Symmetry out;
@@ -286,19 +284,19 @@ namespace cytnx {
     return out;
   }
   cytnx::Symmetry cytnx::Symmetry::Load(const char *fname) {
-    return cytnx::Symmetry::Load(string(fname));
+    return cytnx::Symmetry::Load(std::string(fname));
   }
 
   void cytnx::Symmetry::Load_(const std::string &fname) {
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     this->from_binary(f);
     f.close();
   }
-  void cytnx::Symmetry::Load_(const char *fname) { this->Load_(string(fname)); }
+  void cytnx::Symmetry::Load_(const char *fname) { this->Load_(std::string(fname)); }
 
   //==================
   void cytnx::Symmetry::to_binary(std::ostream &f) const {
@@ -318,7 +316,7 @@ namespace cytnx {
     this->Init(stype_in, n_in);
   }
 
-  ostream &operator<<(ostream &os, const Symmetry &in) {
+  std::ostream &operator<<(std::ostream &os, const Symmetry &in) {
     in.print_info();
     return os;
   }

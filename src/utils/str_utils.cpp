@@ -6,8 +6,8 @@ namespace cytnx {
 
   vector<string> str_split(const string &in, const bool remove_null, const string &delimiter) {
     vector<string> out;
-    size_t last = 0;
-    size_t next = 0;
+    std::size_t last = 0;
+    std::size_t next = 0;
     string tmps;
     while ((next = in.find(delimiter, last)) != string::npos) {
       tmps = in.substr(last, next - last);
@@ -51,7 +51,7 @@ namespace cytnx {
     vector<string> out;
     if (in.empty()) return out;
 
-    size_t pos = 0, endpos;
+    std::size_t pos = 0, endpos;
     string tmp, op;
     if ((endpos = in.find_first_of(tokens, pos)) == string::npos) {
       out.push_back(in);

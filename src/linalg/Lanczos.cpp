@@ -24,31 +24,12 @@ namespace cytnx {
     static T *get_obj_data_ptr(const T_ten &buffer, const cytnx_int32 bk_idx = 0) {
       if constexpr (std::is_same_v<T_ten, UniTensor>) {
         if (buffer.uten_type() == UTenType.Block || buffer.uten_type() == UTenType.BlockFermionic) {
-          if (buffer.device() == Device.cpu) {
-            return buffer.get_blocks_()[bk_idx].template ptr_as<T>();
-          } else {  // on cuda
-  #ifdef UNI_GPU
-            return reinterpret_cast<T *>(
-              buffer.get_blocks_()[bk_idx].template gpu_ptr_as<void>(false));
-  #endif
-          }
+          return buffer.get_blocks_()[bk_idx].template ptr_as<T>();
         } else if (buffer.uten_type() == UTenType.Dense) {
-          if (buffer.device() == Device.cpu) {
-            return buffer.get_block_().template ptr_as<T>();
-          } else {  // on cuda
-  #ifdef UNI_GPU
-            return reinterpret_cast<T *>(buffer.get_block_().template gpu_ptr_as<void>(false));
-  #endif
-          }
+          return buffer.get_block_().template ptr_as<T>();
         }
       } else if constexpr (std::is_same_v<T_ten, Tensor>) {
-        if (buffer.device() == Device.cpu) {
-          return buffer.template ptr_as<T>();
-        } else {  // cuda
-  #ifdef UNI_GPU
-          return reinterpret_cast<T *>(buffer.template gpu_ptr_as<void>(false));
-  #endif
-        }
+        return buffer.template ptr_as<T>();
       }
     }
 
@@ -172,7 +153,7 @@ namespace cytnx {
         // return Lanczos(Hop, Tin, "SA", Maxiter, CvgCrit, 1, is_V, 0, verbose);
       } else {
         cytnx_error_msg(
-          1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
+          true, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
         return std::vector<Tensor>();
       }
     }  // Lanczos
@@ -183,7 +164,7 @@ namespace cytnx {
                                    const cytnx_uint32 &max_krydim, const bool &verbose) {
       if (method == "ER") {
         cytnx_error_msg(
-          1, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");
+          true, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");
         return std::vector<UniTensor>();
       } else if (method == "Gnd") {
         cytnx_error_msg(k > 1, "[ERROR][Lanczos] Only k = 1 is supported for 'Gnd' method.%s",
@@ -195,7 +176,7 @@ namespace cytnx {
         // return Lanczos(Hop, Tin, "SA", Maxiter, CvgCrit, 1, is_V, 0, verbose);
       } else {
         cytnx_error_msg(
-          1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
+          true, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
         return std::vector<UniTensor>();
       }
     }  // Lanczos
@@ -396,17 +377,16 @@ namespace cytnx {
       }
 
       if (is_V) {
-        T *z_data_ptr = reinterpret_cast<T *>(z);
         if constexpr (std::is_same_v<T_ten, UniTensor>) {
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
-            T *z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
+            T *z_k_ptr = z + sorted_idx[ik] * dim;
             pass_data_UT<T, T_ten>(out[ik + 1], z_k_ptr, true);
           }
         } else if constexpr (std::is_same_v<T_ten, Tensor>) {
           T *tens_data = get_obj_data_ptr<T, T_ten>(out[1]);
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
             T *tmp_data = tens_data + ik * dim;
-            T *z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
+            T *z_k_ptr = z + sorted_idx[ik] * dim;
             if (Hop->device() == Device.cpu) {
               memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
             } else {

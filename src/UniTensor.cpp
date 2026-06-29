@@ -72,7 +72,7 @@ namespace cytnx {
     cytnx_uint64 rank = this->_impl->_labels.size();
     f.write((char *)&rank, sizeof(cytnx_uint64));
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      size_t tmp = this->_impl->_labels[i].size();
+      std::size_t tmp = this->_impl->_labels[i].size();
       f.write((char *)&tmp, sizeof(this->_impl->_labels[i].size()));
     }
     for (cytnx_uint64 i = 0; i < rank; i++) {
@@ -135,8 +135,8 @@ namespace cytnx {
     this->_impl->_labels.resize(rank);
     this->_impl->_bonds.resize(rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      size_t tmp;
-      f.read((char *)&tmp, sizeof(size_t));
+      std::size_t tmp;
+      f.read((char *)&tmp, sizeof(std::size_t));
       this->_impl->_labels[i].resize(tmp);
     }
     for (cytnx_uint64 i = 0; i < rank; i++) {

@@ -7,6 +7,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "block_truncation_helpers.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -21,6 +22,7 @@
 
 namespace cytnx {
   namespace linalg {
+
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const bool &is_U, const bool &is_vT,
                                        const unsigned int &return_err, const cytnx_uint64 &mindim) {
@@ -356,11 +358,8 @@ namespace cytnx {
       }
 
       // handle return_err!
-      if (return_err == 1) {
-        outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-        outCyT.back().get_block_().storage().at(0) = Smin;
-      } else if (return_err) {
-        outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+      if (return_err) {
+        outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
       }
     }  // Gesvd_truncate_Block_UTs_internal
 
@@ -418,6 +417,10 @@ namespace cytnx {
       cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                        // negative!
       cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
+      cytnx_error_msg(min_blockdim.empty(),
+                      "[ERROR][Gesvd_truncate] min_blockdim must not be empty; use the overload "
+                      "without min_blockdim if no per-block floor is needed.%s",
+                      "\n");
 
       outCyT = linalg::Gesvd(Tin, is_U, is_vT);
       if (min_blockdim.size() == 1)  // if only one element given, make it a vector
@@ -464,7 +467,7 @@ namespace cytnx {
       if (!anySall) {
         // no truncation; return_err is tensor with one element, set to 0
         if (return_err >= 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+          outCyT.push_back(UniTensor(Tensor({1}, outCyT[0].dtype())));
         }
       } else {
         Scalar Smin;
@@ -495,15 +498,15 @@ namespace cytnx {
             Smin = Sall.storage()(smidx);
           }
           // handle return_err!
-          if (return_err == 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-            outCyT.back().get_block_().storage().at(0) = Smin;
-          } else if (return_err) {
-            outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+          if (return_err) {
+            outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
           }
         } else {
-          if (return_err >= 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+          // keep_dim < 1: per-block min_blockdim guarantees already cover the global cap, so
+          // every value in Sall is dropped.
+          if (return_err) {
+            Sall = algo::Sort(Sall);  // ascending; BuildBlockDiscardedSingularValues expects this
+            outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, Sall.shape()[0], return_err));
           }
         }
 

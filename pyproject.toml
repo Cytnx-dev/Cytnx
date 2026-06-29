@@ -15,7 +15,7 @@ description = "A tensor network library"
 readme = "Readme.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["tensor", "network", "physics"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -25,9 +25,15 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
 ]
 
-dependencies = ["numpy >=1.18", "graphviz", "beartype"]
+dependencies = ["numpy >=1.18", "beartype"]
 
 [project.optional-dependencies]
+# Renders Network diagrams via Network.Diagram(); only imported by
+# `cytnx/Network_conti.py`, which degrades to a ModuleNotFoundError raised
+# at call time (not import time) when this extra isn't installed.
+viz = [
+    "graphviz",
+]
 # Runtime test runner used by `pytests/`.
 test = [
     "pytest",
@@ -44,9 +50,9 @@ coverage = [
 # both Python and C++ coverage. Build-time deps (scikit-build-core,
 # pybind11) come from `[build-system].requires` automatically.
 dev = [
-    "pytest",
-    "pytest-cov",
-    "gcovr",
+    "cytnx[viz]",
+    "cytnx[test]",
+    "cytnx[coverage]",
 ]
 docs = [
     "sphinx>=7.4.7",
@@ -55,6 +61,17 @@ docs = [
     "sphinxbootstrap4theme>=0.6.0",
     "furo>=2024.8.6",
 ]
+
+[dependency-groups]
+# Build / release helpers (e.g. tools/prepare_nightly_release.py,
+# which rewrites this file to stamp a nightly version). Declared as a
+# PEP 735 dependency-group rather than under
+# `[project.optional-dependencies]` because these tools are needed at
+# *build pipeline* time only, not at install or run time of cytnx
+# itself. `pip install --group release-tools` installs the listed
+# packages without invoking scikit-build-core to compile the project,
+# which `pip install .[release-tools]` would have forced.
+release-tools = ["tomlkit"]
 
 [project.urls]
 Documentation = "https://cytnx-dev.github.io/Cytnx/"
@@ -67,10 +84,6 @@ wheel.packages = ["cytnx"]
 cmake.args = [
     # Use the default preset defined in CMakePresets.json
     "--preset=openblas-cpu",
-    # TODO: Remove setting of generator to support builuding on Windows.
-    # scikit-build uses Ninja as the default cmake generator. However, Ninja
-    # conflicts against the build process of HPTT.
-    "-G Unix Makefiles",
 ]
 
 [tool.scikit-build.metadata.version]
@@ -82,3 +95,21 @@ set\(\w+?VERSION_MINOR\s+(?P<minor>\d+)\)
 set\(\w+?VERSION_PATCH\s+(?P<patch>\d+)\)
 '''
 result = "{major}.{minor}.{patch}"
+
+[tool.cibuildwheel]
+manylinux-x86_64-image = "manylinux_2_28"
+before-build = "python ./tools/cibuildwheel_before_build.py"
+
+[tool.cibuildwheel.config-settings]
+"build-dir" = "build"
+
+[tool.cibuildwheel.linux]
+before-all = "bash ./tools/cibuildwheel_before_all.sh"
+environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }
+environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR", "CCACHE_DEBUG", "CCACHE_DEBUGLEVEL", "CCACHE_LOGFILE", "CYTNX_VERSION_TAG"]
+
+[tool.cibuildwheel.macos]
+before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
+# `.cibw_macos_deployment_target.txt` is generated in tools/cibuildwheel_before_all_macos.sh.
+# Keep compiler selection stable across Python versions for reproducible builds and better ccache reuse.
+environment = { CC = "clang", CXX = "clang++", CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deployment_target.txt\"); print(p.read_text().strip() if p.exists() else \"10.9\")')", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }

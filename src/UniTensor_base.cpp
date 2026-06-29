@@ -1,8 +1,10 @@
 #include "UniTensor.hpp"
+
+#include <string>
+
+#include "Network.hpp"
 #include "Tensor.hpp"
 #include "linalg.hpp"
-#include "Network.hpp"
-#include <string>
 
 #ifdef BACKEND_TORCH
 #else
@@ -310,13 +312,11 @@ namespace cytnx {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum,
-                                 const bool &force) {
+  void UniTensor_base::put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum,
-                                  const bool &force) {
+  void UniTensor_base::put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
@@ -836,15 +836,11 @@ namespace cytnx {
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
 
-  void UniTensor_base::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
-                             const cytnx_double &tol) {
+  void UniTensor_base::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force,
+                             cytnx_double tol) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
 
-  void UniTensor_base::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
-    cytnx_error_msg(
-      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
-  }
 }  // namespace cytnx
 #endif

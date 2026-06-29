@@ -44,7 +44,6 @@ void linalg_binding(py::module &m);
 void algo_binding(py::module &m);
 void physics_related_binding(py::module &m);
 void random_binding(py::module &m);
-void tnalgo_binding(py::module &m);
 void scalar_binding(py::module &m);
 
 void ncon_binding(py::module &m);
@@ -127,7 +126,6 @@ PYBIND11_MODULE(cytnx, m) {
   algo_binding(m);
   physics_related_binding(m);
   random_binding(m);
-  tnalgo_binding(m);
   ncon_binding(m);
 #endif
 }

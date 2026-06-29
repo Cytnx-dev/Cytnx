@@ -225,7 +225,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
@@ -292,7 +292,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
@@ -353,7 +353,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
@@ -419,7 +419,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[this->_mapper[mapper_u64[i]]] = i;
@@ -477,7 +477,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[this->_mapper[mapper_u64[i]]] = i;
@@ -530,7 +530,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[this->_mapper[mapper_u64[i]]] = i;

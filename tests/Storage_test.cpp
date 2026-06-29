@@ -1,11 +1,29 @@
 #include "Storage_test.h"
 
+#include <cstdio>
+#include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
 #include "test_tools.h"
+
+namespace {
+
+  class RemoveFileOnExit {
+   public:
+    explicit RemoveFileOnExit(std::string path) : path_(std::move(path)) {}
+    ~RemoveFileOnExit() { std::remove(path_.c_str()); }
+
+    RemoveFileOnExit(const RemoveFileOnExit&) = delete;
+    RemoveFileOnExit& operator=(const RemoveFileOnExit&) = delete;
+
+   private:
+    std::string path_;
+  };
+
+}  // namespace
 
 TEST_F(StorageTest, dtype_str) {
   std::vector<cytnx_complex128> vcd = {cytnx_complex128(1, 2), cytnx_complex128(3, 4),
@@ -230,4 +248,60 @@ TYPED_TEST(StoragePutValue, AppendWithReallocation) {
     EXPECT_GE(storage.capacity(), storage.size());
     EXPECT_EQ(storage.size(), 3);
   }
+}
+
+TEST_F(StorageTest, FromfileHonorsCount) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_count.bin";
+  std::remove(path.c_str());
+  const RemoveFileOnExit cleanup(path);
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  Storage loaded = Storage::Fromfile(path, Type.Double, 2);
+  EXPECT_EQ(loaded.dtype(), Type.Double);
+  ASSERT_EQ(loaded.size(), 2);
+  EXPECT_DOUBLE_EQ(loaded.at<cytnx_double>(0), 1.0);
+  EXPECT_DOUBLE_EQ(loaded.at<cytnx_double>(1), 2.0);
+}
+
+TEST_F(StorageTest, FromfileRejectsCountLargerThanFile) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_oversized_count.bin";
+  std::remove(path.c_str());
+  const RemoveFileOnExit cleanup(path);
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  EXPECT_THROW(Storage::Fromfile(path, Type.Double, 5), std::logic_error);
+}
+
+TEST_F(StorageTest, FromfileCountZeroReturnsEmptyStorage) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_count_zero.bin";
+  std::remove(path.c_str());
+  const RemoveFileOnExit cleanup(path);
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  Storage loaded = Storage::Fromfile(path, Type.Double, 0);
+  EXPECT_EQ(loaded.dtype(), Type.Double);
+  EXPECT_EQ(loaded.size(), 0);
+}
+
+TEST_F(StorageTest, FromfileCountEqualsTotalElementsReadsAll) {
+  const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_count_exact.bin";
+  std::remove(path.c_str());
+  const RemoveFileOnExit cleanup(path);
+
+  Storage source = Storage::from_vector(std::vector<cytnx_double>{1.0, 2.0, 3.0, 4.0});
+  source.Tofile(path);
+
+  // count == total elements: explicit count should match count < 0 behaviour
+  Storage loaded_explicit = Storage::Fromfile(path, Type.Double, 4);
+  Storage loaded_default = Storage::Fromfile(path, Type.Double, -1);
+  ASSERT_EQ(loaded_explicit.size(), 4);
+  ASSERT_EQ(loaded_default.size(), 4);
+  for (cytnx_uint64 i = 0; i < 4; i++)
+    EXPECT_DOUBLE_EQ(loaded_explicit.at<cytnx_double>(i), loaded_default.at<cytnx_double>(i));
 }

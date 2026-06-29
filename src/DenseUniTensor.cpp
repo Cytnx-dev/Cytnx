@@ -1,14 +1,13 @@
 #include "UniTensor.hpp"
-#include "utils/utils.hpp"
 
-#include "Generator.hpp"
-#include "linalg.hpp"
 #include <algorithm>
 #include <utility>
 #include <vector>
-typedef cytnx::Accessor ac;
 
-using namespace std;
+#include "Generator.hpp"
+#include "linalg.hpp"
+#include "utils/utils.hpp"
+typedef cytnx::Accessor ac;
 
 #ifdef BACKEND_TORCH
 #else
@@ -436,8 +435,8 @@ namespace cytnx {
     if (full_info)
       os << this->_block << std::endl;
     else {
-      os << "dtype: " << Type.getname(this->_block.dtype()) << endl;
-      os << "device: " << Device.getname(this->_block.device()) << endl;
+      os << "dtype: " << Type.getname(this->_block.dtype()) << std::endl;
+      os << "device: " << Device.getname(this->_block.device()) << std::endl;
       os << "shape: ";
       vec_print_simple(os, this->_block.shape());
     }
@@ -484,17 +483,17 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < vl; i++) {
       if (i < Nin) {
         if (Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
-        if (Space_Ldim_max < to_string(this->_bonds[i].dim()).size())
-          Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
+        if (Space_Ldim_max < std::to_string(this->_bonds[i].dim()).size())
+          Space_Ldim_max = std::to_string(this->_bonds[i].dim()).size();
       }
       if (i < Nout) {
-        if (Space_Rdim_max < to_string(this->_bonds[Nin + i].dim()).size())
-          Space_Rdim_max = to_string(this->_bonds[Nin + i].dim()).size();
+        if (Space_Rdim_max < std::to_string(this->_bonds[Nin + i].dim()).size())
+          Space_Rdim_max = std::to_string(this->_bonds[Nin + i].dim()).size();
       }
     }
-    string LallSpace = (string(" ") * (Space_Llabel_max + 3 + 1));
-    string MallSpace = string(" ") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
-    string M_dashes = string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
+    std::string LallSpace = (std::string(" ") * (Space_Llabel_max + 3 + 1));
+    std::string MallSpace = std::string(" ") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
+    std::string M_dashes = std::string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
     std::string tmpss;
 
     if (this->is_tag()) {
@@ -519,8 +518,9 @@ namespace cytnx {
           tmpss =
             this->_labels[i] + std::string(" ") * (Space_Llabel_max - this->_labels[i].size());
           sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
-          tmpss = to_string(this->_bonds[i].dim()) +
-                  std::string(" ") * (Space_Ldim_max - to_string(this->_bonds[i].dim()).size());
+          tmpss =
+            std::to_string(this->_bonds[i].dim()) +
+            std::string(" ") * (Space_Ldim_max - std::to_string(this->_bonds[i].dim()).size());
           sprintf(llbl, "%s", tmpss.c_str());
         } else {
           memset(l, 0, sizeof(char) * BUFFsize);
@@ -540,9 +540,9 @@ namespace cytnx {
 
           sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
 
-          tmpss =
-            to_string(this->_bonds[Nin + i].dim()) +
-            std::string(" ") * (Space_Rdim_max - to_string(this->_bonds[Nin + i].dim()).size());
+          tmpss = std::to_string(this->_bonds[Nin + i].dim()) +
+                  std::string(" ") *
+                    (Space_Rdim_max - std::to_string(this->_bonds[Nin + i].dim()).size());
           sprintf(rlbl, "%s", tmpss.c_str());
 
         } else {
@@ -581,8 +581,9 @@ namespace cytnx {
           tmpss =
             this->_labels[i] + std::string(" ") * (Space_Llabel_max - this->_labels[i].size());
           sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
-          tmpss = to_string(this->_bonds[i].dim()) +
-                  std::string(" ") * (Space_Ldim_max - to_string(this->_bonds[i].dim()).size());
+          tmpss =
+            std::to_string(this->_bonds[i].dim()) +
+            std::string(" ") * (Space_Ldim_max - std::to_string(this->_bonds[i].dim()).size());
           sprintf(llbl, "%s", tmpss.c_str());
 
         } else {
@@ -601,9 +602,9 @@ namespace cytnx {
 
           sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
 
-          tmpss =
-            to_string(this->_bonds[Nin + i].dim()) +
-            std::string(" ") * (Space_Rdim_max - to_string(this->_bonds[Nin + i].dim()).size());
+          tmpss = std::to_string(this->_bonds[Nin + i].dim()) +
+                  std::string(" ") *
+                    (Space_Rdim_max - std::to_string(this->_bonds[Nin + i].dim()).size());
           sprintf(rlbl, "%s", tmpss.c_str());
 
         } else {
@@ -1070,16 +1071,11 @@ namespace cytnx {
           tmpR = rhs->get_block_().contiguous();
       }
       std::vector<cytnx_int64> old_shape_L(tmpL.shape().begin(), tmpL.shape().end());
-      // vector<cytnx_int64> old_shape_R(tmpR.shape().begin(),tmpR.shape().end());
       std::vector<cytnx_int64> shape_L =
         vec_concatenate(old_shape_L, std::vector<cytnx_int64>(tmpR.shape().size(), 1));
-      // vector<cytnx_int64> shape_R =
-      // vec_concatenate(vector<cytnx_int64>(old_shape_L.size(),1),old_shape_R);
       tmpL.reshape_(shape_L);
-      // tmpR.reshape_(shape_R);
       tmp->_block = linalg::Kron(tmpL, tmpR, false, true);
       tmpL.reshape_(old_shape_L);
-      // tmpR.reshape_(old_shapeR);
       tmp->_is_diag = false;
 
       //}
@@ -1554,7 +1550,7 @@ namespace cytnx {
     this->_block = lhs / this->_block;
   }
 
-  void _DN_from_DN(DenseUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
+  void _DN_from_DN(DenseUniTensor *ths, DenseUniTensor *rhs, bool force) {
     if (!force) {
       // more checking:
       if ((int(ths->bond_(0).type()) != bondType::BD_NONE) &&
@@ -1569,7 +1565,7 @@ namespace cytnx {
     ths->_block = rhs->_block.clone();
   }
 
-  void _DN_from_BK(DenseUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
+  void _DN_from_BK(DenseUniTensor *ths, BlockUniTensor *rhs, bool force) {
     if (!force) {
       // more checking:
       if (int(ths->bond_(0).type()) != bondType::BD_NONE) {
@@ -1595,20 +1591,68 @@ namespace cytnx {
       auto elem = rhs->at_for_sparse(cart);
       if (elem.exists()) {
         ths->_block.at(cart) = Scalar(elem);
+      } else {
+        ths->_block.at(cart) = 0;
       }
     }
   }
 
-  void DenseUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
+  void _DN_from_BKF(DenseUniTensor *ths, BlockFermionicUniTensor *rhs, bool force) {
+    if (!force) {
+      // more checking:
+      if (int(ths->bond_(0).type()) != bondType::BD_NONE) {
+        for (int i = 0; i < ths->bonds().size(); i++) {
+          cytnx_error_msg(
+            ths->bond_(i).type() != rhs->bond_(i).type(),
+            "[ERROR] Conversion BlockFermionicUniTensor -> DenseUniTensor cannot be made, because "
+            "force=false, both UniTensors have directional bonds, and the directions mismatch.%s",
+            "\n");
+        }
+      }
+    }
+
+    cytnx_uint64 total_elem = ths->_block.storage().size();
+
+    std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
+    for (int i = (rhs->rank() - 2); i >= 0; i--) {
+      stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
+    }
+
+    auto rhsapplied = rhs->apply();
+    // moving element:
+    for (cytnx_uint64 i = 0; i < total_elem; i++) {
+      auto cart = c2cartesian(i, stride_rhs);
+      auto elem = rhsapplied->at_for_sparse(cart);
+      if (elem.exists()) {
+        ths->_block.at(cart) = Scalar(elem);
+      } else {
+        ths->_block.at(cart) = 0;
+      }
+    }
+  }
+
+  void DenseUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force,
+                             cytnx_double tol) {
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
+
+    // a diagonal target keeps only a rank-1 block, which the sparse->dense at(cart) fill cannot
+    // index
+    cytnx_error_msg(this->is_diag() && (rhs->uten_type() == UTenType.Block ||
+                                        rhs->uten_type() == UTenType.BlockFermionic),
+                    "[ERROR][from_] Cannot convert a Block/BlockFermionicUniTensor into a diagonal "
+                    "DenseUniTensor.%s",
+                    "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
       _DN_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.Block) {
       _DN_from_BK(this, (BlockUniTensor *)(rhs.get()), force);
+    } else if (rhs->uten_type() == UTenType.BlockFermionic) {
+      _DN_from_BKF(this, (BlockFermionicUniTensor *)(rhs.get()), force);
     } else {
-      cytnx_error_msg(true, "[ERROR] unsupport conversion of UniTensor from %s => DenseUniTensor\n",
+      cytnx_error_msg(true,
+                      "[ERROR] Unsupported conversion of UniTensor from %s => DenseUniTensor\n",
                       UTenType.getname(rhs->uten_type()).c_str());
     }
   }

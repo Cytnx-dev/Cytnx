@@ -59,7 +59,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < rnks.size(); i++) {
       if (rnks[i] >= rnks.size()) {
-        cytnx_error_msg(1, "%s", "reshape a tensor with invalid rank index.");
+        cytnx_error_msg(true, "%s", "reshape a tensor with invalid rank index.");
       }
       new_idxmap[this->_mapper[rnks[i]]] = i;
       new_fwdmap[i] = this->_mapper[rnks[i]];
@@ -114,7 +114,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < rnks.size(); i++) {
       if (rnks[i] >= rnks.size()) {
-        cytnx_error_msg(1, "%s", "reshape a tensor with invalid rank index.");
+        cytnx_error_msg(true, "%s", "reshape a tensor with invalid rank index.");
       }
       // new_idxmap[this->_mapper[rnks[i]]] = i;
       this->_invmapper[this->_mapper[rnks[i]]] = i;

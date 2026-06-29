@@ -1,5 +1,10 @@
 #include "gtest/gtest.h"
 
+#include <cmath>
+#include <complex>
+#include <limits>
+#include <string>
+
 #include "test_tools.h"
 #include "cytnx.hpp"
 
@@ -19,7 +24,7 @@ namespace Lanczos_Exp_Ut_Test {
    public:
     OneSiteOp(const int d, const int D, const unsigned int dtype = Type.Double,
               const int& device = Device.cpu)
-        : LinOp("mv", D * D, dtype, device) {
+        : LinOp("mv", D * d * D, dtype, device) {
       EffH = CreateOneSiteEffHam(d, D, dtype, device);
     }
     UniTensor EffH;
@@ -44,6 +49,83 @@ namespace Lanczos_Exp_Ut_Test {
     }
   };
 
+  class OneDimScaleOp : public LinOp {
+   public:
+    OneDimScaleOp() : LinOp("mv", 1, Type.Double, Device.cpu) {}
+    UniTensor matvec(const UniTensor& A) override { return A * 3.0; }
+  };
+
+  class SmallResidualOp : public LinOp {
+   public:
+    explicit SmallResidualOp(const double coupling, const unsigned int dtype = Type.Double)
+        : LinOp("mv", 3, dtype, Device.cpu), coupling_(coupling) {}
+
+    UniTensor matvec(const UniTensor& A) override {
+      auto out = UniTensor::zeros(A.shape(), A.labels(), A.dtype(), A.device());
+      out.set_rowrank_(A.rowrank());
+      out.at({0, 0}) = coupling_ * A.at({1, 0});
+      out.at({1, 0}) = coupling_ * A.at({0, 0});
+      return out;
+    }
+
+   private:
+    double coupling_;
+  };
+
+  class TwoDimMixingOp : public LinOp {
+   public:
+    TwoDimMixingOp() : LinOp("mv", 2, Type.Double, Device.cpu) {}
+
+    UniTensor matvec(const UniTensor& A) override {
+      auto out = UniTensor::zeros(A.shape(), A.labels(), A.dtype(), A.device());
+      out.set_rowrank_(A.rowrank());
+      out.at({0, 0}) = A.at({1, 0});
+      out.at({1, 0}) = A.at({0, 0});
+      return out;
+    }
+  };
+
+  double FloatLanczosExpTolerance() { return 100.0 * std::numeric_limits<float>::epsilon(); }
+
+  bool IsSinglePrecisionDType(const unsigned int dtype) {
+    return dtype == Type.Float || dtype == Type.ComplexFloat;
+  }
+
+  UniTensor SmallResidualInitialState(const unsigned int dtype) {
+    UniTensor Tin = UniTensor::zeros({3, 1}, {}, dtype, Device.cpu).set_rowrank_(1);
+    Tin.at({0, 0}) = 1.0;
+    return Tin;
+  }
+
+  UniTensor SmallResidualExpectedState(const double coupling, const double tau,
+                                       const unsigned int dtype) {
+    auto ans = UniTensor::zeros({3, 1}, {}, dtype, Device.cpu).set_rowrank_(1);
+    ans.at({0, 0}) = std::cosh(coupling * tau);
+    ans.at({1, 0}) = std::sinh(coupling * tau);
+    return ans;
+  }
+
+  UniTensor SmallResidualExpectedState(const double coupling, const cytnx_complex128 tau,
+                                       const unsigned int dtype) {
+    auto ans = UniTensor::zeros({3, 1}, {}, dtype, Device.cpu).set_rowrank_(1);
+    ans.at({0, 0}) = std::cosh(coupling * tau);
+    ans.at({1, 0}) = std::sinh(coupling * tau);
+    return ans;
+  }
+
+  UniTensor TwoDimInitialState() {
+    auto Tin = UniTensor::zeros({2, 1}, {}, Type.Double, Device.cpu).set_rowrank_(1);
+    Tin.at({0, 0}) = 1.0;
+    return Tin;
+  }
+
+  UniTensor TwoDimExpectedState(const double tau) {
+    auto ans = UniTensor::zeros({2, 1}, {}, Type.Double, Device.cpu).set_rowrank_(1);
+    ans.at({0, 0}) = std::cosh(tau);
+    ans.at({1, 0}) = std::sinh(tau);
+    return ans;
+  }
+
   // describe:Real type test
   TEST(Lanczos_Exp_Ut, RealTypeTest) {
     int d = 2, D = 5;
@@ -54,7 +136,7 @@ namespace Lanczos_Exp_Ut_Test {
     auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
     auto ans = GetAns(op.EffH, Tin, tau);
     auto err = static_cast<double>((x - ans).Norm().item().real());
-    EXPECT_TRUE(err <= crit);
+    EXPECT_LE(err, crit);
   }
 
   // describe:Complex type test
@@ -67,7 +149,7 @@ namespace Lanczos_Exp_Ut_Test {
     auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
     auto ans = GetAns(op.EffH, Tin, tau);
     auto err = static_cast<double>((x - ans).Norm().item().real());
-    EXPECT_TRUE(err <= crit);
+    EXPECT_LE(err, crit);
   }
 
   // describe:Test non-Hermitian Op but the code will not crash
@@ -92,7 +174,117 @@ namespace Lanczos_Exp_Ut_Test {
     auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
     auto ans = GetAns(op.EffH, Tin, tau);
     auto err = static_cast<double>((x - ans).Norm().item().real());
-    EXPECT_TRUE(err <= crit);
+    EXPECT_LE(err, crit);
+  }
+
+  TEST(Lanczos_Exp_Ut, OneDimensionalKrylovSpace) {
+    OneDimScaleOp op;
+    UniTensor Tin = UniTensor::zeros({1, 1}, {}, Type.Double, Device.cpu).set_rowrank_(1);
+    Tin.at({0, 0}) = 2.0;
+    const double crit = 1.0e-12;
+    const double tau = 0.2;
+
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
+    auto ans = Tin * std::exp(3.0 * tau);
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
+    EXPECT_LE(err, crit);
+  }
+
+  TEST(Lanczos_Exp_Ut, FullKrylovSpaceDoesNotWarnAtDimensionLimit) {
+    TwoDimMixingOp op;
+    auto Tin = TwoDimInitialState();
+    const double crit = 1.0e-12;
+    const double tau = 1.0;
+    const unsigned int maxiter = 2;
+
+    testing::internal::CaptureStderr();
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit, maxiter);
+    const std::string stderr_output = testing::internal::GetCapturedStderr();
+    auto ans = TwoDimExpectedState(tau);
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
+    EXPECT_EQ(stderr_output.find("[WARNING][Lanczos_Exp]"), std::string::npos) << stderr_output;
+    EXPECT_LE(err, crit);
+  }
+
+  TEST(Lanczos_Exp_Ut, SmallResidualIsNotBreakdown) {
+    const double coupling = 5.0e-7;
+    SmallResidualOp op(coupling);
+    auto Tin = SmallResidualInitialState(Type.Double);
+    const double crit = 1.0e-10;
+    const double tau = 1.0;
+    const unsigned int maxiter = 3;
+
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit, maxiter);
+    auto ans = SmallResidualExpectedState(coupling, tau, Type.Double);
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
+    EXPECT_LE(err, crit);
+  }
+
+  TEST(Lanczos_Exp_Ut, FloatSmallResidualBelowRoundoffFloor) {
+    const double coupling = 5.0e-6;
+    SmallResidualOp op(coupling, Type.Float);
+    auto Tin = SmallResidualInitialState(Type.Float);
+    const double tau = 1.0;
+    const unsigned int maxiter = 3;
+
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, 1.0e-10, maxiter);
+    auto ans = SmallResidualExpectedState(coupling, tau, x.dtype());
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
+    // ExpM currently returns a complex matrix even for this real case. Either
+    // real or complex output is acceptable here, but it must remain single precision.
+    EXPECT_TRUE(IsSinglePrecisionDType(x.dtype()));
+    EXPECT_LE(err, FloatLanczosExpTolerance());
+  }
+
+  TEST(Lanczos_Exp_Ut, FloatResidualAboveRoundoffFloorIsNotBreakdown) {
+    const double coupling = 5.0e-5;
+    SmallResidualOp op(coupling, Type.Float);
+    auto Tin = SmallResidualInitialState(Type.Float);
+    const double tau = 1.0;
+    const unsigned int maxiter = 3;
+
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, 1.0e-10, maxiter);
+    auto ans = SmallResidualExpectedState(coupling, tau, x.dtype());
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
+    // ExpM currently returns a complex matrix even for this real case. Either
+    // real or complex output is acceptable here, but it must remain single precision.
+    EXPECT_TRUE(IsSinglePrecisionDType(x.dtype()));
+    EXPECT_LE(err, FloatLanczosExpTolerance());
+  }
+
+  TEST(Lanczos_Exp_Ut, ComplexFloatResidualAboveRoundoffFloorIsNotBreakdown) {
+    const double coupling = 5.0e-5;
+    SmallResidualOp op(coupling, Type.ComplexFloat);
+    auto Tin = SmallResidualInitialState(Type.ComplexFloat);
+    const double tau = 1.0;
+    const unsigned int maxiter = 3;
+
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, 1.0e-10, maxiter);
+    auto ans = SmallResidualExpectedState(coupling, tau, Type.ComplexFloat);
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
+    EXPECT_EQ(x.dtype(), Type.ComplexFloat);
+    EXPECT_LE(err, FloatLanczosExpTolerance());
+  }
+
+  TEST(Lanczos_Exp_Ut, FloatComplexTauReturnsComplexFloat) {
+    const double coupling = 5.0e-5;
+    SmallResidualOp op(coupling, Type.Float);
+    auto Tin = SmallResidualInitialState(Type.Float);
+    const cytnx_complex128 tau(0.0, 1.0);
+    const unsigned int maxiter = 3;
+
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, 1.0e-10, maxiter);
+    auto ans = SmallResidualExpectedState(coupling, tau, Type.ComplexFloat);
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+
+    EXPECT_EQ(x.dtype(), Type.ComplexFloat);
+    EXPECT_LE(err, FloatLanczosExpTolerance());
   }
 
   // describe:test incorrect data type

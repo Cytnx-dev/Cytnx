@@ -12,7 +12,7 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       char jobs = 'N';
 
-      cytnx_complex128 *tA;
+      cytnx_complex128 *tA = nullptr;
       cytnx_complex128 *buffer_A =
         (cytnx_complex128 *)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex128));
       memcpy(buffer_A, in->data(), sizeof(cytnx_complex128) * cytnx_uint64(L) * L);
@@ -38,7 +38,7 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       char jobs = 'N';
 
-      cytnx_complex64 *tA;
+      cytnx_complex64 *tA = nullptr;
       cytnx_complex64 *buffer_A =
         (cytnx_complex64 *)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex64));
       memcpy(buffer_A, in->data(), sizeof(cytnx_complex64) * cytnx_uint64(L) * L);

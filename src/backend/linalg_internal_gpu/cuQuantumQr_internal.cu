@@ -81,7 +81,7 @@ namespace cytnx {
                                  boost::intrusive_ptr<Storage_base> &D,
                                  boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
                                  const cytnx_int64 &N, const bool &is_d) {
-      // const size_t cuTensornetVersion = cutensornetGetVersion();
+      // const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
       /**********************************************
@@ -219,7 +219,7 @@ namespace cytnx {
                                  boost::intrusive_ptr<Storage_base> &D,
                                  boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
                                  const cytnx_int64 &N, const bool &is_d) {
-      // const size_t cuTensornetVersion = cutensornetGetVersion();
+      // const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
       /**********************************************
@@ -356,7 +356,7 @@ namespace cytnx {
                                 boost::intrusive_ptr<Storage_base> &D,
                                 boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
                                 const cytnx_int64 &N, const bool &is_d) {
-      // const size_t cuTensornetVersion = cutensornetGetVersion();
+      // const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
       /**********************************************
@@ -493,7 +493,7 @@ namespace cytnx {
                                 boost::intrusive_ptr<Storage_base> &D,
                                 boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
                                 const cytnx_int64 &N, const bool &is_d) {
-      // const size_t cuTensornetVersion = cutensornetGetVersion();
+      // const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
       /**********************************************
