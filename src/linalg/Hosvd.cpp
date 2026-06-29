@@ -2,7 +2,6 @@
 
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#include <iostream>
 #include <vector>
 
 #ifdef BACKEND_TORCH

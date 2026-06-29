@@ -1,7 +1,6 @@
 #include "linalg.hpp"
 #include "utils/utils.hpp"
 #include "Device.hpp"
-#include <iostream>
 #include "Tensor.hpp"
 
 #ifdef BACKEND_TORCH

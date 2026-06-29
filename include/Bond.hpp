@@ -1,14 +1,16 @@
 #ifndef CYTNX_BOND_H_
 #define CYTNX_BOND_H_
 
+#include <algorithm>
+#include <fstream>
+#include <initializer_list>
+#include <map>
+#include <ostream>
+#include <vector>
+
+#include "Symmetry.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Symmetry.hpp"
-#include <initializer_list>
-#include <vector>
-#include <fstream>
-#include <map>
-#include <algorithm>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 

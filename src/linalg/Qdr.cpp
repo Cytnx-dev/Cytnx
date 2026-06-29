@@ -1,6 +1,5 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
-#include <iostream>
 #include <vector>
 #include "UniTensor.hpp"
 #include "algo.hpp"

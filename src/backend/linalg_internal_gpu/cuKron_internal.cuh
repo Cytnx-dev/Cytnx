@@ -9,7 +9,6 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
-#include <iostream>
 
 #ifndef __CUDACC__
   #error This file requires a CUDA compiler

@@ -1,5 +1,4 @@
 #include "linalg.hpp"
-#include <iostream>
 
 #ifdef BACKEND_TORCH
 #else

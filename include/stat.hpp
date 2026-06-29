@@ -1,12 +1,12 @@
 #ifndef CYTNX_STAT_H_
 #define CYTNX_STAT_H_
 
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-
-#include "Tensor.hpp"
 #include <algorithm>
 #include <iostream>
+
+#include "Tensor.hpp"
+#include "Type.hpp"
+#include "cytnx_error.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -86,7 +86,7 @@ namespace cytnx {
       }
 
       void normalize();
-      void print() const;
+      void print(std::ostream &os = std::cout) const;
 
       const Storage &get_x() const {
         // get x
@@ -179,7 +179,7 @@ namespace cytnx {
       }
 
       void normalize();
-      void print() const;
+      void print(std::ostream &os = std::cout) const;
 
       const Storage &get_x() const {
         // get x

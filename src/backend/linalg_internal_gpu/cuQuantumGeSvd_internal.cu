@@ -1,11 +1,12 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "cuQuantumGeSvd_internal.hpp"
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <cassert>
+#include <iostream>
 #include <unordered_map>
 #include <vector>
-#include <cassert>
-
-#include "cuQuantumGeSvd_internal.hpp"
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM

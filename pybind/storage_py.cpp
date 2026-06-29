@@ -1,18 +1,21 @@
+#include <iostream>
 #include <map>
 #include <random>
 #include <string>
 #include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
+// NOTE: keep "complex.h" last: the C complex.h defines a macro `I` that breaks
+// the `template <std::size_t I, ...>` declarations pulled in via cytnx.hpp/Type.hpp.
 #include "complex.h"
 
 namespace py = pybind11;
@@ -194,8 +197,9 @@ void storage_binding(py::module &m) {
     .def("__deepcopy__", &cytnx::Storage::clone)
     .def("size", &cytnx::Storage::size)
     .def("__len__", [](cytnx::Storage &self) { return self.size(); })
-    .def("print_info", &cytnx::Storage::print_info,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def(
+      "print_info", [](cytnx::Storage &self) { self.print_info(); },
+      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("set_zeros", &cytnx::Storage::set_zeros)
     .def("__eq__",
          [](cytnx::Storage &self, const cytnx::Storage &rhs) -> bool { return self == rhs; })

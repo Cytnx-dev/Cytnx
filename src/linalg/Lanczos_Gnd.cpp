@@ -1,13 +1,13 @@
-#include "linalg.hpp"
-#include "Generator.hpp"
-#include "random.hpp"
-#include "Tensor.hpp"
-#include "LinOp.hpp"
-
 #include <cfloat>
-#include <vector>
-#include "Tensor.hpp"
 #include <iomanip>
+#include <iostream>
+#include <vector>
+
+#include "Generator.hpp"
+#include "LinOp.hpp"
+#include "Tensor.hpp"
+#include "linalg.hpp"
+#include "random.hpp"
 
 #ifdef BACKEND_TORCH
 #else

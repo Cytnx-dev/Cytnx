@@ -4,12 +4,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
-#include <iostream>
+#include <ostream>
 #include <type_traits>
 #include <vector>
 
 #include "boost/smart_ptr/intrusive_ptr.hpp"
 
+#include "Device.hpp"
+#include "Type.hpp"
 #include "backend/Scalar.hpp"
 #include "backend/utils_internal_cpu/Alloc_cpu.hpp"
 #include "backend/utils_internal_cpu/Complexmem_cpu.hpp"
@@ -21,8 +23,6 @@
 #include "backend/utils_internal_gpu/cuMovemem_gpu.hpp"
 #include "backend/utils_internal_gpu/cuSetZeros_gpu.hpp"
 #include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "Type.hpp"
 
 #ifdef UNI_GPU
   #include "cuda_runtime_api.h"
@@ -446,13 +446,13 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::print_elems() {
+  void StorageImplementation<DType>::print_elems(std::ostream &os) const {
     DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
-    std::cout << "[ ";
+    os << "[ ";
     for (unsigned long long cnt = 0; cnt < this->size_; cnt++) {
-      PrintValueAndSpace(std::cout, elem_ptr_[cnt]);
+      PrintValueAndSpace(os, elem_ptr_[cnt]);
     }
-    std::cout << "]" << std::endl;
+    os << "]" << std::endl;
   }
 
   template <typename DType>

@@ -6,8 +6,8 @@
 #include <vector>
 #include <cstring>
 #include <string>
-#include <iostream>
 #include <initializer_list>
+#include <ostream>
 
 namespace cytnx {
 

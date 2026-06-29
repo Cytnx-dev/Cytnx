@@ -1,5 +1,4 @@
 #include "linalg.hpp"
-#include <iostream>
 #include <vector>
 #include "Tensor.hpp"
 

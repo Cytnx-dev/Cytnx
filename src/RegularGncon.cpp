@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+
 #include <stack>
 #include <typeinfo>
 
@@ -134,17 +135,18 @@ namespace cytnx {
 
   /// This is debug function
   void print_gn(std::vector<std::vector<std::pair<std::string, std::string>>> &table,
-                std::vector<std::string> &names, std::map<std::string, cytnx_uint64> &name2pos) {
-    std::cout << "### table  ###" << std::endl;
+                std::vector<std::string> &names, std::map<std::string, cytnx_uint64> &name2pos,
+                std::ostream &os = std::cout) {
+    os << "### table  ###" << std::endl;
     for (int i = 0; i < table.size(); i++) {
       for (int j = 0; j < table[i].size(); j++) {
-        std::cout << "original lbl, replaced lbl =  " << table[i][j].first << " ,"
-                  << table[i][j].second << std::endl;
+        os << "original lbl, replaced lbl =  " << table[i][j].first << " ," << table[i][j].second
+           << std::endl;
       }
     }
-    std::cout << "### tensor names  ###" << std::endl;
+    os << "### tensor names  ###" << std::endl;
     for (int i = 0; i < names.size(); i++) {
-      std::cout << names[i] << " pos : " << name2pos[names[i]] << std::endl;
+      os << names[i] << " pos : " << name2pos[names[i]] << std::endl;
     }
   }
 
@@ -388,7 +390,7 @@ namespace cytnx {
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
-        std::cerr << "[ERROR] Following TNs appeared in ORDER line, but is not defined."
+        std::cerr << "[ERROR] The following TNs appeared in ORDER line, but are not defined."
                   << std::endl;
         for (int i = 0; i < TN_names.size(); i++) {
           std::cerr << "        " << TN_names[i] << std::endl;
@@ -548,7 +550,7 @@ namespace cytnx {
     this->PutUniTensor(idx, utensor);
   }
 
-  void RegularGncon::PrintNet(std::ostream &os) {
+  void RegularGncon::PrintNet(std::ostream &os) const {
     std::string status;
     os << "==== Gncon ====" << std::endl;
     if (this->tensors.size() == 0) {

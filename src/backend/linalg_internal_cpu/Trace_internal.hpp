@@ -2,7 +2,6 @@
 #define CYTNX_BACKEND_LINALG_INTERNAL_CPU_TRACE_INTERNAL_H_
 
 #include <assert.h>
-#include <iostream>
 #include <iomanip>
 #include <vector>
 #include "backend/Storage.hpp"

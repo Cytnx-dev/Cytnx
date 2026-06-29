@@ -1,7 +1,6 @@
 #ifndef CYTNX_BACKEND_LINALG_INTERNAL_INTERFACE_H_
 #define CYTNX_BACKEND_LINALG_INTERNAL_INTERFACE_H_
 
-#include <iostream>
 #include <vector>
 
 #include "Type.hpp"

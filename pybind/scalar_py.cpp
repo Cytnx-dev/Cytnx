@@ -116,7 +116,9 @@ void scalar_binding(py::module &m) {
     .def("iabs", &Scalar::iabs)
     .def("isqrt", &Scalar::isqrt)
     .def("dtype", &Scalar::dtype)
-    .def("print", &Scalar::print)
+    .def(
+      "print", [](const Scalar &self) { self.print(); },
+      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
 
     // ---- Arithmetic in-place ----
     .def("__iadd__",
