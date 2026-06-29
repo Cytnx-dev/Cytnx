@@ -429,7 +429,6 @@ namespace SvdTest {
     double ans_norm = (ans.Norm().storage()).at<double>(0);
     ans_norm = ans_norm < 1.0 ? 1.0 : ans_norm;
     double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
-    // std::cout << relative_err << std::endl;
 
     const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
     return (relative_err < tol);

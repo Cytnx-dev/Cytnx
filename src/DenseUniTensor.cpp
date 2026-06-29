@@ -559,8 +559,6 @@ namespace cytnx {
       std::cout << std::string(buffer);
       sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
       std::cout << std::string(buffer);
-      // sprintf(buffer, "%s", "\n");
-      // std::cout << std::string(buffer);
 
     } else {
       sprintf(buffer, "%s     %s     %s", LallSpace.c_str(), M_dashes.c_str(), "\n");

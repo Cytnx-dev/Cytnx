@@ -50,7 +50,6 @@ class cHclass {
 
   template <class T>
   void set_elem(const T &elem) {
-    // std::cout << typeid(T).name() << std::endl;
     this->proxy = elem;
   }
 };
@@ -378,14 +377,12 @@ void unitensor_binding(py::module &m) {
 
     .def("c_at", [](UniTensor &self, const std::vector<cytnx_uint64> &locator){
                   Scalar::Sproxy tmp = self.at(locator);
-                  //std::cout << "ok" << std::endl;
                   return cHclass(tmp);
                },py::arg("locator"))
 
 
     .def("c_at",[](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &locator){
                   Scalar::Sproxy tmp = self.at(labels,locator);
-                  //std::cout << "ok" << std::endl;
                   return cHclass(tmp);
                },py::arg("labels"), py::arg("locator"))
 

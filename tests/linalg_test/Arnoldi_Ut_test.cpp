@@ -149,11 +149,9 @@ namespace {
       // check eigenvalue by comparing with the full spectrum results.
       // avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
       auto eigval_err = abs(abs(arnoldi_eigval) - abs(exact_eigval)) / abs(exact_eigval);
-      // std::cout << "eigval err" << eigval_err << std::endl;
       if (eigval_err >= tolerance) return false;
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, arnoldi_eigval, arnoldi_eigvec);
-      // std::cout << "resi err" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
       // check phase
     }
@@ -281,11 +279,8 @@ TEST(Arnoldi_Gnd, Arnoldi_BK_test) {
   }
   std::vector<UniTensor> eigs = linalg::Arnoldi(&H, UT_init, "LM");
   cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
-  // std::cout << ev << ' ' << lambda << std::endl;
-  // std::cout << "err val=" <<std::abs(ev - lambda) << std::endl;
   EXPECT_TRUE(std::abs(ev - lambda) < 1e-12);
   auto err = (H.matvec(eigs[1]) - ev * eigs[1]).Norm().item();
-  // std::cout << "err" << err << std::endl;
   EXPECT_TRUE(err < 1e-12);
 }
 
