@@ -2,24 +2,23 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   Tensor A({3, 4, 5});
-  cout << A.shape() << endl;
+  std::cout << A.shape() << std::endl;
 
   Tensor B = A.permute({0, 2, 1});
-  cout << B.shape() << endl;
+  std::cout << B.shape() << std::endl;
 
   //[Note] permute will not actually move the internal memory (storage) layout.
   //       this is called non-contiguous status.
   //       the memory layout will only move when Tensor.contiguous() is called.
   Tensor C = B.contiguous();  // actual moving the memory
-  cout << B.is_contiguous() << endl;  // false.
-  cout << C.is_contiguous() << endl;  // true.
-  cout << C.shape() << endl;
+  std::cout << B.is_contiguous() << std::endl;  // false.
+  std::cout << C.is_contiguous() << std::endl;  // true.
+  std::cout << C.shape() << std::endl;
 
-  cout << C.same_data(B) << endl;  // false
-  cout << B.same_data(A) << endl;  // true
+  std::cout << C.same_data(B) << std::endl;  // false
+  std::cout << B.same_data(A) << std::endl;  // true
 
   return 0;
 }

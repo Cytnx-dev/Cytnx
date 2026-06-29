@@ -2,13 +2,12 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   Tensor A = ones(1, Type.Uint64);
-  cout << A << endl;
+  std::cout << A << std::endl;
 
   // note that type resolver should be consist with the dtype
-  cout << A.item<cytnx_uint64>() << endl;
+  std::cout << A.item<cytnx_uint64>() << std::endl;
 
   return 0;
 }
