@@ -268,6 +268,9 @@ namespace cytnx {
     }
 
     // assign input tensors into slots:
+    this->names.reserve(utensors.size());
+    this->label_arr.reserve(utensors.size());
+    this->iBondNums.reserve(utensors.size());
     std::string name;
     for (unsigned int i = 0; i < utensors.size(); i++) {
       if (alias.size()) {
@@ -300,6 +303,7 @@ namespace cytnx {
 
     this->tensors.resize(this->names.size());
     this->CtTree.base_nodes.clear();
+    this->CtTree.base_nodes.reserve(this->names.size());
     for (std::size_t i = 0; i < this->names.size(); i++) {
       auto node = std::make_shared<Node>();
       node->name = this->names[i];
@@ -382,6 +386,11 @@ namespace cytnx {
     std::string line;
     std::vector<std::string> tmpvs;
     bool isORDER_exist = false;
+
+    // upper bound: at most one tensor definition per content line
+    this->names.reserve(contents.size());
+    this->label_arr.reserve(contents.size());
+    this->iBondNums.reserve(contents.size());
 
     for (int i = 0; i < contents.size(); i++) {
       line = contents[i];
@@ -466,8 +475,8 @@ namespace cytnx {
       "\n");
 
     this->tensors.resize(this->names.size());
-    this->CtTree.base_nodes.resize(this->names.size());
     this->CtTree.base_nodes.clear();
+    this->CtTree.base_nodes.reserve(this->names.size());
 
     // Create base nodes properly
     for (std::size_t i = 0; i < this->names.size(); i++) {
