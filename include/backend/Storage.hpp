@@ -775,7 +775,7 @@ namespace cytnx {
     */
     void print_info() const { this->_impl->print_info(std::cout); }
     /// @cond
-    void print_info(std::ostream &os) const { this->_impl->print(os); }
+    void print_info(std::ostream &os) const { this->_impl->print_info(os); }
     // this is a redundant function
     void print(std::ostream &os = std::cout) const { this->_impl->print(os); }
     /// @endcond
