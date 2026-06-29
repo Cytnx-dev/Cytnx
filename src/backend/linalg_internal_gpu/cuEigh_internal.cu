@@ -15,11 +15,11 @@ namespace cytnx {
       if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_complex128 *tA;
-      if (v != NULL) {
+      if (v != nullptr) {
         tA = (cytnx_complex128 *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(),
                                    sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
@@ -68,11 +68,11 @@ namespace cytnx {
       if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_complex64 *tA;
-      if (v != NULL) {
+      if (v != nullptr) {
         tA = (cytnx_complex64 *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(),
                                    sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
@@ -121,7 +121,7 @@ namespace cytnx {
       if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_double *tA;
@@ -172,7 +172,7 @@ namespace cytnx {
       if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_float *tA;

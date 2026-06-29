@@ -50,7 +50,7 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = NULL;
+          cublasHandle_t cublasH = nullptr;
           checkCudaErrors(cublasCreate(&cublasH));
           checkCudaErrors(cublasZgemm(
             cublasH, transa, transb, m_array[i], n_array[i], k_array[i],
@@ -107,7 +107,7 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = NULL;
+          cublasHandle_t cublasH = nullptr;
           checkCudaErrors(cublasCreate(&cublasH));
           checkCudaErrors(cublasCgemm(cublasH, transa, transb, m_array[i], n_array[i], k_array[i],
                                       (cuFloatComplex *)&alphas[i], (cuFloatComplex *)a_array[idx],
@@ -164,7 +164,7 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = NULL;
+          cublasHandle_t cublasH = nullptr;
           checkCudaErrors(cublasCreate(&cublasH));
           checkCudaErrors(cublasDgemm(
             cublasH, transa, transb, m_array[i], n_array[i], k_array[i], (cytnx_double *)&alphas[i],
@@ -220,7 +220,7 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = NULL;
+          cublasHandle_t cublasH = nullptr;
           checkCudaErrors(cublasCreate(&cublasH));
           checkCudaErrors(cublasSgemm(
             cublasH, transa, transb, m_array[i], n_array[i], k_array[i], (cytnx_float *)&alphas[i],

@@ -94,14 +94,14 @@ namespace cytnx {
     if (dtype == this->dtype()) return boost::intrusive_ptr<Storage_base>(this);
 
     if (this->device() == Device.cpu) {
-      if (utils_internal::uii.ElemCast[this->dtype()][dtype] == NULL) {
+      if (utils_internal::uii.ElemCast[this->dtype()][dtype] == nullptr) {
         cytnx_error_msg(true, "[ERROR] not support type with dtype=%d", dtype);
       } else {
         utils_internal::uii.ElemCast[this->dtype()][dtype](this, out, this->size(), 1);
       }
     } else {
 #ifdef UNI_GPU
-      if (utils_internal::uii.cuElemCast[this->dtype()][dtype] == NULL) {
+      if (utils_internal::uii.cuElemCast[this->dtype()][dtype] == nullptr) {
         cytnx_error_msg(true, "[ERROR] not support type with dtype=%d", dtype);
       } else {
         utils_internal::uii.cuElemCast[this->dtype()][dtype](this, out, this->size(),
@@ -333,14 +333,14 @@ namespace cytnx {
     }
 
     if (this->device() == Device.cpu) {
-      if (utils_internal::uii.SetElems_ii[in->dtype()][this->dtype()] == NULL) {
+      if (utils_internal::uii.SetElems_ii[in->dtype()][this->dtype()] == nullptr) {
         cytnx_error_msg(true, "[ERROR] %s", "cannot assign complex element to real container.\n");
       }
       utils_internal::uii.SetElems_ii[in->dtype()][this->dtype()](
         in->data(), this->data(), c_offj, new_offj, locators, TotalElem, is_scalar);
     } else {
 #ifdef UNI_GPU
-      if (utils_internal::uii.cuSetElems_ii[in->dtype()][this->dtype()] == NULL) {
+      if (utils_internal::uii.cuSetElems_ii[in->dtype()][this->dtype()] == nullptr) {
         cytnx_error_msg(true, "%s", "[ERROR] %s",
                         "cannot assign complex element to real container.\n");
       }
@@ -392,14 +392,14 @@ namespace cytnx {
     }
 
     if (this->device() == Device.cpu) {
-      if (utils_internal::uii.SetElems_conti_ii[in->dtype()][this->dtype()] == NULL) {
+      if (utils_internal::uii.SetElems_conti_ii[in->dtype()][this->dtype()] == nullptr) {
         cytnx_error_msg(true, "[ERROR] %s", "cannot assign complex element to real container.\n");
       }
       utils_internal::uii.SetElems_conti_ii[in->dtype()][this->dtype()](
         in->data(), this->data(), c_offj, new_offj, locators, TotalElem, Nunit, is_scalar);
     } else {
 #ifdef UNI_GPU
-      if (utils_internal::uii.cuSetElems_conti_ii[in->dtype()][this->dtype()] == NULL) {
+      if (utils_internal::uii.cuSetElems_conti_ii[in->dtype()][this->dtype()] == nullptr) {
         cytnx_error_msg(true, "[ERROR] %s", "cannot assign complex element to real container.\n");
       }
       checkCudaErrors(cudaSetDevice(this->device()));

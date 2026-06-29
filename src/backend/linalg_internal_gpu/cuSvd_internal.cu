@@ -17,7 +17,7 @@ namespace cytnx {
       assert(sizeof(cuDoubleComplex) == sizeof(cytnx_complex128));
 
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are nullptr, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -25,7 +25,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -56,7 +56,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -81,7 +81,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */
@@ -127,7 +127,7 @@ namespace cytnx {
       assert(sizeof(cuFloatComplex) == sizeof(cytnx_complex64));
 
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are nullptr, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -135,7 +135,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -167,7 +167,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -192,7 +192,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */
@@ -237,7 +237,7 @@ namespace cytnx {
       cudaDataType cuda_data_typeR = CUDA_R_64F;
 
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are nullptr, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -245,7 +245,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -277,7 +277,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -302,7 +302,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */
@@ -346,7 +346,7 @@ namespace cytnx {
       cudaDataType cuda_data_typeR = CUDA_R_32F;
 
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are nullptr, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -354,7 +354,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -386,7 +386,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -411,7 +411,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */

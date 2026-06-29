@@ -13,8 +13,8 @@ namespace cytnx {
     void cuEig_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
                            boost::intrusive_ptr<Storage_base> &e,
                            boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
-      cusolverDnHandle_t cusolverH = NULL;
-      cudaStream_t stream = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
+      cudaStream_t stream = nullptr;
       cusolverDnCreate(&cusolverH);
       cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
       cusolverDnSetStream(cusolverH, stream);
@@ -25,8 +25,8 @@ namespace cytnx {
       cudaMemcpy(d_A, in->Mem, sizeof(cuDoubleComplex) * L * L, cudaMemcpyHostToDevice);
 
       int lwork = 0;
-      cusolverDnZgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L, NULL,
-                                 1, &lwork);
+      cusolverDnZgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L,
+                                 nullptr, 1, &lwork);
       cuDoubleComplex *d_work;
       cudaMalloc((void **)&d_work, sizeof(cuDoubleComplex) * lwork);
 
@@ -34,7 +34,7 @@ namespace cytnx {
       cudaMalloc((void **)&devInfo, sizeof(int));
 
       cusolverDnZgeev(cusolverH, CUSOLVER_EIG_MODE_VECTOR, CUBLAS_OP_N, L, d_A, L, d_W, d_V, L,
-                      NULL, 1, d_work, lwork, devInfo);
+                      nullptr, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(cuDoubleComplex) * L, cudaMemcpyDeviceToHost);
       if (v->dtype() != Type.Void) {
@@ -53,8 +53,8 @@ namespace cytnx {
     void cuEig_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
                            boost::intrusive_ptr<Storage_base> &e,
                            boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
-      cusolverDnHandle_t cusolverH = NULL;
-      cudaStream_t stream = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
+      cudaStream_t stream = nullptr;
       cusolverDnCreate(&cusolverH);
       cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
       cusolverDnSetStream(cusolverH, stream);
@@ -65,8 +65,8 @@ namespace cytnx {
       cudaMemcpy(d_A, in->Mem, sizeof(cuFloatComplex) * L * L, cudaMemcpyHostToDevice);
 
       int lwork = 0;
-      cusolverDnCgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L, NULL,
-                                 1, &lwork);
+      cusolverDnCgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L,
+                                 nullptr, 1, &lwork);
       cuFloatComplex *d_work;
       cudaMalloc((void **)&d_work, sizeof(cuFloatComplex) * lwork);
 
@@ -74,7 +74,7 @@ namespace cytnx {
       cudaMalloc((void **)&devInfo, sizeof(int));
 
       cusolverDnCgeev(cusolverH, CUSOLVER_EIG_MODE_VECTOR, CUBLAS_OP_N, L, d_A, L, d_W, d_V, L,
-                      NULL, 1, d_work, lwork, devInfo);
+                      nullptr, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(cuFloatComplex) * L, cudaMemcpyDeviceToHost);
       if (v->dtype() != Type.Void) {
@@ -93,8 +93,8 @@ namespace cytnx {
     void cuEig_internal_d(const boost::intrusive_ptr<Storage_base> &in,
                           boost::intrusive_ptr<Storage_base> &e,
                           boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
-      cusolverDnHandle_t cusolverH = NULL;
-      cudaStream_t stream = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
+      cudaStream_t stream = nullptr;
       cusolverDnCreate(&cusolverH);
       cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
       cusolverDnSetStream(cusolverH, stream);
@@ -105,8 +105,8 @@ namespace cytnx {
       cudaMemcpy(d_A, in->Mem, sizeof(double) * L * L, cudaMemcpyHostToDevice);
 
       int lwork = 0;
-      cusolverDnDgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L, NULL,
-                                 1, &lwork);
+      cusolverDnDgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L,
+                                 nullptr, 1, &lwork);
       double *d_work;
       cudaMalloc((void **)&d_work, sizeof(double) * lwork);
 
@@ -114,7 +114,7 @@ namespace cytnx {
       cudaMalloc((void **)&devInfo, sizeof(int));
 
       cusolverDnDgeev(cusolverH, CUSOLVER_EIG_MODE_VECTOR, CUBLAS_OP_N, L, d_A, L, d_W, d_V, L,
-                      NULL, 1, d_work, lwork, devInfo);
+                      nullptr, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(double) * L, cudaMemcpyDeviceToHost);
       if (v->dtype() != Type.Void) {
@@ -133,8 +133,8 @@ namespace cytnx {
     void cuEig_internal_f(const boost::intrusive_ptr<Storage_base> &in,
                           boost::intrusive_ptr<Storage_base> &e,
                           boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
-      cusolverDnHandle_t cusolverH = NULL;
-      cudaStream_t stream = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
+      cudaStream_t stream = nullptr;
       cusolverDnCreate(&cusolverH);
       cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking);
       cusolverDnSetStream(cusolverH, stream);
@@ -145,8 +145,8 @@ namespace cytnx {
       cudaMemcpy(d_A, in->Mem, sizeof(float) * L * L, cudaMemcpyHostToDevice);
 
       int lwork = 0;
-      cusolverDnSgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L, NULL,
-                                 1, &lwork);
+      cusolverDnSgeev_bufferSize(cusolverH, CUSOLVER_EIG_MODE_VECTOR, L, d_A, L, d_W, d_V, L,
+                                 nullptr, 1, &lwork);
       float *d_work;
       cudaMalloc((void **)&d_work, sizeof(float) * lwork);
 
@@ -154,7 +154,7 @@ namespace cytnx {
       cudaMalloc((void **)&devInfo, sizeof(int));
 
       cusolverDnSgeev(cusolverH, CUSOLVER_EIG_MODE_VECTOR, CUBLAS_OP_N, L, d_A, L, d_W, d_V, L,
-                      NULL, 1, d_work, lwork, devInfo);
+                      nullptr, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(float) * L, cudaMemcpyDeviceToHost);
       if (v->dtype() != Type.Void) {
