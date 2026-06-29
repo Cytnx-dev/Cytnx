@@ -27,23 +27,21 @@ else()
 endif()
 
 message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}" )
-if(EXISTS "${CUTENSOR_ROOT}/lib")
-  set(CUTNLIB_DIR "lib/")
-endif()
-# Cytnx requires CUDA >= 12 (enforced in CMakeLists.txt). Use the toolkit major
-# version as the cuTENSOR library subdir (lib/12, lib/13, ...) so both CUDA 12
-# and 13 resolve correctly, matching the 1.x-tarball / apt version-subdir
-# layout. The older lib/10.2 and lib/11 branches were removed as dead code. For
-# the cuTENSOR 2.x flat lib/ layout and apt multiarch paths, see issue #946.
-if(${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 12)
-  set(CUTNLIB_DIR "${CUTNLIB_DIR}${CUDAToolkit_VERSION_MAJOR}")
+# Cytnx requires CUDA >= 12 (enforced in CMakeLists.txt) and cuTENSOR >= 2.0.
+# Search both library layouts: cuTENSOR 2.x tarballs place the libraries
+# directly under lib/, while 1.x tarballs and apt use a per-CUDA subdir
+# (lib/<cuda-major>, e.g. lib/12, lib/13). Listing both as find_library
+# PATH_SUFFIXES lets the supported 2.x flat layout and the legacy versioned
+# layout resolve for both CUDA 12 and 13. The older lib/10.2 and lib/11
+# branches were removed as dead code; apt multiarch paths remain (issue #946).
+if(CUDAToolkit_VERSION_MAJOR GREATER_EQUAL 12)
+  set(CUTNLIB_DIR lib lib/${CUDAToolkit_VERSION_MAJOR})
 else()
   message(FATAL_ERROR
     "cuTENSOR support requires CUDA >= 12, but CUDAToolkit_VERSION_MAJOR is "
     "'${CUDAToolkit_VERSION_MAJOR}'.")
 endif()
 
-set(CUTENSOR_LIBRARY_DIRS ${CUTENSOR_ROOT}/${CUTNLIB_DIR})
 set(CUTENSOR_INCLUDE_DIRS ${CUTENSOR_ROOT}/include)
 
 # Require cuTENSOR >= 2.0. The version macros (CUTENSOR_MAJOR/MINOR/PATCH) live
@@ -94,6 +92,12 @@ find_library(
 )
 message(STATUS "CUTENSOR_LIB: ${CUTENSOR_LIB}")
 message(STATUS "CUTENSORMg_LIB: ${CUTENSORMg_LIB}")
+# Report the directory the library was actually found in (flat lib/ or the
+# versioned lib/<major>) rather than guessing a subdir, so callers and runtime
+# guidance reference the real location.
+if(CUTENSOR_LIB)
+  get_filename_component(CUTENSOR_LIBRARY_DIRS "${CUTENSOR_LIB}" DIRECTORY)
+endif()
 set(CUTENSOR_LIBRARIES "")
 if(CUTENSOR_LIB)
     list(APPEND CUTENSOR_LIBRARIES "${CUTENSOR_LIB}")
@@ -107,4 +111,5 @@ endif()
 # unconditionally would let a NOTFOUND silently pass the caller's REQUIRED check.
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CUTENSOR
-  REQUIRED_VARS CUTENSOR_LIB CUTENSOR_INCLUDE_DIRS)
+  REQUIRED_VARS CUTENSOR_LIB CUTENSOR_INCLUDE_DIRS
+  VERSION_VAR CUTENSOR_VERSION)

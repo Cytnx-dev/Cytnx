@@ -180,9 +180,12 @@ Similarly, cuqauantum (compile option -DUSE_CUTENSOR=ON), requires:
            $export LD_LIBRARY_PATH=$CUTENSOR_ROOT/lib:$CUQUANTUM_ROOT/lib:$LD_LIBRARY_PATH
 
        For cuTENSOR 2.x tarballs the libraries sit directly under ``lib/``, so
-       the path above is sufficient. Older cuTENSOR 1.x tarballs instead use a
-       per-CUDA subdirectory (``lib/<cuda-major>``, e.g. ``lib/12``); use that
-       path if you are on the legacy layout. If ``LD_LIBRARY_PATH`` is not set
+       the path above is sufficient at both build and runtime. Older cuTENSOR
+       1.x tarballs instead use a per-CUDA subdirectory (``lib/<cuda-major>``,
+       e.g. ``lib/12``); on that legacy layout point ``LD_LIBRARY_PATH`` at the
+       subdirectory. Cytnx's ``FindCUTENSOR`` searches both layouts at build
+       time, so the runtime path matches whichever one was found. If
+       ``LD_LIBRARY_PATH`` is not set
        up, importing/running Cytnx fails with ``error while loading shared
        libraries: libcutensor.so... cannot open shared object file``, or
        silently binds to a mismatched system copy of the library if one is

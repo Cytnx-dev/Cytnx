@@ -245,14 +245,14 @@ if(USE_CUDA)
   # 12.0 floor comes from device-side C++20 (nvcc gained -std=c++20 in CUDA
   # 12.0; 11.x tops out at C++17), matching CMAKE_CUDA_STANDARD 20. Fail early
   # with an actionable message instead of a cryptic later C++20/arch error.
-  if(CUDAToolkit_VERSION_MAJOR LESS 12)
+  if(CUDAToolkit_VERSION VERSION_LESS 12.0)
     message(FATAL_ERROR
       "CUDA Toolkit >= 12.0 is required (device-side C++20 support), but found "
       "${CUDAToolkit_VERSION} at ${CUDAToolkit_BIN_DIR}.\n"
       "Install CUDA 12 or 13 and select it with "
       "-DCMAKE_CUDA_COMPILER=/path/to/cuda-12+/bin/nvcc (or set CUDACXX / put "
       "the desired nvcc first on PATH).")
-  elseif(CUDAToolkit_VERSION_MAJOR GREATER 13)
+  elseif(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 14.0)
     message(WARNING
       "CUDA Toolkit ${CUDAToolkit_VERSION} is newer than the versions Cytnx is "
       "tested against (12.x and 13.x). The build will proceed; please report "
@@ -271,7 +271,7 @@ if(USE_CUDA)
   # removed offline support for compute capability < 7.5, so Volta sm_70 is only
   # included for CUDA 12.x.
   if(NOT CMAKE_CUDA_ARCHITECTURES AND NOT DEFINED ENV{CUDAARCHS})
-    if(CUDAToolkit_VERSION_MAJOR GREATER_EQUAL 13)
+    if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 13.0)
       set(CMAKE_CUDA_ARCHITECTURES 75-real 80-real 86-real 89-real 90-real 90-virtual)
     else()
       set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
