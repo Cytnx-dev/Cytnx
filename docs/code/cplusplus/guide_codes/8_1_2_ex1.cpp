@@ -23,4 +23,4 @@ net.PutUniTensor("t1", t1);
 net.PutUniTensor("t2", t2);
 net.PutUniTensor("t3", t3);
 
-cout << net;
+std::cout << net;

@@ -201,10 +201,10 @@ See \link cytnx::linalg cytnx::linalg \endlink for further details
 
         Tensor A({3,4,5,2},Type.Double);
         A.permute_(0,3,1,2); // this will not change the memory, only the shape info is changed.
-        cout << A.is_contiguous() << endl; // false
+        std::cout << A.is_contiguous() << std::endl; // false
 
         A.contiguous_(); // call contiguous() to actually move the memory.
-        cout << A.is_contiguous() << endl; // this will be true!
+        std::cout << A.is_contiguous() << std::endl; // this will be true!
 
 ```
     * Access single element using `.at`

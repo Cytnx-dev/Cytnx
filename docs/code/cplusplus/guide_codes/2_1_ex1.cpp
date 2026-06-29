@@ -1,1 +1,1 @@
-cout << Device.Ncpus;
+std::cout << Device.Ncpus;
