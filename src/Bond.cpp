@@ -6,8 +6,6 @@
 
 #include "utils/utils.hpp"
 
-using namespace std;
-
 namespace cytnx {
   void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type) {
     cytnx_error_msg(dim == 0, "%s", "[ERROR] Bond_impl cannot have 0 or negative dimension.");
@@ -286,7 +284,7 @@ namespace cytnx {
     cytnx_error_msg(this->_qnums.size() == 0,
                     "[ERROR][getUniqueQnums] Cannot call this on a non-symmetry bond!%s", "\n");
 
-    vector<vector<cytnx_int64>> tmp_qnums = this->_qnums;
+    std::vector<std::vector<cytnx_int64>> tmp_qnums = this->_qnums;
     if (this->_degs.size()) {
       // new format
       counts = this->_degs;
@@ -471,13 +469,13 @@ namespace cytnx {
   bool Bond::operator!=(const Bond &rhs) const { return !(*this == rhs); }
 
   void Bond::Save(const std::string &fname) const {
-    fstream f;
+    std::fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
+      f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     } else {
       // add filename extension
-      f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
+      f.open((fname + ".cybd"), std::ios::out | std::ios::trunc | std::ios::binary);
     }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -485,12 +483,12 @@ namespace cytnx {
     this->_Save(f);
     f.close();
   }
-  void Bond::Save(const char *fname) const { this->Save(string(fname)); }
+  void Bond::Save(const char *fname) const { this->Save(std::string(fname)); }
 
   Bond Bond::Load(const std::string &fname) {
     Bond out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
@@ -498,9 +496,9 @@ namespace cytnx {
     f.close();
     return out;
   }
-  Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
+  Bond Bond::Load(const char *fname) { return Bond::Load(std::string(fname)); }
 
-  void Bond::_Save(fstream &f) const {
+  void Bond::_Save(std::fstream &f) const {
     cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
     unsigned int IDDs = 666;
     f.write((char *)&IDDs, sizeof(unsigned int));
@@ -550,7 +548,7 @@ namespace cytnx {
     }
   }
 
-  void Bond::_Load(fstream &f) {
+  void Bond::_Load(std::fstream &f) {
     cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
@@ -627,7 +625,7 @@ namespace cytnx {
       os << " " << bin.syms()[i].stype_str() << ":: ";
       for (cytnx_int32 j = 0; j < bin.qnums().size(); j++) {
         sprintf(buffer, " %+3d", bin.qnums()[j][i]);
-        os << string(buffer);
+        os << std::string(buffer);
       }
       os << std::endl;
     }
@@ -635,7 +633,7 @@ namespace cytnx {
       os << "Deg>> ";
       for (cytnx_int32 i = 0; i < bin.qnums().size(); i++) {
         sprintf(buffer, " %3d", bin._impl->_degs[i]);
-        os << string(buffer);
+        os << std::string(buffer);
       }
       os << std::endl;
     }

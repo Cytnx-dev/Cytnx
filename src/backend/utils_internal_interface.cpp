@@ -1,6 +1,5 @@
 #include "utils_internal_interface.hpp"
 #include <vector>
-using namespace std;
 namespace cytnx {
   namespace utils_internal {
 
@@ -17,7 +16,8 @@ namespace cytnx {
       // blocks_mvelems_ii[Type.Uint16       ] = blocks_mvelems_u16;
       // blocks_mvelems_ii[Type.Int16        ] = blocks_mvelems_i16;
       // blocks_mvelems_ii[Type.Bool         ] = blocks_mvelems_b;
-      ElemCast = vector<vector<ElemCast_io>>(N_Type, vector<ElemCast_io>(N_Type, NULL));
+      ElemCast =
+        std::vector<std::vector<ElemCast_io>>(N_Type, std::vector<ElemCast_io>(N_Type, NULL));
       ElemCast[Type.ComplexDouble][Type.ComplexDouble] = Cast_cpu_cdtcd;
       ElemCast[Type.ComplexDouble][Type.ComplexFloat] = Cast_cpu_cdtcf;
       // ElemCast[Type.ComplexDouble][Type.Double       ] = Cast_cpu_invalid;
@@ -193,7 +193,8 @@ namespace cytnx {
       GetElems_conti_ii[Type.Bool] = GetElems_contiguous_cpu_b;
 
       //
-      SetElems_ii = vector<vector<SetElems_io>>(N_Type, vector<SetElems_io>(N_Type, NULL));
+      SetElems_ii =
+        std::vector<std::vector<SetElems_io>>(N_Type, std::vector<SetElems_io>(N_Type, NULL));
       SetElems_ii[Type.ComplexDouble][Type.ComplexDouble] = SetElems_cpu_cdtcd;
       SetElems_ii[Type.ComplexDouble][Type.ComplexFloat] = SetElems_cpu_cdtcf;
       // SetElems_ii[Type.ComplexDouble][Type.Double       ] = SetElems_cpu_invalid;
@@ -320,8 +321,8 @@ namespace cytnx {
       SetElems_ii[Type.Bool][Type.Uint16] = SetElems_cpu_btu16;
       SetElems_ii[Type.Bool][Type.Bool] = SetElems_cpu_btb;
 
-      SetElems_conti_ii =
-        vector<vector<SetElems_conti_io>>(N_Type, vector<SetElems_conti_io>(N_Type, NULL));
+      SetElems_conti_ii = std::vector<std::vector<SetElems_conti_io>>(
+        N_Type, std::vector<SetElems_conti_io>(N_Type, NULL));
       SetElems_conti_ii[Type.ComplexDouble][Type.ComplexDouble] = SetElems_conti_cpu_cdtcd;
       SetElems_conti_ii[Type.ComplexDouble][Type.ComplexFloat] = SetElems_conti_cpu_cdtcf;
       // SetElems_conti_ii[Type.ComplexDouble][Type.Double       ] = SetElems_conti_cpu_invalid;
@@ -449,7 +450,8 @@ namespace cytnx {
       SetElems_conti_ii[Type.Bool][Type.Bool] = SetElems_conti_cpu_btb;
 
 #ifdef UNI_GPU
-      cuElemCast = vector<vector<ElemCast_io>>(N_Type, vector<ElemCast_io>(N_Type, NULL));
+      cuElemCast =
+        std::vector<std::vector<ElemCast_io>>(N_Type, std::vector<ElemCast_io>(N_Type, NULL));
 
       cuElemCast[Type.ComplexDouble][Type.ComplexDouble] = cuCast_gpu_cdtcd;
       cuElemCast[Type.ComplexDouble][Type.ComplexFloat] = cuCast_gpu_cdtcf;
@@ -617,7 +619,8 @@ namespace cytnx {
       cuGetElems_conti_ii[Type.Bool] = cuGetElems_contiguous_gpu_b;
 
       //
-      cuSetElems_ii = vector<vector<SetElems_io>>(N_Type, vector<SetElems_io>(N_Type, NULL));
+      cuSetElems_ii =
+        std::vector<std::vector<SetElems_io>>(N_Type, std::vector<SetElems_io>(N_Type, NULL));
       cuSetElems_ii[Type.ComplexDouble][Type.ComplexDouble] = cuSetElems_gpu_cdtcd;
       cuSetElems_ii[Type.ComplexDouble][Type.ComplexFloat] = cuSetElems_gpu_cdtcf;
       // cuSetElems_ii[Type.ComplexDouble][Type.Double       ] = cuSetElems_gpu_invalid;
@@ -745,8 +748,8 @@ namespace cytnx {
       cuSetElems_ii[Type.Bool][Type.Bool] = cuSetElems_gpu_btb;
 
       //
-      cuSetElems_conti_ii =
-        vector<vector<SetElems_conti_io>>(N_Type, vector<SetElems_conti_io>(N_Type, NULL));
+      cuSetElems_conti_ii = std::vector<std::vector<SetElems_conti_io>>(
+        N_Type, std::vector<SetElems_conti_io>(N_Type, NULL));
       cuSetElems_conti_ii[Type.ComplexDouble][Type.ComplexDouble] = cuSetElems_conti_gpu_cdtcd;
       cuSetElems_conti_ii[Type.ComplexDouble][Type.ComplexFloat] = cuSetElems_conti_gpu_cdtcf;
       // cuSetElems_conti_ii[Type.ComplexDouble][Type.Double       ] = cuSetElems_conti_gpu_invalid;

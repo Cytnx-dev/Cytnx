@@ -1,7 +1,5 @@
 #include "Alloc_cpu.hpp"
 
-using namespace std;
-
 namespace cytnx {
   namespace utils_internal {
     void* Calloc_cpu(const cytnx_uint64& N, const cytnx_uint64& perelem_bytes) {

@@ -10,14 +10,12 @@
   #include "backend/linalg_internal_cpu/Gemm_Batch_internal.hpp"
   #include "backend/linalg_internal_interface.hpp"
 
-using namespace std;
-
 namespace cytnx {
   namespace linalg {
 
-    void Gemm_Batch(const vector<Scalar>& alpha_array, const vector<Tensor>& a_tensors,
-                    const vector<Tensor>& b_tensors, const vector<Scalar>& beta_array,
-                    vector<Tensor>& c_tensors, const vector<cytnx_int64>& group_size) {
+    void Gemm_Batch(const std::vector<Scalar>& alpha_array, const std::vector<Tensor>& a_tensors,
+                    const std::vector<Tensor>& b_tensors, const std::vector<Scalar>& beta_array,
+                    std::vector<Tensor>& c_tensors, const std::vector<cytnx_int64>& group_size) {
       const cytnx_int64 group_count = static_cast<cytnx_int64>(group_size.size());
 
       // Each group must contain at least one matrix: MKL's gemm_batch rejects
@@ -149,8 +147,8 @@ namespace cytnx {
       }
 
       // Promote and make contiguous
-      vector<Tensor> a_promoted(a_tensors), b_promoted(b_tensors);
-      vector<Scalar> alpha_promoted(alpha_array), beta_promoted(beta_array);
+      std::vector<Tensor> a_promoted(a_tensors), b_promoted(b_tensors);
+      std::vector<Scalar> alpha_promoted(alpha_array), beta_promoted(beta_array);
       for (cytnx_uint64 i = 0; i < total_matrices; i++) {
         if (a_promoted[i].dtype() != promoted_dtype)
           a_promoted[i] = a_tensors[i].astype(promoted_dtype);
@@ -170,7 +168,7 @@ namespace cytnx {
       }
 
       // Raw data pointer arrays
-      vector<void*> a_data(total_matrices), b_data(total_matrices), c_data(total_matrices);
+      std::vector<void*> a_data(total_matrices), b_data(total_matrices), c_data(total_matrices);
       for (cytnx_uint64 i = 0; i < total_matrices; i++) {
         a_data[i] = a_promoted[i].storage()._impl->data();
         b_data[i] = b_promoted[i].storage()._impl->data();
@@ -180,8 +178,8 @@ namespace cytnx {
       // Per-group dimension arrays (MKL contract: one m/n/k per group, derived from first matrix)
       const auto blas_group_sizes = vec_cast<cytnx_int64, blas_int>(group_size);
       constexpr char kNoTranspose = 'N';
-      vector<char> trans_flags(group_count, kNoTranspose);
-      vector<blas_int> ms(group_count), ns(group_count), ks(group_count);
+      std::vector<char> trans_flags(group_count, kNoTranspose);
+      std::vector<blas_int> ms(group_count), ns(group_count), ks(group_count);
       {
         cytnx_uint64 idx = 0;
         for (cytnx_int64 g = 0; g < group_count; g++) {

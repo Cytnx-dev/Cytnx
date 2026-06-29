@@ -9,7 +9,6 @@
 #else
   #include "backend/linalg_internal_interface.hpp"
 
-using namespace std;
 namespace cytnx {
   namespace linalg {
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a,
@@ -55,8 +54,8 @@ namespace cytnx {
       }
 
       // 1) get redundant rank:
-      vector<cytnx_int64> shape(Tn.shape().begin(), Tn.shape().end());
-      vector<cytnx_uint64> accu;
+      std::vector<cytnx_int64> shape(Tn.shape().begin(), Tn.shape().end());
+      std::vector<cytnx_uint64> accu;
       shape.erase(shape.begin() + ax2);
       shape.erase(shape.begin() + ax1);
       // 2) get output element size.
@@ -86,8 +85,8 @@ namespace cytnx {
         }
       } else {
         // nd
-        vector<cytnx_uint64> remain_rank_id;
-        vector<cytnx_uint64> accu(shape.size());
+        std::vector<cytnx_uint64> remain_rank_id;
+        std::vector<cytnx_uint64> accu(shape.size());
         accu.back() = 1;
         for (int i = shape.size() - 1; i > 0; i--) accu[i - 1] = accu[i] * shape[i];
 

@@ -17,7 +17,6 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    using namespace std;
 
     // <A|B>
     static Scalar _Dot(const UniTensor &A, const UniTensor &B) {

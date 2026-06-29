@@ -1,7 +1,5 @@
 #include "tn_algo/MPO.hpp"
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 

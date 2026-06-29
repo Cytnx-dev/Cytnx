@@ -11,7 +11,6 @@
   #include "hptt.h"
 #endif
 
-using namespace std;
 namespace cytnx {
 
   namespace utils_internal {

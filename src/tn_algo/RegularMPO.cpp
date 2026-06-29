@@ -1,17 +1,15 @@
 #include "tn_algo/MPO.hpp"
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
 namespace cytnx {
   namespace tn_algo {
     std::ostream &RegularMPO::Print(std::ostream &os) {
-      os << "[test][RegularMPO]" << endl;
+      os << "[test][RegularMPO]" << std::endl;
       os << "MPO type:"
-         << "Regular" << endl;
-      os << "Number of Op: " << this->_TNs.size() << endl;
+         << "Regular" << std::endl;
+      os << "Number of Op: " << this->_TNs.size() << std::endl;
 
       return os;
     }

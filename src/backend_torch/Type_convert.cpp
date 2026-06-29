@@ -2,7 +2,6 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 
-using namespace std;
 namespace cytnx {
 
   TypeCvrt_class::TypeCvrt_class() {

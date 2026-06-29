@@ -2,7 +2,6 @@
 #include "random.hpp"
 #include <cmath>
 #include <algorithm>
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -11,8 +10,8 @@ namespace cytnx {
   namespace tn_algo {
     std::ostream &iMPS::Print(std::ostream &os) {
       os << "MPS type : "
-         << "[iMPS]" << endl;
-      os << "Size : " << this->_TNs.size() << endl;
+         << "[iMPS]" << std::endl;
+      os << "Size : " << this->_TNs.size() << std::endl;
       os << "physBD dim :\n";
 
       // print Sloc indicator:
@@ -33,8 +32,8 @@ namespace cytnx {
       } else {
         os << "] \n";
       }
-      os << "virtBD dim : " << this->virt_dim << endl;
-      os << endl;
+      os << "virtBD dim : " << this->virt_dim << std::endl;
+      os << std::endl;
       return os;
     }
 
@@ -56,11 +55,12 @@ namespace cytnx {
       for (cytnx_int64 k = 0; k < N; k++) {
         this->_TNs[k] =
           UniTensor(cytnx::random::normal({chi, vphys_dim[k], chi}, 0., 1.), false, 2);
-        this->_TNs[k].relabel_({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
+        this->_TNs[k].relabel_(
+          {std::to_string(2 * k), std::to_string(2 * k + 1), std::to_string(2 * k + 2)});
       }
     }
 
-    void iMPS::_save_dispatch(fstream &f) {
+    void iMPS::_save_dispatch(std::fstream &f) {
       cytnx_uint64 N = this->_TNs.size();
       f.write((char *)&N, sizeof(cytnx_uint64));
 
@@ -69,7 +69,7 @@ namespace cytnx {
         this->_TNs[i]._Save(f);
       }
     }
-    void iMPS::_load_dispatch(fstream &f) {
+    void iMPS::_load_dispatch(std::fstream &f) {
       cytnx_uint64 N;
 
       f.read((char *)&N, sizeof(cytnx_uint64));

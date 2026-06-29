@@ -1,7 +1,5 @@
 #include "tn_algo/MPS.hpp"
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
@@ -74,12 +72,12 @@ namespace cytnx {
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
 
-    void MPS_impl::_save_dispatch(fstream &f) {
+    void MPS_impl::_save_dispatch(std::fstream &f) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
 
-    void MPS_impl::_load_dispatch(fstream &f) {
+    void MPS_impl::_load_dispatch(std::fstream &f) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
