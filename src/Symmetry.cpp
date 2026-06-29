@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace cytnx {
 
   namespace {
@@ -156,7 +154,7 @@ namespace cytnx {
     os << "--------------------\n";
     os << "[Symmetry]" << std::endl;
     os << "type : Abelian, Z(" << this->n << ")" << std::endl;
-    os << "combine rule : (Q1 + Q2)\%" << this->n << std::endl;
+    os << "combine rule : (Q1 + Q2)%" << this->n << std::endl;
     os << "reverse rule : Q*(-1) " << std::endl;
     os << "--------------------\n";
   }
@@ -196,7 +194,7 @@ namespace cytnx {
   }
 
   fermionParity cytnx::FermionParitySymmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
-    // vector<fermionParity> out(this->n);
+    // std::vector<fermionParity> out(this->n);
     if (in_qnum == 0)
       return EVEN;
     else if (in_qnum == 1)
@@ -210,7 +208,7 @@ namespace cytnx {
     os << "--------------------\n";
     os << "[Symmetry]" << std::endl;
     os << "type : fermionic, FermionParity" << std::endl;
-    os << "combine rule : (Q1 + Q2)\2" << std::endl;
+    os << "combine rule : (Q1 + Q2)%2" << std::endl;
     os << "reverse rule : Q*(-1) " << std::endl;
     os << "--------------------\n";
   }
@@ -241,7 +239,7 @@ namespace cytnx {
   }
 
   fermionParity cytnx::FermionNumberSymmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
-    // vector<fermionParity> out(this->n);
+    // std::vector<fermionParity> out(this->n);
     if (in_qnum % 2 == 0)
       return EVEN;
     else
@@ -260,17 +258,17 @@ namespace cytnx {
   //==================================================
 
   void cytnx::Symmetry::Save(const std::string &fname) const {
-    fstream f;
+    std::fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
+      f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     } else {
       // add filename extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cysym'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
+      f.open((fname + ".cysym"), std::ios::out | std::ios::trunc | std::ios::binary);
     }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -278,12 +276,12 @@ namespace cytnx {
     this->_Save(f);
     f.close();
   }
-  void cytnx::Symmetry::Save(const char *fname) const { this->Save(string(fname)); }
+  void cytnx::Symmetry::Save(const char *fname) const { this->Save(std::string(fname)); }
 
   cytnx::Symmetry cytnx::Symmetry::Load(const std::string &fname) {
     Symmetry out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
@@ -292,19 +290,19 @@ namespace cytnx {
     return out;
   }
   cytnx::Symmetry cytnx::Symmetry::Load(const char *fname) {
-    return cytnx::Symmetry::Load(string(fname));
+    return cytnx::Symmetry::Load(std::string(fname));
   }
 
   //==================
-  void cytnx::Symmetry::_Save(fstream &f) const {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid fstream%s", "\n");
+  void cytnx::Symmetry::_Save(std::fstream &f) const {
+    cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid std::fstream%s", "\n");
     unsigned int IDDs = 777;
     f.write((char *)&IDDs, sizeof(unsigned int));
     f.write((char *)&this->_impl->stype_id, sizeof(int));
     f.write((char *)&this->_impl->n, sizeof(int));
   }
-  void cytnx::Symmetry::_Load(fstream &f) {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid fstream%s", "\n");
+  void cytnx::Symmetry::_Load(std::fstream &f) {
+    cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid std::fstream%s", "\n");
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 777, "[ERROR] the object is not a cytnx symmetry!%s", "\n");

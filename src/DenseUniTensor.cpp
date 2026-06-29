@@ -11,8 +11,6 @@
 
 typedef cytnx::Accessor ac;
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
@@ -439,8 +437,8 @@ namespace cytnx {
     if (full_info)
       os << this->_block << std::endl;
     else {
-      os << "dtype: " << Type.getname(this->_block.dtype()) << endl;
-      os << "device: " << Device.getname(this->_block.device()) << endl;
+      os << "dtype: " << Type.getname(this->_block.dtype()) << std::endl;
+      os << "device: " << Device.getname(this->_block.device()) << std::endl;
       os << "shape: ";
       vec_print_simple(os, this->_block.shape());
     }
@@ -487,17 +485,17 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < vl; i++) {
       if (i < Nin) {
         if (Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
-        if (Space_Ldim_max < to_string(this->_bonds[i].dim()).size())
-          Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
+        if (Space_Ldim_max < std::to_string(this->_bonds[i].dim()).size())
+          Space_Ldim_max = std::to_string(this->_bonds[i].dim()).size();
       }
       if (i < Nout) {
-        if (Space_Rdim_max < to_string(this->_bonds[Nin + i].dim()).size())
-          Space_Rdim_max = to_string(this->_bonds[Nin + i].dim()).size();
+        if (Space_Rdim_max < std::to_string(this->_bonds[Nin + i].dim()).size())
+          Space_Rdim_max = std::to_string(this->_bonds[Nin + i].dim()).size();
       }
     }
-    string LallSpace = (string(" ") * (Space_Llabel_max + 3 + 1));
-    string MallSpace = string(" ") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
-    string M_dashes = string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
+    std::string LallSpace = (std::string(" ") * (Space_Llabel_max + 3 + 1));
+    std::string MallSpace = std::string(" ") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
+    std::string M_dashes = std::string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
     std::string tmpss;
 
     if (this->is_tag()) {
@@ -522,8 +520,9 @@ namespace cytnx {
           tmpss =
             this->_labels[i] + std::string(" ") * (Space_Llabel_max - this->_labels[i].size());
           sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
-          tmpss = to_string(this->_bonds[i].dim()) +
-                  std::string(" ") * (Space_Ldim_max - to_string(this->_bonds[i].dim()).size());
+          tmpss =
+            std::to_string(this->_bonds[i].dim()) +
+            std::string(" ") * (Space_Ldim_max - std::to_string(this->_bonds[i].dim()).size());
           sprintf(llbl, "%s", tmpss.c_str());
         } else {
           memset(l, 0, sizeof(char) * BUFFsize);
@@ -543,9 +542,9 @@ namespace cytnx {
 
           sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
 
-          tmpss =
-            to_string(this->_bonds[Nin + i].dim()) +
-            std::string(" ") * (Space_Rdim_max - to_string(this->_bonds[Nin + i].dim()).size());
+          tmpss = std::to_string(this->_bonds[Nin + i].dim()) +
+                  std::string(" ") *
+                    (Space_Rdim_max - std::to_string(this->_bonds[Nin + i].dim()).size());
           sprintf(rlbl, "%s", tmpss.c_str());
 
         } else {
@@ -584,8 +583,9 @@ namespace cytnx {
           tmpss =
             this->_labels[i] + std::string(" ") * (Space_Llabel_max - this->_labels[i].size());
           sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
-          tmpss = to_string(this->_bonds[i].dim()) +
-                  std::string(" ") * (Space_Ldim_max - to_string(this->_bonds[i].dim()).size());
+          tmpss =
+            std::to_string(this->_bonds[i].dim()) +
+            std::string(" ") * (Space_Ldim_max - std::to_string(this->_bonds[i].dim()).size());
           sprintf(llbl, "%s", tmpss.c_str());
 
         } else {
@@ -604,9 +604,9 @@ namespace cytnx {
 
           sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
 
-          tmpss =
-            to_string(this->_bonds[Nin + i].dim()) +
-            std::string(" ") * (Space_Rdim_max - to_string(this->_bonds[Nin + i].dim()).size());
+          tmpss = std::to_string(this->_bonds[Nin + i].dim()) +
+                  std::string(" ") *
+                    (Space_Rdim_max - std::to_string(this->_bonds[Nin + i].dim()).size());
           sprintf(rlbl, "%s", tmpss.c_str());
 
         } else {
@@ -1073,16 +1073,11 @@ namespace cytnx {
           tmpR = rhs->get_block_().contiguous();
       }
       std::vector<cytnx_int64> old_shape_L(tmpL.shape().begin(), tmpL.shape().end());
-      // vector<cytnx_int64> old_shape_R(tmpR.shape().begin(),tmpR.shape().end());
       std::vector<cytnx_int64> shape_L =
         vec_concatenate(old_shape_L, std::vector<cytnx_int64>(tmpR.shape().size(), 1));
-      // vector<cytnx_int64> shape_R =
-      // vec_concatenate(vector<cytnx_int64>(old_shape_L.size(),1),old_shape_R);
       tmpL.reshape_(shape_L);
-      // tmpR.reshape_(shape_R);
       tmp->_block = linalg::Kron(tmpL, tmpR, false, true);
       tmpL.reshape_(old_shape_L);
-      // tmpR.reshape_(old_shapeR);
       tmp->_is_diag = false;
 
       //}

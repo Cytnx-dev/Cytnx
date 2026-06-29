@@ -46,7 +46,7 @@ namespace cytnx {
   typedef int64_t cytnx_int64;
   typedef int32_t cytnx_int32;
   typedef int16_t cytnx_int16;
-  typedef size_t cytnx_size_t;
+  typedef std::size_t cytnx_size_t;
   typedef std::complex<float> cytnx_complex64;
   typedef std::complex<double> cytnx_complex128;
   typedef bool cytnx_bool;
@@ -113,22 +113,22 @@ namespace cytnx {
 
   template <typename T, typename... Types>
   struct variant_index<T, std::variant<Types...>> {
-    static constexpr size_t value = std::variant_size_v<std::variant<Types...>>;
+    static constexpr std::size_t value = std::variant_size_v<std::variant<Types...>>;
   };
 
   template <typename T, typename... Types>
   struct variant_index<T, std::variant<T, Types...>> {
-    static constexpr size_t value = 0;
+    static constexpr std::size_t value = 0;
   };
 
   template <typename T, typename U, typename... Types>
   struct variant_index<T, std::variant<U, Types...>> {
-    static constexpr size_t value = 1 + variant_index<T, std::variant<Types...>>::value;
+    static constexpr std::size_t value = 1 + variant_index<T, std::variant<Types...>>::value;
   };
 
   // helper template variable
   template <typename T, typename Variant>
-  static constexpr size_t variant_index_v = variant_index<T, Variant>::value;
+  static constexpr std::size_t variant_index_v = variant_index<T, Variant>::value;
 
   namespace internal {
     // type_size returns the sizeof(T) for the supported types. This is the same as

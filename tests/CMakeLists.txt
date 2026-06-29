@@ -41,7 +41,9 @@ add_executable(
   linalg_test/Svd_truncate_test.cpp
   linalg_test/Gesvd_truncate_test.cpp
   linalg_test/Rsvd_test.cpp
+  linalg_test/Gemm_Batch_test.cpp
   linalg_test/linalg_test.cpp
+  linalg_test/stride_view_test.cpp
   linalg_test/sum_test.cpp
   linalg_test/Vectordot_test.cpp
   algo_test/Hsplit_test.cpp
@@ -59,6 +61,10 @@ target_include_directories(
   test_main
   PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
+  # Internal backend headers (e.g. linalg_internal_cpu/stride_view.hpp) live
+  # under src/ and are PRIVATE to the cytnx target; expose them to the test
+  # binary so internal utilities can be unit-tested directly.
+  ${CMAKE_SOURCE_DIR}/src
 )
 target_link_libraries(
   test_main

@@ -54,7 +54,6 @@ target_sources(cytnx
     Inv_inplace_internal.cpp
     Matmul_internal.cpp
     Gemm_internal.cpp
-    Gemm_Batch_internal.cpp
     Matmul_dg_internal.cpp
     Matvec_internal.cpp
     iMul_internal.cpp

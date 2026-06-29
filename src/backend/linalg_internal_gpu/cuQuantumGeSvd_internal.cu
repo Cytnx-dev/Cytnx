@@ -1,12 +1,12 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "cuQuantumGeSvd_internal.hpp"
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <cassert>
 #include <iostream>
 #include <unordered_map>
 #include <vector>
-#include <cassert>
-
-#include "cuQuantumGeSvd_internal.hpp"
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
@@ -281,7 +281,7 @@ namespace cytnx {
     void cuQuantumGeSvd_internal_cd(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                     const double &err, const unsigned int &return_err, Tensor &U,
                                     Tensor &S, Tensor &vT, Tensor &terr) {
-      const size_t cuTensornetVersion = cutensornetGetVersion();
+      const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
       cudaDeviceProp prop;
       int deviceId = Tin.device();
@@ -524,7 +524,7 @@ namespace cytnx {
     void cuQuantumGeSvd_internal_cf(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                     const double &err, const unsigned int &return_err, Tensor &U,
                                     Tensor &S, Tensor &vT, Tensor &terr) {
-      const size_t cuTensornetVersion = cutensornetGetVersion();
+      const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
       cudaDeviceProp prop;
@@ -768,7 +768,7 @@ namespace cytnx {
     void cuQuantumGeSvd_internal_d(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                    const double &err, const unsigned int &return_err, Tensor &U,
                                    Tensor &S, Tensor &vT, Tensor &terr) {
-      const size_t cuTensornetVersion = cutensornetGetVersion();
+      const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
       cudaDeviceProp prop;
@@ -1012,7 +1012,7 @@ namespace cytnx {
     void cuQuantumGeSvd_internal_f(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                    const double &err, const unsigned int &return_err, Tensor &U,
                                    Tensor &S, Tensor &vT, Tensor &terr) {
-      const size_t cuTensornetVersion = cutensornetGetVersion();
+      const std::size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
       cudaDeviceProp prop;

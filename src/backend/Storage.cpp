@@ -3,8 +3,6 @@
 #include <filesystem>
 #include <ostream>
 
-using namespace std;
-
 namespace cytnx {
 
   Storage_init_interface __SII;
@@ -83,17 +81,17 @@ namespace cytnx {
   bool Storage::operator!=(const Storage &rhs) { return !(*this == rhs); }
 
   void Storage::Save(const std::string &fname) const {
-    fstream f;
+    std::fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
+      f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     } else {
       // add filename extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cyst'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cyst"), ios::out | ios::trunc | ios::binary);
+      f.open((fname + ".cyst"), std::ios::out | std::ios::trunc | std::ios::binary);
     }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -101,10 +99,10 @@ namespace cytnx {
     this->_Save(f);
     f.close();
   }
-  void Storage::Save(const char *fname) const { this->Save(string(fname)); }
+  void Storage::Save(const char *fname) const { this->Save(std::string(fname)); }
   void Storage::Tofile(const std::string &fname) const {
-    fstream f;
-    f.open(fname, ios::out | ios::trunc | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
@@ -112,26 +110,26 @@ namespace cytnx {
     f.close();
   }
   void Storage::Tofile(const char *fname) const {
-    fstream f;
-    string ffname = string(fname);
-    f.open(ffname, ios::out | ios::trunc | ios::binary);
+    std::fstream f;
+    std::string ffname = std::string(fname);
+    f.open(ffname, std::ios::out | std::ios::trunc | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Savebinary(f);
     f.close();
   }
-  void Storage::Tofile(fstream &f) const {
+  void Storage::Tofile(std::fstream &f) const {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Savebinary(f);
   }
 
-  void Storage::_Save(fstream &f) const {
+  void Storage::_Save(std::fstream &f) const {
     // header
     // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
+    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
 
     unsigned int IDDs = 999;
     f.write((char *)&IDDs, sizeof(unsigned int));
@@ -160,10 +158,10 @@ namespace cytnx {
 #endif
     }
   }
-  void Storage::_Savebinary(fstream &f) const {
+  void Storage::_Savebinary(std::fstream &f) const {
     // header
     // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
+    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
 
     // data:
     if (this->device() == Device.cpu) {
@@ -186,41 +184,45 @@ namespace cytnx {
 
   Storage Storage::Fromfile(const char *fname, const unsigned int &dtype,
                             const cytnx_int64 &count) {
-    return Storage::Fromfile(string(fname), dtype, count);
+    return Storage::Fromfile(std::string(fname), dtype, count);
   }
   Storage Storage::Fromfile(const std::string &fname, const unsigned int &dtype,
                             const cytnx_int64 &count) {
     cytnx_error_msg(dtype == Type.Void, "[ERROR] Cannot have Void dtype.%s", "\n");
-    cytnx_error_msg(count == 0, "[ERROR] count cannot be zero!%s", "\n");
 
     Storage out;
     cytnx_uint64 Nbytes;
     cytnx_uint64 Nelem;
 
     // check size:
-    ifstream jf;
-    jf.open(fname, ios::ate | ios::binary);
+    std::ifstream jf;
+    jf.open(fname, std::ios::ate | std::ios::binary);
     if (!jf.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     Nbytes = jf.tellg();
     jf.close();
 
-    fstream f;
+    std::fstream f;
     // check if type match?
     cytnx_error_msg(Nbytes % Type.typeSize(dtype),
                     "[ERROR] the total size of file is not an interval of assigned dtype.%s", "\n");
 
+    const cytnx_uint64 total_elements = Nbytes / Type.typeSize(dtype);
+
     // check count smaller than Nelem:
-    if (count < 0)
-      Nelem = Nbytes / Type.typeSize(dtype);
-    else {
-      cytnx_error_msg(count > Nelem, "[ERROR] count exceed the total # of elements %d in file.\n",
-                      Nelem);
-      Nelem = count;
+    if (count < 0) {
+      Nelem = total_elements;
+    } else {
+      const cytnx_uint64 requested_count = static_cast<cytnx_uint64>(count);
+      cytnx_error_msg(requested_count > total_elements,
+                      "[ERROR] count (%llu) exceeds the total # of elements (%llu) in file.\n",
+                      static_cast<unsigned long long>(requested_count),
+                      static_cast<unsigned long long>(total_elements));
+      Nelem = requested_count;
     }
 
-    f.open(fname, ios::in | ios::binary);
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
@@ -230,8 +232,8 @@ namespace cytnx {
   }
   Storage Storage::Load(const std::string &fname) {
     Storage out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
@@ -239,15 +241,15 @@ namespace cytnx {
     f.close();
     return out;
   }
-  Storage Storage::Load(const char *fname) { return Storage::Load(string(fname)); }
-  void Storage::_Load(fstream &f) {
+  Storage Storage::Load(const char *fname) { return Storage::Load(std::string(fname)); }
+  void Storage::_Load(std::fstream &f) {
     // header
     unsigned long long sz;
     unsigned int dt;
     int dv;
 
     // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
+    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
 
     // checking IDD
     unsigned int tmpIDDs;
@@ -291,13 +293,13 @@ namespace cytnx {
     }
   }
 
-  void Storage::_Loadbinary(fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem) {
-    // before enter this func, makesure
+  void Storage::_Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem) {
+    // Before entering this function, ensure:
     // 1. dtype is not void.
-    // 2. the Nelement is consistent and smaller than the file size, and should not be zero!
+    // 2. Nelem is consistent and no larger than the file size.
 
     // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
+    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
 
     this->_impl = __SII.USIInit[dtype]();
     this->_impl->Init(Nelem, Device.cpu);

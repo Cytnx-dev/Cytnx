@@ -121,4 +121,28 @@ In the following, let's see how it can be used to get/set the elements from/in a
 
     If your code makes frequent use of get/set elements, using the low-level API can reduce the overhead.
 
+Raw pointer access (C++ only)
+*****************************
+``Tensor::ptr_as<T>()`` and ``Tensor::gpu_ptr_as<T>()`` expose the raw storage
+address of a Tensor. They are intended for low-level library code and should be
+used with care.
+
+Use ``ptr_as<T>()`` when ``T`` is the logical Cytnx element type of the Tensor.
+This is the correct accessor for ordinary C++ code and for raw memory-copy
+interfaces such as ``memcpy`` or ``cudaMemcpy``. For complex tensors, the logical
+type is ``std::complex<double>`` or ``std::complex<float>``.
+
+Use ``gpu_ptr_as<T>()`` only when passing Tensor storage to CUDA APIs that require
+CUDA ABI element types. For complex tensors, this means ``cuDoubleComplex`` or
+``cuComplex``.
+
+Both accessors return the same underlying storage address. The difference is the
+dtype mapping they validate before returning it:
+
+* ``ptr_as<T>()`` checks ``T`` against the normal Cytnx type list.
+* ``gpu_ptr_as<T>()`` checks ``T`` against the CUDA type list.
+
+If a function only needs an address for a byte copy, keep the typed pointer from
+``ptr_as<T>()`` and pass it directly to the copy routine.
+
 .. toctree::

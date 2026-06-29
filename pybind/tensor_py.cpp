@@ -298,7 +298,7 @@ void tensor_binding(py::module &m) {
     .def_static(
       "Fromfile",
       [](const std::string &fname, const unsigned int &dtype, const cytnx::cytnx_int64 &count) {
-        return cytnx::Tensor::Load(fname);
+        return cytnx::Tensor::Fromfile(fname, dtype, count);
       },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = cytnx::cytnx_int64(-1))
 

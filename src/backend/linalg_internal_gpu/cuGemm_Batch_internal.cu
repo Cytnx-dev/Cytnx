@@ -16,8 +16,8 @@ namespace cytnx {
                                   const blas_int *group_size) {
       std::vector<cytnx_complex128> alphas(alpha_array.size());
       std::vector<cytnx_complex128> betas(beta_array.size());
-      for (size_t i = 0; i < alpha_array.size(); i++) alphas[i] = complex128(alpha_array[i]);
-      for (size_t i = 0; i < beta_array.size(); i++) betas[i] = complex128(beta_array[i]);
+      for (std::size_t i = 0; i < alpha_array.size(); i++) alphas[i] = complex128(alpha_array[i]);
+      for (std::size_t i = 0; i < beta_array.size(); i++) betas[i] = complex128(beta_array[i]);
 
       cytnx_uint64 idx = 0;
       for (cytnx_uint64 i = 0; i < group_count; i++) {
@@ -73,8 +73,8 @@ namespace cytnx {
                                   const blas_int *group_size) {
       std::vector<cytnx_complex64> alphas(alpha_array.size());
       std::vector<cytnx_complex64> betas(beta_array.size());
-      for (size_t i = 0; i < alpha_array.size(); i++) alphas[i] = complex64(alpha_array[i]);
-      for (size_t i = 0; i < beta_array.size(); i++) betas[i] = complex64(beta_array[i]);
+      for (std::size_t i = 0; i < alpha_array.size(); i++) alphas[i] = complex64(alpha_array[i]);
+      for (std::size_t i = 0; i < beta_array.size(); i++) betas[i] = complex64(beta_array[i]);
 
       cytnx_uint64 idx = 0;
       for (cytnx_uint64 i = 0; i < group_count; i++) {
@@ -130,8 +130,8 @@ namespace cytnx {
                                  const blas_int *group_size) {
       std::vector<cytnx_double> alphas(alpha_array.size());
       std::vector<cytnx_double> betas(beta_array.size());
-      for (size_t i = 0; i < alpha_array.size(); i++) alphas[i] = double(alpha_array[i]);
-      for (size_t i = 0; i < beta_array.size(); i++) betas[i] = double(beta_array[i]);
+      for (std::size_t i = 0; i < alpha_array.size(); i++) alphas[i] = double(alpha_array[i]);
+      for (std::size_t i = 0; i < beta_array.size(); i++) betas[i] = double(beta_array[i]);
 
       cytnx_uint64 idx = 0;
       for (cytnx_uint64 i = 0; i < group_count; i++) {
@@ -186,8 +186,8 @@ namespace cytnx {
                                  const blas_int *group_size) {
       std::vector<cytnx_float> alphas(alpha_array.size());
       std::vector<cytnx_float> betas(beta_array.size());
-      for (size_t i = 0; i < alpha_array.size(); i++) alphas[i] = float(alpha_array[i]);
-      for (size_t i = 0; i < beta_array.size(); i++) betas[i] = float(beta_array[i]);
+      for (std::size_t i = 0; i < alpha_array.size(); i++) alphas[i] = float(alpha_array[i]);
+      for (std::size_t i = 0; i < beta_array.size(); i++) betas[i] = float(beta_array[i]);
 
       cytnx_uint64 idx = 0;
       for (cytnx_uint64 i = 0; i < group_count; i++) {

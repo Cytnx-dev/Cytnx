@@ -375,14 +375,14 @@ namespace cytnx {
      * @param dtype[in] the data type of the binary file. This can be any of the type defined in
      *   cytnx::Type.
      * @param count[in] the number of elements to be loaded from the binary file. If set to -1,
-     *  all elements in the binary file will be loaded.
+     *  all elements in the binary file will be loaded. If set to 0, this returns an empty Tensor
+     *  with the requested dtype.
      * @return Tensor
      * @pre
      *  1. The @p dtype cannot be Type.Void.
      *  2. The @p dtype must be the same as the data type of the binary file.
-     *  3. The @p Nelem cannot be 0.
-     *  4. The @p Nelem cannot be larger than the number of elements in the binary file.
-     *  5. The file name @p fname must be valid.
+     *  3. The @p count cannot be larger than the number of elements in the binary file.
+     *  4. The file name @p fname must be valid.
      * @see cytnx::Tensor::Tofile
      */
     static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
@@ -512,17 +512,18 @@ namespace cytnx {
     // convert this->_impl->_storage._impl->Mem to a typed variant of pointers, excluding void*
     pointer_types ptr() const;
 
-    // convert this->_impl->_strorage->Mem to the given pointer type.
-    // Throws an exception if T does not match this->dtype
+    // Convert storage to the logical Cytnx element pointer type.
+    //
+    // Use ptr_as<T>() for host code and raw memory copies, including cudaMemcpy. For complex
+    // tensors, T is std::complex<...>. Use gpu_ptr_as<T>() only for CUDA APIs that require CUDA
+    // ABI element types such as cuDoubleComplex or cuComplex.
     template <typename T>
-    T *ptr_as(bool check_type = true) const {
-      if (check_type) {
-        cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
-                        "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
-                        this->dtype(), Type_class::getname(this->dtype()).c_str(),
-                        Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
-      }
-      return reinterpret_cast<T *>(this->_impl->_storage._impl->data());
+    T *ptr_as() const {
+      cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
+                      "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
+                      this->dtype(), Type_class::getname(this->dtype()).c_str(),
+                      Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
+      return static_cast<T *>(this->_impl->_storage._impl->data());
     }
 
   #ifdef UNI_GPU
@@ -534,18 +535,18 @@ namespace cytnx {
     // convert this->_impl->_storage->Mem to a typed variant of pointers, excluding void*
     gpu_pointer_types gpu_ptr() const;
 
-    // convert this->_impl->_strorage->Mem to the given pointer type.
-    // Throws an exception if T does not match this->dtype
+    // Convert storage to the CUDA ABI element pointer type.
+    //
+    // This is for CUDA/cuBLAS/cuSOLVER/kernel interfaces. Generic host code and cudaMemcpy byte
+    // copies should use ptr_as<T>() so the logical Cytnx dtype mapping is checked.
     template <typename T>
-    T *gpu_ptr_as(bool check_type = true) const {
-      if (check_type) {
-        cytnx_error_msg(
-          this->dtype() != Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>,
-          "[ERROR] Attempt to convert dtype %d (%s) to GPU pointer of type %s", this->dtype(),
-          Type_class::getname(this->dtype()).c_str(),
-          Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
-      }
-      return reinterpret_cast<T *>(this->_impl->_storage._impl->data());
+    T *gpu_ptr_as() const {
+      cytnx_error_msg(
+        this->dtype() != Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>,
+        "[ERROR] Attempt to convert dtype %d (%s) to GPU pointer of type %s", this->dtype(),
+        Type_class::getname(this->dtype()).c_str(),
+        Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
+      return static_cast<T *>(this->_impl->_storage._impl->data());
     }
   #endif
 

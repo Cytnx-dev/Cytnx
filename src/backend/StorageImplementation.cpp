@@ -10,6 +10,8 @@
 
 #include "boost/smart_ptr/intrusive_ptr.hpp"
 
+#include "Device.hpp"
+#include "Type.hpp"
 #include "backend/Scalar.hpp"
 #include "backend/utils_internal_cpu/Alloc_cpu.hpp"
 #include "backend/utils_internal_cpu/Complexmem_cpu.hpp"
@@ -21,14 +23,11 @@
 #include "backend/utils_internal_gpu/cuMovemem_gpu.hpp"
 #include "backend/utils_internal_gpu/cuSetZeros_gpu.hpp"
 #include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "Type.hpp"
 
 #ifdef UNI_GPU
   #include "cuda_runtime_api.h"
 #endif
 
-using namespace std;
 namespace cytnx {
   template <typename DType>
   void PrintValueAndSpace(std::ostream &os, const DType &value) {
@@ -784,9 +783,9 @@ namespace cytnx {
     } else {
       ++this->size_;
     }
-    if constexpr (is_same_v<DType, cytnx_complex128>) {
+    if constexpr (std::is_same_v<DType, cytnx_complex128>) {
       this->at<DType>(this->size_ - 1) = complex128(value);
-    } else if constexpr (is_same_v<DType, cytnx_complex64>) {
+    } else if constexpr (std::is_same_v<DType, cytnx_complex64>) {
       this->at<DType>(this->size_ - 1) = complex64(value);
     } else {
       this->at<DType>(this->size_ - 1) = static_cast<DType>(value);
@@ -807,9 +806,9 @@ namespace cytnx {
 
   template <typename DType>
   void StorageImplementation<DType>::SetItem(cytnx_uint64 index, const Scalar &value) {
-    if constexpr (is_same_v<DType, cytnx_complex128>) {
+    if constexpr (std::is_same_v<DType, cytnx_complex128>) {
       this->at<DType>(index) = complex128(value);
-    } else if constexpr (is_same_v<DType, cytnx_complex64>) {
+    } else if constexpr (std::is_same_v<DType, cytnx_complex64>) {
       this->at<DType>(index) = complex64(value);
     } else {
       this->at<DType>(index) = static_cast<DType>(value);

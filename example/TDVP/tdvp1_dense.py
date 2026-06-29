@@ -11,7 +11,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
     class OneSiteOp(cytnx.LinOp):
         def __init__(self, L, M, R):
             self.anet = cytnx.Network()
-            d = L.shape()[0]
+            d = M.shape()[2]
             D1 = L.shape()[2]
             D2 = R.shape()[2]
             cytnx.LinOp.__init__(self, "mv", D1*D2*d, L.dtype(), R.device())
@@ -285,6 +285,32 @@ def prepare_rand_init_MPS(Nsites, chi, d):
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
         A[k].relabel_(lbl)
         lbls.append(lbl) # store the labels for later convinience.
+    return A
+
+
+def prepare_x_init_MPS(Nsites, chi, d=2):
+    if d != 2:
+        raise ValueError("The |x> product state is only defined for d=2.")
+
+    A = [None for i in range(Nsites)]
+    amplitude = 1.0 / np.sqrt(2.0)
+    A[0] = (
+        cytnx.UniTensor.zeros([1, d, min(chi, d)])
+        .set_rowrank_(2)
+        .relabel_(["0", "1", "2"])
+    )
+    A[0][0, 0, 0] = amplitude
+    A[0][0, 1, 0] = amplitude
+
+    for k in range(1, Nsites):
+        dim1 = A[k - 1].shape()[2]
+        dim2 = d
+        dim3 = min(min(chi, A[k - 1].shape()[2] * d), d ** (Nsites - k - 1))
+        A[k] = cytnx.UniTensor.zeros([dim1, dim2, dim3]).set_rowrank_(2)
+        A[k][0, 0, 0] = amplitude
+        A[k][0, 1, 0] = amplitude
+        lbl = [str(2 * k), str(2 * k + 1), str(2 * k + 2)]
+        A[k].relabel_(lbl)
     return A
 
 

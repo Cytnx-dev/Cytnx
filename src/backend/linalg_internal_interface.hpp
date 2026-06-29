@@ -215,7 +215,6 @@ namespace cytnx {
       std::vector<Diagfunc_oii> Diag_ii;
       std::vector<Matmulfunc_oii> Matmul_ii;
       std::vector<Gemmfunc_oii> Gemm_ii;
-      std::vector<Gemm_Batchfunc_oii> Gemm_Batch_ii;
       std::vector<Matmul_dgfunc_oii> Matmul_dg_ii;
       std::vector<Matvecfunc_oii> Matvec_ii;
       std::vector<std::vector<Outerfunc_oii>> Outer_ii;

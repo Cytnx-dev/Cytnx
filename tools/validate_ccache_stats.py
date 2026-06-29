@@ -82,5 +82,24 @@ finally:
 # Reset counters so the next Python-version build observes fresh, per-build stats.
 subprocess.check_call(['ccache', '--zero-stats'])
 
+# cibuildwheel runs this script once per Python-version build. The very first
+# build of a run compiles the C++ sources from a cold cache, so zero hits is
+# expected; later versions reuse those object files and must hit the cache.
+# A marker file inside CCACHE_DIR (shared across the per-version build
+# containers via the bind mount) lets us tell the first build apart. The CI
+# workflow removes this marker once per run before invoking cibuildwheel, so a
+# marker carried over inside the cached CCACHE_DIR never masks a real failure.
+ccache_dir = os.getenv('CCACHE_DIR')
+first_build_marker = pathlib.Path(ccache_dir) / '.cytnx_first_wheel_build_done' if ccache_dir else None
+is_first_build = first_build_marker is not None and not first_build_marker.exists()
+if first_build_marker is not None:
+    first_build_marker.parent.mkdir(parents=True, exist_ok=True)
+    first_build_marker.touch()
+
 if total <= 0:
-    raise SystemExit('No ccache hits detected for this python-version build.')
+    if is_first_build:
+        print('ccache_first_build_no_hits_ok')
+        print('No ccache hits detected, but this is the first python-version build '
+              'of the cibuildwheel run (cold cache); skipping hit enforcement.')
+    else:
+        raise SystemExit('No ccache hits detected for this python-version build.')

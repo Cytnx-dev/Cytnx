@@ -2,10 +2,8 @@
 
 #include <ostream>
 
-#include "utils_internal_interface.hpp"
 #include "utils/vec_print.hpp"
-
-using namespace std;
+#include "utils_internal_interface.hpp"
 
 namespace cytnx {
 
@@ -130,8 +128,8 @@ namespace cytnx {
     return out;
   }
 
-  string Storage_base::dtype_str() const { return Type.getname(this->dtype()); }
-  string Storage_base::device_str() const { return Device.getname(this->device()); }
+  std::string Storage_base::dtype_str() const { return Type.getname(this->dtype()); }
+  std::string Storage_base::device_str() const { return Device.getname(this->device()); }
   void Storage_base::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device,
                                  const bool &iscap, const unsigned long long &cap_in) {
     cytnx_error_msg(true, "%s", "[ERROR] call _Init_byptr in base");
@@ -521,7 +519,7 @@ namespace cytnx {
   std::complex<double> *Storage_base::data<std::complex<double>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexDouble,
-      "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s",
+      "[ERROR] type mismatch. try to get < std::complex<double> > type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -533,7 +531,7 @@ namespace cytnx {
   std::complex<float> *Storage_base::data<std::complex<float>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexFloat,
-      "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s",
+      "[ERROR] type mismatch. try to get < std::complex<float> > type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -626,9 +624,10 @@ namespace cytnx {
       this->dtype() != Type.ComplexDouble,
       "[ERROR] type mismatch. try to get <cuDoubleComplex> type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->device() == Device.cpu, "%s",
-                    "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
-                    "cuDoubleComplex. use type <cytnx_complex128> or < complex<double> > instead.");
+    cytnx_error_msg(
+      this->device() == Device.cpu, "%s",
+      "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
+      "cuDoubleComplex. use type <cytnx_complex128> or < std::complex<double> > instead.");
     cudaDeviceSynchronize();
     return static_cast<cuDoubleComplex *>(this->data());
   }
@@ -638,9 +637,10 @@ namespace cytnx {
       this->dtype() != Type.ComplexFloat,
       "[ERROR] type mismatch. try to get <cuFloatComplex> type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->device() == Device.cpu, "%s",
-                    "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
-                    "cuFloatComplex. use type <cytnx_complex64> or < complex<float> > instead.");
+    cytnx_error_msg(
+      this->device() == Device.cpu, "%s",
+      "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
+      "cuFloatComplex. use type <cytnx_complex64> or < std::complex<float> > instead.");
     cudaDeviceSynchronize();
     return static_cast<cuFloatComplex *>(this->data());
   }
@@ -685,7 +685,7 @@ namespace cytnx {
     if (cytnx::User_debug)
       cytnx_error_msg(
         this->dtype() != Type.ComplexFloat,
-        "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s",
+        "[ERROR] type mismatch. try to get < std::complex<float> > type from raw data of type %s",
         Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
       cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
@@ -693,7 +693,7 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<complex<float> *>(this->data())[idx];
+    return static_cast<std::complex<float> *>(this->data())[idx];
   }
 
   template <>
@@ -701,7 +701,7 @@ namespace cytnx {
     if (cytnx::User_debug)
       cytnx_error_msg(
         this->dtype() != Type.ComplexDouble,
-        "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s",
+        "[ERROR] type mismatch. try to get < std::complex<double> > type from raw data of type %s",
         Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
       cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
@@ -709,7 +709,7 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<complex<double> *>(this->data())[idx];
+    return static_cast<std::complex<double> *>(this->data())[idx];
   }
 
   template <>
@@ -850,27 +850,27 @@ namespace cytnx {
   std::complex<float> &Storage_base::back<std::complex<float>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexFloat,
-      "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s",
+      "[ERROR] type mismatch. try to get < std::complex<float> > type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
     cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
 
-    return static_cast<complex<float> *>(this->data())[this->size() - 1];
+    return static_cast<std::complex<float> *>(this->data())[this->size() - 1];
   }
 
   template <>
   std::complex<double> &Storage_base::back<std::complex<double>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexDouble,
-      "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s",
+      "[ERROR] type mismatch. try to get < std::complex<double> > type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
     cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<complex<double> *>(this->data())[this->size() - 1];
+    return static_cast<std::complex<double> *>(this->data())[this->size() - 1];
   }
 
   template <>

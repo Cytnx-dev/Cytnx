@@ -30,7 +30,6 @@ namespace cytnx {
     extern std::random_device __static_random_device;
   }
 
-  using namespace cytnx;
   /// @cond
   class UniTensorType_class {
    public:

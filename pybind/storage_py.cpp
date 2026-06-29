@@ -4,16 +4,18 @@
 #include <string>
 #include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
+// NOTE: keep "complex.h" last: the C complex.h defines a macro `I` that breaks
+// the `template <std::size_t I, ...>` declarations pulled in via cytnx.hpp/Type.hpp.
 #include "complex.h"
 
 namespace py = pybind11;
@@ -36,7 +38,7 @@ void storage_binding(py::module &m) {
            }
 
            // calculate stride:
-           size_t type_size = Type.typeSize(tmpIN.dtype());
+           std::size_t type_size = Type.typeSize(tmpIN.dtype());
            std::vector<ssize_t> stride(1, type_size);
            std::vector<ssize_t> shape(1, tmpIN.size());
 

@@ -7,9 +7,8 @@ message(STATUS "")
 # #####################################################################
 # ## CMAKE and CXX VERSION
 # #####################################################################
-cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_ARCHITECTURES
+cmake_minimum_required(VERSION 3.25) # 3.25 added CUDA device LTO via INTERPROCEDURAL_OPTIMIZATION
 
-include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 # Inria's morse_cmake provides an up-to-date FindLAPACKE (and helpers) that
 # correctly handles LAPACKE bundled inside LAPACK (e.g. OpenBLAS).
@@ -63,9 +62,21 @@ include(version.cmake)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
 )
+# `CYTNX_VERSION_FULL` carries an optional PEP 440-style suffix
+# (e.g. `.dev202605311220`) supplied via the `CYTNX_VERSION_TAG`
+# environment variable. The nightly release pipeline sets this from
+# tools/prepare_nightly_release.py so that the wheel filename
+# (cytnx_nightly-X.Y.Z.devN-*.whl) and the runtime `cytnx.__version__`
+# agree. `CYTNX_VERSION` itself stays strictly numeric because
+# `project(VERSION ...)` and `set_target_properties(VERSION ...)`
+# require MAJOR.MINOR.PATCH.
+set(CYTNX_VERSION_FULL "${CYTNX_VERSION}")
+if(DEFINED ENV{CYTNX_VERSION_TAG} AND NOT "$ENV{CYTNX_VERSION_TAG}" STREQUAL "")
+  string(APPEND CYTNX_VERSION_FULL "$ENV{CYTNX_VERSION_TAG}")
+endif()
 set(CYTNX_VARIANT_INFO "")
 
-message(STATUS " Version: ${CYTNX_VERSION}")
+message(STATUS " Version: ${CYTNX_VERSION_FULL}")
 
 # create a file that contain all the link flags:
 FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
@@ -186,7 +197,18 @@ project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
-  set(CMAKE_CUDA_ARCHITECTURES native)
+  # Default to a portable fat binary unless the caller picked architectures via
+  # -D, the cache, a preset's cacheVariables, or the CUDAARCHS environment
+  # variable. This must run before enable_language(CUDA): afterwards
+  # CMAKE_CUDA_ARCHITECTURES is never empty (CMake fills in its own default), so
+  # the "not specified" case can no longer be detected. enable_language(CUDA)
+  # reads CUDAARCHS on its own, so we only avoid shadowing it here, not copy it.
+  # The default embeds SASS for each supported real architecture (Volta sm_70 is
+  # the floor required by cuTENSOR/cuQuantum, up through Hopper sm_90) plus PTX
+  # of the newest (90-virtual) so the driver can JIT for newer/unknown GPUs.
+  if(NOT CMAKE_CUDA_ARCHITECTURES AND NOT DEFINED ENV{CUDAARCHS})
+    set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+  endif()
   enable_language(CUDA)
   # Disable generation of "--option-file" flag in compile_commands.json.
   # This workaround helps VSCode's cpptools extension correctly locate CUDA
@@ -387,12 +409,11 @@ IF(BUILD_PYTHON)
     pybind/algo_py.cpp
     pybind/physics_related_py.cpp
     pybind/random_py.cpp
-    pybind/tnalgo_py.cpp
     pybind/scalar_py.cpp
     pybind/ncon_py.cpp
   )
   target_link_libraries(pycytnx PUBLIC cytnx)
-  target_compile_definitions(pycytnx PRIVATE CYTNX_VERSION="${CYTNX_VERSION}")
+  target_compile_definitions(pycytnx PRIVATE CYTNX_VERSION="${CYTNX_VERSION_FULL}")
 
   # On macOS, Python extensions should NOT link to libpython
   # Use -undefined dynamic_lookup to resolve symbols from the running interpreter

@@ -1,4 +1,37 @@
-name: Release to PyPI
+name: Release wheels
+
+# Single release pipeline for cytnx. cibuildwheel builds the wheels on
+# every pull request and every push as a build-health check; what
+# happens to the wheels afterwards depends on the resolved channel:
+#
+#   - **stable** — a `v*` tag push (or a dispatch resolving to stable)
+#     publishes `cytnx X.Y.Z` to production PyPI via OIDC trusted
+#     publishing. pyproject.toml is consumed as-is (numeric version
+#     from version.cmake).
+#
+#   - **nightly** — a push to `master` (or a dispatch resolving to
+#     nightly) stamps a PEP 440 dev version
+#     (`MAJOR.MINOR.PATCH.devYYYYMMDDHHMM`) into pyproject.toml via
+#     tools/prepare_nightly_release.py and uploads the wheels to the
+#     `cytnx-nightly-wheels` organisation channel on anaconda.org. The
+#     official `cytnx` PyPI project is never touched by this path, so
+#     production PyPI only ever holds tagged stable releases.
+#
+# Pull requests always resolve to the nightly channel with publishing
+# disabled: the PR is merged with its target branch and the nightly
+# wheels are built (validating the nightly release path) but never
+# uploaded.
+#
+# Manual `workflow_dispatch` runs default to auto-detection (tag →
+# stable, anything else → nightly) and expose a `channel` input that
+# can force either path.
+#
+# Install commands:
+#   stable:   pip install cytnx
+#   nightly:  pip install --pre \
+#               --extra-index-url \
+#                 https://pypi.anaconda.org/cytnx-nightly-wheels/simple \
+#               cytnx
 
 on:
   pull_request:
@@ -8,10 +41,78 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+    inputs:
+      channel:
+        description: "Release channel"
+        type: choice
+        options:
+          - auto
+          - stable
+          - nightly
+        default: auto
 
 jobs:
+  DetermineChannel:
+    # Resolves a single source of truth for the rest of the workflow:
+    #   * channel — `stable` or `nightly`, selecting the build/publish path
+    #   * publish — whether the resolved channel's publish job may run
+    #   * dev_tag — the PEP 440 dev suffix (`.devYYYYMMDDHHMM`, UTC)
+    #     for nightly builds; empty string for stable. Computed in
+    #     this single job and forwarded to every BuildWheel matrix
+    #     entry so all wheels for one workflow run carry the same
+    #     version, even when the matrix runners start across a
+    #     minute boundary.
+    # Concentrating the decision here keeps the BuildWheel matrix
+    # and the publish jobs from re-deriving the trigger logic.
+    name: DetermineChannel
+    runs-on: ubuntu-24.04
+    outputs:
+      channel: ${{ steps.pick.outputs.channel }}
+      publish: ${{ steps.pick.outputs.publish }}
+      dev_tag: ${{ steps.pick.outputs.dev_tag }}
+    steps:
+    - id: pick
+      run: |
+        event="${{ github.event_name }}"
+        ref="${{ github.ref }}"
+        if [[ "$event" == "pull_request" ]]; then
+          # PRs validate the nightly build path but never upload.
+          channel=nightly
+          publish=false
+        elif [[ "$event" == "push" ]]; then
+          if [[ "$ref" == refs/tags/v* ]]; then
+            channel=stable
+          else
+            channel=nightly
+          fi
+          publish=true
+        else
+          # workflow_dispatch
+          requested="${{ inputs.channel }}"
+          if [[ "$requested" == "auto" ]]; then
+            if [[ "$ref" == refs/tags/v* ]]; then
+              channel=stable
+            else
+              channel=nightly
+            fi
+          else
+            channel="$requested"
+          fi
+          publish=true
+        fi
+        if [[ "$channel" == "nightly" ]]; then
+          dev_tag=".dev$(date -u +%Y%m%d%H%M)"
+        else
+          dev_tag=""
+        fi
+        echo "channel=$channel" >> "$GITHUB_OUTPUT"
+        echo "publish=$publish" >> "$GITHUB_OUTPUT"
+        echo "dev_tag=$dev_tag" >> "$GITHUB_OUTPUT"
+        echo "event=$event ref=$ref -> channel=$channel publish=$publish dev_tag=$dev_tag"
+
   BuildWheel:
     name: BuildWheel-${{ matrix.os }}
+    needs: DetermineChannel
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -20,58 +121,85 @@ jobs:
         # newer images because Homebrew dylib minos can force a higher wheel
         # deployment target and break delocate compatibility for lower targets.
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel]
-    defaults:
-      run:
-        shell: bash -el {0}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       with:
         fetch-depth: 0
         submodules: recursive
 
-    # When re-running a PR job, GitHub Actions uses the merge commit created at
-    # the time of the original run, not a fresh merge with the latest target branch.
-    # This step ensures we always test against the most recent target branch.
     - name: Merge with latest target branch (pull_request only)
       if: github.event_name == 'pull_request'
+      # When re-running a PR job, GitHub Actions reuses the merge commit
+      # created at the time of the original run, not a fresh merge with the
+      # latest target branch. Re-merging here validates the release build
+      # against the current target branch. A committer identity is required
+      # because a non-fast-forward merge creates a merge commit.
       run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git fetch origin ${{ github.event.pull_request.base.ref }}
         git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
-        # Refresh submodules in case the merge moved any gitlinks (e.g. cmake_modules/morse_cmake).
+        # Refresh submodules in case the merge moved any gitlinks
+        # (e.g. cmake_modules/morse_cmake).
         git submodule update --init --recursive
 
-    - name: Cache Ccache Directory (pull_request)
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.ccache
-        key: ccache-wheel-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
-        restore-keys: |
-          ccache-wheel-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
-          ccache-wheel-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
+    - name: Install nightly stamping helper
+      if: needs.DetermineChannel.outputs.channel == 'nightly'
+      # Installs the `release-tools` PEP 735 dependency-group from
+      # pyproject.toml (currently just `tomlkit`). Using `--group`
+      # rather than `pip install .[release-tools]` keeps the source
+      # of truth for build-pipeline deps in pyproject.toml without
+      # triggering scikit-build-core to compile cytnx itself before
+      # cibuildwheel does so under its own isolated environment.
+      # `--group` requires pip 25.1+; the runner-bundled pip is
+      # upgraded first to make the requirement portable across
+      # runner image versions.
+      run: |
+        python -m pip install --upgrade pip
+        pip install --group release-tools
 
-    - name: Cache Ccache Directory (push)
-      if: ${{ github.event_name == 'push' }}
-      uses: actions/cache@v4
+    - name: Stamp pyproject.toml for nightly release
+      if: needs.DetermineChannel.outputs.channel == 'nightly'
+      # Rewrites pyproject.toml to set a static
+      # MAJOR.MINOR.PATCH.devYYYYMMDDHHMM version. The dev suffix is
+      # supplied through the CYTNX_VERSION_TAG env var, sourced from
+      # the DetermineChannel job's output so every matrix entry uses
+      # the same value (each matrix runner reaching this step at a
+      # different minute would otherwise stamp a different version
+      # for the same source commit). The stable path skips this step
+      # entirely so production wheels keep the numeric version
+      # straight from version.cmake.
+      env:
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+      run: python tools/prepare_nightly_release.py
+
+    - name: Cache Ccache Directory
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
       with:
         path: |
           ~/.ccache
         key: ccache-wheel-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
           ccache-wheel-${{ runner.os }}-${{ github.ref_name }}-
+          ccache-wheel-${{ runner.os }}-
 
     - name: Set Ccache Directory
       run: |
-        echo "Start building---------------------------------"
         # HOST_CCACHE_DIR is consumed only by the docker bind-mount source
         # below; the in-container CCACHE_DIR is set in the Build Wheels
         # step's env: block (and forwarded via environment-pass).
         echo "HOST_CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
+        # Reset the "first wheel build" marker once per run (after the cache is
+        # restored, before cibuildwheel). tools/validate_ccache_stats.py allows
+        # zero cache hits only for the first python-version build of a run; this
+        # ensures a marker carried over inside the cached CCACHE_DIR can't mask a
+        # genuine cache-miss failure on later runs.
+        mkdir -p "${HOME}/.ccache"
+        rm -f "${HOME}/.ccache/.cytnx_first_wheel_build_done"
 
     - name: Build Wheels
-      uses: pypa/cibuildwheel@v3.3.0
+      uses: pypa/cibuildwheel@63fd63b352a9a8bdcc24791c9dbee952ee9a8abc  # v3.3.0
       env:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
@@ -92,30 +220,60 @@ jobs:
         CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
+        # CYTNX_VERSION_TAG is sourced from the DetermineChannel job
+        # output so every matrix entry sees the same dev tag for one
+        # workflow run. It is the empty string for stable builds, in
+        # which case CMakeLists.txt leaves CYTNX_VERSION_FULL equal
+        # to the numeric CYTNX_VERSION. On Linux it is forwarded
+        # into the manylinux container via
+        # [tool.cibuildwheel.linux].environment-pass.
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
 
-
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
       with:
         name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
         path: ./wheelhouse/*.whl
 
-  ReleaseTestPyPI:
-    name: ReleaseWheel-TestPyPI
-    needs: BuildWheel
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) }}
+  ReleasePyPI:
+    name: ReleasePyPI
+    needs: [DetermineChannel, BuildWheel]
+    if: needs.DetermineChannel.outputs.channel == 'stable' && needs.DetermineChannel.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
     steps:
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
       with:
         pattern: cibw-wheels-*
         path: dist
         merge-multiple: true
 
-    - name: Publish package distributions to TestPyPI (pull_request and tag push)
-      if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) }}
-      uses: pypa/gh-action-pypi-publish@release/v1
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
       with:
-        repository-url: https://test.pypi.org/legacy/
         packages-dir: dist
+
+  PublishNightlyAnaconda:
+    name: PublishNightlyAnaconda
+    needs: [DetermineChannel, BuildWheel]
+    if: needs.DetermineChannel.outputs.channel == 'nightly' && needs.DetermineChannel.outputs.publish == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+      with:
+        pattern: cibw-wheels-*
+        path: dist
+        merge-multiple: true
+
+    - name: Upload nightly wheels to anaconda.org
+      # Uploads dist/*.whl to the cytnx-nightly-wheels org channel with
+      # `anaconda upload --force` (so workflow re-runs overwrite the
+      # same-named file safely). Authenticated with an anaconda.org
+      # API token stored as the ANACONDA_ORG_UPLOAD_TOKEN repository
+      # secret; no OIDC / id-token permission is required.
+      uses: scientific-python/upload-nightly-action@e76cfec8a4611fd02808a801b0ff5a7d7c1b2d99  # 0.6.4
+      with:
+        artifacts_path: dist
+        anaconda_nightly_upload_token: ${{ secrets.ANACONDA_ORG_UPLOAD_TOKEN }}
+        anaconda_nightly_upload_organization: cytnx-nightly-wheels
+        anaconda_nightly_upload_labels: main
