@@ -299,7 +299,12 @@ namespace cytnx {
     }  // traversal input tensor list
 
     this->tensors.resize(this->names.size());
-    this->CtTree.base_nodes.resize(this->names.size());
+    this->CtTree.base_nodes.clear();
+    for (std::size_t i = 0; i < this->names.size(); i++) {
+      auto node = std::make_shared<Node>();
+      node->name = this->names[i];
+      this->CtTree.base_nodes.push_back(node);
+    }
 
     // checking if all TN are set in ORDER.
     //  only alias assigned will activate order
