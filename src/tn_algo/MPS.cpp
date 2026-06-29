@@ -44,7 +44,7 @@ namespace cytnx {
 
       int mpstype;
       f.read((char*)&mpstype,
-             sizeof(int));  // mps type, this is used to determine Sparse/Dense upon load
+             sizeof(int));  // mps type, this is used to determine Block/Dense upon load
 
       if (mpstype == MPSType.RegularMPS) {
         this->_impl = boost::intrusive_ptr<MPS_impl>(new RegularMPS());
