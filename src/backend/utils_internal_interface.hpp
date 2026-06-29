@@ -53,13 +53,14 @@ namespace cytnx {
                                       const std::vector<cytnx_uint64> &,
                                       const std::vector<std::vector<cytnx_uint64>> &,
                                       const cytnx_uint64 &, const cytnx_uint64 &, const bool &);
-    // typedef void (*blocks_mvelems_io)(vector<Storage> &, const vector<Storage> &,
-    //     const vector<vector<cytnx_uint64>> &, const vector<vector<cytnx_uint64>> &,
-    //     const vector<cytnx_uint64> &,
-    //     const vector<vector<cytnx_uint64>>  &, const vector<vector<cytnx_uint64>>  &,
-    //     map<cytnx_uint64, pair<cytnx_uint64,cytnx_uint64>>  &, map<cytnx_uint64,
-    //     pair<cytnx_uint64,cytnx_uint64>> &, const vector<cytnx_uint64> &, const
-    //     vector<cytnx_uint64> &, const cytnx_uint64 &,  const cytnx_uint64 &);
+    // typedef void (*blocks_mvelems_io)(std::vector<Storage> &, const std::vector<Storage> &,
+    //     const std::vector<std::vector<cytnx_uint64>> &, const
+    //     std::vector<std::vector<cytnx_uint64>> &, const std::vector<cytnx_uint64> &, const
+    //     std::vector<std::vector<cytnx_uint64>>  &, const std::vector<std::vector<cytnx_uint64>>
+    //     &, std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64>>  &,
+    //     std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64>> &, const
+    //     std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const cytnx_uint64 &,
+    //     const cytnx_uint64 &);
 
     typedef void (*blocks_mvelems_io)(
       std::vector<Tensor> &, const std::vector<Tensor> &, const std::vector<cytnx_uint64> &,

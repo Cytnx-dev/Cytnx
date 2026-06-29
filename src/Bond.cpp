@@ -110,7 +110,8 @@ namespace cytnx {
               }
             }
             if (QNpool.find(tmpqnum) == QNpool.end()) {
-              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({static_cast<int>(d)})));
+              QNpool.insert(
+                std::make_pair(tmpqnum, std::vector<cytnx_int32>({static_cast<int>(d)})));
             } else {
               QNpool[tmpqnum].push_back(d);
             }
@@ -217,7 +218,8 @@ namespace cytnx {
                                            bd_in->_qnums[d % bd_in->_qnums.size()][i]);
             }
             if (QNpool.find(tmpqnum) == QNpool.end()) {
-              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({static_cast<int>(d)})));
+              QNpool.insert(
+                std::make_pair(tmpqnum, std::vector<cytnx_int32>({static_cast<int>(d)})));
             } else {
               QNpool[tmpqnum].push_back(d);
             }
@@ -619,7 +621,6 @@ namespace cytnx {
     } else {
       cytnx_error_msg(true, "%s", "[ERROR] internal error.");
     }
-    // os << bin.get_syms().size() << endl;
 
     for (cytnx_int32 i = 0; i < bin.Nsym(); i++) {
       os << " " << bin.syms()[i].stype_str() << ":: ";
