@@ -17,7 +17,7 @@ namespace cytnx {
       assert(sizeof(cuDoubleComplex) == sizeof(cytnx_complex128));
 
       cusolverEigMode_t jobz;
-      // if U and vT are nullptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -127,7 +127,7 @@ namespace cytnx {
       assert(sizeof(cuFloatComplex) == sizeof(cytnx_complex64));
 
       cusolverEigMode_t jobz;
-      // if U and vT are nullptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -237,7 +237,7 @@ namespace cytnx {
       cudaDataType cuda_data_typeR = CUDA_R_64F;
 
       cusolverEigMode_t jobz;
-      // if U and vT are nullptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -346,7 +346,7 @@ namespace cytnx {
       cudaDataType cuda_data_typeR = CUDA_R_32F;
 
       cusolverEigMode_t jobz;
-      // if U and vT are nullptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
