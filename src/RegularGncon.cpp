@@ -135,7 +135,8 @@ namespace cytnx {
 
   /// This is debug function
   void print_gn(std::vector<std::vector<std::pair<std::string, std::string>>> &table,
-                std::vector<std::string> &names, std::map<std::string, cytnx_uint64> &name2pos, std::ostream &os = std::cout) {
+                std::vector<std::string> &names, std::map<std::string, cytnx_uint64> &name2pos,
+                std::ostream &os = std::cout) {
     os << "### table  ###" << std::endl;
     for (int i = 0; i < table.size(); i++) {
       for (int j = 0; j < table[i].size(); j++) {
@@ -389,7 +390,8 @@ namespace cytnx {
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
-        std::cerr << "[ERROR] The following TNs appeared in ORDER line, but are not defined." << std::endl;
+        std::cerr << "[ERROR] The following TNs appeared in ORDER line, but are not defined."
+                  << std::endl;
         for (int i = 0; i < TN_names.size(); i++) {
           std::cerr << "        " << TN_names[i] << std::endl;
         }
