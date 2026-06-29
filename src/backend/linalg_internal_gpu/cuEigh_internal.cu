@@ -19,7 +19,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_complex128 *tA;
-      if (v != nullptr) {
+      if (v->dtype() != Type.Void) {
         tA = (cytnx_complex128 *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(),
                                    sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
@@ -72,7 +72,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_complex64 *tA;
-      if (v != nullptr) {
+      if (v->dtype() != Type.Void) {
         tA = (cytnx_complex64 *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(),
                                    sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
