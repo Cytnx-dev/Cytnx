@@ -451,7 +451,7 @@
 <h1><span class="section-number">10. </span>Iterative solver<a class="headerlink" href="#iterative-solver" title="Link to this heading">¶</a></h1>
 <p>In addition to offering basic linear algebra functions for dense tensors, Cytnx also includes an iterative solver for solving eigenvalue problems. By using the LinOp class, users can define a custom linear operator as a function or class, similar to
 <a class="extlink-splo reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html">scipy.LinearOperator</a>.</p>
-<p>This approach is more versatile than using the standard sparse storage format. Linear algebra algorithms can be implemented matrix-free with a LinOp object that defines how an input tensor is transformed, for example by contracting it in a more complicated network.</p>
+<p>This approach is more versatile than using the deprecated sparse storage format. Linear algebra algorithms can be implemented matrix-free with a LinOp object that defines how an input tensor is transformed, for example by contracting it in a more complicated network.</p>
 <p>In the following section, we demonstrate how to define a custom linear operator using the <strong>LinOp</strong> class and how to solve the eigenvalue problem using the iterative solver.</p>
 <div class="toctree-wrapper compound">
 <ul>
