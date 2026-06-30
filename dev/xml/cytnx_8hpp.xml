@@ -26,9 +26,6 @@
     <includes refid="LinOp_8hpp" local="yes">LinOp.hpp</includes>
     <includes local="yes">utils/is.hpp</includes>
     <includes local="yes">utils/print.hpp</includes>
-    <includes local="yes">tn_algo/MPS.hpp</includes>
-    <includes local="yes">tn_algo/MPO.hpp</includes>
-    <includes local="yes">tn_algo/DMRG.hpp</includes>
     <includes local="yes">Gncon.hpp</includes>
     <includedby refid="cytnx_8hpp" local="yes">include/cytnx.hpp</includedby>
     <includedby refid="ncon_8hpp" local="yes">include/ncon.hpp</includedby>
@@ -372,12 +369,6 @@
         </childnode>
         <childnode refid="58" relation="include">
         </childnode>
-        <childnode refid="59" relation="include">
-        </childnode>
-        <childnode refid="60" relation="include">
-        </childnode>
-        <childnode refid="61" relation="include">
-        </childnode>
       </node>
       <node id="15">
         <label>cytnx_error.hpp</label>
@@ -465,7 +456,7 @@
         <childnode refid="23" relation="include">
         </childnode>
       </node>
-      <node id="61">
+      <node id="58">
         <label>Gncon.hpp</label>
       </node>
       <node id="40">
@@ -548,15 +539,6 @@
       </node>
       <node id="8">
         <label>string</label>
-      </node>
-      <node id="60">
-        <label>tn_algo/DMRG.hpp</label>
-      </node>
-      <node id="59">
-        <label>tn_algo/MPO.hpp</label>
-      </node>
-      <node id="58">
-        <label>tn_algo/MPS.hpp</label>
       </node>
       <node id="10">
         <label>tuple</label>
@@ -654,13 +636,9 @@
 <codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;utils/is.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;utils/print.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="41"><highlight class="normal"></highlight></codeline>
-<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;tn_algo/MPS.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;tn_algo/MPO.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;tn_algo/DMRG.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="45"><highlight class="normal"></highlight></codeline>
-<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;Gncon.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="47"><highlight class="normal"></highlight></codeline>
-<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CYTNX_CYTNX_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;Gncon.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CYTNX_CYTNX_H_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cytnx.hpp"/>
   </compounddef>
