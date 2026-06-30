@@ -1,8 +1,6 @@
 #include "Cast_cpu.hpp"
 #include "backend/Storage.hpp"
 
-using namespace std;
-
 namespace cytnx {
   namespace utils_internal {
 

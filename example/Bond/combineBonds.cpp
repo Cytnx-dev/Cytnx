@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   /* 1.
       combine multiple KET bonds
@@ -16,11 +15,11 @@ int main() {
   // so it is both memory efficient and fast!
   Bond bd_all = bd_a.combineBonds({bd_b, bd_c, bd_d});
 
-  cout << bd_a << endl;
-  cout << bd_b << endl;
-  cout << bd_c << endl;
-  cout << bd_d << endl;
-  cout << bd_all << endl;
+  std::cout << bd_a << std::endl;
+  std::cout << bd_b << std::endl;
+  std::cout << bd_c << std::endl;
+  std::cout << bd_d << std::endl;
+  std::cout << bd_all << std::endl;
 
   /* 2.
       combine symmetry bonds,
@@ -36,10 +35,10 @@ int main() {
                        {Symmetry::U1(), Symmetry::Zn(2)});
 
   Bond bd_sym_d = bd_sym_a.combineBonds({bd_sym_b, bd_sym_c});
-  cout << bd_sym_a << endl;
-  cout << bd_sym_b << endl;
-  cout << bd_sym_c << endl;
-  cout << bd_sym_d << endl;
+  std::cout << bd_sym_a << std::endl;
+  std::cout << bd_sym_b << std::endl;
+  std::cout << bd_sym_c << std::endl;
+  std::cout << bd_sym_d << std::endl;
 
   return 0;
 }

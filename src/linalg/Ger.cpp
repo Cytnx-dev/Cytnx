@@ -12,7 +12,6 @@
 namespace cytnx {
 
   namespace linalg {
-    using namespace std;
     Tensor Ger(const Tensor &x, const Tensor &y, const Scalar &a) {
       // checking
       cytnx_error_msg(x.shape().size() != 1, "[ERROR][Ger] x must be rank-1 (vector).%s", "\n");

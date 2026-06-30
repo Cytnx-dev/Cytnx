@@ -14,8 +14,6 @@ target_sources(cytnx
   UniTensor_base.cpp
   UniTensor.cpp
   DenseUniTensor.cpp
-
-  # SparseUniTensor.cpp
   BlockUniTensor.cpp
   BlockFermionicUniTensor.cpp
   Symmetry.cpp

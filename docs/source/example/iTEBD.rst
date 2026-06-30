@@ -209,15 +209,15 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
 ..     auto Sz = physics::pauli("z").real();
 ..     auto Sx = physics::pauli("x").real();
 ..     auto I  = eye(2);
-..     cout << Sz << endl;
-..     cout << Sx << endl;
+..     std::cout << Sz << std::endl;
+..     std::cout << Sx << std::endl;
 
 
 ..     // Construct the local Hamiltonian
 ..     auto TFterm = linalg::Kron(Sx,I) + linalg::Kron(I,Sx);
 ..     auto ZZterm = linalg::Kron(Sz,Sz);
 ..     auto H = Hx*TFterm + J*ZZterm;
-..     cout << H << endl;
+..     std::cout << H << std::endl;
 
 
 ..     // Build Evolution Operator
@@ -372,10 +372,10 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 
 ..     //> check if converged.
 ..     if(abs(E-Elast) < CvgCrit){
-..         cout << "[Converged!]" << endl;
+..         std::cout << "[Converged!]" << std::endl;
 ..         break;
 ..     }
-..     cout << "Step: " << i << "Enr: " << Elast << endl;
+..     std::cout << "Step: " << i << "Enr: " << Elast << std::endl;
 ..     Elast = E;
 
 in the next step we perform the two-sites imaginary time evolution, using the operator (or "gate") eH we defined above:
@@ -408,7 +408,7 @@ we also performed SVD for the XeH here, this put the MPS into mixed canonical fo
 ..     XeH.permute_({"d","2","3","e"});
 
 ..     XeH.set_Rowrank(2);
-..     vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
+..     std::vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
 ..     la = out[0]; A = out[1]; B = out[2];
 ..     la.normalize_(); //normalize
 
@@ -556,10 +556,10 @@ Let's put everything together in a loop for iteration:
 
 ..         //> check if converged.
 ..         if(abs(E-Elast) < CvgCrit){
-..             cout << "[Converged!]" << endl;
+..             std::cout << "[Converged!]" << std::endl;
 ..             break;
 ..         }
-..         cout << "Step: " << i << "Enr: " << Elast << endl;
+..         std::cout << "Step: " << i << "Enr: " << Elast << std::endl;
 ..         Elast = E;
 
 
@@ -569,7 +569,7 @@ Let's put everything together in a loop for iteration:
 
 ..         //> Do Svd + truncate
 ..         XeH.set_rowrank(2);
-..         vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
+..         std::vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
 ..         la = out[0]; A = out[1]; B = out[2];
 ..         la.normalize_(); //normalize
 

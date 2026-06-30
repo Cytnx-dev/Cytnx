@@ -549,8 +549,6 @@ TEST_F(BlockUniTensorTest, contract1) {
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans1.get_blocks();
   for (int i = 0; i < ansbks.size(); i++) {
-    // std::cout << outbks[i] << std::endl;
-    // std::cout << ansbks[i] << std::endl;
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], ansbks[i], 1e-5), true);
   }
 }
@@ -564,8 +562,6 @@ TEST_F(BlockUniTensorTest, contract2) {
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans2.get_blocks();
   for (int i = 0; i < ansbks.size(); i++) {
-    // std::cout << outbks[i] << std::endl;
-    // std::cout << ansbks[i] << std::endl;
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], ansbks[i], 1e-5), true);
   }
 }
@@ -579,8 +575,6 @@ TEST_F(BlockUniTensorTest, contract3) {
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans3.get_blocks();
   for (int i = 0; i < ansbks.size(); i++) {
-    // std::cout << outbks[i] << std::endl;
-    // std::cout << ansbks[i] << std::endl;
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], ansbks[i], 1e-5), true);
   }
 }
@@ -804,7 +798,6 @@ TEST_F(BlockUniTensorTest, LinAlgElementwise) {
 }
 
 TEST_F(BlockUniTensorTest, Norm) {
-  // std::cout<<BUT4<<std::endl;
   // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
   EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()), 10.36019459497064);
 
@@ -943,10 +936,7 @@ TEST_F(BlockUniTensorTest, Transpose) {
 }
 
 TEST_F(BlockUniTensorTest, Trace) {
-  // std::cout<<BUT4<<std::endl;
   auto tmp = BUT4.Trace(0, 3);
-  // std::cout<<BUtrT4<<std::endl;
-  // std::cout<<tmp<<std::endl;
   for (cytnx_int64 j = 0; j < 11; j++)
     for (cytnx_int64 k = 0; k < 3; k++)
       if (BUtrT4.at({j, k}).exists()) {
@@ -954,7 +944,6 @@ TEST_F(BlockUniTensorTest, Trace) {
         EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).real()), double(BUtrT4.at({j, k}).real()));
         EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).imag()), double(BUtrT4.at({j, k}).imag()));
       }
-  // std::cout<<tmp<<std::endl;
   tmp = UT_diag.Trace(0, 1);
   cytnx_double ans = 0;
   for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
@@ -1012,13 +1001,6 @@ TEST_F(BlockUniTensorTest, Dagger) {
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
-            // EXPECT_TRUE(Scalar(tmp.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
-            // std::cout << "       BUT4(i=" << i << ", j=" << j << ", k=" << k << ", l=" << l
-            //           << ") = " << double(BUT4.at({i, j, k, l}).real()) << " + i * "
-            //           << double(BUT4.at({i, j, k, l}).imag()) << std::endl;
-            // std::cout << "BUT4.Dagger(k=" << k << ", l=" << l << ", i=" << i << ", j=" << j
-            //           << ") = " << double(tmp.at({k, l, i, j}).real()) << " + i * "
-            //           << double(tmp.at({k, l, i, j}).imag()) << std::endl;
             EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).real()),
                              double(BUT4.at({i, j, k, l}).real()));
             EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).imag()),

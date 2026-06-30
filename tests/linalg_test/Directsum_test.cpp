@@ -458,7 +458,6 @@ namespace DirectsumTest {
     } else {
       expect_T = ConstructExpectTens(T1, T2, shared_axes);
     }
-    // std::cout << dirsum_T << expect_T << std::endl;
     EXPECT_TRUE(AreEqTensor(dirsum_T, expect_T));
   }
 

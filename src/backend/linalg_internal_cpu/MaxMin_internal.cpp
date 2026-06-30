@@ -4,8 +4,6 @@
 #include <cfloat>
 #include <limits>
 
-using namespace std;
-
 namespace cytnx {
   namespace linalg_internal {
 
@@ -16,12 +14,12 @@ namespace cytnx {
       cytnx_uint64 *_out = (cytnx_uint64 *)out->data();
 
       if (type == 'x') {
-        _out[0] = numeric_limits<cytnx_uint64>::min();
+        _out[0] = std::numeric_limits<cytnx_uint64>::min();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = numeric_limits<cytnx_uint64>::max();
+        _out[0] = std::numeric_limits<cytnx_uint64>::max();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }
@@ -35,12 +33,12 @@ namespace cytnx {
       cytnx_int64 *_out = (cytnx_int64 *)out->data();
 
       if (type == 'x') {
-        _out[0] = numeric_limits<cytnx_int64>::min();
+        _out[0] = std::numeric_limits<cytnx_int64>::min();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = numeric_limits<cytnx_int64>::max();
+        _out[0] = std::numeric_limits<cytnx_int64>::max();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }
@@ -54,12 +52,12 @@ namespace cytnx {
       cytnx_uint32 *_out = (cytnx_uint32 *)out->data();
 
       if (type == 'x') {
-        _out[0] = numeric_limits<cytnx_uint32>::min();
+        _out[0] = std::numeric_limits<cytnx_uint32>::min();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = numeric_limits<cytnx_uint32>::max();
+        _out[0] = std::numeric_limits<cytnx_uint32>::max();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }
@@ -73,12 +71,12 @@ namespace cytnx {
       cytnx_int32 *_out = (cytnx_int32 *)out->data();
 
       if (type == 'x') {
-        _out[0] = numeric_limits<cytnx_int32>::min();
+        _out[0] = std::numeric_limits<cytnx_int32>::min();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = numeric_limits<cytnx_int32>::max();
+        _out[0] = std::numeric_limits<cytnx_int32>::max();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }
@@ -92,12 +90,12 @@ namespace cytnx {
       cytnx_uint16 *_out = (cytnx_uint16 *)out->data();
 
       if (type == 'x') {
-        _out[0] = numeric_limits<cytnx_uint16>::min();
+        _out[0] = std::numeric_limits<cytnx_uint16>::min();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = numeric_limits<cytnx_uint16>::max();
+        _out[0] = std::numeric_limits<cytnx_uint16>::max();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }
@@ -111,12 +109,12 @@ namespace cytnx {
       cytnx_int16 *_out = (cytnx_int16 *)out->data();
 
       if (type == 'x') {
-        _out[0] = numeric_limits<cytnx_int16>::min();
+        _out[0] = std::numeric_limits<cytnx_int16>::min();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = numeric_limits<cytnx_int16>::max();
+        _out[0] = std::numeric_limits<cytnx_int16>::max();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }

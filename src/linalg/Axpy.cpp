@@ -12,7 +12,6 @@
 namespace cytnx {
 
   namespace linalg {
-    using namespace std;
     Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y) {
       bool no_y = false;
       // checking the largest dtype!

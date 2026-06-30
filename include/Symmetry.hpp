@@ -39,7 +39,7 @@ namespace cytnx {
    */
   enum fermionParity : bool { EVEN = false, ODD = true };
 
-  // helper class, has implicitly conversion to vector<int64>!
+  // helper class, has implicitly conversion to std::vector<int64>!
   class Qs {
    private:
     std::vector<cytnx_int64> tmpQs;

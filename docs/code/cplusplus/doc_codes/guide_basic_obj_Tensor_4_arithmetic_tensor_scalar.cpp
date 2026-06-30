@@ -1,8 +1,8 @@
 auto A = cytnx::ones({3, 4});
-cout << A << endl;
+std::cout << A << std::endl;
 
 auto B = A + 4;
-cout << B << endl;
+std::cout << B << std::endl;
 
 auto C = A - std::complex<double>(0, 7);  // type promotion
-cout << C << endl;
+std::cout << C << std::endl;

@@ -4,8 +4,6 @@
 #include <algorithm>
 #include <iostream>
 
-using namespace std;
-
 namespace cytnx {
   /// Fermion Network is developing!
 

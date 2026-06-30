@@ -1,8 +1,8 @@
 auto A = cytnx::arange(24).reshape(2, 3, 4);
-cout << A << endl;
+std::cout << A << std::endl;
 
 auto B = A(0, ":", "1:4:2");
-cout << B << endl;
+std::cout << B << std::endl;
 
 auto C = A(":", 1);
-cout << C << endl;
+std::cout << C << std::endl;

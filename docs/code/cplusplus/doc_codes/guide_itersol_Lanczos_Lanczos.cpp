@@ -17,5 +17,5 @@ auto op = MyOp();
 auto v0 = arange(6);  // trial state
 auto ev = linalg::Lanczos_ER(&op, 1, true, 10000, 1.0e-14, false, v0);
 
-cout << ev[0] << endl;  // eigenval
-cout << ev[1] << endl;  // eigenvec
+std::cout << ev[0] << std::endl;  // eigenval
+std::cout << ev[1] << std::endl;  // eigenvec

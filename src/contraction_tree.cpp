@@ -2,8 +2,6 @@
 
 #include <stack>
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
@@ -46,9 +44,9 @@ namespace cytnx {
       "[ERROR][ContractionTree][build_contraction_order_by_tokens] Cannot have empty tokens.%s",
       "\n");
 
-    stack<std::shared_ptr<Node>> stk;
+    std::stack<std::shared_ptr<Node>> stk;
     std::shared_ptr<Node> left, right;
-    stack<char> operators;
+    std::stack<char> operators;
     char topc;
     std::size_t pos = 0;
     std::string tok;

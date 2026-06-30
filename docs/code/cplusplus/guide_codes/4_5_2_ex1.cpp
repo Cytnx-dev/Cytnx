@@ -1,2 +1,2 @@
 auto A = cytnx::Storage::Load("S1.cyst");
-cout << A << endl;
+std::cout << A << std::endl;

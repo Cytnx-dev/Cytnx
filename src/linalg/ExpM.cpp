@@ -11,7 +11,6 @@
 #else
   #include "backend/linalg_internal_interface.hpp"
 
-using namespace std;
 namespace cytnx {
   namespace linalg {
 
@@ -25,7 +24,7 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[ExpM] error, ExpM can only operator on square Tensor (#row = #col%s", "\n");
 
-      vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
+      std::vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
       Tensor s, u, ut;
       // exp(a*M + b*I) with a == 0 is exp(b)*I: keep the bias b (matches ExpH).
       if (a == 0) {
@@ -89,16 +88,6 @@ namespace cytnx {
       out.get_block_() = cytnx::linalg::ExpM(out.get_block_(), a, b);
 
       out.get_block_().reshape_(Tin.shape());
-    }
-
-    template <typename T>
-    static void ExpM_Sparse_UT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
-                                        const T &b) {
-      std::vector<Tensor> &tmp = out.get_blocks_();
-
-      for (int i = 0; i < tmp.size(); i++) {
-        tmp[i] = cytnx::linalg::ExpM(tmp[i], a, b);
-      }
     }
 
     // Block-wise matrix exponential of a general symmetric UniTensor. Handles both BlockUniTensor
@@ -266,15 +255,12 @@ namespace cytnx {
         out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
         ExpM_BlockUT_internal<BlockFermionicUniTensor>(out, Tin, a, b);
         return out;
-      } else if (Tin.uten_type() == UTenType.Sparse) {
-        UniTensor out;
-        if (Tin.is_contiguous())
-          out = Tin.clone();
-        else
-          out = Tin.contiguous();
-        ExpM_Sparse_UT_internal(out, Tin, a, b);
-        return out;
       } else {
+        cytnx_error_msg(Tin.uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          Tin.uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
         cytnx_error_msg(true, "[ERROR][ExpM] UniTensor type '%s' not supported\n",
                         Tin.uten_type_str().c_str());
       }

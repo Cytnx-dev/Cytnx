@@ -5,7 +5,6 @@
 #include <gtest/gtest.h>
 
 using namespace cytnx;
-using namespace std;
 class TensorTest : public ::testing::Test {
  public:
   std::string data_dir = CYTNX_TEST_DATA_DIR "/common/Tensor/";

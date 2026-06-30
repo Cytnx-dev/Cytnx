@@ -8,7 +8,6 @@
 namespace cytnx {
 
   namespace linalg {
-    using namespace std;
     Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj) {
       // checking:
       cytnx_error_msg(Tl.device() != Tr.device(),

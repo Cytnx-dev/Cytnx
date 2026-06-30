@@ -3,6 +3,6 @@ auto B = A(0, 0, 1);
 Scalar C = B.item();
 double Ct = B.item<double>();
 
-cout << B << endl;
-cout << C << endl;
-cout << Ct << endl;
+std::cout << B << std::endl;
+std::cout << C << std::endl;
+std::cout << Ct << std::endl;

@@ -1,6 +1,5 @@
 #include "ncon_test.h"
 
-using namespace std;
 using namespace cytnx;
 
 TEST_F(NconTest, ncon_denseUt_default_order) {

@@ -135,11 +135,9 @@ namespace {
       // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'SM'
       // check the is the eigenvector correct
       auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
-      // std::cout << "eigval err=" << eigval_err << std::endl;
       if (eigval_err >= tolerance) return false;
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
-      // std::cout << "resi err=" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
       // check phase
     }

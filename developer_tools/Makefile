@@ -270,8 +270,6 @@ UniTensor_base.o: $(CytnxPATH)/src/UniTensor_base.cpp $(CytnxPATH)/include/UniTe
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 DenseUniTensor.o: $(CytnxPATH)/src/DenseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-#SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
-#	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 BlockUniTensor.o: $(CytnxPATH)/src/BlockUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 ncon.o: $(CytnxPATH)/src/ncon.cpp $(CytnxPATH)/include/ncon.hpp
