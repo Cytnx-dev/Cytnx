@@ -7,6 +7,7 @@
 #include "Device.hpp"
 #include "Tensor.hpp"
 #include "Type.hpp"
+#include "backend/Storage.hpp"
 #include "linalg.hpp"
 #include "random.hpp"
 
@@ -19,8 +20,11 @@
 
 namespace {
 
+  using cytnx::cytnx_double;
+  using cytnx::cytnx_int64;
   using cytnx::cytnx_uint64;
   using cytnx::Device;
+  using cytnx::Storage;
   using cytnx::Tensor;
   using cytnx::Type;
 
@@ -28,6 +32,16 @@ namespace {
   // tensor through the same public API, then keep it on the CPU.
   static Tensor ContiguousCpuReferenceTrace(const Tensor& gpu_t, cytnx_uint64 a, cytnx_uint64 b) {
     return cytnx::linalg::Trace(gpu_t.to(Device.cpu).contiguous(), a, b);
+  }
+
+  // Tensor's own constructor and Tensor::get() (slicing) both reject a 0 in any
+  // shape dimension, so a zero-extent Tensor can only be built by composing a
+  // zero-element Storage directly and reshaping it onto the target shape.
+  static Tensor ZeroExtentGpuTensor(const std::vector<cytnx_int64>& shape, unsigned int dtype) {
+    Storage s(0, dtype, Device.cuda);
+    Tensor t = Tensor::from_storage(s);
+    t.reshape_(shape);
+    return t;
   }
 
   static Tensor TraceOnGpuToCpu(const Tensor& gpu_t, cytnx_uint64 a, cytnx_uint64 b) {
@@ -189,6 +203,40 @@ namespace {
     const double expected = value * static_cast<double>(n);
     const double slack = static_cast<double>(n) * 1e-15 * std::abs(value) + 1e-9;
     EXPECT_NEAR(gpu.at<cytnx::cytnx_double>({0}), expected, slack);
+  }
+
+  // The following three cases mirror tests/linalg_test/Trace_test.cpp's CPU
+  // zero-extent coverage. cuTraceImpl's zero-extent early-out (the GPU
+  // counterpart of TraceImpl's `diagonal_length == 0 || output_size == 0`
+  // branch) returns before any cudaMalloc/kernel launch, so these pin that
+  // path -- and its NumPy-matching output -- against regression independently
+  // of the CPU implementation.
+
+  TEST(LinalgGpuTraceTest, Rank2ZeroExtentReturnsZeroScalar) {
+    auto t = ZeroExtentGpuTensor({0, 0}, Type.Double);
+    auto out = cytnx::linalg::Trace(t, 0, 1).to(Device.cpu);
+    ASSERT_EQ(out.shape().size(), 1u);
+    EXPECT_EQ(out.shape()[0], 1u);
+    EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), 0.0);
+  }
+
+  TEST(LinalgGpuTraceTest, ZeroTracedAxisReturnsZeroFilledOutput) {
+    // shape {3, 0, 0} traced over (1, 2): the diagonal is empty for every one of
+    // the 3 surviving indices, so each sums to 0 -> output shape {3}, all zero.
+    auto t = ZeroExtentGpuTensor({3, 0, 0}, Type.Double);
+    auto out = cytnx::linalg::Trace(t, 1, 2).to(Device.cpu);
+    ASSERT_EQ(out.shape().size(), 1u);
+    EXPECT_EQ(out.shape()[0], 3u);
+    for (cytnx_uint64 i = 0; i < 3; i++) EXPECT_DOUBLE_EQ(out.at<cytnx_double>({i}), 0.0);
+  }
+
+  TEST(LinalgGpuTraceTest, ZeroRemainingAxisReturnsEmptyOutput) {
+    // shape {3, 0, 3} traced over (0, 2): the surviving axis (1) is zero-length,
+    // so the output is an empty tensor of shape {0}.
+    auto t = ZeroExtentGpuTensor({3, 0, 3}, Type.Double);
+    auto out = cytnx::linalg::Trace(t, 0, 2).to(Device.cpu);
+    ASSERT_EQ(out.shape().size(), 1u);
+    EXPECT_EQ(out.shape()[0], 0u);
   }
 
 }  // namespace
