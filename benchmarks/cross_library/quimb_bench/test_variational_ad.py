@@ -30,15 +30,15 @@ one-site sweep does, so it needs both a larger learning rate and many more
 iterations to reach a comparable energy neighborhood; `LEARNING_RATE` and
 the local `_n_grad_steps(num_sites)` helper (scaling with `num_sites`,
 since a longer chain needs proportionally more whole-state updates to
-converge as far) are shared with the TeNPy/Cytnx benchmarks. They were
-picked by checking, at every (bond_dim, num_sites) grid point, that the
-resulting energy lands within the
-`rel=2e-2` tolerance used below while comfortably inside the timeout. Since
-this update is a much weaker optimizer than a one-site sweep, its converged
-energy is sensitive to each library's own initial-state construction and
-RNG, so the `rel=2e-2` tolerance is wider than the tight per-library
-tolerances used elsewhere in this suite -- it is not expected to shrink as
-the manual-gradient benchmarks are made more precise.
+converge as far) are shared with the TeNPy/Cytnx benchmarks. Each backend
+is checked only against its own `JAX_REFERENCE_ENERGIES`/
+`TORCH_REFERENCE_ENERGIES` at a tight `rel=1e-6` self-consistency
+tolerance, the same as the TeNPy/Cytnx manual-gradient benchmarks -- this
+run is deterministic given the seeded initial state (`seed=0`), so no
+cross-backend or cross-library energy comparison is expected to land this
+close; `JAX_REFERENCE_ENERGIES` and `TORCH_REFERENCE_ENERGIES` themselves
+differ from each other by far more than `1e-6` despite sharing the seed
+and formula.
 
 GPU code paths are written for both backends (`device="cuda"` placement)
 but cannot be exercised in this environment (no GPU).
@@ -194,7 +194,7 @@ def run_one_torch(bond_dim, num_sites):
 def test_variational_ad_jax_benchmark(benchmark, bond_dim, num_sites):
     energy = benchmark.pedantic(run_one_jax, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
+    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory
@@ -203,7 +203,7 @@ def test_variational_ad_jax_benchmark(benchmark, bond_dim, num_sites):
 @pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
 def test_variational_ad_jax_memory(bond_dim, num_sites):
     energy = run_one_jax(bond_dim, num_sites)
-    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
+    assert energy == pytest.approx(JAX_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)
@@ -212,7 +212,7 @@ def test_variational_ad_jax_memory(bond_dim, num_sites):
 def test_variational_ad_torch_benchmark(benchmark, bond_dim, num_sites):
     energy = benchmark.pedantic(run_one_torch, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
+    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory
@@ -221,4 +221,4 @@ def test_variational_ad_torch_benchmark(benchmark, bond_dim, num_sites):
 @pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
 def test_variational_ad_torch_memory(bond_dim, num_sites):
     energy = run_one_torch(bond_dim, num_sites)
-    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=2e-2)
+    assert energy == pytest.approx(TORCH_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)

@@ -41,10 +41,12 @@ MPS is seeded (per-site `cytnx.UniTensor.normal(..., seed=k)`). Unlike a
 one-site sweep -- a strong local optimizer whose converged energy is
 largely insensitive to small initial-state differences -- this
 whole-network update is a weaker optimizer whose converged energy is
-sensitive to the initial state, so (as with quimb's AD benchmark) a tight
-per-library self-consistency tolerance is still used, but no cross-library
-energy comparison is expected to land as close as the one-site-sweep
-designs do.
+sensitive to the initial state, so (as with quimb's AD benchmark, which
+uses the same `LEARNING_RATE`/`_n_grad_steps`) each test asserts only
+against its own `REFERENCE_ENERGIES` at a tight `rel=1e-6`
+self-consistency tolerance -- this run is fully deterministic given the
+seeded initial state, so no cross-library energy comparison is expected
+to land this close.
 """
 import pytest
 
