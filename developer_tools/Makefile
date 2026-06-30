@@ -116,11 +116,6 @@ OBJS = Scalar.o Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint
 OBJS += LinOp.o Storage.o Tensor.o Tensor_impl.o Accessor.o Generator.o Physics.o ncon.o
 OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o BlockUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
-## TN
-OBJS += DMRG.o MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o iMPS.o MPS_base.o
-
-
-
 ## Utils
 OBJS += utils_internal_interface.o
 OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_sort.o vec_argsort.o vec_io.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_contiguous_cpu.o GetElems_cpu.o SetElems_contiguous_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o dynamic_arg_resolver.o blocks_mvelems_cpu.o
@@ -357,26 +352,6 @@ Hsplit.o : $(CytnxPATH)/src/algo/Hsplit.cpp $(CytnxPATH)/include/algo.hpp
 histogram.o: $(CytnxPATH)/src/stat/histogram.cpp $(CytnxPATH)/include/stat.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-
-## TN
-#############################
-MPS.o: $(CytnxPATH)/src/tn_algo/MPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-RegularMPS.o: $(CytnxPATH)/src/tn_algo/RegularMPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-iMPS.o: $(CytnxPATH)/src/tn_algo/iMPS.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-MPS_base.o: $(CytnxPATH)/src/tn_algo/MPS_base.cpp $(CytnxPATH)/include/tn_algo/MPS.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-MPO.o: $(CytnxPATH)/src/tn_algo/MPO.cpp $(CytnxPATH)/include/tn_algo/MPO.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-RegularMPO.o: $(CytnxPATH)/src/tn_algo/RegularMPO.cpp $(CytnxPATH)/include/tn_algo/MPO.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-MPO_base.o: $(CytnxPATH)/src/tn_algo/MPO_base.cpp $(CytnxPATH)/include/tn_algo/MPO.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-DMRG.o: $(CytnxPATH)/src/tn_algo/DMRG.cpp $(CytnxPATH)/include/tn_algo/DMRG.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## linalg_internal
 ###########################
