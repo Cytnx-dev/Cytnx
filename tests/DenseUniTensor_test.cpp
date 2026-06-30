@@ -4895,6 +4895,29 @@ describe:test Save uninitialized UniTensor
 TEST_F(DenseUniTensorTest, Save_uninit) { EXPECT_ANY_THROW(ut_uninit.Save(temp_file_path)); }
 
 /*=====test info=====
+describe:In-place Load_ must not inherit a stale name from a previous UniTensor.
+====================*/
+TEST_F(DenseUniTensorTest, Load_ResetsStaleName) {
+  auto row_rank = 1u;
+  std::vector<Bond> bonds = {Bond(3), Bond(2)};
+
+  // 1) save a UniTensor with an empty name
+  UniTensor ut_anon = UniTensor(bonds, {"a", "b"}, row_rank);
+  ASSERT_TRUE(ut_anon.name().empty());
+  ut_anon.Save(temp_file_path);
+
+  // 2) build a UniTensor with a non-empty name, then Load_ the anonymous payload into it.
+  UniTensor ut_named = UniTensor(bonds, {"a", "b"}, row_rank);
+  ut_named.set_name("stale_name");
+  ASSERT_EQ(ut_named.name(), "stale_name");
+  ut_named.Load_(temp_file_path);
+  EXPECT_TRUE(ut_named.name().empty())
+    << "stale UniTensor name leaked when loading a payload with empty name";
+  EXPECT_TRUE(AreEqUniTensor(ut_named, ut_anon))
+    << "Load_ should fully reconstruct the saved UniTensor";
+}
+
+/*=====test info=====
 describe:test truncate by label
 ====================*/
 TEST_F(DenseUniTensorTest, truncate_label) {

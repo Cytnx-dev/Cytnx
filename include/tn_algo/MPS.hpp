@@ -74,8 +74,8 @@ namespace cytnx {
       virtual void S_mvleft();
       virtual void S_mvright();
 
-      virtual void _save_dispatch(std::fstream &f);
-      virtual void _load_dispatch(std::fstream &f);
+      virtual void to_binary_dispatch(std::ostream &f);
+      virtual void from_binary_dispatch(std::istream &f, const bool restore_device = true);
     };
 
     // finite size:
@@ -116,8 +116,8 @@ namespace cytnx {
         return out;
       }
 
-      void _save_dispatch(std::fstream &f);
-      void _load_dispatch(std::fstream &f);
+      void to_binary_dispatch(std::ostream &f);
+      void from_binary_dispatch(std::istream &f, const bool restore_device = true);
     };
 
     // infinite size:
@@ -160,8 +160,8 @@ namespace cytnx {
         return out;
       }
       Scalar norm() const;
-      void _save_dispatch(std::fstream &f);
-      void _load_dispatch(std::fstream &f);
+      void to_binary_dispatch(std::ostream &f);
+      void from_binary_dispatch(std::istream &f, const bool restore_device = true);
     };
     ///@endcond
 
@@ -287,15 +287,41 @@ namespace cytnx {
       cytnx_int64 &S_loc() { return this->_impl->S_loc; }
 
       ///@cond
-      void _Save(std::fstream &f) const;
-      void _Load(std::fstream &f);
+      void to_binary(std::ostream &f) const;
+      void from_binary(std::istream &f, const bool restore_device = true);
       ///@endcond
 
       void Save(const std::string &fname) const;
       void Save(const char *fname) const;
 
-      static MPS Load(const std::string &fname);
-      static MPS Load(const char *fname);
+      /**
+      @brief Load MPS from file and create new instance
+      @param fname[in] file name
+      @param[in] restore_device whether to try restoring the device on which the data is stored; if
+      false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+      loading.
+      @pre The file must be an MPS object which is saved by cytnx::MPS::Save.
+      @note This function creates a new MPS and keeps the original MPS unchanged. See \link
+      Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
+      MPS to the current MPS.
+      */
+      static MPS Load(const std::string &fname, const bool restore_device = true);
+      /**
+       * @see Load(const std::string &fname)
+       */
+      static MPS Load(const char *fname, const bool restore_device = true);
+
+      /**
+      @brief Load MPS from file and overwrite current instance
+      @note This function overwrites the existing MPS. See \link Load(const std::string &fname,
+      const bool restore_device) Load() \endlink for creating a new MPS.
+      @see Load(const std::string &fname, const bool restore_device)
+      */
+      void Load_(const std::string &fname, const bool restore_device = true);
+      /**
+       * @see Load_(const std::string &fname, const bool restore_device)
+       */
+      void Load_(const char *fname, const bool restore_device = true);
     };
 
     std::ostream &operator<<(std::ostream &os, const MPS &in);

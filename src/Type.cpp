@@ -25,11 +25,9 @@ namespace cytnx {
 using namespace std;
 
 // global debug flag!
-namespace cytnx {
-  bool User_debug = false;
-}
 
 namespace cytnx {
+  bool User_debug = false;
 
   // Construct an array of typeid(T).name() for each type in Type_list.
   // This is complicated by Type_list containing 'void', which means we can't use an ordinary

@@ -96,17 +96,18 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Save(f);
+    this->to_binary(f);
     f.close();
   }
   void Storage::Save(const char *fname) const { this->Save(std::string(fname)); }
+
   void Storage::Tofile(const std::string &fname) const {
     std::fstream f;
     f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Savebinary(f);
+    this->data_to_binary(f);
     f.close();
   }
   void Storage::Tofile(const char *fname) const {
@@ -116,21 +117,17 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Savebinary(f);
+    this->data_to_binary(f);
     f.close();
   }
   void Storage::Tofile(std::fstream &f) const {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Savebinary(f);
+    this->data_to_binary(f);
   }
 
-  void Storage::_Save(std::fstream &f) const {
-    // header
-    // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
-
+  void Storage::to_binary(std::ostream &f) const {
     unsigned int IDDs = 999;
     f.write((char *)&IDDs, sizeof(unsigned int));
     auto write_number = [&f](auto number) {
@@ -140,7 +137,9 @@ namespace cytnx {
     write_number(this->dtype());
     write_number(this->device());
 
-    // data:
+    this->data_to_binary(f);
+  }
+  void Storage::data_to_binary(std::ostream &f) const {
     if (this->device() == Device.cpu) {
       f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
     } else {
@@ -152,65 +151,36 @@ namespace cytnx {
                                  cudaMemcpyDeviceToHost));
       f.write((char *)htmp, Type.typeSize(this->dtype()) * this->size());
       free(htmp);
-
-#else
-      cytnx_error_msg(true, "ERROR internal fatal error in Save Storage%s", "\n");
-#endif
-    }
-  }
-  void Storage::_Savebinary(std::fstream &f) const {
-    // header
-    // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
-
-    // data:
-    if (this->device() == Device.cpu) {
-      f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
-    } else {
-#ifdef UNI_GPU
-      checkCudaErrors(cudaSetDevice(this->device()));
-      void *htmp = malloc(Type.typeSize(this->dtype()) * this->size());
-      checkCudaErrors(cudaMemcpy(htmp, this->_impl->data(),
-                                 Type.typeSize(this->dtype()) * this->size(),
-                                 cudaMemcpyDeviceToHost));
-      f.write((char *)htmp, Type.typeSize(this->dtype()) * this->size());
-      free(htmp);
-
 #else
       cytnx_error_msg(true, "ERROR internal fatal error in Save Storage%s", "\n");
 #endif
     }
   }
 
-  Storage Storage::Fromfile(const char *fname, const unsigned int &dtype,
-                            const cytnx_int64 &count) {
-    return Storage::Fromfile(std::string(fname), dtype, count);
+  Storage Storage::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count,
+                            const int device) {
+    return Storage::Fromfile(std::string(fname), dtype, count, device);
   }
   Storage Storage::Fromfile(const std::string &fname, const unsigned int &dtype,
-                            const cytnx_int64 &count) {
+                            const cytnx_int64 &count, const int device) {
     cytnx_error_msg(dtype == Type.Void, "[ERROR] Cannot have Void dtype.%s", "\n");
 
-    Storage out;
-    cytnx_uint64 Nbytes;
-    cytnx_uint64 Nelem;
-
-    // check size:
+    // check size
     std::ifstream jf;
     jf.open(fname, std::ios::ate | std::ios::binary);
     if (!jf.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    Nbytes = jf.tellg();
+    cytnx_uint64 Nbytes = jf.tellg();
     jf.close();
 
-    std::fstream f;
-    // check if type match?
+    // check if type matches
     cytnx_error_msg(Nbytes % Type.typeSize(dtype),
                     "[ERROR] the total size of file is not an interval of assigned dtype.%s", "\n");
+    const cytnx_uint64 total_elements = Nbytes / Type.typeSize(dtype);  // total elements in file
 
-    const cytnx_uint64 total_elements = Nbytes / Type.typeSize(dtype);
-
-    // check count smaller than Nelem:
+    // resolve how many elements to read: count < 0 means "all elements".
+    cytnx_uint64 Nelem;
     if (count < 0) {
       Nelem = total_elements;
     } else {
@@ -222,35 +192,43 @@ namespace cytnx {
       Nelem = requested_count;
     }
 
-    f.open(fname, std::ios::in | std::ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
-    }
-    out._Loadbinary(f, dtype, Nelem);
-    f.close();
-    return out;
-  }
-  Storage Storage::Load(const std::string &fname) {
-    Storage out;
     std::fstream f;
     f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    out._Load(f);
+    Storage out;
+    out.data_from_binary(f, Nelem, dtype, device);
     f.close();
     return out;
   }
-  Storage Storage::Load(const char *fname) { return Storage::Load(std::string(fname)); }
-  void Storage::_Load(std::fstream &f) {
-    // header
-    unsigned long long sz;
-    unsigned int dt;
-    int dv;
 
-    // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
+  Storage Storage::Load(const std::string &fname, const bool restore_device) {
+    Storage out;
+    out.Load_(fname, restore_device);
+    return out;
+  }
+  Storage Storage::Load(const char *fname, const bool restore_device) {
+    return Storage::Load(std::string(fname), restore_device);
+  }
 
+  void Storage::Load_(const std::string &fname, const bool restore_device) {
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
+    if (!f.is_open()) {
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+    }
+    this->from_binary(f, restore_device);
+    f.close();
+  }
+  void Storage::Load_(const char *fname, const bool restore_device) {
+    this->Load_(std::string(fname), restore_device);
+  }
+
+  void Storage::from_binary(std::istream &f, const bool restore_device) {
+    unsigned long long Nelem;
+    unsigned int dtype;
+    int device;
     // checking IDD
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
@@ -258,53 +236,45 @@ namespace cytnx {
       cytnx_error_msg(true, "[ERROR] the Load file is not the Storage object!\n", "%s");
     }
 
-    f.read((char *)&sz, sizeof(unsigned long long));
-    f.read((char *)&dt, sizeof(unsigned int));
-    f.read((char *)&dv, sizeof(int));
+    f.read((char *)&Nelem, sizeof(unsigned long long));
+    f.read((char *)&dtype, sizeof(unsigned int));
+    f.read((char *)&device, sizeof(int));
 
-    if (dv != Device.cpu) {
-      if (dv >= Device.Ngpus) {
+    if (restore_device) {
+      if (device != Device.cpu && device >= Device.Ngpus) {
         cytnx_warning_msg(true,
                           "[Warning!!] the original device ID does not exists. the tensor will be "
                           "put on CPU, please use .to() or .to_() to move to desire devices.%s",
                           "\n");
-        dv = -1;
+        device = Device.cpu;
       }
+    } else {
+      device = Device.cpu;
     }
+    this->data_from_binary(f, Nelem, dtype, device);
+  }
 
-    this->_impl = __SII.USIInit[dt]();
-    this->_impl->Init(sz, dv);
-
-    // data:
-    if (dv == Device.cpu) {
-      f.read((char *)this->_impl->data(), Type.typeSize(dt) * sz);
+  void Storage::data_from_binary(std::istream &f, const cytnx_uint64 &Nelem,
+                                 const unsigned int &dtype, const int &device) {
+    // before enter this func, make sure
+    // 1. dtype is not void.
+    // 2. the Nelement is consistent and smaller than the file size, and should not be zero!
+    this->_impl = __SII.USIInit[dtype]();
+    this->_impl->Init(Nelem, device, false);
+    if (device == Device.cpu) {
+      f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
     } else {
 #ifdef UNI_GPU
-      checkCudaErrors(cudaSetDevice(dv));
-      void *htmp = malloc(Type.typeSize(dt) * sz);
-      f.read((char *)htmp, Type.typeSize(dt) * sz);
-      checkCudaErrors(
-        cudaMemcpy(this->_impl->data(), htmp, Type.typeSize(dt) * sz, cudaMemcpyHostToDevice));
+      checkCudaErrors(cudaSetDevice(device));
+      void *htmp = malloc(Type.typeSize(dtype) * Nelem);
+      f.read((char *)htmp, Type.typeSize(dtype) * Nelem);
+      checkCudaErrors(cudaMemcpy(this->_impl->data(), htmp, Type.typeSize(dtype) * Nelem,
+                                 cudaMemcpyHostToDevice));
       free(htmp);
-
 #else
       cytnx_error_msg(true, "ERROR internal fatal error in Load Storage%s", "\n");
 #endif
     }
-  }
-
-  void Storage::_Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem) {
-    // Before entering this function, ensure:
-    // 1. dtype is not void.
-    // 2. Nelem is consistent and no larger than the file size.
-
-    // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
-
-    this->_impl = __SII.USIInit[dtype]();
-    this->_impl->Init(Nelem, Device.cpu);
-
-    f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
   }
 
   Scalar::Sproxy Storage::operator()(const cytnx_uint64 &idx) {
