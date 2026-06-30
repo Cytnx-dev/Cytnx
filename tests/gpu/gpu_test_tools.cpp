@@ -459,9 +459,6 @@ namespace cytnx {
           if (ind2 < 0) {
             std::cout << "Qnum " << Ut1ptr->_inner_to_outer_idx[i]
                       << " not found in second tensor:" << std::endl;
-            // for  (int j = 0; j < blocks_num; j++) {
-            //   std::cout << "Qnum[" << j << "]: " << Ut2ptr->_inner_to_outer_idx[j] << std::endl;
-            // }
             return false;
           }
           // check blocks
@@ -498,9 +495,6 @@ namespace cytnx {
           if (ind2 < 0) {
             std::cout << "Qnum " << Ut1ptr->_inner_to_outer_idx[i] << " not found in second tensor."
                       << std::endl;
-            // for  (int j = 0; j < blocks_num; j++) {
-            //   std::cout << "Qnum[" << j << "]: " << Ut2ptr->_inner_to_outer_idx[j] << std::endl;
-            // }
             return false;
           }
           // check blocks

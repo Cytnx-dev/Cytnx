@@ -88,8 +88,6 @@ void generator_binding(py::module &m) {
   m.def("_from_numpy", [](py::buffer b) -> Tensor {
     py::buffer_info info = b.request();
 
-    // std::cout << PyBuffer_IsContiguous(info,'C') << std::endl;
-
     // check type:
     int dtype;
     std::vector<cytnx_uint64> shape(info.shape.begin(), info.shape.end());

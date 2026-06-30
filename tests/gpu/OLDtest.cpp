@@ -102,50 +102,6 @@ int main(int argc, char *argv[]) {
   Ott.print_diagram();
   return 0;
 
-  // testing Sparse:
-  auto bdi = Bond(4, BD_IN, {{0}, {-2}, {+2}, {0}});
-  auto bdo = bdi.redirect();
-  auto phys_bdi = Bond(2, BD_IN, {{1}, {-1}});
-  auto phys_bdo = phys_bdi.redirect();
-
-  auto U1 = UniTensor({bdi, bdo, phys_bdi, phys_bdo}, {}, 2);
-
-  U1.print_diagram();
-  print(U1);
-  return 0;
-  // I
-  U1.at({0, 0, 0, 0}) = 1;
-  U1.at({0, 0, 1, 1}) = 1;
-  U1.at({3, 3, 0, 0}) = 1;
-  U1.at({3, 3, 1, 1}) = 1;
-
-  // S-
-  U1.at({0, 1, 1, 0}) = 1;
-
-  // S+
-  U1.at({0, 2, 0, 1}) = 2;
-
-  // S+
-  U1.at({1, 3, 0, 1}) = 1;
-
-  // S-
-  U1.at({2, 3, 1, 0}) = 4;
-
-  print(U1);
-
-  U1.permute({1, 0, 3, 2});
-  U1.set_rowrank(3);
-  U1.contiguous_();
-
-  print(U1);
-
-  // U1.set_rowrank(3);
-  U1.Save("sps.cytnx");
-
-  auto readU1 = UniTensor::Load("sps.cytnx");
-
-  return 0;
-
   auto A0 = UniTensor({Bond(1, BD_KET, {{0}}), phys_bdi, phys_bdi, Bond(1, BD_BRA, {{0}})}, {}, 2);
   A0.get_block_(0).item() = 1;
 
@@ -219,8 +175,6 @@ int main(int argc, char *argv[]) {
   auto tn3 = zeros(7);
 
   std::cout << algo::Concatenate(tn1, tn3);
-
-  return 0;
 
   return 0;
 }

@@ -123,27 +123,3 @@ namespace cytnx {
 // void  blocks_mvelems_b(...){
 //     _moving_elem<cytnx_bool>(...);
 // }
-
-// ---------- in SparseUniTensor.cpp ----------
-
-// boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contiguous(){
-//     if(this->is_contiguous()){
-//         boost::intrusive_ptr<UniTensor_base> out(this);
-//         return out;
-//     }else{
-//         // make new instance
-//         SparseUniTensor* tmp = new SparseUniTensor();
-//         tmp->Init(this->_bonds,this->_labels,this->_rowrank,this->dtype(),this->device(),this->_is_diag);
-//         if(src->_is_diag){
-//             tmp->_blocks[b] = this->_blocks[b];
-//         }else{
-//             utils_internal::uii.blocks_mvelems_ii[this->dtype()](tmp->_blocks, this->_blocks,
-//             this->shape,  this->_inner2outer_row, this->_inner2outer_col, tmp->_outer2inner_row,
-//             tmp->_outer2inner_col, this->_mapper, this->_inv_mapper, this->_inner_rowrank,
-//             tmp->_rowrank);
-//         }
-//         //transform to a intr_ptr.
-//         boost::intrusive_ptr<UniTensor_base> out(tmp);
-//         return out;
-//     }
-// }

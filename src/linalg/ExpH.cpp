@@ -98,16 +98,6 @@ namespace cytnx {
       out.get_block_().reshape_(Tin.shape());
     }
 
-    template <typename T>
-    static void ExpH_Sparse_UT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
-                                        const T &b) {
-      std::vector<Tensor> &tmp = out.get_blocks_();
-
-      for (int i = 0; i < tmp.size(); i++) {
-        tmp[i] = cytnx::linalg::ExpH(tmp[i], a, b);
-      }
-    }
-
     // Block-wise matrix exponential of a Hermitian symmetric UniTensor. Handles both
     // BlockUniTensor (bosonic) and BlockFermionicUniTensor (fermionic), selected by the template
     // parameter BUT. For the fermionic case, sign-flipped blocks are negated to the physical
@@ -273,15 +263,12 @@ namespace cytnx {
         out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
         ExpH_BlockUT_internal<BlockFermionicUniTensor>(out, Tin, a, b);
         return out;
-      } else if (Tin.uten_type() == UTenType.Sparse) {
-        UniTensor out;
-        if (Tin.is_contiguous())
-          out = Tin.clone();
-        else
-          out = Tin.contiguous();
-        ExpH_Sparse_UT_internal(out, Tin, a, b);
-        return out;
       } else {
+        cytnx_error_msg(Tin.uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          Tin.uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
         cytnx_error_msg(true, "[ERROR][ExpH] UniTensor type '%s' not supported\n",
                         Tin.uten_type_str().c_str());
       }
