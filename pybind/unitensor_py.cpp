@@ -392,7 +392,7 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to getitem from a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
-             "[ERROR] Cannot get element using [] from Block/SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] Cannot get element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
 
            auto accessors = build_accessors(self, locators);
            return self.get(accessors);
@@ -401,9 +401,7 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, py::object locators, const cytnx::Tensor &rhs) {
            cytnx_error_msg(self.shape().size() == 0,
                            "[ERROR] try to setelem to a empty UniTensor%s", "\n");
-           cytnx_error_msg(
-             self.uten_type() == UTenType.Sparse,
-             "[ERROR] Cannot set element using [] from SparseUniTensor. Use at() instead.%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Sparse, "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs);
@@ -414,7 +412,7 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to setelem to a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
-             "[ERROR] cannot set element using [] from Block/SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] cannot set element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs.get_block());
