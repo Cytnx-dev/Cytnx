@@ -1,5 +1,4 @@
 #include "DenseUniTensor_test.h"
-using namespace std;
 using namespace cytnx;
 using namespace std::complex_literals;
 TEST_F(DenseUniTensorTest, gpu_Trace) {
@@ -134,9 +133,9 @@ TEST_F(DenseUniTensorTest, gpu_relabel_) {
 }
 
 TEST_F(DenseUniTensorTest, gpu_Norm) {
-  EXPECT_DOUBLE_EQ(double(utar345.Norm().at({0}).real()), sqrt(59.0 * 60.0 * 119.0 / 6.0));
+  EXPECT_DOUBLE_EQ(double(utar345.Norm().at({0}).real()), std::sqrt(59.0 * 60.0 * 119.0 / 6.0));
   EXPECT_DOUBLE_EQ(double(utarcomplex345.Norm().at({0}).real()),
-                   sqrt(2.0 * 59.0 * 60.0 * 119.0 / 6.0));
+                   std::sqrt(2.0 * 59.0 * 60.0 * 119.0 / 6.0));
 }
 
 /*=====test info=====
@@ -303,7 +302,6 @@ TEST_F(DenseUniTensorTest, gpu_Init_tagged) {
     dut.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cuda, true, false));
 
   // is_diag = true, but no outward bond
-  // cout << phy << endl;
   EXPECT_ANY_THROW(dut.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cuda, true, false));
 }
 
@@ -513,9 +511,6 @@ TEST_F(DenseUniTensorTest, gpu_contract3) {
 TEST_F(DenseUniTensorTest, gpu_Add) {
   auto cnst = Scalar(std::complex<double>(9, 9));
   auto out = utarcomplex3456.Add(cnst);
-  // cout << Scalar(std::complex<double>(9,9)) << endl;
-  // cout << out;
-  // cout << utarcomplex3456;
   for (size_t i = 1; i <= 3; i++)
     for (size_t j = 1; j <= 4; j++)
       for (size_t k = 1; k <= 5; k++)

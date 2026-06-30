@@ -1,7 +1,7 @@
 auto A = cytnx::zeros({2, 3, 4});
 auto B = A.permute(0, 2, 1);
 
-cout << A << endl;
-cout << B << endl;
+std::cout << A << std::endl;
+std::cout << B << std::endl;
 
-cout << is(B, A) << endl;
+std::cout << is(B, A) << std::endl;

@@ -5,7 +5,6 @@
 #include <gtest/gtest.h>
 
 using namespace cytnx;
-using namespace std;
 class StorageTest : public ::testing::Test {
  public:
  protected:

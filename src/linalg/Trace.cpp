@@ -9,7 +9,6 @@
 #else
   #include "backend/linalg_internal_interface.hpp"
 
-using namespace std;
 namespace cytnx {
   namespace linalg {
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a,

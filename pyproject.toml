@@ -15,7 +15,7 @@ description = "A tensor network library"
 readme = "Readme.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["tensor", "network", "physics"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -25,9 +25,15 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
 ]
 
-dependencies = ["numpy >=1.18", "graphviz", "beartype"]
+dependencies = ["numpy >=1.18", "beartype"]
 
 [project.optional-dependencies]
+# Renders Network diagrams via Network.Diagram(); only imported by
+# `cytnx/Network_conti.py`, which degrades to a ModuleNotFoundError raised
+# at call time (not import time) when this extra isn't installed.
+viz = [
+    "graphviz",
+]
 # Runtime test runner used by `pytests/`.
 test = [
     "pytest",
@@ -44,6 +50,7 @@ coverage = [
 # both Python and C++ coverage. Build-time deps (scikit-build-core,
 # pybind11) come from `[build-system].requires` automatically.
 dev = [
+    "cytnx[viz]",
     "cytnx[test]",
     "cytnx[coverage]",
 ]

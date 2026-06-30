@@ -7,7 +7,6 @@
 #include <cfloat>
 #include <iostream>
 #include <cmath>
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -58,7 +57,7 @@ namespace cytnx {
       return Out;
     }
     Tensor spin(const cytnx_double &S, const char &Comp, const int &device) {
-      return spin(S, string(1, Comp), device);
+      return spin(S, std::string(1, Comp), device);
     }
 
     Tensor pauli(const std::string &Comp, const int &device) {
@@ -79,7 +78,9 @@ namespace cytnx {
       }
       return Out;
     }
-    Tensor pauli(const char &Comp, const int &device) { return pauli(string(1, Comp), device); }
+    Tensor pauli(const char &Comp, const int &device) {
+      return pauli(std::string(1, Comp), device);
+    }
 
   }  // namespace physics
 }  // namespace cytnx

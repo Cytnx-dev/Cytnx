@@ -113,17 +113,17 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descL;
       HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descL, nlabelL, extentL.data(),
-                                                  NULL, /*stride*/
+                                                  nullptr, /*stride*/
                                                   type, defaultAlignment));
 
       cutensorTensorDescriptor_t descR;
       HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descR, nlabelR, extentR.data(),
-                                                  NULL, /*stride*/
+                                                  nullptr, /*stride*/
                                                   type, defaultAlignment));
 
       cutensorTensorDescriptor_t descOut;
       HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descOut, nlabelOut, extentOut.data(),
-                                                  NULL, /*stride*/
+                                                  nullptr, /*stride*/
                                                   type, defaultAlignment));
 
       /*******************************

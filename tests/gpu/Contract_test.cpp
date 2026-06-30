@@ -1,6 +1,5 @@
 #include "Contract_test.h"
 
-using namespace std;
 using namespace cytnx;
 
 TEST_F(ContractTest, gpu_Contract_denseUt_optimal_order) {

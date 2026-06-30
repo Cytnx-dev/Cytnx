@@ -199,7 +199,7 @@ libcytnx.a: $(ALLOBJS)
 #	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 #	#$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
-pyobj: ncon_py.o pycytnx.o generator_py.o storage_py.o tensor_py.o symmetry_py.o bond_py.o network_py.o linop_py.o unitensor_py.o linalg_py.o algo_py.o physics_related_py.o random_py.o tnalgo_py.o scalar_py.o
+pyobj: ncon_py.o pycytnx.o generator_py.o storage_py.o tensor_py.o symmetry_py.o bond_py.o network_py.o linop_py.o unitensor_py.o linalg_py.o algo_py.o physics_related_py.o random_py.o scalar_py.o
 	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $(ALLOBJS) $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
 
@@ -234,8 +234,6 @@ scalar_py.o: pybind/scalar_py.cpp
 random_py.o: pybind/random_py.cpp
 	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@
 physics_related_py.o: pybind/physics_related_py.cpp
-	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@
-tnalgo_py.o: pybind/tnalgo_py.cpp
 	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@
 
 doc :
@@ -277,8 +275,6 @@ UniTensor_base.o: $(CytnxPATH)/src/UniTensor_base.cpp $(CytnxPATH)/include/UniTe
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 DenseUniTensor.o: $(CytnxPATH)/src/DenseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-#SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
-#	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 BlockUniTensor.o: $(CytnxPATH)/src/BlockUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 ncon.o: $(CytnxPATH)/src/ncon.cpp $(CytnxPATH)/include/ncon.hpp

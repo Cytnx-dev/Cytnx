@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   /* 1.
       create a U1 symmetry object
@@ -12,20 +11,20 @@ int main() {
   /* 2.
       using with Bond to define a bond with symmetry.
   */
-  Bond bd_sym_u1_a = Bond(4, BD_KET, {{0}, {-4}, {-2}, {3}}, {sym_u1});
-  Bond bd_sym_u1_b = Bond(4, BD_KET, {{0}, {-4}, {-2}, {3}});  // default is U1 symmetry
-  cout << bd_sym_u1_a << endl;
-  cout << bd_sym_u1_b << endl;
-  cout << (bd_sym_u1_a == bd_sym_u1_b) << endl;  // true
+  Bond bd_sym_u1_a = Bond(BD_KET, {{0}, {-4}, {-2}, {3}}, {1, 1, 1, 1}, {sym_u1});
+  Bond bd_sym_u1_b = Bond(BD_KET, {{0}, {-4}, {-2}, {3}}, {1, 1, 1, 1});  // default is U1 symmetry
+  std::cout << bd_sym_u1_a << std::endl;
+  std::cout << bd_sym_u1_b << std::endl;
+  std::cout << (bd_sym_u1_a == bd_sym_u1_b) << std::endl;  // true
 
-  Bond bd_sym_u1_c = Bond(5, BD_KET, {{-1}, {1}, {2}, {-2}, {0}});
-  cout << bd_sym_u1_c << endl;
+  Bond bd_sym_u1_c = Bond(BD_KET, {{-1}, {1}, {2}, {-2}, {0}}, {1, 1, 1, 1, 1});
+  std::cout << bd_sym_u1_c << std::endl;
 
   /* 3.
       new qnums will be calculated using Symmetry::combine_rule.
   */
   Bond bd_sym_all = bd_sym_u1_a.combineBond(bd_sym_u1_c);
-  cout << bd_sym_all << endl;
+  std::cout << bd_sym_all << std::endl;
 
   return 0;
 }

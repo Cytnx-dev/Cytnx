@@ -1,8 +1,8 @@
 auto A = cytnx::arange(12).reshape(3, 4);
-cout << A << endl;
+std::cout << A << std::endl;
 
 auto B = cytnx::ones({3, 4}) * 4;
-cout << B << endl;
+std::cout << B << std::endl;
 
 auto C = A * B;
-cout << C << endl;
+std::cout << C << std::endl;

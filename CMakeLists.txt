@@ -409,7 +409,6 @@ IF(BUILD_PYTHON)
     pybind/algo_py.cpp
     pybind/physics_related_py.cpp
     pybind/random_py.cpp
-    pybind/tnalgo_py.cpp
     pybind/scalar_py.cpp
     pybind/ncon_py.cpp
   )

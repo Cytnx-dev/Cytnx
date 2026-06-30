@@ -4,8 +4,6 @@
 #include <fstream>
 #include <iostream>
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
@@ -44,7 +42,7 @@ namespace cytnx {
 
       int mpstype;
       f.read((char*)&mpstype,
-             sizeof(int));  // mps type, this is used to determine Sparse/Dense upon load
+             sizeof(int));  // mps type, this is used to determine Block/Dense upon load
 
       if (mpstype == MPSType.RegularMPS) {
         this->_impl = boost::intrusive_ptr<MPS_impl>(new RegularMPS());
@@ -63,10 +61,10 @@ namespace cytnx {
     }
 
     void MPS::Save(const std::string& fname) const {
-      fstream f;
+      std::fstream f;
       if (std::filesystem::path(fname).has_extension()) {
         // filename extension is given
-        f.open(fname, ios::out | ios::trunc | ios::binary);
+        f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
       } else {
         // add filename extension
         cytnx_warning_msg(
@@ -74,7 +72,7 @@ namespace cytnx {
           "Missing file extension in fname '%s'. I am adding the extension '.cymps'. This is "
           "deprecated, please provide the file extension in the future.\n",
           fname.c_str());
-        f.open((fname + ".cymps"), ios::out | ios::trunc | ios::binary);
+        f.open((fname + ".cymps"), std::ios::out | std::ios::trunc | std::ios::binary);
       }
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -83,9 +81,9 @@ namespace cytnx {
       f.close();
     }
     void MPS::Save(const char* fname) const {
-      fstream f;
-      string ffname = string(fname) + ".cymps";
-      f.open((ffname), ios::out | ios::trunc | ios::binary);
+      std::fstream f;
+      std::string ffname = std::string(fname) + ".cymps";
+      f.open((ffname), std::ios::out | std::ios::trunc | std::ios::binary);
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
       }
@@ -95,8 +93,8 @@ namespace cytnx {
 
     MPS MPS::Load(const std::string& fname) {
       MPS out;
-      fstream f;
-      f.open(fname, ios::in | ios::binary);
+      std::fstream f;
+      f.open(fname, std::ios::in | std::ios::binary);
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
       }
@@ -104,7 +102,7 @@ namespace cytnx {
       f.close();
       return out;
     }
-    MPS MPS::Load(const char* fname) { return MPS::Load(string(fname)); }
+    MPS MPS::Load(const char* fname) { return MPS::Load(std::string(fname)); }
 
   }  // namespace tn_algo
 

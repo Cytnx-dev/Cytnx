@@ -19,7 +19,6 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    using namespace std;
 
     namespace {
       constexpr double kBetaBreakdownRoundoff = 100.0;

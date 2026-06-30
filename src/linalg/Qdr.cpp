@@ -4,7 +4,6 @@
 #include <vector>
 #include "UniTensor.hpp"
 #include "algo.hpp"
-using namespace std;
 typedef cytnx::Accessor ac;
 
 #ifdef BACKEND_TORCH
@@ -109,27 +108,27 @@ namespace cytnx {
           tmp.contiguous_();
         }
 
-        vector<cytnx_uint64> tmps = tmp.shape();
-        vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+        std::vector<cytnx_uint64> tmps = tmp.shape();
+        std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
         tmps.clear();
-        vector<string> oldlabel = Tin.labels();
+        std::vector<std::string> oldlabel = Tin.labels();
 
         // collapse as Matrix:
         cytnx_int64 rowdim = 1;
         for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
         tmp.reshape_({rowdim, -1});
 
-        vector<Tensor> outT = cytnx::linalg::Qdr(tmp, is_tau);
+        std::vector<Tensor> outT = cytnx::linalg::Qdr(tmp, is_tau);
         if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
         int t = 0;
-        vector<cytnx::UniTensor> outCyT(outT.size());
+        std::vector<cytnx::UniTensor> outCyT(outT.size());
 
-        string newlbl = "_aux_L";
+        std::string newlbl = "_aux_L";
 
         // Q
-        vector<cytnx_int64> Qshape;
-        vector<string> Qlbl;
+        std::vector<cytnx_int64> Qshape;
+        std::vector<std::string> Qlbl;
         for (int i = 0; i < Tin.rowrank(); i++) {
           Qshape.push_back(oldshape[i]);
           Qlbl.push_back(oldlabel[i]);
@@ -144,7 +143,7 @@ namespace cytnx {
         outCyT[1] = UniTensor(outT[1], true, 1);
         // outCyT[1].relabel_({newlbl, newlbl - 1});
         // newlbl -= 1;
-        outCyT[1].relabel_({newlbl, string("_aux_R")});
+        outCyT[1].relabel_({newlbl, std::string("_aux_R")});
         newlbl = outCyT[1].labels().back();
 
         // R

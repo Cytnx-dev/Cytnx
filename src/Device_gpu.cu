@@ -1,7 +1,6 @@
 #include "Device.hpp"
 #include "cytnx_error.hpp"
 
-using namespace std;
 namespace cytnx {
 
 #ifdef UNI_GPU

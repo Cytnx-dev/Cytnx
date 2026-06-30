@@ -12,7 +12,7 @@ namespace cytnx {
                             const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                             const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex128 alpha = complex128(a), beta = complex128(b);
 
@@ -34,7 +34,7 @@ namespace cytnx {
                             const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                             const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex64 alpha = complex64(a), beta = complex64(b);
 
@@ -57,7 +57,7 @@ namespace cytnx {
                            const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                            const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_double alpha = double(a), beta = double(b);
 
@@ -78,7 +78,7 @@ namespace cytnx {
                            const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                            const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_float alpha = float(a), beta = float(b);
 

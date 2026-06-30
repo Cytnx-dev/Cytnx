@@ -1,8 +1,6 @@
 #include "search_tree.hpp"
 #include <stack>
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
@@ -10,8 +8,8 @@ namespace cytnx {
   // helper functions
   cytnx_float get_cost(const PseudoUniTensor& t1, const PseudoUniTensor& t2) {
     cytnx_float cost = 1;
-    vector<cytnx_uint64> shape1 = t1.shape;
-    vector<cytnx_uint64> shape2 = t2.shape;
+    std::vector<cytnx_uint64> shape1 = t1.shape;
+    std::vector<cytnx_uint64> shape2 = t2.shape;
 
     for (cytnx_uint64 i = 0; i < shape1.size(); i++) {
       cost *= shape1[i];
@@ -21,8 +19,8 @@ namespace cytnx {
     }
 
     // get bond with common label:
-    vector<string> common_lbl;
-    vector<cytnx_uint64> comm_idx1, comm_idx2;
+    std::vector<std::string> common_lbl;
+    std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_(common_lbl, t1.labels, t2.labels, comm_idx1, comm_idx2);
 
     for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++) cost /= shape2[comm_idx2[i]];
@@ -37,8 +35,8 @@ namespace cytnx {
     t3.cost = get_cost(t1, t2);  // Calculate contraction cost
 
     // Find common labels between t1 and t2
-    vector<cytnx_uint64> loc1, loc2;
-    vector<string> comm_lbl;
+    std::vector<cytnx_uint64> loc1, loc2;
+    std::vector<std::string> comm_lbl;
     vec_intersect_(comm_lbl, t1.labels, t2.labels, loc1, loc2);
 
     // New shape is concatenation of non-contracted dimensions
@@ -115,8 +113,8 @@ namespace cytnx {
       for (std::size_t i = 0; i < n; ++i) {
         for (std::size_t j = i + 1; j < n; ++j) {
           // Find common labels
-          vector<string> common_lbl;
-          vector<cytnx_uint64> comm_idx1, comm_idx2;
+          std::vector<std::string> common_lbl;
+          std::vector<cytnx_uint64> comm_idx1, comm_idx2;
           vec_intersect_(common_lbl, nodes[i]->labels, nodes[j]->labels, comm_idx1, comm_idx2);
 
           if (!common_lbl.empty()) {

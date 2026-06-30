@@ -10,7 +10,7 @@ namespace cytnx {
 
     /// cuNorm
     void cuNorm_internal_cd(void *out, const boost::intrusive_ptr<Storage_base> &Rin) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
 
       checkCudaErrors(
@@ -19,7 +19,7 @@ namespace cytnx {
       cublasDestroy(cublasH);
     }
     void cuNorm_internal_cf(void *out, const boost::intrusive_ptr<Storage_base> &Rin) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
 
       checkCudaErrors(
@@ -28,7 +28,7 @@ namespace cytnx {
       cublasDestroy(cublasH);
     }
     void cuNorm_internal_d(void *out, const boost::intrusive_ptr<Storage_base> &Rin) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
 
       checkCudaErrors(cublasDnrm2(cublasH, Rin->size(), (double *)Rin->data(), 1, (double *)out));
@@ -36,7 +36,7 @@ namespace cytnx {
       cublasDestroy(cublasH);
     }
     void cuNorm_internal_f(void *out, const boost::intrusive_ptr<Storage_base> &Rin) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       checkCudaErrors(cublasSnrm2(cublasH, Rin->size(), (float *)Rin->data(), 1, (float *)out));
       cublasDestroy(cublasH);
