@@ -226,7 +226,7 @@ namespace cytnx {
 
       //================
       Outer_ii =
-        std::vector<std::vector<Outerfunc_oii>>(N_Type, std::vector<Outerfunc_oii>(N_Type, NULL));
+        std::vector<std::vector<Outerfunc_oii>>(N_Type, std::vector<Outerfunc_oii>(N_Type, nullptr));
 
       Outer_ii[Type.ComplexDouble][Type.ComplexDouble] = Outer_internal_cdtcd;
       Outer_ii[Type.ComplexDouble][Type.ComplexFloat] = Outer_internal_cdtcf;
@@ -721,7 +721,7 @@ namespace cytnx {
       //================
 
       cuOuter_ii =
-        std::vector<std::vector<Outerfunc_oii>>(N_Type, std::vector<Outerfunc_oii>(N_Type, NULL));
+        std::vector<std::vector<Outerfunc_oii>>(N_Type, std::vector<Outerfunc_oii>(N_Type, nullptr));
 
       cuOuter_ii[Type.ComplexDouble][Type.ComplexDouble] = cuOuter_internal_cdtcd;
       cuOuter_ii[Type.ComplexDouble][Type.ComplexFloat] = cuOuter_internal_cdtcf;

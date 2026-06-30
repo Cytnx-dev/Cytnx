@@ -240,12 +240,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, cutensor_data_type,
+                                                     nullptr /* stride */, cutensor_data_type,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      cutensor_data_type, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),

@@ -26,7 +26,7 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                               const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex128 alpha = cytnx_complex128(1, 0), beta = cytnx_complex128(0, 0);
 
@@ -47,7 +47,7 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                               const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex64 alpha = cytnx_complex64(1, 0), beta = cytnx_complex64(0, 0);
 
@@ -69,7 +69,7 @@ namespace cytnx {
                              const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                              const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_double alpha = 1, beta = 0;
 
@@ -89,7 +89,7 @@ namespace cytnx {
                              const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                              const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_float alpha = 1, beta = 0;
 

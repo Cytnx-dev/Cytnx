@@ -14,7 +14,7 @@ namespace cytnx {
       using data_type = cytnx_complex128;
       using d_data_type = cuDoubleComplex;
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -22,7 +22,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -47,7 +47,7 @@ namespace cytnx {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
-      gesvdjInfo_t gesvdj_params = NULL;
+      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
       checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));
@@ -102,7 +102,7 @@ namespace cytnx {
       using data_type = cytnx_complex64;
       using d_data_type = cuFloatComplex;
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -110,7 +110,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -135,7 +135,7 @@ namespace cytnx {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
-      gesvdjInfo_t gesvdj_params = NULL;
+      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
       checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));
@@ -189,7 +189,7 @@ namespace cytnx {
                             const cytnx_int64 &N) {
       using data_type = cytnx_double;
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -197,7 +197,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -222,7 +222,7 @@ namespace cytnx {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
-      gesvdjInfo_t gesvdj_params = NULL;
+      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
       checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));
@@ -275,7 +275,7 @@ namespace cytnx {
                             const cytnx_int64 &N) {
       using data_type = cytnx_float;
       cusolverEigMode_t jobz;
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
                                                                     : CUSOLVER_EIG_MODE_VECTOR;
 
@@ -283,7 +283,7 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cuDoubleComplex *Mij;
@@ -308,7 +308,7 @@ namespace cytnx {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
-      gesvdjInfo_t gesvdj_params = NULL;
+      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
       checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));

@@ -127,7 +127,7 @@ namespace cytnx {
       cutensornetTensorDescriptor_t descTensorQ;
       cutensornetTensorDescriptor_t descTensorR;
 
-      const int64_t *strides = NULL;  // assuming fortran layout for all tensors
+      const int64_t *strides = nullptr;  // assuming fortran layout for all tensors
 
       HANDLE_ERROR(cutensornetCreateTensorDescriptor(handle, numModesIn, extentT.data(), strides,
                                                      modesT.data(), typeData, &descTensorIn));
@@ -265,7 +265,7 @@ namespace cytnx {
       cutensornetTensorDescriptor_t descTensorQ;
       cutensornetTensorDescriptor_t descTensorR;
 
-      const int64_t *strides = NULL;  // assuming fortran layout for all tensors
+      const int64_t *strides = nullptr;  // assuming fortran layout for all tensors
 
       HANDLE_ERROR(cutensornetCreateTensorDescriptor(handle, numModesIn, extentT.data(), strides,
                                                      modesT.data(), typeData, &descTensorIn));
@@ -402,7 +402,7 @@ namespace cytnx {
       cutensornetTensorDescriptor_t descTensorQ;
       cutensornetTensorDescriptor_t descTensorR;
 
-      const int64_t *strides = NULL;  // assuming fortran layout for all tensors
+      const int64_t *strides = nullptr;  // assuming fortran layout for all tensors
 
       HANDLE_ERROR(cutensornetCreateTensorDescriptor(handle, numModesIn, extentT.data(), strides,
                                                      modesT.data(), typeData, &descTensorIn));
@@ -539,7 +539,7 @@ namespace cytnx {
       cutensornetTensorDescriptor_t descTensorQ;
       cutensornetTensorDescriptor_t descTensorR;
 
-      const int64_t *strides = NULL;  // assuming fortran layout for all tensors
+      const int64_t *strides = nullptr;  // assuming fortran layout for all tensors
 
       HANDLE_ERROR(cutensornetCreateTensorDescriptor(handle, numModesIn, extentT.data(), strides,
                                                      modesT.data(), typeData, &descTensorIn));

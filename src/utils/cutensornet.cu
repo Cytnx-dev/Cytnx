@@ -176,7 +176,7 @@ namespace cytnx {
         tmp_extents[idx][j] = uts[idx].shape()[numModesIn[idx] - 1 - j];
       }
       extentsIn[idx] = tmp_extents[idx].data();
-      stridesIn[idx] = NULL;
+      stridesIn[idx] = nullptr;
     }
   }
 
@@ -282,8 +282,8 @@ namespace cytnx {
     HANDLE_ERROR(cutensornetCreateNetworkDescriptor(
       (const cutensornetHandle_t)handle, numInputs, (const int32_t *)numModesIn.data(),
       (const int64_t **)extentsIn.data(), (const int64_t **)stridesIn.data(),
-      (const int32_t **)modesIn.data(), NULL, nmodeR, (const int64_t *)extentR.data(),
-      /*stridesOut = */ NULL, (const int32_t *)modesR.data(), typeData, typeCompute, &descNet));
+      (const int32_t **)modesIn.data(), nullptr, nmodeR, (const int64_t *)extentR.data(),
+      /*stridesOut = */ nullptr, (const int32_t *)modesR.data(), typeData, typeCompute, &descNet));
     if (verbose)
       printf("Initialized the cuTensorNet library and created a tensor network descriptor\n");
     return descNet;
@@ -389,7 +389,7 @@ namespace cytnx {
     // HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
     HANDLE_ERROR(cutensornetContractSlices(
       handle, plan, rawDataIn_d.data(), R_d, accumulateOutput, workDesc,
-      sliceGroup,  // alternatively, NULL can also be used to contract over all
+      sliceGroup,  // alternatively, nullptr can also be used to contract over all
                    // slices instead of specifying a sliceGroup object
       stream));
     HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));

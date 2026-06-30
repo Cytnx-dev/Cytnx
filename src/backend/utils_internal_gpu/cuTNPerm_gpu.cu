@@ -54,12 +54,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_C_64F,
+                                                     nullptr /* stride */, CUTENSOR_C_64F,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_C_64F, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -192,12 +192,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_C_32F,
+                                                     nullptr /* stride */, CUTENSOR_C_32F,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_C_32F, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -329,12 +329,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_64I,
+                                                     nullptr /* stride */, CUTENSOR_R_64I,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_64I, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -467,12 +467,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_32F,
+                                                     nullptr /* stride */, CUTENSOR_R_32F,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_32F, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -602,12 +602,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_64F,
+                                                     nullptr /* stride */, CUTENSOR_R_64F,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_64F, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -736,12 +736,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_64U,
+                                                     nullptr /* stride */, CUTENSOR_R_64U,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_64U, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -870,12 +870,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_32I,
+                                                     nullptr /* stride */, CUTENSOR_R_32I,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_32I, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -1006,12 +1006,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_32U,
+                                                     nullptr /* stride */, CUTENSOR_R_32U,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_32U, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -1140,12 +1140,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_16U,
+                                                     nullptr /* stride */, CUTENSOR_R_16U,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_16U, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -1273,12 +1273,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_16I,
+                                                     nullptr /* stride */, CUTENSOR_R_16I,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_16I, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -1407,12 +1407,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, CUTENSOR_R_8I,
+                                                     nullptr /* stride */, CUTENSOR_R_8I,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      CUTENSOR_R_8I, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
