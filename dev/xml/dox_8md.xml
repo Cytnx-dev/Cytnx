@@ -210,10 +210,10 @@
 <codeline></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>A({3,4,5,2},Type.Double);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A.permute_(0,3,1,2);<sp/>//<sp/>this<sp/>will<sp/>not<sp/>change<sp/>the<sp/>memory,<sp/>only<sp/>the<sp/>shape<sp/>info<sp/>is<sp/>changed.</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/>//<sp/>false</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>std::endl;<sp/>//<sp/>false</highlight></codeline>
 <codeline></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A.contiguous_();<sp/>//<sp/>call<sp/>contiguous()<sp/>to<sp/>actually<sp/>move<sp/>the<sp/>memory.</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/>//<sp/>this<sp/>will<sp/>be<sp/>true!</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>std::endl;<sp/>//<sp/>this<sp/>will<sp/>be<sp/>true!</highlight></codeline>
 <codeline></codeline>
 <codeline><highlight class="normal">```</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Access<sp/>single<sp/>element<sp/>using<sp/>`.at`</highlight></codeline>

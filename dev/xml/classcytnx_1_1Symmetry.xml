@@ -485,7 +485,6 @@ Deg&gt;&gt;    3   3   3   3
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>symmetry<sp/>objects</highlight></codeline>
@@ -496,11 +495,11 @@ Deg&gt;&gt;    3   3   3   3
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_D<sp/>=<sp/>sym_A;<sp/><sp/></highlight><highlight class="comment">//<sp/>same<sp/>instance.</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>using<sp/>is()<sp/>to<sp/>check<sp/>if<sp/>they<sp/>are<sp/>the<sp/>same<sp/>instance.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(sym_D,<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true.<sp/>same<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(sym_D<sp/>==<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>is(sym_D,<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true.<sp/>same<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>(sym_D<sp/>==<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(sym_C,<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false.<sp/>different<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(sym_C<sp/>==<sp/>sym_A)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>sane<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>is(sym_C,<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false.<sp/>different<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>(sym_C<sp/>==<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>sane<sp/>content</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>

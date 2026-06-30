@@ -796,7 +796,6 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span><a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">std</a>;</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">main</a>(<span class="keywordtype">int</span> <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">argc</a>, <span class="keywordtype">char</span>* <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">argv</a>[]) {</div>
@@ -804,30 +803,30 @@ Static Public Member Functions</h2></td></tr>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1UniTensor.html">UniTensor</a> <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT</a> = <a class="code hl_class" href="classcytnx_1_1UniTensor.html">UniTensor</a>(<a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a>, <span class="keyword">false</span>, 2);  <span class="comment">// create un-tagged CyTensor from Tensor</span></div>
 <div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT</a>.print_diagram();</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT</a> &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// Note that it is a shared view, so a change to CyT will affect Tensor T.</span></div>
 <div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT</a>.at&lt;<a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cytnx_double</a>&gt;({0, 0}) = 1.456;</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <span class="stringliteral">&quot;after:&quot;</span> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;after:&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT</a> &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// If we want a new instance of memery, use clone at initialize:</span></div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <span class="stringliteral">&quot;[non-share example]&quot;</span> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;[non-share example]&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1UniTensor.html">UniTensor</a> <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT_nonshare</a> = <a class="code hl_class" href="classcytnx_1_1UniTensor.html">UniTensor</a>(<a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a>.clone(), <span class="keyword">false</span>, 2);</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT_nonshare</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;before:&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT_nonshare</a> &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT_nonshare</a>.at&lt;<a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cytnx_double</a>&gt;({1, 1}) = 2.345;</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <span class="stringliteral">&quot;after&quot;</span> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;  <span class="comment">// T is unchanged!</span></div>
-<div class="line">  <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">cout</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT_nonshare</a> &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">endl</a>;</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;after&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">T</a> &lt;&lt; std::endl;  <span class="comment">// T is unchanged!</span></div>
+<div class="line">  std::cout &lt;&lt; <a class="code hl_function" href="classcytnx_1_1UniTensor.html#a8e4a44ff5b17788458dc8cf2642f811f">CyT_nonshare</a> &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>

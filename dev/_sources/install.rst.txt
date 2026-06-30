@@ -121,12 +121,11 @@ Let us consider the same example as before for Python. Here, we want to compile 
 
     #include "cytnx.hpp"
     #include <iostream>
-    using namespace std;
     using namespace cytnx;
 
     int main(){
         auto A = zeros(4);
-        cout << A << endl;
+        std::cout << A << std::endl;
         return 0;
     }
 

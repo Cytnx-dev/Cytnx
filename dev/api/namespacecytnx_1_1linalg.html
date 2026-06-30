@@ -6866,7 +6866,7 @@ const std::string &amp;b)</a> instead. </dd></dl>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>[vector&lt;Tensor&gt;] if is_V = True, the first tensor is the eigen value, and second tensor is eigenvector of shape [k,L].</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensor&gt;] if is_V = True, the first tensor is the eigen value, and second tensor is eigenvector of shape [k,L].</dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd>two Tensors must be Rank-1, with length of Diag = L and Sub_diag length = L-1.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>performance tune: This function have better performance when two vectors with same types, and are one of following type: cytnx_double, cytnx_float. In general all real type can be use as input, which will be promote to floating point type for calculation. </dd></dl>
 

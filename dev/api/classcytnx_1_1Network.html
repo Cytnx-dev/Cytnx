@@ -421,12 +421,11 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Network.html">Network</a> N;</div>
 <div class="line">  N.<a class="code hl_function" href="classcytnx_1_1Network.html#a00bc1bf6b9291a0416d5c0fb5beaa284">Fromfile</a>(<span class="stringliteral">&quot;example.net&quot;</span>);</div>
-<div class="line">  cout &lt;&lt; N &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; N &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Network_html"><div class="ttname"><a href="classcytnx_1_1Network.html">cytnx::Network</a></div><div class="ttdef"><b>Definition</b> Network.hpp:261</div></div>
 <div class="ttc" id="aclasscytnx_1_1Network_html_a00bc1bf6b9291a0416d5c0fb5beaa284"><div class="ttname"><a href="classcytnx_1_1Network.html#a00bc1bf6b9291a0416d5c0fb5beaa284">cytnx::Network::Fromfile</a></div><div class="ttdeci">void Fromfile(const std::string &amp;fname, const int &amp;network_type=NtType.Regular)</div><div class="ttdoc">Construct Network from network file.</div><div class="ttdef"><b>Definition</b> Network.hpp:320</div></div>
@@ -515,13 +514,12 @@ ORDER : (A,B),(C,D)
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Network.html">Network</a> N;</div>
 <div class="line">  N.<a class="code hl_function" href="classcytnx_1_1Network.html#aa863a755e95a85411a15af58d1ac4057">FromString</a>(</div>
 <div class="line">    {<span class="stringliteral">&quot;A: 0,1,2&quot;</span>, <span class="stringliteral">&quot;B: 0,3,4&quot;</span>, <span class="stringliteral">&quot;C: 5,1,6&quot;</span>, <span class="stringliteral">&quot;D: 5,7,8&quot;</span>, <span class="stringliteral">&quot;TOUT: 2,3,4;6,7,8&quot;</span>, <span class="stringliteral">&quot;ORDER: (A,B),(C,D)&quot;</span>});</div>
-<div class="line">  cout &lt;&lt; N &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; N &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Network_html_aa863a755e95a85411a15af58d1ac4057"><div class="ttname"><a href="classcytnx_1_1Network.html#aa863a755e95a85411a15af58d1ac4057">cytnx::Network::FromString</a></div><div class="ttdeci">void FromString(const std::vector&lt; std::string &gt; &amp;contents, const int &amp;network_type=NtType.Regular)</div><div class="ttdoc">Construct Network from a list of strings, where each string is the same as each line in network file.</div><div class="ttdef"><b>Definition</b> Network.hpp:357</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>

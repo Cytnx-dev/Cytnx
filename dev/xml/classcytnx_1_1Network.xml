@@ -82,12 +82,11 @@ Format of a network file:</para>
 <para><programlisting filename="example/Network/Fromfile.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[])<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Network" kindref="compound">Network</ref><sp/>N;</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>N.<ref refid="classcytnx_1_1Network_1a00bc1bf6b9291a0416d5c0fb5beaa284" kindref="member">Fromfile</ref>(</highlight><highlight class="stringliteral">&quot;example.net&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>N<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>N<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
 </programlisting> <heading level="4">output&gt;</heading>
 </para>
@@ -175,13 +174,12 @@ Format of each string follows the same policy as Fromfile.</para>
 <para><programlisting filename="example/Network/FromString.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>argc,<sp/></highlight><highlight class="keywordtype">char</highlight><highlight class="normal">*<sp/>argv[])<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Network" kindref="compound">Network</ref><sp/>N;</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>N.<ref refid="classcytnx_1_1Network_1aa863a755e95a85411a15af58d1ac4057" kindref="member">FromString</ref>(</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight><highlight class="stringliteral">&quot;A:<sp/>0,1,2&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;B:<sp/>0,3,4&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;C:<sp/>5,1,6&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;D:<sp/>5,7,8&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;TOUT:<sp/>2,3,4;6,7,8&quot;</highlight><highlight class="normal">,<sp/></highlight><highlight class="stringliteral">&quot;ORDER:<sp/>(A,B),(C,D)&quot;</highlight><highlight class="normal">});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>N<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>N<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
 </programlisting> <heading level="4">output&gt;</heading>
 </para>

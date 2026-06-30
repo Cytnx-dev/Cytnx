@@ -170,7 +170,6 @@ Static Public Member Functions</h2></td></tr>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// 1. handy alias:</span></div>
 <div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div>
@@ -183,7 +182,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code hl_function" href="namespacecytnx.html#a685cf4e94754373ae4f12622b168fb98">cytnx::arange</a>(24);</div>
 <div class="line">  A.<a class="code hl_function" href="classcytnx_1_1Tensor.html#ad55b5e50d414b35cbe77091a82389f8b">reshape_</a>({2, 3, 4});</div>
-<div class="line">  cout &lt;&lt; A &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; A &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/*</span></div>
 <div class="line"><span class="comment">      3. Accessing elements using accessor</span></div>
@@ -192,7 +191,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="line"><span class="comment"></span> </div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, ac::all(), ac::range(0, 2, 1));</div>
-<div class="line">  cout &lt;&lt; B &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; B &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* [Note] Conversion from python slice to ac:</span></div>
 <div class="line"><span class="comment">          [::x]   = ac::step(x)</span></div>
@@ -359,7 +358,6 @@ template&lt;class T &gt; </div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// 1. handy alias:</span></div>
 <div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div>
@@ -372,7 +370,7 @@ template&lt;class T &gt; </div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code hl_function" href="namespacecytnx.html#a685cf4e94754373ae4f12622b168fb98">cytnx::arange</a>(24);</div>
 <div class="line">  A.<a class="code hl_function" href="classcytnx_1_1Tensor.html#ad55b5e50d414b35cbe77091a82389f8b">reshape_</a>({2, 3, 4});</div>
-<div class="line">  cout &lt;&lt; A &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; A &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/*</span></div>
 <div class="line"><span class="comment">      3. Accessing elements using accessor</span></div>
@@ -381,7 +379,7 @@ template&lt;class T &gt; </div>
 <div class="line"><span class="comment"></span> </div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, ac::all(), ac::range(0, 2, 1));</div>
-<div class="line">  cout &lt;&lt; B &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; B &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* [Note] Conversion from python slice to ac:</span></div>
 <div class="line"><span class="comment">          [::x]   = ac::step(x)</span></div>
@@ -537,7 +535,6 @@ Shape : (3,2)
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">// 1. handy alias:</span></div>
 <div class="line">  <span class="keyword">typedef</span> <a class="code hl_class" href="classcytnx_1_1Accessor.html">Accessor</a> ac;</div>
@@ -550,7 +547,7 @@ Shape : (3,2)
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> A = <a class="code hl_function" href="namespacecytnx.html#a685cf4e94754373ae4f12622b168fb98">cytnx::arange</a>(24);</div>
 <div class="line">  A.<a class="code hl_function" href="classcytnx_1_1Tensor.html#ad55b5e50d414b35cbe77091a82389f8b">reshape_</a>({2, 3, 4});</div>
-<div class="line">  cout &lt;&lt; A &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; A &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/*</span></div>
 <div class="line"><span class="comment">      3. Accessing elements using accessor</span></div>
@@ -559,7 +556,7 @@ Shape : (3,2)
 <div class="line"><span class="comment"></span> </div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Tensor.html">Tensor</a> B = A(0, ac::all(), ac::range(0, 2, 1));</div>
-<div class="line">  cout &lt;&lt; B &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; B &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* [Note] Conversion from python slice to ac:</span></div>
 <div class="line"><span class="comment">          [::x]   = ac::step(x)</span></div>

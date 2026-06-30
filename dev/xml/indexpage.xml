@@ -681,10 +681,10 @@
 </listitem><listitem><para>Virtual swap and permute. All the permute and swap operations do not change the underlying memory immediately. Minimized cost of moving elements.</para>
 </listitem><listitem><para>Use <computeroutput>contiguous()</computeroutput> when needed to actually move the memory layout. <programlisting filename=".cpp"><codeline><highlight class="normal">Tensor<sp/>A({3,4,5,2},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
 <codeline><highlight class="normal">A.permute_(0,3,1,2);<sp/></highlight><highlight class="comment">//<sp/>this<sp/>will<sp/>not<sp/>change<sp/>the<sp/>memory,<sp/>only<sp/>the<sp/>shape<sp/>info<sp/>is<sp/>changed.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal">cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/></highlight><highlight class="comment">//<sp/>false</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">std::cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>std::endl;<sp/></highlight><highlight class="comment">//<sp/>false</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal">A.contiguous_();<sp/></highlight><highlight class="comment">//<sp/>call<sp/>contiguous()<sp/>to<sp/>actually<sp/>move<sp/>the<sp/>memory.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal">cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/></highlight><highlight class="comment">//<sp/>this<sp/>will<sp/>be<sp/>true!</highlight></codeline>
+<codeline><highlight class="normal">std::cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>std::endl;<sp/></highlight><highlight class="comment">//<sp/>this<sp/>will<sp/>be<sp/>true!</highlight></codeline>
 </programlisting></para>
 </listitem><listitem><para>Access single element using <computeroutput>.at</computeroutput> <programlisting filename=".cpp"><codeline><highlight class="normal">Tensor<sp/>A({3,4,5},<ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>.Double);</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>val<sp/>=<sp/>A.at&lt;</highlight><highlight class="keywordtype">double</highlight><highlight class="normal">&gt;(0,2,2);</highlight></codeline>

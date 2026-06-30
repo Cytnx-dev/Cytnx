@@ -18,7 +18,7 @@ For this, you can pass a **LinOp** or any of its child classes to **linalg.Lancz
     :param Tensor Tin: the initial vector, should be a Tensor with rank-1
     :param uint32 max_krydim: the maximum Krylov subspace dimension for each iteration
     :return: [eigvals (Tensor), eigvecs (Tensor)(option)]
-    :rtype: vector<Tensor> (C++ API)/list of Tensor(python API)
+    :rtype: std::vector<Tensor> (C++ API)/list of Tensor(python API)
 
 
 For example, we consider a simple example where we wrap a (4x4) matrix inside a custom operator. We can easily generalize the **matvec** to be any custom sparse structure.

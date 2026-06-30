@@ -5518,7 +5518,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para>[vector&lt;Tensor&gt;] if is_V = True, the first tensor is the eigen value, and second tensor is eigenvector of shape [k,L].</para>
+<simplesect kind="return"><para>[std::vector&lt;Tensor&gt;] if is_V = True, the first tensor is the eigen value, and second tensor is eigenvector of shape [k,L].</para>
 </simplesect>
 <simplesect kind="pre"><para>two Tensors must be Rank-1, with length of Diag = L and Sub_diag length = L-1.</para>
 </simplesect>

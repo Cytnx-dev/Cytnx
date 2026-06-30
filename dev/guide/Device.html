@@ -462,7 +462,7 @@
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ncpus</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ncpus</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.</p>
@@ -492,7 +492,7 @@ However, any Cytnx internal function that utilizes OpenMP may or may not automat
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ngpus</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ngpus</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>If Cytnx is not compiled with CUDA available, the Device.Ngpus will always return 0.</p>

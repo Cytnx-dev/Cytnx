@@ -315,10 +315,10 @@ $(function() {
 <li>Virtual swap and permute. All the permute and swap operations do not change the underlying memory immediately. Minimized cost of moving elements.</li>
 <li>Use <code>contiguous()</code> when needed to actually move the memory layout. <div class="fragment"><div class="line">Tensor A({3,4,5,2},<a class="code hl_variable" href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">Type</a>.Double);</div>
 <div class="line">A.permute_(0,3,1,2); <span class="comment">// this will not change the memory, only the shape info is changed.</span></div>
-<div class="line">cout &lt;&lt; A.is_contiguous() &lt;&lt; endl; <span class="comment">// false</span></div>
+<div class="line">std::cout &lt;&lt; A.is_contiguous() &lt;&lt; std::endl; <span class="comment">// false</span></div>
 <div class="line"> </div>
 <div class="line">A.contiguous_(); <span class="comment">// call contiguous() to actually move the memory.</span></div>
-<div class="line">cout &lt;&lt; A.is_contiguous() &lt;&lt; endl; <span class="comment">// this will be true!</span></div>
+<div class="line">std::cout &lt;&lt; A.is_contiguous() &lt;&lt; std::endl; <span class="comment">// this will be true!</span></div>
 </div><!-- fragment --></li>
 <li>Access single element using <code>.at</code> <div class="fragment"><div class="line">Tensor A({3,4,5},<a class="code hl_variable" href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">Type</a>.Double);</div>
 <div class="line"><span class="keywordtype">double</span> val = A.at&lt;<span class="keywordtype">double</span>&gt;(0,2,2);</div>

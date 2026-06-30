@@ -52,7 +52,6 @@ See also <ref refid="classcytnx_1_1Tensor_1aa54246c4e3769043d084d6fcbc20beef" ki
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>1.<sp/>handy<sp/>alias:</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref><sp/>ac;</highlight></codeline>
@@ -65,7 +64,7 @@ See also <ref refid="classcytnx_1_1Tensor_1aa54246c4e3769043d084d6fcbc20beef" ki
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1ad55b5e50d414b35cbe77091a82389f8b" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>3.<sp/>Accessing<sp/>elements<sp/>using<sp/>accessor</highlight></codeline>
@@ -74,7 +73,7 @@ See also <ref refid="classcytnx_1_1Tensor_1aa54246c4e3769043d084d6fcbc20beef" ki
 <codeline><highlight class="comment"></highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>B<sp/>=<sp/>A(0,<sp/>ac::all(),<sp/>ac::range(0,<sp/>2,<sp/>1));</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>[Note]<sp/>Conversion<sp/>from<sp/>python<sp/>slice<sp/>to<sp/>ac:</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[::x]<sp/><sp/><sp/>=<sp/>ac::step(x)</highlight></codeline>
@@ -234,7 +233,6 @@ Shape : (3,2)
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>1.<sp/>handy<sp/>alias:</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref><sp/>ac;</highlight></codeline>
@@ -247,7 +245,7 @@ Shape : (3,2)
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1ad55b5e50d414b35cbe77091a82389f8b" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>3.<sp/>Accessing<sp/>elements<sp/>using<sp/>accessor</highlight></codeline>
@@ -256,7 +254,7 @@ Shape : (3,2)
 <codeline><highlight class="comment"></highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>B<sp/>=<sp/>A(0,<sp/>ac::all(),<sp/>ac::range(0,<sp/>2,<sp/>1));</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>[Note]<sp/>Conversion<sp/>from<sp/>python<sp/>slice<sp/>to<sp/>ac:</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[::x]<sp/><sp/><sp/>=<sp/>ac::step(x)</highlight></codeline>
@@ -394,7 +392,6 @@ Shape : (3,2)
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>1.<sp/>handy<sp/>alias:</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref><sp/>ac;</highlight></codeline>
@@ -407,7 +404,7 @@ Shape : (3,2)
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1ad55b5e50d414b35cbe77091a82389f8b" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>3.<sp/>Accessing<sp/>elements<sp/>using<sp/>accessor</highlight></codeline>
@@ -416,7 +413,7 @@ Shape : (3,2)
 <codeline><highlight class="comment"></highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>B<sp/>=<sp/>A(0,<sp/>ac::all(),<sp/>ac::range(0,<sp/>2,<sp/>1));</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>B<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>[Note]<sp/>Conversion<sp/>from<sp/>python<sp/>slice<sp/>to<sp/>ac:</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>[::x]<sp/><sp/><sp/>=<sp/>ac::step(x)</highlight></codeline>

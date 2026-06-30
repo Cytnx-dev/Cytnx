@@ -598,7 +598,6 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="cytnx_8hpp.html">cytnx.hpp</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
@@ -607,16 +606,16 @@ Static Public Member Functions</h2></td></tr>
 <div class="line"><span class="comment">      with dimension 10</span></div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(10);</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_b = bd_a;</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_c = bd_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#a8c4d6443ffe7c3f3ecd8c474fd9a18eb">clone</a>();</div>
 <div class="line"> </div>
-<div class="line">  cout &lt;&lt; is(bd_b, bd_a) &lt;&lt; endl;  <span class="comment">// true, the same instance</span></div>
-<div class="line">  cout &lt;&lt; is(bd_c, bd_a) &lt;&lt; endl;  <span class="comment">// false, different instance</span></div>
+<div class="line">  std::cout &lt;&lt; is(bd_b, bd_a) &lt;&lt; std::endl;  <span class="comment">// true, the same instance</span></div>
+<div class="line">  std::cout &lt;&lt; is(bd_c, bd_a) &lt;&lt; std::endl;  <span class="comment">// false, different instance</span></div>
 <div class="line"> </div>
-<div class="line">  cout &lt;&lt; (bd_b == bd_a) &lt;&lt; endl;  <span class="comment">// true, same content</span></div>
-<div class="line">  cout &lt;&lt; (bd_c == bd_a) &lt;&lt; endl;  <span class="comment">// true, same content</span></div>
+<div class="line">  std::cout &lt;&lt; (bd_b == bd_a) &lt;&lt; std::endl;  <span class="comment">// true, same content</span></div>
+<div class="line">  std::cout &lt;&lt; (bd_c == bd_a) &lt;&lt; std::endl;  <span class="comment">// true, same content</span></div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
@@ -717,7 +716,6 @@ True
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
 <div class="line"><span class="comment">      create a non-symmetry, regular bond (BD_REG)</span></div>
@@ -726,9 +724,9 @@ True
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(10, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>);</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(15, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>);</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_c = bd_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">combineBond</a>(bd_b);</div>
-<div class="line">  cout &lt;&lt; bd_c &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_b &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_c &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_b &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 2.</span></div>
 <div class="line"><span class="comment">      combine symmetry bonds,</span></div>
@@ -741,9 +739,9 @@ True
 <div class="line">                   {<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(), <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_f = bd_d.<a class="code hl_function" href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">combineBond</a>(bd_e);</div>
-<div class="line">  cout &lt;&lt; bd_f &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_d &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_e &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_f &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_d &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_e &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Bond_html_a4714d9891e02b2aebf6756ec68c25e5c"><div class="ttname"><a href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">cytnx::Bond::combineBond</a></div><div class="ttdeci">Bond combineBond(const Bond &amp;bd_in, const bool &amp;is_grp=true) const</div><div class="ttdoc">combine the input bond with self, and return a new combined Bond instance.</div><div class="ttdef"><b>Definition</b> Bond.hpp:553</div></div>
@@ -887,7 +885,6 @@ Deg&gt;&gt;    1   1   1   1
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
 <div class="line"><span class="comment">      create a non-symmetry, regular bond (BD_REG)</span></div>
@@ -896,9 +893,9 @@ Deg&gt;&gt;    1   1   1   1
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(10, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>);</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(15, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>);</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_c = bd_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">combineBond</a>(bd_b);</div>
-<div class="line">  cout &lt;&lt; bd_c &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_b &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_c &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_b &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 2.</span></div>
 <div class="line"><span class="comment">      combine symmetry bonds,</span></div>
@@ -911,9 +908,9 @@ Deg&gt;&gt;    1   1   1   1
 <div class="line">                   {<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(), <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_f = bd_d.<a class="code hl_function" href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">combineBond</a>(bd_e);</div>
-<div class="line">  cout &lt;&lt; bd_f &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_d &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_e &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_f &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_d &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_e &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 </div><!-- fragment --> <h4>output&gt;</h4>
@@ -1050,20 +1047,19 @@ Deg&gt;&gt;    1   1   1   1
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
 <div class="line"><span class="comment">      create a non-symmetry, regular bond (BD_REG)</span></div>
 <div class="line"><span class="comment">      with dimension 10</span></div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(10);</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(5);</div>
-<div class="line">  cout &lt;&lt; bd_b &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_b &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  bd_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#ab8645d03cf115b59e946f329f3bba122">combineBond_</a>(bd_b);</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 2.</span></div>
 <div class="line"><span class="comment">      combine symmetry bonds,</span></div>
@@ -1072,14 +1068,14 @@ Deg&gt;&gt;    1   1   1   1
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_c =</div>
 <div class="line">    <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(<a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170">BD_BRA</a>, {<a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(0, 1) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(2, 0) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(-4, 1) &gt;&gt; 1}, {<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(), <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div>
 <div class="line"> </div>
-<div class="line">  cout &lt;&lt; bd_c &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_c &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(<a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170">BD_BRA</a>, {<a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(0, 0) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(2, 1) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(-1, 1) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(3, 0) &gt;&gt; 1},</div>
 <div class="line">                   {<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(), <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div>
-<div class="line">  cout &lt;&lt; bd_d &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_d &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  bd_c.<a class="code hl_function" href="classcytnx_1_1Bond.html#ab8645d03cf115b59e946f329f3bba122">combineBond_</a>(bd_d);</div>
-<div class="line">  cout &lt;&lt; bd_c &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_c &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
@@ -1277,7 +1273,6 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
 <div class="line"><span class="comment">      combine multiple KET bonds</span></div>
@@ -1291,11 +1286,11 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
 <div class="line">  <span class="comment">// so it is both memory efficient and fast!</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_all = bd_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#a5282d90bef238154945707bffca76875">combineBonds</a>({bd_b, bd_c, bd_d});</div>
 <div class="line"> </div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_b &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_c &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_d &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_all &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_b &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_c &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_d &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_all &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 2.</span></div>
 <div class="line"><span class="comment">      combine symmetry bonds,</span></div>
@@ -1311,10 +1306,10 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
 <div class="line">                       {<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(), <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_d = bd_sym_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#a5282d90bef238154945707bffca76875">combineBonds</a>({bd_sym_b, bd_sym_c});</div>
-<div class="line">  cout &lt;&lt; bd_sym_a &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_sym_b &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_sym_c &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_sym_d &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_a &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_b &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_c &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_d &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
@@ -1495,7 +1490,6 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
 <div class="line"><span class="comment">      combine multiple KET bonds</span></div>
@@ -1504,13 +1498,13 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(4, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>);</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(5, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>);</div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(2, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">BD_KET</a>);</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_b &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_c &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_d &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_b &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_c &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_d &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  bd_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#a38a40e58d24fb4d75597df25b7bf8918">combineBonds_</a>({bd_b, bd_c, bd_d});</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 2.</span></div>
 <div class="line"><span class="comment">      combine symmetry bonds,</span></div>
@@ -1525,11 +1519,11 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_sym_c = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(<a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170">BD_BRA</a>, {<a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(1, 1) &gt;&gt; 2, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(-1, 1) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(-2, 0) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(0, 0) &gt;&gt; 1},</div>
 <div class="line">                       {<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(), <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div>
 <div class="line"> </div>
-<div class="line">  cout &lt;&lt; bd_sym_a &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_sym_b &lt;&lt; endl;</div>
-<div class="line">  cout &lt;&lt; bd_sym_c &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_a &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_b &lt;&lt; std::endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_c &lt;&lt; std::endl;</div>
 <div class="line">  bd_sym_a.<a class="code hl_function" href="classcytnx_1_1Bond.html#a38a40e58d24fb4d75597df25b7bf8918">combineBonds_</a>({bd_sym_b, bd_sym_c});</div>
-<div class="line">  cout &lt;&lt; bd_sym_a &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_sym_a &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
@@ -2225,28 +2219,27 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a>;</div>
-<div class="line"><span class="keyword">using namespace </span>std;</div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <span class="comment">/* 1.</span></div>
 <div class="line"><span class="comment">      create a non-symmetry, regular bond (BD_REG)</span></div>
 <div class="line"><span class="comment">      with dimension 10</span></div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_a = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(10);</div>
-<div class="line">  cout &lt;&lt; bd_a &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_a &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 2.</span></div>
 <div class="line"><span class="comment">      create a non-symmetry bond tagged with BD_IN</span></div>
 <div class="line"><span class="comment">      with dimension 10</span></div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_b = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(10, <a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efa236cc2f8a468e7190902edda6ca8ee29">BD_IN</a>);</div>
-<div class="line">  cout &lt;&lt; bd_b &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_b &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 3.</span></div>
 <div class="line"><span class="comment">      crate a symmetry bond,</span></div>
 <div class="line"><span class="comment">      with single U1 (default) symmetry and qnums = (0,2,-1,3)</span></div>
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_c = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(<a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efa236cc2f8a468e7190902edda6ca8ee29">BD_IN</a>, {<a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(0) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(2) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(-1) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(3) &gt;&gt; 1});</div>
-<div class="line">  cout &lt;&lt; bd_c &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_c &lt;&lt; std::endl;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">/* 3.</span></div>
 <div class="line"><span class="comment">      crate a symmetry bond,</span></div>
@@ -2255,7 +2248,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
 <div class="line"><span class="comment">  */</span></div>
 <div class="line">  <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a> bd_d = <a class="code hl_class" href="classcytnx_1_1Bond.html">Bond</a>(<a class="code hl_enumvalue" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efa6bb366661f9937d42c2284dfac2910da">BD_OUT</a>, {<a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(0, 0) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(2, 1) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(-1, 1) &gt;&gt; 1, <a class="code hl_class" href="classcytnx_1_1Qs.html">Qs</a>(3, 0) &gt;&gt; 1},</div>
 <div class="line">                   {<a class="code hl_function" href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">Symmetry::U1</a>(), <a class="code hl_function" href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">Symmetry::Zn</a>(2)});</div>
-<div class="line">  cout &lt;&lt; bd_d &lt;&lt; endl;</div>
+<div class="line">  std::cout &lt;&lt; bd_d &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="ttc" id="anamespacecytnx_html_ac1ea381505268a3cf3bc68d7b8a480efa236cc2f8a468e7190902edda6ca8ee29"><div class="ttname"><a href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efa236cc2f8a468e7190902edda6ca8ee29">cytnx::BD_IN</a></div><div class="ttdeci">@ BD_IN</div><div class="ttdef"><b>Definition</b> Bond.hpp:36</div></div>
 <div class="ttc" id="anamespacecytnx_html_ac1ea381505268a3cf3bc68d7b8a480efa6bb366661f9937d42c2284dfac2910da"><div class="ttname"><a href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efa6bb366661f9937d42c2284dfac2910da">cytnx::BD_OUT</a></div><div class="ttdeci">@ BD_OUT</div><div class="ttdef"><b>Definition</b> Bond.hpp:37</div></div>

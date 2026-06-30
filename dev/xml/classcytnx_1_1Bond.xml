@@ -280,28 +280,27 @@ details:<orderedlist>
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>a<sp/>non-symmetry,<sp/>regular<sp/>bond<sp/>(BD_REG)</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>with<sp/>dimension<sp/>10</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_a<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(10);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>a<sp/>non-symmetry<sp/>bond<sp/>tagged<sp/>with<sp/>BD_IN</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>with<sp/>dimension<sp/>10</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_b<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(10,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efa236cc2f8a468e7190902edda6ca8ee29" kindref="member">BD_IN</ref>);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>3.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>crate<sp/>a<sp/>symmetry<sp/>bond,</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>with<sp/>single<sp/>U1<sp/>(default)<sp/>symmetry<sp/>and<sp/>qnums<sp/>=<sp/>(0,2,-1,3)</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_c<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(<ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efa236cc2f8a468e7190902edda6ca8ee29" kindref="member">BD_IN</ref>,<sp/>{<ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(0)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(2)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(-1)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(3)<sp/>&gt;&gt;<sp/>1});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>3.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>crate<sp/>a<sp/>symmetry<sp/>bond,</highlight></codeline>
@@ -310,7 +309,7 @@ details:<orderedlist>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_d<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(<ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efa6bb366661f9937d42c2284dfac2910da" kindref="member">BD_OUT</ref>,<sp/>{<ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(0,<sp/>0)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(2,<sp/>1)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(-1,<sp/>1)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(3,<sp/>0)<sp/>&gt;&gt;<sp/>1},</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>(),<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2)});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
 </programlisting> <heading level="4">output&gt;</heading>
 </para>
@@ -797,7 +796,6 @@ Deg&gt;&gt;    1   1   1   1
 <para><programlisting filename="example/Bond/clone.cpp"><codeline><highlight class="preprocessor">#include<sp/>&quot;<ref refid="cytnx_8hpp" kindref="compound">cytnx.hpp</ref>&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
@@ -806,16 +804,16 @@ Deg&gt;&gt;    1   1   1   1
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>with<sp/>dimension<sp/>10</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_a<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(10);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_b<sp/>=<sp/>bd_a;</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_c<sp/>=<sp/>bd_a.<ref refid="classcytnx_1_1Bond_1a8c4d6443ffe7c3f3ecd8c474fd9a18eb" kindref="member">clone</ref>();</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(bd_b,<sp/>bd_a)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>the<sp/>same<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>is(bd_c,<sp/>bd_a)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false,<sp/>different<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>is(bd_b,<sp/>bd_a)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>the<sp/>same<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>is(bd_c,<sp/>bd_a)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false,<sp/>different<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(bd_b<sp/>==<sp/>bd_a)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>(bd_c<sp/>==<sp/>bd_a)<sp/>&lt;&lt;<sp/>endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>(bd_b<sp/>==<sp/>bd_a)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>(bd_c<sp/>==<sp/>bd_a)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
@@ -916,20 +914,19 @@ True
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>a<sp/>non-symmetry,<sp/>regular<sp/>bond<sp/>(BD_REG)</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>with<sp/>dimension<sp/>10</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_a<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(10);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_b<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(5);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>bd_a.<ref refid="classcytnx_1_1Bond_1ab8645d03cf115b59e946f329f3bba122" kindref="member">combineBond_</ref>(bd_b);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>combine<sp/>symmetry<sp/>bonds,</highlight></codeline>
@@ -938,14 +935,14 @@ True
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_c<sp/>=</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(<ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">BD_BRA</ref>,<sp/>{<ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(0,<sp/>1)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(2,<sp/>0)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(-4,<sp/>1)<sp/>&gt;&gt;<sp/>1},<sp/>{<ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>(),<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2)});</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_d<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(<ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">BD_BRA</ref>,<sp/>{<ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(0,<sp/>0)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(2,<sp/>1)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(-1,<sp/>1)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(3,<sp/>0)<sp/>&gt;&gt;<sp/>1},</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>(),<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2)});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>bd_c.<ref refid="classcytnx_1_1Bond_1ab8645d03cf115b59e946f329f3bba122" kindref="member">combineBond_</ref>(bd_d);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
@@ -1092,7 +1089,6 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>a<sp/>non-symmetry,<sp/>regular<sp/>bond<sp/>(BD_REG)</highlight></codeline>
@@ -1101,9 +1097,9 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_a<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(10,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_b<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(15,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_c<sp/>=<sp/>bd_a.<ref refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kindref="member">combineBond</ref>(bd_b);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>combine<sp/>symmetry<sp/>bonds,</highlight></codeline>
@@ -1116,9 +1112,9 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>(),<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2)});</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_f<sp/>=<sp/>bd_d.<ref refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kindref="member">combineBond</ref>(bd_e);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_f<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_e<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_f<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_e<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
 </programlisting> <heading level="4">output&gt;</heading>
@@ -1262,7 +1258,6 @@ Deg&gt;&gt;    1   1   1   1
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>create<sp/>a<sp/>non-symmetry,<sp/>regular<sp/>bond<sp/>(BD_REG)</highlight></codeline>
@@ -1271,9 +1266,9 @@ Deg&gt;&gt;    1   1   1   1
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_a<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(10,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_b<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(15,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_c<sp/>=<sp/>bd_a.<ref refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kindref="member">combineBond</ref>(bd_b);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>combine<sp/>symmetry<sp/>bonds,</highlight></codeline>
@@ -1286,9 +1281,9 @@ Deg&gt;&gt;    1   1   1   1
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>(),<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2)});</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_f<sp/>=<sp/>bd_d.<ref refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kindref="member">combineBond</ref>(bd_e);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_f<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_e<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_f<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_e<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
 </programlisting> <heading level="4">output&gt;</heading>
@@ -1488,7 +1483,6 @@ Deg&gt;&gt;    1   1   1   1
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>combine<sp/>multiple<sp/>KET<sp/>bonds</highlight></codeline>
@@ -1502,11 +1496,11 @@ Deg&gt;&gt;    1   1   1   1
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>so<sp/>it<sp/>is<sp/>both<sp/>memory<sp/>efficient<sp/>and<sp/>fast!</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_all<sp/>=<sp/>bd_a.<ref refid="classcytnx_1_1Bond_1a5282d90bef238154945707bffca76875" kindref="member">combineBonds</ref>({bd_b,<sp/>bd_c,<sp/>bd_d});</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_all<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_all<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>combine<sp/>symmetry<sp/>bonds,</highlight></codeline>
@@ -1522,10 +1516,10 @@ Deg&gt;&gt;    1   1   1   1
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>(),<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2)});</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_d<sp/>=<sp/>bd_sym_a.<ref refid="classcytnx_1_1Bond_1a5282d90bef238154945707bffca76875" kindref="member">combineBonds</ref>({bd_sym_b,<sp/>bd_sym_c});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_d<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_d<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
@@ -1710,7 +1704,6 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
 <codeline><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;iostream&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal"><ref refid="namespacecytnx" kindref="compound">cytnx</ref>;</highlight></codeline>
-<codeline><highlight class="normal"></highlight><highlight class="keyword">using<sp/>namespace<sp/></highlight><highlight class="normal">std;</highlight></codeline>
 <codeline><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>main()<sp/>{</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>1.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>combine<sp/>multiple<sp/>KET<sp/>bonds</highlight></codeline>
@@ -1719,13 +1712,13 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_b<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(4,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_c<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(5,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_d<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(2,<sp/><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">BD_KET</ref>);</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_d<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>bd_a.<ref refid="classcytnx_1_1Bond_1a38a40e58d24fb4d75597df25b7bf8918" kindref="member">combineBonds_</ref>({bd_b,<sp/>bd_c,<sp/>bd_d});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">/*<sp/>2.</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>combine<sp/>symmetry<sp/>bonds,</highlight></codeline>
@@ -1740,11 +1733,11 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref><sp/>bd_sym_c<sp/>=<sp/><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>(<ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">BD_BRA</ref>,<sp/>{<ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(1,<sp/>1)<sp/>&gt;&gt;<sp/>2,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(-1,<sp/>1)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(-2,<sp/>0)<sp/>&gt;&gt;<sp/>1,<sp/><ref refid="classcytnx_1_1Qs" kindref="compound">Qs</ref>(0,<sp/>0)<sp/>&gt;&gt;<sp/>1},</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>{<ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>(),<sp/><ref refid="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" kindref="member">Symmetry::Zn</ref>(2)});</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_b<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_c<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_b<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_c<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>bd_sym_a.<ref refid="classcytnx_1_1Bond_1a38a40e58d24fb4d75597df25b7bf8918" kindref="member">combineBonds_</ref>({bd_sym_b,<sp/>bd_sym_c});</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>cout<sp/>&lt;&lt;<sp/>bd_sym_a<sp/>&lt;&lt;<sp/>endl;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>bd_sym_a<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
 <codeline><highlight class="normal">}</highlight></codeline>
