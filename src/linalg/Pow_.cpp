@@ -63,7 +63,8 @@ namespace cytnx {
           true, "[ERROR][Pow_] fatal internal, cannot call on an un-initialized UniTensor_base%s",
           "\n");
       } else {
-        cytnx_error_msg(true, "[Pow_]Unknown UniTensor type%s", "\n");
+        cytnx_error_msg(true, "[ERROR][Pow_] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }  // uten types
     }
 

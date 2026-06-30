@@ -1,10 +1,7 @@
 #include "BlockUniTensor_test.h"
 
 TEST_F(BlockUniTensorTest, gpu_Trace) {
-  // std::cout<<BUT4<<std::endl;
   auto tmp = BUT4.Trace(0, 3);
-  // std::cout<<BUtrT4<<std::endl;
-  // std::cout<<tmp<<std::endl;
   for (cytnx_int64 j = 0; j < 11; j++)
     for (cytnx_int64 k = 0; k < 3; k++)
       if (BUtrT4.at({j, k}).exists()) {
@@ -12,7 +9,6 @@ TEST_F(BlockUniTensorTest, gpu_Trace) {
         EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).real()), double(BUtrT4.at({j, k}).real()));
         EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).imag()), double(BUtrT4.at({j, k}).imag()));
       }
-  // std::cout<<tmp<<std::endl;
   tmp = UT_diag.Trace(0, 1);
   cytnx_double ans = 0;
   for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
@@ -184,7 +180,6 @@ TEST_F(BlockUniTensorTest, gpu_syms) {
 }
 
 TEST_F(BlockUniTensorTest, gpu_Norm) {
-  // std::cout<<BUT4<<std::endl;
   // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
   EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()), 10.36019459497064);
 

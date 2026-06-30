@@ -49,7 +49,7 @@ namespace cytnx {
    *  Block          |  2, block UniTensor
    *  BlockFermionic |  3, fermionic UniTensor (block form)
    *
-   *  @warning the type \em Sparse is deprecated. Use \em Block instead.
+   *  @warning the type \em Sparse is deprecated. Use \em Block instead or create a \em LinOp.
    *  @see UniTensor::uten_type(), UniTensor::uten_type_str()
    */
 
@@ -57,7 +57,6 @@ namespace cytnx {
 
   /// @cond
   // class DenseUniTensor;
-  // class SparseUniTensor;
   class UniTensor_base : public intrusive_ptr_base<UniTensor_base> {
    public:
     int uten_type_id;  // the unitensor type id.
@@ -89,7 +88,6 @@ namespace cytnx {
 
     friend class UniTensor;  // allow wrapper to access the private elems
     friend class DenseUniTensor;
-    // friend class SparseUniTensor;
     friend class BlockUniTensor;
     friend class BlockFermionicUniTensor;
 
@@ -2849,28 +2847,16 @@ namespace cytnx {
   #ifdef UNI_DEBUG
         cytnx_warning_msg(true, "[DEBUG] message: entry dispatch: UniTensor: symmetric%s", "\n");
   #endif
-        // cytnx_warning_msg(true,"[warning, still developing, some functions will display
-        // \"[Developing]\"][SparseUniTensor]%s","\n");
-        if (sym_fver == 0) {
-          // boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
-          // this->_impl = out;
-          cytnx_error_msg(true,
-                          "[ERROR] internal error! [legacy Sparse entry] the Bond is symmetry but "
-                          "the version is not properly determined!%s",
-                          "\n")
-        } else if (sym_fver == -1) {
-          cytnx_error_msg(true,
-                          "[ERROR] internal error! the Bond is symmetry but the version is not "
-                          "properly determined!%s",
-                          "\n");
+        cytnx_error_msg(
+          sym_fver < 1,
+          "[ERROR] Symmetric tensor, but no degeneracies given. The UniTensor seems broken.%s",
+          "\n");
+        if (fermionic) {
+          boost::intrusive_ptr<UniTensor_base> out(new BlockFermionicUniTensor());
+          this->_impl = out;
         } else {
-          if (fermionic) {
-            boost::intrusive_ptr<UniTensor_base> out(new BlockFermionicUniTensor());
-            this->_impl = out;
-          } else {
-            boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
-            this->_impl = out;
-          }
+          boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
+          this->_impl = out;
         }
       } else {
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
@@ -3917,17 +3903,16 @@ namespace cytnx {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
-
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          T aux;
-          return this->_impl->at_for_sparse(locator, aux);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at<T>(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 
@@ -3945,17 +3930,16 @@ namespace cytnx {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
-
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          T aux;  // [workaround] use aux to dispatch.
-          return this->_impl->at_for_sparse(locator, aux);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at<T>(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 
@@ -4013,15 +3997,16 @@ namespace cytnx {
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          return this->_impl->at_for_sparse(locator);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 
@@ -4035,15 +4020,16 @@ namespace cytnx {
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          return this->_impl->at_for_sparse(locator);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 

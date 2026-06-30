@@ -103,7 +103,6 @@ namespace {
       auto lanczos_eigval = eigval_cuda_to_cpu.at({i});
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
-      // std::cout << "resi err=" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
     }
     return true;

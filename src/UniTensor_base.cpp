@@ -16,8 +16,6 @@ namespace cytnx {
       return std::string("Void (un-initialize UniTensor)");
     } else if (ut_type == this->Dense) {
       return std::string("Dense");
-    } else if (ut_type == this->Sparse) {
-      return std::string("Sparse");
     } else if (ut_type == this->Block) {
       return std::string("Block");
     } else if (ut_type == this->BlockFermionic) {
