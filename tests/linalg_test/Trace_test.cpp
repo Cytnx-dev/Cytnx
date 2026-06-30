@@ -4,18 +4,31 @@
 
 #include "Tensor.hpp"
 #include "Type.hpp"
+#include "backend/Storage.hpp"
 #include "linalg.hpp"
 #include "random.hpp"
 #include "test_tools.h"
 
 namespace {
 
+  using cytnx::cytnx_double;
   using cytnx::cytnx_int32;
   using cytnx::cytnx_int64;
   using cytnx::cytnx_uint64;
   using cytnx::Device;
+  using cytnx::Storage;
   using cytnx::Tensor;
   using cytnx::Type;
+
+  // Tensor's own constructor and Tensor::get() (slicing) both reject a 0 in any
+  // shape dimension, so a zero-extent Tensor can only be built by composing a
+  // zero-element Storage directly and reshaping it onto the target shape.
+  static Tensor ZeroExtentTensor(const std::vector<cytnx_int64>& shape, unsigned int dtype) {
+    Storage s(0, dtype, Device.cpu);
+    Tensor t = Tensor::from_storage(s);
+    t.reshape_(shape);
+    return t;
+  }
 
   // The strided in-place trace must agree with the trace of a fully materialized
   // contiguous clone of the same tensor (which is the layout the old code always
@@ -99,6 +112,38 @@ namespace {
     auto ab = cytnx::linalg::Trace(t, 0, 2);
     auto ba = cytnx::linalg::Trace(t, 2, 0);
     EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(ab, ba, 1e-12));
+  }
+
+  // The following three cases match NumPy's convention for zero-extent np.trace
+  // (verified against numpy.trace with axis1/axis2 on shapes {0,0}, {3,0,0},
+  // {3,0,3}): a zero-length diagonal sums to 0 for every surviving index, and a
+  // zero-length surviving axis produces an empty result of that shape.
+
+  TEST(LinalgTraceTest, Rank2ZeroExtentReturnsZeroScalar) {
+    auto t = ZeroExtentTensor({0, 0}, Type.Double);
+    auto out = cytnx::linalg::Trace(t, 0, 1);
+    ASSERT_EQ(out.shape().size(), 1u);
+    EXPECT_EQ(out.shape()[0], 1u);
+    EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), 0.0);
+  }
+
+  TEST(LinalgTraceTest, ZeroTracedAxisReturnsZeroFilledOutput) {
+    // shape {3, 0, 0} traced over (1, 2): the diagonal is empty for every one of
+    // the 3 surviving indices, so each sums to 0 -> output shape {3}, all zero.
+    auto t = ZeroExtentTensor({3, 0, 0}, Type.Double);
+    auto out = cytnx::linalg::Trace(t, 1, 2);
+    ASSERT_EQ(out.shape().size(), 1u);
+    EXPECT_EQ(out.shape()[0], 3u);
+    for (cytnx_uint64 i = 0; i < 3; i++) EXPECT_DOUBLE_EQ(out.at<cytnx_double>({i}), 0.0);
+  }
+
+  TEST(LinalgTraceTest, ZeroRemainingAxisReturnsEmptyOutput) {
+    // shape {3, 0, 3} traced over (0, 2): the surviving axis (1) is zero-length,
+    // so the output is an empty tensor of shape {0}.
+    auto t = ZeroExtentTensor({3, 0, 3}, Type.Double);
+    auto out = cytnx::linalg::Trace(t, 0, 2);
+    ASSERT_EQ(out.shape().size(), 1u);
+    EXPECT_EQ(out.shape()[0], 0u);
   }
 
 }  // namespace
