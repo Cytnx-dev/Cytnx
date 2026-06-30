@@ -4,7 +4,6 @@
 
 #include "cytnx_error.hpp"
 
-using namespace std;
 namespace cytnx {
 
   Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
@@ -13,12 +12,12 @@ namespace cytnx {
     // get all available gpus
     checkCudaErrors(cudaGetDeviceCount(&Ngpus));
 
-    CanAccessPeer = vector<vector<bool>>(Ngpus, vector<bool>(Ngpus));
+    CanAccessPeer = std::vector<std::vector<bool>>(Ngpus, std::vector<bool>(Ngpus));
     // check can Peer Access, if can, open PCIE access to increase bandwidth
     //  Enable Peer Access when it's possible:
     //  https://stackoverflow.com/questions/31628041/how-to-copy-memory-between-different-gpus-in-cuda
     int cAP = 0;
-    vector<int> isopen(Ngpus);
+    std::vector<int> isopen(Ngpus);
     for (int i = 0; i < Ngpus; i++) {
       CanAccessPeer[i][i] = 1;
       for (int j = i + 1; j < Ngpus; j++) {
@@ -44,57 +43,57 @@ namespace cytnx {
 
   };
 
-  string Device_class::getname(const int& device_id) {
+  std::string Device_class::getname(const int& device_id) {
     if (device_id == this->cpu) {
-      return string("cytnx device: CPU");
+      return std::string("cytnx device: CPU");
     } else if (device_id >= 0) {
       if (device_id >= Ngpus) {
         cytnx_error_msg(true, "%s", "[ERROR] invalid device_id, gpuid exceed limit");
-        return string("");
+        return std::string("");
       } else {
-        return string("cytnx device: CUDA/GPU-id:") + to_string(device_id);
+        return std::string("cytnx device: CUDA/GPU-id:") + std::to_string(device_id);
       }
     } else {
       cytnx_error_msg(true, "%s", "[ERROR] invalid device_id");
-      return string("");
+      return std::string("");
     }
   }
   void Device_class::Print_Property() {
     char* buffer = (char*)malloc(sizeof(char) * 256);
 #ifdef UNI_GPU
-    cout << "=== CUDA support ===" << endl;
-    cout << ": Peer PCIE Access:" << endl;
-    cout << "   ";
+    std::cout << "=== CUDA support ===" << std::endl;
+    std::cout << ": Peer PCIE Access:" << std::endl;
+    std::cout << "   ";
     for (int i = 0; i < this->Ngpus; i++) {
       sprintf(buffer, " %2d", i);
-      cout << string(buffer);
+      std::cout << std::string(buffer);
     }
-    cout << endl;
+    std::cout << std::endl;
 
-    cout << "   ";
+    std::cout << "   ";
     for (int i = 0; i < this->Ngpus; i++) {
       sprintf(buffer, "%s", "---");
-      cout << string(buffer);
+      std::cout << std::string(buffer);
     }
-    cout << endl;
+    std::cout << std::endl;
 
     for (int i = 0; i < this->Ngpus; i++) {
       sprintf(buffer, "%2d|", i);
-      cout << string(buffer);
+      std::cout << std::string(buffer);
       for (int j = 0; j < this->Ngpus; j++) {
         if (j == i) {
           sprintf(buffer, "%s", "  x");
-          cout << string(buffer);
+          std::cout << std::string(buffer);
         } else {
           sprintf(buffer, "  %d", int(CanAccessPeer[i][j]));
-          cout << string(buffer);
+          std::cout << std::string(buffer);
         }
       }
-      cout << endl;
+      std::cout << std::endl;
     }
-    cout << "--------------------" << endl;
+    std::cout << "--------------------" << std::endl;
 #else
-    cout << "=== No CUDA support ===" << endl;
+    std::cout << "=== No CUDA support ===" << std::endl;
 #endif
 
     free(buffer);

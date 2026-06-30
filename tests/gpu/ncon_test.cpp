@@ -1,6 +1,5 @@
 #include "ncon_test.h"
 
-using namespace std;
 using namespace cytnx;
 
 TEST_F(NconTest, gpu_ncon_default_order) {

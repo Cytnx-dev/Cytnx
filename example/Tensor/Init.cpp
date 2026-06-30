@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   /*
       1. Create a Tensor with
@@ -11,7 +10,7 @@ int main() {
       device=Device.cpu [default]
   */
   Tensor A({3, 4, 5});
-  cout << A << endl;
+  std::cout << A << std::endl;
 
   /*
       2. Create a Tensor with
@@ -21,7 +20,7 @@ int main() {
       [Note] the dtype can be any one of the supported type.
   */
   Tensor B({3, 4, 5}, Type.Uint64);
-  cout << B << endl;
+  std::cout << B << std::endl;
 
   /*
       3. Initialize a Tensor with
@@ -31,7 +30,7 @@ int main() {
       [Note] the gpu device can be set with Device.cuda+<gpu-id>
   */
   Tensor C({3, 4, 5}, Type.Double, Device.cuda + 0);
-  cout << C << endl;
+  std::cout << C << std::endl;
 
   // 4. Create an empty Tensor, and init later
   Tensor D;

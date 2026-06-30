@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <iostream>
 #include "utils/vec_print.hpp"
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -262,8 +261,8 @@ namespace cytnx {
         psi_T.flatten_();  // flatten to 1d
 
         cytnx_uint64 new_dim =
-          min(min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
-              this->mps.virt_dim());
+          std::min(std::min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
+                   this->mps.virt_dim());
 
         //  calculate local ortho_mps:
         // omps = []
@@ -378,8 +377,8 @@ namespace cytnx {
         psi_T.flatten_();  // flatten to 1d
 
         cytnx_int64 new_dim =
-          min(min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
-              this->mps.virt_dim());
+          std::min(std::min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
+                   this->mps.virt_dim());
 
         // calculate local ortho_mps:
         std::vector<Tensor> omps;
@@ -497,8 +496,8 @@ namespace cytnx {
 
         auto psi = Contract(this->mps.data()[p], this->mps.data()[p + 1]);  // contract
         cytnx_uint64 new_dim =
-          min(min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
-              this->mps.virt_dim());
+          std::min(std::min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
+                   this->mps.virt_dim());
 
         //  calculate local ortho_mps:
         // omps = []
@@ -614,8 +613,8 @@ namespace cytnx {
         // auto psi_T = psi.get_block_(); psi_T.flatten_();// flatten to 1d
 
         cytnx_int64 new_dim =
-          min(min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
-              this->mps.virt_dim());
+          std::min(std::min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
+                   this->mps.virt_dim());
 
         // calculate local ortho_mps:
         std::vector<UniTensor> omps;

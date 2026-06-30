@@ -7,7 +7,6 @@
 namespace cytnx {
 
   namespace linalg_internal {
-    using namespace std;
     void cuVectordot_internal_cd(boost::intrusive_ptr<Storage_base> &out,
                                  const boost::intrusive_ptr<Storage_base> &Lin,
                                  const boost::intrusive_ptr<Storage_base> &Rin,

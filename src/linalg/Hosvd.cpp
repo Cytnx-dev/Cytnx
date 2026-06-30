@@ -9,7 +9,6 @@
 #else
   #include "backend/linalg_internal_interface.hpp"
 
-using namespace std;
 namespace cytnx {
   namespace linalg {
 
@@ -75,7 +74,7 @@ namespace cytnx {
             if (is_Ls) Ls.push_back(tsvdout[0]);
           }
           out.back().relabel_(out.back().rank() - 1,
-                              out.back().labels().back() + "_" + to_string(i));
+                              out.back().labels().back() + "_" + std::to_string(i));
           perm.clear();
           if (i == mode.size() - 1) {
             for (int j = mode[i] + in.rank() - tot; j < in.rank(); j++) perm.push_back(j);

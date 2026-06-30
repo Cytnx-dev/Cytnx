@@ -234,7 +234,7 @@ TEST_F(TensorTest, gpu_get) {
   EXPECT_EQ(tmp.shape()[2], 4);
   EXPECT_EQ(tmp.shape()[3], 6);
   EXPECT_EQ(tmp.is_contiguous(), false);
-  cout << tmp(0, ":", ":", 0) << endl;
+  std::cout << tmp(0, ":", ":", 0) << std::endl;
   TestTools::AreNearlyEqTensor(tmp(0, ":", ":", 0), arange(12).reshape({3, 4}), 1e-5);
   TestTools::AreNearlyEqTensor(tmp(":", 0, 0, ":"), arange(30).reshape({5, 6}), 1e-5);
   TestTools::AreNearlyEqTensor(tmp(":", 0, 0, "4:6"), arange(20, 30).reshape({5, 2}), 1e-5);

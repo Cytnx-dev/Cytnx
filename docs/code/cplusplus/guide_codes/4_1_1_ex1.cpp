@@ -3,5 +3,5 @@ A.set_zeros();
 
 auto B = A.astype(cytnx::Type.ComplexDouble);
 
-cout << A << endl;
-cout << B << endl;
+std::cout << A << std::endl;
+std::cout << B << std::endl;

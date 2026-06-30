@@ -9,8 +9,6 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 
-using namespace std;
-
 namespace cytnx {
   namespace linalg_internal {
 

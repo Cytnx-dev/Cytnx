@@ -15,7 +15,7 @@ namespace cytnx {
     if (!sorted_L) vec2d_col_sort(v1);
     if (!sorted_R) vec2d_col_sort(v2);
 
-    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(out));
+    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), std::back_inserter(out));
     return out;
   }
 
@@ -27,7 +27,7 @@ namespace cytnx {
     std::sort(v1.begin(), v1.end());
     std::sort(v2.begin(), v2.end());
 
-    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(out));
+    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), std::back_inserter(out));
     return out;
   }
 
@@ -43,7 +43,7 @@ namespace cytnx {
     std::sort(v1.begin(), v1.end());
     std::sort(v2.begin(), v2.end());
 
-    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(out));
+    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), std::back_inserter(out));
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       indices_v1.push_back(std::distance(inL.begin(), std::find(inL.begin(), inL.end(), out[i])));
       indices_v2.push_back(std::distance(inR.begin(), std::find(inR.begin(), inR.end(), out[i])));
@@ -58,7 +58,7 @@ namespace cytnx {
     std::sort(v1.begin(), v1.end());
     std::sort(v2.begin(), v2.end());
 
-    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), back_inserter(out));
+    std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), std::back_inserter(out));
   }
 
   // template std::vector<cytnx_complex128> vec_intersect(const std::vector<cytnx_complex128>

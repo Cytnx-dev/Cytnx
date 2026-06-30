@@ -11,7 +11,6 @@
 #else
   #include "backend/linalg_internal_interface.hpp"
 
-using namespace std;
 namespace cytnx {
   namespace linalg {
 
@@ -25,7 +24,7 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[ExpM] error, ExpM can only operator on square Tensor (#row = #col%s", "\n");
 
-      vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
+      std::vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
       Tensor s, u, ut;
       // exp(a*M + b*I) with a == 0 is exp(b)*I: keep the bias b (matches ExpH).
       if (a == 0) {

@@ -7,8 +7,6 @@
 #include "linalg.hpp"
 #include "random.hpp"
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
@@ -150,17 +148,17 @@ namespace cytnx {
   }
 
   void UniTensor::Save(const std::string &fname) const {
-    fstream f;
+    std::fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
+      f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     } else {
       // add filename extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cytnx"), ios::out | ios::trunc | ios::binary);
+      f.open((fname + ".cytnx"), std::ios::out | std::ios::trunc | std::ios::binary);
     }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -168,12 +166,12 @@ namespace cytnx {
     this->_Save(f);
     f.close();
   }
-  void UniTensor::Save(const char *fname) const { Save(string(fname)); }
+  void UniTensor::Save(const char *fname) const { Save(std::string(fname)); }
 
   UniTensor UniTensor::Load(const std::string &fname) {
     UniTensor out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
     }
@@ -181,7 +179,7 @@ namespace cytnx {
     f.close();
     return out;
   }
-  UniTensor UniTensor::Load(const char *fname) { return UniTensor::Load(string(fname)); }
+  UniTensor UniTensor::Load(const char *fname) { return UniTensor::Load(std::string(fname)); }
 
   // Random Generators:
   UniTensor UniTensor::normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,

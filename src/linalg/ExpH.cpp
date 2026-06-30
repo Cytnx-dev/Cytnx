@@ -11,7 +11,6 @@
 #else
 
   #include "backend/linalg_internal_interface.hpp"
-using namespace std;
 namespace cytnx {
   namespace linalg {
 
@@ -32,7 +31,7 @@ namespace cytnx {
           return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device()) * exp(b);
       }
 
-      vector<Tensor> su = cytnx::linalg::Eigh(Tin, true);
+      std::vector<Tensor> su = cytnx::linalg::Eigh(Tin, true);
       Tensor s, u, ut;
 
       if (b == 0)

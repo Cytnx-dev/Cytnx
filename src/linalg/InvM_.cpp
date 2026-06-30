@@ -1,7 +1,6 @@
 #include "linalg.hpp"
 
 #include "Tensor.hpp"
-using namespace std;
 #ifdef BACKEND_TORCH
 #else
   #include "backend/linalg_internal_interface.hpp"
@@ -44,10 +43,10 @@ namespace cytnx {
         tmp.contiguous_();
       }
 
-      vector<cytnx_uint64> tmps = tmp.shape();
-      vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+      std::vector<cytnx_uint64> tmps = tmp.shape();
+      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
       tmps.clear();
-      vector<string> oldlabel = Tin.labels();
+      std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
       cytnx_int64 rowdim = 1;

@@ -1,15 +1,15 @@
 #include "utils/str_utils.hpp"
 #include "Type.hpp"
-using namespace std;
 
 namespace cytnx {
 
-  vector<string> str_split(const string &in, const bool remove_null, const string &delimiter) {
-    vector<string> out;
+  std::vector<std::string> str_split(const std::string &in, const bool remove_null,
+                                     const std::string &delimiter) {
+    std::vector<std::string> out;
     std::size_t last = 0;
     std::size_t next = 0;
-    string tmps;
-    while ((next = in.find(delimiter, last)) != string::npos) {
+    std::string tmps;
+    while ((next = in.find(delimiter, last)) != std::string::npos) {
       tmps = in.substr(last, next - last);
       if (remove_null) {
         if ((tmps != delimiter) && (tmps.length() != 0)) {
@@ -31,29 +31,29 @@ namespace cytnx {
     return out;
   }
 
-  string str_strip(const string &in, const string &key) {
+  std::string str_strip(const std::string &in, const std::string &key) {
     if (in.empty()) return in;
 
-    string tmp = in;  // make  copy of in string
+    std::string tmp = in;  // make  copy of in string
 
-    string::size_type pos = tmp.find_first_not_of(key);
-    if (pos == string::npos) return string();
+    std::string::size_type pos = tmp.find_first_not_of(key);
+    if (pos == std::string::npos) return std::string();
     tmp.erase(0, pos);  // ltrim
 
     pos = tmp.find_last_not_of(key);
-    if (pos == string::npos) return tmp;
+    if (pos == std::string::npos) return tmp;
     tmp.erase(pos + 1);  // rtrim
 
     return tmp;
   }
 
-  vector<string> str_findall(const string &in, const string &tokens) {
-    vector<string> out;
+  std::vector<std::string> str_findall(const std::string &in, const std::string &tokens) {
+    std::vector<std::string> out;
     if (in.empty()) return out;
 
     std::size_t pos = 0, endpos;
-    string tmp, op;
-    if ((endpos = in.find_first_of(tokens, pos)) == string::npos) {
+    std::string tmp, op;
+    if ((endpos = in.find_first_of(tokens, pos)) == std::string::npos) {
       out.push_back(in);
       return out;
     }

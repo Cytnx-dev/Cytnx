@@ -1,4 +1,4 @@
 A(0, 0, 0) = 300;
 
-cout << A << endl;
-cout << B << endl;
+std::cout << A << std::endl;
+std::cout << B << std::endl;

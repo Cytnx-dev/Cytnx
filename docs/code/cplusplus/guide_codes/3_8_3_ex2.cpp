@@ -1,6 +1,6 @@
 auto C = B.contiguous();
 
-cout << C << endl;
-cout << C.is_contiguous() << endl;
+std::cout << C << std::endl;
+std::cout << C.is_contiguous() << std::endl;
 
-cout << C.same_data(B) << endl;
+std::cout << C.same_data(B) << std::endl;

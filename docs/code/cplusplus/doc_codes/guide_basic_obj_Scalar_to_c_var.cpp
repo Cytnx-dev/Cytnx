@@ -1,13 +1,13 @@
 Scalar A = 10;
-cout << A << endl;
+std::cout << A << std::endl;
 
 auto fA = float(A);  // convert to float
-cout << typeid(fA).name() << fA << endl;
+std::cout << typeid(fA).name() << fA << std::endl;
 
 // convert to complex double
 auto cdA = complex128(A);
-cout << cdA << endl;
+std::cout << cdA << std::endl;
 
 // convert to complex float
 auto cfA = complex64(A);
-cout << cfA << endl;
+std::cout << cfA << std::endl;

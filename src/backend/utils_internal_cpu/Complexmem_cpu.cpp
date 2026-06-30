@@ -10,7 +10,6 @@
   #define __Cpt_flt __complex__ float *
 #endif
 
-using namespace std;
 namespace cytnx {
 
   namespace utils_internal {

@@ -88,7 +88,7 @@ Output:
 
 .. note::
 
-    Note the slightly different syntax in case of complex type castings. Use **complex128()** and **complex64()** to convert to a standard C++ type **complex<double>** and **complex<float>** respectively.
+    Note the slightly different syntax in case of complex type castings. Use **complex128()** and **complex64()** to convert to a standard C++ type **std::complex<double>** and **std::complex<float>** respectively.
 
 
 Change data type
