@@ -12,7 +12,7 @@ namespace cytnx {
                                  const boost::intrusive_ptr<Storage_base> &Lin,
                                  const boost::intrusive_ptr<Storage_base> &Rin,
                                  const unsigned long long &len, const bool &is_conj) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
 
       cuDoubleComplex *_out = (cuDoubleComplex *)out->data();
@@ -71,7 +71,7 @@ namespace cytnx {
                                  const boost::intrusive_ptr<Storage_base> &Lin,
                                  const boost::intrusive_ptr<Storage_base> &Rin,
                                  const unsigned long long &len, const bool &is_conj) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
 
       cuFloatComplex *_out = (cuFloatComplex *)out->data();
@@ -130,7 +130,7 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
 
       cytnx_double *_out = (cytnx_double *)out->data();
@@ -184,7 +184,7 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
 
       cytnx_float *_out = (cytnx_float *)out->data();

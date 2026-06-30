@@ -26,7 +26,7 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void**)&devInfo, sizeof(int)));
 
       int workspace_size = 0;
-      cuDoubleComplex* workspace = NULL;
+      cuDoubleComplex* workspace = nullptr;
       cusolverDnZgetrf_bufferSize(cusolverH, L, L, _in, L, &workspace_size);
       checkCudaErrors(cudaMalloc((void**)&workspace, workspace_size * sizeof(cuDoubleComplex)));
 
@@ -73,7 +73,7 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void**)&devInfo, sizeof(int)));
 
       int workspace_size = 0;
-      cuFloatComplex* workspace = NULL;
+      cuFloatComplex* workspace = nullptr;
       cusolverDnCgetrf_bufferSize(cusolverH, L, L, _in, L, &workspace_size);
       checkCudaErrors(cudaMalloc((void**)&workspace, workspace_size * sizeof(cuFloatComplex)));
 
@@ -120,7 +120,7 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void**)&devInfo, sizeof(int)));
 
       int workspace_size = 0;
-      cytnx_double* workspace = NULL;
+      cytnx_double* workspace = nullptr;
       cusolverDnDgetrf_bufferSize(cusolverH, L, L, _in, L, &workspace_size);
       checkCudaErrors(cudaMalloc((void**)&workspace, workspace_size * sizeof(cytnx_double)));
 
@@ -167,7 +167,7 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void**)&devInfo, sizeof(int)));
 
       int workspace_size = 0;
-      cytnx_float* workspace = NULL;
+      cytnx_float* workspace = nullptr;
       cusolverDnSgetrf_bufferSize(cusolverH, L, L, _in, L, &workspace_size);
       checkCudaErrors(cudaMalloc((void**)&workspace, workspace_size * sizeof(cytnx_float)));
 

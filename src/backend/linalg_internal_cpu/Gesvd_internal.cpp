@@ -14,7 +14,7 @@ namespace cytnx {
                            const cytnx_int64 &N) {
       char jobu, jobv;
 
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobu = (U->dtype() == Type.Void) ? 'N' : 'S';
       jobv = (vT->dtype() == Type.Void) ? 'N' : 'S';
 
@@ -43,7 +43,7 @@ namespace cytnx {
                            const cytnx_int64 &N) {
       char jobu, jobv;
 
-      // if U and vT are NULL ptr, then it will not be computed.
+      // if U and vT are void, then it will not be computed.
       jobu = (U->dtype() == Type.Void) ? 'N' : 'S';
       jobv = (vT->dtype() == Type.Void) ? 'N' : 'S';
 

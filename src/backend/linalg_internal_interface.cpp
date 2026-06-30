@@ -227,7 +227,7 @@ namespace cytnx {
       Trace_ii[Type.Bool] = Trace_internal_b;
 
       //================
-      Outer_ii = vector<vector<Outerfunc_oii>>(N_Type, vector<Outerfunc_oii>(N_Type, NULL));
+      Outer_ii = vector<vector<Outerfunc_oii>>(N_Type, vector<Outerfunc_oii>(N_Type, nullptr));
 
       Outer_ii[Type.ComplexDouble][Type.ComplexDouble] = Outer_internal_cdtcd;
       Outer_ii[Type.ComplexDouble][Type.ComplexFloat] = Outer_internal_cdtcf;
@@ -720,7 +720,7 @@ namespace cytnx {
       cuTrace_ii[Type.Bool] = cuTrace_internal_b;
       //================
 
-      cuOuter_ii = vector<vector<Outerfunc_oii>>(N_Type, vector<Outerfunc_oii>(N_Type, NULL));
+      cuOuter_ii = vector<vector<Outerfunc_oii>>(N_Type, vector<Outerfunc_oii>(N_Type, nullptr));
 
       cuOuter_ii[Type.ComplexDouble][Type.ComplexDouble] = cuOuter_internal_cdtcd;
       cuOuter_ii[Type.ComplexDouble][Type.ComplexFloat] = cuOuter_internal_cdtcf;

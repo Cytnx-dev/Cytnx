@@ -14,7 +14,7 @@ namespace cytnx {
                          const cytnx_int64 &N) {
       // char jobu, jobv;
 
-      // // if U and vT are NULL ptr, then it will not be computed.
+      // // if U and vT are void, then it will not be computed.
       // jobu = (U->dtype() == Type.Void) ? 'N' : 'S';
       // jobv = (vT->dtype() == Type.Void) ? 'N' : 'S';
 
@@ -32,10 +32,10 @@ namespace cytnx {
       }
       void *UMem =
         (U->data() ? U->data()
-                   : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex128)) : NULL));
+                   : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex128)) : nullptr));
       void *vTMem =
         (vT->data() ? vT->data()
-                    : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex128)) : NULL));
+                    : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex128)) : nullptr));
 
       // double *superb = (double *)malloc(sizeof(double) * (min - 1));
 
@@ -80,11 +80,12 @@ namespace cytnx {
       if (U->dtype() == Type.Void and vT->dtype() == Type.Void) {
         jobz = 'N';
       }
-      void *UMem = (U->data() ? U->data()
-                              : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex64)) : NULL));
+      void *UMem =
+        (U->data() ? U->data()
+                   : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex64)) : nullptr));
       void *vTMem =
         (vT->data() ? vT->data()
-                    : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex64)) : NULL));
+                    : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_complex64)) : nullptr));
 
       // double *superb = (double *)malloc(sizeof(double) * (min - 1));
       // info = LAPACKE_dgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_double *)S->Mem,
@@ -126,10 +127,11 @@ namespace cytnx {
       if (U->dtype() == Type.Void and vT->dtype() == Type.Void) {
         jobz = 'N';
       }
-      void *UMem =
-        (U->data() ? U->data() : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_double)) : NULL));
+      void *UMem = (U->data() ? U->data()
+                              : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_double)) : nullptr));
       void *vTMem =
-        (vT->data() ? vT->data() : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_double)) : NULL));
+        (vT->data() ? vT->data()
+                    : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_double)) : nullptr));
 
       // double *superb = (double *)malloc(sizeof(double) * (min - 1));
       // info = LAPACKE_dgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_double *)S->Mem,
@@ -173,9 +175,10 @@ namespace cytnx {
         jobz = 'N';
       }
       void *UMem =
-        (U->data() ? U->data() : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_float)) : NULL));
+        (U->data() ? U->data() : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_float)) : nullptr));
       void *vTMem =
-        (vT->data() ? vT->data() : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_float)) : NULL));
+        (vT->data() ? vT->data()
+                    : (jobz == 'S' ? malloc(max * max * sizeof(cytnx_float)) : nullptr));
 
       // double *superb = (double *)malloc(sizeof(double) * (min - 1));
       // info = LAPACKE_dgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_double *)S->Mem,
