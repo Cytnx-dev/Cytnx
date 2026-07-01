@@ -25,6 +25,7 @@ add_executable(
   Type_test.cpp
   Tensor_strides_test.cpp
   Storage_test.cpp
+  Scalar_test.cpp
   search_tree_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp

@@ -168,6 +168,14 @@ namespace cytnx {
   constexpr int N_Type = std::variant_size_v<Type_list>;
   constexpr int N_fType = 5;
 
+  template <typename T>
+  inline constexpr bool is_cytnx_type_v =
+    variant_index_v<std::remove_cvref_t<T>, Type_list> < std::variant_size_v<Type_list> &&
+    !std::is_same_v<std::remove_cvref_t<T>, void>;
+
+  template <typename T>
+  concept CytnxType = is_cytnx_type_v<T>;
+
   // The friendly name of each type
   template <typename T>
   inline constexpr char* Type_names = nullptr;

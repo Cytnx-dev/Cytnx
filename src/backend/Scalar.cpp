@@ -72,50 +72,24 @@ namespace cytnx {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex128& rc) {
+
+  template <CytnxType T>
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const T& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex64& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_double& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_float& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint64& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int64& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint32& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int32& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint16& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int16& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_bool& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
+
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_complex128>(const cytnx_complex128& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_complex64>(const cytnx_complex64& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_double>(const cytnx_double& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_float>(const cytnx_float& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_uint64>(const cytnx_uint64& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_int64>(const cytnx_int64& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_uint32>(const cytnx_uint32& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_int32>(const cytnx_int32& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_uint16>(const cytnx_uint16& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_int16>(const cytnx_int16& rc);
+  template Scalar::Sproxy& Scalar::Sproxy::operator=<cytnx_bool>(const cytnx_bool& rc);
 
   bool Scalar::Sproxy::exists() const { return this->_insimpl->dtype() != Type.Void; };
 
