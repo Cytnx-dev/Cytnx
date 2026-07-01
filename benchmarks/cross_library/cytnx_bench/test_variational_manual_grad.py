@@ -201,9 +201,7 @@ def run_one(bond_dim, num_sites):
     RN0[0, 0] = 1.0
     nets = _Networks()
 
-    def grad_step(A):
-        A_conj = [a.Dagger().permute_(a.labels()) for a in A]
-
+    def grad_step(A, A_conj):
         LH = [None] * (num_sites + 1)
         LH[0] = L0
         for p in range(num_sites):
@@ -234,19 +232,28 @@ def run_one(bond_dim, num_sites):
             new_A[p] = A[p] - LEARNING_RATE * grad
             new_A[p].relabel_(lbls[p]).set_name(f"A{p}")
 
+        new_A_conj = [None] * num_sites
         LNn = LN0
         for p in range(num_sites):
-            LNn = nets.update_L_N(LNn, new_A[p], new_A[p].Dagger().permute_(new_A[p].labels()))
+            new_A_conj[p] = new_A[p].Dagger().permute_(new_A[p].labels())
+            LNn = nets.update_L_N(LNn, new_A[p], new_A_conj[p])
         den_new = LNn[0, 0].item()
         scale = den_new ** (-1.0 / (2 * num_sites))
+        # scale is real and positive, so Dagger(scale * a) == scale * Dagger(a)
+        # exactly; rescaling new_A_conj here instead of recomputing it from
+        # scratch at the top of the next grad_step call avoids a redundant
+        # Dagger()/permute_() pass over every tensor on every gradient step.
         new_A = [a * scale for a in new_A]
+        new_A_conj = [ac * scale for ac in new_A_conj]
         for p in range(num_sites):
             new_A[p].relabel_(lbls[p]).set_name(f"A{p}")
-        return new_A, energy
+            new_A_conj[p].relabel_(lbls[p])
+        return new_A, new_A_conj, energy
 
     energy = None
+    A_conj = [a.Dagger().permute_(a.labels()) for a in A]
     for _ in range(_n_grad_steps(num_sites)):
-        A, energy = grad_step(A)
+        A, A_conj, energy = grad_step(A, A_conj)
     return energy
 
 
