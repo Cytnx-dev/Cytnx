@@ -195,6 +195,71 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 # #####################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
+# #####################################################################
+# ## HOST COMPILER REQUIREMENT: C++20 std::format (Python bindings only)
+# #####################################################################
+# std::format (the C++20 <format> library, P0645) is used ONLY by the Python
+# binding layer -- pybind/symmetry_py.cpp and pybind/unitensor_py.cpp -- which
+# is compiled only when BUILD_PYTHON is ON. The core C++ library (include/,
+# src/) does not use std::format, so a C++-only build (-DBUILD_PYTHON=OFF)
+# needs just a C++20 compiler, not this floor. Hence the requirement is gated
+# on BUILD_PYTHON. (If include/ or src/ ever adopt std::format, move this out
+# of the BUILD_PYTHON guard.)
+#
+# std::format is absent from early C++20-era standard libraries, and its
+# minimum differs per implementation -- and is NOT implied by the Clang
+# front-end version, since Clang can use either libc++ or libstdc++:
+#   * libstdc++ (GCC):              since GCC 13
+#   * libc++    (Clang/AppleClang): since LLVM 17 (older needed
+#                                   -fexperimental-library)
+# So rather than gate on a compiler version (unreliable for Clang), probe the
+# actual feature. check_cxx_source_compiles honors CMAKE_CXX_STANDARD here
+# (cmake_minimum_required is >= 3.25, so policy CMP0067 is NEW), meaning the
+# probe is compiled at C++20, not the compiler's default (typically C++17,
+# where <format> is absent and the probe would false-negative).
+if(BUILD_PYTHON)
+  # Friendlier fast-path message for the most common miss (old GCC), before the
+  # generic probe.
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13)
+    message(FATAL_ERROR
+      "GCC >= 13 is required for the Python bindings (BUILD_PYTHON=ON): Cytnx "
+      "uses std::format (C++20 <format>), which libstdc++ implements only from "
+      "GCC 13. Found GCC ${CMAKE_CXX_COMPILER_VERSION} at ${CMAKE_CXX_COMPILER}.\n"
+      "Install GCC 13+ and point CMake at it, e.g. -DCMAKE_CXX_COMPILER=g++-13 "
+      "(and -DCMAKE_C_COMPILER=gcc-13), set the CXX/CC environment variables, or "
+      "configure a C++-only build with -DBUILD_PYTHON=OFF.")
+  endif()
+
+  # Authoritative, compiler-agnostic check: does this toolchain (compiler +
+  # standard library + flags) actually provide std::format at C++20?
+  include(CheckCXXSourceCompiles)
+  # Match the compile definition the real pybind sources inherit from the cytnx
+  # target -- target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY),
+  # propagated to pycytnx via target_link_libraries(pycytnx PUBLIC cytnx). On
+  # macOS/libc++ that define turns off std::format's deployment-target
+  # availability guards, so the probe predicts the actual build instead of
+  # false-rejecting a low-deployment-target (e.g. cibuildwheel) macOS config
+  # that would in fact compile. It is a no-op on libstdc++/MSVC.
+  set(CMAKE_REQUIRED_DEFINITIONS -D_LIBCPP_DISABLE_AVAILABILITY)
+  check_cxx_source_compiles(
+    "#include <format>
+int main() { return std::format(\"{}\", 42).size() == 2 ? 0 : 1; }"
+    CYTNX_HAS_STD_FORMAT)
+  unset(CMAKE_REQUIRED_DEFINITIONS)
+  if(NOT CYTNX_HAS_STD_FORMAT)
+    message(FATAL_ERROR
+      "The Python bindings (BUILD_PYTHON=ON) require std::format (C++20 "
+      "<format>), which this C++ toolchain does not provide. Compiler: "
+      "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} "
+      "(${CMAKE_CXX_COMPILER}).\n"
+      "Minimum standard libraries: GCC/libstdc++ >= 13, or Clang/libc++ >= 17 "
+      "(AppleClang: a recent Xcode with a matching macOS deployment target).\n"
+      "Select a newer compiler with -DCMAKE_CXX_COMPILER=... (and "
+      "-DCMAKE_C_COMPILER=...), use a newer standard library, or build C++-only "
+      "with -DBUILD_PYTHON=OFF.")
+  endif()
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
   # Default to a portable fat binary unless the caller picked architectures via
