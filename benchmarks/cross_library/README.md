@@ -25,7 +25,7 @@ evolution from a random seeded state), not a ground-state energy
 comparable across libraries — see the docstring in that file.
 
 All four classes share the model/parameter definitions in `common/model.py`
-(`HEISENBERG_J`, `TFIM_J`/`TFIM_HX_INITIAL`/`TFIM_HX_FINAL`/`TFIM_DT`, the
+(`HEISENBERG_J`, `TFIM_J`/`TFIM_HX_FINAL`/`TFIM_DT`, the
 `(BOND_DIM_VALUES, NUM_SITES_VALUES)` grid).
 
 ### Gradient computation in class 3

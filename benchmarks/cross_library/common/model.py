@@ -14,11 +14,12 @@ varies between runs is the library/implementation:
 # Heisenberg coupling J (isotropic, antiferromagnetic) for DMRG / variational.
 HEISENBERG_J = 1.0
 
-# Transverse-field Ising parameters for the TEBD/TDVP quench benchmark.
-# H(t<0) = -J * sum ZZ - hx_i * sum X   (paramagnetic ground state)
-# H(t>=0) = -J * sum ZZ - hx_f * sum X  (quench drives entanglement growth)
+# Transverse-field Ising parameters for the TEBD/TDVP quench benchmark. All
+# three implementations start from the all-down product state |0...0> and
+# evolve it directly under this post-quench Hamiltonian
+# H = -J * sum ZZ - hx_f * sum X (no separate initial-field ground state is
+# prepared).
 TFIM_J = 1.0
-TFIM_HX_INITIAL = 2.0
 TFIM_HX_FINAL = 0.5
 TFIM_DT = 0.05
 TFIM_N_STEPS = 40
