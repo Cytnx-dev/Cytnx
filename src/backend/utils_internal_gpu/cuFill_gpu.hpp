@@ -1,15 +1,18 @@
 #ifndef CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
 #define CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
 
-#include <complex>
-
-#include "cuda/std/complex"
-
 #include "Type.hpp"
+
+#ifdef UNI_GPU
+  #include <complex>
+
+  #include "cuda/std/complex"
+#endif
 
 namespace cytnx {
   namespace utils_internal {
 
+#ifdef UNI_GPU
     /// @brief Maps a cytnx/std scalar type to the device arithmetic type used
     /// inside CUDA kernels. Complex types map to the bit-compatible
     /// cuda::std::complex, which provides device operator+ /
@@ -33,6 +36,7 @@ namespace cytnx {
     struct ToCudaDType<cytnx_complex64> {
       typedef cuda::std::complex<float> type;
     };
+#endif
 
     /**
      * @brief Assign the given value to the first `count` elements in the range beginning at
