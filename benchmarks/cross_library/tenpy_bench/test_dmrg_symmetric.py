@@ -13,7 +13,7 @@ from tenpy.algorithms import dmrg
 from tenpy.models.spins import SpinChain
 from tenpy.networks.mps import MPS
 
-from common.model import BOND_DIM_VALUES, HEISENBERG_J, NUM_SITES_VALUES, N_SWEEPS, GRID_POINT_TIMEOUT_SEC
+from common.model import BOND_DIM_VALUES, HEISENBERG_J, LANCZOS_MAXITER, NUM_SITES_VALUES, N_SWEEPS, GRID_POINT_TIMEOUT_SEC
 
 REFERENCE_ENERGIES = {
     (16, 20): -8.682468456356823,
@@ -39,9 +39,13 @@ def run_one(bond_dim, num_sites):
     psi = MPS.from_product_state(M.lat.mps_sites(), product_state, bc=M.lat.bc_MPS)
 
     dmrg_params = {
-        "mixer": True,
+        # Disabled to match Cytnx/quimb's plain two-site sweep, which does no
+        # subspace expansion.
+        "mixer": False,
         "trunc_params": {"chi_max": bond_dim, "svd_min": 1e-10},
         "max_sweeps": N_SWEEPS,
+        # Matches Cytnx's Lanczos(Maxiter=LANCZOS_MAXITER) local-eigensolve budget.
+        "lanczos_params": {"N_max": LANCZOS_MAXITER},
         "combine": True,
     }
     eng = dmrg.TwoSiteDMRGEngine(psi, M, dmrg_params)
@@ -55,7 +59,7 @@ def run_one(bond_dim, num_sites):
 def test_dmrg_symmetric_benchmark(benchmark, bond_dim, num_sites):
     energy = benchmark.pedantic(run_one, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory
@@ -64,4 +68,4 @@ def test_dmrg_symmetric_benchmark(benchmark, bond_dim, num_sites):
 @pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
 def test_dmrg_symmetric_memory(bond_dim, num_sites):
     energy = run_one(bond_dim, num_sites)
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)

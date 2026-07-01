@@ -32,7 +32,7 @@ ground energy as
 `cytnx_bench/test_dmrg_symmetric.py`/`tenpy_bench/test_dmrg_symmetric.py`
 at every (bond_dim, num_sites) grid point (matched to within the `rel=1e-2` tolerance
 used for `SYMMETRIC_REFERENCE_ENERGIES`, looser than the dense/symmetric
-DMRG benchmarks' `rel=1e-4` since ITE over a finite total imaginary time
+DMRG benchmarks' `rel=1e-6` since ITE over a finite total imaginary time
 is itself an approximation to the true ground state, not just a
 discretization of an already-exact sweep).
 
@@ -203,7 +203,7 @@ def run_one_symmetric(bond_dim, num_sites):
 def test_dmrg_dense_benchmark(benchmark, bond_dim, num_sites):
     energy = benchmark.pedantic(run_one_dense, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = float(energy)
-    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory
@@ -212,7 +212,7 @@ def test_dmrg_dense_benchmark(benchmark, bond_dim, num_sites):
 @pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
 def test_dmrg_dense_memory(bond_dim, num_sites):
     energy = run_one_dense(bond_dim, num_sites)
-    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert float(energy) == pytest.approx(DENSE_REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.timeout(GRID_POINT_TIMEOUT_SEC)

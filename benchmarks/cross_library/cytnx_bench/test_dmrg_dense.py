@@ -83,7 +83,10 @@ def _r_update_network():
 def _optimize_psi(anet, psi, L, M1, M2, R, maxit, device):
     anet.PutUniTensors(["L", "M1", "M2", "R"], [L, M1, M2, R])
     H = _Hxx(anet, psi.shape()[0] * psi.shape()[1] * psi.shape()[2] * psi.shape()[3], device)
-    energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=1e-12, Tin=psi)
+    # CvgCrit=1e-8 is looser than the rel=1e-6 tolerance the returned energy is
+    # checked against, letting Lanczos exit before maxit when its own energy
+    # convergence check is satisfied.
+    energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=1e-8, Tin=psi)
     return psivec, energy[0].item()
 
 

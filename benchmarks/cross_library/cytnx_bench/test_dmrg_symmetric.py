@@ -101,7 +101,12 @@ def _r_update_network():
 def _optimize_psi(anet, psi, L, M1, M2, R, maxit, device):
     anet.PutUniTensors(["L", "M1", "M2", "R"], [L, M1, M2, R])
     H = _Hxx(anet, _stored_numel(psi), device)
-    energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=1e-12, Tin=psi)
+    # CvgCrit=1e-8 is looser than the rel=1e-6 tolerance the returned energy is
+    # checked against, letting Lanczos exit before maxit when its own energy
+    # convergence check is satisfied. See common/model.py's LANCZOS_MAXITER
+    # comment: this file's hardest grid point needs the larger Lanczos budget
+    # there to land within tolerance regardless of CvgCrit.
+    energy, psivec = cytnx.linalg.Lanczos(Hop=H, method="Gnd", Maxiter=maxit, CvgCrit=1e-8, Tin=psi)
     return psivec, energy[0].item()
 
 
@@ -244,7 +249,7 @@ def run_one(bond_dim, num_sites):
 def test_dmrg_symmetric_benchmark(benchmark, bond_dim, num_sites):
     energy = benchmark.pedantic(run_one, args=(bond_dim, num_sites), rounds=1, iterations=1)
     benchmark.extra_info["energy"] = energy
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
 
 
 @pytest.mark.cytnx_memory
@@ -253,4 +258,4 @@ def test_dmrg_symmetric_benchmark(benchmark, bond_dim, num_sites):
 @pytest.mark.parametrize("bond_dim", BOND_DIM_VALUES)
 def test_dmrg_symmetric_memory(bond_dim, num_sites):
     energy = run_one(bond_dim, num_sites)
-    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-4)
+    assert energy == pytest.approx(REFERENCE_ENERGIES[(bond_dim, num_sites)], rel=1e-6)
