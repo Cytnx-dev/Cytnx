@@ -106,14 +106,24 @@ namespace cytnx {
   template <typename T>
   constexpr bool is_complex_floating_point_v = is_complex_floating_point<T>::value;
 
-  // variant_index<T, Variant> returns the index of type T in the Variant, or compile error if not
-  // found
+  template <typename>
+  inline constexpr bool always_false_v = false;
+
+  template <typename T, typename Variant>
+  inline constexpr bool variant_contains_v = false;
+
+  template <typename T, typename... Types>
+  inline constexpr bool variant_contains_v<T, std::variant<Types...>> = (std::is_same_v<T, Types> ||
+                                                                         ...);
+
+  // variant_index<T, Variant> returns the index of type T in the Variant.
   template <typename T, typename Variant>
   struct variant_index;
 
-  template <typename T, typename... Types>
-  struct variant_index<T, std::variant<Types...>> {
-    static constexpr std::size_t value = std::variant_size_v<std::variant<Types...>>;
+  template <typename T>
+  struct variant_index<T, std::variant<>> {
+    static_assert(always_false_v<T>, "variant_index<T, Variant>: T is not in Variant");
+    static constexpr std::size_t value = 0;
   };
 
   template <typename T, typename... Types>
