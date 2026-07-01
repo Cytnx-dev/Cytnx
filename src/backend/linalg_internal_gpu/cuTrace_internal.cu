@@ -4,6 +4,7 @@
 #include "backend/Storage.hpp"
 
 #include <algorithm>
+#include <limits>
 #include <vector>
 
 #include "cuda/std/complex"
@@ -37,6 +38,19 @@ namespace cytnx {
       // TraceImplGpu below.
       constexpr cytnx_uint64 kMaxGridDimX = 2147483647ULL;
       constexpr cytnx_uint64 kMaxGridDimY = 65535ULL;
+
+      // Narrows a shape/stride extent (mathematically non-negative, stored as
+      // cytnx_uint64) to cytnx_int64, rejecting values that would overflow.
+      // internal::CheckedCastToInt64 (utils/checked_cast.hpp) does the same
+      // check on the CPU path, but its std::source_location::current() default
+      // argument does not compile under nvcc's host-code frontend, so the GPU
+      // path checks inline instead.
+      cytnx_int64 CheckedCastToInt64Gpu(cytnx_uint64 value, const char *name) {
+        cytnx_error_msg(value > static_cast<cytnx_uint64>(std::numeric_limits<cytnx_int64>::max()),
+                        "[internal][cuTrace] %s=%llu exceeds cytnx_int64 max.\n", name,
+                        static_cast<unsigned long long>(value));
+        return static_cast<cytnx_int64>(value);
+      }
 
       // Maps a cytnx storage type to the device arithmetic type used inside the
       // kernels. Complex storage is bit-compatible with cuda::std::complex, which
@@ -177,7 +191,7 @@ namespace cytnx {
         std::vector<cytnx_uint64> host_surviving_input_stride;
         for (cytnx_uint64 axis = 0; axis < input_shape.size(); ++axis) {
           if (axis != ax1 && axis != ax2) {
-            output_shape.push_back(static_cast<cytnx_int64>(input_shape[axis]));
+            output_shape.push_back(CheckedCastToInt64Gpu(input_shape[axis], "input_shape[axis]"));
             host_surviving_shape.push_back(input_shape[axis]);
             host_surviving_input_stride.push_back(static_cast<cytnx_uint64>(input_strides[axis]));
           }
