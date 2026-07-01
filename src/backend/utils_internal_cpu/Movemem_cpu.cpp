@@ -11,7 +11,6 @@
   #include "hptt.h"
 #endif
 
-using namespace std;
 namespace cytnx {
 
   namespace utils_internal {
@@ -108,8 +107,8 @@ namespace cytnx {
       if (in->size() > 64) {
         std::vector<int> perm(mapper.begin(), mapper.end());
         std::vector<int> size(old_shape.begin(), old_shape.end());
-        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], NULL, 0, des, NULL,
-                                      hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
+        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des,
+                                      nullptr, hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
         plan->execute();
         accu_old = in->size();
       } else {

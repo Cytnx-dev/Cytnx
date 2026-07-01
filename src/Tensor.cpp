@@ -5,9 +5,8 @@
 
 #include "linalg.hpp"
 #include "utils/is.hpp"
+#include "utils/checked_cast.hpp"
 #include "Type.hpp"
-
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -440,7 +439,7 @@ namespace cytnx {
       this->_impl->_storage.Tofile(fname);
     }
   }
-  void Tensor::Tofile(fstream &f) const {
+  void Tensor::Tofile(std::fstream &f) const {
     if (!this->is_contiguous()) {
       auto A = this->contiguous();
       A.storage().Tofile(f);
@@ -449,17 +448,17 @@ namespace cytnx {
     }
   }
   void Tensor::Save(const std::string &fname) const {
-    fstream f;
+    std::fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
+      f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     } else {
       // add filename extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cytn'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cytn"), ios::out | ios::trunc | ios::binary);
+      f.open((fname + ".cytn"), std::ios::out | std::ios::trunc | std::ios::binary);
     }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -467,8 +466,8 @@ namespace cytnx {
     this->_Save(f);
     f.close();
   }
-  void Tensor::Save(const char *fname) const { this->Save(string(fname)); }
-  void Tensor::_Save(fstream &f) const {
+  void Tensor::Save(const char *fname) const { this->Save(std::string(fname)); }
+  void Tensor::_Save(std::fstream &f) const {
     // header
     // check:
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
@@ -497,8 +496,8 @@ namespace cytnx {
   }
   Tensor Tensor::Load(const std::string &fname) {
     Tensor out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
@@ -506,8 +505,8 @@ namespace cytnx {
     f.close();
     return out;
   }
-  Tensor Tensor::Load(const char *fname) { return Tensor::Load(string(fname)); }
-  void Tensor::_Load(fstream &f) {
+  Tensor Tensor::Load(const char *fname) { return Tensor::Load(std::string(fname)); }
+  void Tensor::_Load(std::fstream &f) {
     // header
     // check:
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
@@ -905,6 +904,22 @@ namespace cytnx {
 
   bool Tensor::same_data(const Tensor &rhs) const {
     return is(this->_impl->storage(), rhs.storage());
+  }
+
+  std::vector<cytnx_int64> Tensor::strides() const {
+    // The storage is laid out contiguously in memory order; _invmapper[i] gives
+    // the logical axis sitting at memory position i (innermost last). The stride
+    // of a logical axis is the product of the memory-order extents inside it.
+    const std::vector<cytnx_uint64> &shape = this->_impl->shape();
+    const std::vector<cytnx_uint64> &invmapper = this->_impl->invmapper();
+    const cytnx_uint64 rank = shape.size();
+    std::vector<cytnx_int64> out(rank);
+    cytnx_uint64 step = 1;
+    for (cytnx_int64 i = static_cast<cytnx_int64>(rank) - 1; i >= 0; i--) {
+      out[invmapper[i]] = cytnx::internal::CheckedCastToInt64(step, "stride");
+      step *= shape[invmapper[i]];
+    }
+    return out;
   }
 
   //===========================

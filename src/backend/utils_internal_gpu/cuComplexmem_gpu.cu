@@ -2,8 +2,6 @@
 #include "cuAlloc_gpu.hpp"
 #include "backend/Storage.hpp"
 
-using namespace std;
-
 namespace cytnx {
   namespace utils_internal {
 #ifdef UNI_GPU

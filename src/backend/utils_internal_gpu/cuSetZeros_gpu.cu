@@ -1,7 +1,5 @@
 #include "cuSetZeros_gpu.hpp"
 
-using namespace std;
-
 namespace cytnx {
   namespace utils_internal {
 #ifdef UNI_GPU

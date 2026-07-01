@@ -56,14 +56,20 @@ jobs:
         # system C/C++ libraries, and gtest. BLAS is OpenBLAS to match
         # pyproject.toml's `--preset=openblas-cpu`.
         #
-        # All Python packages -- runtime (numpy, graphviz, beartype),
+        # graphviz is the system package (the `dot`/`circo` executables),
+        # which the PyPI `graphviz` package does not bundle. It is needed by
+        # the Network.Diagram() rendering test (pytests/network_diagram_test.py);
+        # the PyPI `graphviz` Python binding itself comes from the `viz` extra
+        # pulled in by `.[dev]` below.
+        #
+        # All other Python packages -- runtime (numpy, graphviz, beartype),
         # build (scikit-build-core, pybind11), and dev (pytest, pytest-cov,
         # gcovr) -- come from pyproject.toml via the
         # `pip install --editable .[dev]` step below. That keeps
         # pyproject.toml as the single source of truth for everything
         # Python.
         run: |
-          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest
+          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest graphviz
 
       - name: CPU info
         run: lscpu

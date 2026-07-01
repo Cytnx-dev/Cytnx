@@ -177,7 +177,7 @@ struct StoragePutValue : testing::Test {
     if constexpr (is_complex_v<ValueDType> && is_complex_v<StorageDType>) {
       using ValueDTypeInComplex = typename ValueDType::value_type;
       using StorageDTypeInComplex = typename StorageDType::value_type;
-      if constexpr (is_convertible_v<ValueDTypeInComplex, StorageDTypeInComplex>) {
+      if constexpr (std::is_convertible_v<ValueDTypeInComplex, StorageDTypeInComplex>) {
         return StorageDType{StorageDTypeInComplex(value.real()),
                             StorageDTypeInComplex(value.imag())};
       } else {

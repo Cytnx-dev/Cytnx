@@ -4,7 +4,6 @@
 #include "linalg.hpp"
 #include "utils/is.hpp"
 #include "Type.hpp"
-using namespace std;
 
 namespace cytnx {
 
@@ -246,9 +245,9 @@ namespace cytnx {
       acc.push_back(Accessor::all());
     }
 
-    vector<cytnx_uint64> get_shape(acc.size());
+    std::vector<cytnx_uint64> get_shape(acc.size());
 
-    // vector<cytnx_uint64> new_shape;
+    // std::vector<cytnx_uint64> new_shape;
     std::vector<std::vector<cytnx_uint64>> locators(this->_shape.size());
     for (cytnx_uint32 i = 0; i < acc.size(); i++) {
       acc[i].get_len_pos(this->_shape[i], get_shape[i], locators[i]);
@@ -260,7 +259,7 @@ namespace cytnx {
     this->storage()._impl->GetElem_byShape(out->storage()._impl, this->shape(), this->_mapper,
                                            get_shape, locators);
 
-    vector<cytnx_int64> new_shape;
+    std::vector<cytnx_int64> new_shape;
     for (cytnx_uint32 i = 0; i < acc.size(); i++)
       if (get_shape[i] != 1) new_shape.push_back(get_shape[i]);
 
@@ -276,12 +275,12 @@ namespace cytnx {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
-    vector<cytnx::Accessor> acc = accessors;
+    std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
       acc.push_back(Accessor::all());
     }
 
-    // vector<cytnx_uint64> get_shape(acc.size());
+    // std::vector<cytnx_uint64> get_shape(acc.size());
     acc = vec_map(acc, this->_invmapper);  // contiguous.
 
     //[1] curr_shape:

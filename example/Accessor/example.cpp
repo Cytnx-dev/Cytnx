@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   // 1. handy alias:
   typedef Accessor ac;
@@ -15,7 +14,7 @@ int main() {
   */
   Tensor A = cytnx::arange(24);
   A.reshape_({2, 3, 4});
-  cout << A << endl;
+  std::cout << A << std::endl;
 
   /*
       3. Accessing elements using accessor
@@ -24,7 +23,7 @@ int main() {
 
   */
   Tensor B = A(0, ac::all(), ac::range(0, 2, 1));
-  cout << B << endl;
+  std::cout << B << std::endl;
 
   /* [Note] Conversion from python slice to ac:
           [::x]   = ac::step(x)

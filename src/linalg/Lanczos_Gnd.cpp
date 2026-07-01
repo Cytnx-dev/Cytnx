@@ -15,7 +15,6 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    using namespace std;
 
     void _Lanczos_Gnd_general(std::vector<Tensor> &out, LinOp *Hop, const Tensor &Tin,
                               const bool &is_V, const double &CvgCrit, const unsigned int &Maxiter,

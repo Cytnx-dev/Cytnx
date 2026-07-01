@@ -3,7 +3,6 @@
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include <numeric>
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else

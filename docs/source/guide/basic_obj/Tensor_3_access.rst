@@ -115,7 +115,7 @@ In the following, let's see how it can be used to get/set the elements from/in a
 
 .. Hint::
 
-    1. Similarly, you can also pass a C++ *vector<cytnx_int64>* as an argument.
+    1. Similarly, you can also pass a C++ *std::vector<cytnx_int64>* as an argument.
 
 .. Tip::
 

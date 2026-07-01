@@ -7,7 +7,6 @@
 #include "cytnx.hpp"
 
 using namespace cytnx;
-using namespace std;
 using namespace TestTools;
 class DenseUniTensorTest : public ::testing::Test {
  public:

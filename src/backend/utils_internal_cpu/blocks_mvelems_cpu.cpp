@@ -7,33 +7,34 @@
 // #include "backend/utils_internal_interface.hpp"
 #include <map>
 
-using namespace std;
-
 namespace cytnx {
   namespace utils_internal {
     template <class T>
-    // void _moving_elem(vector<Storage> &dest_blocks, const vector<Storage> &src_blocks,
-    //                 const vector<vector<cytnx_uint64>> &dest_shapes, const
-    //                 vector<vector<cytnx_uint64>> &src_shapes, const vector<cytnx_uint64>
-    //                 &src_shape, const vector<vector<cytnx_uint64>>  &src_inner2outer_row, const
-    //                 vector<vector<cytnx_uint64>>  &src_inner2outer_col, map<cytnx_uint64,
-    //                 pair<cytnx_uint64,cytnx_uint64>>  &dest_outer2inner_row,
-    //                 map<cytnx_uint64,pair<cytnx_uint64, cytnx_uint64>>  &dest_outer2inner_col,
-    //                 const vector<cytnx_uint64> &mapper, const vector<cytnx_uint64> &inv_mapper,
-    //                 const cytnx_uint64 &src_inner_rowrank,  const cytnx_uint64 &dest_rowrank){
+    // void _moving_elem(std::vector<Storage> &dest_blocks, const std::vector<Storage> &src_blocks,
+    //                 const std::vector<std::vector<cytnx_uint64>> &dest_shapes, const
+    //                 std::vector<std::vector<cytnx_uint64>> &src_shapes, const
+    //                 std::vector<cytnx_uint64> &src_shape, const
+    //                 std::vector<std::vector<cytnx_uint64>>  &src_inner2outer_row, const
+    //                 std::vector<std::vector<cytnx_uint64>>  &src_inner2outer_col,
+    //                 std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64>>
+    //                 &dest_outer2inner_row, std::map<cytnx_uint64,std::pair<cytnx_uint64,
+    //                 cytnx_uint64>>  &dest_outer2inner_col, const std::vector<cytnx_uint64>
+    //                 &mapper, const std::vector<cytnx_uint64> &inv_mapper, const cytnx_uint64
+    //                 &src_inner_rowrank,  const cytnx_uint64 &dest_rowrank){
 
-    void _moving_elem(vector<Tensor> &dest_blocks, const vector<Tensor> &src_blocks,
-                      const vector<cytnx_uint64> &src_shape,
-                      const vector<vector<cytnx_uint64>> &src_inner2outer_row,
-                      const vector<vector<cytnx_uint64>> &src_inner2outer_col,
-                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_row,
-                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_col,
-                      const vector<cytnx_uint64> &mapper, const vector<cytnx_uint64> &inv_mapper,
-                      const cytnx_uint64 &src_inner_rowrank, const cytnx_uint64 &dest_rowrank) {
-      const vector<cytnx_uint64> dest_shape = src_shape;
+    void _moving_elem(
+      std::vector<Tensor> &dest_blocks, const std::vector<Tensor> &src_blocks,
+      const std::vector<cytnx_uint64> &src_shape,
+      const std::vector<std::vector<cytnx_uint64>> &src_inner2outer_row,
+      const std::vector<std::vector<cytnx_uint64>> &src_inner2outer_col,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_row,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_col,
+      const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &inv_mapper,
+      const cytnx_uint64 &src_inner_rowrank, const cytnx_uint64 &dest_rowrank) {
+      const std::vector<cytnx_uint64> dest_shape = src_shape;
 
-      vector<cytnx_uint64> oldshape = vec_map(src_shape, inv_mapper);
-      vector<cytnx_uint64> acc_in_old(src_inner_rowrank),
+      std::vector<cytnx_uint64> oldshape = vec_map(src_shape, inv_mapper);
+      std::vector<cytnx_uint64> acc_in_old(src_inner_rowrank),
         acc_out_old(oldshape.size() - src_inner_rowrank);
       acc_out_old[acc_out_old.size() - 1] = 1;
       acc_in_old[acc_in_old.size() - 1] = 1;
@@ -62,7 +63,7 @@ namespace cytnx {
           //     unsigned int i=elem/src_shapes[b][1];
           //     unsigned int j=elem%src_shapes[b][1];
           // decompress
-          // vector<cytnx_uint64> tfidx =
+          // std::vector<cytnx_uint64> tfidx =
           // vec_concatenate(c2cartesian(src_inner2outer_row[b][i],acc_in_old),
           // c2cartesian(src_inner2outer_col[b][j],acc_out_old)); vec_concatenate_(tfidx_tmp,
           // c2cartesian(src_inner2outer_row[b][i],acc_in_old),
@@ -118,30 +119,32 @@ namespace cytnx {
       }  // end b loop
     }  // end mvelem
 
-    // void blocks_mvelems_d(vector<Storage> &dest_blocks, const vector<Storage> &src_blocks,
-    //                     const vector<vector<cytnx_uint64>> &dest_shapes, const
-    //                     vector<vector<cytnx_uint64>> &src_shapes, const vector<cytnx_uint64>
-    //                     &src_shape, const vector<vector<cytnx_uint64>>  &src_inner2outer_row,
-    //                     const vector<vector<cytnx_uint64>>  &src_inner2outer_col,
-    //                     map<cytnx_uint64, pair<cytnx_uint64,cytnx_uint64>> &dest_outer2inner_row,
-    //                     map<cytnx_uint64,pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_col,
-    //                     const vector<cytnx_uint64> &mapper, const vector<cytnx_uint64>
-    //                     &inv_mapper, const cytnx_uint64 &src_inner_rowrank,  const cytnx_uint64
-    //                     &dest_rowrank){
+    // void blocks_mvelems_d(std::vector<Storage> &dest_blocks, const std::vector<Storage>
+    // &src_blocks,
+    //                     const std::vector<std::vector<cytnx_uint64>> &dest_shapes, const
+    //                     std::vector<std::vector<cytnx_uint64>> &src_shapes, const
+    //                     std::vector<cytnx_uint64> &src_shape, const
+    //                     std::vector<std::vector<cytnx_uint64>>  &src_inner2outer_row, const
+    //                     std::vector<std::vector<cytnx_uint64>>  &src_inner2outer_col,
+    //                     std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64>>
+    //                     &dest_outer2inner_row, std::map<cytnx_uint64,std::pair<cytnx_uint64,
+    //                     cytnx_uint64>> &dest_outer2inner_col, const std::vector<cytnx_uint64>
+    //                     &mapper, const std::vector<cytnx_uint64> &inv_mapper, const cytnx_uint64
+    //                     &src_inner_rowrank,  const cytnx_uint64 &dest_rowrank){
     //     _moving_elem<cytnx_double>(dest_blocks, src_blocks, dest_shapes, src_shapes, src_shape,
     //     src_inner2outer_row, src_inner2outer_col,
     //                             dest_outer2inner_row, dest_outer2inner_col, mapper, inv_mapper,
     //                             src_inner_rowrank, dest_rowrank);
     // } // end blocks_mvelems
-    void blocks_mvelems_d(vector<Tensor> &dest_blocks, const vector<Tensor> &src_blocks,
-                          const vector<cytnx_uint64> &src_shape,
-                          const vector<vector<cytnx_uint64>> &src_inner2outer_row,
-                          const vector<vector<cytnx_uint64>> &src_inner2outer_col,
-                          map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_row,
-                          map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_col,
-                          const vector<cytnx_uint64> &mapper,
-                          const vector<cytnx_uint64> &inv_mapper,
-                          const cytnx_uint64 &src_inner_rowrank, const cytnx_uint64 &dest_rowrank) {
+    void blocks_mvelems_d(
+      std::vector<Tensor> &dest_blocks, const std::vector<Tensor> &src_blocks,
+      const std::vector<cytnx_uint64> &src_shape,
+      const std::vector<std::vector<cytnx_uint64>> &src_inner2outer_row,
+      const std::vector<std::vector<cytnx_uint64>> &src_inner2outer_col,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_row,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_col,
+      const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &inv_mapper,
+      const cytnx_uint64 &src_inner_rowrank, const cytnx_uint64 &dest_rowrank) {
       _moving_elem<cytnx_double>(dest_blocks, src_blocks, src_shape, src_inner2outer_row,
                                  src_inner2outer_col, dest_outer2inner_row, dest_outer2inner_col,
                                  mapper, inv_mapper, src_inner_rowrank, dest_rowrank);

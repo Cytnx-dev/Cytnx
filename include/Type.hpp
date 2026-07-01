@@ -101,8 +101,8 @@ namespace cytnx {
   template <typename T>
   constexpr bool is_complex_v = is_complex<T>::value;
 
-  // is_complex_floating_point_v<T> is a template constant that is true if T is of type complex<U>
-  // where U is a floating point type, and false otherwise.
+  // is_complex_floating_point_v<T> is a template constant that is true if T is of type
+  // std::complex<U> where U is a floating point type, and false otherwise.
   template <typename T>
   constexpr bool is_complex_floating_point_v = is_complex_floating_point<T>::value;
 
