@@ -153,6 +153,18 @@ namespace cytnx {
         if (threadIdx.x == 0) output_data[output_index] = sum;
       }
 
+      // Composes the output Tensor from its already-filled storage, reshaping to
+      // output_shape unless the trace is a rank-2 scalar. Tensor::from_storage
+      // keeps the storage on its current device, so no host round-trip is
+      // involved.
+      Tensor ComposeTraceOutput(Storage &output_storage,
+                                const std::vector<cytnx_int64> &output_shape,
+                                bool output_is_scalar) {
+        Tensor out = Tensor::from_storage(output_storage);
+        if (!output_is_scalar) out.reshape_(output_shape);
+        return out;
+      }
+
       template <class T>
       Tensor TraceImplGpu(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
         using CudaT = typename utils_internal::ToCudaDType<T>::type;
@@ -183,16 +195,12 @@ namespace cytnx {
         for (auto dim : host_surviving_shape) output_size *= dim;
         const bool output_is_scalar = surviving_rank == 0;
 
-        // Fill a device-resident result Storage, then compose the output Tensor
-        // from it; Tensor::from_storage keeps the storage on its current device, so
-        // no host round-trip is involved.
+        // Fill a device-resident result Storage.
         Storage output_storage(output_is_scalar ? cytnx_uint64{1} : output_size, Tn.dtype(),
                                Tn.device());
         if (diagonal_length == 0 || output_size == 0) {
           output_storage.set_zeros();
-          Tensor out = Tensor::from_storage(output_storage);
-          if (!output_is_scalar) out.reshape_(output_shape);
-          return out;
+          return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
         }
 
         // Ship the two surviving_rank-sized layout arrays the multi-index decode
@@ -252,9 +260,7 @@ namespace cytnx {
           checkCudaErrors(cudaFree(device_surviving_input_stride));
         }
 
-        Tensor out = Tensor::from_storage(output_storage);
-        if (!output_is_scalar) out.reshape_(output_shape);
-        return out;
+        return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
       }
 
     }  // namespace
