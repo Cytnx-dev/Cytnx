@@ -598,6 +598,17 @@ namespace cytnx {
     const std::vector<cytnx_uint64> &shape() const { return this->_impl->shape(); }
 
     /**
+    @brief the storage strides of the Tensor
+    @return [std::vector<cytnx_int64>] for each logical axis, the distance in the
+    underlying storage between consecutive elements along that axis
+    @details cytnx tensors store a dense permutation of their logical axes, so the
+    stride of every axis is well defined (this is the layout Tensor::at indexes
+    through). For a contiguous tensor these are the row-major strides; for a
+    permuted (non-contiguous) view they reflect the permuted memory order.
+    */
+    std::vector<cytnx_int64> strides() const;
+
+    /**
         @brief the rank of the Tensor
         @return [cytnx_uint64] the rank of the Tensor
     */

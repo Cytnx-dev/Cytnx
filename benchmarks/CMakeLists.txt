@@ -15,6 +15,7 @@ add_executable(
   linalg/Directsum_bm.cpp
   linalg/Svd_bm.cpp
   linalg/Svd_truncate_bm.cpp
+  linalg/Trace_bm.cpp
   linalg/Vectordot_bm.cpp
   linalg/Lanczos_bm.cpp
   linalg/linalg_basic_bm.cpp
