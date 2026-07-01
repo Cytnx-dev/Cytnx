@@ -113,8 +113,8 @@ namespace cytnx {
   inline constexpr bool variant_contains_v = false;
 
   template <typename T, typename... Types>
-  inline constexpr bool variant_contains_v<T, std::variant<Types...>> =
-    (std::is_same_v<T, Types> || ...);
+  inline constexpr bool variant_contains_v<T, std::variant<Types...>> = (std::is_same_v<T, Types> ||
+                                                                         ...);
 
   // variant_index<T, Variant> returns the index of type T in the Variant.
   template <typename T, typename Variant>
