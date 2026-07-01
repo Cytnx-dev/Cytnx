@@ -28,6 +28,15 @@ namespace cytnx {
       // which only covers every lane when the warp size is a power of two.
       static_assert((kWarpSize & (kWarpSize - 1)) == 0,
                     "kWarpSize must be a power of two for the tree reduction.");
+      // Max extent of grid.x on every architecture this project targets (CUDA
+      // compute capability >= 3.0). One block is launched per output element;
+      // output counts at or below this fit in a 1-D grid. Above it, the launch
+      // spills into grid.y (max 65535), so passing output_size directly as the
+      // <<<...>>> launch's first argument would implicitly narrow to dim3.x
+      // (32-bit) and silently truncate the grid -- see the 2-D grid dispatch in
+      // TraceImplGpu below.
+      constexpr cytnx_uint64 kMaxGridDimX = 2147483647ULL;
+      constexpr cytnx_uint64 kMaxGridDimY = 65535ULL;
 
       // Maps a cytnx storage type to the device arithmetic type used inside the
       // kernels. Complex storage is bit-compatible with cuda::std::complex, which
@@ -137,7 +146,8 @@ namespace cytnx {
                                   const cytnx_uint64 *surviving_input_stride,
                                   cytnx_uint64 surviving_rank, cytnx_uint64 output_size,
                                   cytnx_uint64 diagonal_length, cytnx_uint64 diagonal_stride) {
-        const cytnx_uint64 output_index = blockIdx.x;
+        const cytnx_uint64 output_index =
+          static_cast<cytnx_uint64>(blockIdx.y) * gridDim.x + blockIdx.x;
         if (output_index >= output_size) return;
 
         const cytnx_uint64 diagonal_start_offset = DecodeDiagonalStartOffset(
@@ -217,7 +227,20 @@ namespace cytnx {
         // diagonal.
         const cytnx_uint64 threads_per_block = std::min<cytnx_uint64>(
           ((diagonal_length + kWarpSize - 1) / kWarpSize) * kWarpSize, kMaxTraceThreadsPerBlock);
-        TraceKernel<CudaT><<<output_size, threads_per_block>>>(
+
+        // One block per output element. output_size can exceed dim3::x's 32-bit
+        // range, so it is spread across grid.x and grid.y instead of being passed
+        // directly as the <<<...>>> launch's first argument (which would
+        // implicitly narrow to dim3 and silently truncate to the low 32 bits).
+        cytnx_error_msg(output_size > kMaxGridDimX * kMaxGridDimY,
+                        "[internal][cuTrace] output_size=%llu exceeds the maximum grid size "
+                        "(%llu) this launch can address.\n",
+                        static_cast<unsigned long long>(output_size),
+                        static_cast<unsigned long long>(kMaxGridDimX * kMaxGridDimY));
+        const dim3 grid_dim(
+          static_cast<unsigned int>(std::min(output_size, kMaxGridDimX)),
+          static_cast<unsigned int>((output_size + kMaxGridDimX - 1) / kMaxGridDimX));
+        TraceKernel<CudaT><<<grid_dim, threads_per_block>>>(
           reinterpret_cast<CudaT *>(output_storage.data()),
           reinterpret_cast<const CudaT *>(Tn.storage().data()), device_surviving_shape,
           device_surviving_input_stride, surviving_rank, output_size, diagonal_length,
