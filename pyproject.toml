@@ -1,5 +1,14 @@
 [build-system]
-requires = ["scikit-build-core >=0.11", "pybind11 >=3.0"]
+requires = [
+    "scikit-build-core >=0.11",
+    # Pinned exactly: pybind11 controls the type annotations baked into the
+    # extension, which tools/generate_stubs.py reads to produce the committed
+    # cytnx/cytnx/*.pyi stubs. A floating version silently rewrites those
+    # annotations (e.g. 3.0.1 -> 3.0.4 added `typing.SupportsIndex` to integer
+    # arguments), so the committed stubs only stay reproducible when the
+    # pybind11 version is fixed. Bump deliberately alongside a stub regen.
+    "pybind11 ==3.0.4",
+]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -46,13 +55,15 @@ coverage = [
 ]
 # Convenience aggregate for contributors and CI:
 #     pip install --editable .[dev]
-# pulls everything needed to build, run the test suite, and collect
-# both Python and C++ coverage. Build-time deps (scikit-build-core,
+# pulls everything needed to build, run the test suite, collect both
+# Python and C++ coverage, and regenerate the committed PEP 561 type
+# stubs with `tools/generate_stubs.py`. Build-time deps (scikit-build-core,
 # pybind11) come from `[build-system].requires` automatically.
 dev = [
     "cytnx[viz]",
     "cytnx[test]",
     "cytnx[coverage]",
+    "pybind11-stubgen",
 ]
 docs = [
     "sphinx>=7.4.7",

@@ -115,10 +115,15 @@ PYBIND11_MODULE(cytnx, m) {
   //   py::arg("cont_order") = std::vector<cytnx_int64>(),
   //   py::arg("out_labels") = std::vector<std::string>());
 
-  generator_binding(m);
   scalar_binding(m);
   storage_binding(m);
   tensor_binding(m);
+  // generator_binding defines the module-level Tensor factories (zeros, ones,
+  // arange, ...). It must run after tensor_binding so the Tensor class is
+  // already registered when these functions are bound; otherwise pybind11
+  // cannot resolve their `-> Tensor` return type and emits a raw C++ type that
+  // pybind11-stubgen renders as an untyped `...` in the committed stubs.
+  generator_binding(m);
   network_binding(m);
   linop_binding(m);
   unitensor_binding(m);
