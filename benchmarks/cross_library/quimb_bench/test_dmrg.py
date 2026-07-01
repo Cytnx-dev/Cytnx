@@ -105,7 +105,11 @@ def build_dense(bond_dim, num_sites):
 
 def run_one_dense(bond_dim, num_sites):
     dmrg = build_dense(bond_dim, num_sites)
-    dmrg.solve(tol=1e-6, max_sweeps=N_SWEEPS, verbosity=0)
+    # tol=0.0 disables early stopping on energy convergence, so this always
+    # runs the full N_SWEEPS budget -- matching Cytnx/TeNPy's fixed sweep
+    # count instead of exiting early when quimb's own convergence check is
+    # satisfied.
+    dmrg.solve(tol=0.0, max_sweeps=N_SWEEPS, verbosity=0)
     return dmrg.energy
 
 
