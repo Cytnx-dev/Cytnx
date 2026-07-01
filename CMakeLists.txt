@@ -233,10 +233,19 @@ if(BUILD_PYTHON)
   # Authoritative, compiler-agnostic check: does this toolchain (compiler +
   # standard library + flags) actually provide std::format at C++20?
   include(CheckCXXSourceCompiles)
+  # Match the compile definition the real pybind sources inherit from the cytnx
+  # target -- target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY),
+  # propagated to pycytnx via target_link_libraries(pycytnx PUBLIC cytnx). On
+  # macOS/libc++ that define turns off std::format's deployment-target
+  # availability guards, so the probe predicts the actual build instead of
+  # false-rejecting a low-deployment-target (e.g. cibuildwheel) macOS config
+  # that would in fact compile. It is a no-op on libstdc++/MSVC.
+  set(CMAKE_REQUIRED_DEFINITIONS -D_LIBCPP_DISABLE_AVAILABILITY)
   check_cxx_source_compiles(
     "#include <format>
 int main() { return std::format(\"{}\", 42).size() == 2 ? 0 : 1; }"
     CYTNX_HAS_STD_FORMAT)
+  unset(CMAKE_REQUIRED_DEFINITIONS)
   if(NOT CYTNX_HAS_STD_FORMAT)
     message(FATAL_ERROR
       "The Python bindings (BUILD_PYTHON=ON) require std::format (C++20 "
