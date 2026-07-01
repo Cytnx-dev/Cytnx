@@ -17,26 +17,6 @@ namespace cytnx {
     }
 
     template <typename DType>
-    struct ToCudaDType {
-      typedef DType type;
-    };
-
-    template <typename DType>
-    struct ToCudaDType<std::complex<DType>> {
-      typedef cuda::std::complex<DType> type;
-    };
-
-    template <>
-    struct ToCudaDType<cytnx_complex128> {
-      typedef cuda::std::complex<double> type;
-    };
-
-    template <>
-    struct ToCudaDType<cytnx_complex64> {
-      typedef cuda::std::complex<float> type;
-    };
-
-    template <typename DType>
     void FillGpu(void* first, const DType& value, cytnx_uint64 count) {
       using CudaDType = typename ToCudaDType<DType>::type;
 

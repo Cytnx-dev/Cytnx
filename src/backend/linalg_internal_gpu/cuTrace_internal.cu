@@ -2,6 +2,7 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "backend/Storage.hpp"
+#include "backend/utils_internal_gpu/cuFill_gpu.hpp"
 
 #include <algorithm>
 #include <limits>
@@ -51,25 +52,6 @@ namespace cytnx {
                         static_cast<unsigned long long>(value));
         return static_cast<cytnx_int64>(value);
       }
-
-      // Maps a cytnx storage type to the device arithmetic type used inside the
-      // kernels. Complex storage is bit-compatible with cuda::std::complex, which
-      // provides device operator+ / construction-from-zero, so the kernels stay
-      // type-generic.
-      template <class T>
-      struct TraceCudaType {
-        using type = T;
-      };
-      template <>
-      struct TraceCudaType<cytnx_complex128> {
-        using type = cuda::std::complex<double>;
-      };
-      template <>
-      struct TraceCudaType<cytnx_complex64> {
-        using type = cuda::std::complex<float>;
-      };
-      template <class T>
-      using TraceCudaTypeT = typename TraceCudaType<T>::type;
 
       // value + (the value `reduction_stride` lanes higher in the warp). For real
       // types this is a single __shfl_down_sync; complex storage is shuffled
@@ -173,7 +155,7 @@ namespace cytnx {
 
       template <class T>
       Tensor TraceImplGpu(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
-        using CudaT = TraceCudaTypeT<T>;
+        using CudaT = typename utils_internal::ToCudaDType<T>::type;
         // Trace() validates upstream that ax1 != ax2 and shape[ax1] == shape[ax2],
         // so their order is irrelevant: the diagonal stride and the set of
         // surviving axes are symmetric in (ax1, ax2).
