@@ -195,6 +195,26 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 # #####################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
+# #####################################################################
+# ## HOST COMPILER REQUIREMENT (GCC >= 13)
+# #####################################################################
+# Cytnx targets C++20 (CMAKE_CXX_STANDARD 20) and calls std::format
+# (pybind/symmetry_py.cpp, pybind/unitensor_py.cpp). libstdc++ only implements
+# the C++20 <format> library from GCC 13, so GCC 12 and earlier fail to compile
+# those translation units with errors like "'format' is not a member of 'std'".
+# Enforce a GCC >= 13 floor here with an early, actionable message instead of a
+# confusing mid-build compile error. Only GNU is gated: Clang/AppleClang provide
+# <format> via their own standard library and are validated separately.
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13)
+  message(FATAL_ERROR
+    "GCC >= 13 is required: Cytnx uses std::format (C++20 <format>), which "
+    "libstdc++ implements only from GCC 13. Found GCC "
+    "${CMAKE_CXX_COMPILER_VERSION} at ${CMAKE_CXX_COMPILER}.\n"
+    "Install GCC 13+ and point CMake at it, e.g. "
+    "-DCMAKE_CXX_COMPILER=g++-13 (and -DCMAKE_C_COMPILER=gcc-13), "
+    "or set the CXX/CC environment variables.")
+endif()
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
   # Default to a portable fat binary unless the caller picked architectures via
