@@ -1,5 +1,15 @@
 
 
+#ARPACK
+# Found ahead of the BLAS/LAPACK resolution below (regardless of USE_MKL)
+# so the OpenBLAS branch's runtime-dependency check can inspect ARPACK_LIB's
+# own dependencies, and so it's available for the target_link_libraries(cytnx
+# PRIVATE ${ARPACK_LIB}) call in the main CMakeLists.txt after this file is
+# included. This file is only included for the non-BACKEND_TORCH build, so
+# ARPACK_LIB is not defined here when BACKEND_TORCH is on.
+find_library(ARPACK_LIB arpack REQUIRED)
+message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
+
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
@@ -42,6 +52,62 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
     find_package( LAPACKE REQUIRED)
+
+    # Some OpenBLAS packagings (e.g. Fedora/RHEL's "openblas-devel", used by
+    # the manylinux_2_28 image) install a serial and a pthread-threaded
+    # build side by side, and the system's prebuilt "arpack" package (found
+    # as ARPACK_LIB above) can end up needing a different one than
+    # find_package(BLAS) above resolved (the generic "-lopenblas" name), so
+    # both variants get linked and both are vendored into the wheel. Rather
+    # than guess a vendor-specific naming convention for the "other" build,
+    # ask the loader what arpack actually needs -- via CMake's own
+    # GET_RUNTIME_DEPENDENCIES, portable across the platforms this build
+    # supports -- and switch to that OpenBLAS build if it differs, so only
+    # one variant is linked overall. find_package(LAPACKE) above already
+    # resolved LAPACKE_INCLUDE_DIRS through morse_cmake's hardened,
+    # cross-platform header search (see the "Vendor FindLAPACKE via Inria
+    # morse_cmake submodule" commit for why cytnx moved off a homegrown
+    # find_path(lapacke.h)); only the library selection is revisited here,
+    # since the header itself is agnostic to which OpenBLAS build backs it.
+    file(GET_RUNTIME_DEPENDENCIES
+      LIBRARIES "${ARPACK_LIB}"
+      RESOLVED_DEPENDENCIES_VAR CYTNX_ARPACK_RUNTIME_DEPS
+    )
+    set(CYTNX_ARPACK_OPENBLAS "")
+    foreach(_cytnx_dep ${CYTNX_ARPACK_RUNTIME_DEPS})
+      if(_cytnx_dep MATCHES "libopenblas")
+        set(CYTNX_ARPACK_OPENBLAS "${_cytnx_dep}")
+        break()
+      endif()
+    endforeach()
+
+    if(CYTNX_ARPACK_OPENBLAS)
+      get_filename_component(CYTNX_ARPACK_OPENBLAS_REAL "${CYTNX_ARPACK_OPENBLAS}" REALPATH)
+      set(CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK FALSE)
+      foreach(_cytnx_found_lib ${BLAS_LIBRARIES})
+        get_filename_component(_cytnx_found_lib_real "${_cytnx_found_lib}" REALPATH)
+        if(_cytnx_found_lib_real STREQUAL CYTNX_ARPACK_OPENBLAS_REAL)
+          set(CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK TRUE)
+        endif()
+      endforeach()
+
+      if(NOT CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK)
+        # arpack needs a different OpenBLAS build than find_package(BLAS)
+        # picked. Only switch to it if it itself exposes LAPACKE symbols
+        # directly (cytnx's own C++ code calls the LAPACKE C API, unlike
+        # arpack's Fortran BLAS/LAPACK calls, so this isn't guaranteed just
+        # because arpack is happy with it); otherwise leave the
+        # find_package() result as-is and accept both variants being linked.
+        include(CheckLibraryExists)
+        check_library_exists("${CYTNX_ARPACK_OPENBLAS}" LAPACKE_dgesdd "" CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE)
+        if(CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE)
+          set(BLAS_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
+          set(LAPACK_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
+          set(LAPACKE_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
+          message(STATUS "Switching to arpack's own OpenBLAS build to avoid linking two copies: ${CYTNX_ARPACK_OPENBLAS}")
+        endif()
+      endif()
+    endif()
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
     target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
