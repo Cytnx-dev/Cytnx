@@ -152,6 +152,7 @@
     <member refid="classcytnx_1_1Tensor_1a9e09106c7529e8be90caa52e1541e498" kind="function"><name>dtype_str</name></member>
     <member refid="classcytnx_1_1Tensor_1a335f7625fa01784f49b2223238d0c14e" kind="function"><name>device_str</name></member>
     <member refid="classcytnx_1_1Tensor_1af36ef858677f13dcda8512fd9b5ae475" kind="function"><name>shape</name></member>
+    <member refid="classcytnx_1_1Tensor_1a292b58b739db2324f443c0817f99d654" kind="function"><name>strides</name></member>
     <member refid="classcytnx_1_1Tensor_1aa3ee5ed793cacd43d3fadbd92d7920a4" kind="function"><name>rank</name></member>
     <member refid="classcytnx_1_1Tensor_1a5e2248e9babdb786167ed349df9084ae" kind="function"><name>clone</name></member>
     <member refid="classcytnx_1_1Tensor_1acf7f697a9434f9bc98a7d00a555ee982" kind="function"><name>to</name></member>

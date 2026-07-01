@@ -146,6 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af36ef858677f13dcda8512fd9b5ae475" id="r_af36ef858677f13dcda8512fd9b5ae475"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">const</a> std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">cytnx_uint64</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#af36ef858677f13dcda8512fd9b5ae475">shape</a> () <a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">const</a></td></tr>
 <tr class="memdesc:af36ef858677f13dcda8512fd9b5ae475"><td class="mdescLeft">&#160;</td><td class="mdescRight">the shape of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>  <br /></td></tr>
 <tr class="separator:af36ef858677f13dcda8512fd9b5ae475"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a292b58b739db2324f443c0817f99d654" id="r_a292b58b739db2324f443c0817f99d654"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">cytnx_int64</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#a292b58b739db2324f443c0817f99d654">strides</a> () <a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">const</a></td></tr>
+<tr class="memdesc:a292b58b739db2324f443c0817f99d654"><td class="mdescLeft">&#160;</td><td class="mdescRight">the storage strides of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>  <br /></td></tr>
+<tr class="separator:a292b58b739db2324f443c0817f99d654"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3ee5ed793cacd43d3fadbd92d7920a4" id="r_aa3ee5ed793cacd43d3fadbd92d7920a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">cytnx_uint64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1Tensor.html#aa3ee5ed793cacd43d3fadbd92d7920a4">rank</a> () <a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">const</a></td></tr>
 <tr class="memdesc:aa3ee5ed793cacd43d3fadbd92d7920a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">the rank of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>  <br /></td></tr>
 <tr class="separator:aa3ee5ed793cacd43d3fadbd92d7920a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -764,7 +767,7 @@ B(j,k) &amp; \text{if } i = N
 <div class="line">}</div>
 <div class="ttc" id="aType_8hpp_html_aca659129dad1fd53a88bfce6ac7f8743"><div class="ttname"><a href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">Type</a></div><div class="ttdeci">constexpr Type_class Type</div><div class="ttdoc">data type</div><div class="ttdef"><b>Definition</b> Type.hpp:426</div></div>
 <div class="ttc" id="aclasscytnx_1_1Tensor_html"><div class="ttname"><a href="classcytnx_1_1Tensor.html">cytnx::Tensor</a></div><div class="ttdoc">an tensor (multi-dimensional array)</div><div class="ttdef"><b>Definition</b> Tensor.hpp:41</div></div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a7b996d3281e7375b29a7cfe4273b299f"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a7b996d3281e7375b29a7cfe4273b299f">cytnx::Tensor::astype</a></div><div class="ttdeci">Tensor astype(const int &amp;new_type) const</div><div class="ttdoc">return a new Tensor that cast to different dtype.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:887</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a7b996d3281e7375b29a7cfe4273b299f"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a7b996d3281e7375b29a7cfe4273b299f">cytnx::Tensor::astype</a></div><div class="ttdeci">Tensor astype(const int &amp;new_type) const</div><div class="ttdoc">return a new Tensor that cast to different dtype.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:898</div></div>
 <div class="ttc" id="aclasscytnx_1_1Tensor_html_ac6d3310eb4defbdacf662dcd81d8fe09"><div class="ttname"><a href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">cytnx::Tensor::device</a></div><div class="ttdeci">int device() const</div><div class="ttdoc">the device-id of the Tensor</div><div class="ttdef"><b>Definition</b> Tensor.hpp:578</div></div>
 <div class="ttc" id="acytnx_8hpp_html"><div class="ttname"><a href="cytnx_8hpp.html">cytnx.hpp</a></div></div>
 <div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition</b> Accessor.hpp:12</div></div>
@@ -935,8 +938,8 @@ template&lt;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a55f6e4c4106c0964f23fb06ac63d75ec"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a55f6e4c4106c0964f23fb06ac63d75ec">cytnx::Tensor::at</a></div><div class="ttdeci">T &amp; at(const std::vector&lt; cytnx_uint64 &gt; &amp;locator)</div><div class="ttdoc">Get an element at specific location.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:922</div></div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a57aea99887adf41da14fd7578ef9bf13"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13">cytnx::Tensor::reshape</a></div><div class="ttdeci">Tensor reshape(const std::vector&lt; cytnx_int64 &gt; &amp;new_shape) const</div><div class="ttdoc">return a new Tensor that is reshaped.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:834</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a55f6e4c4106c0964f23fb06ac63d75ec"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a55f6e4c4106c0964f23fb06ac63d75ec">cytnx::Tensor::at</a></div><div class="ttdeci">T &amp; at(const std::vector&lt; cytnx_uint64 &gt; &amp;locator)</div><div class="ttdoc">Get an element at specific location.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:933</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a57aea99887adf41da14fd7578ef9bf13"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a57aea99887adf41da14fd7578ef9bf13">cytnx::Tensor::reshape</a></div><div class="ttdeci">Tensor reshape(const std::vector&lt; cytnx_int64 &gt; &amp;new_shape) const</div><div class="ttdoc">return a new Tensor that is reshaped.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:845</div></div>
 <div class="ttc" id="anamespacecytnx_html_a685cf4e94754373ae4f12622b168fb98"><div class="ttname"><a href="namespacecytnx.html#a685cf4e94754373ae4f12622b168fb98">cytnx::arange</a></div><div class="ttdeci">Tensor arange(const cytnx_int64 &amp;Nelem)</div><div class="ttdoc">Create a rank-1 Tensor with incremental unsigned integer elements in the range [0,...</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Total elem: 30
@@ -1030,7 +1033,7 @@ template&lt;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a5e2248e9babdb786167ed349df9084ae"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae">cytnx::Tensor::clone</a></div><div class="ttdeci">Tensor clone() const</div><div class="ttdoc">return a clone of the current Tensor.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:623</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a5e2248e9babdb786167ed349df9084ae"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a5e2248e9babdb786167ed349df9084ae">cytnx::Tensor::clone</a></div><div class="ttdeci">Tensor clone() const</div><div class="ttdoc">return a clone of the current Tensor.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:634</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">1
 0
@@ -1145,9 +1148,9 @@ False
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a4d7da181303c588f2ab84bffda435525"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a4d7da181303c588f2ab84bffda435525">cytnx::Tensor::contiguous</a></div><div class="ttdeci">Tensor contiguous() const</div><div class="ttdoc">Make the Tensor contiguous by coalescing the memory (storage).</div><div class="ttdef"><b>Definition</b> Tensor.hpp:741</div></div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_aa66028524d53c79d62714b96cd274ccd"><div class="ttname"><a href="classcytnx_1_1Tensor.html#aa66028524d53c79d62714b96cd274ccd">cytnx::Tensor::is_contiguous</a></div><div class="ttdeci">const bool &amp; is_contiguous() const</div><div class="ttdoc">return whether the Tensor is contiguous or not.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:678</div></div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_adbdc402a8c4d6d738523a888bcf9c0c2"><div class="ttname"><a href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">cytnx::Tensor::permute</a></div><div class="ttdeci">Tensor permute(const std::vector&lt; cytnx_uint64 &gt; &amp;rnks) const</div><div class="ttdoc">perform tensor permute on the cytnx::Tensor and return a new instance.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:711</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a4d7da181303c588f2ab84bffda435525"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a4d7da181303c588f2ab84bffda435525">cytnx::Tensor::contiguous</a></div><div class="ttdeci">Tensor contiguous() const</div><div class="ttdoc">Make the Tensor contiguous by coalescing the memory (storage).</div><div class="ttdef"><b>Definition</b> Tensor.hpp:752</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_aa66028524d53c79d62714b96cd274ccd"><div class="ttname"><a href="classcytnx_1_1Tensor.html#aa66028524d53c79d62714b96cd274ccd">cytnx::Tensor::is_contiguous</a></div><div class="ttdeci">const bool &amp; is_contiguous() const</div><div class="ttdoc">return whether the Tensor is contiguous or not.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:689</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_adbdc402a8c4d6d738523a888bcf9c0c2"><div class="ttname"><a href="classcytnx_1_1Tensor.html#adbdc402a8c4d6d738523a888bcf9c0c2">cytnx::Tensor::permute</a></div><div class="ttdeci">Tensor permute(const std::vector&lt; cytnx_uint64 &gt; &amp;rnks) const</div><div class="ttdoc">perform tensor permute on the cytnx::Tensor and return a new instance.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:722</div></div>
 <div class="ttc" id="aclasscytnx_1_1Tensor_html_af36ef858677f13dcda8512fd9b5ae475"><div class="ttname"><a href="classcytnx_1_1Tensor.html#af36ef858677f13dcda8512fd9b5ae475">cytnx::Tensor::shape</a></div><div class="ttdeci">const std::vector&lt; cytnx_uint64 &gt; &amp; shape() const</div><div class="ttdoc">the shape of the Tensor</div><div class="ttdef"><b>Definition</b> Tensor.hpp:598</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Vector Print:
@@ -1648,7 +1651,7 @@ template&lt;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a0c7f2bac2a03be7d22769c7cb896afbe"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a0c7f2bac2a03be7d22769c7cb896afbe">cytnx::Tensor::fill</a></div><div class="ttdeci">void fill(const T &amp;val)</div><div class="ttdoc">fill all the element of current Tensor with the value.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:1127</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a0c7f2bac2a03be7d22769c7cb896afbe"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a0c7f2bac2a03be7d22769c7cb896afbe">cytnx::Tensor::fill</a></div><div class="ttdeci">void fill(const T &amp;val)</div><div class="ttdoc">fill all the element of current Tensor with the value.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:1138</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 60
@@ -3689,7 +3692,7 @@ template&lt;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a771f1f5b51f89abd8df4166e602214ac"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">cytnx::Tensor::set</a></div><div class="ttdeci">void set(const std::vector&lt; cytnx::Accessor &gt; &amp;accessors, const Tensor &amp;rhs)</div><div class="ttdoc">set elements with the input Tensor using Accessor (C++ API) / slices (python API)</div><div class="ttdef"><b>Definition</b> Tensor.hpp:1067</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a771f1f5b51f89abd8df4166e602214ac"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a771f1f5b51f89abd8df4166e602214ac">cytnx::Tensor::set</a></div><div class="ttdeci">void set(const std::vector&lt; cytnx::Accessor &gt; &amp;accessors, const Tensor &amp;rhs)</div><div class="ttdoc">set elements with the input Tensor using Accessor (C++ API) / slices (python API)</div><div class="ttdef"><b>Definition</b> Tensor.hpp:1078</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">
 Total elem: 60
@@ -4221,6 +4224,27 @@ Shape : (3,4,5)
 
 </div>
 </div>
+<a id="a292b58b739db2324f443c0817f99d654" name="a292b58b739db2324f443c0817f99d654"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a292b58b739db2324f443c0817f99d654">&#9670;&#160;</a></span>strides()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662dcd81d8fe09">cytnx_int64</a> &gt; cytnx::Tensor::strides </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>the storage strides of the <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> </p>
+<dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;cytnx_int64&gt;] for each logical axis, the distance in the underlying storage between consecutive elements along that axis</dd></dl>
+<p>cytnx tensors store a dense permutation of their logical axes, so the stride of every axis is well defined (this is the layout <a class="el" href="classcytnx_1_1Tensor.html#a55f6e4c4106c0964f23fb06ac63d75ec" title="Get an element at specific location.">Tensor::at</a> indexes through). For a contiguous tensor these are the row-major strides; for a permuted (non-contiguous) view they reflect the permuted memory order. </p>
+
+</div>
+</div>
 <a id="a4648eef7874bad42d6d7b15fb1598644" name="a4648eef7874bad42d6d7b15fb1598644"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4648eef7874bad42d6d7b15fb1598644">&#9670;&#160;</a></span>Sub()</h2>
 
@@ -4366,7 +4390,7 @@ template&lt;<a class="el" href="classcytnx_1_1Tensor.html#ac6d3310eb4defbdacf662
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Tensor_html_a335f7625fa01784f49b2223238d0c14e"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a335f7625fa01784f49b2223238d0c14e">cytnx::Tensor::device_str</a></div><div class="ttdeci">std::string device_str() const</div><div class="ttdoc">the device (in string) of the Tensor</div><div class="ttdef"><b>Definition</b> Tensor.hpp:592</div></div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_acf7f697a9434f9bc98a7d00a555ee982"><div class="ttname"><a href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">cytnx::Tensor::to</a></div><div class="ttdeci">Tensor to(const int &amp;device) const</div><div class="ttdoc">copy a tensor to new device</div><div class="ttdef"><b>Definition</b> Tensor.hpp:649</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_acf7f697a9434f9bc98a7d00a555ee982"><div class="ttname"><a href="classcytnx_1_1Tensor.html#acf7f697a9434f9bc98a7d00a555ee982">cytnx::Tensor::to</a></div><div class="ttdeci">Tensor to(const int &amp;device) const</div><div class="ttdoc">copy a tensor to new device</div><div class="ttdef"><b>Definition</b> Tensor.hpp:660</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">cytnx device: CUDA/GPU-id:0
 cytnx device: CPU
@@ -4435,7 +4459,7 @@ cytnx device: CPU
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Tensor_html_a114a31fbb8bf4a90f150b6a67e42183a"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">cytnx::Tensor::to_</a></div><div class="ttdeci">void to_(const int &amp;device)</div><div class="ttdoc">move the current Tensor to the device.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:672</div></div>
+<div class="ttc" id="aclasscytnx_1_1Tensor_html_a114a31fbb8bf4a90f150b6a67e42183a"><div class="ttname"><a href="classcytnx_1_1Tensor.html#a114a31fbb8bf4a90f150b6a67e42183a">cytnx::Tensor::to_</a></div><div class="ttdeci">void to_(const int &amp;device)</div><div class="ttdoc">move the current Tensor to the device.</div><div class="ttdef"><b>Definition</b> Tensor.hpp:683</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">cytnx device: CUDA/GPU-id:0
 </pre> <h3>python API:</h3>
