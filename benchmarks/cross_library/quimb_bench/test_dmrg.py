@@ -194,10 +194,12 @@ def run_one_symmetric(bond_dim, num_sites):
     for dt in ITE_DT_SCHEDULE:
         zigzag_pass(dt)
     h_op = _heisenberg_two_site_op()
-    energy = sum(
-        psi.local_expectation_exact(h_op, where=(i, i + 1))
-        for i in range(num_sites - 1)
-    )
+    # compute_local_expectation(method="envs") builds shared left/right
+    # environments once and reuses them across every bond, unlike summing
+    # num_sites-1 separate local_expectation_exact calls that each redo the
+    # environment contraction from scratch.
+    terms = {(i, i + 1): h_op for i in range(num_sites - 1)}
+    energy = psi.compute_local_expectation(terms, normalized=True, method="envs")
     return energy
 
 
