@@ -196,15 +196,26 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
 # #####################################################################
-# ## HOST COMPILER REQUIREMENT (GCC >= 13)
+# ## HOST COMPILER REQUIREMENT: C++20 std::format
 # #####################################################################
-# Cytnx targets C++20 (CMAKE_CXX_STANDARD 20) and calls std::format
-# (pybind/symmetry_py.cpp, pybind/unitensor_py.cpp). libstdc++ only implements
-# the C++20 <format> library from GCC 13, so GCC 12 and earlier fail to compile
-# those translation units with errors like "'format' is not a member of 'std'".
-# Enforce a GCC >= 13 floor here with an early, actionable message instead of a
-# confusing mid-build compile error. Only GNU is gated: Clang/AppleClang provide
-# <format> via their own standard library and are validated separately.
+# Cytnx compiles as C++20 (CMAKE_CXX_STANDARD 20, set above) and calls
+# std::format (pybind/symmetry_py.cpp, pybind/unitensor_py.cpp). std::format
+# (the C++20 <format> library, P0645) is absent from early C++20-era standard
+# libraries, and the minimum version differs per implementation -- and is NOT
+# implied by the Clang front-end version, since Clang can use either libc++ or
+# libstdc++:
+#   * libstdc++ (GCC):              since GCC 13
+#   * libc++    (Clang/AppleClang): since LLVM 17 (older needed
+#                                   -fexperimental-library)
+#
+# So rather than gate on a compiler version (unreliable for Clang), probe the
+# actual feature below. check_cxx_source_compiles honors CMAKE_CXX_STANDARD
+# here -- cmake_minimum_required is >= 3.25, so policy CMP0067 is NEW -- meaning
+# the probe is compiled at C++20, not the compiler's default (typically C++17,
+# where <format> is absent and the probe would false-negative).
+
+# Friendlier fast-path message for the most common miss (old GCC), before the
+# generic probe.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13)
   message(FATAL_ERROR
     "GCC >= 13 is required: Cytnx uses std::format (C++20 <format>), which "
@@ -213,6 +224,24 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_L
     "Install GCC 13+ and point CMake at it, e.g. "
     "-DCMAKE_CXX_COMPILER=g++-13 (and -DCMAKE_C_COMPILER=gcc-13), "
     "or set the CXX/CC environment variables.")
+endif()
+
+# Authoritative, compiler-agnostic check: does this exact toolchain (compiler +
+# standard library + flags) actually provide std::format at C++20?
+include(CheckCXXSourceCompiles)
+check_cxx_source_compiles(
+  "#include <format>
+int main() { return std::format(\"{}\", 42).size() == 2 ? 0 : 1; }"
+  CYTNX_HAS_STD_FORMAT)
+if(NOT CYTNX_HAS_STD_FORMAT)
+  message(FATAL_ERROR
+    "This C++ toolchain does not provide std::format (C++20 <format>), which "
+    "Cytnx requires. Compiler: ${CMAKE_CXX_COMPILER_ID} "
+    "${CMAKE_CXX_COMPILER_VERSION} (${CMAKE_CXX_COMPILER}).\n"
+    "Minimum standard libraries: GCC/libstdc++ >= 13, or Clang/libc++ >= 17 "
+    "(AppleClang: a recent Xcode with a matching macOS deployment target).\n"
+    "Select a newer compiler with -DCMAKE_CXX_COMPILER=... "
+    "(and -DCMAKE_C_COMPILER=...), or build against a newer standard library.")
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
