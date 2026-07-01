@@ -298,5 +298,6 @@ if(USE_HPTT)
     # `find_package(hptt)`; otherwise `install(EXPORT cytnx_targets)` fails
     # with "target hptt_static is not in any export set".
     install(TARGETS hptt_static EXPORT cytnx_targets
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT Development)
 endif()
