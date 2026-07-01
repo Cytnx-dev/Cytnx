@@ -326,20 +326,16 @@ Output>>
     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
 
 
-Using C++ API after self-build install
-------------------------------------------
-In the case that Cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling variables:
+Using the C++ API after a self-build install
+------------------------------------------------
+Cytnx no longer exposes ``__cpp_include__``/``__cpp_lib__`` Python attributes to introspect the C++ headers and library paths -- pip and conda installs don't carry those files at all (see **Option C** above). To compile your own C++ code against Cytnx, use **Option B** (bare CMake install) and consume the installed package the standard CMake way:
 
-.. code-block:: shell
+.. code-block:: cmake
 
-    CYTNX_INC := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_include__)\")")
-    CYTNX_LDFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\")")
-    CYTNX_LIB := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_lib__)\")")/libcytnx.a
-    CYTNX_CXXFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_flags__)\")")
+    find_package(Cytnx CONFIG REQUIRED PATHS ${CYTNX_ROOT})
+    target_link_libraries(your_target PRIVATE Cytnx::cytnx)
 
-.. Note::
-
-    CYTNX_ROOT is the path where Cytnx is installed from binary build.
+where ``CYTNX_ROOT`` is the ``-DCMAKE_INSTALL_PREFIX`` used for the Option B install. ``tests/downstream_find_package/`` in the Cytnx repository is a minimal example of a project consuming Cytnx this way.
 
 
 Build troubleshooting
