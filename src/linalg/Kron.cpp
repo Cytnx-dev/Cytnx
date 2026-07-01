@@ -87,7 +87,7 @@ namespace cytnx {
             using out_type =
               Type_class::type_promote_from_gpu_pointer_t<decltype(tl), decltype(tr)>;
             static_assert(!std::is_same_v<out_type, void>);
-            cytnx::linalg_internal::cuKron_general(out.ptr_as<out_type>(), tl, tr, pad_shape1,
+            cytnx::linalg_internal::cuKron_general(out.gpu_ptr_as<out_type>(), tl, tr, pad_shape1,
                                                    pad_shape2);
           },
           Tl.gpu_ptr(), Tr.gpu_ptr());
