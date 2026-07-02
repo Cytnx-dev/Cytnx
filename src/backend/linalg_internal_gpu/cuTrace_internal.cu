@@ -206,19 +206,23 @@ namespace cytnx {
         // Ship the two surviving_rank-sized layout arrays the multi-index decode
         // needs; the rank-2 case (surviving_rank == 0) needs neither, so the
         // kernel reads nullptr only where the decode loop never runs.
+        //
+        // Allocated with cudaMallocAsync (stream-ordered) rather than cudaMalloc
+        // so they can be released with cudaFreeAsync below -- cudaFreeAsync only
+        // accepts pointers allocated by cudaMallocAsync/cudaMallocFromPoolAsync.
         cytnx_uint64 *device_surviving_shape = nullptr;
         cytnx_uint64 *device_surviving_input_stride = nullptr;
         if (surviving_rank > 0) {
+          checkCudaErrors(cudaMallocAsync((void **)&device_surviving_shape,
+                                          sizeof(cytnx_uint64) * surviving_rank, 0));
+          checkCudaErrors(cudaMallocAsync((void **)&device_surviving_input_stride,
+                                          sizeof(cytnx_uint64) * surviving_rank, 0));
+          checkCudaErrors(cudaMemcpyAsync(device_surviving_shape, host_surviving_shape.data(),
+                                          sizeof(cytnx_uint64) * surviving_rank,
+                                          cudaMemcpyHostToDevice, 0));
           checkCudaErrors(
-            cudaMalloc((void **)&device_surviving_shape, sizeof(cytnx_uint64) * surviving_rank));
-          checkCudaErrors(cudaMalloc((void **)&device_surviving_input_stride,
-                                     sizeof(cytnx_uint64) * surviving_rank));
-          checkCudaErrors(cudaMemcpy(device_surviving_shape, host_surviving_shape.data(),
-                                     sizeof(cytnx_uint64) * surviving_rank,
-                                     cudaMemcpyHostToDevice));
-          checkCudaErrors(
-            cudaMemcpy(device_surviving_input_stride, host_surviving_input_stride.data(),
-                       sizeof(cytnx_uint64) * surviving_rank, cudaMemcpyHostToDevice));
+            cudaMemcpyAsync(device_surviving_input_stride, host_surviving_input_stride.data(),
+                            sizeof(cytnx_uint64) * surviving_rank, cudaMemcpyHostToDevice, 0));
         }
 
         // Size each block to its diagonal: diagonal_length is known here, so the
@@ -254,11 +258,21 @@ namespace cytnx {
         checkCudaErrors(cudaGetLastError());
 
         if (surviving_rank > 0) {
-          // cudaFree synchronizes the device, but that wait is already bounded
-          // by the TraceKernel launch above on this same in-order stream, so it
-          // adds no additional stall beyond the kernel's own completion.
-          checkCudaErrors(cudaFree(device_surviving_shape));
-          checkCudaErrors(cudaFree(device_surviving_input_stride));
+          // cudaEventSynchronize waits only for TraceKernel (recorded on this
+          // same stream), not the whole device; cudaFreeAsync then enqueues the
+          // release into the stream-ordered memory pool without the host
+          // blocking on the free itself. This is groundwork for a future where
+          // GPU work runs across multiple concurrent streams -- today, with
+          // every op on the default stream, it costs the same as a direct
+          // cudaFree, but it stops scaling into a device-wide stall once that
+          // stops being true.
+          cudaEvent_t kernel_done;
+          checkCudaErrors(cudaEventCreate(&kernel_done));
+          checkCudaErrors(cudaEventRecord(kernel_done, 0));
+          checkCudaErrors(cudaEventSynchronize(kernel_done));
+          checkCudaErrors(cudaFreeAsync(device_surviving_shape, 0));
+          checkCudaErrors(cudaFreeAsync(device_surviving_input_stride, 0));
+          checkCudaErrors(cudaEventDestroy(kernel_done));
         }
 
         return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
