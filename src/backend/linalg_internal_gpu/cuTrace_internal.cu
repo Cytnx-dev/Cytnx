@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <limits>
+#include <thread>
 #include <vector>
 
 #include "cuda/std/complex"
@@ -254,10 +255,24 @@ namespace cytnx {
         checkCudaErrors(cudaGetLastError());
 
         if (surviving_rank > 0) {
-          // cudaFree synchronizes the device, so the kernel is guaranteed complete
-          // (and its reads of the layout arrays done) before the buffers are freed.
-          checkCudaErrors(cudaFree(device_surviving_shape));
-          checkCudaErrors(cudaFree(device_surviving_input_stride));
+          // A direct cudaFree here would synchronize the whole device, stalling
+          // the host on every trace call. Instead, record an event right after
+          // the launch and hand the wait-then-free off to a detached background
+          // thread, so this call returns as soon as the kernel is queued.
+          //
+          // This must be a detached std::thread, not std::async: a std::future
+          // returned by std::async blocks in its own destructor until the task
+          // completes, so an unstored std::async result would reintroduce the
+          // same stall synchronously at the end of this expression.
+          cudaEvent_t free_ready;
+          checkCudaErrors(cudaEventCreate(&free_ready));
+          checkCudaErrors(cudaEventRecord(free_ready, 0));
+          std::thread([device_surviving_shape, device_surviving_input_stride, free_ready]() {
+            checkCudaErrors(cudaEventSynchronize(free_ready));
+            checkCudaErrors(cudaFree(device_surviving_shape));
+            checkCudaErrors(cudaFree(device_surviving_input_stride));
+            checkCudaErrors(cudaEventDestroy(free_ready));
+          }).detach();
         }
 
         return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
