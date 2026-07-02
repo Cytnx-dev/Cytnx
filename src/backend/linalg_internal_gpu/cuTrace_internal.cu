@@ -38,8 +38,8 @@ namespace cytnx {
       // <<<...>>> launch's first argument would implicitly narrow to dim3.x
       // (32-bit) and silently truncate the grid -- see the 2-D grid dispatch in
       // TraceImplGpu below.
-      constexpr cytnx_uint64 kMaxGridDimX = 2147483647ULL;
-      constexpr cytnx_uint64 kMaxGridDimY = 65535ULL;
+      constexpr cytnx_int64 kMaxGridDimX = 2147483647LL;
+      constexpr cytnx_int64 kMaxGridDimY = 65535LL;
 
       // Narrows a shape/stride extent (mathematically non-negative, stored as
       // cytnx_uint64) to cytnx_int64, rejecting values that would overflow.
@@ -75,13 +75,17 @@ namespace cytnx {
       // element's diagonal start: walk the surviving axes, accumulating
       // (index_along_axis * input_stride_of_axis). For a rank-2 trace
       // (surviving_rank == 0) the loop is empty and the offset is 0.
-      __device__ cytnx_uint64 DecodeDiagonalStartOffset(cytnx_uint64 output_index,
-                                                        const cytnx_uint64 *surviving_shape,
-                                                        const cytnx_uint64 *surviving_input_stride,
-                                                        cytnx_uint64 surviving_rank) {
-        cytnx_uint64 remaining_flat_index = output_index;
-        cytnx_uint64 diagonal_start_offset = 0;
-        for (cytnx_uint64 axis = surviving_rank; axis-- > 0;) {
+      //
+      // Every index/extent here is a single signed type (cytnx_int64), mirroring
+      // the CPU TraceImpl (Trace_internal.cpp) so this arithmetic needs no casts
+      // between calls.
+      __device__ cytnx_int64 DecodeDiagonalStartOffset(cytnx_int64 output_index,
+                                                       const cytnx_int64 *surviving_shape,
+                                                       const cytnx_int64 *surviving_input_stride,
+                                                       cytnx_int64 surviving_rank) {
+        cytnx_int64 remaining_flat_index = output_index;
+        cytnx_int64 diagonal_start_offset = 0;
+        for (cytnx_int64 axis = surviving_rank; axis-- > 0;) {
           diagonal_start_offset +=
             (remaining_flat_index % surviving_shape[axis]) * surviving_input_stride[axis];
           remaining_flat_index /= surviving_shape[axis];
@@ -96,10 +100,12 @@ namespace cytnx {
       // blockDim.x the kernel was launched with -- the caller sizes blockDim per
       // call to diagonal_length so a short diagonal never spawns idle warps.
       template <class T>
-      __device__ T BlockTraceDiagonal(const T *input_data, cytnx_uint64 diagonal_start_offset,
-                                      cytnx_uint64 diagonal_length, cytnx_uint64 diagonal_stride) {
+      __device__ T BlockTraceDiagonal(const T *input_data, cytnx_int64 diagonal_start_offset,
+                                      cytnx_int64 diagonal_length, cytnx_int64 diagonal_stride) {
         T thread_partial_sum = T(0);
-        for (cytnx_uint64 i = threadIdx.x; i < diagonal_length; i += blockDim.x)
+        // threadIdx.x/blockDim.x are CUDA's native unsigned int; cast once here at
+        // that boundary and keep the stride math in cytnx_int64 from then on.
+        for (cytnx_int64 i = threadIdx.x; i < diagonal_length; i += blockDim.x)
           thread_partial_sum += input_data[diagonal_start_offset + i * diagonal_stride];
 
         // Reduce within each warp.
@@ -139,15 +145,17 @@ namespace cytnx {
       // launch many small blocks running concurrently across SMs.
       template <class T>
       __global__ void TraceKernel(T *output_data, const T *input_data,
-                                  const cytnx_uint64 *surviving_shape,
-                                  const cytnx_uint64 *surviving_input_stride,
-                                  cytnx_uint64 surviving_rank, cytnx_uint64 output_size,
-                                  cytnx_uint64 diagonal_length, cytnx_uint64 diagonal_stride) {
-        const cytnx_uint64 output_index =
-          static_cast<cytnx_uint64>(blockIdx.y) * gridDim.x + blockIdx.x;
+                                  const cytnx_int64 *surviving_shape,
+                                  const cytnx_int64 *surviving_input_stride,
+                                  cytnx_int64 surviving_rank, cytnx_int64 output_size,
+                                  cytnx_int64 diagonal_length, cytnx_int64 diagonal_stride) {
+        // blockIdx/gridDim are CUDA's native unsigned int; cast once here at that
+        // boundary, then the rest of the decode stays in cytnx_int64.
+        const cytnx_int64 output_index =
+          static_cast<cytnx_int64>(blockIdx.y) * gridDim.x + blockIdx.x;
         if (output_index >= output_size) return;
 
-        const cytnx_uint64 diagonal_start_offset = DecodeDiagonalStartOffset(
+        const cytnx_int64 diagonal_start_offset = DecodeDiagonalStartOffset(
           output_index, surviving_shape, surviving_input_stride, surviving_rank);
         T sum = BlockTraceDiagonal<T>(input_data, diagonal_start_offset, diagonal_length,
                                       diagonal_stride);
@@ -169,36 +177,47 @@ namespace cytnx {
       template <class T>
       Tensor TraceImplGpu(const Tensor &Tn, cytnx_uint64 ax1, cytnx_uint64 ax2) {
         using CudaT = typename utils_internal::ToCudaDType<T>::type;
+        // Every cudaXxxAsync call and the kernel launch below share this one
+        // stream, named rather than passed as a bare 0, so the whole function
+        // only has to change in one place if this ever moves off the default
+        // stream.
+        const cudaStream_t stream = 0;
         // Trace() validates upstream that ax1 != ax2 and shape[ax1] == shape[ax2],
         // so their order is irrelevant: the diagonal stride and the set of
         // surviving axes are symmetric in (ax1, ax2).
+        // Every index/extent below is kept as a single signed type (cytnx_int64),
+        // mirroring the CPU TraceImpl (Trace_internal.cpp) -- input_shape's
+        // elements and surviving_rank are the only values that start out
+        // unsigned (Tn.shape() and std::vector::size()), so those are the only
+        // two places a cast is needed at all.
         const auto &input_shape = Tn.shape();
         const std::vector<cytnx_int64> input_strides = Tn.strides();
-        const cytnx_uint64 diagonal_length = input_shape[ax1];
-        const cytnx_uint64 diagonal_stride =
-          static_cast<cytnx_uint64>(input_strides[ax1] + input_strides[ax2]);
+        const cytnx_int64 diagonal_length =
+          CheckedCastToInt64Gpu(input_shape[ax1], "input_shape[ax1]");
+        const cytnx_int64 diagonal_stride = input_strides[ax1] + input_strides[ax2];
 
         // Build the reduced output shape and the matching per-surviving-axis input
         // strides in a single pass over the surviving axes (no separate surviving-
-        // axis index list).
-        std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_
-        std::vector<cytnx_uint64> host_surviving_shape;  // same dims, device-bound
-        std::vector<cytnx_uint64> host_surviving_input_stride;
+        // axis index list). output_shape doubles as the surviving-axis extent
+        // array shipped to the device below -- it already holds exactly those
+        // values, so there is no separate host_surviving_shape.
+        std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_ and device upload
+        std::vector<cytnx_int64> surviving_input_stride;
         for (cytnx_uint64 axis = 0; axis < input_shape.size(); ++axis) {
           if (axis != ax1 && axis != ax2) {
             output_shape.push_back(CheckedCastToInt64Gpu(input_shape[axis], "input_shape[axis]"));
-            host_surviving_shape.push_back(input_shape[axis]);
-            host_surviving_input_stride.push_back(static_cast<cytnx_uint64>(input_strides[axis]));
+            surviving_input_stride.push_back(input_strides[axis]);
           }
         }
-        const cytnx_uint64 surviving_rank = host_surviving_shape.size();
-        cytnx_uint64 output_size = 1;
-        for (auto dim : host_surviving_shape) output_size *= dim;
+        const cytnx_int64 surviving_rank = std::ssize(surviving_input_stride);
+        cytnx_int64 output_size = 1;
+        for (cytnx_int64 dim : output_shape) output_size *= dim;
         const bool output_is_scalar = surviving_rank == 0;
 
         // Fill a device-resident result Storage.
-        Storage output_storage(output_is_scalar ? cytnx_uint64{1} : output_size, Tn.dtype(),
-                               Tn.device());
+        Storage output_storage(
+          output_is_scalar ? cytnx_uint64{1} : static_cast<cytnx_uint64>(output_size), Tn.dtype(),
+          Tn.device());
         if (diagonal_length == 0 || output_size == 0) {
           output_storage.set_zeros();
           return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
@@ -211,19 +230,19 @@ namespace cytnx {
         // Allocated with cudaMallocAsync (stream-ordered) rather than cudaMalloc
         // so they can be released with cudaFreeAsync below -- cudaFreeAsync only
         // accepts pointers allocated by cudaMallocAsync/cudaMallocFromPoolAsync.
-        cytnx_uint64 *device_surviving_shape = nullptr;
-        cytnx_uint64 *device_surviving_input_stride = nullptr;
+        cytnx_int64 *device_surviving_shape = nullptr;
+        cytnx_int64 *device_surviving_input_stride = nullptr;
         if (surviving_rank > 0) {
           checkCudaErrors(cudaMallocAsync((void **)&device_surviving_shape,
-                                          sizeof(cytnx_uint64) * surviving_rank, 0));
+                                          sizeof(cytnx_int64) * surviving_rank, stream));
           checkCudaErrors(cudaMallocAsync((void **)&device_surviving_input_stride,
-                                          sizeof(cytnx_uint64) * surviving_rank, 0));
-          checkCudaErrors(cudaMemcpyAsync(device_surviving_shape, host_surviving_shape.data(),
-                                          sizeof(cytnx_uint64) * surviving_rank,
-                                          cudaMemcpyHostToDevice, 0));
+                                          sizeof(cytnx_int64) * surviving_rank, stream));
+          checkCudaErrors(cudaMemcpyAsync(device_surviving_shape, output_shape.data(),
+                                          sizeof(cytnx_int64) * surviving_rank,
+                                          cudaMemcpyHostToDevice, stream));
           checkCudaErrors(
-            cudaMemcpyAsync(device_surviving_input_stride, host_surviving_input_stride.data(),
-                            sizeof(cytnx_uint64) * surviving_rank, cudaMemcpyHostToDevice, 0));
+            cudaMemcpyAsync(device_surviving_input_stride, surviving_input_stride.data(),
+                            sizeof(cytnx_int64) * surviving_rank, cudaMemcpyHostToDevice, stream));
         }
 
         // Size each block to its diagonal: diagonal_length is known here, so the
@@ -234,22 +253,26 @@ namespace cytnx {
         // diagonals still reduce concurrently across SMs, and the rank-2 trace
         // (output_size == 1) puts every thread of its single block on the one
         // diagonal.
-        const cytnx_uint64 threads_per_block = std::min<cytnx_uint64>(
+        const cytnx_int64 threads_per_block = std::min<cytnx_int64>(
           ((diagonal_length + kWarpSize - 1) / kWarpSize) * kWarpSize, kMaxTraceThreadsPerBlock);
 
         // One block per output element. output_size can exceed dim3::x's 32-bit
         // range, so it is spread across grid.x and grid.y instead of being passed
         // directly as the <<<...>>> launch's first argument (which would
         // implicitly narrow to dim3 and silently truncate to the low 32 bits).
+        // The final casts to unsigned int here are the actual CUDA API boundary
+        // (dim3's fields), not a signed/unsigned bookkeeping cast.
         cytnx_error_msg(output_size > kMaxGridDimX * kMaxGridDimY,
-                        "[internal][cuTrace] output_size=%llu exceeds the maximum grid size "
-                        "(%llu) this launch can address.\n",
-                        static_cast<unsigned long long>(output_size),
-                        static_cast<unsigned long long>(kMaxGridDimX * kMaxGridDimY));
+                        "[internal][cuTrace] output_size=%lld exceeds the maximum grid size "
+                        "(%lld) this launch can address.\n",
+                        static_cast<long long>(output_size),
+                        static_cast<long long>(kMaxGridDimX * kMaxGridDimY));
         const dim3 grid_dim(
           static_cast<unsigned int>(std::min(output_size, kMaxGridDimX)),
           static_cast<unsigned int>((output_size + kMaxGridDimX - 1) / kMaxGridDimX));
-        TraceKernel<CudaT><<<grid_dim, threads_per_block>>>(
+        // 0 below is the dynamic shared-memory size in bytes (the kernel uses
+        // none; its __shared__ warp_sums array is statically sized).
+        TraceKernel<CudaT><<<grid_dim, threads_per_block, /* shared_mem_bytes */ 0, stream>>>(
           reinterpret_cast<CudaT *>(output_storage.data()),
           reinterpret_cast<const CudaT *>(Tn.storage().data()), device_surviving_shape,
           device_surviving_input_stride, surviving_rank, output_size, diagonal_length,
@@ -269,10 +292,10 @@ namespace cytnx {
           // stops being true.
           cudaEvent_t kernel_done;
           checkCudaErrors(cudaEventCreate(&kernel_done));
-          checkCudaErrors(cudaEventRecord(kernel_done, 0));
+          checkCudaErrors(cudaEventRecord(kernel_done, stream));
           checkCudaErrors(cudaEventSynchronize(kernel_done));
-          checkCudaErrors(cudaFreeAsync(device_surviving_shape, 0));
-          checkCudaErrors(cudaFreeAsync(device_surviving_input_stride, 0));
+          checkCudaErrors(cudaFreeAsync(device_surviving_shape, stream));
+          checkCudaErrors(cudaFreeAsync(device_surviving_input_stride, stream));
           checkCudaErrors(cudaEventDestroy(kernel_done));
         }
 
