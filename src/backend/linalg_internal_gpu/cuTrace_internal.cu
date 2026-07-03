@@ -41,6 +41,25 @@ namespace cytnx {
       constexpr cytnx_int64 kMaxGridDimX = 2147483647LL;
       constexpr cytnx_int64 kMaxGridDimY = 65535LL;
 
+      // Cap on the surviving (non-traced) rank the fast, allocation-free
+      // kernel path below handles. 32 mirrors NumPy's historical NPY_MAXDIMS:
+      // generous relative to real tensor-network tensors (MPS/MPO rank 2-4,
+      // PEPS rank 4-6, MERA/TTN rank 3-4; even unusually complex ncon
+      // intermediates rarely exceed ~15 legs before their element count is
+      // infeasible regardless of Trace), while costing nothing extra against
+      // CUDA's per-launch parameter/constant-memory budget. Ranks above this
+      // fall back to the heap-allocated path (see TraceImplGpu).
+      constexpr cytnx_int64 kMaxTraceRank = 32;
+
+      // Surviving-axis shape/stride, sized to kMaxTraceRank so it can be
+      // passed to TraceKernelFast by value as a __grid_constant__ parameter
+      // instead of two separate device allocations.
+      struct TraceLayout {
+        cytnx_int64 rank;
+        cytnx_int64 shape[kMaxTraceRank];
+        cytnx_int64 stride[kMaxTraceRank];
+      };
+
       // Narrows a shape/stride extent (mathematically non-negative, stored as
       // cytnx_uint64) to cytnx_int64, rejecting values that would overflow.
       // internal::CheckedCastToInt64 (utils/checked_cast.hpp) does the same
@@ -162,6 +181,29 @@ namespace cytnx {
         if (threadIdx.x == 0) output_data[output_index] = sum;
       }
 
+      // Same per-output decode and block reduction as TraceKernel, but the
+      // surviving-axis layout is a small fixed-size struct passed by value as
+      // a __grid_constant__ parameter instead of two device pointers -- no
+      // cudaMalloc/cudaMemcpy/cudaFree needed for surviving_rank <=
+      // kMaxTraceRank (the common case; see the dispatch in TraceImplGpu).
+      // __grid_constant__ places the parameter in read-only per-grid constant
+      // memory rather than copying it into every thread's local memory.
+      template <class T>
+      __global__ void TraceKernelFast(T *output_data, const T *input_data,
+                                      const __grid_constant__ TraceLayout layout,
+                                      cytnx_int64 output_size, cytnx_int64 diagonal_length,
+                                      cytnx_int64 diagonal_stride) {
+        const cytnx_int64 output_index =
+          static_cast<cytnx_int64>(blockIdx.y) * gridDim.x + blockIdx.x;
+        if (output_index >= output_size) return;
+
+        const cytnx_int64 diagonal_start_offset =
+          DecodeDiagonalStartOffset(output_index, layout.shape, layout.stride, layout.rank);
+        T sum = BlockTraceDiagonal<T>(input_data, diagonal_start_offset, diagonal_length,
+                                      diagonal_stride);
+        if (threadIdx.x == 0) output_data[output_index] = sum;
+      }
+
       // Composes the output Tensor from its already-filled storage, reshaping to
       // output_shape unless the trace is a rank-2 scalar. Tensor::from_storage
       // keeps the storage on its current device, so no host round-trip is
@@ -196,20 +238,27 @@ namespace cytnx {
           CheckedCastToInt64Gpu(input_shape[ax1], "input_shape[ax1]");
         const cytnx_int64 diagonal_stride = input_strides[ax1] + input_strides[ax2];
 
-        // Build the reduced output shape and the matching per-surviving-axis input
-        // strides in a single pass over the surviving axes (no separate surviving-
-        // axis index list). output_shape doubles as the surviving-axis extent
-        // array shipped to the device below -- it already holds exactly those
-        // values, so there is no separate host_surviving_shape.
-        std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_ and device upload
-        std::vector<cytnx_int64> surviving_input_stride;
+        // Build the reduced output shape (needed for Tensor::reshape_ on every
+        // path) and, in the same pass, write directly into a stack-resident
+        // TraceLayout wherever it still fits (idx < kMaxTraceRank) -- the
+        // common case needs no heap allocation or host->device copy at all
+        // for the surviving-axis layout; see the dispatch below.
+        TraceLayout layout;
+        std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_
+        cytnx_int64 idx = 0;
         for (cytnx_uint64 axis = 0; axis < input_shape.size(); ++axis) {
           if (axis != ax1 && axis != ax2) {
-            output_shape.push_back(CheckedCastToInt64Gpu(input_shape[axis], "input_shape[axis]"));
-            surviving_input_stride.push_back(input_strides[axis]);
+            const cytnx_int64 dim = CheckedCastToInt64Gpu(input_shape[axis], "input_shape[axis]");
+            output_shape.push_back(dim);
+            if (idx < kMaxTraceRank) {
+              layout.shape[idx] = dim;
+              layout.stride[idx] = input_strides[axis];
+            }
+            ++idx;
           }
         }
-        const cytnx_int64 surviving_rank = std::ssize(surviving_input_stride);
+        const cytnx_int64 surviving_rank = idx;
+        layout.rank = surviving_rank;
         cytnx_int64 output_size = 1;
         for (cytnx_int64 dim : output_shape) output_size *= dim;
         const bool output_is_scalar = surviving_rank == 0;
@@ -221,28 +270,6 @@ namespace cytnx {
         if (diagonal_length == 0 || output_size == 0) {
           output_storage.set_zeros();
           return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
-        }
-
-        // Ship the two surviving_rank-sized layout arrays the multi-index decode
-        // needs; the rank-2 case (surviving_rank == 0) needs neither, so the
-        // kernel reads nullptr only where the decode loop never runs.
-        //
-        // Allocated with cudaMallocAsync (stream-ordered) rather than cudaMalloc
-        // so they can be released with cudaFreeAsync below -- cudaFreeAsync only
-        // accepts pointers allocated by cudaMallocAsync/cudaMallocFromPoolAsync.
-        cytnx_int64 *device_surviving_shape = nullptr;
-        cytnx_int64 *device_surviving_input_stride = nullptr;
-        if (surviving_rank > 0) {
-          checkCudaErrors(cudaMallocAsync((void **)&device_surviving_shape,
-                                          sizeof(cytnx_int64) * surviving_rank, stream));
-          checkCudaErrors(cudaMallocAsync((void **)&device_surviving_input_stride,
-                                          sizeof(cytnx_int64) * surviving_rank, stream));
-          checkCudaErrors(cudaMemcpyAsync(device_surviving_shape, output_shape.data(),
-                                          sizeof(cytnx_int64) * surviving_rank,
-                                          cudaMemcpyHostToDevice, stream));
-          checkCudaErrors(
-            cudaMemcpyAsync(device_surviving_input_stride, surviving_input_stride.data(),
-                            sizeof(cytnx_int64) * surviving_rank, cudaMemcpyHostToDevice, stream));
         }
 
         // Size each block to its diagonal: diagonal_length is known here, so the
@@ -270,26 +297,68 @@ namespace cytnx {
         const dim3 grid_dim(
           static_cast<unsigned int>(std::min(output_size, kMaxGridDimX)),
           static_cast<unsigned int>((output_size + kMaxGridDimX - 1) / kMaxGridDimX));
-        // 0 below is the dynamic shared-memory size in bytes (the kernel uses
-        // none; its __shared__ warp_sums array is statically sized).
-        TraceKernel<CudaT><<<grid_dim, threads_per_block, /* shared_mem_bytes */ 0, stream>>>(
-          reinterpret_cast<CudaT *>(output_storage.data()),
-          reinterpret_cast<const CudaT *>(Tn.storage().data()), device_surviving_shape,
-          device_surviving_input_stride, surviving_rank, output_size, diagonal_length,
-          diagonal_stride);
-        // Surface a launch/configuration failure at the trace call rather than at
-        // the next, unrelated CUDA call.
-        checkCudaErrors(cudaGetLastError());
 
-        if (surviving_rank > 0) {
+        if (surviving_rank <= kMaxTraceRank) {
+          // layout is already fully populated above -- launch directly, no
+          // cudaMalloc/cudaMemcpy/cudaFree at all. 0 below is the dynamic
+          // shared-memory size in bytes (the kernel uses none; its __shared__
+          // warp_sums array is statically sized).
+          TraceKernelFast<CudaT><<<grid_dim, threads_per_block, /* shared_mem_bytes */ 0, stream>>>(
+            reinterpret_cast<CudaT *>(output_storage.data()),
+            reinterpret_cast<const CudaT *>(Tn.storage().data()), layout, output_size,
+            diagonal_length, diagonal_stride);
+          // Surface a launch/configuration failure at the trace call rather
+          // than at the next, unrelated CUDA call.
+          checkCudaErrors(cudaGetLastError());
+        } else {
+          // Rare (surviving_rank > kMaxTraceRank), but not free to be sloppy
+          // about: rebuild the full stride list as three contiguous
+          // range-copies around ax1/ax2 instead of a per-element branch,
+          // since this path is only reached when rank is large enough for
+          // that branch to actually cost something. output_shape already has
+          // every entry and is reused as-is for the device shape array.
+          const cytnx_uint64 lo = std::min(ax1, ax2);
+          const cytnx_uint64 hi = std::max(ax1, ax2);
+          std::vector<cytnx_int64> surviving_input_stride;
+          surviving_input_stride.reserve(surviving_rank);
+          std::copy(input_strides.begin(), input_strides.begin() + lo,
+                    std::back_inserter(surviving_input_stride));
+          std::copy(input_strides.begin() + lo + 1, input_strides.begin() + hi,
+                    std::back_inserter(surviving_input_stride));
+          std::copy(input_strides.begin() + hi + 1, input_strides.end(),
+                    std::back_inserter(surviving_input_stride));
+
+          // Ship the two surviving_rank-sized layout arrays the multi-index
+          // decode needs. Allocated with cudaMallocAsync (stream-ordered)
+          // rather than cudaMalloc so they can be released with cudaFreeAsync
+          // below -- cudaFreeAsync only accepts pointers allocated by
+          // cudaMallocAsync/cudaMallocFromPoolAsync.
+          cytnx_int64 *device_surviving_shape = nullptr;
+          cytnx_int64 *device_surviving_input_stride = nullptr;
+          checkCudaErrors(cudaMallocAsync((void **)&device_surviving_shape,
+                                          sizeof(cytnx_int64) * surviving_rank, stream));
+          checkCudaErrors(cudaMallocAsync((void **)&device_surviving_input_stride,
+                                          sizeof(cytnx_int64) * surviving_rank, stream));
+          checkCudaErrors(cudaMemcpyAsync(device_surviving_shape, output_shape.data(),
+                                          sizeof(cytnx_int64) * surviving_rank,
+                                          cudaMemcpyHostToDevice, stream));
+          checkCudaErrors(
+            cudaMemcpyAsync(device_surviving_input_stride, surviving_input_stride.data(),
+                            sizeof(cytnx_int64) * surviving_rank, cudaMemcpyHostToDevice, stream));
+
+          TraceKernel<CudaT><<<grid_dim, threads_per_block, /* shared_mem_bytes */ 0, stream>>>(
+            reinterpret_cast<CudaT *>(output_storage.data()),
+            reinterpret_cast<const CudaT *>(Tn.storage().data()), device_surviving_shape,
+            device_surviving_input_stride, surviving_rank, output_size, diagonal_length,
+            diagonal_stride);
+          // Surface a launch/configuration failure at the trace call rather
+          // than at the next, unrelated CUDA call.
+          checkCudaErrors(cudaGetLastError());
+
           // cudaEventSynchronize waits only for TraceKernel (recorded on this
           // same stream), not the whole device; cudaFreeAsync then enqueues the
           // release into the stream-ordered memory pool without the host
-          // blocking on the free itself. This is groundwork for a future where
-          // GPU work runs across multiple concurrent streams -- today, with
-          // every op on the default stream, it costs the same as a direct
-          // cudaFree, but it stops scaling into a device-wide stall once that
-          // stops being true.
+          // blocking on the free itself.
           cudaEvent_t kernel_done;
           checkCudaErrors(cudaEventCreate(&kernel_done));
           checkCudaErrors(cudaEventRecord(kernel_done, stream));

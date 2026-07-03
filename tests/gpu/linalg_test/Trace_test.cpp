@@ -205,6 +205,34 @@ namespace {
     EXPECT_NEAR(gpu.at<cytnx::cytnx_double>({0}), expected, slack);
   }
 
+  TEST(LinalgGpuTraceTest, SurvivingRankAtFastPathCapMatchesReference) {
+    // TraceImplGpu's stack-resident TraceLayout fast path (a __grid_constant__
+    // kernel parameter, no cudaMalloc/cudaFree) handles surviving_rank <=
+    // kMaxTraceRank (32); this pins correctness exactly at that boundary.
+    // shape = {5, 5, 1x32}: 32 size-1 axes beyond the two traced ones keep the
+    // tensor -- and its element count -- tiny even at rank 34.
+    std::vector<cytnx_uint64> shape = {5, 5};
+    shape.insert(shape.end(), 32, 1);
+    auto cpu = cytnx::random::random_tensor(shape, -2.0, 2.0, Device.cpu, 0, Type.Double);
+    auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
+    auto reference = cytnx::linalg::Trace(cpu, 0, 1);
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu, reference, 1e-10));
+    EXPECT_EQ(gpu.shape().size(), 32u);
+  }
+
+  TEST(LinalgGpuTraceTest, SurvivingRankAboveFastPathCapUsesFallback) {
+    // One more surviving axis than kMaxTraceRank forces TraceImplGpu's
+    // heap-allocated cudaMallocAsync/cudaFreeAsync fallback path -- pins that
+    // path's correctness independently of the fast path above.
+    std::vector<cytnx_uint64> shape = {5, 5};
+    shape.insert(shape.end(), 33, 1);
+    auto cpu = cytnx::random::random_tensor(shape, -2.0, 2.0, Device.cpu, 0, Type.Double);
+    auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
+    auto reference = cytnx::linalg::Trace(cpu, 0, 1);
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu, reference, 1e-10));
+    EXPECT_EQ(gpu.shape().size(), 33u);
+  }
+
   // The following three cases mirror tests/linalg_test/Trace_test.cpp's CPU
   // zero-extent coverage. cuTraceImpl's zero-extent early-out (the GPU
   // counterpart of TraceImpl's `diagonal_length == 0 || output_size == 0`
