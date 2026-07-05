@@ -17,11 +17,11 @@ namespace cytnx {
           if constexpr (op_code == 0) {
             cytnx_error_msg(true, "[ERROR][iadd] Cannot perform real+=complex%s", "\n");
           } else if constexpr (op_code == 1) {
-            cytnx_error_msg(true, "[ERROR][imul] Cannot perform real+=complex%s", "\n");
+            cytnx_error_msg(true, "[ERROR][imul] Cannot perform real*=complex%s", "\n");
           } else if constexpr (op_code == 2) {
-            cytnx_error_msg(true, "[ERROR][isub] Cannot perform real+=complex%s", "\n");
+            cytnx_error_msg(true, "[ERROR][isub] Cannot perform real-=complex%s", "\n");
           } else if constexpr (op_code == 3) {
-            cytnx_error_msg(true, "[ERROR][idiv] Cannot perform real+=complex%s", "\n");
+            cytnx_error_msg(true, "[ERROR][idiv] Cannot perform real/=complex%s", "\n");
           }
         } else {
           if constexpr (op_code == 0) {

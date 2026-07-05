@@ -467,3 +467,19 @@ TEST(Tensor, CytnxScalarInplaceAddKeepsStorageSharing) {
   EXPECT_TRUE(is(a.storage(), b.storage()));
   EXPECT_DOUBLE_EQ(b.storage().at<double>(1), 2.5);
 }
+
+TEST(Tensor, ScalarInplaceRealTimesComplexErrorNamesOperator) {
+  Tensor a = zeros({2}, Type.Double);
+  try {
+    a *= cytnx_complex128(0, 1);
+    FAIL() << "expected real *= complex to throw";
+  } catch (const std::logic_error &e) {
+    EXPECT_NE(std::string(e.what()).find("*="), std::string::npos) << e.what();
+  }
+  try {
+    a /= cytnx_complex128(0, 1);
+    FAIL() << "expected real /= complex to throw";
+  } catch (const std::logic_error &e) {
+    EXPECT_NE(std::string(e.what()).find("/="), std::string::npos) << e.what();
+  }
+}
