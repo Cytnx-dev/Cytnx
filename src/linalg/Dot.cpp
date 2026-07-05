@@ -39,30 +39,22 @@ namespace cytnx {
           Tl.shape().back() != Tr.shape()[0],
           "[Dot] error. The last dimension of Tl must be the same as dimension of Tr.%s", "\n");
 
-        // check type:
-        Tensor _tl = Tl.contiguous();
-        Tensor _tr = Tr.contiguous();
+        // check type: promote to a common dtype. The promoted dtype can differ
+        // from both inputs (e.g. ComplexFloat x Double -> ComplexDouble), so
+        // cast both operands; astype is a no-op when the dtype already matches.
+        const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
+        Tensor _tl = Tl.contiguous().astype(out_dtype);
+        Tensor _tr = Tr.contiguous().astype(out_dtype);
         Tensor out;
         std::vector<cytnx_uint64> newshape = Tl.shape();
         newshape.pop_back();
         cytnx_int32 lin_dim = 1;
         for (int i = 0; i < newshape.size(); i++) lin_dim *= newshape[i];
 
-        if (Tl.dtype() != Tr.dtype()) {
-          // do conversion:
-          if (Tl.dtype() < Tr.dtype()) {
-            _tr = _tr.astype(Tl.dtype());
-            out.Init(newshape, Tl.dtype(), Tl.device());
-          } else {
-            _tl = _tl.astype(Tr.dtype());
-            out.Init(newshape, Tr.dtype(), Tr.device());
-          }
-        } else {
-          out.Init(newshape, Tr.dtype(), Tr.device());
-        }
+        out.Init(newshape, out_dtype, Tl.device());
 
         if (Tl.device() == Device.cpu) {
-          cytnx::linalg_internal::lii.Matvec_ii[_tl.dtype()](
+          cytnx::linalg_internal::lii.Matvec_ii[out.dtype()](
             out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
             lin_dim, _tr.shape()[0]);
 
@@ -71,7 +63,7 @@ namespace cytnx {
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Tl.device()));
-          cytnx::linalg_internal::lii.cuMatvec_ii[_tl.dtype()](
+          cytnx::linalg_internal::lii.cuMatvec_ii[out.dtype()](
             out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
             lin_dim, _tr.shape()[0]);
 

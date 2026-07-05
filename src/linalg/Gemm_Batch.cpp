@@ -135,15 +135,15 @@ namespace cytnx {
       // Promoted dtype: the highest-precision type among all tensors and scalars.
       // Scalars with higher precision than the tensors promote the tensors upward so that BLAS
       // operates uniformly at the promoted precision without losing scalar bits.
-      int promoted_dtype = a_tensors[0].dtype();
+      unsigned int promoted_dtype = a_tensors[0].dtype();
       for (cytnx_uint64 i = 0; i < total_matrices; i++) {
-        if (a_tensors[i].dtype() < promoted_dtype) promoted_dtype = a_tensors[i].dtype();
-        if (b_tensors[i].dtype() < promoted_dtype) promoted_dtype = b_tensors[i].dtype();
-        if (c_tensors[i].dtype() < promoted_dtype) promoted_dtype = c_tensors[i].dtype();
+        promoted_dtype = Type.type_promote(promoted_dtype, a_tensors[i].dtype());
+        promoted_dtype = Type.type_promote(promoted_dtype, b_tensors[i].dtype());
+        promoted_dtype = Type.type_promote(promoted_dtype, c_tensors[i].dtype());
       }
       for (cytnx_int64 g = 0; g < group_count; g++) {
-        if (alpha_array[g].dtype() < promoted_dtype) promoted_dtype = alpha_array[g].dtype();
-        if (beta_array[g].dtype() < promoted_dtype) promoted_dtype = beta_array[g].dtype();
+        promoted_dtype = Type.type_promote(promoted_dtype, alpha_array[g].dtype());
+        promoted_dtype = Type.type_promote(promoted_dtype, beta_array[g].dtype());
       }
 
       // Promote and make contiguous

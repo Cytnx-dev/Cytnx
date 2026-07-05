@@ -19,33 +19,18 @@ namespace cytnx {
       cytnx_error_msg(x.device() != y.device(), "[ERROR][Ger] x and y must on same device!%s",
                       "\n");
 
-      // checking the largest dtype!
-      int fin_dtype = x.dtype();
-      if (y.dtype() < fin_dtype) fin_dtype = y.dtype();
+      // find the promoted dtype (a participates only when explicitly given):
+      unsigned int fin_dtype = Type.type_promote(x.dtype(), y.dtype());
+      if (a.dtype() != Type.Void) fin_dtype = Type.type_promote(fin_dtype, a.dtype());
 
-      Scalar alph;
-      if (a.dtype() == Type.Void)
-        alph = Scalar(1, fin_dtype);
-      else {
-        if (a.dtype() <= fin_dtype) fin_dtype = a.dtype();
-        alph = a;
-      }
-      if (fin_dtype < Type.Float) fin_dtype = Type.Double;
+      // the ger kernels only cover the four float types; floor integer/bool to Double
+      if (fin_dtype > Type.Float) fin_dtype = Type.Double;
 
-      // convert dtype:
-      Tensor px;
-      if (x.dtype() > fin_dtype)
-        px = x.astype(fin_dtype);
-      else
-        px = x;
+      Scalar alph = (a.dtype() == Type.Void) ? Scalar(1, fin_dtype) : a.astype(fin_dtype);
 
-      Tensor py;
-      if (y.dtype() > fin_dtype)
-        py = y.astype(fin_dtype);
-      else
-        py = y;
-
-      if (alph.dtype() > fin_dtype) alph = a.astype(fin_dtype);
+      // convert dtype (astype is a no-op when the dtype already matches):
+      Tensor px = x.astype(fin_dtype);
+      Tensor py = y.astype(fin_dtype);
 
       Tensor out = zeros({x.shape()[0], y.shape()[0]}, fin_dtype, x.device());
 

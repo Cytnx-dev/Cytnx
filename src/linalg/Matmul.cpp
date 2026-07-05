@@ -31,25 +31,18 @@ namespace cytnx {
       cytnx_error_msg(Tl.shape()[1] != Tr.shape()[0], "[Matmul] error, dimension not match.%s",
                       "\n");
 
-      // check type:
-      Tensor _tl = Tl.contiguous(), _tr = Tr.contiguous();
+      // check type: promote to a common dtype. The promoted dtype can differ
+      // from both inputs (e.g. ComplexFloat x Double -> ComplexDouble), so
+      // cast both operands; astype is a no-op when the dtype already matches.
+      const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
+      Tensor _tl = Tl.contiguous().astype(out_dtype);
+      Tensor _tr = Tr.contiguous().astype(out_dtype);
       Tensor out;
-      if (Tl.dtype() != Tr.dtype()) {
-        // do conversion:
-        if (Tl.dtype() < Tr.dtype()) {
-          _tr = _tr.astype(Tl.dtype());
-          out.Init({Tl.shape()[0], Tr.shape()[1]}, Tl.dtype(), Tl.device());
-        } else {
-          _tl = _tl.astype(Tr.dtype());
-          out.Init({Tl.shape()[0], Tr.shape()[1]}, Tr.dtype(), Tr.device());
-        }
-      } else {
-        out.Init({Tl.shape()[0], Tr.shape()[1]}, Tr.dtype(), Tr.device(), false);
-      }
-      // out.storage().set_zeros();
+      // the kernels fully overwrite the output, so skip zero-initialization
+      out.Init({Tl.shape()[0], Tr.shape()[1]}, out_dtype, Tl.device(), false);
 
       if (Tl.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Matmul_ii[_tl.dtype()](
+        cytnx::linalg_internal::lii.Matmul_ii[out.dtype()](
           out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
           _tl.shape()[0], _tl.shape()[1], _tr.shape()[1]);
 
@@ -58,7 +51,7 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
-        cytnx::linalg_internal::lii.cuMatmul_ii[_tl.dtype()](
+        cytnx::linalg_internal::lii.cuMatmul_ii[out.dtype()](
           out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
           _tl.shape()[0], _tl.shape()[1], _tr.shape()[1]);
         return out;
