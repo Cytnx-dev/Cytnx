@@ -359,7 +359,6 @@ if(RUN_TESTS)
   # To make the executalbe targets defined under tests/ link OpenMP correctly,
   # tests/ must be added after including CytnxBKNDCMakeLists.cmake.
   add_subdirectory(tests)
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif()
 
 if(RUN_BENCHMARKS)

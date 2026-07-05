@@ -2,8 +2,8 @@
 
 TEST_F(BlockUniTensorTest, gpu_Trace) {
   auto tmp = BUT4.Trace(0, 3);
-  for (cytnx_int64 j = 0; j < 11; j++)
-    for (cytnx_int64 k = 0; k < 3; k++)
+  for (cytnx_uint64 j = 0; j < 11; j++)
+    for (cytnx_uint64 k = 0; k < 3; k++)
       if (BUtrT4.at({j, k}).exists()) {
         // EXPECT_TRUE(Scalar(tmp.at({j,k})-BUtrT4.at({j,k})).abs()<1e-5);
         EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).real()), double(BUtrT4.at({j, k}).real()));
@@ -11,7 +11,7 @@ TEST_F(BlockUniTensorTest, gpu_Trace) {
       }
   tmp = UT_diag.Trace(0, 1);
   cytnx_double ans = 0;
-  for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
     for (int j = 0; j < deg; j++) ans += i + 1;
   }
@@ -185,7 +185,7 @@ TEST_F(BlockUniTensorTest, gpu_Norm) {
 
   cytnx_double tmp = double(UT_diag.Norm().at({0}).real());
   cytnx_double ans = 0;
-  for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
     for (int j = 0; j < deg; j++) ans += (i + 1) * (i + 1);
   }
@@ -227,10 +227,10 @@ TEST_F(BlockUniTensorTest, gpu_Pow) {
 
 TEST_F(BlockUniTensorTest, gpu_Conj) {
   auto tmp = BUT4.Conj();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(tmp.at({i, j, k, l})-BUconjT4.at({i, j, k, l})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(tmp.at({i, j, k, l}).real()),
@@ -240,10 +240,10 @@ TEST_F(BlockUniTensorTest, gpu_Conj) {
           }
   tmp = BUT4.clone();
   BUT4.Conj_();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(BUT4.at({i, j, k, l})-BUconjT4.at({i, j, k, l})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
@@ -253,9 +253,9 @@ TEST_F(BlockUniTensorTest, gpu_Conj) {
           }
 
   tmp = UT_diag_cplx.Conj();
-  for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
-    for (cytnx_int64 j = 0; j < deg; j++) {
+    for (cytnx_uint64 j = 0; j < deg; j++) {
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).real()),
                        double(UT_diag_cplx.get_block_(i).at({j}).real()));
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).imag()),
@@ -324,10 +324,10 @@ TEST_F(BlockUniTensorTest, gpu_Dagger) {
             std::vector<std::vector<cytnx_int64>>({{0, 2}, {1, 5}, {1, 6}, {0, 1}}));
 
   tmp = BUT4.Dagger();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(tmp.at({i, j, k, l})-BUconjT4.at({i, j, k, l})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).real()),
@@ -341,10 +341,10 @@ TEST_F(BlockUniTensorTest, gpu_Dagger) {
 
   tmp = BUT4.clone();
   tmp.Dagger_();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(BUT4.at({i, j, k, l})-BUconjT4.at({i, j, k, l})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
@@ -357,9 +357,9 @@ TEST_F(BlockUniTensorTest, gpu_Dagger) {
         }
 
   tmp = UT_diag_cplx.Dagger();
-  for (cytnx_int64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
-    for (cytnx_int64 j = 0; j < deg; j++) {
+    for (cytnx_uint64 j = 0; j < deg; j++) {
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).real()),
                        double(UT_diag_cplx.get_block_(i).at({j}).real()));
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).imag()),
@@ -395,10 +395,10 @@ TEST_F(BlockUniTensorTest, gpu_truncate) {
 }
 
 TEST_F(BlockUniTensorTest, gpu_elem_exist) {
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.elem_exists({i, j, k, l})) {
             cytnx_int64 _a;
             std::vector<cytnx_uint64> _b;
@@ -409,10 +409,10 @@ TEST_F(BlockUniTensorTest, gpu_elem_exist) {
                       0);
           }
 
-  cytnx_int64 offset = 0;
-  for (cytnx_int64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
+  cytnx_uint64 offset = 0;
+  for (cytnx_uint64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
-    for (cytnx_int64 j = 0; j < deg; j++) {
+    for (cytnx_uint64 j = 0; j < deg; j++) {
       EXPECT_TRUE(UT_diag_cplx.elem_exists({offset + j, offset + j}));
       EXPECT_DOUBLE_EQ(double(UT_diag_cplx.at({offset + j, offset + j}).real()), double(i + 1));
       EXPECT_DOUBLE_EQ(double(UT_diag_cplx.at({offset + j, offset + j}).imag()), double(i + 1));
@@ -620,9 +620,9 @@ TEST_F(BlockUniTensorTest, gpu_put_block__byidx) {
   UT_pB.put_block_(t1a, 1);
   UT_pB.put_block_(t1b, 2);
   UT_pB.put_block_(t2, 3);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -645,9 +645,9 @@ TEST_F(BlockUniTensorTest, gpu_put_block_byidx) {
   UT_pB.put_block(t1a, 1);
   UT_pB.put_block(t1b, 2);
   UT_pB.put_block(t2, 3);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -670,9 +670,9 @@ TEST_F(BlockUniTensorTest, gpu_put_block__byqnum) {
   UT_pB.put_block_(t1a, {0, 1, 1}, true);
   UT_pB.put_block_(t1b, {1, 0, 1}, true);
   UT_pB.put_block_(t2, {1, 1, 2}, true);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -695,9 +695,9 @@ TEST_F(BlockUniTensorTest, gpu_put_block_byqnum) {
   UT_pB.put_block(t1a, {0, 1, 1}, true);
   UT_pB.put_block(t1b, {1, 0, 1}, true);
   UT_pB.put_block(t2, {1, 1, 2}, true);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -717,9 +717,9 @@ TEST_F(BlockUniTensorTest, gpu_put_block_byqnum) {
 
 TEST_F(BlockUniTensorTest, gpu_clone) {
   UniTensor cloned = UT_pB_ans.clone();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(cloned.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (cloned.at({i, j, k}).exists()) EXPECT_EQ(cloned.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -729,9 +729,9 @@ TEST_F(BlockUniTensorTest, gpu_permute1) {
   // rank-3 tensor
   std::vector<cytnx_int64> a = {1, 2, 0};
   auto permuted = UT_permute_1.permute(a, -1);
-  for (cytnx_int64 i = 0; i < 10; i++)
-    for (cytnx_int64 j = 0; j < 6; j++)
-      for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 i = 0; i < 10; i++)
+    for (cytnx_uint64 j = 0; j < 6; j++)
+      for (cytnx_uint64 k = 0; k < 10; k++) {
         EXPECT_EQ(permuted.at({i, j, k}).exists(), UT_permute_ans1.at({i, j, k}).exists());
         if (permuted.at({i, j, k}).exists())
           EXPECT_EQ(double(permuted.at({i, j, k}).real()),
@@ -743,8 +743,8 @@ TEST_F(BlockUniTensorTest, gpu_permute2) {
   std::vector<cytnx_int64> a = {1, 0};
   auto permuted = UT_permute_2.permute(a, -1);
 
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(permuted.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (permuted.at({j, k}).exists())
         EXPECT_EQ(double(permuted.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
@@ -756,9 +756,9 @@ TEST_F(BlockUniTensorTest, gpu_permute_1) {
   std::vector<cytnx_int64> a = {1, 2, 0};
   auto permuted = UT_permute_1.clone();
   permuted.permute_(a, -1);
-  for (cytnx_int64 i = 0; i < 10; i++)
-    for (cytnx_int64 j = 0; j < 6; j++)
-      for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 i = 0; i < 10; i++)
+    for (cytnx_uint64 j = 0; j < 6; j++)
+      for (cytnx_uint64 k = 0; k < 10; k++) {
         EXPECT_EQ(permuted.at({i, j, k}).exists(), UT_permute_ans1.at({i, j, k}).exists());
         if (permuted.at({i, j, k}).exists())
           EXPECT_EQ(double(permuted.at({i, j, k}).real()),
@@ -770,8 +770,8 @@ TEST_F(BlockUniTensorTest, gpu_permute_2) {
   std::vector<cytnx_int64> a = {1, 0};
   auto permuted = UT_permute_2.clone();
   permuted.permute_(a, -1);
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(permuted.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (permuted.at({j, k}).exists())
         EXPECT_EQ(double(permuted.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
@@ -837,10 +837,10 @@ TEST_F(BlockUniTensorTest, gpu_Add) {
   //     }
   BUT4 = BUT4.Load(data_dir + "OriginalBUT.cytnx").to(cytnx::Device.cuda);
   auto out2 = BUT4.Add(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out2.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out2.at({i, j, k, l}).real()),
                              double(BUTpT2.at({i, j, k, l}).real()));
@@ -848,10 +848,10 @@ TEST_F(BlockUniTensorTest, gpu_Add) {
                              double(BUTpT2.at({i, j, k, l}).imag()));
           }
   BUT4.Add_(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTpT2.at({i, j, k, l}).real()));
@@ -883,10 +883,10 @@ TEST_F(BlockUniTensorTest, gpu_Sub) {
   //     }
   BUT4 = BUT4.Load(data_dir + "OriginalBUT.cytnx").to(cytnx::Device.cuda);
   auto out2 = BUT4.Sub(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out2.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out2.at({i, j, k, l}).real()),
                              double(BUTsT2.at({i, j, k, l}).real()));
@@ -894,10 +894,10 @@ TEST_F(BlockUniTensorTest, gpu_Sub) {
                              double(BUTsT2.at({i, j, k, l}).imag()));
           }
   BUT4.Sub_(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTsT2.at({i, j, k, l}).real()));
@@ -908,10 +908,10 @@ TEST_F(BlockUniTensorTest, gpu_Sub) {
 
 TEST_F(BlockUniTensorTest, gpu_Mul) {
   auto out = BUT4.Mul(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out.at({i, j, k, l}).real()),
                              double(BUTm9.at({i, j, k, l}).real()));
@@ -919,10 +919,10 @@ TEST_F(BlockUniTensorTest, gpu_Mul) {
                              double(BUTm9.at({i, j, k, l}).imag()));
           }
   BUT4.Mul_(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTm9.at({i, j, k, l}).real()));
@@ -933,10 +933,10 @@ TEST_F(BlockUniTensorTest, gpu_Mul) {
 
 TEST_F(BlockUniTensorTest, gpu_Div) {
   auto out = BUT4.Div(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out.at({i, j, k, l}).real()),
                              double(BUTd9.at({i, j, k, l}).real()));
@@ -944,10 +944,10 @@ TEST_F(BlockUniTensorTest, gpu_Div) {
                              double(BUTd9.at({i, j, k, l}).imag()));
           }
   BUT4.Div_(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTd9.at({i, j, k, l}).real()));

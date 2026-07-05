@@ -156,7 +156,7 @@ class BlockUniTensorTest : public ::testing::Test {
 
     for (size_t i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
       cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
-      UT_diag.get_block_(i).fill(i + 1);
+      UT_diag.get_block_(i).fill(static_cast<cytnx_uint64>(i + 1));
     }
     using namespace std::complex_literals;
     for (size_t i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {

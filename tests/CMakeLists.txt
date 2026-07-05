@@ -2,6 +2,25 @@
 if(BACKEND_TORCH)
 else()
 
+# GoogleTest (gtest + gmock): prefer a system/toolchain install, otherwise
+# fetch a pinned release so the test suite builds on machines without one
+# (e.g. macOS). The GTest::gmock target only exists with a config-mode
+# install or CMake's FindGTest module from 3.23+, so key the fallback on
+# the target rather than GTest_FOUND.
+find_package(GTest QUIET)
+if(NOT TARGET GTest::gmock)
+  include(FetchContent)
+  # Keep the MSVC runtime selection consistent with the parent project.
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+  FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+    URL_HASH SHA256=8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7
+  )
+  FetchContent_MakeAvailable(googletest)
+endif()
+
 # Define the path to the test data directory
 set(CYTNX_TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test_data_base")
 
@@ -71,9 +90,9 @@ target_include_directories(
 )
 target_link_libraries(
   test_main
-  gtest_main
-  gmock
-  gtest
+  GTest::gtest_main
+  GTest::gmock
+  GTest::gtest
 )
 target_link_libraries(test_main cytnx)
 
