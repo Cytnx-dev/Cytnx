@@ -268,14 +268,12 @@ namespace cytnx {
       }
       for (int i = 0; i < new_shape.size(); i++) {
         if (new_shape[i] < 0) {
-          if (new_shape[i] != -1)
-            cytnx_error_msg(
-              new_shape[i] != -1, "%s",
-              "[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
-          if (has_undetermine)
-            cytnx_error_msg(
-              new_shape[i] != -1, "%s",
-              "[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
+          cytnx_error_msg(
+            new_shape[i] != -1, "%s",
+            "[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
+          cytnx_error_msg(
+            has_undetermine, "%s",
+            "[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
           Udet_id = i;
           has_undetermine = true;
         } else {

@@ -365,3 +365,13 @@ TEST(Tensor, ItemDtypeMismatchThrows) {
   EXPECT_THROW(t.item<double>(), std::logic_error);
   EXPECT_NO_THROW(t.item<float>());
 }
+
+TEST(Tensor, ReshapeRejectsMultipleUnknownDims) {
+  Tensor t = zeros({12}, Type.Double);
+  EXPECT_THROW(t.reshape({-1, -1}), std::logic_error);
+  EXPECT_THROW(t.reshape_({-1, -1}), std::logic_error);
+  EXPECT_THROW(t.reshape({-2, 6}), std::logic_error);
+  // a single -1 must keep working
+  Tensor r = t.reshape({3, -1});
+  EXPECT_EQ(r.shape(), (std::vector<cytnx_uint64>{3, 4}));
+}
