@@ -338,18 +338,44 @@ namespace cytnx {
       return cy_typeid_v<T>;
     }
 
+    // Real counterpart of a dtype: ComplexDouble -> Double, ComplexFloat -> Float,
+    // anything else unchanged. Replaces the "dtype <= 2 ? dtype + 2 : dtype" idiom
+    // (without depending on the enum layout).
+    static constexpr unsigned int to_real(unsigned int type_id) {
+      check_type(type_id);
+      if (type_id == ComplexDouble) return Double;
+      if (type_id == ComplexFloat) return Float;
+      return type_id;
+    }
+
+    // Complex counterpart of a dtype: Double -> ComplexDouble, Float -> ComplexFloat,
+    // complex types unchanged, Void unchanged, integral/bool -> ComplexDouble.
+    static constexpr unsigned int to_complex(unsigned int type_id) {
+      check_type(type_id);
+      if (is_complex(type_id)) return type_id;
+      if (type_id == Double) return ComplexDouble;
+      if (type_id == Float) return ComplexFloat;
+      if (type_id == Void) return Void;
+      return ComplexDouble;
+    }
+
     // Find a common type for typeL and typeR
     static constexpr unsigned int type_promote(unsigned int typeL, unsigned int typeR) {
+      if (typeL == Void || typeR == Void) return Void;
+      // Mixed complex/real: promote the real counterparts, then re-complexify.
+      // Fixes ComplexFloat + Double -> ComplexDouble (previously ComplexFloat,
+      // discarding precision, because the enum interleaves complexness and
+      // precision and promotion picked the lower index).
+      if (is_complex(typeL) != is_complex(typeR)) {
+        return to_complex(type_promote(to_real(typeL), to_real(typeR)));
+      }
       if (typeL < typeR) {
-        if (typeL == 0) return 0;
-
         if (!is_unsigned(typeR) && is_unsigned(typeL)) {
           return typeL - 1;
         } else {
           return typeL;
         }
       } else {
-        if (typeR == 0) return 0;
         if (!is_unsigned(typeL) && is_unsigned(typeR)) {
           return typeR - 1;
         } else {

@@ -24,7 +24,7 @@ namespace cytnx {
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
       Tensor U, S, vT;
-      S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+      S.Init({n_singlu}, Type.to_real(in.dtype()),
              in.device());  // if type is complex, S should be real
       // S.storage().set_zeros();
       if (is_UvT) {
