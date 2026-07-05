@@ -305,3 +305,44 @@ TEST_F(StorageTest, FromfileCountEqualsTotalElementsReadsAll) {
   for (cytnx_uint64 i = 0; i < 4; i++)
     EXPECT_DOUBLE_EQ(loaded_explicit.at<cytnx_double>(i), loaded_default.at<cytnx_double>(i));
 }
+
+TEST_F(StorageTest, AtDtypeMismatchThrows) {
+  Storage s(4, Type.Float);
+  EXPECT_THROW(s.at<double>(0), std::logic_error);
+  EXPECT_THROW(s.at<cytnx_int64>(0), std::logic_error);
+  EXPECT_NO_THROW(s.at<float>(0));
+}
+
+TEST_F(StorageTest, AtDtypeMismatchThrowsForAllDtypes) {
+  const std::vector<unsigned int> dtypes = {
+    Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float,  Type.Int64, Type.Uint64,
+    Type.Int32,         Type.Uint32,       Type.Int16,  Type.Uint16, Type.Bool};
+  for (auto dt : dtypes) {
+    Storage s(2, dt);
+    const std::string name = Type.getname(dt);
+    // Every mismatching at<T> specialization must throw, so that no single
+    // specialization can silently lose its dtype check again.
+    if (dt != Type.ComplexDouble)
+      EXPECT_THROW(s.at<cytnx_complex128>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.ComplexFloat)
+      EXPECT_THROW(s.at<cytnx_complex64>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Double)
+      EXPECT_THROW(s.at<cytnx_double>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Float)
+      EXPECT_THROW(s.at<cytnx_float>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Int64)
+      EXPECT_THROW(s.at<cytnx_int64>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Uint64)
+      EXPECT_THROW(s.at<cytnx_uint64>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Int32)
+      EXPECT_THROW(s.at<cytnx_int32>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Uint32)
+      EXPECT_THROW(s.at<cytnx_uint32>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Int16)
+      EXPECT_THROW(s.at<cytnx_int16>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Uint16)
+      EXPECT_THROW(s.at<cytnx_uint16>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Bool)
+      EXPECT_THROW(s.at<cytnx_bool>(0), std::logic_error) << "storage dtype " << name;
+  }
+}

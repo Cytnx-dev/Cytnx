@@ -1348,10 +1348,10 @@ describe:test at
 ====================*/
 TEST_F(DenseUniTensorTest, at) {
   auto ut_src = UniTensor({Bond(3), Bond(4), Bond(2)});
-  const UniTensor cut = UniTensor({Bond(3), Bond(4), Bond(2)});
   auto loc = std::vector<cytnx_uint64>({0, 1, 0});
   for (auto dtype : dtype_list) {
     auto ut = ut_src.clone();
+    const UniTensor cut = ut_src.clone().astype(dtype);
     switch (dtype) {
       case Type.ComplexDouble: {
         ut = ut.astype(dtype);
