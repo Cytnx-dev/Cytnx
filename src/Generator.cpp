@@ -74,7 +74,7 @@ namespace cytnx {
                                                 Nelem);
   #else
       cytnx_error_msg(true, "[ERROR] fatal internal, %s",
-                      " [arange] the container is on gpu without CUDA support!%s", "\n")
+                      " [arange] the container is on gpu without CUDA support!%s", "\n");
   #endif
     }
 
@@ -109,7 +109,7 @@ namespace cytnx {
                                                 Nelem);
   #else
       cytnx_error_msg(true, "[ERROR] fatal internal, %s",
-                      " [arange] the container is on gpu without CUDA support!%s", "\n")
+                      " [arange] the container is on gpu without CUDA support!%s", "\n");
   #endif
     }
     return out;
