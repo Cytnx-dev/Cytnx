@@ -242,6 +242,9 @@ namespace cytnx {
         smidx++;
         Smin = Sall.storage()(smidx);
       }
+      // the per-block scans below keep every value >= Smin, so an exact degeneracy at the
+      // cut is kept entirely; only values strictly below Smin are dropped.
+      smidx = CountDroppedSingularValues(Sall, smidx, Smin);
 
       // traversal each block and truncate!
       UniTensor &S = outCyT[0];
@@ -496,6 +499,14 @@ namespace cytnx {
             if (keep_dim == 0) break;  // this is needed, keep_dim can be 0
             smidx++;
             Smin = Sall.storage()(smidx);
+          }
+          if (keep_dim == 0) {
+            // the err threshold dropped every value in Sall; nothing above the cut is kept
+            smidx = Sshape;
+          } else {
+            // the per-block scans below keep every value >= Smin, so an exact degeneracy at
+            // the cut is kept entirely; only values strictly below Smin are dropped.
+            smidx = CountDroppedSingularValues(Sall, smidx, Smin);
           }
           // handle return_err!
           if (return_err) {
