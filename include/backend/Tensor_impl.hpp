@@ -254,48 +254,48 @@ namespace cytnx {
     }
 
     void reshape_(const std::vector<cytnx_int64> &new_shape) {
-      if (!this->_contiguous) {
-        this->contiguous_();
-      }
-      // std::vector<cytnx_uint64> result_shape(new_shape.size());
+      // validate the whole request before mutating any member so a throwing
+      // reshape_ leaves the tensor unchanged
       cytnx_uint64 new_N = 1;
       bool has_undetermine = false;
-      unsigned int Udet_id = 0;
-      // this->_shape = vec_cast<cytnx_int64,cytnx_uint64>(new_shape);
-      this->_shape.resize(new_shape.size());
+      cytnx_uint64 Udet_id = 0;
       for (cytnx_uint64 i = 0; i < new_shape.size(); i++) {
-        this->_shape[i] = new_shape[i];
-      }
-      for (int i = 0; i < new_shape.size(); i++) {
         if (new_shape[i] < 0) {
           cytnx_error_msg(
             new_shape[i] != -1, "%s",
             "[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
-          cytnx_error_msg(
-            has_undetermine, "%s",
-            "[ERROR] reshape can only have dimension > 0 and one undetermine rank specify as -1");
+          cytnx_error_msg(has_undetermine, "%s",
+                          "[ERROR] reshape can have only one dimension specified as -1");
           Udet_id = i;
           has_undetermine = true;
         } else {
           new_N *= new_shape[i];
-          // result_shape[i] = new_shape[i];
         }
       }
 
       if (has_undetermine) {
+        cytnx_error_msg(
+          new_N == 0, "%s",
+          "[ERROR] reshape cannot infer the -1 dimension when another dimension is 0");
         cytnx_error_msg(new_N > this->_storage.size(), "%s",
                         "[ERROR] new shape exceed the total number of elements.");
         cytnx_error_msg(this->_storage.size() % new_N, "%s",
                         "[ERROR] unmatch size when reshape with undetermine dimension");
-        // result_shape[Udet_id] = this->_storage.size() / new_N;
-        this->_shape[Udet_id] = this->_storage.size() / new_N;
       } else {
         cytnx_error_msg(new_N != this->_storage.size(), "%s",
                         "[ERROR] new shape does not match the number of elements.");
       }
 
-      // this->_shape = result_shape;
-      // this->_mapper = std::move(vec_range(new_shape.size()));
+      if (!this->_contiguous) {
+        this->contiguous_();
+      }
+      this->_shape.resize(new_shape.size());
+      for (cytnx_uint64 i = 0; i < new_shape.size(); i++) {
+        this->_shape[i] = new_shape[i];
+      }
+      if (has_undetermine) {
+        this->_shape[Udet_id] = this->_storage.size() / new_N;
+      }
       this->_mapper.resize(new_shape.size());
       vec_range_(this->_mapper, new_shape.size());
       this->_invmapper = this->_mapper;
