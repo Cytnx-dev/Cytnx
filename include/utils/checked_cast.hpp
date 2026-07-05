@@ -27,9 +27,10 @@ namespace cytnx {
       cytnx_uint64 value, const char *name,
       std::source_location location = std::source_location::current()) {
       if (value > static_cast<cytnx_uint64>(std::numeric_limits<cytnx_int64>::max())) {
-        error_msg(location.function_name(), location.file_name(), static_cast<int>(location.line()),
-                  true, "[ERROR] %s=%llu exceeds cytnx_int64 max.\n", name,
-                  static_cast<unsigned long long>(value));
+        cytnx::internal::error_msg_impl(location.function_name(), location.file_name(),
+                                        static_cast<int>(location.line()),
+                                        "[ERROR] %s=%llu exceeds cytnx_int64 max.\n", name,
+                                        static_cast<unsigned long long>(value));
       }
       return static_cast<cytnx_int64>(value);
     }
