@@ -313,11 +313,20 @@ TEST_F(StorageTest, AtDtypeMismatchThrows) {
   EXPECT_NO_THROW(s.at<float>(0));
 }
 
+TEST_F(StorageTest, AtOutOfBoundMessageReportsIndexAndSize) {
+  Storage s(4, Type.Double);
+  try {
+    s.at<cytnx_double>(5);
+    FAIL() << "expected out-of-bound access to throw";
+  } catch (const std::logic_error& e) {
+    const std::string msg = e.what();
+    EXPECT_NE(msg.find("[5]"), std::string::npos) << msg;
+    EXPECT_NE(msg.find("[4]"), std::string::npos) << msg;
+  }
+}
+
 TEST_F(StorageTest, AtDtypeMismatchThrowsForAllDtypes) {
-  const std::vector<unsigned int> dtypes = {
-    Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float,  Type.Int64, Type.Uint64,
-    Type.Int32,         Type.Uint32,       Type.Int16,  Type.Uint16, Type.Bool};
-  for (auto dt : dtypes) {
+  for (auto dt : TestTools::dtype_list) {
     Storage s(2, dt);
     const std::string name = Type.getname(dt);
     // Every mismatching at<T> specialization must throw, so that no single
