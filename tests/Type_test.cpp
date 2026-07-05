@@ -32,6 +32,12 @@ namespace {
   static_assert(cytnx::Type_class::to_complex(cytnx::Type_class::Float) ==
                 cytnx::Type_class::ComplexFloat);
 
+  // type_promote's unsigned->signed adjustment (typeX - 1) relies on each
+  // unsigned dtype directly following its signed counterpart in Type_list.
+  static_assert(cytnx::Type_class::Uint64 == cytnx::Type_class::Int64 + 1);
+  static_assert(cytnx::Type_class::Uint32 == cytnx::Type_class::Int32 + 1);
+  static_assert(cytnx::Type_class::Uint16 == cytnx::Type_class::Int16 + 1);
+
 }  // namespace
 
 TEST(TypeTest, VariantContainsRecognizesSupportedTypes) {
