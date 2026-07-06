@@ -2010,6 +2010,122 @@ TEST_F(DenseUniTensorTest, reshape_utuninit) {
 }
 
 /*=====test info=====
+describe:regression test for issue #724. Two UniTensors sharing the same
+         underlying block Tensor (via relabel(), which is documented to
+         return a new UniTensor whose data is still shared with the
+         original) must not corrupt each other's metadata when one of them
+         is permuted in place with permute_(). Reproduces the exact
+         scenario from the issue report.
+====================*/
+TEST_F(DenseUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = UniTensor::arange(6).reshape({2, 3}).set_name("uT").set_rowrank(1);
+  UniTensor uT2 = uT.relabel({"a", "b"}).set_name("uT2");
+
+  // Precondition: the two UniTensors really do share the same block storage.
+  ASSERT_TRUE(uT.same_data(uT2));
+
+  const auto orig_shape = uT.shape();
+  const auto orig_labels = uT.labels();
+  std::vector<std::vector<double>> orig_vals(2, std::vector<double>(3));
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) orig_vals[i][j] = double(uT.at({i, j}).real());
+
+  uT2.permute_(std::vector<cytnx_int64>{1, 0});
+
+  // uT2 changed as expected.
+  EXPECT_EQ(uT2.shape(), std::vector<cytnx_uint64>({3, 2}));
+
+  // uT must be completely unaffected: shape, labels, and data all preserved. Reading uT after
+  // uT2's in-place permute must not even throw (metadata desynced from the physically permuted
+  // shared block Tensor can manifest as an out-of-bound access), so guard each read.
+  EXPECT_EQ(uT.shape(), orig_shape);
+  EXPECT_EQ(uT.labels(), orig_labels);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) {
+      try {
+        EXPECT_DOUBLE_EQ(double(uT.at({i, j}).real()), orig_vals[i][j]);
+      } catch (const std::exception &e) {
+        ADD_FAILURE() << "uT.at({" << i << "," << j
+                      << "}) threw after uT2.permute_() (shared-block metadata corrupted): "
+                      << e.what();
+      }
+    }
+
+  // uT2 must still read back the correct (permuted) data.
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++)
+      EXPECT_DOUBLE_EQ(double(uT2.at({j, i}).real()), orig_vals[i][j]);
+}
+
+/*=====test info=====
+describe:regression test for issue #724, reshape_() variant. Same sharing
+         setup as PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder, but
+         calling reshape_() on the shared-block holder instead of
+         permute_(), per manuschneider's comment that reshape_() is
+         similarly affected.
+====================*/
+TEST_F(DenseUniTensorTest, ReshapeInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = UniTensor::arange(6).reshape({2, 3}).set_name("uT");
+  UniTensor uT2 = uT.relabel({"a", "b"}).set_name("uT2");
+
+  ASSERT_TRUE(uT.same_data(uT2));
+
+  const auto orig_shape = uT.shape();
+  std::vector<double> orig_vals(6);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) orig_vals[i * 3 + j] = double(uT.at({i, j}).real());
+
+  uT2.reshape_({3, 2});
+
+  EXPECT_EQ(uT2.shape(), std::vector<cytnx_uint64>({3, 2}));
+
+  // uT must be unaffected by uT2's in-place reshape. Guard reads since a metadata/storage
+  // mismatch from the bug can manifest as an out-of-bound access rather than just wrong data.
+  EXPECT_EQ(uT.shape(), orig_shape);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) {
+      try {
+        EXPECT_DOUBLE_EQ(double(uT.at({i, j}).real()), orig_vals[i * 3 + j]);
+      } catch (const std::exception &e) {
+        ADD_FAILURE() << "uT.at({" << i << "," << j
+                      << "}) threw after uT2.reshape_() (shared-block metadata corrupted): "
+                      << e.what();
+      }
+    }
+
+  // uT2 must read back the correctly reshaped data.
+  for (cytnx_uint64 i = 0; i < 3; i++)
+    for (cytnx_uint64 j = 0; j < 2; j++)
+      EXPECT_DOUBLE_EQ(double(uT2.at({i, j}).real()), orig_vals[i * 2 + j]);
+}
+
+/*=====test info=====
+describe:control test - when blocks are NOT shared (independent clone),
+         in-place permute_() on one UniTensor must obviously not affect the
+         other; this guards against a fix that accidentally over-isolates
+         or breaks normal (non-shared) permute_ behavior.
+====================*/
+TEST_F(DenseUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) {
+  UniTensor uT = UniTensor::arange(6).reshape({2, 3}).set_name("uT");
+  UniTensor uT_indep = uT.clone().set_name("uT_indep");
+
+  ASSERT_FALSE(uT.same_data(uT_indep));
+
+  const auto orig_shape = uT.shape();
+  std::vector<double> orig_vals(6);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) orig_vals[i * 3 + j] = double(uT.at({i, j}).real());
+
+  uT_indep.permute_(std::vector<cytnx_int64>{1, 0});
+
+  EXPECT_EQ(uT_indep.shape(), std::vector<cytnx_uint64>({3, 2}));
+  EXPECT_EQ(uT.shape(), orig_shape);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++)
+      EXPECT_DOUBLE_EQ(double(uT.at({i, j}).real()), orig_vals[i * 3 + j]);
+}
+
+/*=====test info=====
 describe:test to_dense
 ====================*/
 TEST_F(DenseUniTensorTest, to_dense) {

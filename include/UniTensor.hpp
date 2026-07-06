@@ -608,7 +608,11 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
-      this->_block.contiguous_();
+      // Rebind _block to the non-mutating Tensor::contiguous() result instead of calling
+      // contiguous_() in place, so a block Tensor shared with another UniTensor (e.g. via
+      // relabel()) is not corrupted (#724). Tensor::contiguous() is cheap when the block is
+      // already contiguous (no data copy; same impl returned).
+      this->_block = this->_block.contiguous();
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
     boost::intrusive_ptr<UniTensor_base> contiguous() {
@@ -1441,7 +1445,12 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
-      for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
+      // Rebind each block to the non-mutating Tensor::contiguous() result instead of calling
+      // contiguous_() in place, so a block Tensor shared with another UniTensor (e.g. via
+      // relabel()) is not corrupted (#724). Tensor::contiguous() is cheap when the block is
+      // already contiguous (no data copy; same impl returned).
+      for (unsigned int b = 0; b < this->_blocks.size(); b++)
+        this->_blocks[b] = this->_blocks[b].contiguous();
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
     boost::intrusive_ptr<UniTensor_base> contiguous();
@@ -2213,7 +2222,11 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
+      // Rebind each block to the non-mutating Tensor::contiguous() result instead of calling
+      // contiguous_() in place, so a block Tensor shared with another UniTensor (e.g. via
+      // relabel()) is not corrupted (#724).
+      for (unsigned int b = 0; b < this->_blocks.size(); b++)
+        this->_blocks[b] = this->_blocks[b].contiguous();
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
     boost::intrusive_ptr<UniTensor_base> contiguous();
