@@ -21,13 +21,17 @@ TEST(Bond, gpu_SimpleBondNoSymm) {
 TEST(Bond, gpu_SimpleBondOperation) {
   Bond bd(4, BD_KET);
   EXPECT_EQ(bd.type(), BD_KET);
-  bd.set_type(BD_BRA);
-  EXPECT_EQ(bd.type(), BD_BRA);
+  // Bond is immutable: retype() returns a new Bond and leaves bd untouched.
+  Bond bd_bra = bd.retype(BD_BRA);
+  EXPECT_EQ(bd_bra.type(), BD_BRA);
+  EXPECT_EQ(bd.type(), BD_KET);
 
-  Bond bd1 = bd.retype(BD_KET);
+  Bond bd1 = bd_bra.retype(BD_KET);
   EXPECT_EQ(bd1.type(), BD_KET);
+  EXPECT_EQ(bd_bra.type(), BD_BRA);
   Bond bd2 = bd1.redirect();
   EXPECT_EQ(bd2.type(), BD_BRA);
+  EXPECT_EQ(bd1.type(), BD_KET);
 }
 
 TEST(Bond, gpu_CombineBondNoSymmReg) {
@@ -47,8 +51,8 @@ TEST(Bond, gpu_CombineBondNoSymmBraKet) {
   EXPECT_THROW(Bond bd5 = bd1.combineBond(bd3);, std::logic_error);
   Bond bd5 = bd1.combineBond(bd2);
   EXPECT_EQ(bd5.type(), BD_BRA);
-  bd3.set_type(BD_BRA);
-  bd4.set_type(BD_BRA);
+  bd3 = bd3.retype(BD_BRA);
+  bd4 = bd4.retype(BD_BRA);
   Bond bd_all = bd1.combineBond({bd2, bd3, bd4});
   EXPECT_EQ(bd_all.dim(), 210);
   EXPECT_EQ(bd_all.type(), BD_BRA);
