@@ -1484,13 +1484,7 @@ void unitensor_binding(py::module &m) {
 
     .def("truncate_",
          [](py::object self, const std::string &label, const cytnx_uint64 &dim) {
-           // NOTE: pre-existing behavior (carried over bug-for-bug from the
-           // c_truncate_ shadow binding this replaces): this overload calls the
-           // non-mutating truncate() and discards the result, so truncate_(label,
-           // dim) with a STRING label is a silent no-op on `self`. The cytnx_int64
-           // bond_idx overload above is the only one that actually mutates. See
-           // issue tracking for #779/#336 conversion -- flagged, not fixed, here.
-           self.cast<UniTensor &>().truncate(label, dim);
+           self.cast<UniTensor &>().truncate_(label, dim);
            return self;
          },
          py::arg("label"), py::arg("dim"))
