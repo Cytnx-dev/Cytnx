@@ -409,4 +409,60 @@ namespace cytnx {
     EXPECT_EQ(linalg::Div(A, B).dtype(), Type.ComplexDouble);
   }
 
+  namespace {
+    // Every typed-scalar Mod specialization allocates its own output buffer;
+    // each must agree with the kernel's Type_class::type_promote_t. Exercises
+    // both the scalar-left and scalar-right specializations for one scalar
+    // type against a different-kind tensor dtype.
+    template <typename S>
+    void ExpectModTypedScalarPromotes(unsigned int tensor_dtype, S sc) {
+      const unsigned int sc_dtype = Type.cy_typeid(sc);
+      Tensor t = zeros({2}, Type.Double, Device.cpu);
+      t.at<cytnx_double>({0}) = 5;
+      t.at<cytnx_double>({1}) = 7;
+      t = t.astype(tensor_dtype);
+
+      Tensor r = linalg::Mod(t, sc);
+      EXPECT_EQ(r.dtype(), Type.type_promote(tensor_dtype, sc_dtype))
+        << "tensor % scalar, tensor dtype " << tensor_dtype << ", scalar dtype " << sc_dtype;
+
+      Tensor l = linalg::Mod(sc, t);
+      EXPECT_EQ(l.dtype(), Type.type_promote(sc_dtype, tensor_dtype))
+        << "scalar % tensor, tensor dtype " << tensor_dtype << ", scalar dtype " << sc_dtype;
+    }
+  }  // namespace
+
+  TEST(DtypePromotion, Mod_typed_scalar_specializations_promote) {
+    ExpectModTypedScalarPromotes(Type.Float, cytnx_double(3));
+    ExpectModTypedScalarPromotes(Type.Int64, cytnx_float(3));
+    ExpectModTypedScalarPromotes(Type.Uint64, cytnx_int64(3));
+    ExpectModTypedScalarPromotes(Type.Int32, cytnx_uint64(3));
+    ExpectModTypedScalarPromotes(Type.Uint32, cytnx_int32(3));
+    ExpectModTypedScalarPromotes(Type.Int16, cytnx_uint32(3));
+    ExpectModTypedScalarPromotes(Type.Uint16, cytnx_int16(3));
+    ExpectModTypedScalarPromotes(Type.Int64, cytnx_uint16(3));
+    ExpectModTypedScalarPromotes(Type.Uint16, cytnx_bool(true));
+  }
+
+  TEST(DtypePromotion, Mod_complexfloat_scalar_throws_after_promotion) {
+    // Mod on complex is rejected by the kernel, but the ComplexFloat-scalar
+    // specializations still allocate the promoted output buffer first.
+    Tensor t = zeros({2}, Type.Double, Device.cpu);
+    t.at<cytnx_double>({0}) = 5;
+    t.at<cytnx_double>({1}) = 7;
+    EXPECT_THROW(linalg::Mod(t, cytnx_complex64(1, 0)), std::logic_error);
+    EXPECT_THROW(linalg::Mod(cytnx_complex64(1, 0), t), std::logic_error);
+  }
+
+  TEST(DtypePromotion, Axpy_without_y_complexfloat_double_scalar) {
+    // out = a*x with no y: the zeros() output must already use the promoted dtype.
+    Tensor x = zeros({2}, Type.ComplexFloat, Device.cpu);
+    x.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
+    x.at<cytnx_complex64>({1}) = cytnx_complex64(3, -1);
+    Tensor out = linalg::Axpy(Scalar(2.0), x);
+    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+    ExpectComplexNear(out, {0}, 2, 4);
+    ExpectComplexNear(out, {1}, 6, -2);
+  }
+
 }  // namespace cytnx
