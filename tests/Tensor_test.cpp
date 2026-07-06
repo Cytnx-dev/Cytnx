@@ -352,6 +352,17 @@ TEST_F(TensorTest, eye) {
   EXPECT_DOUBLE_EQ(tn.at<double>({1, 2}), 0);
   EXPECT_DOUBLE_EQ(tn.at<double>({2, 2}), 1);
 }
+
+// norm() (#676): returns a plain double, equal to the deprecated Norm().item(),
+// on a known 3-4-5 vector.
+TEST_F(TensorTest, norm) {
+  Tensor v({2}, Type.Double);
+  v(0) = 3.0;
+  v(1) = 4.0;
+  double n = v.norm();
+  EXPECT_DOUBLE_EQ(n, 5.0);
+  EXPECT_DOUBLE_EQ(n, double(v.Norm().item().real()));
+}
 // TEST_F(TensorTest, approx_eq) {
 //   cytnx::User_debug = true;
 //   EXPECT_TRUE(tar3456.approx_eq(tar3456));

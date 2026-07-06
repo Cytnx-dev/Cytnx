@@ -38,7 +38,7 @@ namespace cytnx {
 
       // Frobenius norm is sign-flip independent, so it is the correct vector norm for fermionic
       // tensors too (and equals sqrt(<Tin|Tin>) for bosonic).
-      double Norm = double(Tin.Norm().item().real());
+      double Norm = Tin.norm();
 
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
@@ -81,7 +81,7 @@ namespace cytnx {
       auto alpha = _Dot(new_psi, psi_1).real();
       As(0) = alpha;
       new_psi -= alpha * psi_1;
-      auto beta = new_psi.Norm().item();
+      auto beta = new_psi.norm();
       Bs(0) = beta;
       psi_0 = psi_1;
       new_psi /= beta;
@@ -114,7 +114,7 @@ namespace cytnx {
           break;
         }
 
-        beta = new_psi.Norm().item();
+        beta = new_psi.norm();
         Bs.append(beta);
 
         if (beta == 0) {

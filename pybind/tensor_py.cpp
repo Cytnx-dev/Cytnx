@@ -1712,7 +1712,23 @@ void tensor_binding(py::module &m) {
          })
     .def("Max", &cytnx::Tensor::Max)
     .def("Min", &cytnx::Tensor::Min)
-    .def("Norm", &cytnx::Tensor::Norm)
+  // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
+  // The -Wdeprecated-declarations warning that calling cytnx::Tensor::Norm would otherwise
+  // trigger here is suppressed locally since this binding's whole purpose is to keep
+  // exposing the deprecated call for one release.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+    .def("Norm",
+         [](cytnx::Tensor &self) {
+           PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+           return self.Norm();
+         })
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+    .def("norm", &cytnx::Tensor::norm)
     .def("Trace", &cytnx::Tensor::Trace)
 
     ;  // end of object line

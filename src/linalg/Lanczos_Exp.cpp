@@ -167,8 +167,7 @@ namespace cytnx {
         double delta = CvgCrit;
         int k = static_cast<int>(std::log(1.0 / delta));
         k = k < Maxiter ? k : Maxiter;
-        auto Op_apprx_norm =
-          static_cast<double>(Hop->matvec(Tin).get_block_().flatten().Norm().item().real());
+        auto Op_apprx_norm = Hop->matvec(Tin).get_block_().flatten().norm();
         double eps1 = std::exp(-(k * std::log(k) + std::log(1.0 + Op_apprx_norm)));
 
         std::vector<UniTensor> vs;

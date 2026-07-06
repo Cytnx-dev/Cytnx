@@ -1891,7 +1891,23 @@ void unitensor_binding(py::module &m) {
                  },
                  py::arg("a"), py::arg("b"))
 
-    .def("Norm", &UniTensor::Norm)
+  // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
+  // The -Wdeprecated-declarations warning that calling UniTensor::Norm would otherwise
+  // trigger here is suppressed locally since this binding's whole purpose is to keep
+  // exposing the deprecated call for one release.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+    .def("Norm",
+         [](UniTensor &self) {
+           PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+           return self.Norm();
+         })
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+    .def("norm", &UniTensor::norm)
     .def("Transpose_",
          [](py::object self) {
            self.cast<UniTensor &>().Transpose_();

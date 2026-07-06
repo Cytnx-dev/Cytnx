@@ -129,7 +129,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
             A[p+1].set_name(f"A{p+1}") \
                   .relabel_(lbls[p+1]); # set the label back to be consistent
 
-            s = s/s.Norm().item() # normalize s
+            s = s/s.norm() # normalize s
 
             A[p] = cytnx.Contract(A[p],s) # absorb s into next neighbor
             A[p].set_name(f"A{p}") \
@@ -169,7 +169,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
             A[p].set_name(f"A{p}") \
                 .relabel_(lbls[p]); #set the label back to be consistent
 
-            s = s/s.Norm().item() # normalize s
+            s = s/s.norm() # normalize s
 
             A[p+1] = cytnx.Contract(s,A[p+1]) ## absorb s into next neighbor.
             A[p+1].set_name(f"A{p+1}") \

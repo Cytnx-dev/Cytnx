@@ -119,8 +119,8 @@ def test_convert_from_returns_self():
     # Round-trip: dense back into a fresh block recovers the original blocks.
     B2 = cytnx.UniTensor([bi, bi.redirect()])
     B2.convert_from(D)
-    assert (B.get_block_(0) - B2.get_block_(0)).Norm().item() < 1e-12
-    assert (B.get_block_(1) - B2.get_block_(1)).Norm().item() < 1e-12
+    assert (B.get_block_(0) - B2.get_block_(0)).norm() < 1e-12
+    assert (B.get_block_(1) - B2.get_block_(1)).norm() < 1e-12
 
 
 def test_convert_from_tol_default_rejects_forbidden_nonzero():

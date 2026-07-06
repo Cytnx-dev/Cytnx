@@ -882,6 +882,8 @@ namespace cytnx {
   Tensor Tensor::Exp() const { return linalg::Exp(*this); }
   Tensor Tensor::Norm() const { return linalg::Norm(*this); }
 
+  double Tensor::norm() const { return linalg::norm(*this); }
+
   Tensor Tensor::Pow(const cytnx_double &p) const { return linalg::Pow(*this, p); }
 
   Tensor &Tensor::Pow_(const cytnx_double &p) {

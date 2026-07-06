@@ -1705,8 +1705,20 @@ namespace cytnx {
     and then calculate the frobenius norm.
     @param[in] Tl input Tensor
     @return Tensor
+    @deprecated Use norm(const Tensor&) instead, which returns a double directly.
     */
-    Tensor Norm(const Tensor &Tl);
+    [[deprecated("use norm() (returns double) instead")]] Tensor Norm(const Tensor &Tl);
+
+    // norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of a tensor.
+    @details Same as Norm(const Tensor&), but returns a plain double instead of a
+    rank-0 (shape {1}) Tensor.
+    @param[in] Tl input Tensor
+    @return double
+    */
+    double norm(const Tensor &Tl);
 
     // Norm:
     //=================================================
@@ -1718,8 +1730,20 @@ namespace cytnx {
     then calculate the frobenius norm.
     @param[in] uTl input UniTensor
     @return Tensor
+    @deprecated Use norm(const UniTensor&) instead, which returns a double directly.
     */
-    Tensor Norm(const cytnx::UniTensor &uTl);
+    [[deprecated("use norm() (returns double) instead")]] Tensor Norm(const cytnx::UniTensor &uTl);
+
+    // norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of an UniTensor.
+    @details Same as Norm(const UniTensor&), but returns a plain double instead of a
+    rank-0 (shape {1}) Tensor.
+    @param[in] uTl input UniTensor
+    @return double
+    */
+    double norm(const cytnx::UniTensor &uTl);
 
     // Det:
     //=================================================

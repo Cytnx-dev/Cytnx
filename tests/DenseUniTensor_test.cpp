@@ -53,6 +53,16 @@ TEST_F(DenseUniTensorTest, Init_tagged) {
 }
 
 /*=====test info=====
+describe:Test norm() (#676): returns a plain double, equal to the deprecated
+Norm().item(), on a known all-ones DenseUniTensor (norm = sqrt(N)).
+====================*/
+TEST_F(DenseUniTensorTest, norm) {
+  double n = utone345.norm();
+  EXPECT_DOUBLE_EQ(n, std::sqrt(3.0 * 4.0 * 5.0));
+  EXPECT_DOUBLE_EQ(n, double(utone345.Norm().item().real()));
+}
+
+/*=====test info=====
 describe:Test set_name
 ====================*/
 TEST_F(DenseUniTensorTest, set_name) {

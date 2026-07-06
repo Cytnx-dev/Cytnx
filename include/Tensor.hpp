@@ -1680,8 +1680,15 @@ namespace cytnx {
     /**
      * @brief the Norm member function. Same as linalg::Norm(const Tensor &Tin), where \p Tin is
      * the current Tensor.
+     * @deprecated Use norm() instead, which returns a double directly.
      */
-    Tensor Norm() const;
+    [[deprecated("use norm() (returns double) instead")]] Tensor Norm() const;
+
+    /**
+     * @brief the norm member function. Same as linalg::norm(const Tensor &Tin), where \p Tin is
+     * the current Tensor. Returns the 2-norm as a plain double.
+     */
+    double norm() const;
 
     /**
      * @brief the Pow member function. Same as linalg::Pow(const Tensor &Tin, const cytnx_double

@@ -5065,8 +5065,21 @@ namespace cytnx {
         ||UT||_2
         \f]
         @return Tensor
+        @deprecated Use norm() instead, which returns a double directly.
         */
-    Tensor Norm() const { return this->_impl->Norm(); };
+    [[deprecated("use norm() (returns double) instead")]] Tensor Norm() const {
+      return this->_impl->Norm();
+    };
+
+    /**
+    @brief Return the norm of the UniTensor.
+        @details norm() return the 2-norm of the UniTensor \f$UT\f$ as a plain double.
+        \f[
+        ||UT||_2
+        \f]
+        @return double
+        */
+    double norm() const { return double(this->_impl->Norm().item().real()); };
 
     /**
     @brief The addition assignment operator of the UniTensor.

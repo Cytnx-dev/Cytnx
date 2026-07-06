@@ -1808,7 +1808,8 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     Scalar out(0, this->dtype());
     for (auto &block : this->_blocks) {
-      out += Scalar(linalg::Pow(linalg::Norm(block), 2).item());
+      double bn = linalg::norm(block);
+      out += Scalar(bn * bn);
     }
     out = sqrt(out);
     for (auto &block : this->_blocks) {
@@ -1947,11 +1948,11 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     Scalar t;
     if (this->_blocks.size()) {
-      t = linalg::Norm(this->_blocks[0]).item();
-      t *= t;
+      double n0 = linalg::norm(this->_blocks[0]);
+      t = Scalar(n0 * n0);
       for (int blk = 1; blk < this->_blocks.size(); blk++) {
-        Scalar tmp = linalg::Norm(this->_blocks[blk]).item();
-        t += tmp * tmp;
+        double nblk = linalg::norm(this->_blocks[blk]);
+        t += Scalar(nblk * nblk);
       }
 
     } else {

@@ -1146,7 +1146,19 @@ namespace cytnx {
     return out;
   }
 
+  // DenseUniTensor::Norm() (non-deprecated internal virtual) intentionally keeps
+  // delegating to the deprecated linalg::Norm free function for one release so the
+  // returned rank-0 Tensor's dtype stays bit-identical to the old behavior; the
+  // local pragma silences -Wdeprecated-declarations the same way the pybind Norm
+  // shims do.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
   Tensor DenseUniTensor::Norm() const { return linalg::Norm(this->_block); }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
   void DenseUniTensor::Trace_(const std::string &a, const std::string &b) {
     // 1) from label to indx.
     cytnx_uint64 ida, idb;
@@ -1260,7 +1272,21 @@ namespace cytnx {
     this->permute_(idxorder, idxnum + 1 - this->_rowrank);
   };
 
-  void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
+  void DenseUniTensor::normalize_() {
+    // In-place and dtype-preserving: divide by a rank-0 (shape {1}) Tensor so the
+    // division routes through linalg::iDiv, which writes into _block's own storage
+    // (an Int32 block stays Int32). Dividing by a bare double or Scalar would take
+    // the promoting Div + storage-swap path instead and silently retype integer
+    // blocks to Double (regression caught by DenseUniTensorTest.normalize_int_type).
+    // The divisor's dtype mirrors what the deprecated linalg::Norm(_block) used to
+    // return: Float for Float/ComplexFloat blocks, Double otherwise.
+    const unsigned int dt = this->_block.dtype();
+    const unsigned int norm_dt =
+      (dt == Type.Float || dt == Type.ComplexFloat) ? Type.Float : Type.Double;
+    Tensor nrm({1}, norm_dt, this->_block.device());
+    nrm.at({0}) = linalg::norm(this->_block);
+    this->_block /= nrm;
+  }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
   void DenseUniTensor::_load_dispatch(std::fstream &f) { this->_block._Load(f); }
