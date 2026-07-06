@@ -9,7 +9,9 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
+#include <cuComplex.h>
 #include <iostream>
+#include <type_traits>
 
 #ifndef __CUDACC__
   #error This file requires a CUDA compiler
@@ -18,6 +20,42 @@
 namespace cytnx {
 
   namespace linalg_internal {
+
+    // Promote an operand to the Kron output type before multiplying. The raw
+    // `operator*` overloads follow the left operand's precision (e.g.
+    // cuFloatComplex * double -> cuFloatComplex), which no longer matches the
+    // promoted output dtype after mixed complex/real pairs promote by precision
+    // (ComplexFloat + Double -> ComplexDouble, see #858). Computing the product
+    // in TO keeps the result assignable to `out`, mirroring cuDiv_dispatch.
+    template <typename T>
+    __device__ inline cuDoubleComplex cuKron_to_cd(const T &v) {
+      return make_cuDoubleComplex(static_cast<cytnx_double>(v), 0.0);
+    }
+    __device__ inline cuDoubleComplex cuKron_to_cd(const cuDoubleComplex &v) { return v; }
+    __device__ inline cuDoubleComplex cuKron_to_cd(const cuComplex &v) {
+      return cuComplexFloatToDouble(v);
+    }
+
+    template <typename T>
+    __device__ inline cuComplex cuKron_to_cf(const T &v) {
+      return make_cuFloatComplex(static_cast<cytnx_float>(v), 0.0f);
+    }
+    __device__ inline cuComplex cuKron_to_cf(const cuComplex &v) { return v; }
+    __device__ inline cuComplex cuKron_to_cf(const cuDoubleComplex &v) {
+      return make_cuFloatComplex(static_cast<cytnx_float>(cuCreal(v)),
+                                 static_cast<cytnx_float>(cuCimag(v)));
+    }
+
+    template <typename TO, typename TL, typename TR>
+    __device__ inline TO cuKron_mul(const TL &lhs, const TR &rhs) {
+      if constexpr (std::is_same_v<TO, cuDoubleComplex>) {
+        return cuCmul(cuKron_to_cd(lhs), cuKron_to_cd(rhs));
+      } else if constexpr (std::is_same_v<TO, cuComplex>) {
+        return cuCmulf(cuKron_to_cf(lhs), cuKron_to_cf(rhs));
+      } else {
+        return static_cast<TO>(lhs) * static_cast<TO>(rhs);
+      }
+    }
 
     template <class TO, class TL, class TR>
     __global__ void cuKron_kernel(TO *out, const TL *Lin, const TR *Rin, cytnx_uint64 *meta_infos,
@@ -46,7 +84,7 @@ namespace cytnx {
           x += cytnx_uint64(tmp2 / info[offset2 + j]) * info[len_nsa + j];
           y += cytnx_uint64(tmp2 % info[offset2 + j]) * info[offset1 + j];
         }
-        out[blockIdx.x * blockDim.x + threadIdx.x] = Lin[x] * Rin[y];
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuKron_mul<TO>(Lin[x], Rin[y]);
       }
     }
 
