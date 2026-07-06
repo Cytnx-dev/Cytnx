@@ -49,6 +49,18 @@ find_library(
 )
 message(STATUS "CUQUANTUM_TENSORNET_LIB: ${CUQUANTUM_TENSORNET_LIB}")
 message(STATUS "CUQUANTUM_CUSTATEVEC_LIB: ${CUQUANTUM_CUSTATEVEC_LIB}")
-set(CUQUANTUM_LIBRARIES "${CUQUANTUM_TENSORNET_LIB};${CUQUANTUM_CUSTATEVEC_LIB}")
-message(STATUS "ok")
-set(CUQUANTUM_FOUND TRUE)
+set(CUQUANTUM_LIBRARIES "")
+if(CUQUANTUM_TENSORNET_LIB)
+    list(APPEND CUQUANTUM_LIBRARIES "${CUQUANTUM_TENSORNET_LIB}")
+endif()
+if(CUQUANTUM_CUSTATEVEC_LIB)
+    list(APPEND CUQUANTUM_LIBRARIES "${CUQUANTUM_CUSTATEVEC_LIB}")
+endif()
+
+# CUQUANTUM_FOUND must reflect whether the libraries were actually located;
+# both cuTensorNet and cuStateVec are linked, so both are required. Setting it
+# unconditionally would let a NOTFOUND (e.g. an "...-NOTFOUND" entry on the link
+# line) silently pass the caller's REQUIRED check.
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(CUQUANTUM
+  REQUIRED_VARS CUQUANTUM_TENSORNET_LIB CUQUANTUM_CUSTATEVEC_LIB CUQUANTUM_INCLUDE_DIRS)
