@@ -36,3 +36,6 @@ GEMINI.local.md
 .antigravity/
 # Cursor
 .cursor/
+
+# Local CUDA math libs installed for testing (cuTENSOR / cuQuantum)
+/.deps/
