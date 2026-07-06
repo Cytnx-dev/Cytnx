@@ -178,14 +178,19 @@ void tensor_binding(py::module &m) {
 
     .def("to_", &cytnx::Tensor::to_, py::arg("device"))
     .def("is_contiguous", &cytnx::Tensor::is_contiguous)
+    // permute_()/permute() accept both the variadic form (t.permute_(1, 2, 0)) and
+    // the list form (t.permute_([1, 2, 0])); see pybind_cytnx::parse_index_args in
+    // pyint_dispatch.hpp (#293, ruling 4).
     .def("permute_",
          [](cytnx::Tensor &self, py::args args) {
-           std::vector<cytnx::cytnx_uint64> c_args = args.cast<std::vector<cytnx::cytnx_uint64>>();
+           std::vector<cytnx::cytnx_uint64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_uint64>(args);
            return &self.permute_(c_args);
          })
     .def("permute",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {
-           std::vector<cytnx::cytnx_uint64> c_args = args.cast<std::vector<cytnx::cytnx_uint64>>();
+           std::vector<cytnx::cytnx_uint64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_uint64>(args);
            return self.permute(c_args);
          })
     .def("same_data", &cytnx::Tensor::same_data)
@@ -193,14 +198,19 @@ void tensor_binding(py::module &m) {
     .def("flatten_", &cytnx::Tensor::flatten_)
     .def("make_contiguous", &cytnx::Tensor::contiguous)  // this will be rename by python side conti
     .def("contiguous_", &cytnx::Tensor::contiguous_)
+    // reshape_()/reshape() accept both the variadic form (t.reshape_(2, 3)) and
+    // the list form (t.reshape_([2, 3])); see pybind_cytnx::parse_index_args in
+    // pyint_dispatch.hpp (#293, ruling 4).
     .def("reshape_",
          [](cytnx::Tensor &self, py::args args) {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            return &self.reshape_(c_args);
          })
     .def("reshape",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            return self.reshape(c_args);
          })
     //.def("astype", &cytnx::Tensor::astype,py::arg("new_type"))

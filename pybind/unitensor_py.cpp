@@ -404,9 +404,13 @@ void unitensor_binding(py::module &m) {
 
     .def("get_index",&UniTensor::get_index)
 
+    // reshape()/reshape_() accept both the variadic form (ut.reshape(2, 3)) and the
+    // list form (ut.reshape([2, 3])); see pybind_cytnx::parse_index_args in
+    // pyint_dispatch.hpp (#293, ruling 4).
     .def("reshape",
          [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            cytnx_uint64 rowrank = 0;
 
            if (kwargs) {
@@ -417,7 +421,8 @@ void unitensor_binding(py::module &m) {
          })
     .def("reshape_",
          [](UniTensor &self, py::args args, py::kwargs kwargs) {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            cytnx_uint64 rowrank = 0;
 
            if (kwargs) {
@@ -780,6 +785,36 @@ void unitensor_binding(py::module &m) {
     .def("permute", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
                         return self.permute(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+    // permute_()/permute() ALSO accept the variadic forms (ut.permute_(1, 2, 0) and
+    // ut.permute_("a", "b", "c")), on top of the list forms bound just above (#293,
+    // ruling 4). These py::args catch-all overloads are registered AFTER the
+    // specific std::vector<...> overloads so a genuine single-list call
+    // (ut.permute([1, 2, 0])) keeps matching those first; only calls with 0, 2+
+    // positional args, or exactly 1 non-list/tuple positional arg fall through to
+    // here. is_string_args()/parse_index_args() (pyint_dispatch.hpp) resolve
+    // whether the mapper is int- or string-valued, and unwrap a sole list/tuple
+    // argument if present so both variadic and list calls funnel through the same
+    // path once they reach this overload.
+    .def("permute_",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) {
+           cytnx_int64 rowrank = -1;
+           if (kwargs && kwargs.contains("rowrank")) rowrank = kwargs["rowrank"].cast<cytnx_int64>();
+           if (pybind_cytnx::is_string_args(args)) {
+             return &self.permute_(pybind_cytnx::parse_index_args<std::string>(args), rowrank);
+           }
+           return &self.permute_(pybind_cytnx::parse_index_args<cytnx_int64>(args), rowrank);
+         })
+
+    .def("permute",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
+           cytnx_int64 rowrank = -1;
+           if (kwargs && kwargs.contains("rowrank")) rowrank = kwargs["rowrank"].cast<cytnx_int64>();
+           if (pybind_cytnx::is_string_args(args)) {
+             return self.permute(pybind_cytnx::parse_index_args<std::string>(args), rowrank);
+           }
+           return self.permute(pybind_cytnx::parse_index_args<cytnx_int64>(args), rowrank);
+         })
 
      .def("permute_nosignflip", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
                         return self.permute_nosignflip(mapper,rowrank);
