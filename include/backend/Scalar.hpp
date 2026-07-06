@@ -3183,13 +3183,8 @@ namespace cytnx {
      */
     template <class T>
     Scalar radd(const T &rc) const {
-      Scalar out;
-      int rid = Type.cy_typeid(rc);
-      if (this->dtype() < rid) {
-        out = *this;
-      } else {
-        out = this->astype(rid);
-      }
+      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
       out._impl->iadd(rc);
       return out;
     }
@@ -3199,12 +3194,9 @@ namespace cytnx {
      * @see operator+(const Scalar &lhs, const Scalar &rhs)
      */
     Scalar radd(const Scalar &rhs) const {
-      Scalar out;
-      if (this->dtype() < rhs.dtype()) {
-        out = *this;
-      } else {
-        out = this->astype(rhs.dtype());
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat + Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
       out._impl->iadd(rhs._impl);
       return out;
     }
@@ -3217,13 +3209,8 @@ namespace cytnx {
      */
     template <class T>
     Scalar rmul(const T &rc) const {
-      Scalar out;
-      int rid = Type.cy_typeid(rc);
-      if (this->dtype() < rid) {
-        out = *this;
-      } else {
-        out = this->astype(rid);
-      }
+      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
       out._impl->imul(rc);
       return out;
     }
@@ -3233,12 +3220,9 @@ namespace cytnx {
      * @see operator*(const Scalar &lhs, const Scalar &rhs)
      */
     Scalar rmul(const Scalar &rhs) const {
-      Scalar out;
-      if (this->dtype() < rhs.dtype()) {
-        out = *this;
-      } else {
-        out = this->astype(rhs.dtype());
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat * Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
       out._impl->imul(rhs._impl);
       return out;
     }
@@ -3251,13 +3235,8 @@ namespace cytnx {
      */
     template <class T>
     Scalar rsub(const T &rc) const {
-      Scalar out;
-      int rid = Type.cy_typeid(rc);
-      if (this->dtype() < rid) {
-        out = *this;
-      } else {
-        out = this->astype(rid);
-      }
+      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
       out._impl->isub(rc);
       return out;
     }
@@ -3267,12 +3246,9 @@ namespace cytnx {
      * @see operator-(const Scalar &lhs, const Scalar &rhs)
      */
     Scalar rsub(const Scalar &rhs) const {
-      Scalar out;
-      if (this->dtype() < rhs.dtype()) {
-        out = *this;
-      } else {
-        out = this->astype(rhs.dtype());
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat - Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
       out._impl->isub(rhs._impl);
       return out;
     }
@@ -3285,13 +3261,8 @@ namespace cytnx {
      */
     template <class T>
     Scalar rdiv(const T &rc) const {
-      Scalar out;
-      int rid = Type.cy_typeid(rc);
-      if (this->dtype() < rid) {
-        out = *this;
-      } else {
-        out = this->astype(rid);
-      }
+      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
       out._impl->idiv(rc);
       return out;
     }
@@ -3301,12 +3272,9 @@ namespace cytnx {
      * @see operator/(const Scalar &lhs, const Scalar &rhs)
      */
     Scalar rdiv(const Scalar &rhs) const {
-      Scalar out;
-      if (this->dtype() < rhs.dtype()) {
-        out = *this;
-      } else {
-        out = this->astype(rhs.dtype());
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat / Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type.
+      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
       out._impl->idiv(rhs._impl);
       return out;
     }

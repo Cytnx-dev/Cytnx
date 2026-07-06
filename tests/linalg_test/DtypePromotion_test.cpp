@@ -6,6 +6,8 @@
 #include "Generator.hpp"
 #include "Type.hpp"
 #include "linalg.hpp"
+#include "algo.hpp"
+#include "UniTensor.hpp"
 
 // Mixed-dtype promotion coverage for the linalg entry points that used to
 // hand-roll "pick the lower enum index" dtype selection instead of
@@ -296,6 +298,115 @@ namespace cytnx {
     ASSERT_EQ(out.dtype(), Type.Int64);
     EXPECT_EQ(out.at<cytnx_int64>({0}), 2);
     EXPECT_EQ(out.at<cytnx_int64>({1}), 1);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Follow-up to the review of #984: entry points that still selected the
+  // lower-enum-index dtype instead of Type.type_promote. The discriminating
+  // pair ComplexFloat x Double must promote to ComplexDouble (the old rule kept
+  // ComplexFloat, dropping double precision and, for Outer/Exp, writing the
+  // narrower complex into the wider output buffer).
+  // ---------------------------------------------------------------------------
+
+  TEST(DtypePromotion, Outer_complexfloat_double) {
+    Tensor a = zeros({2}, Type.ComplexFloat, Device.cpu);
+    a.at<cytnx_complex64>({0}) = cytnx_complex64(1, 1);
+    a.at<cytnx_complex64>({1}) = cytnx_complex64(2, 0);
+    Tensor b = zeros({2}, Type.Double, Device.cpu);
+    b.at<cytnx_double>({0}) = 3;
+    b.at<cytnx_double>({1}) = 0.5;
+    Tensor out = linalg::Outer(a, b);
+    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+    ExpectComplexNear(out, {0, 0}, 3, 3);  // (1+1i) * 3
+    ExpectComplexNear(out, {1, 1}, 1, 0);  // 2 * 0.5
+  }
+
+  TEST(DtypePromotion, Exp_complexfloat_promotes_to_complexdouble) {
+    Tensor a = zeros({1}, Type.ComplexFloat, Device.cpu);  // exp(0) = 1
+    Tensor out = linalg::Exp(a);
+    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+    ExpectComplexNear(out, {0}, 1, 0);
+  }
+
+  TEST(DtypePromotion, Exp_float_reads_correct_buffer_width) {
+    // Old dispatch fed the float storage to the Double kernel, reinterpreting
+    // float bits as double. Nonzero input makes the corruption visible.
+    Tensor a = zeros({1}, Type.Float, Device.cpu);
+    a.storage().at<cytnx_float>(0) = 1.0f;
+    Tensor out = linalg::Exp(a);
+    ASSERT_EQ(out.dtype(), Type.Double);
+    EXPECT_NEAR(out.at<cytnx_double>({0}), 2.718281828459045, 1e-6);
+  }
+
+  TEST(DtypePromotion, Concatenate_complexfloat_double) {
+    Tensor a = zeros({2}, Type.ComplexFloat, Device.cpu);
+    a.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
+    Tensor b = zeros({2}, Type.Double, Device.cpu);
+    b.at<cytnx_double>({0}) = 3;
+    Tensor out = algo::Concatenate(a, b);
+    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+    ExpectComplexNear(out, {0}, 1, 2);
+    ExpectComplexNear(out, {2}, 3, 0);
+  }
+
+  TEST(DtypePromotion, Hstack_complexfloat_double) {
+    Tensor a = zeros({1, 1}, Type.ComplexFloat, Device.cpu);
+    a.at<cytnx_complex64>({0, 0}) = cytnx_complex64(1, 2);
+    Tensor b = zeros({1, 1}, Type.Double, Device.cpu);
+    b.at<cytnx_double>({0, 0}) = 3;
+    Tensor out = algo::Hstack({a, b});
+    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+    ExpectComplexNear(out, {0, 0}, 1, 2);
+    ExpectComplexNear(out, {0, 1}, 3, 0);
+  }
+
+  TEST(DtypePromotion, Vstack_complexfloat_double) {
+    Tensor a = zeros({1, 1}, Type.ComplexFloat, Device.cpu);
+    a.at<cytnx_complex64>({0, 0}) = cytnx_complex64(1, 2);
+    Tensor b = zeros({1, 1}, Type.Double, Device.cpu);
+    b.at<cytnx_double>({0, 0}) = 3;
+    Tensor out = algo::Vstack({a, b});
+    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+    ExpectComplexNear(out, {0, 0}, 1, 2);
+    ExpectComplexNear(out, {1, 0}, 3, 0);
+  }
+
+  TEST(DtypePromotion, Directsum_complexfloat_double) {
+    Tensor a = zeros({1, 1}, Type.ComplexFloat, Device.cpu);
+    a.at<cytnx_complex64>({0, 0}) = cytnx_complex64(1, 2);
+    Tensor b = zeros({1, 1}, Type.Double, Device.cpu);
+    b.at<cytnx_double>({0, 0}) = 3;
+    Tensor out = linalg::Directsum(a, b, {});
+    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+    ExpectComplexNear(out, {0, 0}, 1, 2);
+    ExpectComplexNear(out, {1, 1}, 3, 0);
+  }
+
+  TEST(DtypePromotion, Lstsq_complexfloat_double) {
+    Tensor A = MakeComplexFloatA();
+    Tensor b = zeros({2, 1}, Type.Double, Device.cpu);
+    b.at<cytnx_double>({0, 0}) = 1;
+    b.at<cytnx_double>({1, 0}) = 2;
+    std::vector<Tensor> res = linalg::Lstsq(A, b);
+    ASSERT_EQ(res[0].dtype(), Type.ComplexDouble);
+  }
+
+  TEST(DtypePromotion, Scalar_complexfloat_double_promotes) {
+    Scalar a = Scalar(cytnx_complex64(1, 2));
+    Scalar b = Scalar(cytnx_double(3));
+    EXPECT_EQ((a + b).dtype(), Type.ComplexDouble);
+    EXPECT_EQ((a - b).dtype(), Type.ComplexDouble);
+    EXPECT_EQ((a * b).dtype(), Type.ComplexDouble);
+    EXPECT_EQ((a / b).dtype(), Type.ComplexDouble);
+  }
+
+  TEST(DtypePromotion, UniTensorArithmetic_complexfloat_double_promotes) {
+    UniTensor A(ones({2, 2}, Type.ComplexFloat, Device.cpu));
+    UniTensor B(ones({2, 2}, Type.Double, Device.cpu));
+    EXPECT_EQ(linalg::Add(A, B).dtype(), Type.ComplexDouble);
+    EXPECT_EQ(linalg::Sub(A, B).dtype(), Type.ComplexDouble);
+    EXPECT_EQ(linalg::Mul(A, B).dtype(), Type.ComplexDouble);
+    EXPECT_EQ(linalg::Div(A, B).dtype(), Type.ComplexDouble);
   }
 
 }  // namespace cytnx

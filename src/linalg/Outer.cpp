@@ -29,22 +29,33 @@ namespace cytnx {
 
       std::vector<cytnx_uint64> new_shape = {Tl.shape()[0], Tr.shape()[0]};
 
-      Tensor out(new_shape, Type.type_promote(Tl.dtype(), Tr.dtype()), Tl.device());
+      // Promote to a common dtype and cast BOTH operands to it, then dispatch by the promoted
+      // dtype. The promoted dtype can differ from both inputs (e.g. ComplexFloat x Double ->
+      // ComplexDouble); dispatching by the raw input dtypes selects a kernel whose output element
+      // type is the weaker complex, writing e.g. complex64 values into the complex128 output
+      // buffer. astype is a no-op (ref, no copy) when the dtype already matches.
+      const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
+      Tensor _Tl = Tl.astype(out_dtype);
+      Tensor _Tr = Tr.astype(out_dtype);
+
+      Tensor out(new_shape, out_dtype, Tl.device());
       cytnx_uint64 j1, j2;
       j1 = Tl.shape()[0];
       j2 = Tr.shape()[0];
 
       if (Tl.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Outer_ii[Tl.dtype()][Tr.dtype()](
-          out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl, j1, j2);
+        cytnx::linalg_internal::lii.Outer_ii[out_dtype][out_dtype](
+          out._impl->storage()._impl, _Tl._impl->storage()._impl, _Tr._impl->storage()._impl, j1,
+          j2);
       } else {
   #ifdef UNI_GPU
         // cytnx_error_msg(true, "[Outer] currently Outer is not support for GPU, pending for
         // fix.%s",
         //                 "\n");
         checkCudaErrors(cudaSetDevice(Tl.device()));
-        cytnx::linalg_internal::lii.cuOuter_ii[Tl.dtype()][Tr.dtype()](
-          out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl, j1, j2);
+        cytnx::linalg_internal::lii.cuOuter_ii[out_dtype][out_dtype](
+          out._impl->storage()._impl, _Tl._impl->storage()._impl, _Tr._impl->storage()._impl, j1,
+          j2);
   #else
         cytnx_error_msg(true, "[Outer] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
