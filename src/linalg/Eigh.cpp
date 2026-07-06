@@ -27,7 +27,7 @@ namespace cytnx {
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
       Tensor S, V;
-      S.Init({in.shape()[0]}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+      S.Init({in.shape()[0]}, Type.to_real(in.dtype()),
              in.device());  // if type is complex, S should be real
       // V is only allocated when eigenvectors are requested. When is_V == false, V stays an empty
       // (Void) tensor; it is still passed to the backend below, which detects the Void storage and

@@ -49,8 +49,7 @@ namespace cytnx {
 
       std::vector<Tensor> out;
 
-      Tensor s =
-        zeros(m < n ? m : n, Ain.dtype() <= 2 ? Ain.dtype() + 2 : Ain.dtype(), Ain.device());
+      Tensor s = zeros(m < n ? m : n, Type.to_real(Ain.dtype()), Ain.device());
       Tensor r = zeros(1, Type.Int64, Ain.device());
 
       if (A.device() == Device.cpu) {

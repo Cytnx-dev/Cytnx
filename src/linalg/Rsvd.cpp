@@ -80,7 +80,7 @@ namespace cytnx {
         cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(shape[0], shape[1]));
 
         Tensor U, S, vT;
-        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+        S.Init({n_singlu}, Type.to_real(in.dtype()),
                in.device());  // if type is complex, S should be real
         if (is_U) {
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
@@ -500,7 +500,7 @@ namespace cytnx {
         }
         // prepare U, S, vT
         Tensor U, S, vT, terr;
-        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+        S.Init({n_singlu}, Type.to_real(in.dtype()),
                in.device());  // if type is complex, S should be real
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
@@ -515,7 +515,7 @@ namespace cytnx {
           // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
           // output tensor descriptors from the passed buffer shapes, so the buffers must be
           // re-initialized to the full size before restarting.
-          S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(), in.device());
+          S.Init({n_singlu}, Type.to_real(in.dtype()), in.device());
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
           terr.Init({1}, in.dtype(), in.device());
