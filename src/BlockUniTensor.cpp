@@ -952,24 +952,21 @@ namespace cytnx {
 
         std::vector<cytnx_uint64> Lgbuffer;
         std::vector<cytnx_uint64> itoiR_idx;
-        std::vector<cytnx_uint64> oldshapeL;
-        std::vector<std::vector<cytnx_uint64>> oldshapeR(Rtn->_blocks.size(),
-                                                         std::vector<cytnx_uint64>());
+        // The operands' blocks may be shared with other UniTensors (#724), so they must not
+        // be permute_()/reshape_()'d in place. Matrix views are built with the non-mutating
+        // permute()/reshape() instead; right-block views are cached here since the same
+        // right block can pair with several left blocks.
+        std::vector<Tensor> Rmat(Rtn->_blocks.size());
+        std::vector<bool> Rmat_ready(Rtn->_blocks.size(), false);
         std::vector<std::vector<cytnx_uint64>> oldshapeC;
         std::vector<bool> reshaped(tmp->_blocks.size(), false);
         for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
           oldshapeC.push_back(tmp->_blocks[a].shape());
         }
-        std::vector<cytnx_uint64> mapperL, inv_mapperL(this->rank());
-        std::vector<cytnx_uint64> mapperR, inv_mapperR(rhs->rank());
+        std::vector<cytnx_uint64> mapperL;
+        std::vector<cytnx_uint64> mapperR;
         vec_concatenate_(mapperL, non_comm_idx1, comm_idx1);
         vec_concatenate_(mapperR, comm_idx2, non_comm_idx2);
-        for (int aa = 0; aa < mapperL.size(); aa++) {
-          inv_mapperL[mapperL[aa]] = aa;
-        }
-        for (int aa = 0; aa < mapperR.size(); aa++) {
-          inv_mapperR[mapperR[aa]] = aa;
-        }
 
         if (this->is_diag() != Rtn->is_diag()) {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -991,21 +988,6 @@ namespace cytnx {
             }
           }
         } else {
-          // KNOWN ISSUE (#724, not fixed by this change): the three branches below (the
-          // UNI_MKL integer-dtype Matmul fallback, the UNI_MKL Gemm_Batch path, and the
-          // non-MKL Matmul fallback further down) temporarily
-          // mutate this->_blocks[a] / Rtn->_blocks[b] / tmp_Rtn->_blocks[b] in place via
-          // permute_()/reshape_(), then restore the original shape/permutation afterward. If
-          // any of those blocks are shared with another UniTensor (e.g. via relabel()), that
-          // other UniTensor's block is transiently corrupted during the contraction, and would
-          // be corrupted permanently if an exception were thrown before the restore runs.
-          // Converting this to the non-mutating rebind pattern used elsewhere in this file would
-          // require threading local Tensor variables through the Gemm_Batch batching loop and
-          // the dtype-casting/early-cleanup logic across three near-duplicate branches; left as
-          // a follow-up rather than risking a rushed change to this hot contraction path.
-          BlockUniTensor *tmp_Rtn = Rtn;
-          bool tmp_rtn_is_casted = false;
-
           // check if all sub-tensor are same dtype and device
           if (User_debug) {
             bool all_sub_tensor_same_dtype = true;
@@ -1049,14 +1031,14 @@ namespace cytnx {
               itoiR_idx = mp[itoiL_common[a]];
               for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++)
                 comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
-              this->_blocks[a].permute_(mapperL);
-              oldshapeL = this->_blocks[a].shape();
-              this->_blocks[a].reshape_({-1, comm_dim});
+              // matrix view of this->_blocks[a]; non-mutating (the block may be shared, #724)
+              const Tensor Lmat = this->_blocks[a].permute(mapperL).reshape({-1, comm_dim});
               for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
                 cytnx_uint64 b = itoiR_idx[binx];
-                Rtn->_blocks[b].permute_(mapperR);
-                oldshapeR[b] = Rtn->_blocks[b].shape();
-                Rtn->_blocks[b].reshape_({comm_dim, -1});
+                if (!Rmat_ready[b]) {
+                  Rmat[b] = Rtn->_blocks[b].permute(mapperR).reshape({comm_dim, -1});
+                  Rmat_ready[b] = true;
+                }
                 Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
                 for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++)
                   Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
@@ -1065,26 +1047,14 @@ namespace cytnx {
                   Lgbuffer[cc] =
                     Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
                 cytnx_int64 targ_b = mpC[Lgbuffer];
-                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
-                                          .reshape(tmp->_blocks[targ_b].shape());
-                Rtn->_blocks[b].reshape_(oldshapeR[b]);
-                Rtn->_blocks[b].permute_(inv_mapperR);
+                tmp->_blocks[targ_b] +=
+                  linalg::Matmul(Lmat, Rmat[b]).reshape(tmp->_blocks[targ_b].shape());
               }
-              this->_blocks[a].reshape_(oldshapeL);
-              this->_blocks[a].permute_(inv_mapperL);
             }
           } else {
             // fp/complex: use Gemm_Batch
-            // If the dtype of this and Rtn are different, we need to cast to the common dtype
-            if (Rtn->dtype() != common_dtype) {
-              BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
-              tmpp->_blocks.resize(Rtn->_blocks.size());
-              for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
-                tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(common_dtype);
-              }
-              tmp_Rtn = tmpp;
-              tmp_rtn_is_casted = true;
-            }
+            // (right blocks whose dtype differs from the common dtype are cast lazily when
+            // their matrix view is built below)
             // First select left block to do gemm
             for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
               cytnx_int64 comm_dim = 1;
@@ -1093,10 +1063,8 @@ namespace cytnx {
               for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
                 comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
               }
-              // permute&reshape this->_blocks[a]
-              this->_blocks[a].permute_(mapperL);
-              oldshapeL = this->_blocks[a].shape();
-              this->_blocks[a].reshape_({-1, comm_dim});
+              // matrix view of this->_blocks[a]; non-mutating (the block may be shared, #724)
+              const Tensor Lmat = this->_blocks[a].permute(mapperL).reshape({-1, comm_dim});
               // Collect block pairs for this left block then call Gemm_Batch once.
               std::vector<Tensor> batch_a, batch_b, batch_c;
               std::vector<Scalar> batch_alpha, batch_beta;
@@ -1106,10 +1074,11 @@ namespace cytnx {
               for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
                 // get the index of the right block
                 cytnx_uint64 b = itoiR_idx[binx];
-                // permute&reshape Rtn->_blocks[b]
-                tmp_Rtn->_blocks[b].permute_(mapperR);
-                oldshapeR[b] = tmp_Rtn->_blocks[b].shape();
-                tmp_Rtn->_blocks[b].reshape_({comm_dim, -1});
+                if (!Rmat_ready[b]) {
+                  Rmat[b] =
+                    Rtn->_blocks[b].astype(common_dtype).permute(mapperR).reshape({comm_dim, -1});
+                  Rmat_ready[b] = true;
+                }
                 // prepare to find the target block
                 Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
                 for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
@@ -1118,22 +1087,22 @@ namespace cytnx {
                 for (cytnx_uint64 cc = non_comm_idx1.size();
                      cc < non_comm_idx1.size() + non_comm_idx2.size(); cc++) {
                   Lgbuffer[cc] =
-                    tmp_Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
+                    Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
                 }
                 // target block index
                 cytnx_int64 targ_b = mpC[Lgbuffer];
                 double beta = 1.0;
                 if (!reshaped[targ_b]) {
-                  tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0],
-                                                 (cytnx_int64)tmp_Rtn->_blocks[b].shape()[1]});
+                  tmp->_blocks[targ_b].reshape_(
+                    {(cytnx_int64)Lmat.shape()[0], (cytnx_int64)Rmat[b].shape()[1]});
                   reshaped[targ_b] = true;
                   beta = 0.0;
                 }
-                batch_a.push_back(this->_blocks[a]);
-                batch_b.push_back(tmp_Rtn->_blocks[b]);
+                batch_a.push_back(Lmat);
+                batch_b.push_back(Rmat[b]);
                 batch_c.push_back(tmp->_blocks[targ_b]);
-                batch_alpha.push_back(Scalar(1.0).astype(this->_blocks[a].dtype()));
-                batch_beta.push_back(Scalar(beta).astype(this->_blocks[a].dtype()));
+                batch_alpha.push_back(Scalar(1.0).astype(Lmat.dtype()));
+                batch_beta.push_back(Scalar(beta).astype(Lmat.dtype()));
                 batch_targ_b.push_back(targ_b);
               }
               if (!batch_a.empty()) {
@@ -1142,18 +1111,8 @@ namespace cytnx {
                 for (std::size_t i = 0; i < batch_c.size(); i++)
                   tmp->_blocks[batch_targ_b[i]] = batch_c[i];
               }
-              // restore the shape&permutation of this->_blocks[a]
-              for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
-                cytnx_uint64 b = itoiR_idx[binx];
-
-                tmp_Rtn->_blocks[b].reshape_(oldshapeR[b]);
-                tmp_Rtn->_blocks[b].permute_(inv_mapperR);
-              }
-
-              this->_blocks[a].reshape_(oldshapeL);
-              this->_blocks[a].permute_(inv_mapperL);
             }
-            // restore the shape of tmp->_blocks
+            // restore the shape of tmp->_blocks (tmp is freshly built above and not shared)
             for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
               tmp->_blocks[a].reshape_(oldshapeC[a]);
               if (!reshaped[a]) {
@@ -1161,16 +1120,9 @@ namespace cytnx {
                 tmp->_blocks[a].storage().set_zeros();
               }
             }
-
-            // if Rtn dtype is casted, delete the tmp_Rtn
-            if (tmp_rtn_is_casted) {
-              delete tmp_Rtn;
-            }
           }  // end else (common_dtype <= 4)
         }
   #else
-          // NOTE: shared-block mutate/restore hazard — see KNOWN ISSUE (#724) at top of this
-          // else-block.
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
@@ -1179,18 +1131,16 @@ namespace cytnx {
             for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
               comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
             }
-            // permute&reshape this->_blocks[a]
-            this->_blocks[a].permute_(mapperL);
-            oldshapeL = this->_blocks[a].shape();
-            this->_blocks[a].reshape_({-1, comm_dim});
+            // matrix view of this->_blocks[a]; non-mutating (the block may be shared, #724)
+            const Tensor Lmat = this->_blocks[a].permute(mapperL).reshape({-1, comm_dim});
             // loop over all right blocks that can contract with this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
               // get the index of the right block
               cytnx_uint64 b = itoiR_idx[binx];
-              // permute&reshape Rtn->_blocks[b]
-              Rtn->_blocks[b].permute_(mapperR);
-              oldshapeR[b] = Rtn->_blocks[b].shape();
-              Rtn->_blocks[b].reshape_({comm_dim, -1});
+              if (!Rmat_ready[b]) {
+                Rmat[b] = Rtn->_blocks[b].permute(mapperR).reshape({comm_dim, -1});
+                Rmat_ready[b] = true;
+              }
               // prepare to find the target block
               Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
               for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
@@ -1203,19 +1153,9 @@ namespace cytnx {
               }
               // target block index
               cytnx_int64 targ_b = mpC[Lgbuffer];
-              tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
-                                        .reshape(tmp->_blocks[targ_b].shape());
+              tmp->_blocks[targ_b] +=
+                linalg::Matmul(Lmat, Rmat[b]).reshape(tmp->_blocks[targ_b].shape());
             }
-            // restore the shape&permutation of this->_blocks[a]
-            for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
-              cytnx_uint64 b = itoiR_idx[binx];
-
-              Rtn->_blocks[b].reshape_(oldshapeR[b]);
-              Rtn->_blocks[b].permute_(inv_mapperR);
-            }
-
-            this->_blocks[a].reshape_(oldshapeL);
-            this->_blocks[a].permute_(inv_mapperL);
           }
           // // restore the shape of tmp->_blocks
           // for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
