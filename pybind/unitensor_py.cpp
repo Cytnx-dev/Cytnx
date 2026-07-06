@@ -95,6 +95,43 @@ inline bool parse_get_blocks_silent_arg(const py::args &args, const py::kwargs &
   return silent;
 }
 
+// Phase-2 Task 3 (issue #934, decision record 2026-07-06): elementwise
+// UniTensor(+)UniTensor arithmetic ('+', '-', '*', '/' and their in-place
+// forms) is not a well-defined tensor-network operation -- for
+// BlockUniTensor/BlockFermionicUniTensor it either destroys the block
+// structure or is basis-dependent (see #934); #753/#675 additionally
+// document it silently discarding labels. The python-facing dunders for the
+// UniTensor-vs-UniTensor overloads raise TypeError via the helper below
+// instead of performing the operation. Scalar<->UniTensor arithmetic (both
+// directions, out-of-place and in-place) is unaffected and keeps working.
+//
+// Three guidance bodies cover the eight call sites (+/+=/-/-= share the
+// vector-space text; the * and / pairs each share one). A future removal
+// (e.g. __mod__) should add its guidance constant here and reuse the helper.
+inline constexpr const char *kUniTensorAddSubRemovedGuidance =
+  "Use Contract() for tensor contraction, Kron() for tensor products, or scalar "
+  "arithmetic. If you need a Krylov-style vector-space linear combination (axpy), use "
+  "cytnx.linalg.Lanczos()/Lanczos_Exp()/Arnoldi(), which implement this internally in C++.";
+
+inline constexpr const char *kUniTensorMulRemovedGuidance =
+  "Use Contract() for tensor contraction or Kron() for tensor (outer) products; for a "
+  "genuinely elementwise (Hadamard) product, operate on the raw blocks instead -- "
+  "Tensor-level elementwise arithmetic is fully supported via ut.get_block(). The Hadamard "
+  "product of two UniTensors is basis-dependent and not a tensor-network operation. Scalar "
+  "multiplication ('2.0 * ut', 'ut *= 2.0') is unaffected.";
+
+inline constexpr const char *kUniTensorDivRemovedGuidance =
+  "Use Contract() with an inverted operator, or scalar division ('ut / 2.0', 'ut /= 2.0') "
+  "if that is what you meant; for a genuinely elementwise division, operate on the raw "
+  "blocks instead -- Tensor-level elementwise arithmetic is fully supported via "
+  "ut.get_block(). Division of two UniTensors has no well-defined tensor-network meaning.";
+
+[[noreturn]] inline void raise_unitensor_elementwise_removed(const std::string &op_name,
+                                                             const std::string &alt) {
+  throw py::type_error(std::format(
+    "elementwise UniTensor{}UniTensor arithmetic was removed (issue #934): {}", op_name, alt));
+}
+
 // Lambda used for _getitem__ and _setitem__
 auto build_accessors = [](const UniTensor &self, py::object locators) {
   ssize_t start, stop, step, slicelength;
@@ -957,7 +994,12 @@ void unitensor_binding(py::module &m) {
     // NOTE: no __eq__/__ne__/__bool__ on UniTensor (intentional, Task 3 scope) -- Python falls
     // back to identity semantics; see Tensor's __ne__/__bool__ notes in tensor_py.cpp.
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__add__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Add(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor+UniTensor removed from the
+    // python surface; see raise_unitensor_elementwise_removed's doc comment above.
+    .def("__add__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" + ", kUniTensorAddSubRemovedGuidance);
+         })
     .def("__add__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Add(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1052,8 +1094,12 @@ void unitensor_binding(py::module &m) {
     .def("__radd__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Add(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor+=UniTensor removed from the
+    // python surface; see raise_unitensor_elementwise_removed's doc comment above.
     .def("__iadd__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Add_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" += ", kUniTensorAddSubRemovedGuidance);
+         })
     .def("__iadd__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Add_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1101,7 +1147,12 @@ void unitensor_binding(py::module &m) {
     .def("__iadd__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Add_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__sub__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Sub(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor-UniTensor removed from the
+    // python surface; see raise_unitensor_elementwise_removed's doc comment above.
+    .def("__sub__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" - ", kUniTensorAddSubRemovedGuidance);
+         })
     .def("__sub__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Sub(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1196,8 +1247,12 @@ void unitensor_binding(py::module &m) {
     .def("__rsub__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Sub(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor-=UniTensor removed from the
+    // python surface; see raise_unitensor_elementwise_removed's doc comment above.
     .def("__isub__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Sub_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" -= ", kUniTensorAddSubRemovedGuidance);
+         })
     .def("__isub__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Sub_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1245,7 +1300,13 @@ void unitensor_binding(py::module &m) {
     .def("__isub__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Sub_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__mul__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Mul(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*UniTensor (Hadamard/elementwise
+    // product) removed from the python surface -- it is basis-dependent and not a
+    // tensor-network operation (#934); see raise_unitensor_elementwise_removed above.
+    .def("__mul__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" * ", kUniTensorMulRemovedGuidance);
+         })
     .def("__mul__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Mul(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1340,8 +1401,12 @@ void unitensor_binding(py::module &m) {
     .def("__rmul__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Mul(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*=UniTensor (Hadamard/elementwise
+    // product) removed from the python surface; see __mul__'s comment above.
     .def("__imul__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Mul_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" *= ", kUniTensorMulRemovedGuidance);
+         })
     .def("__imul__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Mul_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1389,7 +1454,14 @@ void unitensor_binding(py::module &m) {
     .def("__imul__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Mul_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__truediv__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Div(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/UniTensor (elementwise division)
+    // removed from the python surface -- per #934 it has no well-defined tensor-network
+    // meaning (basis-dependent, and typically produces inf/nan); see
+    // raise_unitensor_elementwise_removed's doc comment above.
+    .def("__truediv__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" / ", kUniTensorDivRemovedGuidance);
+         })
     .def("__truediv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Div(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1484,8 +1556,12 @@ void unitensor_binding(py::module &m) {
     .def("__rtruediv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/=UniTensor (elementwise
+    // division) removed from the python surface; see __truediv__'s comment above.
     .def("__itruediv__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Div_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" /= ", kUniTensorDivRemovedGuidance);
+         })
     .def("__itruediv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Div_(static_cast<cytnx::cytnx_float>(rhs));
