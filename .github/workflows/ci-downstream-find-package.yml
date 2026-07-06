@@ -63,7 +63,11 @@ jobs:
       # commit, so merge the latest target branch to test against current tip.
       - name: Merge with latest target branch (pull_request only)
         if: github.event_name == 'pull_request'
+        # A committer identity is required because a non-fast-forward merge
+        # creates a merge commit.
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin ${{ github.event.pull_request.base.ref }}
           git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
           # Refresh submodules in case the merge moved any gitlinks.
