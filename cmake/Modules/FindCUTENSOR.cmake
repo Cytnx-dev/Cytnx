@@ -27,20 +27,15 @@ else()
 endif()
 
 message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}" )
-# Cytnx requires CUDA >= 12 (enforced in CMakeLists.txt) and cuTENSOR >= 2.0.
-# Search both library layouts: cuTENSOR 2.x tarballs place the libraries
-# directly under lib/, while 1.x tarballs and apt use a per-CUDA subdir
-# (lib/<cuda-major>, e.g. lib/12, lib/13). Listing both as find_library
-# PATH_SUFFIXES lets the supported 2.x flat layout and the legacy versioned
-# layout resolve for both CUDA 12 and 13. The older lib/10.2 and lib/11
-# branches were removed as dead code; apt multiarch paths remain (issue #946).
-if(CUDAToolkit_VERSION_MAJOR GREATER_EQUAL 12)
-  set(CUTNLIB_DIR lib lib/${CUDAToolkit_VERSION_MAJOR})
-else()
-  message(FATAL_ERROR
-    "cuTENSOR support requires CUDA >= 12, but CUDAToolkit_VERSION_MAJOR is "
-    "'${CUDAToolkit_VERSION_MAJOR}'.")
-endif()
+# Search both cuTENSOR library layouts: 2.x tarballs place the libraries
+# directly under lib/, while older tarballs and apt use a per-CUDA-major
+# subdir (lib/<cuda-major>, e.g. lib/11, lib/12, lib/13). Listing both as
+# find_library PATH_SUFFIXES resolves either layout for any CUDA major. The
+# older minor-specific lib/10.2 and lib/11.0 special-cases were removed; the
+# generic lib/<major> covers them (apt multiarch paths remain, issue #946).
+# The CUDA-version floor is a separate policy decision (issue #962), enforced
+# in CMakeLists.txt rather than gated here, so this finder stays policy-free.
+set(CUTNLIB_DIR lib lib/${CUDAToolkit_VERSION_MAJOR})
 
 set(CUTENSOR_INCLUDE_DIRS ${CUTENSOR_ROOT}/include)
 
@@ -61,7 +56,14 @@ endforeach()
 if(_cutensor_version_header)
   file(STRINGS "${_cutensor_version_header}" _cutensor_minor_line REGEX "^#define[ \t]+CUTENSOR_MINOR[ \t]+[0-9]+")
   string(REGEX REPLACE ".*CUTENSOR_MAJOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MAJOR "${_cutensor_major_line}")
-  string(REGEX REPLACE ".*CUTENSOR_MINOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MINOR "${_cutensor_minor_line}")
+  # CUTENSOR_MINOR may be absent/unmatched; default it to 0 rather than leaving
+  # CUTENSOR_VERSION malformed (e.g. "2."), which would break the VERSION_VAR
+  # comparison in find_package_handle_standard_args.
+  if(_cutensor_minor_line)
+    string(REGEX REPLACE ".*CUTENSOR_MINOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MINOR "${_cutensor_minor_line}")
+  else()
+    set(CUTENSOR_VERSION_MINOR "0")
+  endif()
   set(CUTENSOR_VERSION "${CUTENSOR_VERSION_MAJOR}.${CUTENSOR_VERSION_MINOR}")
   message(STATUS "cuTENSOR version: ${CUTENSOR_VERSION} (from ${_cutensor_version_header})")
   if(CUTENSOR_VERSION_MAJOR LESS 2)
