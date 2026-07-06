@@ -2260,6 +2260,30 @@ TEST_F(DenseUniTensorTest, combineBond) {
 }
 
 /*=====test info=====
+describe:#846 aliasing regression -- a user-held copy of a tensor's bond shares the Bond impl
+  with the tensor's own _bonds entry. combineBond(force=true) legitimately mutates a CLONE of
+  that entry in place (Bond_impl::force_combineBond_); if the .clone() in
+  DenseUniTensor::combineBonds were ever dropped, the user's bond would be silently rewritten.
+  Pin that the held copy stays untouched.
+====================*/
+TEST_F(DenseUniTensorTest, combineBondForceDoesNotRewriteUserHeldBond) {
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, {"a", "b", "c"});
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+
+  Bond held = ut.bonds()[0];  // shares the impl of ut's bond "a"
+  const cytnx_uint64 held_dim = held.dim();
+  const bondType held_type = held.type();
+
+  ut.combineBond({"a", "b"}, /*force=*/true);
+
+  EXPECT_EQ(ut.bonds()[0].dim(), 20);  // the tensor itself did combine
+  EXPECT_EQ(held.dim(), held_dim);  // ...but the user-held copy is untouched
+  EXPECT_EQ(held.type(), held_type);
+}
+
+/*=====test info=====
 describe:test combineBond with diagonal UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, combineBond_diag) {

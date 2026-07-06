@@ -149,14 +149,15 @@ namespace cytnx {
         outCyT[0].tag();
         outCyT[1].tag();
         for (int i = 0; i < Tin.rowrank(); i++) {
-          outCyT[0].bonds()[i].set_type(Tin.bonds()[i].type());
+          outCyT[0]._impl->_bonds[i] = outCyT[0]._impl->_bonds[i].retype(Tin.bonds()[i].type());
         }
-        outCyT[0].bonds().back().set_type(cytnx::BD_BRA);
+        outCyT[0]._impl->_bonds.back() = outCyT[0]._impl->_bonds.back().retype(cytnx::BD_BRA);
         outCyT[0]._impl->_is_braket_form = outCyT[0]._impl->_update_braket();
 
-        outCyT[1].bonds()[0].set_type(cytnx::BD_KET);
+        outCyT[1]._impl->_bonds[0] = outCyT[1]._impl->_bonds[0].retype(cytnx::BD_KET);
         for (int i = 1; i < outCyT[1].rank(); i++) {
-          outCyT[1].bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+          outCyT[1]._impl->_bonds[i] =
+            outCyT[1]._impl->_bonds[i].retype(Tin.bonds()[Tin.rowrank() + i - 1].type());
         }
         outCyT[1]._impl->_is_braket_form = outCyT[1]._impl->_update_braket();
       }  // if tag
@@ -173,7 +174,8 @@ namespace cytnx {
       // outCyT must be empty and Tin must be checked with proper rowrank!
       std::vector<bool> signflip;
       if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+        signflip =
+          linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(Tin._impl.get()));
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
@@ -354,7 +356,7 @@ namespace cytnx {
       Q_ptr->_inner_to_outer_idx = Q_itoi;
       Q_ptr->_blocks = Q_blocks;
       if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        Q_ptr->_signflip = std::vector<bool>(Q_blocks.size(), false);
+        linalg::_fermionic_signflip_(*Q_ptr) = std::vector<bool>(Q_blocks.size(), false);
       UniTensor Q;
       Q._impl = boost::intrusive_ptr<UniTensor_base>(Q_ptr);
       outCyT.push_back(Q);
@@ -373,7 +375,7 @@ namespace cytnx {
       R_ptr->_inner_to_outer_idx = R_itoi;
       R_ptr->_blocks = R_blocks;
       if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        R_ptr->_signflip = std::vector<bool>(R_blocks.size(), false);
+        linalg::_fermionic_signflip_(*R_ptr) = std::vector<bool>(R_blocks.size(), false);
       UniTensor R;
       R._impl = boost::intrusive_ptr<UniTensor_base>(R_ptr);
       outCyT.push_back(R);

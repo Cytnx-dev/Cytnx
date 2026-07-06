@@ -122,7 +122,6 @@ namespace cytnx {
       return -1;
     }
     const std::vector<Bond> &bonds() const { return this->_bonds; }
-    std::vector<Bond> &bonds() { return this->_bonds; }
 
     Bond &bond_(const cytnx_uint64 &idx) {
       cytnx_error_msg(idx >= this->_bonds.size(), "[ERROR][bond] index %d out of bound, total %d\n",
@@ -228,7 +227,6 @@ namespace cytnx {
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
     virtual std::vector<bool> signflip() const;
-    virtual std::vector<bool> &signflip_();
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -1049,10 +1047,10 @@ namespace cytnx {
     void tag() {
       if (!this->is_tag()) {
         for (int i = 0; i < this->_rowrank; i++) {
-          this->_bonds[i].set_type(BD_KET);
+          this->_bonds[i] = this->_bonds[i].retype(BD_KET);
         }
         for (int i = this->_rowrank; i < this->_bonds.size(); i++) {
-          this->_bonds[i].set_type(BD_BRA);
+          this->_bonds[i] = this->_bonds[i].retype(BD_BRA);
         }
         this->_is_tag = true;
         this->_is_braket_form = this->_update_braket();
@@ -1827,6 +1825,17 @@ namespace cytnx {
   /// @endcond
 
   //======================================================================
+  class BlockFermionicUniTensor;
+
+  namespace linalg {
+    // Internal accessor granting the fermionic sign-flip bookkeeping to the SVD/QR/Eig/Exp
+    // decomposition internals that legitimately construct or truncate BlockFermionicUniTensor
+    // blocks (see #841). Not part of the public API: _signflip must stay in lockstep with
+    // _blocks/_inner_to_outer_idx and the qnums on the contracted bond, so no other code may
+    // touch it.
+    std::vector<cytnx_bool> &_fermionic_signflip_(BlockFermionicUniTensor &self);
+  }  // namespace linalg
+
   /// @cond
   class BlockFermionicUniTensor : public UniTensor_base {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally sign flips are stored as
@@ -1836,10 +1845,14 @@ namespace cytnx {
       _inner_to_outer_idx;  // stores the qindices for each block
     std::vector<Tensor> _blocks;
     Tensor NullRefTensor;  // this returns when accessed block does not exists!
-    // additional informaiton for fermions:
+
+   private:
+    // additional information for fermions:
     std::vector<cytnx_bool>
       _signflip;  // if true, the sign of the corresponding block needs to be flipped
+    friend std::vector<cytnx_bool> &linalg::_fermionic_signflip_(BlockFermionicUniTensor &self);
 
+   public:
     // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums
     // calculated from Symm object! this assume 1. symmetry are the same for each bond!
     //             2. total_qns are feeded with size len(symmetry)
@@ -1950,7 +1963,6 @@ namespace cytnx {
     };
 
     std::vector<bool> signflip() const override { return this->_signflip; };
-    std::vector<bool> &signflip_() override { return this->_signflip; };
 
     void to_(const int &device) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
@@ -3150,11 +3162,6 @@ namespace cytnx {
     */
     const std::vector<Bond> &bonds() const { return this->_impl->bonds(); }
 
-    /**
-        @see bonds();
-    */
-    std::vector<Bond> &bonds() { return this->_impl->bonds(); }
-
     const Bond &bond_(const cytnx_uint64 &idx) const { return this->_impl->bond_(idx); }
     Bond &bond_(const cytnx_uint64 &idx) { return this->_impl->bond_(idx); }
 
@@ -3177,16 +3184,6 @@ namespace cytnx {
      * @return std::vector<bool>
      */
     std::vector<bool> signflip() const { return this->_impl->signflip(); }
-
-    /**
-     * @brief Get reference to the sign information of a fermionic UniTensor.
-     * @details Length is the number of blocks in the UniTensor. If the return is true, the sign of
-     * the elements of the corresponding block needs to be flipped.
-     * @warning This is an inline version which returns a reference. Changes to the reference affect
-     * the UniTensor!
-     * @return std::vector<bool> &
-     */
-    std::vector<bool> &signflip_() { return this->_impl->signflip_(); }
 
     /**
      * @brief Check whether the UniTensor is in block form.

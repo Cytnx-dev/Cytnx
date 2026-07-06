@@ -156,7 +156,8 @@ namespace cytnx {
 
       std::vector<bool> signflip;
       if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+        signflip =
+          linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(Tin._impl.get()));
       std::vector<cytnx_uint64> strides;
       strides.reserve(Tin.rank());
       auto BdLeft = Tin.bonds()[0].clone();
@@ -309,7 +310,7 @@ namespace cytnx {
         v_ptr->_inner_to_outer_idx = v_itoi;
         v_ptr->_blocks = v_blocks;
         if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-          v_ptr->_signflip = std::vector<bool>(v_blocks.size(), false);
+          linalg::_fermionic_signflip_(*v_ptr) = std::vector<bool>(v_blocks.size(), false);
         UniTensor V;
         V._impl = boost::intrusive_ptr<UniTensor_base>(v_ptr);
         outCyT.push_back(V);

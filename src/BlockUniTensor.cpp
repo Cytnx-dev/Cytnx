@@ -1181,9 +1181,9 @@ namespace cytnx {
 
   void BlockUniTensor::Transpose_() {
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    cytnx_int64 idxnum = this->bonds().size() - 1;
+    cytnx_int64 idxnum = this->_bonds.size() - 1;
     for (cytnx_int64 i = 0; i <= idxnum; i++) {
-      this->bonds()[i].redirect_();
+      this->_bonds[i] = this->_bonds[i].redirect();
       idxorder[i] = idxnum - i;
     }
     this->permute_(idxorder, idxnum + 1 - this->_rowrank);
@@ -1819,7 +1819,9 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
       if (this->_bonds[i].has_duplicate_qnums()) {
         has_dup.push_back(i);
-        idx_mappers.push_back(this->_bonds[i].group_duplicates_());
+        std::vector<cytnx_uint64> mapper;
+        this->_bonds[i] = this->_bonds[i].group_duplicates(mapper);
+        idx_mappers.push_back(mapper);
       }
     }
 
@@ -1883,14 +1885,14 @@ namespace cytnx {
     std::vector<cytnx_uint64> cb_stride(indicators.size());
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
-        Bond tmp = this->_bonds[i];
+        Bond tmp = this->_bonds[i].clone();
         cb_stride[0] = this->_bonds[i].qnums().size();
         for (int j = 1; j < indicators.size(); j++) {
           cb_stride[j] = this->_bonds[i + j].qnums().size();
           if (force)
             tmp._impl->force_combineBond_(this->_bonds[i + j]._impl, false);  // no grouping
           else
-            tmp.combineBond_(this->_bonds[i + j], false);  // no grouping
+            tmp = tmp.combineBond(this->_bonds[i + j], false);  // no grouping
         }
         new_bonds.push_back(tmp);
         i += indicators.size() - 1;

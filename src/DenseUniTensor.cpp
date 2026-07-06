@@ -821,12 +821,12 @@ namespace cytnx {
     std::vector<Bond> new_bonds;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
-        Bond tmp = this->_bonds[i];
+        Bond tmp = this->_bonds[i].clone();
         for (int j = 1; j < indicators.size(); j++) {
           if (force)
             tmp._impl->force_combineBond_(this->_bonds[i + j]._impl, false);
           else
-            tmp.combineBond_(this->_bonds[i + j]);
+            tmp = tmp.combineBond(this->_bonds[i + j]);
         }
         new_bonds.push_back(tmp);
         i += indicators.size() - 1;
@@ -1261,10 +1261,10 @@ namespace cytnx {
 
   void DenseUniTensor::Transpose_() {
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    cytnx_int64 idxnum = this->bonds().size() - 1;
+    cytnx_int64 idxnum = this->_bonds.size() - 1;
     if (this->is_tag()) {
       for (cytnx_int64 i = 0; i <= idxnum; i++) {
-        this->bonds()[i].redirect_();
+        this->_bonds[i] = this->_bonds[i].redirect();
         idxorder[i] = idxnum - i;
       }
     } else {

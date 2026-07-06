@@ -1099,6 +1099,40 @@ TEST_F(linalg_Test, BkFUt_GesvdTruncateUnitaryAndReconstruction) {
 }
 
 /*=====test info=====
+describe:#841 regression -- after Svd_truncate/Gesvd_truncate genuinely drops blocks (small
+  keepdim) on a sign-flip-active BlockFermionicUniTensor, U/S/vT's signflip() must stay in
+  lockstep with Nblocks() (this is exactly the invariant the friend-granted
+  linalg::_fermionic_signflip_() accessor exists to protect -- see Svd_truncate.cpp /
+  Gesvd_truncate.cpp). Also confirms U/S/vT still reconstruct M correctly post-truncation.
+====================*/
+TEST_F(linalg_Test, BkFUt_TruncateKeepsSignflipInLockstepWithNblocks) {
+  const double tol = 1e-8;
+  UniTensor Msf = permute_with_signflips(make_rank4_herm_dt(false));
+
+  // keepdim=1 forces the truncation path to actually drop blocks/qnums (not just a no-op pass
+  // through), which is when U/S/vT's _signflip must be re-erased in lockstep with _blocks.
+  for (auto trunc : {linalg::Svd_truncate(Msf, 1, 0., true, 0),
+                     linalg::Gesvd_truncate(Msf, 1, 0., true, true, 0)}) {
+    ASSERT_EQ(trunc.size(), 3u);  // S, U, vT (return_err=0)
+    const UniTensor &S = trunc[0];
+    const UniTensor &U = trunc[1];
+    const UniTensor &vT = trunc[2];
+
+    EXPECT_EQ(S.signflip().size(), S.Nblocks());
+    EXPECT_EQ(U.signflip().size(), U.Nblocks());
+    EXPECT_EQ(vT.signflip().size(), vT.Nblocks());
+    // Truncation genuinely happened: fewer blocks survive than the untruncated decomposition.
+    EXPECT_LT(S.Nblocks(), linalg::Svd(Msf, true)[0].Nblocks());
+
+    // Post-truncation, all surviving signflips must read false (already-physical singular
+    // values / vectors), matching the "no-op" write in Svd_BlockUT_internal.
+    for (bool f : S.signflip()) EXPECT_FALSE(f);
+    for (bool f : U.signflip()) EXPECT_FALSE(f);
+    for (bool f : vT.signflip()) EXPECT_FALSE(f);
+  }
+}
+
+/*=====test info=====
 describe:ExpH for fermionic tensors: exp of a (sign-flip-active) Hermitian operator has spectrum
   exp(a * eigenvalues), verifying the per-sector signflip negation in ExpH_BlockUT_internal.
 ====================*/
@@ -1163,7 +1197,7 @@ TEST_F(linalg_Test, BkFUt_ExpMBias) {
 inline UniTensor make_rank5_fermionic_seq(bool inverse) {
   Bond B1 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1}, {Symmetry::FermionParity()});
-  Bond B12 = B1.combineBond(B2).redirect_();
+  Bond B12 = B1.combineBond(B2).redirect();
   Bond B3 = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   Bond B4 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   UniTensor M = UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"});

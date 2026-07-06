@@ -19,6 +19,15 @@
 
 namespace cytnx {
   typedef Accessor ac;
+
+  namespace linalg {
+    // See the friend declaration + comment in include/UniTensor.hpp next to
+    // BlockFermionicUniTensor::_signflip.
+    std::vector<cytnx_bool> &_fermionic_signflip_(BlockFermionicUniTensor &self) {
+      return self._signflip;
+    }
+  }  // namespace linalg
+
   void BlockFermionicUniTensor::Init(const std::vector<Bond> &bonds,
                                      const std::vector<std::string> &in_labels,
                                      const cytnx_int64 &rowrank, const unsigned int &dtype,
@@ -1756,9 +1765,9 @@ namespace cytnx {
 
     // modify tag
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    cytnx_int64 idxnum = this->bonds().size() - 1;
+    cytnx_int64 idxnum = this->_bonds.size() - 1;
     for (cytnx_int64 i = 0; i <= idxnum; i++) {
-      this->bonds()[i].redirect_();
+      this->_bonds[i] = this->_bonds[i].redirect();
       idxorder[i] = idxnum - i;
     }
     this->permute_nosignflip_(idxorder, this->_bonds.size() - this->_rowrank);
@@ -2538,7 +2547,9 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
       if (this->_bonds[i].has_duplicate_qnums()) {
         has_dup.push_back(i);
-        idx_mappers.push_back(this->_bonds[i].group_duplicates_());
+        std::vector<cytnx_uint64> mapper;
+        this->_bonds[i] = this->_bonds[i].group_duplicates(mapper);
+        idx_mappers.push_back(mapper);
       }
     }
 
@@ -2609,14 +2620,14 @@ namespace cytnx {
     std::vector<cytnx_uint64> cb_stride(indicators.size());
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
-        Bond tmp = this->_bonds[i];
+        Bond tmp = this->_bonds[i].clone();
         cb_stride[0] = this->_bonds[i].qnums().size();
         for (int j = 1; j < indicators.size(); j++) {
           cb_stride[j] = this->_bonds[i + j].qnums().size();
           if (force)
             tmp._impl->force_combineBond_(this->_bonds[i + j]._impl, false);  // no grouping
           else
-            tmp.combineBond_(this->_bonds[i + j], false);  // no grouping
+            tmp = tmp.combineBond(this->_bonds[i + j], false);  // no grouping
         }
         new_bonds.push_back(tmp);
         i += indicators.size() - 1;
@@ -2749,7 +2760,7 @@ namespace cytnx {
     cytnx_uint64 total_elem = rhs->_block.storage().size();
 
     std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
-    ths->_signflip = std::vector<bool>(ths->_blocks.size(), false);
+    linalg::_fermionic_signflip_(*ths) = std::vector<bool>(ths->_blocks.size(), false);
     for (int i = (rhs->rank() - 2); i >= 0; i--) {
       stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
     }

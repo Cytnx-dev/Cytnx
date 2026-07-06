@@ -1477,3 +1477,58 @@ TEST_F(BlockUniTensorTest, ContractLeavesSharedBlockObserverUntouched) {
   EXPECT_TRUE(observer.is_contiguous());
   EXPECT_TRUE(R.is_contiguous());
 }
+
+/*=====test info=====
+describe: #846 regression -- a Bond handed out from a UniTensor cannot
+          desynchronize the tensor's own block structure. bonds() is
+          const-only, so `ut.bonds()[0]` is a copy of an immutable Bond value;
+          reassigning that local copy (the only "mutation" left, since Bond
+          has no in-place setters) cannot reach back into ut's own _bonds,
+          and ut's block/qnum/degeneracy structure stays intact.
+====================*/
+TEST_F(BlockUniTensorTest, BondObtainedFromUniTensorCannotDesyncBlockStructure) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  UniTensor ut = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, false);
+
+  auto qnums_before = ut.bonds()[0].qnums();
+  auto degs_before = ut.bonds()[0].getDegeneracies();
+  cytnx_uint64 nblocks_before = ut.Nblocks();
+
+  // Take a Bond out of the tensor (bonds() returns const&, so this is a
+  // value copy sharing the same immutable impl) and try to "change" it the
+  // only way still possible: reassign the local variable via a return-new
+  // call. This must be a pure local rebind -- it cannot mutate ut.
+  Bond taken = ut.bonds()[0];
+  taken = taken.redirect();  // local variable now points at a *different* Bond value.
+
+  EXPECT_EQ(ut.bonds()[0].qnums(), qnums_before);
+  EXPECT_EQ(ut.bonds()[0].getDegeneracies(), degs_before);
+  EXPECT_EQ(ut.Nblocks(), nblocks_before);
+  EXPECT_EQ(ut.bonds()[0].type(), BD_IN);  // unchanged; only `taken` was redirected.
+  EXPECT_EQ(taken.type(), BD_OUT);
+}
+
+/*=====test info=====
+describe:#846 aliasing regression -- a user-held copy of a tensor's bond shares the Bond impl
+  with the tensor's own _bonds entry. combineBond(force=true) legitimately mutates a CLONE of
+  that entry in place (Bond_impl::force_combineBond_); if the .clone() in
+  BlockUniTensor::combineBonds were ever dropped, the user's bond would be silently rewritten.
+  Pin that the held copy stays untouched.
+====================*/
+TEST_F(BlockUniTensorTest, CombineBondForceDoesNotRewriteUserHeldBond) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  UniTensor ut =
+    UniTensor({bi, bi, bi.redirect(), bi.redirect()}, {"a", "b", "c", "d"}, 2, Type.Double);
+
+  Bond held = ut.bonds()[0];  // shares the impl of ut's bond "a"
+  const cytnx_uint64 held_dim = held.dim();
+  const auto held_qnums = held.qnums();
+  const auto held_degs = held.getDegeneracies();
+
+  ut.combineBond({"a", "b"}, /*force=*/true);
+
+  EXPECT_EQ(ut.bonds()[0].dim(), held_dim * held_dim);  // the tensor itself did combine
+  EXPECT_EQ(held.dim(), held_dim);  // ...but the user-held copy is untouched
+  EXPECT_EQ(held.qnums(), held_qnums);
+  EXPECT_EQ(held.getDegeneracies(), held_degs);
+}
