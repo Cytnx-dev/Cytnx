@@ -349,6 +349,11 @@ namespace cytnx {
     virtual std::vector<Symmetry> syms() const;
 
     // arithmetic
+    // internal/advanced: the UniTensor-vs-UniTensor overloads below (Add_/Mul_/Sub_/Div_
+    // taking a boost::intrusive_ptr<UniTensor_base>) are not TN operations; python surface
+    // removed per #934. See operator+(const UniTensor&, const UniTensor&) in
+    // include/linalg.hpp for the full rationale. The Scalar overloads (scalar scaling)
+    // remain fully public, including from python.
     virtual void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     virtual void Add_(const Scalar &rhs);
 
@@ -4778,6 +4783,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Add(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Add_(const Scalar&), Add(const UniTensor&)const, Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4799,6 +4807,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Mul(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Mul_(const Scalar&), Mul(const UniTensor&)const, Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4820,6 +4831,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Sub(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Sub_(const Scalar&), Sub(const UniTensor&)const, Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -4841,6 +4855,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Div(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Div_(const Scalar&), Div(const UniTensor&)const, Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -4922,6 +4939,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Add_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Add_(const UniTensor&), Add_(const Scalar&), Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4952,6 +4972,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Mul_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Mul_(const UniTensor&), Mul_(const Scalar&), Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4982,6 +5005,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Div_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Div_(const UniTensor&), Div_(const Scalar&), Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -5012,6 +5038,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Sub_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Sub_(const UniTensor&), Sub_(const Scalar&), Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
