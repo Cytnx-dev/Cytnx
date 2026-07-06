@@ -435,86 +435,112 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>      <span class="keywordflow">return</span> cy_typeid_v&lt;T&gt;;</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    }</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span> </div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="comment">// Find a common type for typeL and typeR</span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> type_promote(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> typeL, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> typeR) {</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>      <span class="keywordflow">if</span> (typeL &lt; typeR) {</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        <span class="keywordflow">if</span> (typeL == 0) <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keywordflow">if</span> (!is_unsigned(typeR) &amp;&amp; is_unsigned(typeL)) {</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>          <span class="keywordflow">return</span> typeL - 1;</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>          <span class="keywordflow">return</span> typeL;</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        }</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <span class="keywordflow">if</span> (typeR == 0) <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="keywordflow">if</span> (!is_unsigned(typeL) &amp;&amp; is_unsigned(typeR)) {</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>          <span class="keywordflow">return</span> typeR - 1;</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>          <span class="keywordflow">return</span> typeR;</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        }</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>      }</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    }</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    <span class="comment">// type metafunction for type promotion</span></div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="keyword">using </span>type_promote_t =</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>      std::variant_alternative_t&lt;Type_class::type_promote(variant_index_v&lt;TL, Type_list&gt;,</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                                                          variant_index_v&lt;TR, Type_list&gt;),</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                                 Type_list&gt;;</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span> </div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="comment">// Helper to promote two pointer types (note does _not_ return another pointer type)</span></div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keyword">struct </span>type_promote_from_pointer {</div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>      <span class="keyword">using </span>type = void;</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>    };</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    <span class="keyword">struct </span>type_promote_from_pointer&lt;TL*, TR*&gt; {</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>      <span class="keyword">using </span>type = type_promote_t&lt;std::decay_t&lt;TL&gt;, std::decay_t&lt;TR&gt;&gt;;</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    };</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    <span class="comment">// helper typedef</span></div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keyword">using </span>type_promote_from_pointer_t = <span class="keyword">typename</span> type_promote_from_pointer&lt;TL, TR&gt;::type;</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span> </div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="preprocessor">#ifdef UNI_GPU</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>    <span class="comment">// .. and we need a version where TL and TR are GPU device pointers</span></div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>    <span class="keyword">using </span>type_promote_gpu_t =</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>      std::variant_alternative_t&lt;Type_class::type_promote(variant_index_v&lt;TL, Type_list_gpu&gt;,</div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>                                                          variant_index_v&lt;TR, Type_list_gpu&gt;),</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>                                 Type_list_gpu&gt;;</div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span> </div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keyword">struct </span>type_promote_from_gpu_pointer {</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>      <span class="keyword">using </span>type = void;</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    };</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keyword">struct </span>type_promote_from_gpu_pointer&lt;TL*, TR*&gt; {</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>      <span class="keyword">using </span>type = type_promote_gpu_t&lt;std::decay_t&lt;TL&gt;, std::decay_t&lt;TR&gt;&gt;;</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    };</div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span> </div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="comment">// helper typedef</span></div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keyword">using </span>type_promote_from_gpu_pointer_t = <span class="keyword">typename</span> type_promote_from_gpu_pointer&lt;TL, TR&gt;::type;</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>  };  <span class="comment">// Type_class</span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    <span class="comment">// Real counterpart of a dtype: ComplexDouble -&gt; Double, ComplexFloat -&gt; Float,</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    <span class="comment">// anything else unchanged. Replaces the &quot;dtype &lt;= 2 ? dtype + 2 : dtype&quot; idiom</span></div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    <span class="comment">// (without depending on the enum layout).</span></div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> to_real(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> type_id) {</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>      check_type(type_id);</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>      <span class="keywordflow">if</span> (type_id == ComplexDouble) <span class="keywordflow">return</span> Double;</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>      <span class="keywordflow">if</span> (type_id == ComplexFloat) <span class="keywordflow">return</span> Float;</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>      <span class="keywordflow">return</span> type_id;</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    }</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span> </div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    <span class="comment">// Complex counterpart of a dtype: Double -&gt; ComplexDouble, Float -&gt; ComplexFloat,</span></div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>    <span class="comment">// complex types unchanged, Void unchanged, integral/bool -&gt; ComplexDouble.</span></div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> to_complex(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> type_id) {</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>      check_type(type_id);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>      <span class="keywordflow">if</span> (is_complex(type_id)) <span class="keywordflow">return</span> type_id;</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>      <span class="keywordflow">if</span> (type_id == Double) <span class="keywordflow">return</span> ComplexDouble;</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>      <span class="keywordflow">if</span> (type_id == Float) <span class="keywordflow">return</span> ComplexFloat;</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>      <span class="keywordflow">if</span> (type_id == Void) <span class="keywordflow">return</span> Void;</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>      <span class="keywordflow">return</span> ComplexDouble;</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    }</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span> </div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    <span class="comment">// Find a common type for typeL and typeR</span></div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> type_promote(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> typeL, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> typeR) {</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>      <span class="keywordflow">if</span> (typeL == Void || typeR == Void) <span class="keywordflow">return</span> Void;</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>      <span class="comment">// Mixed complex/real: promote the real counterparts, then re-complexify.</span></div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>      <span class="comment">// Fixes ComplexFloat + Double -&gt; ComplexDouble (previously ComplexFloat,</span></div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>      <span class="comment">// discarding precision, because the enum interleaves complexness and</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>      <span class="comment">// precision and promotion picked the lower index).</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>      <span class="keywordflow">if</span> (is_complex(typeL) != is_complex(typeR)) {</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="keywordflow">return</span> to_complex(type_promote(to_real(typeL), to_real(typeR)));</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>      }</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>      <span class="keywordflow">if</span> (typeL &lt; typeR) {</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        <span class="keywordflow">if</span> (!is_unsigned(typeR) &amp;&amp; is_unsigned(typeL)) {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>          <span class="keywordflow">return</span> typeL - 1;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>          <span class="keywordflow">return</span> typeL;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        }</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        <span class="keywordflow">if</span> (!is_unsigned(typeL) &amp;&amp; is_unsigned(typeR)) {</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>          <span class="keywordflow">return</span> typeR - 1;</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>          <span class="keywordflow">return</span> typeR;</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>        }</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>      }</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    }</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span> </div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    <span class="comment">// type metafunction for type promotion</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    <span class="keyword">using </span>type_promote_t =</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span>      std::variant_alternative_t&lt;Type_class::type_promote(variant_index_v&lt;TL, Type_list&gt;,</div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>                                                          variant_index_v&lt;TR, Type_list&gt;),</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>                                 Type_list&gt;;</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span> </div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    <span class="comment">// Helper to promote two pointer types (note does _not_ return another pointer type)</span></div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">struct </span>type_promote_from_pointer {</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>      <span class="keyword">using </span>type = void;</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    };</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="keyword">struct </span>type_promote_from_pointer&lt;TL*, TR*&gt; {</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>      <span class="keyword">using </span>type = type_promote_t&lt;std::decay_t&lt;TL&gt;, std::decay_t&lt;TR&gt;&gt;;</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    };</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>    <span class="comment">// helper typedef</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keyword">using </span>type_promote_from_pointer_t = <span class="keyword">typename</span> type_promote_from_pointer&lt;TL, TR&gt;::type;</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span> </div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno"><a class="line" href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">  436</a></span>  <span class="keyword">constexpr</span> Type_class <a class="code hl_variable" href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">Type</a>;</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span> </div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>  <span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="Type_8hpp.html#a7730a97d285d53e329a7b5e9d74ad05c">__blasINTsize__</a>;</div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span> </div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>  <span class="keyword">extern</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="Type_8hpp.html#a98cd8880722041b005f9c42c1e9e9723">User_debug</a>;</div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span> </div>
-<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>}  <span class="comment">// namespace cytnx</span></div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span> </div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_TYPE_H_</span></div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span><span class="preprocessor">#ifdef UNI_GPU</span></div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>    <span class="comment">// .. and we need a version where TL and TR are GPU device pointers</span></div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>    <span class="keyword">using </span>type_promote_gpu_t =</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>      std::variant_alternative_t&lt;Type_class::type_promote(variant_index_v&lt;TL, Type_list_gpu&gt;,</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>                                                          variant_index_v&lt;TR, Type_list_gpu&gt;),</div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>                                 Type_list_gpu&gt;;</div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span> </div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>    <span class="keyword">struct </span>type_promote_from_gpu_pointer {</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>      <span class="keyword">using </span>type = void;</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>    };</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span> </div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>    <span class="keyword">struct </span>type_promote_from_gpu_pointer&lt;TL*, TR*&gt; {</div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>      <span class="keyword">using </span>type = type_promote_gpu_t&lt;std::decay_t&lt;TL&gt;, std::decay_t&lt;TR&gt;&gt;;</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>    };</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>    <span class="comment">// helper typedef</span></div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> TL, <span class="keyword">typename</span> TR&gt;</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    <span class="keyword">using </span>type_promote_from_gpu_pointer_t = <span class="keyword">typename</span> type_promote_from_gpu_pointer&lt;TL, TR&gt;::type;</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>  };  <span class="comment">// Type_class</span></div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span> </div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno"><a class="line" href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">  462</a></span>  <span class="keyword">constexpr</span> Type_class <a class="code hl_variable" href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">Type</a>;</div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span> </div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span>  <span class="keyword">extern</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="Type_8hpp.html#a7730a97d285d53e329a7b5e9d74ad05c">__blasINTsize__</a>;</div>
+<div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span> </div>
+<div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span>  <span class="keyword">extern</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="Type_8hpp.html#a98cd8880722041b005f9c42c1e9e9723">User_debug</a>;</div>
+<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span> </div>
+<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>}  <span class="comment">// namespace cytnx</span></div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span> </div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_TYPE_H_</span></div>
 <div class="ttc" id="aType_8hpp_html_a7730a97d285d53e329a7b5e9d74ad05c"><div class="ttname"><a href="Type_8hpp.html#a7730a97d285d53e329a7b5e9d74ad05c">__blasINTsize__</a></div><div class="ttdeci">int __blasINTsize__</div></div>
 <div class="ttc" id="aType_8hpp_html_a811069b79e704a9e1dee1e70bb135aec"><div class="ttname"><a href="Type_8hpp.html#a811069b79e704a9e1dee1e70bb135aec">blas_int</a></div><div class="ttdeci">int32_t blas_int</div><div class="ttdef"><b>Definition</b> Type.hpp:27</div></div>
 <div class="ttc" id="aType_8hpp_html_a98cd8880722041b005f9c42c1e9e9723"><div class="ttname"><a href="Type_8hpp.html#a98cd8880722041b005f9c42c1e9e9723">User_debug</a></div><div class="ttdeci">bool User_debug</div></div>
-<div class="ttc" id="aType_8hpp_html_aca659129dad1fd53a88bfce6ac7f8743"><div class="ttname"><a href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">Type</a></div><div class="ttdeci">constexpr Type_class Type</div><div class="ttdoc">data type</div><div class="ttdef"><b>Definition</b> Type.hpp:436</div></div>
+<div class="ttc" id="aType_8hpp_html_aca659129dad1fd53a88bfce6ac7f8743"><div class="ttname"><a href="Type_8hpp.html#aca659129dad1fd53a88bfce6ac7f8743">Type</a></div><div class="ttdeci">constexpr Type_class Type</div><div class="ttdoc">data type</div><div class="ttdef"><b>Definition</b> Type.hpp:462</div></div>
 <div class="ttc" id="acytnx__error_8hpp_html"><div class="ttname"><a href="cytnx__error_8hpp.html">cytnx_error.hpp</a></div></div>
 <div class="ttc" id="acytnx__error_8hpp_html_aa2edc77cab5ba7d1561fd1ea6cfba9ac"><div class="ttname"><a href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a></div><div class="ttdeci">#define cytnx_error_msg(is_true, format,...)</div><div class="ttdef"><b>Definition</b> cytnx_error.hpp:27</div></div>
 <div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition</b> Accessor.hpp:12</div></div>
