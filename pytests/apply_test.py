@@ -13,14 +13,32 @@ import cytnx
 # ---------------------------------------------------------------------------
 
 def _are_nearly_eq(a, b, tol=1e-12):
-    """Return True if two UniTensors have the same labels and nearly equal values."""
+    """Return True if two block-sparse UniTensors have the same labels and
+    nearly equal values.
+
+    get_blocks_() storage order is not canonical (permute().contiguous() and
+    direct construction enumerate the same sectors in different orders), so
+    blocks are matched by quantum-number sector via get_qindices(), mirroring
+    AreEqUniTensor in tests/test_tools.cpp. Unlike the C++ helper, pending
+    signflips are compared rather than compensated: a tensor whose flips have
+    not been applied is NOT equal to its applied form, which is what the
+    apply()/apply_() tests below rely on.
+    """
     a = a.permute(b.labels())
     blocks_a = a.get_blocks_()
     blocks_b = b.get_blocks_()
     if len(blocks_a) != len(blocks_b):
         return False
-    for ba, bb in zip(blocks_a, blocks_b):
-        if (ba - bb).Norm().item() > tol:
+    signs_a = a.signflip()
+    signs_b = b.signflip()
+    sector_to_idx_b = {tuple(b.get_qindices(j)): j for j in range(len(blocks_b))}
+    for i in range(len(blocks_a)):
+        j = sector_to_idx_b.get(tuple(a.get_qindices(i)))
+        if j is None:
+            return False
+        if signs_a[i] != signs_b[j]:
+            return False
+        if (blocks_a[i] - blocks_b[j]).Norm().item() > tol:
             return False
     return True
 
