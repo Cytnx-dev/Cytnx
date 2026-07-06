@@ -745,7 +745,7 @@ namespace cytnx {
         out.Mul_(Rt);
       }
       out.relabel_(vec_range<std::string>(Lt.rank()));
-      out.set_name("");
+      out.set_name_("");
 
       return out;
     }
@@ -765,7 +765,7 @@ namespace cytnx {
         out = Rt.clone();
         out.Mul_(lc);
       }
-      out.set_name("");
+      out.set_name_("");
 
       return out;
     }

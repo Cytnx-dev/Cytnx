@@ -146,8 +146,8 @@ namespace cytnx {
       }
 
       if (Tin.is_tag()) {
-        outCyT[0].tag();
-        outCyT[1].tag();
+        outCyT[0].tag_();
+        outCyT[1].tag_();
         for (int i = 0; i < Tin.rowrank(); i++) {
           outCyT[0].bonds()[i].set_type(Tin.bonds()[i].type());
         }

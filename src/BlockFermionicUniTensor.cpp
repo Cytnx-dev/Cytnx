@@ -1190,7 +1190,7 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
-    tmp->set_label(inx, new_label);
+    tmp->set_label_(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
@@ -1200,7 +1200,7 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
-    tmp->set_label(inx, new_label);
+    tmp->set_label_(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }

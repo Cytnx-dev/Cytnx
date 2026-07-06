@@ -140,7 +140,11 @@ namespace cytnx {
 
     const std::string &name() const { return this->_name; }
     cytnx_uint64 rank() const { return this->_labels.size(); }
-    void set_name(const std::string &in) { this->_name = in; }
+    void set_name_(const std::string &in) { this->_name = in; }
+    [[deprecated("Please use set_name_(const std::string &in) instead.")]] void set_name(
+      const std::string &in) {
+      this->set_name_(in);
+    }
 
     /**
      * @brief Set a label
@@ -151,9 +155,9 @@ namespace cytnx {
      * 1. \p oldlabel should exist in this UniTensor.
      * 2. The new label \p new_label cannot be the same as other existing labels (no duplicate
      * labels allowed).
-     * @see set_label(const cytnx_int64 &inx, const std::string &new_label)
+     * @see set_label_(const cytnx_int64 &inx, const std::string &new_label)
      */
-    void set_label(const std::string &oldlabel, const std::string &new_label) {
+    void set_label_(const std::string &oldlabel, const std::string &new_label) {
       cytnx_int64 idx;
       auto res = std::find(this->_labels.begin(), this->_labels.end(), oldlabel);
       cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n",
@@ -175,7 +179,7 @@ namespace cytnx {
                       "\n");
       this->_labels[idx] = new_label;
     }
-    void set_label(const cytnx_int64 &inx, const std::string &new_label) {
+    void set_label_(const cytnx_int64 &inx, const std::string &new_label) {
       cytnx_error_msg(inx < 0, "[ERROR] index is negative%s", "\n");
       cytnx_error_msg(inx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
                       "\n");
@@ -192,6 +196,18 @@ namespace cytnx {
                       "\n");
       this->_labels[inx] = new_label;
     }
+    [[deprecated(
+      "Please use set_label_(const std::string &oldlabel, const std::string "
+      "&new_label) instead.")]] void
+      set_label(const std::string &oldlabel, const std::string &new_label) {
+      this->set_label_(oldlabel, new_label);
+    }
+    [[deprecated(
+      "Please use set_label_(const cytnx_int64 &inx, const std::string &new_label) "
+      "instead.")]] void
+      set_label(const cytnx_int64 &inx, const std::string &new_label) {
+      this->set_label_(inx, new_label);
+    }
 
     [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]] void
       set_labels(const std::vector<std::string> &new_labels);
@@ -206,10 +222,10 @@ namespace cytnx {
       relabels_(const std::vector<std::string> &old_labels,
                 const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::string &old_label, const std::string &new_label) {
-      this->set_label(old_label, new_label);
+      this->set_label_(old_label, new_label);
     }
     void relabel_(const cytnx_int64 &inx, const std::string &new_label) {
-      this->set_label(inx, new_label);
+      this->set_label_(inx, new_label);
     }
 
     int uten_type() { return this->uten_type_id; }
@@ -381,7 +397,7 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> Dagger();
     virtual void Dagger_();
 
-    virtual void tag();
+    virtual void tag_();
 
     virtual void truncate_(const std::string &label, const cytnx_uint64 &dim);
     virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
@@ -1047,7 +1063,7 @@ namespace cytnx {
         true, "[ERROR][DenseUniTensor] elem_exists can only be used on UniTensor with Symmetry.%s",
         "\n");
     }
-    void tag() {
+    void tag_() {
       if (!this->is_tag()) {
         for (int i = 0; i < this->_rowrank; i++) {
           this->_bonds[i].set_type(BD_KET);
@@ -1640,7 +1656,7 @@ namespace cytnx {
       }
     }
 
-    void tag() {
+    void tag_() {
       // no-use!
     }
 
@@ -2423,7 +2439,7 @@ namespace cytnx {
       }
     }
 
-    void tag() {
+    void tag_() {
       // no-use!
     }
 
@@ -2872,18 +2888,26 @@ namespace cytnx {
     }
 
     /**
-    @brief Set the name of a UniTensor.
+    @brief Set the name of a UniTensor, in-place.
         @details You can use this function to give a name for the UniTensor.
     @param[in] in Input the name you want to set for the UniTensor. It should be a string.
-        @return UniTensor
+        @return UniTensor& (self)
     */
-    UniTensor &set_name(const std::string &in) {
-      this->_impl->set_name(in);
+    UniTensor &set_name_(const std::string &in) {
+      this->_impl->set_name_(in);
       return *this;
     }
 
     /**
-    @brief Set a new label for bond at the assigned index.
+    @deprecated This function is deprecated. Please use set_name_(const std::string &in) instead.
+    */
+    [[deprecated("Please use set_name_(const std::string &in) instead.")]] UniTensor &set_name(
+      const std::string &in) {
+      return this->set_name_(in);
+    }
+
+    /**
+    @brief Set a new label for bond at the assigned index, in-place.
     @param[in] idx the index of the bond.
     @param[in] new_label the new label that is assign to the bond.
     @note
@@ -2892,21 +2916,21 @@ namespace cytnx {
         2. Compared to relabel(const cytnx_int64 &idx, const std::string &new_label) const,
         this function set the new label and return self.
     */
-    UniTensor &set_label(const cytnx_int64 &idx, const std::string &new_label) {
-      this->_impl->set_label(idx, new_label);
+    UniTensor &set_label_(const cytnx_int64 &idx, const std::string &new_label) {
+      this->_impl->set_label_(idx, new_label);
       return *this;
     }
 
     /**
-          @see set_label(const cytnx_int64 &idx, const std::string &new_label)
+          @see set_label_(const cytnx_int64 &idx, const std::string &new_label)
     */
-    UniTensor &set_label(const cytnx_int64 &idx, const char *new_label) {
-      this->_impl->set_label(idx, std::string(new_label));
+    UniTensor &set_label_(const cytnx_int64 &idx, const char *new_label) {
+      this->_impl->set_label_(idx, std::string(new_label));
       return *this;
     }
 
     /**
-    @brief set a new label for bond to replace one of the current label.
+    @brief set a new label for bond to replace one of the current label, in-place.
     @param[in] old_label the current label of the bond.
     @param[in] new_label the new label that is assign to the bond.
     @note
@@ -2915,33 +2939,97 @@ namespace cytnx {
         2. Compared to relabel(const std::string &old_label, const std::string &new_label) const,
         this function set the new label and return self.
     */
-    UniTensor &set_label(const std::string &old_label, const std::string &new_label) {
-      this->_impl->set_label(old_label, new_label);
+    UniTensor &set_label_(const std::string &old_label, const std::string &new_label) {
+      this->_impl->set_label_(old_label, new_label);
       return *this;
+    }
+
+    /**
+          @see set_label_(const std::string &old_label, const std::string &new_label)
+    */
+    UniTensor &set_label_(const char *old_label, const std::string &new_label) {
+      this->_impl->set_label_(std::string(old_label), new_label);
+      return *this;
+    }
+
+    /**
+          @see set_label_(const std::string &old_label, const std::string &new_label)
+    */
+    UniTensor &set_label_(const std::string &old_label, const char *new_label) {
+      this->_impl->set_label_(old_label, std::string(new_label));
+      return *this;
+    }
+
+    /**
+          @see set_label_(const std::string &old_label, const std::string &new_label)
+    */
+    UniTensor &set_label_(const char *old_label, const char *new_label) {
+      this->_impl->set_label_(std::string(old_label), std::string(new_label));
+      return *this;
+    }
+
+    /**
+    @deprecated This function is deprecated. Please use \n
+        UniTensor &set_label_(const cytnx_int64 &idx, const std::string &new_label)\n
+      instead.
+    */
+    [[deprecated(
+      "Please use set_label_(const cytnx_int64 &idx, const std::string &new_label) "
+      "instead.")]] UniTensor &
+      set_label(const cytnx_int64 &idx, const std::string &new_label) {
+      return this->set_label_(idx, new_label);
+    }
+
+    /**
+          @see set_label(const cytnx_int64 &idx, const std::string &new_label)
+    */
+    [[deprecated(
+      "Please use set_label_(const cytnx_int64 &idx, const char *new_label) "
+      "instead.")]] UniTensor &
+      set_label(const cytnx_int64 &idx, const char *new_label) {
+      return this->set_label_(idx, new_label);
+    }
+
+    /**
+    @deprecated This function is deprecated. Please use \n
+        UniTensor &set_label_(const std::string &old_label, const std::string &new_label)\n
+      instead.
+    */
+    [[deprecated(
+      "Please use set_label_(const std::string &old_label, const std::string "
+      "&new_label) instead.")]] UniTensor &
+      set_label(const std::string &old_label, const std::string &new_label) {
+      return this->set_label_(old_label, new_label);
     }
 
     /**
           @see set_label(const std::string &old_label, const std::string &new_label)
     */
-    UniTensor &set_label(const char *old_label, const std::string &new_label) {
-      this->_impl->set_label(std::string(old_label), new_label);
-      return *this;
+    [[deprecated(
+      "Please use set_label_(const char *old_label, const std::string &new_label) "
+      "instead.")]] UniTensor &
+      set_label(const char *old_label, const std::string &new_label) {
+      return this->set_label_(old_label, new_label);
     }
 
     /**
           @see set_label(const std::string &old_label, const std::string &new_label)
     */
-    UniTensor &set_label(const std::string &old_label, const char *new_label) {
-      this->_impl->set_label(old_label, std::string(new_label));
-      return *this;
+    [[deprecated(
+      "Please use set_label_(const std::string &old_label, const char *new_label) "
+      "instead.")]] UniTensor &
+      set_label(const std::string &old_label, const char *new_label) {
+      return this->set_label_(old_label, new_label);
     }
 
     /**
           @see set_label(const std::string &old_label, const std::string &new_label)
     */
-    UniTensor &set_label(const char *old_label, const char *new_label) {
-      this->_impl->set_label(std::string(old_label), std::string(new_label));
-      return *this;
+    [[deprecated(
+      "Please use set_label_(const char *old_label, const char *new_label) "
+      "instead.")]] UniTensor &
+      set_label(const char *old_label, const char *new_label) {
+      return this->set_label_(old_label, new_label);
     }
 
     /*
@@ -4660,12 +4748,12 @@ namespace cytnx {
 
     /**
      * @deprecated This function is deprecated. Please use \n
-     *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
+     *   combineBond_(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
     [[deprecated(
       "Please use "
-      "combineBond(const std::vector<std::string> &indicators, const bool &force) "
+      "combineBond_(const std::vector<std::string> &indicators, const bool &force) "
       "instead.")]] void
       combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                    const bool &by_label) {
@@ -4674,12 +4762,12 @@ namespace cytnx {
 
     /**
     @deprecated This function is deprecated. Please use \n
-      combineBond(const std::vector<std::string> &indicators, const bool &force) \n
+      combineBond_(const std::vector<std::string> &indicators, const bool &force) \n
       instead.
        */
     [[deprecated(
       "Please use "
-      "combineBond(const std::vector<std::string> &indicators, const bool &force) "
+      "combineBond_(const std::vector<std::string> &indicators, const bool &force) "
       "instead.")]] void
       combineBonds(const std::vector<std::string> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
@@ -4687,19 +4775,19 @@ namespace cytnx {
 
     /**
      * @deprecated This function is deprecated. Please use \n
-     *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
+     *   combineBond_(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
     [[deprecated(
       "Please use "
-      "combineBond(const std::vector<std::string> &indicators, const bool &force) "
+      "combineBond_(const std::vector<std::string> &indicators, const bool &force) "
       "instead.")]] void
       combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
     }
 
     /**
-    @brief Combine the sevral bonds of the UniTensor.
+    @brief Combine the sevral bonds of the UniTensor, in-place.
         @param[in] indicators the labels of the legs you want to combine.
         @param[in] force If force is true, it will combine the bonds anyway even the direction
       of the bonds are same. After combining, the direction of the bonds will be set as
@@ -4707,10 +4795,31 @@ namespace cytnx {
         @pre
             1. The size of \p indicators need to >= 2.
             2. The UniTensor cannot be diagonal form (that means is_diag cannot be true.)
+        @return UniTensor& (self)
+        @see combineBond(const std::vector<std::string> &indicators, const bool &force) const
         */
-    UniTensor &combineBond(const std::vector<std::string> &indicators, const bool &force = false) {
+    UniTensor &combineBond_(const std::vector<std::string> &indicators, const bool &force = false) {
       this->_impl->combineBond(indicators, force);
       return *this;
+    }
+
+    /**
+    @brief Combine the sevral bonds of the UniTensor, out-of-place.
+        @param[in] indicators the labels of the legs you want to combine.
+        @param[in] force If force is true, it will combine the bonds anyway even the direction
+      of the bonds are same. After combining, the direction of the bonds will be set as
+      same as the first bond.
+        @pre
+            1. The size of \p indicators need to >= 2.
+            2. The UniTensor cannot be diagonal form (that means is_diag cannot be true.)
+        @return UniTensor a new UniTensor with the bonds combined; this UniTensor is unchanged.
+        @see combineBond_(const std::vector<std::string> &indicators, const bool &force)
+        */
+    UniTensor combineBond(const std::vector<std::string> &indicators,
+                          const bool &force = false) const {
+      UniTensor out = this->clone();
+      out.combineBond_(indicators, force);
+      return out;
     }
 
     /**
@@ -5454,17 +5563,22 @@ namespace cytnx {
     }
 
     /**
-     * @brief Set the UniTensor as a tagged UniTensor.
+     * @brief Set the UniTensor as a tagged UniTensor, in-place.
      * @details This function will set the untagged UniTensor(all of the Bonds are
      * BondType::BD_REG) ) to tagged UniTensor (all of the Bonds are BondType::BD_BRA or
      * BondType::BD_KET). And it will change the UniTensor to bra-ket form. See is_braket_form()
      * for more information.
      * @see is_braket_form()
      */
-    UniTensor &tag() {
-      this->_impl->tag();
+    UniTensor &tag_() {
+      this->_impl->tag_();
       return *this;
     }
+
+    /**
+     * @deprecated This function is deprecated. Please use tag_() instead.
+     */
+    [[deprecated("Please use tag_() instead.")]] UniTensor &tag() { return this->tag_(); }
 
     /**
      * @brief Take the power \p p of all elements
@@ -5661,9 +5775,9 @@ namespace cytnx {
     /// @endcond
 
     /**
-    @brief Copy data from a UniTensor of different type
+    @brief Copy data from a UniTensor of different type, in-place.
     @details For example, if uTB is a BlockUniTensor and uTD is a DenseUniTensor of the same shape,
-    then uTD.convert_from(uTB) makes uTD a sparse copy of uTB.
+    then uTD.convert_from_(uTB) makes uTD a sparse copy of uTB.
     @param[in] rhs the UniTensor to copy from
     @param[in] force if true, the compatibility of the input and output tensor structure is
     not checked strictly; elements that do not exist in the output tensor are ignored in the input
@@ -5674,9 +5788,21 @@ namespace cytnx {
     @return
         [UniTensor] a reference to this UniTensor
     */
-    UniTensor &convert_from(const UniTensor &rhs, bool force = false, cytnx_double tol = 0.) {
+    UniTensor &convert_from_(const UniTensor &rhs, bool force = false, cytnx_double tol = 0.) {
       this->_impl->from_(rhs._impl, force, tol);
       return *this;
+    }
+
+    /**
+    @deprecated This function is deprecated. Please use \n
+      convert_from_(const UniTensor &rhs, bool force, cytnx_double tol)\n
+      instead.
+    */
+    [[deprecated(
+      "Please use convert_from_(const UniTensor &rhs, bool force, cytnx_double tol) "
+      "instead.")]] UniTensor &
+      convert_from(const UniTensor &rhs, bool force = false, cytnx_double tol = 0.) {
+      return this->convert_from_(rhs, force, tol);
     }
 
     // Generators:

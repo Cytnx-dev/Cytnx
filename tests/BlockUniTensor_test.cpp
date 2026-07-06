@@ -1188,6 +1188,27 @@ TEST_F(BlockUniTensorTest, convert_from_dense_block_roundtrip) {
   EXPECT_TRUE(AreEqUniTensor(B, B2));  // round-trip recovers the original block exactly
 }
 
+// convert_from_ (#335/#336, ruling 3): canonical in-place spelling, returns a
+// reference to self so it chains. Same round-trip as convert_from_dense_block_roundtrip
+// above, checked through the new name.
+TEST_F(BlockUniTensorTest, convert_from__dense_block_roundtrip) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2});
+  UniTensor B = UniTensor({bi, bi.redirect()});
+  B.at({0, 0}) = 1.0;
+  B.at({0, 1}) = 5.0;
+  B.at({1, 1}) = 2.0;
+  B.at({2, 2}) = 3.0;
+  B.at({3, 3}) = 4.0;
+
+  UniTensor D = UniTensor(zeros(B.shape()));
+  UniTensor& ret = D.convert_from_(B);
+  EXPECT_EQ(&ret, &D);
+  EXPECT_DOUBLE_EQ(double(D.at({0, 0}).real()), 1.0);
+  EXPECT_DOUBLE_EQ(double(D.at({0, 1}).real()), 5.0);
+  EXPECT_DOUBLE_EQ(double(D.at({2, 2}).real()), 3.0);
+  EXPECT_DOUBLE_EQ(double(D.at({0, 2}).real()), 0.0);
+}
+
 // Dense -> Block honors tol in all cases: a nonzero symmetry-forbidden entry is rejected at the
 // default tol=0, but a large tol or force=true tolerates it (the forbidden entry is dropped and the
 // allowed entries reproduce the original block exactly).

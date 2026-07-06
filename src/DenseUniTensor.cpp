@@ -247,7 +247,7 @@ namespace cytnx {
                                                                const std::string &new_label) {
     DenseUniTensor *out_raw = this->clone_meta();
     out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label);
+    out_raw->set_label_(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
@@ -256,7 +256,7 @@ namespace cytnx {
                                                                const std::string &new_label) {
     DenseUniTensor *out_raw = this->clone_meta();
     out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label);
+    out_raw->set_label_(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }

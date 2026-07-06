@@ -1034,7 +1034,7 @@ namespace cytnx {
         out = out.astype(Rt.dtype());
       }
       out.relabel_(vec_range<std::string>(Lt.rank()));
-      out.set_name("");
+      out.set_name_("");
 
       out.Sub_(Rt);
 
@@ -1054,7 +1054,7 @@ namespace cytnx {
         out = Rt.clone();
         out._impl->lSub_(lc);
       }
-      out.set_name("");
+      out.set_name_("");
 
       return out;
     }
@@ -1088,7 +1088,7 @@ namespace cytnx {
         out.Sub_(rc);
       }
       // out.relabel_(vec_range<cytnx_int64>(Lt.rank()));
-      out.set_name("");
+      out.set_name_("");
 
       return out;
     }

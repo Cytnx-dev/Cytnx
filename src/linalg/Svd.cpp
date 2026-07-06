@@ -150,7 +150,7 @@ namespace cytnx {
       }
       // if tag, then update  the tagging informations
       if (Tin.is_tag()) {
-        Cy_S.tag();
+        Cy_S.tag_();
         t = 1;
         if (compute_uv) {
           cytnx::UniTensor &Cy_U = outCyT[t];
