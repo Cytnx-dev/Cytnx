@@ -359,3 +359,9 @@ TEST_F(TensorTest, eye) {
 //   EXPECT_FALSE(tar3456.approx_eq(tarcomplex3456));
 //   EXPECT_TRUE(tone3456.approx_eq(tone3456.astype(Type.ComplexFloat), 1e-5));
 // }
+
+TEST(Tensor, ItemDtypeMismatchThrows) {
+  Tensor t = zeros({1}, Type.Float);
+  EXPECT_THROW(t.item<double>(), std::logic_error);
+  EXPECT_NO_THROW(t.item<float>());
+}

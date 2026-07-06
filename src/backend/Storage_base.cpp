@@ -648,13 +648,13 @@ namespace cytnx {
   //====================================================
   template <>
   float &Storage_base::at<float>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug) {
-      cytnx_error_msg(this->dtype() != Type.Float,
-                      "[ERROR] type mismatch. try to get <float> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
-    }
+    cytnx_error_msg(this->dtype() != Type.Float,
+                    "[ERROR] type mismatch. try to get <float> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -664,13 +664,13 @@ namespace cytnx {
 
   template <>
   double &Storage_base::at<double>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug) {
-      cytnx_error_msg(this->dtype() != Type.Double,
-                      "[ERROR] type mismatch. try to get <double> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
-    }
+    cytnx_error_msg(this->dtype() != Type.Double,
+                    "[ERROR] type mismatch. try to get <double> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -680,13 +680,14 @@ namespace cytnx {
 
   template <>
   std::complex<float> &Storage_base::at<std::complex<float>>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(
-        this->dtype() != Type.ComplexFloat,
-        "[ERROR] type mismatch. try to get < std::complex<float> > type from raw data of type %s",
-        Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(
+      this->dtype() != Type.ComplexFloat,
+      "[ERROR] type mismatch. try to get < std::complex<float> > type from raw data of type %s",
+      Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -696,13 +697,14 @@ namespace cytnx {
 
   template <>
   std::complex<double> &Storage_base::at<std::complex<double>>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(
-        this->dtype() != Type.ComplexDouble,
-        "[ERROR] type mismatch. try to get < std::complex<double> > type from raw data of type %s",
-        Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(
+      this->dtype() != Type.ComplexDouble,
+      "[ERROR] type mismatch. try to get < std::complex<double> > type from raw data of type %s",
+      Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -712,12 +714,13 @@ namespace cytnx {
 
   template <>
   uint32_t &Storage_base::at<uint32_t>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(this->dtype() != Type.Uint32,
-                      "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->dtype() != Type.Uint32,
+                    "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -727,12 +730,13 @@ namespace cytnx {
 
   template <>
   int32_t &Storage_base::at<int32_t>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(this->dtype() != Type.Int32,
-                      "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->dtype() != Type.Int32,
+                    "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -742,12 +746,13 @@ namespace cytnx {
 
   template <>
   uint64_t &Storage_base::at<uint64_t>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(this->dtype() != Type.Uint64,
-                      "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->dtype() != Type.Uint64,
+                    "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -757,12 +762,13 @@ namespace cytnx {
 
   template <>
   int64_t &Storage_base::at<int64_t>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(this->dtype() != Type.Int64,
-                      "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->dtype() != Type.Int64,
+                    "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -772,13 +778,14 @@ namespace cytnx {
 
   template <>
   uint16_t &Storage_base::at<uint16_t>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(this->dtype() != Type.Uint16,
-                      "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->dtype() != Type.Uint16,
+                    "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
 
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -788,12 +795,13 @@ namespace cytnx {
 
   template <>
   int16_t &Storage_base::at<int16_t>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(this->dtype() != Type.Int16,
-                      "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->dtype() != Type.Int16,
+                    "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -803,13 +811,14 @@ namespace cytnx {
 
   template <>
   bool &Storage_base::at<bool>(const cytnx_uint64 &idx) const {
-    if (cytnx::User_debug)
-      cytnx_error_msg(this->dtype() != Type.Bool,
-                      "[ERROR] type mismatch. try to get <bool> type from raw data of type %s",
-                      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->dtype() != Type.Bool,
+                    "[ERROR] type mismatch. try to get <bool> type from raw data of type %s",
+                    Type.getname(this->dtype()).c_str());
 
     if (idx >= this->size())
-      cytnx_error_msg(true, "[ERROR] index [%d] out of bound [%d]\n", idx, this->size());
+      cytnx_error_msg(true, "[ERROR] index [%llu] out of bound [%llu]\n",
+                      static_cast<unsigned long long>(idx),
+                      static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();

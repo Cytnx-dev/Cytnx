@@ -275,7 +275,7 @@ TEST(Arnoldi_Gnd, Arnoldi_BK_test) {
   std::vector<UniTensor> exact_eigs = linalg::Eig(H.H);
   double lambda = -DBL_MAX;
   for (auto& block : exact_eigs[0].get_blocks_()) {
-    lambda = std::max(lambda, linalg::Max(block).item<double>());
+    lambda = std::max(lambda, double(linalg::Max(block).item().real()));
   }
   std::vector<UniTensor> eigs = linalg::Arnoldi(&H, UT_init, "LM");
   cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
