@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['linop_0',['LinOp',['../classcytnx_1_1LinOp.html',1,'cytnx']]]
+  ['error_0',['error',['../classcytnx_1_1error.html',1,'cytnx']]]
 ];

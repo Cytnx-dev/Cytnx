@@ -76,6 +76,8 @@
         </childnode>
         <childnode refid="13" relation="include">
         </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
       </node>
       <node id="14">
         <label>intrusive_ptr_base.hpp</label>

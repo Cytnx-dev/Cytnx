@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="classcytnx_1_1error" kind="class" language="C++" prot="public">
+    <compoundname>cytnx::error</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">std::logic_error</basecompoundref>
+    <includes refid="cytnx__error_8hpp" local="no">cytnx_error.hpp</includes>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>cytnx::error</label>
+        <link refid="classcytnx_1_1error"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>std::logic_error</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>cytnx::error</label>
+        <link refid="classcytnx_1_1error"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>std::logic_error</label>
+      </node>
+    </collaborationgraph>
+    <location file="include/cytnx_error.hpp" line="34" column="3" bodyfile="include/cytnx_error.hpp" bodystart="34" bodyend="37"/>
+    <listofallmembers>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -51,6 +51,7 @@ var menudata={children:[
 {text:"t",url:"namespacemembers_t.html#index_t"},
 {text:"u",url:"namespacemembers_u.html#index_u"},
 {text:"v",url:"namespacemembers_v.html#index_v"},
+{text:"w",url:"namespacemembers_w.html#index_w"},
 {text:"z",url:"namespacemembers_z.html#index_z"}]},
 {text:"Functions",url:"namespacemembers_func.html",children:[
 {text:"a",url:"namespacemembers_func.html#index_a"},
@@ -72,6 +73,7 @@ var menudata={children:[
 {text:"t",url:"namespacemembers_func_t.html#index_t"},
 {text:"u",url:"namespacemembers_func_u.html#index_u"},
 {text:"v",url:"namespacemembers_func_v.html#index_v"},
+{text:"w",url:"namespacemembers_func_w.html#index_w"},
 {text:"z",url:"namespacemembers_func_z.html#index_z"}]},
 {text:"Variables",url:"namespacemembers_vars.html"},
 {text:"Enumerations",url:"namespacemembers_enum.html"},
@@ -79,6 +81,7 @@ var menudata={children:[
 {text:"Classes",url:"annotated.html",children:[
 {text:"Class List",url:"annotated.html"},
 {text:"Class Index",url:"classes.html"},
+{text:"Class Hierarchy",url:"inherits.html"},
 {text:"Class Members",url:"functions.html",children:[
 {text:"All",url:"functions.html",children:[
 {text:"_",url:"functions.html#index__5F"},

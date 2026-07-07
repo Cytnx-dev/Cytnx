@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['symmetry_0',['Symmetry',['../classcytnx_1_1Symmetry.html',1,'cytnx']]]
+  ['qs_0',['Qs',['../classcytnx_1_1Qs.html',1,'cytnx']]]
 ];

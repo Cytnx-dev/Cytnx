@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['zeros_0',['zeros',['../classcytnx_1_1UniTensor.html#a84915f6a0aed270b91758acbef9c6d74',1,'cytnx::UniTensor::zeros(const cytnx_uint64 &amp;Nelem, const std::vector&lt; std::string &gt; &amp;in_labels={}, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu, const std::string &amp;name=&quot;&quot;)'],['../classcytnx_1_1UniTensor.html#a2d9ada5a5b30bc0bc893104170de4efc',1,'cytnx::UniTensor::zeros(const std::vector&lt; cytnx_uint64 &gt; &amp;shape, const std::vector&lt; std::string &gt; &amp;in_labels={}, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu, const std::string &amp;name=&quot;&quot;)'],['../namespacecytnx.html#ab8a79a03fb0465f3eb2641017f3f1755',1,'cytnx::zeros(const cytnx_uint64 &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)'],['../namespacecytnx.html#ad53947bd87534866b11080f9898d2a53',1,'cytnx::zeros(const std::vector&lt; cytnx_uint64 &gt; &amp;Nelem, const unsigned int &amp;dtype=Type.Double, const int &amp;device=Device.cpu)']]],
+  ['zn_1',['Zn',['../classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359',1,'cytnx::Symmetry']]]
+];

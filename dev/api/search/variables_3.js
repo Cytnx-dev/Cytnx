@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['user_5fdebug_0',['User_debug',['../Type_8hpp.html#a98cd8880722041b005f9c42c1e9e9723',1,'Type.hpp']]],
+  ['user_5fdebug_0',['User_debug',['../namespacecytnx.html#a27aa2c9f9401b20248afcfb1ab761b06',1,'cytnx']]],
   ['utentype_1',['UTenType',['../namespacecytnx.html#a224ad816267928be693a2396f5483e06',1,'cytnx']]]
 ];

@@ -66,6 +66,8 @@
         </childnode>
         <childnode refid="17" relation="include">
         </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
       </node>
       <node id="7">
         <label>array</label>
@@ -403,19 +405,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="include/Type.hpp" line="464" column="14" declfile="include/Type.hpp" declline="464" declcolumn="14"/>
-      </memberdef>
-      <memberdef kind="variable" id="Type_8hpp_1a98cd8880722041b005f9c42c1e9e9723" prot="public" static="no" extern="yes" mutable="no">
-        <type>bool</type>
-        <definition>bool User_debug</definition>
-        <argsstring></argsstring>
-        <name>User_debug</name>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/Type.hpp" line="466" column="15" declfile="include/Type.hpp" declline="466" declcolumn="15"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -860,7 +849,7 @@
 <codeline lineno="463"><highlight class="normal"></highlight></codeline>
 <codeline lineno="464"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="Type_8hpp_1a7730a97d285d53e329a7b5e9d74ad05c" kindref="member">__blasINTsize__</ref>;</highlight></codeline>
 <codeline lineno="465"><highlight class="normal"></highlight></codeline>
-<codeline lineno="466"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="Type_8hpp_1a98cd8880722041b005f9c42c1e9e9723" kindref="member">User_debug</ref>;</highlight></codeline>
+<codeline lineno="466"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>User_debug<sp/>is<sp/>declared<sp/>in<sp/>cytnx_error.hpp<sp/>(included<sp/>above);<sp/>no<sp/>need<sp/>to<sp/>redeclare<sp/>it<sp/>here.</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="467"><highlight class="normal"></highlight></codeline>
 <codeline lineno="468"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cytnx</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="469"><highlight class="normal"></highlight></codeline>

@@ -88,7 +88,11 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">cytnx_error.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -98,24 +102,27 @@ $(function() {
 <code>#include &lt;stdarg.h&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for cytnx_error.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="cytnx__error_8hpp__incl.png" border="0" usemap="#ainclude_2cytnx__error_8hpp" alt=""/></div>
 <map name="ainclude_2cytnx__error_8hpp" id="ainclude_2cytnx__error_8hpp">
-<area shape="rect" title=" " alt="" coords="174,5,349,31"/>
+<area shape="rect" title=" " alt="" coords="222,5,397,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,67,104"/>
-<area shape="poly" title=" " alt="" coords="226,33,80,79,79,74,224,28"/>
+<area shape="poly" title=" " alt="" coords="265,33,80,81,79,76,264,28"/>
 <area shape="rect" title=" " alt="" coords="91,79,157,104"/>
-<area shape="poly" title=" " alt="" coords="240,33,160,75,157,70,238,28"/>
+<area shape="poly" title=" " alt="" coords="281,33,168,76,166,71,279,28"/>
 <area shape="rect" title=" " alt="" coords="181,79,248,104"/>
-<area shape="poly" title=" " alt="" coords="256,32,232,69,228,66,251,30"/>
+<area shape="poly" title=" " alt="" coords="296,33,243,72,240,68,293,29"/>
 <area shape="rect" title=" " alt="" coords="272,79,347,104"/>
-<area shape="poly" title=" " alt="" coords="271,30,296,66,292,69,267,33"/>
+<area shape="poly" title=" " alt="" coords="312,31,312,65,307,65,307,31"/>
 <area shape="rect" title=" " alt="" coords="371,79,451,104"/>
-<area shape="poly" title=" " alt="" coords="286,28,375,70,373,75,284,33"/>
+<area shape="poly" title=" " alt="" coords="327,28,384,68,381,73,324,33"/>
 <area shape="rect" title=" " alt="" coords="475,79,562,104"/>
-<area shape="poly" title=" " alt="" coords="303,28,465,72,463,78,302,33"/>
+<area shape="poly" title=" " alt="" coords="344,28,472,72,471,77,342,33"/>
+<area shape="rect" title=" " alt="" coords="587,79,645,104"/>
+<area shape="poly" title=" " alt="" coords="364,28,574,76,572,81,363,33"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -209,14 +216,46 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="cytnx__error_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcytnx_1_1error.html">cytnx::error</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacecytnx" id="r_namespacecytnx"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html">cytnx</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespacecytnx_1_1internal" id="r_namespacecytnx_1_1internal"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1internal.html">cytnx::internal</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a657739793b5913e4ca54e957234a7f27" id="r_a657739793b5913e4ca54e957234a7f27"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cytnx__error_8hpp.html#a657739793b5913e4ca54e957234a7f27">CYTNX_HAS_EXECINFO</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a657739793b5913e4ca54e957234a7f27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80be6480b99a383c9f8d4d31a721142b" id="r_a80be6480b99a383c9f8d4d31a721142b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cytnx__error_8hpp.html#a80be6480b99a383c9f8d4d31a721142b">CYTNX_FUNC_NAME</a>&#160;&#160;&#160;__PRETTY_FUNCTION__</td></tr>
+<tr class="separator:a80be6480b99a383c9f8d4d31a721142b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2edc77cab5ba7d1561fd1ea6cfba9ac" id="r_aa2edc77cab5ba7d1561fd1ea6cfba9ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cytnx__error_8hpp.html#aa2edc77cab5ba7d1561fd1ea6cfba9ac">cytnx_error_msg</a>(is_true,  format, ...)</td></tr>
 <tr class="separator:aa2edc77cab5ba7d1561fd1ea6cfba9ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81109ea32caf96bd935d7df52c03105f" id="r_a81109ea32caf96bd935d7df52c03105f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cytnx__error_8hpp.html#a81109ea32caf96bd935d7df52c03105f">cytnx_warning_msg</a>(is_true,  format, ...)</td></tr>
 <tr class="separator:a81109ea32caf96bd935d7df52c03105f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a892b9074c2498da118428f798784ce68" id="r_a892b9074c2498da118428f798784ce68"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1internal.html#a892b9074c2498da118428f798784ce68">cytnx::internal::vformat_message</a> (char const *format, va_list args)</td></tr>
+<tr class="separator:a892b9074c2498da118428f798784ce68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad619737cc981416c5751c54dc3a59ec9" id="r_ad619737cc981416c5751c54dc3a59ec9"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1internal.html#ad619737cc981416c5751c54dc3a59ec9">cytnx::internal::compose_report</a> (char const *kind, char const *func, char const *file, int line, const std::string &amp;msg)</td></tr>
+<tr class="separator:ad619737cc981416c5751c54dc3a59ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e4e066d9c0a7008768e68a0d791b89" id="r_ab9e4e066d9c0a7008768e68a0d791b89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1internal.html#ab9e4e066d9c0a7008768e68a0d791b89">cytnx::internal::print_backtrace_if_debug</a> ()</td></tr>
+<tr class="separator:ab9e4e066d9c0a7008768e68a0d791b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7801d0d3ad5adb083645ab42c03f0c2" id="r_aa7801d0d3ad5adb083645ab42c03f0c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1internal.html#aa7801d0d3ad5adb083645ab42c03f0c2">cytnx::internal::error_msg_impl</a> (char const *func, char const *file, int line, char const *format,...)</td></tr>
+<tr class="separator:aa7801d0d3ad5adb083645ab42c03f0c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28700253924d13c0c358dc9ae93ff5f0" id="r_a28700253924d13c0c358dc9ae93ff5f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1internal.html#a28700253924d13c0c358dc9ae93ff5f0">cytnx::internal::warning_msg_impl</a> (char const *func, char const *file, int line, char const *format,...)</td></tr>
+<tr class="separator:a28700253924d13c0c358dc9ae93ff5f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a27aa2c9f9401b20248afcfb1ab761b06" id="r_a27aa2c9f9401b20248afcfb1ab761b06"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx.html#a27aa2c9f9401b20248afcfb1ab761b06">cytnx::User_debug</a></td></tr>
+<tr class="separator:a27aa2c9f9401b20248afcfb1ab761b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="aa2edc77cab5ba7d1561fd1ea6cfba9ac" name="aa2edc77cab5ba7d1561fd1ea6cfba9ac"></a>
@@ -250,11 +289,27 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  {                                                                                         \</div>
-<div class="line">    if (is_true)                                                                            \</div>
-<div class="line">      error_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (is_true), (format), __VA_ARGS__); \</div>
-<div class="line">  }</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                       \</div>
+<div class="line">    if (is_true)                                                             \</div>
+<div class="line">      ::cytnx::internal::error_msg_impl(<a class="code hl_define" href="cytnx__error_8hpp.html#a80be6480b99a383c9f8d4d31a721142b">CYTNX_FUNC_NAME</a>, __FILE__, __LINE__, \</div>
+<div class="line">                                        (format)__VA_OPT__(, ) __VA_ARGS__); \</div>
+<div class="line">  } <span class="keywordflow">while</span> (0)</div>
+<div class="ttc" id="acytnx__error_8hpp_html_a80be6480b99a383c9f8d4d31a721142b"><div class="ttname"><a href="cytnx__error_8hpp.html#a80be6480b99a383c9f8d4d31a721142b">CYTNX_FUNC_NAME</a></div><div class="ttdeci">#define CYTNX_FUNC_NAME</div><div class="ttdef"><b>Definition</b> cytnx_error.hpp:26</div></div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="a80be6480b99a383c9f8d4d31a721142b" name="a80be6480b99a383c9f8d4d31a721142b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80be6480b99a383c9f8d4d31a721142b">&#9670;&#160;</a></span>CYTNX_FUNC_NAME</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CYTNX_FUNC_NAME&#160;&#160;&#160;__PRETTY_FUNCTION__</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <a id="a657739793b5913e4ca54e957234a7f27" name="a657739793b5913e4ca54e957234a7f27"></a>
@@ -302,10 +357,11 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  {                                                                                           \</div>
-<div class="line">    if (is_true)                                                                              \</div>
-<div class="line">      warning_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (is_true), (format), __VA_ARGS__); \</div>
-<div class="line">  }</div>
+<b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span> {                                                                         \</div>
+<div class="line">    if (is_true)                                                               \</div>
+<div class="line">      ::cytnx::internal::warning_msg_impl(<a class="code hl_define" href="cytnx__error_8hpp.html#a80be6480b99a383c9f8d4d31a721142b">CYTNX_FUNC_NAME</a>, __FILE__, __LINE__, \</div>
+<div class="line">                                          (format)__VA_OPT__(, ) __VA_ARGS__); \</div>
+<div class="line">  } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>

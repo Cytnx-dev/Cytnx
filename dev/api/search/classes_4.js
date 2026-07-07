@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['qs_0',['Qs',['../classcytnx_1_1Qs.html',1,'cytnx']]]
+  ['network_0',['Network',['../classcytnx_1_1Network.html',1,'cytnx']]]
 ];

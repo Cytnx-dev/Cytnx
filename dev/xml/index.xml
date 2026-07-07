@@ -62,6 +62,8 @@
     <member refid="classcytnx_1_1Bond_1a2cd69edc7ecb13fe2a5411d490649909" kind="function"><name>Load</name></member>
     <member refid="classcytnx_1_1Bond_1af2846c2e1d412ea61a5a1561bc410a15" kind="function"><name>Load</name></member>
   </compound>
+  <compound refid="classcytnx_1_1error" kind="class"><name>cytnx::error</name>
+  </compound>
   <compound refid="classcytnx_1_1LinOp" kind="class"><name>cytnx::LinOp</name>
     <member refid="classcytnx_1_1LinOp_1a28d0512985d35f0cb72f297288f2cdcc" kind="variable"><name>_type</name></member>
     <member refid="classcytnx_1_1LinOp_1a38afcf53b4dc771d8c23e0441450a2d8" kind="variable"><name>_nx</name></member>
@@ -466,6 +468,7 @@
     <member refid="namespacecytnx_1af664ec40b8661447cc01a0e0d227795c" kind="enum"><name>fermionParity</name></member>
     <member refid="namespacecytnx_1af664ec40b8661447cc01a0e0d227795ca6fd9ef7c3daa624e97952df76dc68a89" kind="enumvalue"><name>EVEN</name></member>
     <member refid="namespacecytnx_1af664ec40b8661447cc01a0e0d227795cac7d73b44b81eca41c3956e1d9f5d19df" kind="enumvalue"><name>ODD</name></member>
+    <member refid="namespacecytnx_1a27aa2c9f9401b20248afcfb1ab761b06" kind="variable"><name>User_debug</name></member>
     <member refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kind="variable"><name>Device</name></member>
     <member refid="namespacecytnx_1a224ad816267928be693a2396f5483e06" kind="variable"><name>UTenType</name></member>
     <member refid="namespacecytnx_1ab8a79a03fb0465f3eb2641017f3f1755" kind="function"><name>zeros</name></member>
@@ -534,6 +537,13 @@
     <member refid="namespacecytnx_1_1algo_1a030124e0b8e894d35837134e3111e3c7" kind="function"><name>Hsplit_</name></member>
     <member refid="namespacecytnx_1_1algo_1a977a0c66043b8238214658b1178cd073" kind="function"><name>Vsplit</name></member>
     <member refid="namespacecytnx_1_1algo_1a882e6a0d33e659d35f7f1df18a51152a" kind="function"><name>Hsplit</name></member>
+  </compound>
+  <compound refid="namespacecytnx_1_1internal" kind="namespace"><name>cytnx::internal</name>
+    <member refid="namespacecytnx_1_1internal_1a892b9074c2498da118428f798784ce68" kind="function"><name>vformat_message</name></member>
+    <member refid="namespacecytnx_1_1internal_1ad619737cc981416c5751c54dc3a59ec9" kind="function"><name>compose_report</name></member>
+    <member refid="namespacecytnx_1_1internal_1ab9e4e066d9c0a7008768e68a0d791b89" kind="function"><name>print_backtrace_if_debug</name></member>
+    <member refid="namespacecytnx_1_1internal_1aa7801d0d3ad5adb083645ab42c03f0c2" kind="function"><name>error_msg_impl</name></member>
+    <member refid="namespacecytnx_1_1internal_1a28700253924d13c0c358dc9ae93ff5f0" kind="function"><name>warning_msg_impl</name></member>
   </compound>
   <compound refid="namespacecytnx_1_1linalg" kind="namespace"><name>cytnx::linalg</name>
     <member refid="namespacecytnx_1_1linalg_1ac61bd0f99306496fae81f8601fa4070c" kind="function"><name>Add</name></member>
@@ -688,6 +698,8 @@
     <member refid="namespacecytnx_1_1random_1a526bd27b4f67395742c5633c2f8343de" kind="function"><name>uniform</name></member>
     <member refid="namespacecytnx_1_1random_1af0b01447d0dcdf05b7cb268df806478c" kind="function"><name>random_tensor</name></member>
   </compound>
+  <compound refid="namespacestd" kind="namespace"><name>std</name>
+  </compound>
   <compound refid="dox_8md" kind="file"><name>dox.md</name>
   </compound>
   <compound refid="Accessor_8hpp" kind="file"><name>Accessor.hpp</name>
@@ -702,10 +714,9 @@
   </compound>
   <compound refid="cytnx__error_8hpp" kind="file"><name>cytnx_error.hpp</name>
     <member refid="cytnx__error_8hpp_1a657739793b5913e4ca54e957234a7f27" kind="define"><name>CYTNX_HAS_EXECINFO</name></member>
+    <member refid="cytnx__error_8hpp_1a80be6480b99a383c9f8d4d31a721142b" kind="define"><name>CYTNX_FUNC_NAME</name></member>
     <member refid="cytnx__error_8hpp_1aa2edc77cab5ba7d1561fd1ea6cfba9ac" kind="define"><name>cytnx_error_msg</name></member>
     <member refid="cytnx__error_8hpp_1a81109ea32caf96bd935d7df52c03105f" kind="define"><name>cytnx_warning_msg</name></member>
-    <member refid="cytnx__error_8hpp_1a453e54e3a5064e29d1b8bcd0dcfa0849" kind="function"><name>error_msg</name></member>
-    <member refid="cytnx__error_8hpp_1a5b90293952ef75bb17c3c53d6cb2253e" kind="function"><name>warning_msg</name></member>
   </compound>
   <compound refid="Device_8hpp" kind="file"><name>Device.hpp</name>
   </compound>
@@ -738,7 +749,6 @@
     <member refid="Type_8hpp_1a811069b79e704a9e1dee1e70bb135aec" kind="typedef"><name>blas_int</name></member>
     <member refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kind="variable"><name>Type</name></member>
     <member refid="Type_8hpp_1a7730a97d285d53e329a7b5e9d74ad05c" kind="variable"><name>__blasINTsize__</name></member>
-    <member refid="Type_8hpp_1a98cd8880722041b005f9c42c1e9e9723" kind="variable"><name>User_debug</name></member>
   </compound>
   <compound refid="UniTensor_8hpp" kind="file"><name>UniTensor.hpp</name>
   </compound>

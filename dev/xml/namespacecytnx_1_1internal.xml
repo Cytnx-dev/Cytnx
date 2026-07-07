@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacecytnx_1_1internal" kind="namespace" language="C++">
+    <compoundname>cytnx::internal</compoundname>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacecytnx_1_1internal_1a892b9074c2498da118428f798784ce68" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string cytnx::internal::vformat_message</definition>
+        <argsstring>(char const *format, va_list args)</argsstring>
+        <name>vformat_message</name>
+        <qualifiedname>cytnx::internal::vformat_message</qualifiedname>
+        <param>
+          <type>char const *</type>
+          <declname>format</declname>
+        </param>
+        <param>
+          <type>va_list</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cytnx_error.hpp" line="41" column="24" bodyfile="include/cytnx_error.hpp" bodystart="41" bodyend="51"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1internal_1ad619737cc981416c5751c54dc3a59ec9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string cytnx::internal::compose_report</definition>
+        <argsstring>(char const *kind, char const *func, char const *file, int line, const std::string &amp;msg)</argsstring>
+        <name>compose_report</name>
+        <qualifiedname>cytnx::internal::compose_report</qualifiedname>
+        <param>
+          <type>char const *</type>
+          <declname>kind</declname>
+        </param>
+        <param>
+          <type>char const *</type>
+          <declname>func</declname>
+        </param>
+        <param>
+          <type>char const *</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cytnx_error.hpp" line="53" column="24" bodyfile="include/cytnx_error.hpp" bodystart="53" bodyend="74"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1internal_1ab9e4e066d9c0a7008768e68a0d791b89" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::internal::print_backtrace_if_debug</definition>
+        <argsstring>()</argsstring>
+        <name>print_backtrace_if_debug</name>
+        <qualifiedname>cytnx::internal::print_backtrace_if_debug</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cytnx_error.hpp" line="76" column="17" bodyfile="include/cytnx_error.hpp" bodystart="76" bodyend="90"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1internal_1aa7801d0d3ad5adb083645ab42c03f0c2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::internal::error_msg_impl</definition>
+        <argsstring>(char const *func, char const *file, int line, char const *format,...)</argsstring>
+        <name>error_msg_impl</name>
+        <qualifiedname>cytnx::internal::error_msg_impl</qualifiedname>
+        <param>
+          <type>char const *</type>
+          <declname>func</declname>
+        </param>
+        <param>
+          <type>char const *</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type>char const *</type>
+          <declname>format</declname>
+        </param>
+        <param>
+          <type>...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cytnx_error.hpp" line="92" column="18" bodyfile="include/cytnx_error.hpp" bodystart="92" bodyend="101"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1internal_1a28700253924d13c0c358dc9ae93ff5f0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::internal::warning_msg_impl</definition>
+        <argsstring>(char const *func, char const *file, int line, char const *format,...)</argsstring>
+        <name>warning_msg_impl</name>
+        <qualifiedname>cytnx::internal::warning_msg_impl</qualifiedname>
+        <param>
+          <type>char const *</type>
+          <declname>func</declname>
+        </param>
+        <param>
+          <type>char const *</type>
+          <declname>file</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>line</declname>
+        </param>
+        <param>
+          <type>char const *</type>
+          <declname>format</declname>
+        </param>
+        <param>
+          <type>...</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cytnx_error.hpp" line="103" column="17" bodyfile="include/cytnx_error.hpp" bodystart="103" bodyend="110"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cytnx_error.hpp" line="39" column="3"/>
+  </compounddef>
+</doxygen>

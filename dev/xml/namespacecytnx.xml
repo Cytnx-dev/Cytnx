@@ -4,6 +4,7 @@
     <compoundname>cytnx</compoundname>
     <innerclass refid="classcytnx_1_1Accessor" prot="public">cytnx::Accessor</innerclass>
     <innerclass refid="classcytnx_1_1Bond" prot="public">cytnx::Bond</innerclass>
+    <innerclass refid="classcytnx_1_1error" prot="public">cytnx::error</innerclass>
     <innerclass refid="classcytnx_1_1LinOp" prot="public">cytnx::LinOp</innerclass>
     <innerclass refid="classcytnx_1_1Network" prot="public">cytnx::Network</innerclass>
     <innerclass refid="classcytnx_1_1Qs" prot="public">cytnx::Qs</innerclass>
@@ -11,6 +12,7 @@
     <innerclass refid="classcytnx_1_1Tensor" prot="public">cytnx::Tensor</innerclass>
     <innerclass refid="classcytnx_1_1UniTensor" prot="public">cytnx::UniTensor</innerclass>
     <innernamespace refid="namespacecytnx_1_1algo">cytnx::algo</innernamespace>
+    <innernamespace refid="namespacecytnx_1_1internal">cytnx::internal</innernamespace>
     <innernamespace refid="namespacecytnx_1_1linalg">cytnx::linalg</innernamespace>
     <innernamespace refid="namespacecytnx_1_1operators">cytnx::operators</innernamespace>
     <innernamespace refid="namespacecytnx_1_1physics">cytnx::physics</innernamespace>
@@ -206,6 +208,20 @@
       </memberdef>
     </sectiondef>
     <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacecytnx_1a27aa2c9f9401b20248afcfb1ab761b06" prot="public" static="no" extern="yes" mutable="no">
+        <type>bool</type>
+        <definition>bool cytnx::User_debug</definition>
+        <argsstring></argsstring>
+        <name>User_debug</name>
+        <qualifiedname>cytnx::User_debug</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cytnx_error.hpp" line="30" column="15" declfile="include/cytnx_error.hpp" declline="30" declcolumn="15"/>
+      </memberdef>
       <memberdef kind="variable" id="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" prot="public" static="no" extern="yes" mutable="no">
         <type>Device_class</type>
         <definition>Device_class cytnx::Device</definition>
