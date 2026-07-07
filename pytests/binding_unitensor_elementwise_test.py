@@ -1,21 +1,25 @@
 """Tests for Phase-2 Task 3 of the API-semantics plan (issue #934, #753, #675).
 
-Maintainer ruling (yingjerkao, 2026-07-06): `UniTensor` is a tensor-network
-object, not a raw array. Element-wise `UniTensor (+) UniTensor` arithmetic
-(`+`, `-`, `*`, `/`, and their reflected/in-place forms) has no general
-tensor-network meaning -- for BlockUniTensor/BlockFermionicUniTensor it either
-destroys the block structure or is basis-dependent nonsense (see #934's
-enumeration; #753/#675 document the same operations losing labels). The
-python-facing dunders for the UniTensor-vs-UniTensor overloads are removed
-and now raise TypeError with guidance pointing at Contract()/Kron()/scalar
-arithmetic. This is INTENTIONALLY narrower than the C++ layer: the internal
-C++ `operator+`/`operator-` on UniTensor (declared in include/linalg.hpp) is
-kept, because src/linalg/Lanczos_Gnd_Ut.cpp and src/linalg/Lanczos_Exp.cpp
-use it as genuine Krylov-subspace vector-space arithmetic (axpy-style linear
-combinations) inside the Lanczos/BiCGSTAB solvers that back
-`cytnx.linalg.Lanczos(..., method="Gnd")` and `cytnx.linalg.Lanczos_Exp`
-(used by the DMRG and TDVP examples). Python users never call `+`/`-` on two
-UniTensors directly for that purpose; they call the solver entry points.
+Maintainer ruling (yingjerkao, 2026-07-06, amended): `UniTensor` is a
+tensor-network object, not a raw array. The four elementwise
+`UniTensor (+) UniTensor` operator families split by whether the operation is
+well defined:
+
+  * ``+`` ``-`` ``+=`` ``-=`` are KEPT, but guarded: they require the two
+    operands to describe the same tensor slot (matching type, rank, labels,
+    rowrank, is_diag, bonds). With matching metadata the sum/difference is
+    unambiguous and label-preserving; with mismatched metadata the labels would
+    be silently discarded (the #934/#753/#675 complaint), so they raise
+    TypeError instead.
+  * ``*`` ``/`` ``*=`` ``/=`` are REMOVED: the elementwise (Hadamard)
+    product/quotient of two UniTensors is basis-dependent and has no
+    tensor-network meaning. They raise TypeError with guidance.
+
+The C++ ``operator+``/``operator-`` on UniTensor (declared in
+include/linalg.hpp) is unchanged: src/linalg/Lanczos_Gnd_Ut.cpp and
+src/linalg/Lanczos_Exp.cpp use it as genuine Krylov-subspace vector-space
+arithmetic backing ``cytnx.linalg.Lanczos(..., method="Gnd")`` /
+``cytnx.linalg.Lanczos_Exp`` (used by the DMRG and TDVP examples).
 
 Scalar (Python/numpy number, cytnx.Scalar) <-> UniTensor arithmetic is
 unaffected and stays public in both directions (`2.0 * ut`, `ut * 2.0`,
@@ -27,26 +31,88 @@ import cytnx
 
 
 def _pair():
+    # two structurally-identical Dense UniTensors: same default labels, bonds,
+    # rowrank, is_diag -> matching metadata.
     ut1 = cytnx.UniTensor(cytnx.ones([2, 2]))
     ut2 = cytnx.UniTensor(cytnx.ones([2, 2]))
     return ut1, ut2
 
 
 # ---------------------------------------------------------------------------
-# Removed: UniTensor (+) UniTensor elementwise arithmetic (out-of-place)
+# Kept (guarded): UniTensor +/- UniTensor with matching metadata works and
+# preserves the shared labels (the #934 label-discarding is what we guard away).
 # ---------------------------------------------------------------------------
 
 
-def test_add_unitensor_unitensor_raises():
+def test_add_unitensor_matching_metadata_works():
     ut1, ut2 = _pair()
-    with pytest.raises(TypeError, match=r"(?s)934.*Contract"):
+    labels = ut1.labels()
+    out = ut1 + ut2
+    assert out.get_block()[0, 0].item() == 2.0
+    assert out.labels() == labels  # labels preserved, not reset to a plain range
+
+
+def test_sub_unitensor_matching_metadata_works():
+    ut1, ut2 = _pair()
+    labels = ut1.labels()
+    out = ut1 - ut2
+    assert out.get_block()[0, 0].item() == 0.0
+    assert out.labels() == labels
+
+
+def test_iadd_unitensor_matching_metadata_works():
+    ut1, ut2 = _pair()
+    labels = ut1.labels()
+    ut1 += ut2
+    assert ut1.get_block()[0, 0].item() == 2.0
+    assert ut1.labels() == labels
+
+
+def test_isub_unitensor_matching_metadata_works():
+    ut1, ut2 = _pair()
+    labels = ut1.labels()
+    ut1 -= ut2
+    assert ut1.get_block()[0, 0].item() == 0.0
+    assert ut1.labels() == labels
+
+
+# ---------------------------------------------------------------------------
+# Guarded: UniTensor +/- UniTensor with mismatched metadata raises TypeError.
+# ---------------------------------------------------------------------------
+
+
+def test_add_unitensor_mismatched_labels_raises():
+    ut1 = cytnx.UniTensor(cytnx.ones([2, 2])).relabel_(["a", "b"])
+    ut2 = cytnx.UniTensor(cytnx.ones([2, 2])).relabel_(["c", "d"])
+    with pytest.raises(TypeError, match=r"(?s)labels.*934"):
         ut1 + ut2
 
 
-def test_sub_unitensor_unitensor_raises():
-    ut1, ut2 = _pair()
-    with pytest.raises(TypeError, match=r"(?s)934.*Contract"):
+def test_sub_unitensor_mismatched_labels_raises():
+    ut1 = cytnx.UniTensor(cytnx.ones([2, 2])).relabel_(["a", "b"])
+    ut2 = cytnx.UniTensor(cytnx.ones([2, 2])).relabel_(["c", "d"])
+    with pytest.raises(TypeError, match=r"(?s)labels.*934"):
         ut1 - ut2
+
+
+def test_add_unitensor_mismatched_bonds_raises():
+    # same labels, different bond dimension on leg 'b' -> bond mismatch.
+    ut1 = cytnx.UniTensor(cytnx.ones([2, 2])).relabel_(["a", "b"])
+    ut2 = cytnx.UniTensor(cytnx.ones([2, 3])).relabel_(["a", "b"])
+    with pytest.raises(TypeError, match=r"(?s)934"):
+        ut1 + ut2
+
+
+def test_iadd_unitensor_mismatched_labels_raises():
+    ut1 = cytnx.UniTensor(cytnx.ones([2, 2])).relabel_(["a", "b"])
+    ut2 = cytnx.UniTensor(cytnx.ones([2, 2])).relabel_(["c", "d"])
+    with pytest.raises(TypeError, match=r"(?s)labels.*934"):
+        ut1 += ut2
+
+
+# ---------------------------------------------------------------------------
+# Removed: UniTensor * / UniTensor elementwise arithmetic (out-of-place & in-place)
+# ---------------------------------------------------------------------------
 
 
 def test_mul_unitensor_unitensor_raises():
@@ -59,23 +125,6 @@ def test_truediv_unitensor_unitensor_raises():
     ut1, ut2 = _pair()
     with pytest.raises(TypeError, match=r"(?s)934.*get_block"):
         ut1 / ut2
-
-
-# ---------------------------------------------------------------------------
-# Removed: UniTensor (+)= UniTensor elementwise arithmetic (in-place)
-# ---------------------------------------------------------------------------
-
-
-def test_iadd_unitensor_unitensor_raises():
-    ut1, ut2 = _pair()
-    with pytest.raises(TypeError, match=r"(?s)934.*Contract"):
-        ut1 += ut2
-
-
-def test_isub_unitensor_unitensor_raises():
-    ut1, ut2 = _pair()
-    with pytest.raises(TypeError, match=r"(?s)934.*Contract"):
-        ut1 -= ut2
 
 
 def test_imul_unitensor_unitensor_raises():
