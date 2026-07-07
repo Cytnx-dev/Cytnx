@@ -458,6 +458,32 @@ namespace cytnx {
                                                           variant_index_v<TR, Type_list>),
                                  Type_list>;
 
+    // Runtime counterpart of make_floating_point_t, for call sites that only
+    // have a dtype id (not a C++ type) at the point an operation's output
+    // Tensor/Storage is pre-sized, e.g. Div's out-of-place output allocation
+    // before the typed visitor runs. Named distinctly from the
+    // make_floating_point<T> type-trait below (a function and a class
+    // template cannot share a name in the same scope).
+    static constexpr unsigned int make_floating_point_dtype(unsigned int type_id) {
+      check_type(type_id);
+      if (is_float(type_id)) return type_id;
+      return Double;
+    }
+
+    // The true-division output type for a promoted dtype: integral/bool dtypes
+    // become cytnx_double (Python true-division semantics), existing floating
+    // dtypes and complex dtypes are unchanged. Used by Div's output-type rule
+    // (make_floating_point_t<type_promote_t<TL,TR>>) so int/int division
+    // produces a floating result instead of truncating (#941).
+    template <typename T>
+    struct make_floating_point {
+      using type =
+        std::conditional_t<std::is_floating_point_v<T> || is_complex_v<T>, T, cytnx_double>;
+    };
+
+    template <typename T>
+    using make_floating_point_t = typename make_floating_point<T>::type;
+
     // Helper to promote two pointer types (note does _not_ return another pointer type)
     template <typename TL, typename TR>
     struct type_promote_from_pointer {
