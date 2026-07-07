@@ -41,6 +41,7 @@ namespace cytnx {
   namespace internal {
 
     inline std::string vformat_message(char const *format, va_list args) {
+      if (format == nullptr) return std::string();
       va_list args_copy;
       va_copy(args_copy, args);
       const int n = std::vsnprintf(nullptr, 0, format, args_copy);
@@ -55,16 +56,19 @@ namespace cytnx {
                                       int line, const std::string &msg) {
       std::string out;
       out.reserve(msg.size() + 256);
+      // kind/func/file come from macro literals / CYTNX_FUNC_NAME / __FILE__ (or
+      // std::source_location), so they are non-null in practice; fall back defensively so a
+      // misuse can never turn report composition itself into undefined behavior.
       out += "\n# Cytnx ";
-      out += kind;
+      out += kind ? kind : "error";
       out += " occur at ";
-      out += func;
+      out += func ? func : "unknown";
       out += "\n# ";
-      out += kind;
+      out += kind ? kind : "error";
       out += ": ";
       out += msg;
       out += "\n# file : ";
-      out += file;
+      out += file ? file : "unknown";
       out += " (";
       out += std::to_string(line);
       out += ")";
