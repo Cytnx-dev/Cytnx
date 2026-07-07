@@ -418,7 +418,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2716" column="14" bodyfile="include/UniTensor.hpp" bodystart="2716" bodyend="2721"/>
+        <location file="include/UniTensor.hpp" line="2729" column="14" bodyfile="include/UniTensor.hpp" bodystart="2729" bodyend="2734"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2d0d50a0e14e4f77228d6cc8fe443a83" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -501,7 +501,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2739" column="10" bodyfile="include/UniTensor.hpp" bodystart="2739" bodyend="2745"/>
+        <location file="include/UniTensor.hpp" line="2752" column="10" bodyfile="include/UniTensor.hpp" bodystart="2752" bodyend="2758"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a22bfca573fca4122e18717050f1f0a7c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -607,7 +607,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2766" column="5" bodyfile="include/UniTensor.hpp" bodystart="2766" bodyend="2781"/>
+        <location file="include/UniTensor.hpp" line="2779" column="5" bodyfile="include/UniTensor.hpp" bodystart="2779" bodyend="2794"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a60507be1cb58a25749d53c32a76f846f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -720,7 +720,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2813" column="15" bodyfile="include/UniTensor.hpp" bodystart="2813" bodyend="2867"/>
+        <location file="include/UniTensor.hpp" line="2826" column="15" bodyfile="include/UniTensor.hpp" bodystart="2826" bodyend="2880"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9ea55737e39a8d81f4e90a81fd47692d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -751,7 +751,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2875" column="15" bodyfile="include/UniTensor.hpp" bodystart="2875" bodyend="2878"/>
+        <location file="include/UniTensor.hpp" line="2888" column="15" bodyfile="include/UniTensor.hpp" bodystart="2888" bodyend="2891"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6e81820a5c1de5e398ccff44ae3cb3a5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -798,7 +798,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2890" column="15" bodyfile="include/UniTensor.hpp" bodystart="2890" bodyend="2893"/>
+        <location file="include/UniTensor.hpp" line="2903" column="15" bodyfile="include/UniTensor.hpp" bodystart="2903" bodyend="2906"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a163ad7f509495337e6c4ee327bc90294" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -823,7 +823,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2898" column="15" bodyfile="include/UniTensor.hpp" bodystart="2898" bodyend="2901"/>
+        <location file="include/UniTensor.hpp" line="2911" column="15" bodyfile="include/UniTensor.hpp" bodystart="2911" bodyend="2914"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a32f8c1ca6d2e782c2fd1a443df4884fa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -870,7 +870,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2913" column="15" bodyfile="include/UniTensor.hpp" bodystart="2913" bodyend="2916"/>
+        <location file="include/UniTensor.hpp" line="2926" column="15" bodyfile="include/UniTensor.hpp" bodystart="2926" bodyend="2929"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a669817ede29d57f6a0b05b69e19ab51f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -895,7 +895,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2921" column="15" bodyfile="include/UniTensor.hpp" bodystart="2921" bodyend="2924"/>
+        <location file="include/UniTensor.hpp" line="2934" column="15" bodyfile="include/UniTensor.hpp" bodystart="2934" bodyend="2937"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa37a5f9513c62bbb58d86f9eb332ad07" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -920,7 +920,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2929" column="15" bodyfile="include/UniTensor.hpp" bodystart="2929" bodyend="2932"/>
+        <location file="include/UniTensor.hpp" line="2942" column="15" bodyfile="include/UniTensor.hpp" bodystart="2942" bodyend="2945"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aab2831be9e39aaa46b3dd3a3191f83da" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -945,7 +945,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2937" column="15" bodyfile="include/UniTensor.hpp" bodystart="2937" bodyend="2940"/>
+        <location file="include/UniTensor.hpp" line="2950" column="15" bodyfile="include/UniTensor.hpp" bodystart="2950" bodyend="2953"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a54712d4aedcfe01324bd7d4aa042cf8c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -967,7 +967,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2958" column="7" bodyfile="include/UniTensor.hpp" bodystart="2958" bodyend="2961"/>
+        <location file="include/UniTensor.hpp" line="2971" column="7" bodyfile="include/UniTensor.hpp" bodystart="2971" bodyend="2974"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3edc556b2b60d672d1e1b40d2ccd69e6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -989,7 +989,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2972" column="7" bodyfile="include/UniTensor.hpp" bodystart="2972" bodyend="2980"/>
+        <location file="include/UniTensor.hpp" line="2985" column="7" bodyfile="include/UniTensor.hpp" bodystart="2985" bodyend="2993"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6a404fc472417514812f3a8ed992e8df" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -1018,7 +1018,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2988" column="15" bodyfile="include/UniTensor.hpp" bodystart="2988" bodyend="2991"/>
+        <location file="include/UniTensor.hpp" line="3001" column="15" bodyfile="include/UniTensor.hpp" bodystart="3001" bodyend="3004"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a349d9a76363fe18af58e7c91f033c2f5" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1036,7 +1036,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="2993" column="15" bodyfile="include/UniTensor.hpp" bodystart="2993" bodyend="2997"/>
+        <location file="include/UniTensor.hpp" line="3006" column="15" bodyfile="include/UniTensor.hpp" bodystart="3006" bodyend="3010"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a06d8f228e0440461df89e9604b66a141" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -1055,7 +1055,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3000" column="7" bodyfile="include/UniTensor.hpp" bodystart="3000" bodyend="3008"/>
+        <location file="include/UniTensor.hpp" line="3013" column="7" bodyfile="include/UniTensor.hpp" bodystart="3013" bodyend="3021"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ae46713d86ffeae73218f696eb5de3507" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>Scalar::Sproxy</type>
@@ -1069,7 +1069,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3010" column="20" bodyfile="include/UniTensor.hpp" bodystart="3010" bodyend="3018"/>
+        <location file="include/UniTensor.hpp" line="3023" column="20" bodyfile="include/UniTensor.hpp" bodystart="3023" bodyend="3031"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af1a73d20890029bde10151a387d5f647" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref></type>
@@ -1087,7 +1087,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3023" column="18" bodyfile="include/UniTensor.hpp" bodystart="3023" bodyend="3023"/>
+        <location file="include/UniTensor.hpp" line="3036" column="18" bodyfile="include/UniTensor.hpp" bodystart="3036" bodyend="3036"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a95239beb2137a790e5765e32060ff09f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref></type>
@@ -1105,7 +1105,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3029" column="18" bodyfile="include/UniTensor.hpp" bodystart="3029" bodyend="3029"/>
+        <location file="include/UniTensor.hpp" line="3042" column="18" bodyfile="include/UniTensor.hpp" bodystart="3042" bodyend="3042"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a373efd1b4ee3f0588f30f4795f2c5c16" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref></type>
@@ -1123,7 +1123,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3035" column="18" bodyfile="include/UniTensor.hpp" bodystart="3035" bodyend="3035"/>
+        <location file="include/UniTensor.hpp" line="3048" column="18" bodyfile="include/UniTensor.hpp" bodystart="3048" bodyend="3048"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa3a370844d981cb86c3d784ecbb573c1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">unsigned</ref> <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">int</ref></type>
@@ -1141,7 +1141,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3042" column="18" bodyfile="include/UniTensor.hpp" bodystart="3042" bodyend="3042"/>
+        <location file="include/UniTensor.hpp" line="3055" column="18" bodyfile="include/UniTensor.hpp" bodystart="3055" bodyend="3055"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1afe930fe1d99b1149ccb65e1003c6030b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">int</ref></type>
@@ -1161,7 +1161,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3050" column="9" bodyfile="include/UniTensor.hpp" bodystart="3050" bodyend="3050"/>
+        <location file="include/UniTensor.hpp" line="3063" column="9" bodyfile="include/UniTensor.hpp" bodystart="3063" bodyend="3063"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>int</type>
@@ -1179,7 +1179,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3057" column="9" bodyfile="include/UniTensor.hpp" bodystart="3057" bodyend="3057"/>
+        <location file="include/UniTensor.hpp" line="3070" column="9" bodyfile="include/UniTensor.hpp" bodystart="3070" bodyend="3070"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a55941f8078598076309486cc1de3d73f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -1197,7 +1197,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3063" column="17" bodyfile="include/UniTensor.hpp" bodystart="3063" bodyend="3063"/>
+        <location file="include/UniTensor.hpp" line="3076" column="17" bodyfile="include/UniTensor.hpp" bodystart="3076" bodyend="3076"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a91173048a7985caa45786a7c08f68c40" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -1217,7 +1217,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3070" column="17" bodyfile="include/UniTensor.hpp" bodystart="3070" bodyend="3070"/>
+        <location file="include/UniTensor.hpp" line="3083" column="17" bodyfile="include/UniTensor.hpp" bodystart="3083" bodyend="3083"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ae7862c67c8ce93035aa7c6ffb3fc0f17" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -1237,7 +1237,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3077" column="17" bodyfile="include/UniTensor.hpp" bodystart="3077" bodyend="3077"/>
+        <location file="include/UniTensor.hpp" line="3090" column="17" bodyfile="include/UniTensor.hpp" bodystart="3090" bodyend="3090"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a1c7cfbb826a15cd3272985e6db0d9c78" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -1257,7 +1257,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3084" column="17" bodyfile="include/UniTensor.hpp" bodystart="3084" bodyend="3084"/>
+        <location file="include/UniTensor.hpp" line="3097" column="17" bodyfile="include/UniTensor.hpp" bodystart="3097" bodyend="3097"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a0b2eb7bd2d16f74c43f991c2f3a64fac" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref></type>
@@ -1277,7 +1277,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3091" column="10" bodyfile="include/UniTensor.hpp" bodystart="3091" bodyend="3091"/>
+        <location file="include/UniTensor.hpp" line="3104" column="10" bodyfile="include/UniTensor.hpp" bodystart="3104" bodyend="3104"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8de198d36f24c6e9d49b357632ec0c98" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref></type>
@@ -1295,7 +1295,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3097" column="10" bodyfile="include/UniTensor.hpp" bodystart="3097" bodyend="3097"/>
+        <location file="include/UniTensor.hpp" line="3110" column="10" bodyfile="include/UniTensor.hpp" bodystart="3110" bodyend="3110"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a1c3cbcbe162042897fe77c9ce7632af2" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref></type>
@@ -1313,7 +1313,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3104" column="10" bodyfile="include/UniTensor.hpp" bodystart="3104" bodyend="3104"/>
+        <location file="include/UniTensor.hpp" line="3117" column="10" bodyfile="include/UniTensor.hpp" bodystart="3117" bodyend="3117"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a834fdcd0eaf341c351be23f8445a03bb" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> &gt;</type>
@@ -1331,7 +1331,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3111" column="17" bodyfile="include/UniTensor.hpp" bodystart="3111" bodyend="3111"/>
+        <location file="include/UniTensor.hpp" line="3124" column="17" bodyfile="include/UniTensor.hpp" bodystart="3124" bodyend="3124"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a41d3d78b0b9c4118b15925169720cfb6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref> &amp;</type>
@@ -1351,7 +1351,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3119" column="16" bodyfile="include/UniTensor.hpp" bodystart="3119" bodyend="3119"/>
+        <location file="include/UniTensor.hpp" line="3132" column="16" bodyfile="include/UniTensor.hpp" bodystart="3132" bodyend="3132"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad46c621c998425501578d4e39d9eb3fc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> std::vector&lt; std::string &gt; &amp;</type>
@@ -1369,7 +1369,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3125" column="23" bodyfile="include/UniTensor.hpp" bodystart="3125" bodyend="3125"/>
+        <location file="include/UniTensor.hpp" line="3138" column="23" bodyfile="include/UniTensor.hpp" bodystart="3138" bodyend="3138"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad5ad4f4d395dd713ab70ca68d3f22ce8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_int64</ref></type>
@@ -1400,7 +1400,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3132" column="17" bodyfile="include/UniTensor.hpp" bodystart="3132" bodyend="3132"/>
+        <location file="include/UniTensor.hpp" line="3145" column="17" bodyfile="include/UniTensor.hpp" bodystart="3145" bodyend="3145"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1adb09a9052e76013471b08f537d0015e9" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> std::vector&lt; <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &gt; &amp;</type>
@@ -1418,7 +1418,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3138" column="23" bodyfile="include/UniTensor.hpp" bodystart="3138" bodyend="3138"/>
+        <location file="include/UniTensor.hpp" line="3151" column="23" bodyfile="include/UniTensor.hpp" bodystart="3151" bodyend="3151"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6875687e10e8b1582644fb6985f36f98" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &gt; &amp;</type>
@@ -1435,7 +1435,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3143" column="17" bodyfile="include/UniTensor.hpp" bodystart="3143" bodyend="3143"/>
+        <location file="include/UniTensor.hpp" line="3156" column="17" bodyfile="include/UniTensor.hpp" bodystart="3156" bodyend="3156"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2708f2ba38dc5ef773f74c04f3365e53" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
@@ -1453,7 +1453,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3145" column="16" bodyfile="include/UniTensor.hpp" bodystart="3145" bodyend="3145"/>
+        <location file="include/UniTensor.hpp" line="3158" column="16" bodyfile="include/UniTensor.hpp" bodystart="3158" bodyend="3158"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ac66f66cb8f02a7821f72f8ef1526cf67" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
@@ -1471,7 +1471,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3146" column="10" bodyfile="include/UniTensor.hpp" bodystart="3146" bodyend="3146"/>
+        <location file="include/UniTensor.hpp" line="3159" column="10" bodyfile="include/UniTensor.hpp" bodystart="3159" bodyend="3159"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ac447c4c8eefe41ec99a0c70390dd64ae" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
@@ -1489,7 +1489,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3148" column="16" bodyfile="include/UniTensor.hpp" bodystart="3148" bodyend="3148"/>
+        <location file="include/UniTensor.hpp" line="3161" column="16" bodyfile="include/UniTensor.hpp" bodystart="3161" bodyend="3161"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a951844276d1a2999d9d13474f7ba724d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
@@ -1507,7 +1507,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3149" column="10" bodyfile="include/UniTensor.hpp" bodystart="3149" bodyend="3149"/>
+        <location file="include/UniTensor.hpp" line="3162" column="10" bodyfile="include/UniTensor.hpp" bodystart="3162" bodyend="3162"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af33ca81d4fe081fcea0ea8a2a154c852" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -1525,7 +1525,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3151" column="10" bodyfile="include/UniTensor.hpp" bodystart="3151" bodyend="3151"/>
+        <location file="include/UniTensor.hpp" line="3164" column="10" bodyfile="include/UniTensor.hpp" bodystart="3164" bodyend="3164"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a96624499b10b7c699f54dda08bc77117" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -1543,7 +1543,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3152" column="10" bodyfile="include/UniTensor.hpp" bodystart="3152" bodyend="3152"/>
+        <location file="include/UniTensor.hpp" line="3165" column="10" bodyfile="include/UniTensor.hpp" bodystart="3165" bodyend="3165"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4a87af4bf568263dcd6db1376f35d97c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref> &gt;</type>
@@ -1561,7 +1561,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3158" column="17" bodyfile="include/UniTensor.hpp" bodystart="3158" bodyend="3158"/>
+        <location file="include/UniTensor.hpp" line="3171" column="17" bodyfile="include/UniTensor.hpp" bodystart="3171" bodyend="3171"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a12cea716bcce79e026bd7d147d8eda2e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref> &gt;</type>
@@ -1579,7 +1579,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3166" column="17" bodyfile="include/UniTensor.hpp" bodystart="3166" bodyend="3166"/>
+        <location file="include/UniTensor.hpp" line="3179" column="17" bodyfile="include/UniTensor.hpp" bodystart="3179" bodyend="3179"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9744f8a90c899a6b811efbc4dd920643" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref> &gt; &amp;</type>
@@ -1599,7 +1599,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3176" column="17" bodyfile="include/UniTensor.hpp" bodystart="3176" bodyend="3176"/>
+        <location file="include/UniTensor.hpp" line="3189" column="17" bodyfile="include/UniTensor.hpp" bodystart="3189" bodyend="3189"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aac44ae40cb93f11f673ac0c1930ae319" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref></type>
@@ -1615,7 +1615,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3183" column="10" bodyfile="include/UniTensor.hpp" bodystart="3183" bodyend="3183"/>
+        <location file="include/UniTensor.hpp" line="3196" column="10" bodyfile="include/UniTensor.hpp" bodystart="3196" bodyend="3196"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad85301a279a5b403fcfd28e261f696df" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -1646,7 +1646,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3191" column="15" bodyfile="include/UniTensor.hpp" bodystart="3191" bodyend="3194"/>
+        <location file="include/UniTensor.hpp" line="3204" column="15" bodyfile="include/UniTensor.hpp" bodystart="3204" bodyend="3207"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a025f4a2d775a9892b7f86aeff364fa49" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1681,7 +1681,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3205" column="15" bodyfile="include/UniTensor.hpp" bodystart="3205" bodyend="3209"/>
+        <location file="include/UniTensor.hpp" line="3218" column="15" bodyfile="include/UniTensor.hpp" bodystart="3218" bodyend="3222"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ae1125e6627eb2f5268d5c21944d31434" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1699,7 +1699,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3215" column="15" bodyfile="include/UniTensor.hpp" bodystart="3215" bodyend="3219"/>
+        <location file="include/UniTensor.hpp" line="3228" column="15" bodyfile="include/UniTensor.hpp" bodystart="3228" bodyend="3232"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8241712bf34eee2ce6e2963833c1a156" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -1734,7 +1734,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3230" column="15" bodyfile="include/UniTensor.hpp" bodystart="3230" bodyend="3233"/>
+        <location file="include/UniTensor.hpp" line="3243" column="15" bodyfile="include/UniTensor.hpp" bodystart="3243" bodyend="3246"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1afb9812c7247f573bf659a98f24b12715" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -1756,7 +1756,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3243" column="7" bodyfile="include/UniTensor.hpp" bodystart="3243" bodyend="3246"/>
+        <location file="include/UniTensor.hpp" line="3256" column="7" bodyfile="include/UniTensor.hpp" bodystart="3256" bodyend="3259"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8368a52036f9ff25572bd455ecece2dd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1792,7 +1792,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3259" column="15" bodyfile="include/UniTensor.hpp" bodystart="3259" bodyend="3263"/>
+        <location file="include/UniTensor.hpp" line="3272" column="15" bodyfile="include/UniTensor.hpp" bodystart="3272" bodyend="3276"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aea30e0417a4b6552a016d77ff10cc032" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1814,7 +1814,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3273" column="7" bodyfile="include/UniTensor.hpp" bodystart="3273" bodyend="3277"/>
+        <location file="include/UniTensor.hpp" line="3286" column="7" bodyfile="include/UniTensor.hpp" bodystart="3286" bodyend="3290"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af19f7b1442c93f00f46d14b49bd4eec3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1836,7 +1836,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3283" column="15" bodyfile="include/UniTensor.hpp" bodystart="3283" bodyend="3292"/>
+        <location file="include/UniTensor.hpp" line="3296" column="15" bodyfile="include/UniTensor.hpp" bodystart="3296" bodyend="3305"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1abb243634aaeecdde1c973e78fa66acbc" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1858,7 +1858,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3302" column="7" bodyfile="include/UniTensor.hpp" bodystart="3302" bodyend="3311"/>
+        <location file="include/UniTensor.hpp" line="3315" column="7" bodyfile="include/UniTensor.hpp" bodystart="3315" bodyend="3324"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3fdf3353f8cf66739814b047e174edac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -1879,7 +1879,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3315" column="15" bodyfile="include/UniTensor.hpp" bodystart="3315" bodyend="3323"/>
+        <location file="include/UniTensor.hpp" line="3328" column="15" bodyfile="include/UniTensor.hpp" bodystart="3328" bodyend="3336"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2c1273dcc551489e466999bb5cee57b3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -1901,7 +1901,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3333" column="7" bodyfile="include/UniTensor.hpp" bodystart="3333" bodyend="3341"/>
+        <location file="include/UniTensor.hpp" line="3346" column="7" bodyfile="include/UniTensor.hpp" bodystart="3346" bodyend="3354"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9bc53d5c8da90d3c9321b1e4128c786d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1947,7 +1947,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3350" column="15" bodyfile="include/UniTensor.hpp" bodystart="3350" bodyend="3355"/>
+        <location file="include/UniTensor.hpp" line="3363" column="15" bodyfile="include/UniTensor.hpp" bodystart="3363" bodyend="3368"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a7f59300d4e1226d80c701ee5181cdf49" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -1974,7 +1974,7 @@ Shape : (4,4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3366" column="7" bodyfile="include/UniTensor.hpp" bodystart="3366" bodyend="3371"/>
+        <location file="include/UniTensor.hpp" line="3379" column="7" bodyfile="include/UniTensor.hpp" bodystart="3379" bodyend="3384"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1abfc0b1faeef378712dab6124dc26930f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2027,7 +2027,7 @@ std::vector&lt;std::string&gt; &amp;new_labels) const </ref>, this function set 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3388" column="15" bodyfile="include/UniTensor.hpp" bodystart="3388" bodyend="3392"/>
+        <location file="include/UniTensor.hpp" line="3401" column="15" bodyfile="include/UniTensor.hpp" bodystart="3401" bodyend="3405"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a38cb9dcf09a704aa10567f77e7354f37" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2054,7 +2054,7 @@ std::vector&lt;std::string&gt; &amp;new_labels) const </ref>, this function set 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3403" column="7" bodyfile="include/UniTensor.hpp" bodystart="3403" bodyend="3407"/>
+        <location file="include/UniTensor.hpp" line="3416" column="7" bodyfile="include/UniTensor.hpp" bodystart="3416" bodyend="3420"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aeb569a5ea02641e9814bb50004a2c534" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2080,7 +2080,7 @@ std::vector&lt;std::string&gt; &amp;new_labels) const </ref>, this function set 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3413" column="15" bodyfile="include/UniTensor.hpp" bodystart="3413" bodyend="3426"/>
+        <location file="include/UniTensor.hpp" line="3426" column="15" bodyfile="include/UniTensor.hpp" bodystart="3426" bodyend="3439"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad1e94c2ce8a085b471b4ea2e21dacc70" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2107,7 +2107,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels) const </ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3438" column="7" bodyfile="include/UniTensor.hpp" bodystart="3438" bodyend="3451"/>
+        <location file="include/UniTensor.hpp" line="3451" column="7" bodyfile="include/UniTensor.hpp" bodystart="3451" bodyend="3464"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad5a368eb5eaf1223de1e63c90f7d25b2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2133,7 +2133,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels) const </ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3457" column="15" bodyfile="include/UniTensor.hpp" bodystart="3457" bodyend="3471"/>
+        <location file="include/UniTensor.hpp" line="3470" column="15" bodyfile="include/UniTensor.hpp" bodystart="3470" bodyend="3484"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ab28f13002b796f7b741574b4d5fa6644" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2160,7 +2160,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3482" column="7" bodyfile="include/UniTensor.hpp" bodystart="3482" bodyend="3496"/>
+        <location file="include/UniTensor.hpp" line="3495" column="7" bodyfile="include/UniTensor.hpp" bodystart="3495" bodyend="3509"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ace3f158d0212942e6e9b0d5d07ebbf92" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2205,7 +2205,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3512" column="15" bodyfile="include/UniTensor.hpp" bodystart="3512" bodyend="3516"/>
+        <location file="include/UniTensor.hpp" line="3525" column="15" bodyfile="include/UniTensor.hpp" bodystart="3525" bodyend="3529"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4154a0658b8d28146cb678b3d4273a34" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2248,7 +2248,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3525" column="15" bodyfile="include/UniTensor.hpp" bodystart="3525" bodyend="3528"/>
+        <location file="include/UniTensor.hpp" line="3538" column="15" bodyfile="include/UniTensor.hpp" bodystart="3538" bodyend="3541"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2a25effba33e8a35e20fbbd8c34f89f6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2291,7 +2291,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3538" column="15" bodyfile="include/UniTensor.hpp" bodystart="3538" bodyend="3541"/>
+        <location file="include/UniTensor.hpp" line="3551" column="15" bodyfile="include/UniTensor.hpp" bodystart="3551" bodyend="3554"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a89b99b81994e6be6ee5c11ed18256f59" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2336,7 +2336,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3557" column="15" bodyfile="include/UniTensor.hpp" bodystart="3557" bodyend="3561"/>
+        <location file="include/UniTensor.hpp" line="3570" column="15" bodyfile="include/UniTensor.hpp" bodystart="3570" bodyend="3574"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a61e40e264c721245ffeaaa548b86c435" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2369,7 +2369,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3569" column="15" bodyfile="include/UniTensor.hpp" bodystart="3569" bodyend="3577"/>
+        <location file="include/UniTensor.hpp" line="3582" column="15" bodyfile="include/UniTensor.hpp" bodystart="3582" bodyend="3590"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa2bc7b8d77bd97e608abc427174d1916" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2416,7 +2416,7 @@ cytnx_int64 &amp;rowrank) instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3587" column="15" bodyfile="include/UniTensor.hpp" bodystart="3587" bodyend="3592"/>
+        <location file="include/UniTensor.hpp" line="3600" column="15" bodyfile="include/UniTensor.hpp" bodystart="3600" bodyend="3605"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa37f4ea9814e1ddb2983e5163aa0ca2d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2460,7 +2460,7 @@ cytnx_int64 &amp;rowrank) instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3600" column="15" bodyfile="include/UniTensor.hpp" bodystart="3600" bodyend="3605"/>
+        <location file="include/UniTensor.hpp" line="3613" column="15" bodyfile="include/UniTensor.hpp" bodystart="3613" bodyend="3618"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a1a6cdc0c1eeed7e4f75dff08c39c4d1d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2489,7 +2489,7 @@ cytnx_int64 &amp;rowrank) instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3612" column="15" bodyfile="include/UniTensor.hpp" bodystart="3612" bodyend="3620"/>
+        <location file="include/UniTensor.hpp" line="3625" column="15" bodyfile="include/UniTensor.hpp" bodystart="3625" bodyend="3633"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4afc2458fa79ed4fa95bfb259ddc9745" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2534,7 +2534,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3629" column="15" bodyfile="include/UniTensor.hpp" bodystart="3629" bodyend="3632"/>
+        <location file="include/UniTensor.hpp" line="3642" column="15" bodyfile="include/UniTensor.hpp" bodystart="3642" bodyend="3645"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ac32ef9d113b470bbbab92f9566f6b4a5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2578,7 +2578,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3640" column="15" bodyfile="include/UniTensor.hpp" bodystart="3640" bodyend="3643"/>
+        <location file="include/UniTensor.hpp" line="3653" column="15" bodyfile="include/UniTensor.hpp" bodystart="3653" bodyend="3656"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6ec88d6c44efad569cc8a334eb4f5b71" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2627,7 +2627,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3658" column="15" bodyfile="include/UniTensor.hpp" bodystart="3658" bodyend="3663"/>
+        <location file="include/UniTensor.hpp" line="3671" column="15" bodyfile="include/UniTensor.hpp" bodystart="3671" bodyend="3676"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a22bcc9498a3cc022c5b30085abf3d3b2" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2673,7 +2673,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3676" column="15" bodyfile="include/UniTensor.hpp" bodystart="3676" bodyend="3681"/>
+        <location file="include/UniTensor.hpp" line="3689" column="15" bodyfile="include/UniTensor.hpp" bodystart="3689" bodyend="3694"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9a17d6c17a0bd5f63d0ec85562a0f288" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2702,7 +2702,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3688" column="15" bodyfile="include/UniTensor.hpp" bodystart="3688" bodyend="3696"/>
+        <location file="include/UniTensor.hpp" line="3701" column="15" bodyfile="include/UniTensor.hpp" bodystart="3701" bodyend="3709"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2e4fbeb81522f5307918677295410c84" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2749,7 +2749,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3710" column="15" bodyfile="include/UniTensor.hpp" bodystart="3710" bodyend="3714"/>
+        <location file="include/UniTensor.hpp" line="3723" column="15" bodyfile="include/UniTensor.hpp" bodystart="3723" bodyend="3727"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a87ecd1df0ac84d722200edc813026061" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2795,7 +2795,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3727" column="15" bodyfile="include/UniTensor.hpp" bodystart="3727" bodyend="3731"/>
+        <location file="include/UniTensor.hpp" line="3740" column="15" bodyfile="include/UniTensor.hpp" bodystart="3740" bodyend="3744"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3e9e54bca2cdb1a9065381ff37b77784" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2826,7 +2826,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3741" column="15" bodyfile="include/UniTensor.hpp" bodystart="3741" bodyend="3745"/>
+        <location file="include/UniTensor.hpp" line="3754" column="15" bodyfile="include/UniTensor.hpp" bodystart="3754" bodyend="3758"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aaee1c16532dc9e8b98eac125f0609146" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2857,7 +2857,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3754" column="15" bodyfile="include/UniTensor.hpp" bodystart="3754" bodyend="3758"/>
+        <location file="include/UniTensor.hpp" line="3767" column="15" bodyfile="include/UniTensor.hpp" bodystart="3767" bodyend="3771"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3df67737a297fe5c50a90416a44cea0d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2888,7 +2888,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3764" column="15" bodyfile="include/UniTensor.hpp" bodystart="3764" bodyend="3767"/>
+        <location file="include/UniTensor.hpp" line="3777" column="15" bodyfile="include/UniTensor.hpp" bodystart="3777" bodyend="3780"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5d40faf5a5054b1ba4ed71f1038e324a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2919,7 +2919,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3773" column="15" bodyfile="include/UniTensor.hpp" bodystart="3773" bodyend="3776"/>
+        <location file="include/UniTensor.hpp" line="3786" column="15" bodyfile="include/UniTensor.hpp" bodystart="3786" bodyend="3789"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9963c0399878d23e2a065cde39b7d666" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2937,7 +2937,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3792" column="15" bodyfile="include/UniTensor.hpp" bodystart="3792" bodyend="3796"/>
+        <location file="include/UniTensor.hpp" line="3805" column="15" bodyfile="include/UniTensor.hpp" bodystart="3805" bodyend="3809"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a707bb81afd05ea12616e5632ffa19b09" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2957,7 +2957,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3802" column="15" bodyfile="include/UniTensor.hpp" bodystart="3802" bodyend="3805"/>
+        <location file="include/UniTensor.hpp" line="3815" column="15" bodyfile="include/UniTensor.hpp" bodystart="3815" bodyend="3818"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a78d8b11e2327e3323c23c5f8e098c165" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2977,7 +2977,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3813" column="15" bodyfile="include/UniTensor.hpp" bodystart="3813" bodyend="3817"/>
+        <location file="include/UniTensor.hpp" line="3826" column="15" bodyfile="include/UniTensor.hpp" bodystart="3826" bodyend="3830"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2448c0224588af16cb4ed755d8ee5899" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -2995,7 +2995,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3823" column="15" bodyfile="include/UniTensor.hpp" bodystart="3823" bodyend="3826"/>
+        <location file="include/UniTensor.hpp" line="3836" column="15" bodyfile="include/UniTensor.hpp" bodystart="3836" bodyend="3839"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aaf4a3d47266f9dc87954571ab0b9f3e7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -3015,7 +3015,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3836" column="15" bodyfile="include/UniTensor.hpp" bodystart="3836" bodyend="3840"/>
+        <location file="include/UniTensor.hpp" line="3849" column="15" bodyfile="include/UniTensor.hpp" bodystart="3849" bodyend="3853"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a7d475e79fff54d3ef9e6a926ed65c3e7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -3033,7 +3033,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3847" column="15" bodyfile="include/UniTensor.hpp" bodystart="3847" bodyend="3850"/>
+        <location file="include/UniTensor.hpp" line="3860" column="15" bodyfile="include/UniTensor.hpp" bodystart="3860" bodyend="3863"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad199aeff72a9389dd16e11cb7b3a8746" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -3063,7 +3063,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3856" column="10" bodyfile="include/UniTensor.hpp" bodystart="3856" bodyend="3858"/>
+        <location file="include/UniTensor.hpp" line="3869" column="10" bodyfile="include/UniTensor.hpp" bodystart="3869" bodyend="3871"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ae3635708a51d75cde30af3a6bb87fe9a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -3093,7 +3093,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3864" column="10" bodyfile="include/UniTensor.hpp" bodystart="3864" bodyend="3864"/>
+        <location file="include/UniTensor.hpp" line="3877" column="10" bodyfile="include/UniTensor.hpp" bodystart="3877" bodyend="3877"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a05ae9cbc839846845f8cc5f10768c03b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -3135,7 +3135,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3871" column="10" bodyfile="include/UniTensor.hpp" bodystart="3871" bodyend="3873"/>
+        <location file="include/UniTensor.hpp" line="3884" column="10" bodyfile="include/UniTensor.hpp" bodystart="3884" bodyend="3886"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a89eebf30816d3f443c4c7c698de27a68" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -3153,7 +3153,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3881" column="15" bodyfile="include/UniTensor.hpp" bodystart="3881" bodyend="3884"/>
+        <location file="include/UniTensor.hpp" line="3894" column="15" bodyfile="include/UniTensor.hpp" bodystart="3894" bodyend="3897"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aaccbad43729ab4e2bc8ac56925a71d6c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -3167,7 +3167,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3886" column="15" bodyfile="include/UniTensor.hpp" bodystart="3886" bodyend="3890"/>
+        <location file="include/UniTensor.hpp" line="3899" column="15" bodyfile="include/UniTensor.hpp" bodystart="3899" bodyend="3903"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3205,7 +3205,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3901" column="7" bodyfile="include/UniTensor.hpp" bodystart="3901" bodyend="3917"/>
+        <location file="include/UniTensor.hpp" line="3914" column="7" bodyfile="include/UniTensor.hpp" bodystart="3914" bodyend="3930"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a7d514b8969ce13d75fa49447ac7f1b6c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3243,7 +3243,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3928" column="13" bodyfile="include/UniTensor.hpp" bodystart="3928" bodyend="3944"/>
+        <location file="include/UniTensor.hpp" line="3941" column="13" bodyfile="include/UniTensor.hpp" bodystart="3941" bodyend="3957"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2ba246ff5f51332d0fa82b5d9e45821d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3270,7 +3270,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3947" column="13" bodyfile="include/UniTensor.hpp" bodystart="3947" bodyend="3967"/>
+        <location file="include/UniTensor.hpp" line="3960" column="13" bodyfile="include/UniTensor.hpp" bodystart="3960" bodyend="3980"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2e84c1f6405e21759ea08f35cf4efb04" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3297,7 +3297,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3969" column="7" bodyfile="include/UniTensor.hpp" bodystart="3969" bodyend="3988"/>
+        <location file="include/UniTensor.hpp" line="3982" column="7" bodyfile="include/UniTensor.hpp" bodystart="3982" bodyend="4001"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1afbc92cb5b89de62af024d2a7892511ca" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> Scalar::Sproxy</type>
@@ -3319,7 +3319,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="3997" column="26" bodyfile="include/UniTensor.hpp" bodystart="3997" bodyend="4011"/>
+        <location file="include/UniTensor.hpp" line="4010" column="26" bodyfile="include/UniTensor.hpp" bodystart="4010" bodyend="4024"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5e01dc0a9ed6cbada0635744a935911c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>Scalar::Sproxy</type>
@@ -3341,7 +3341,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4020" column="20" bodyfile="include/UniTensor.hpp" bodystart="4020" bodyend="4034"/>
+        <location file="include/UniTensor.hpp" line="4033" column="20" bodyfile="include/UniTensor.hpp" bodystart="4033" bodyend="4047"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4b38acce3f290ada6517213c53bfcd26" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>Scalar::Sproxy</type>
@@ -3363,7 +3363,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4036" column="20" bodyfile="include/UniTensor.hpp" bodystart="4036" bodyend="4056"/>
+        <location file="include/UniTensor.hpp" line="4049" column="20" bodyfile="include/UniTensor.hpp" bodystart="4049" bodyend="4069"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a572870a9af62c61f5c089ea9aa9841f8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> Scalar::Sproxy</type>
@@ -3385,7 +3385,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4058" column="26" bodyfile="include/UniTensor.hpp" bodystart="4058" bodyend="4078"/>
+        <location file="include/UniTensor.hpp" line="4071" column="26" bodyfile="include/UniTensor.hpp" bodystart="4071" bodyend="4091"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a7d4df6dffeca0fd8eafdb9d766813f84" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3419,7 +3419,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4089" column="12" bodyfile="include/UniTensor.hpp" bodystart="4089" bodyend="4089"/>
+        <location file="include/UniTensor.hpp" line="4102" column="12" bodyfile="include/UniTensor.hpp" bodystart="4102" bodyend="4102"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2406cf0250175887be132de18b054953" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3465,7 +3465,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4103" column="12" bodyfile="include/UniTensor.hpp" bodystart="4103" bodyend="4105"/>
+        <location file="include/UniTensor.hpp" line="4116" column="12" bodyfile="include/UniTensor.hpp" bodystart="4116" bodyend="4118"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a0e25cd5c5ea43d8f2c7fda2d2bf671e3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3492,7 +3492,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4107" column="12" bodyfile="include/UniTensor.hpp" bodystart="4107" bodyend="4132"/>
+        <location file="include/UniTensor.hpp" line="4120" column="12" bodyfile="include/UniTensor.hpp" bodystart="4120" bodyend="4145"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1afb6f38f370802c39cc4bae6eebf7ee5e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3518,7 +3518,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4138" column="12" bodyfile="include/UniTensor.hpp" bodystart="4138" bodyend="4142"/>
+        <location file="include/UniTensor.hpp" line="4151" column="12" bodyfile="include/UniTensor.hpp" bodystart="4151" bodyend="4155"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af1b28d5c93207d8a8b08f239c7dfb7d4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3544,7 +3544,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4148" column="12" bodyfile="include/UniTensor.hpp" bodystart="4148" bodyend="4151"/>
+        <location file="include/UniTensor.hpp" line="4161" column="12" bodyfile="include/UniTensor.hpp" bodystart="4161" bodyend="4164"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1adb181f580f4cc90333eaf40ec0229063" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3571,7 +3571,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4153" column="12" bodyfile="include/UniTensor.hpp" bodystart="4153" bodyend="4157"/>
+        <location file="include/UniTensor.hpp" line="4166" column="12" bodyfile="include/UniTensor.hpp" bodystart="4166" bodyend="4170"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1abee44516bc18f72b726500bc2bb4872f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3605,7 +3605,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4167" column="18" bodyfile="include/UniTensor.hpp" bodystart="4167" bodyend="4169"/>
+        <location file="include/UniTensor.hpp" line="4180" column="18" bodyfile="include/UniTensor.hpp" bodystart="4180" bodyend="4182"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1affb7a9d6dcbf5cdda50187ea0e01ecd3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3629,7 +3629,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4175" column="12" bodyfile="include/UniTensor.hpp" bodystart="4175" bodyend="4175"/>
+        <location file="include/UniTensor.hpp" line="4188" column="12" bodyfile="include/UniTensor.hpp" bodystart="4188" bodyend="4188"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2ce35ddc36f7536bd9621402a3562679" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3675,7 +3675,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4188" column="12" bodyfile="include/UniTensor.hpp" bodystart="4188" bodyend="4190"/>
+        <location file="include/UniTensor.hpp" line="4201" column="12" bodyfile="include/UniTensor.hpp" bodystart="4201" bodyend="4203"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9018f0b377ce8caee1f83e432a43c19d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3735,7 +3735,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4210" column="12" bodyfile="include/UniTensor.hpp" bodystart="4210" bodyend="4237"/>
+        <location file="include/UniTensor.hpp" line="4223" column="12" bodyfile="include/UniTensor.hpp" bodystart="4223" bodyend="4250"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a041d8bb8a591e889b612024d35efa8b5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3761,7 +3761,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4242" column="12" bodyfile="include/UniTensor.hpp" bodystart="4242" bodyend="4245"/>
+        <location file="include/UniTensor.hpp" line="4255" column="12" bodyfile="include/UniTensor.hpp" bodystart="4255" bodyend="4258"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a05ac175c87cb251d34479eb2ac51dc61" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3787,7 +3787,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4250" column="12" bodyfile="include/UniTensor.hpp" bodystart="4250" bodyend="4253"/>
+        <location file="include/UniTensor.hpp" line="4263" column="12" bodyfile="include/UniTensor.hpp" bodystart="4263" bodyend="4266"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aaaabd8979a936e3fdddb77a1e2651e9f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3814,7 +3814,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4255" column="12" bodyfile="include/UniTensor.hpp" bodystart="4255" bodyend="4259"/>
+        <location file="include/UniTensor.hpp" line="4268" column="12" bodyfile="include/UniTensor.hpp" bodystart="4268" bodyend="4272"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4ec447c20a8c5f9dda75daab89e1d31a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3840,7 +3840,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4266" column="18" bodyfile="include/UniTensor.hpp" bodystart="4266" bodyend="4269"/>
+        <location file="include/UniTensor.hpp" line="4279" column="18" bodyfile="include/UniTensor.hpp" bodystart="4279" bodyend="4282"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ab8db9033c7662fa4870256ee112e3d4b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3866,7 +3866,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4274" column="18" bodyfile="include/UniTensor.hpp" bodystart="4274" bodyend="4278"/>
+        <location file="include/UniTensor.hpp" line="4287" column="18" bodyfile="include/UniTensor.hpp" bodystart="4287" bodyend="4291"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8f1abdea2e18db9c5eeb6fcb3a49f11a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3892,7 +3892,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4283" column="18" bodyfile="include/UniTensor.hpp" bodystart="4283" bodyend="4287"/>
+        <location file="include/UniTensor.hpp" line="4296" column="18" bodyfile="include/UniTensor.hpp" bodystart="4296" bodyend="4300"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a18f7a36047f964adf220d92dafbef3c8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3917,7 +3917,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4302" column="17" bodyfile="include/UniTensor.hpp" bodystart="4302" bodyend="4302"/>
+        <location file="include/UniTensor.hpp" line="4315" column="17" bodyfile="include/UniTensor.hpp" bodystart="4315" bodyend="4315"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ab201df6580c4b3c912b2789f693a9172" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &amp;</type>
@@ -3951,7 +3951,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4313" column="23" bodyfile="include/UniTensor.hpp" bodystart="4313" bodyend="4315"/>
+        <location file="include/UniTensor.hpp" line="4326" column="23" bodyfile="include/UniTensor.hpp" bodystart="4326" bodyend="4328"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a0586ff59c33eda6cc9fbb3ea25cb3aca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &amp;</type>
@@ -3973,7 +3973,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4321" column="17" bodyfile="include/UniTensor.hpp" bodystart="4321" bodyend="4323"/>
+        <location file="include/UniTensor.hpp" line="4334" column="17" bodyfile="include/UniTensor.hpp" bodystart="4334" bodyend="4336"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9c894a11bd5e9a1d5c042c5bb61c8e48" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4017,7 +4017,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4334" column="15" bodyfile="include/UniTensor.hpp" bodystart="4334" bodyend="4337"/>
+        <location file="include/UniTensor.hpp" line="4347" column="15" bodyfile="include/UniTensor.hpp" bodystart="4347" bodyend="4350"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a0eaa545881f5de347199910555b9532f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4047,7 +4047,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4348" column="7" bodyfile="include/UniTensor.hpp" bodystart="4348" bodyend="4351"/>
+        <location file="include/UniTensor.hpp" line="4361" column="7" bodyfile="include/UniTensor.hpp" bodystart="4361" bodyend="4364"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3858de1d359d85ecdaa54bb7d73a75a3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4090,7 +4090,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4362" column="15" bodyfile="include/UniTensor.hpp" bodystart="4362" bodyend="4365"/>
+        <location file="include/UniTensor.hpp" line="4375" column="15" bodyfile="include/UniTensor.hpp" bodystart="4375" bodyend="4378"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9df943e88dec88c5ee1a9723797d9179" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4120,7 +4120,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4376" column="7" bodyfile="include/UniTensor.hpp" bodystart="4376" bodyend="4379"/>
+        <location file="include/UniTensor.hpp" line="4389" column="7" bodyfile="include/UniTensor.hpp" bodystart="4389" bodyend="4392"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5771a65dbc78c563fd1556af159d3adb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4150,7 +4150,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4389" column="15" bodyfile="include/UniTensor.hpp" bodystart="4389" bodyend="4415"/>
+        <location file="include/UniTensor.hpp" line="4402" column="15" bodyfile="include/UniTensor.hpp" bodystart="4402" bodyend="4428"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1addf4ec2c8db5c4172eb8bc5acb843665" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4185,7 +4185,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4427" column="7" bodyfile="include/UniTensor.hpp" bodystart="4427" bodyend="4430"/>
+        <location file="include/UniTensor.hpp" line="4440" column="7" bodyfile="include/UniTensor.hpp" bodystart="4440" bodyend="4443"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a79aa757a759a1427c6d0a9f525e3632b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4216,7 +4216,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4441" column="15" bodyfile="include/UniTensor.hpp" bodystart="4441" bodyend="4444"/>
+        <location file="include/UniTensor.hpp" line="4454" column="15" bodyfile="include/UniTensor.hpp" bodystart="4454" bodyend="4457"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a085299bccf586326e0b82b434255e3c1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4246,7 +4246,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4455" column="15" bodyfile="include/UniTensor.hpp" bodystart="4455" bodyend="4458"/>
+        <location file="include/UniTensor.hpp" line="4468" column="15" bodyfile="include/UniTensor.hpp" bodystart="4468" bodyend="4471"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a94e1b0c5abad291972ad29598cfd4bbd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4276,7 +4276,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4469" column="7" bodyfile="include/UniTensor.hpp" bodystart="4469" bodyend="4472"/>
+        <location file="include/UniTensor.hpp" line="4482" column="7" bodyfile="include/UniTensor.hpp" bodystart="4482" bodyend="4485"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6c19f2c2119009097a4b9f26151cc4aa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4308,7 +4308,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4482" column="15" bodyfile="include/UniTensor.hpp" bodystart="4482" bodyend="4511"/>
+        <location file="include/UniTensor.hpp" line="4495" column="15" bodyfile="include/UniTensor.hpp" bodystart="4495" bodyend="4524"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ae9cda7e4b96ae82e7d8e4eea3b8d17f3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4343,7 +4343,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4523" column="7" bodyfile="include/UniTensor.hpp" bodystart="4523" bodyend="4526"/>
+        <location file="include/UniTensor.hpp" line="4536" column="7" bodyfile="include/UniTensor.hpp" bodystart="4536" bodyend="4539"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2e2d7f3137bb1cfb26e6a19acbc9563e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4383,7 +4383,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4543" column="15" bodyfile="include/UniTensor.hpp" bodystart="4543" bodyend="4547"/>
+        <location file="include/UniTensor.hpp" line="4556" column="15" bodyfile="include/UniTensor.hpp" bodystart="4556" bodyend="4560"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a467e637ee3f32199e16afef477625beb" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4405,7 +4405,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4553" column="15" bodyfile="include/UniTensor.hpp" bodystart="4553" bodyend="4557"/>
+        <location file="include/UniTensor.hpp" line="4566" column="15" bodyfile="include/UniTensor.hpp" bodystart="4566" bodyend="4570"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6ba0946b8addb3591c1b629c6273cbad" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4423,7 +4423,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4558" column="15" bodyfile="include/UniTensor.hpp" bodystart="4558" bodyend="4561"/>
+        <location file="include/UniTensor.hpp" line="4571" column="15" bodyfile="include/UniTensor.hpp" bodystart="4571" bodyend="4574"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af0f31b97cff92e6502f0d3b3a2e2a0bf" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4441,7 +4441,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4562" column="15" bodyfile="include/UniTensor.hpp" bodystart="4562" bodyend="4568"/>
+        <location file="include/UniTensor.hpp" line="4575" column="15" bodyfile="include/UniTensor.hpp" bodystart="4575" bodyend="4581"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a66972866bb3e7ea1668ebded55e5f9bb" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4459,7 +4459,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4569" column="15" bodyfile="include/UniTensor.hpp" bodystart="4569" bodyend="4572"/>
+        <location file="include/UniTensor.hpp" line="4582" column="15" bodyfile="include/UniTensor.hpp" bodystart="4582" bodyend="4585"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5ae4f4974c26ef7fe69a2a2870c07576" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4511,7 +4511,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4590" column="15" bodyfile="include/UniTensor.hpp" bodystart="4590" bodyend="4593"/>
+        <location file="include/UniTensor.hpp" line="4603" column="15" bodyfile="include/UniTensor.hpp" bodystart="4603" bodyend="4606"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a34b74115c5fdede1d4712bd66f6ee152" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4533,7 +4533,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4594" column="15" bodyfile="include/UniTensor.hpp" bodystart="4594" bodyend="4604"/>
+        <location file="include/UniTensor.hpp" line="4607" column="15" bodyfile="include/UniTensor.hpp" bodystart="4607" bodyend="4617"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a18226194a82791cfa6f661293b25d101" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4577,7 +4577,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4613" column="15" bodyfile="include/UniTensor.hpp" bodystart="4613" bodyend="4617"/>
+        <location file="include/UniTensor.hpp" line="4626" column="15" bodyfile="include/UniTensor.hpp" bodystart="4626" bodyend="4630"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad0984371a4b623a9d8f3ac090aae38f5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4606,7 +4606,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4625" column="15" bodyfile="include/UniTensor.hpp" bodystart="4625" bodyend="4629"/>
+        <location file="include/UniTensor.hpp" line="4638" column="15" bodyfile="include/UniTensor.hpp" bodystart="4638" bodyend="4642"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4aeec131076ae541e8be7cdb930e151b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4628,7 +4628,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4641" column="15" bodyfile="include/UniTensor.hpp" bodystart="4641" bodyend="4645"/>
+        <location file="include/UniTensor.hpp" line="4654" column="15" bodyfile="include/UniTensor.hpp" bodystart="4654" bodyend="4658"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a7865ac8753d490640054dcee930ff9ec" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4646,7 +4646,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4651" column="15" bodyfile="include/UniTensor.hpp" bodystart="4651" bodyend="4654"/>
+        <location file="include/UniTensor.hpp" line="4664" column="15" bodyfile="include/UniTensor.hpp" bodystart="4664" bodyend="4667"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aaadfa8d665c76353ea6eef35d5be976d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -4676,7 +4676,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4665" column="7" bodyfile="include/UniTensor.hpp" bodystart="4665" bodyend="4668"/>
+        <location file="include/UniTensor.hpp" line="4678" column="7" bodyfile="include/UniTensor.hpp" bodystart="4678" bodyend="4681"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a893a7715779cd9b7369ac2e0011aee99" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -4703,7 +4703,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4679" column="7" bodyfile="include/UniTensor.hpp" bodystart="4679" bodyend="4681"/>
+        <location file="include/UniTensor.hpp" line="4692" column="7" bodyfile="include/UniTensor.hpp" bodystart="4692" bodyend="4694"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a286ea6434384864cc38f3b4c0736fdc9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -4730,7 +4730,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4692" column="7" bodyfile="include/UniTensor.hpp" bodystart="4692" bodyend="4694"/>
+        <location file="include/UniTensor.hpp" line="4705" column="7" bodyfile="include/UniTensor.hpp" bodystart="4705" bodyend="4707"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8963181b34820940d2f33813c33a4f78" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4778,7 +4778,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4706" column="15" bodyfile="include/UniTensor.hpp" bodystart="4706" bodyend="4709"/>
+        <location file="include/UniTensor.hpp" line="4719" column="15" bodyfile="include/UniTensor.hpp" bodystart="4719" bodyend="4722"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4845,7 +4845,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4729" column="15" bodyfile="include/UniTensor.hpp" bodystart="4729" bodyend="4734"/>
+        <location file="include/UniTensor.hpp" line="4742" column="15" bodyfile="include/UniTensor.hpp" bodystart="4742" bodyend="4747"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a60f413988532b115c5323b6f7dc1be6b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref></type>
@@ -4867,7 +4867,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4761" column="10" bodyfile="include/UniTensor.hpp" bodystart="4761" bodyend="4766"/>
+        <location file="include/UniTensor.hpp" line="4774" column="10" bodyfile="include/UniTensor.hpp" bodystart="4774" bodyend="4779"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa163e81ce65c07d61886eb25a54fdeb2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4906,7 +4906,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4784" column="15" bodyfile="include/UniTensor.hpp" bodystart="4784" bodyend="4787"/>
+        <location file="include/UniTensor.hpp" line="4797" column="15" bodyfile="include/UniTensor.hpp" bodystart="4797" bodyend="4800"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a844dc64c7eb7a93664084b7e1154722f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4945,7 +4945,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4805" column="15" bodyfile="include/UniTensor.hpp" bodystart="4805" bodyend="4808"/>
+        <location file="include/UniTensor.hpp" line="4818" column="15" bodyfile="include/UniTensor.hpp" bodystart="4818" bodyend="4821"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1abaec2f79addf171c581ab58b3fc043cc" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -4984,7 +4984,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4826" column="15" bodyfile="include/UniTensor.hpp" bodystart="4826" bodyend="4829"/>
+        <location file="include/UniTensor.hpp" line="4839" column="15" bodyfile="include/UniTensor.hpp" bodystart="4839" bodyend="4842"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a932ec2b2408783aec6a7ac66b58bc1aa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5023,7 +5023,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4847" column="15" bodyfile="include/UniTensor.hpp" bodystart="4847" bodyend="4850"/>
+        <location file="include/UniTensor.hpp" line="4860" column="15" bodyfile="include/UniTensor.hpp" bodystart="4860" bodyend="4863"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5a5a5366d5da8a7658611e2c981145cd" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5058,7 +5058,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4862" column="15" bodyfile="include/UniTensor.hpp" bodystart="4862" bodyend="4865"/>
+        <location file="include/UniTensor.hpp" line="4875" column="15" bodyfile="include/UniTensor.hpp" bodystart="4875" bodyend="4878"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa68c141ac062702ef294813e7c6f8836" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5093,7 +5093,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4877" column="15" bodyfile="include/UniTensor.hpp" bodystart="4877" bodyend="4880"/>
+        <location file="include/UniTensor.hpp" line="4890" column="15" bodyfile="include/UniTensor.hpp" bodystart="4890" bodyend="4893"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a404dcfd69cceaf9339acbe2a2380eb2a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5128,7 +5128,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4892" column="15" bodyfile="include/UniTensor.hpp" bodystart="4892" bodyend="4895"/>
+        <location file="include/UniTensor.hpp" line="4905" column="15" bodyfile="include/UniTensor.hpp" bodystart="4905" bodyend="4908"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a938c80d6a0739b6ae90e2d6bb047bf64" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5163,7 +5163,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4907" column="15" bodyfile="include/UniTensor.hpp" bodystart="4907" bodyend="4910"/>
+        <location file="include/UniTensor.hpp" line="4920" column="15" bodyfile="include/UniTensor.hpp" bodystart="4920" bodyend="4923"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af8db9e12557098f0c424dabfb3a45ac3" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5202,7 +5202,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4928" column="15"/>
+        <location file="include/UniTensor.hpp" line="4941" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a45ca59d3ef14450292fdb6bd188157fe" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5237,7 +5237,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4940" column="15"/>
+        <location file="include/UniTensor.hpp" line="4953" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1acf6c7e5d9923a6fb2955c0ea1e7a9b3d" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5276,7 +5276,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4958" column="15"/>
+        <location file="include/UniTensor.hpp" line="4971" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3d6da382b5cd47f26426830403363b8d" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5311,7 +5311,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4970" column="15"/>
+        <location file="include/UniTensor.hpp" line="4983" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a0c7fb1da6efa33d60f21a823485555af" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5350,7 +5350,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="4988" column="15"/>
+        <location file="include/UniTensor.hpp" line="5001" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad3a2346fdbf029f9f60c1ea3427a31bf" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5385,7 +5385,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5000" column="15"/>
+        <location file="include/UniTensor.hpp" line="5013" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aed5727a9b976bb792e421f325fc7d9b7" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5424,7 +5424,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5018" column="15"/>
+        <location file="include/UniTensor.hpp" line="5031" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3baa0bc609bc2bc402cddfb26efb4cd8" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5459,7 +5459,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5030" column="15"/>
+        <location file="include/UniTensor.hpp" line="5043" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a3d328126eaf4f8ac2854f96cba81d592" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5479,7 +5479,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5040" column="12" bodyfile="include/UniTensor.hpp" bodystart="5040" bodyend="5040"/>
+        <location file="include/UniTensor.hpp" line="5053" column="12" bodyfile="include/UniTensor.hpp" bodystart="5053" bodyend="5053"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a165f096bd0b248c9a96da1db287e1bf7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5516,7 +5516,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5057" column="15" bodyfile="include/UniTensor.hpp" bodystart="5057" bodyend="5060"/>
+        <location file="include/UniTensor.hpp" line="5070" column="15" bodyfile="include/UniTensor.hpp" bodystart="5070" bodyend="5073"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa750cf27fca09d332c3af8a47c177d50" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5553,7 +5553,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5077" column="15" bodyfile="include/UniTensor.hpp" bodystart="5077" bodyend="5080"/>
+        <location file="include/UniTensor.hpp" line="5090" column="15" bodyfile="include/UniTensor.hpp" bodystart="5090" bodyend="5093"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a05c0070bc928da52ea57b555d0ccf6e5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5590,7 +5590,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5097" column="15" bodyfile="include/UniTensor.hpp" bodystart="5097" bodyend="5100"/>
+        <location file="include/UniTensor.hpp" line="5110" column="15" bodyfile="include/UniTensor.hpp" bodystart="5110" bodyend="5113"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a027a174c6e9cda2116a7cfbdcec8f9ba" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5627,7 +5627,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5117" column="15" bodyfile="include/UniTensor.hpp" bodystart="5117" bodyend="5120"/>
+        <location file="include/UniTensor.hpp" line="5130" column="15" bodyfile="include/UniTensor.hpp" bodystart="5130" bodyend="5133"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a92924aa4eb84c12bfd3037013819506b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5660,7 +5660,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5132" column="15" bodyfile="include/UniTensor.hpp" bodystart="5132" bodyend="5135"/>
+        <location file="include/UniTensor.hpp" line="5145" column="15" bodyfile="include/UniTensor.hpp" bodystart="5145" bodyend="5148"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a370694872953cb1f18e6edbc02eecc62" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5693,7 +5693,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5147" column="15" bodyfile="include/UniTensor.hpp" bodystart="5147" bodyend="5150"/>
+        <location file="include/UniTensor.hpp" line="5160" column="15" bodyfile="include/UniTensor.hpp" bodystart="5160" bodyend="5163"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a417fdf4a2037612bbac8e24395c8f44d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5726,7 +5726,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5162" column="15" bodyfile="include/UniTensor.hpp" bodystart="5162" bodyend="5165"/>
+        <location file="include/UniTensor.hpp" line="5175" column="15" bodyfile="include/UniTensor.hpp" bodystart="5175" bodyend="5178"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a7dbc2894cce5dbc7b8b434e99e653016" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5759,7 +5759,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5177" column="15" bodyfile="include/UniTensor.hpp" bodystart="5177" bodyend="5180"/>
+        <location file="include/UniTensor.hpp" line="5190" column="15" bodyfile="include/UniTensor.hpp" bodystart="5190" bodyend="5193"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1acdc2a73c9d270bbb33091f2fbf92b046" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5809,7 +5809,7 @@ T_\text{out}[i] = \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5206" column="15"/>
+        <location file="include/UniTensor.hpp" line="5219" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8c989c263d0875976dc5b2c3b3aabafc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5859,7 +5859,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5232" column="15"/>
+        <location file="include/UniTensor.hpp" line="5245" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a32f2956329ca428840408b7744332736" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5881,7 +5881,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5241" column="15" bodyfile="include/UniTensor.hpp" bodystart="5241" bodyend="5245"/>
+        <location file="include/UniTensor.hpp" line="5254" column="15" bodyfile="include/UniTensor.hpp" bodystart="5254" bodyend="5258"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af03325a182bdc478efced2d102181b5d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5903,7 +5903,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5254" column="15" bodyfile="include/UniTensor.hpp" bodystart="5254" bodyend="5257"/>
+        <location file="include/UniTensor.hpp" line="5267" column="15" bodyfile="include/UniTensor.hpp" bodystart="5267" bodyend="5270"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a647f7d7cb96c53243484678ad8625e15" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5927,7 +5927,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5272" column="15" bodyfile="include/UniTensor.hpp" bodystart="5272" bodyend="5276"/>
+        <location file="include/UniTensor.hpp" line="5285" column="15" bodyfile="include/UniTensor.hpp" bodystart="5285" bodyend="5289"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1adced323eadd2324bc6cc2684a39efd2e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5951,7 +5951,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5285" column="15" bodyfile="include/UniTensor.hpp" bodystart="5285" bodyend="5288"/>
+        <location file="include/UniTensor.hpp" line="5298" column="15" bodyfile="include/UniTensor.hpp" bodystart="5298" bodyend="5301"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a814c4bb56fcdd3bf89a080048bbf4a56" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -5973,7 +5973,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5296" column="15" bodyfile="include/UniTensor.hpp" bodystart="5296" bodyend="5300"/>
+        <location file="include/UniTensor.hpp" line="5309" column="15" bodyfile="include/UniTensor.hpp" bodystart="5309" bodyend="5313"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8b5fb238746134ded8b8126fcb3d3c7d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -5995,7 +5995,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5308" column="15" bodyfile="include/UniTensor.hpp" bodystart="5308" bodyend="5311"/>
+        <location file="include/UniTensor.hpp" line="5321" column="15" bodyfile="include/UniTensor.hpp" bodystart="5321" bodyend="5324"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5f54b53bac411c2696874acd104cd304" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -6042,7 +6042,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5322" column="15" bodyfile="include/UniTensor.hpp" bodystart="5322" bodyend="5326"/>
+        <location file="include/UniTensor.hpp" line="5335" column="15" bodyfile="include/UniTensor.hpp" bodystart="5335" bodyend="5339"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa0316aa645994648a1f21c7d1a9c0120" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -6091,7 +6091,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5337" column="15" bodyfile="include/UniTensor.hpp" bodystart="5337" bodyend="5341"/>
+        <location file="include/UniTensor.hpp" line="5350" column="15" bodyfile="include/UniTensor.hpp" bodystart="5350" bodyend="5354"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5b2436f07649001672eca25f0d1769f8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6138,7 +6138,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5352" column="15" bodyfile="include/UniTensor.hpp" bodystart="5352" bodyend="5363"/>
+        <location file="include/UniTensor.hpp" line="5365" column="15" bodyfile="include/UniTensor.hpp" bodystart="5365" bodyend="5376"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9b4837429728ccf3c3e0d50cae7c1eba" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6187,7 +6187,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5374" column="15" bodyfile="include/UniTensor.hpp" bodystart="5374" bodyend="5385"/>
+        <location file="include/UniTensor.hpp" line="5387" column="15" bodyfile="include/UniTensor.hpp" bodystart="5387" bodyend="5398"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aafc6a839bed086c5e23bae8baaeee588" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -6213,7 +6213,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5395" column="15" bodyfile="include/UniTensor.hpp" bodystart="5395" bodyend="5399"/>
+        <location file="include/UniTensor.hpp" line="5408" column="15" bodyfile="include/UniTensor.hpp" bodystart="5408" bodyend="5412"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a67b2b3961ab052969018a4545565a6d3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6239,7 +6239,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5409" column="15" bodyfile="include/UniTensor.hpp" bodystart="5409" bodyend="5412"/>
+        <location file="include/UniTensor.hpp" line="5422" column="15" bodyfile="include/UniTensor.hpp" bodystart="5422" bodyend="5425"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a26a40f3cfae8d14b33fcf883ee300abf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6258,7 +6258,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5422" column="15" bodyfile="include/UniTensor.hpp" bodystart="5422" bodyend="5425"/>
+        <location file="include/UniTensor.hpp" line="5435" column="15" bodyfile="include/UniTensor.hpp" bodystart="5435" bodyend="5438"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aa6605e1634684f737bf1cc80d9b0d129" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -6299,7 +6299,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5442" column="15"/>
+        <location file="include/UniTensor.hpp" line="5455" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a8edcf22c095570948abcc18fa24c2b6f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6340,7 +6340,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5459" column="15"/>
+        <location file="include/UniTensor.hpp" line="5472" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aba05da7f762eea1f139e5379a338e9d6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">bool</ref></type>
@@ -6373,7 +6373,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5467" column="10" bodyfile="include/UniTensor.hpp" bodystart="5467" bodyend="5469"/>
+        <location file="include/UniTensor.hpp" line="5480" column="10" bodyfile="include/UniTensor.hpp" bodystart="5480" bodyend="5482"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a0c5a3ca425fdb2467007c3bf9816dde7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -6400,7 +6400,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5477" column="8" bodyfile="include/UniTensor.hpp" bodystart="5477" bodyend="5479"/>
+        <location file="include/UniTensor.hpp" line="5490" column="8" bodyfile="include/UniTensor.hpp" bodystart="5490" bodyend="5492"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a066c45760deaa7a5c109ddb94827717d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -6431,7 +6431,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5487" column="16" bodyfile="include/UniTensor.hpp" bodystart="5487" bodyend="5492"/>
+        <location file="include/UniTensor.hpp" line="5500" column="16" bodyfile="include/UniTensor.hpp" bodystart="5500" bodyend="5505"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a366ace08b1f9ebf57dd899666d275072" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -6462,7 +6462,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5500" column="10"/>
+        <location file="include/UniTensor.hpp" line="5513" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1af28c0cebe2d998c6a48a69b56d135dce" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">void</ref></type>
@@ -6493,7 +6493,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5508" column="10"/>
+        <location file="include/UniTensor.hpp" line="5521" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1afae3370b89be2e121a2bafdcde6ca0a9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6538,7 +6538,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5538" column="15" bodyfile="include/UniTensor.hpp" bodystart="5538" bodyend="5541"/>
+        <location file="include/UniTensor.hpp" line="5551" column="15" bodyfile="include/UniTensor.hpp" bodystart="5551" bodyend="5554"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a5b70438a966f5c0105d61c7a900722b1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6583,7 +6583,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5551" column="15" bodyfile="include/UniTensor.hpp" bodystart="5551" bodyend="5554"/>
+        <location file="include/UniTensor.hpp" line="5564" column="15" bodyfile="include/UniTensor.hpp" bodystart="5564" bodyend="5567"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a63e4b0a6b7e110e7557f473ac40ad9bd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -6630,7 +6630,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5565" column="15" bodyfile="include/UniTensor.hpp" bodystart="5565" bodyend="5569"/>
+        <location file="include/UniTensor.hpp" line="5578" column="15" bodyfile="include/UniTensor.hpp" bodystart="5578" bodyend="5582"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1adb596c97cb65767730bd3823af2fa5d0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -6677,7 +6677,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5580" column="15" bodyfile="include/UniTensor.hpp" bodystart="5580" bodyend="5584"/>
+        <location file="include/UniTensor.hpp" line="5593" column="15" bodyfile="include/UniTensor.hpp" bodystart="5593" bodyend="5597"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ad323800d8b97faa8aad9b980eb6b9c7f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> std::vector&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref> &gt; &amp;</type>
@@ -6708,7 +6708,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5593" column="23" bodyfile="include/UniTensor.hpp" bodystart="5593" bodyend="5595"/>
+        <location file="include/UniTensor.hpp" line="5606" column="23" bodyfile="include/UniTensor.hpp" bodystart="5606" bodyend="5608"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a118c7e66008dd037063e3e71604ebd74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref> &gt; &amp;</type>
@@ -6739,7 +6739,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5603" column="17" bodyfile="include/UniTensor.hpp" bodystart="5603" bodyend="5605"/>
+        <location file="include/UniTensor.hpp" line="5616" column="17" bodyfile="include/UniTensor.hpp" bodystart="5616" bodyend="5618"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ae7525954cafa6cf69b4fc69dcabae4c3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">vec2d</ref>&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref> &gt; &amp;</type>
@@ -6757,7 +6757,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5613" column="17" bodyfile="include/UniTensor.hpp" bodystart="5613" bodyend="5613"/>
+        <location file="include/UniTensor.hpp" line="5626" column="17" bodyfile="include/UniTensor.hpp" bodystart="5626" bodyend="5626"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ae300c5f40fe1ec3ec841c91bdf9cb944" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">vec2d</ref>&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">cytnx_uint64</ref> &gt; &amp;</type>
@@ -6771,7 +6771,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5614" column="11" bodyfile="include/UniTensor.hpp" bodystart="5614" bodyend="5614"/>
+        <location file="include/UniTensor.hpp" line="5627" column="11" bodyfile="include/UniTensor.hpp" bodystart="5627" bodyend="5627"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a0cad52c38726a58b9cdc3f4a99c6e8e7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6828,7 +6828,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5635" column="15" bodyfile="include/UniTensor.hpp" bodystart="5635" bodyend="5638"/>
+        <location file="include/UniTensor.hpp" line="5648" column="15" bodyfile="include/UniTensor.hpp" bodystart="5648" bodyend="5651"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6ab0cc54674b9af5dd660cffafa70758" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6885,7 +6885,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5964" column="15"/>
+        <location file="include/UniTensor.hpp" line="5977" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6a9ad3afce8d654957443d8f105b7cb8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;</type>
@@ -6944,7 +6944,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5979" column="15"/>
+        <location file="include/UniTensor.hpp" line="5992" column="15"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -6981,7 +6981,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5518" column="22"/>
+        <location file="include/UniTensor.hpp" line="5531" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a66f3a49fe730aa91410e6098457d4aee" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7016,7 +7016,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5528" column="22"/>
+        <location file="include/UniTensor.hpp" line="5541" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a84915f6a0aed270b91758acbef9c6d74" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7101,7 +7101,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5653" column="22" bodyfile="include/UniTensor.hpp" bodystart="5653" bodyend="5658"/>
+        <location file="include/UniTensor.hpp" line="5666" column="22" bodyfile="include/UniTensor.hpp" bodystart="5666" bodyend="5671"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a2d9ada5a5b30bc0bc893104170de4efc" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7187,7 +7187,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5673" column="22" bodyfile="include/UniTensor.hpp" bodystart="5673" bodyend="5678"/>
+        <location file="include/UniTensor.hpp" line="5686" column="22" bodyfile="include/UniTensor.hpp" bodystart="5686" bodyend="5691"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a81e0b5796d282efe493cf30c72c3ffe3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7272,7 +7272,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5691" column="22" bodyfile="include/UniTensor.hpp" bodystart="5691" bodyend="5695"/>
+        <location file="include/UniTensor.hpp" line="5704" column="22" bodyfile="include/UniTensor.hpp" bodystart="5704" bodyend="5708"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ac61660b0c3e5a98b09250e984b7a6f1c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7370,7 +7370,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5710" column="22" bodyfile="include/UniTensor.hpp" bodystart="5710" bodyend="5720"/>
+        <location file="include/UniTensor.hpp" line="5723" column="22" bodyfile="include/UniTensor.hpp" bodystart="5723" bodyend="5733"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a02a5bb943c1fcaa5f2defc0b1814264c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7472,7 +7472,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5737" column="22" bodyfile="include/UniTensor.hpp" bodystart="5737" bodyend="5741"/>
+        <location file="include/UniTensor.hpp" line="5750" column="22" bodyfile="include/UniTensor.hpp" bodystart="5750" bodyend="5754"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a6349a5473301e9caccdcd5e6c1119c59" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7558,7 +7558,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5755" column="22" bodyfile="include/UniTensor.hpp" bodystart="5755" bodyend="5760"/>
+        <location file="include/UniTensor.hpp" line="5768" column="22" bodyfile="include/UniTensor.hpp" bodystart="5768" bodyend="5773"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1aac1496f732b5d4d52389ad413a3da315" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7622,7 +7622,7 @@ std::string &amp;name)</ref> <linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5776" column="22" bodyfile="include/UniTensor.hpp" bodystart="5776" bodyend="5780"/>
+        <location file="include/UniTensor.hpp" line="5789" column="22" bodyfile="include/UniTensor.hpp" bodystart="5789" bodyend="5793"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a64b0230c0d3cb5b2a76362661744810c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7733,7 +7733,7 @@ unsigned int &amp;dtype, const int &amp;device)</ref> </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5799" column="22" bodyfile="include/UniTensor.hpp" bodystart="5799" bodyend="5805"/>
+        <location file="include/UniTensor.hpp" line="5812" column="22" bodyfile="include/UniTensor.hpp" bodystart="5812" bodyend="5818"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4a54d47bb9daf00f898ea68aa13a7cf3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7856,7 +7856,7 @@ const bool &amp;endpoint, const unsigned int &amp;dtype, const int &amp;device)<
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5826" column="22" bodyfile="include/UniTensor.hpp" bodystart="5826" bodyend="5833"/>
+        <location file="include/UniTensor.hpp" line="5839" column="22" bodyfile="include/UniTensor.hpp" bodystart="5839" bodyend="5846"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1acd9620ae410650194e3cf2c314209d3e" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7979,7 +7979,7 @@ int &amp;device, const unsigned int &amp;seed, const unsigned int &amp;dtype)</r
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5854" column="22"/>
+        <location file="include/UniTensor.hpp" line="5867" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1a4c23490cb01b9cc9d387dde9384d0167" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -8102,7 +8102,7 @@ int &amp;device, const unsigned int &amp;seed, const unsigned int &amp;dtype)</r
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5878" column="22"/>
+        <location file="include/UniTensor.hpp" line="5891" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1add23fcd2b00660de4685bc222c4a5f76" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -8225,7 +8225,7 @@ int &amp;device, const unsigned int &amp;seed, const unsigned int &amp;dtype)</r
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5902" column="22"/>
+        <location file="include/UniTensor.hpp" line="5915" column="22"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1UniTensor_1ab0098e53bd9646bdbf1da89e73ebb055" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -8419,7 +8419,7 @@ Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</re
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="5945" column="22"/>
+        <location file="include/UniTensor.hpp" line="5958" column="22"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -8427,7 +8427,7 @@ Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</re
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/UniTensor.hpp" line="2677" column="3" bodyfile="include/UniTensor.hpp" bodystart="2677" bodyend="5982"/>
+    <location file="include/UniTensor.hpp" line="2690" column="3" bodyfile="include/UniTensor.hpp" bodystart="2690" bodyend="5995"/>
     <listofallmembers>
       <member refid="classcytnx_1_1UniTensor_1af8db9e12557098f0c424dabfb3a45ac3" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>Add</name></member>
       <member refid="classcytnx_1_1UniTensor_1a45ca59d3ef14450292fdb6bd188157fe" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>Add</name></member>
