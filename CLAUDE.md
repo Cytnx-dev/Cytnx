@@ -13,7 +13,7 @@ Configure with a preset (see `CMakePresets.json`), then build. Artifacts land in
 ```bash
 git submodule update --init --recursive          # first time (hptt, morse_cmake), else configure fails
 cmake --preset openblas-cpu                       # or: mkl-cpu, openblas-cuda, mkl-cuda, openblas-apple
-cmake --build build/openblas-cpu -j
+cmake --build --preset openblas-cpu
 ```
 
 Key toggles (set by presets): `USE_CUDA`, `USE_MKL`, `BUILD_PYTHON` (ON by
