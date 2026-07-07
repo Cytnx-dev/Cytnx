@@ -26,7 +26,7 @@ C++ tests need `RUN_TESTS=ON` — use a `debug-*` preset:
 
 ```bash
 cmake --preset debug-openblas-cpu
-cmake --build build/debug-openblas-cpu --target test_main -j
+cmake --build --preset debug-openblas-cpu --target test_main
 ctest --preset cpu-only --output-on-failure
 # single suite: build/debug-openblas-cpu/tests/test_main --gtest_filter='Storage.*'
 ```
