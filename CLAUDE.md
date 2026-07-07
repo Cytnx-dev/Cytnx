@@ -35,7 +35,7 @@ GPU tests — target `gpu_test_main` (binary under `tests/gpu/`), NOT `test_main
 
 ```bash
 cmake --preset debug-openblas-cuda                # add -DCMAKE_CUDA_ARCHITECTURES=<arch> if autodetect fails
-cmake --build build/debug-openblas-cuda --target gpu_test_main test_main -j
+cmake --build --preset debug-openblas-cuda --target gpu_test_main test_main
 ctest --preset cpu-and-cuda --output-on-failure   # full GPU arith suite is slow (~10 min)
 ```
 
