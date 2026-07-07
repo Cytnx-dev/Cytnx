@@ -30,7 +30,7 @@ def _make_bfut3():
     fp = cytnx.Symmetry.FermionParity()
     B1 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
     B2 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
-    B12 = B1.combineBond(B2).c_redirect_()
+    B12 = B1.combineBond(B2).redirect_()
     B3 = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
     B4 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
 
