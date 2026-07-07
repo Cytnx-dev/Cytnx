@@ -235,7 +235,6 @@ TYPED_TEST(StoragePutValue, AppendWithReallocation) {
   Storage storage = Storage::from_vector(v);
 
   ASSERT_EQ(storage.dtype(), Type.cy_typeid(element1));
-  ASSERT_EQ(storage.size(), storage.capacity());
 
   auto value_to_append = ValueDType(10);
   auto value_in_storage_dtype = this->TryConvertToStorageDType(value_to_append);
@@ -245,8 +244,12 @@ TYPED_TEST(StoragePutValue, AppendWithReallocation) {
     EXPECT_THROW(storage.append(value_to_append), std::logic_error);
   } else {
     storage.append(value_to_append);
-    EXPECT_GE(storage.capacity(), storage.size());
+    // capacity() was removed (#941 ruling 2): every append reallocates
+    // exactly, so the only observable contract is size growth plus element
+    // preservation.
     EXPECT_EQ(storage.size(), 3);
+    EXPECT_EQ(storage.at<StorageDType>(0), element1);
+    EXPECT_EQ(storage.at<StorageDType>(1), element2);
   }
 }
 
@@ -483,4 +486,36 @@ TEST(StorageAsTypeOrReplace, AllocatesWhenOutIsEmpty) {
   auto typed = storage_as_type_or_replace<cytnx_float>(out, 4, Device.cpu);
   EXPECT_EQ(out.dtype(), (unsigned int)Type.Float);
   EXPECT_EQ(typed->size(), 4u);
+}
+
+// --- #941 ruling 2: capacity_ removed; append() = exact realloc (O(n), numpy-like) ---
+
+TEST(StorageCapacityRemoval, AppendGrowsExactly) {
+  Storage s = Storage::from_vector<cytnx_int32>({1, 2, 3});
+  EXPECT_EQ(s.size(), 3u);
+  s.append(cytnx_int32(4));
+  EXPECT_EQ(s.size(), 4u);
+  EXPECT_EQ(s.at<cytnx_int32>(3), 4);
+  s.append(cytnx_int32(5));
+  EXPECT_EQ(s.size(), 5u);
+  EXPECT_EQ(s.at<cytnx_int32>(4), 5);
+}
+
+TEST(StorageCapacityRemoval, AppendPreservesExistingElements) {
+  Storage s = Storage::from_vector<cytnx_double>({1.0, 2.0, 3.0});
+  s.append(cytnx_double(4.0));
+  for (int i = 0; i < 3; i++) EXPECT_DOUBLE_EQ(s.at<cytnx_double>(i), (double)(i + 1));
+  EXPECT_DOUBLE_EQ(s.at<cytnx_double>(3), 4.0);
+}
+
+TEST(StorageCapacityRemoval, ResizeShrinkAndGrowPreservesPrefix) {
+  Storage s = Storage::from_vector<cytnx_int64>({10, 20, 30, 40});
+  s.resize(2);
+  EXPECT_EQ(s.size(), 2u);
+  EXPECT_EQ(s.at<cytnx_int64>(0), 10);
+  EXPECT_EQ(s.at<cytnx_int64>(1), 20);
+  s.resize(5);
+  EXPECT_EQ(s.size(), 5u);
+  EXPECT_EQ(s.at<cytnx_int64>(0), 10);
+  EXPECT_EQ(s.at<cytnx_int64>(1), 20);
 }

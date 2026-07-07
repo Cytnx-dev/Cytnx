@@ -38,9 +38,12 @@ namespace cytnx {
     // void Init(const std::initializer_list<unsigned int> &init_shape);
     std::string dtype_str() const;
     std::string device_str() const;
-    virtual const unsigned long long capacity() const {
-      cytnx_error_msg(true, "Not implemented.%s", "");
-    }
+    // capacity()/capacity_ were removed (#941 ruling 2): Storage always
+    // allocates exactly size() elements; append()/resize() reallocate
+    // exactly (documented O(n) per call, numpy-like) instead of the previous
+    // STORAGE_DEFT_SZ-rounded over-allocation. This also guarantees a
+    // buffer's allocated extent always equals its size, which the zero-copy
+    // numpy view (ruling 4) relies on.
     virtual const unsigned long long size() const {
       cytnx_error_msg(true, "Not implemented.%s", "");
     }
@@ -169,19 +172,12 @@ namespace cytnx {
                             const std::vector<std::vector<cytnx_uint64>> &locators,
                             const cytnx_uint64 &Nunit, const bool &is_scalar);
 
-    /**
-     * @brief Drop the ownership of the underlying contiguous memory.
-     *
-     * The caller MUST take the ownership before calling this method. Any operation following this
-     * method causes undefined behavior.
-     *
-     * @return The pointer referencing the underlying storage.
-     * @deprecated This method may be removed without any notification.
-     */
-    [[deprecated("This method is deprecated and may be removed in the future.")]] virtual void *
-      release() noexcept {
-      return nullptr;
-    }
+    // release() was removed (#941 migration step 12): it returned an erased
+    // void*, dropped the allocation from StorageImplementation<T>, and left a
+    // typed storage object in a deliberately invalid state -- incompatible
+    // with trustworthy typed storage invariants. Its only callers (the
+    // .numpy() bindings) now use a py::capsule holding an
+    // intrusive_ptr<Storage_base> for ownership/keepalive instead.
 
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);
@@ -267,7 +263,7 @@ namespace cytnx {
     static constexpr unsigned int dtype_value = Type_class::cy_typeid_v<DType>;
 
     StorageImplementation()
-        : capacity_(0), size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
+        : size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
     void Init(const unsigned long long &len_in, const int &device = -1,
               const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
@@ -291,7 +287,6 @@ namespace cytnx {
     boost::intrusive_ptr<Storage_base> real();
     boost::intrusive_ptr<Storage_base> imag();
 
-    const unsigned long long capacity() const override { return capacity_; }
     const unsigned long long size() const override { return size_; }
     void *data() const override { return start_; }
     int dtype() const override { return dtype_; }
@@ -311,23 +306,6 @@ namespace cytnx {
     // as_storage_variant()'s visitor, which is the primary typed-dispatch
     // entry point anyway.
     value_type *data() { return static_cast<value_type *>(start_); }
-
-    /**
-     * @brief Drop the ownership of the underlying contiguous memory.
-     *
-     * The caller MUST take the ownership before calling this method. Any operation following this
-     * method causes undefined behavior.
-     *
-     * @return The pointer referencing the underlying storage.
-     * @deprecated This method may be removed without any notification.
-     */
-    void *release() noexcept override {
-      void *original_start = start_;
-      start_ = nullptr;
-      size_ = 0;
-      capacity_ = 0;
-      return original_start;
-    };
 
     // generators:
     void fill(const cytnx_complex128 &val);
@@ -385,7 +363,6 @@ namespace cytnx {
 
     void *start_;
     unsigned long long size_;
-    unsigned long long capacity_;
     unsigned int dtype_;
     int device_;
   };
@@ -886,26 +863,6 @@ namespace cytnx {
 
     */
     unsigned long long size() const { return this->_impl->size(); }
-
-    /**
-    @brief the capacity in the Storage.
-    @details the capacity is the actual allocated memory in the Storage. The behavior of
-      capacity is similar to std::vector::capacity() in c++.
-    @return [cytnx_uint64]
-
-    */
-    unsigned long long capacity() const { return this->_impl->capacity(); }
-
-    /**
-     * @brief Drop the ownership of the underlying contiguous memory.
-     *
-     * The caller MUST take the ownership before calling this method. Any operation following this
-     * method causes undefined behavior.
-     *
-     * @return The pointer referencing the underlying storage.
-     * @deprecated This method may be removed without any notification.
-     */
-    void *release() noexcept { return this->_impl->release(); }
 
     /**
     @brief print the info of the Storage, including the device, dtype and size.
