@@ -15,16 +15,18 @@ namespace cytnx {
 
       Tensor out;
       bool icnst = false;
+      // The Mod kernels assign every output element (_out[i] = ...), so out is
+      // fully overwritten -- pass false to skip the redundant zero-initialization.
       if (Lt.shape().size() == 1 && Lt.shape()[0] == 1) {
-        out.Init(Rt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
+        out.Init(Rt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
         icnst = true;
       } else if (Rt.shape().size() == 1 && Rt.shape()[0] == 1) {
-        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
+        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[Mod] The two tensors do not have the same shape.%s", "\n");
-        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
+        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
       }
 
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {

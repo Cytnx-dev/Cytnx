@@ -51,7 +51,9 @@ namespace cytnx {
         cytnx_int32 lin_dim = 1;
         for (int i = 0; i < newshape.size(); i++) lin_dim *= newshape[i];
 
-        out.Init(newshape, out_dtype, Tl.device());
+        // Matvec fully overwrites out (BLAS gemv uses beta=0; the integer kernel
+        // self-zeros each element), so skip the redundant zero-initialization.
+        out.Init(newshape, out_dtype, Tl.device(), false);
 
         if (Tl.device() == Device.cpu) {
           cytnx::linalg_internal::lii.Matvec_ii[out.dtype()](
