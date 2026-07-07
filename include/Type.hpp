@@ -13,6 +13,10 @@
 
 #include "cytnx_error.hpp"  // also brings in cuComplex.h
 
+#ifdef UNI_GPU
+  #include <cuda/std/complex>
+#endif
+
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
 
@@ -51,6 +55,11 @@ namespace cytnx {
   typedef std::complex<double> cytnx_complex128;
   typedef bool cytnx_bool;
 
+#ifdef UNI_GPU
+  using cytnx_cuda_complex64 = cuda::std::complex<float>;
+  using cytnx_cuda_complex128 = cuda::std::complex<double>;
+#endif
+
   namespace internal {
     template <class>
     struct is_complex_impl : std::false_type {};
@@ -58,11 +67,21 @@ namespace cytnx {
     template <class T>
     struct is_complex_impl<std::complex<T>> : std::true_type {};
 
+#ifdef UNI_GPU
+    template <class T>
+    struct is_complex_impl<cuda::std::complex<T>> : std::true_type {};
+#endif
+
     template <typename>
     struct is_complex_floating_point_impl : std::false_type {};
 
     template <typename T>
     struct is_complex_floating_point_impl<std::complex<T>> : std::is_floating_point<T> {};
+
+#ifdef UNI_GPU
+    template <typename T>
+    struct is_complex_floating_point_impl<cuda::std::complex<T>> : std::is_floating_point<T> {};
+#endif
 
     template <std::size_t I, typename T, typename Tuple>
     constexpr std::size_t index_in_tuple_helper() {
@@ -157,11 +176,13 @@ namespace cytnx {
     std::variant<void, cytnx_complex128, cytnx_complex64, cytnx_double, cytnx_float, cytnx_int64,
                  cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
 
-  // For GPU storage, the types are slightly different because CUDA uses their own complex type
+  // For GPU kernels, use cuda::std::complex for complex arithmetic. Low-level CUDA library calls
+  // that require cuComplex ABI pointers should cast explicitly at those call boundaries.
 #ifdef UNI_GPU
   using Type_list_gpu =
-    std::variant<void, cuDoubleComplex, cuComplex, cytnx_double, cytnx_float, cytnx_int64,
-                 cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
+    std::variant<void, cytnx_cuda_complex128, cytnx_cuda_complex64, cytnx_double, cytnx_float,
+                 cytnx_int64, cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16,
+                 cytnx_bool>;
 #endif
 
   // The number of supported types

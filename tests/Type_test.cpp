@@ -14,6 +14,11 @@ namespace {
   using cytnx::cytnx_double;
   using cytnx::cytnx_int64;
   using cytnx::Type_list;
+#ifdef UNI_GPU
+  using cytnx::cytnx_cuda_complex128;
+  using cytnx::cytnx_cuda_complex64;
+  using cytnx::Type_list_gpu;
+#endif
   using cytnx::variant_contains_v;
   using cytnx::variant_index_v;
 
@@ -37,6 +42,21 @@ namespace {
   static_assert(cytnx::Type_class::Uint64 == cytnx::Type_class::Int64 + 1);
   static_assert(cytnx::Type_class::Uint32 == cytnx::Type_class::Int32 + 1);
   static_assert(cytnx::Type_class::Uint16 == cytnx::Type_class::Int16 + 1);
+
+#ifdef UNI_GPU
+  static_assert(variant_index_v<cytnx_cuda_complex128, Type_list_gpu> ==
+                cytnx::Type_class::ComplexDouble);
+  static_assert(variant_index_v<cytnx_cuda_complex64, Type_list_gpu> ==
+                cytnx::Type_class::ComplexFloat);
+  static_assert(cytnx::is_complex_v<cytnx_cuda_complex128>);
+  static_assert(cytnx::is_complex_v<cytnx_cuda_complex64>);
+  static_assert(
+    std::is_same_v<cytnx::Type_class::type_promote_gpu_t<cytnx_cuda_complex64, cytnx_double>,
+                   cytnx_cuda_complex128>);
+  static_assert(
+    std::is_same_v<cytnx::Type_class::type_promote_gpu_t<cytnx_double, cytnx_cuda_complex64>,
+                   cytnx_cuda_complex128>);
+#endif
 
 }  // namespace
 
