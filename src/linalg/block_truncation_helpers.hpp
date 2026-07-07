@@ -5,6 +5,20 @@
 namespace cytnx {
   namespace linalg {
 
+    // The block truncation keeps every singular value >= Smin (the cut value selected by the
+    // keepdim/err/mindim rules), so an exact degeneracy straddling the cut enlarges the kept
+    // set beyond keepdim (see the degeneracy note in the Svd_truncate documentation). Given
+    // the ascending-sorted Sall and the cut index smidx (with Sall[smidx] == Smin), returns
+    // the number of values strictly below Smin -- the values that are actually dropped --
+    // keeping the return_err output consistent with the enlarged kept set.
+    inline cytnx_uint64 CountDroppedSingularValues(const Tensor &Sall, cytnx_uint64 smidx,
+                                                   const Scalar &Smin) {
+      while (smidx > 0 && !(Sall.storage()(smidx - 1) < Smin)) {
+        --smidx;
+      }
+      return smidx;
+    }
+
     // Returns a UniTensor holding the discarded singular values for the return_err path of
     // block truncated SVD functions (Svd_truncate, Gesvd_truncate).
     //

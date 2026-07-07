@@ -47,9 +47,17 @@ TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_returns_discarded_values) {
 
   ASSERT_EQ(full.size(), 3);
   ASSERT_EQ(trunc.size(), 4);
-  ASSERT_EQ(trunc[0].shape()[0], 5);
   ASSERT_EQ(all_svals.shape()[0], 400);
-  ASSERT_EQ(trunc[3].shape()[0], all_svals.shape()[0] - trunc[0].shape()[0]);
+  // keepdim may only be exceeded when singular values at the cut are exactly degenerate
+  // (see the degeneracy note on Svd_truncate): every extra kept value must equal the
+  // smallest value required by keepdim.
+  cytnx_uint64 kept = trunc[0].shape()[0];
+  ASSERT_GE(kept, 5);
+  ASSERT_LE(kept, all_svals.shape()[0]);
+  for (cytnx_uint64 j = all_svals.shape()[0] - kept; j < all_svals.shape()[0] - 5; j++) {
+    EXPECT_EQ(all_svals.at({j}), all_svals.at({all_svals.shape()[0] - 5}));
+  }
+  ASSERT_EQ(trunc[3].shape()[0], all_svals.shape()[0] - kept);
 
   for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
     EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
@@ -63,9 +71,17 @@ TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_returns_discarded_values) {
 
   ASSERT_EQ(full.size(), 3);
   ASSERT_EQ(trunc.size(), 4);
-  ASSERT_EQ(trunc[0].shape()[0], 5);
   ASSERT_EQ(all_svals.shape()[0], 400);
-  ASSERT_EQ(trunc[3].shape()[0], all_svals.shape()[0] - trunc[0].shape()[0]);
+  // keepdim may only be exceeded when singular values at the cut are exactly degenerate
+  // (see the degeneracy note on Svd_truncate): every extra kept value must equal the
+  // smallest value required by keepdim.
+  cytnx_uint64 kept = trunc[0].shape()[0];
+  ASSERT_GE(kept, 5);
+  ASSERT_LE(kept, all_svals.shape()[0]);
+  for (cytnx_uint64 j = all_svals.shape()[0] - kept; j < all_svals.shape()[0] - 5; j++) {
+    EXPECT_EQ(all_svals.at({j}), all_svals.at({all_svals.shape()[0] - 5}));
+  }
+  ASSERT_EQ(trunc[3].shape()[0], all_svals.shape()[0] - kept);
 
   for (cytnx_uint64 i = 0; i < trunc[3].shape()[0]; i++) {
     EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
@@ -80,7 +96,12 @@ TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_one_returns_first_discarded_val
   ASSERT_EQ(full.size(), 3);
   ASSERT_EQ(trunc.size(), 4);
   ASSERT_EQ(trunc[3].shape()[0], 1);
-  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - trunc[0].shape()[0] - 1}), trunc[3].at({0}));
+  // the kept dimension adapts to exact degeneracies at the cut (>= keepdim); the returned
+  // error is the largest singular value that was actually discarded.
+  cytnx_uint64 kept = trunc[0].shape()[0];
+  ASSERT_GE(kept, 5);
+  ASSERT_LT(kept, all_svals.shape()[0]);
+  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - kept - 1}), trunc[3].at({0}));
 }
 
 TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_one_returns_first_discarded_value) {
@@ -91,7 +112,12 @@ TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_one_returns_first_discarded_v
   ASSERT_EQ(full.size(), 3);
   ASSERT_EQ(trunc.size(), 4);
   ASSERT_EQ(trunc[3].shape()[0], 1);
-  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - trunc[0].shape()[0] - 1}), trunc[3].at({0}));
+  // the kept dimension adapts to exact degeneracies at the cut (>= keepdim); the returned
+  // error is the largest singular value that was actually discarded.
+  cytnx_uint64 kept = trunc[0].shape()[0];
+  ASSERT_GE(kept, 5);
+  ASSERT_LT(kept, all_svals.shape()[0]);
+  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - kept - 1}), trunc[3].at({0}));
 }
 
 /*=====test info=====
