@@ -463,7 +463,7 @@ namespace cytnx {
 
   extern int __blasINTsize__;
 
-  extern bool User_debug;
+  // User_debug is declared in cytnx_error.hpp (included above); no need to redeclare it here.
 
 }  // namespace cytnx
 

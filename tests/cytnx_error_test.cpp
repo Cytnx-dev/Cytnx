@@ -97,3 +97,39 @@ TEST(CytnxError, CheckedCastNullNameDoesNotCrash) {
     static_cast<cytnx::cytnx_uint64>(std::numeric_limits<cytnx::cytnx_int64>::max()) + 1;
   EXPECT_THROW(cytnx::internal::CheckedCastToInt64(too_big, nullptr), std::logic_error);
 }
+
+// Single-report: an error throws only -- with User_debug off it writes nothing to stderr
+// (the backtrace is gated behind User_debug), so throw-heavy suites don't spam the logs.
+TEST(CytnxError, ErrorDoesNotEchoToStderr) {
+  const bool prev = cytnx::User_debug;
+  cytnx::User_debug = false;
+  testing::internal::CaptureStderr();
+  EXPECT_THROW(cytnx_error_msg(true, "boom%s", ""), cytnx::error);
+  const std::string captured = testing::internal::GetCapturedStderr();
+  cytnx::User_debug = prev;
+  EXPECT_TRUE(captured.empty()) << "error unexpectedly wrote to stderr: " << captured;
+}
+
+// Warnings do not throw and are reported to stderr.
+TEST(CytnxError, WarningEchoesToStderr) {
+  testing::internal::CaptureStderr();
+  cytnx_warning_msg(true, "heads up%s", "");
+  const std::string captured = testing::internal::GetCapturedStderr();
+  EXPECT_NE(captured.find("heads up"), std::string::npos);
+  EXPECT_NE(captured.find("Cytnx warning"), std::string::npos);
+}
+
+// The macro-expanded report carries the call-site function, file, and line.
+TEST(CytnxError, ReportCarriesFuncFileLine) {
+  try {
+    cytnx_error_msg(true, "located%s", "");
+    FAIL() << "expected throw";
+  } catch (const cytnx::error &e) {
+    const std::string w = e.what();
+    EXPECT_NE(w.find("located"), std::string::npos);  // the message
+    EXPECT_NE(w.find(" occur at "), std::string::npos);  // function section
+    EXPECT_NE(w.find("ReportCarriesFuncFileLine"), std::string::npos);  // CYTNX_FUNC_NAME
+    EXPECT_NE(w.find("# file : "), std::string::npos);  // file section
+    EXPECT_NE(w.find("cytnx_error_test"), std::string::npos);  // __FILE__
+  }
+}
