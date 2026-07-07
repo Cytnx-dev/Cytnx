@@ -54,6 +54,17 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
+  // Map cytnx::error (thrown by cytnx_error_msg) to cytnx.CytnxError, a subclass
+  // of RuntimeError so existing `except RuntimeError` call sites keep working.
+  // Only cytnx_error_msg-originated errors are reclassified; every other C++
+  // exception keeps its default pybind11 translation (a plain RuntimeError,
+  // TypeError, etc.). Exception translators are module-global and consulted when
+  // an exception propagates out of C++ -- not at binding time -- so this works for
+  // every submodule below regardless of registration order relative to them.
+  py::register_exception<cytnx::error>(m, "CytnxError", PyExc_RuntimeError).attr("__doc__") =
+    "Raised when a cytnx C++ operation fails (via cytnx_error_msg). Subclass of "
+    "RuntimeError; only cytnx_error_msg-originated errors are reclassified as CytnxError.";
+
   symmetry_binding(m);
   bond_binding(m);
   py::add_ostream_redirect(m, "ostream_redirect");
