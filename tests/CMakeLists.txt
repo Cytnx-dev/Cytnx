@@ -13,6 +13,7 @@ add_executable(
   test_tools.cpp
   common_data_generator.cpp
   Bond_test.cpp
+  Symmetry_test.cpp
   Network_test.cpp
   UniTensor_base_test.cpp
   ncon_test.cpp
