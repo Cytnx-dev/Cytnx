@@ -11,7 +11,9 @@ def test_cytnx_error_type_exists_and_raises():
 
 
 def test_message_content():
-    with pytest.raises(cytnx.CytnxError, match="reshape"):
+    # Match a stable substring of the error *body*, not the function-name section
+    # (which comes from CYTNX_FUNC_NAME/__PRETTY_FUNCTION__ and is formatting-coupled).
+    with pytest.raises(cytnx.CytnxError, match="number of elements"):
         cytnx.zeros([2]).reshape(3, 3)
 
 

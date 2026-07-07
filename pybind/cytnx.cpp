@@ -54,20 +54,16 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
-  // cytnx::error (thrown by cytnx_error_msg) -> cytnx.CytnxError, a subclass of
-  // RuntimeError so existing `except RuntimeError` call sites keep working.
-  // Registered before any submodule bindings so the translator is in effect for
-  // every binding below (the translator is module-global, not per-submodule).
-  static py::exception<cytnx::error> cytnx_error_exc(m, "CytnxError", PyExc_RuntimeError);
-  cytnx_error_exc.attr("__doc__") =
-    "Raised when a cytnx C++ operation fails (via cytnx_error_msg).";
-  py::register_exception_translator([](std::exception_ptr p) {
-    try {
-      if (p) std::rethrow_exception(p);
-    } catch (const cytnx::error &e) {
-      py::set_error(cytnx_error_exc, e.what());
-    }
-  });
+  // Map cytnx::error (thrown by cytnx_error_msg) to cytnx.CytnxError, a subclass
+  // of RuntimeError so existing `except RuntimeError` call sites keep working.
+  // Only cytnx_error_msg-originated errors are reclassified; every other C++
+  // exception keeps its default pybind11 translation (a plain RuntimeError,
+  // TypeError, etc.). Exception translators are module-global and consulted when
+  // an exception propagates out of C++ -- not at binding time -- so this works for
+  // every submodule below regardless of registration order relative to them.
+  py::register_exception<cytnx::error>(m, "CytnxError", PyExc_RuntimeError).attr("__doc__") =
+    "Raised when a cytnx C++ operation fails (via cytnx_error_msg). Subclass of "
+    "RuntimeError; only cytnx_error_msg-originated errors are reclassified as CytnxError.";
 
   symmetry_binding(m);
   bond_binding(m);
