@@ -1273,19 +1273,15 @@ namespace cytnx {
   };
 
   void DenseUniTensor::normalize_() {
-    // In-place and dtype-preserving: divide by a rank-0 (shape {1}) Tensor so the
-    // division routes through linalg::iDiv, which writes into _block's own storage
-    // (an Int32 block stays Int32). Dividing by a bare double or Scalar would take
-    // the promoting Div + storage-swap path instead and silently retype integer
-    // blocks to Double (regression caught by DenseUniTensorTest.normalize_int_type).
-    // The divisor's dtype mirrors what the deprecated linalg::Norm(_block) used to
-    // return: Float for Float/ComplexFloat blocks, Double otherwise.
-    const unsigned int dt = this->_block.dtype();
-    const unsigned int norm_dt =
-      (dt == Type.Float || dt == Type.ComplexFloat) ? Type.Float : Type.Double;
-    Tensor nrm({1}, norm_dt, this->_block.device());
-    nrm.at({0}) = linalg::norm(this->_block);
-    this->_block /= nrm;
+    // Divide by the norm carried as an on-device rank-1 {1} Tensor via the non-deprecated
+    // internal Norm() (whose dtype is Float for Float/ComplexFloat blocks and Double
+    // otherwise). Routing through Tensor /= keeps linalg::iDiv's in-place, dtype-preserving
+    // path -- an Int32 block stays Int32; dividing by a bare double or Scalar would take the
+    // promoting Div + storage-swap path and silently retype integer blocks to Double
+    // (regression caught by DenseUniTensorTest.normalize_int_type). Keeping the divisor a
+    // device Tensor also avoids the device->host->device scalar roundtrip that norm() (which
+    // returns a host double) forces on GPU.
+    this->_block /= this->Norm();
   }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
