@@ -1,26 +1,40 @@
 # Cytnx C++ test suite
 
+## Prerequisites
+
+GoogleTest (with GMock) must be installed and discoverable by
+`find_package(GTest)` — it is a required dependency of the test suite and is
+deliberately **not** fetched at configure time, so the CMake configuration stays
+free of network access (see #944). Install it once:
+
+- macOS: `brew install googletest`
+- Ubuntu/Debian: `apt install libgtest-dev libgmock-dev`
+- conda: `conda install -c conda-forge gtest gmock`
+
 ## Building
 
+Build through a CMake preset that enables `RUN_TESTS` rather than a manual
+`-S/-B` configure — the presets are what CI uses and keep the configuration
+consistent (see `CMakePresets.json` and the top-level build docs). The `debug-*`
+presets turn tests on, e.g.:
+
 ```bash
-git submodule update --init --recursive   # required once per fresh clone/worktree
-cmake -S . -B build -DRUN_TESTS=ON
-cmake --build build --target test_main
+git submodule update --init --recursive        # once per fresh clone/worktree
+cmake --preset debug-openblas-cpu               # macOS: debug-openblas-apple
+cmake --build --preset debug-openblas-cpu --target test_main
 ```
 
-GoogleTest is found via `find_package(GTest)` if installed, and otherwise
-fetched automatically as a pinned release, so no system googletest is
-required.
+Each preset builds into its own directory (`build/<preset>/`), not `build/`.
 
 ## Running
 
 ```bash
 cd tests   # several suites load fixtures from tests/test_data_base
-../build/tests/test_main                      # run everything
-../build/tests/test_main --gtest_filter='BlockUniTensorTest.*'
+../build/<preset>/tests/test_main                        # run everything
+../build/<preset>/tests/test_main --gtest_filter='BlockUniTensorTest.*'
 ```
 
-or `ctest --test-dir build` after a full build.
+or `ctest --test-dir build/<preset>` after a full build.
 
 ## macOS: do not set `DYLD_LIBRARY_PATH`
 

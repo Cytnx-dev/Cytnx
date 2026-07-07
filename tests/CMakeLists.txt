@@ -2,23 +2,23 @@
 if(BACKEND_TORCH)
 else()
 
-# GoogleTest (gtest + gmock): prefer a system/toolchain install, otherwise
-# fetch a pinned release so the test suite builds on machines without one
-# (e.g. macOS). The GTest::gmock target only exists with a config-mode
-# install or CMake's FindGTest module from 3.23+, so key the fallback on
-# the target rather than GTest_FOUND.
-find_package(GTest QUIET)
+# GoogleTest (gtest + gmock) is a required prerequisite for the test suite and
+# must be provided by the toolchain / a config-mode install. It is deliberately
+# NOT fetched here so the CMake configuration stays free of network access
+# (see #944, which moved the other optional deps to submodules/finders).
+# find_package(GTest) can succeed with only gtest -- the GTest::gmock target
+# needs a config-mode install or CMake's FindGTest from 3.23+ -- so require the
+# gmock target explicitly and fail with actionable guidance when it is missing.
+find_package(GTest REQUIRED)
 if(NOT TARGET GTest::gmock)
-  include(FetchContent)
-  # Keep the MSVC runtime selection consistent with the parent project.
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
-  FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
-    URL_HASH SHA256=8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7
-  )
-  FetchContent_MakeAvailable(googletest)
+  message(FATAL_ERROR
+    "GoogleTest was found but the GTest::gmock target is missing, which the test "
+    "suite links against. Install a GoogleTest that also provides GMock (it is not "
+    "fetched automatically):\n"
+    "  macOS:         brew install googletest\n"
+    "  Ubuntu/Debian: apt install libgtest-dev libgmock-dev\n"
+    "  conda:         conda install -c conda-forge gtest gmock\n"
+    "or point CMake at such an install with -DCMAKE_PREFIX_PATH=<gtest-prefix>.")
 endif()
 
 # Define the path to the test data directory
