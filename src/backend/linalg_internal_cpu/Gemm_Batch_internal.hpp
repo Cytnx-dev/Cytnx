@@ -45,9 +45,9 @@ namespace cytnx {
       T ScalarTo(const Scalar& x) {
         if constexpr (is_complex_v<T>) {
           if constexpr (std::is_same_v<T, cytnx_complex128>)
-            return x._impl->to_cytnx_complex128();
+            return complex128(x);
           else
-            return x._impl->to_cytnx_complex64();
+            return complex64(x);
         } else {
           return static_cast<T>(x);
         }

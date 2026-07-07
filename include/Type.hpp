@@ -380,6 +380,18 @@ namespace cytnx {
       return ComplexDouble;
     }
 
+    // The dtype linalg::Norm() produces for an input of the given dtype: the
+    // real counterpart for floating/complex dtypes, Double for integer/bool
+    // inputs (which Norm computes in double precision). This is the single
+    // home of that policy -- src/linalg/Norm.cpp and callers pre-sizing
+    // norm accumulators (e.g. UniTensor::normalize_) both use it, so they
+    // cannot drift apart.
+    static constexpr unsigned int norm_result_dtype(unsigned int type_id) {
+      check_type(type_id);
+      if (is_float(type_id)) return to_real(type_id);
+      return Double;
+    }
+
     // Find a common type for typeL and typeR
     static constexpr unsigned int type_promote(unsigned int typeL, unsigned int typeR) {
       if (typeL == Void || typeR == Void) return Void;

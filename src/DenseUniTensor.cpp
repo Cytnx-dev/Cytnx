@@ -1390,8 +1390,17 @@ namespace cytnx {
         (long long)n);
       if (this->_block.device() == Device.cpu) {
         for (cytnx_uint64 i = 0; i < n; i++) {
+          // Out-of-place addition: `this` and `rhs` are independent
+          // UniTensors and are not guaranteed to share a dtype, so the two
+          // Scalars here can legitimately differ in dtype (e.g. Int64 vs
+          // Double). Scalar's in-place += now throws on a lossy dtype
+          // change (Ruling 1, #935/#937); out-of-place + always promotes via
+          // Type.type_promote and never throws, matching #937's own
+          // migration guidance ("replace in-place arithmetic by out-of-place
+          // arithmetic"). The result is narrowed back to this->_block's
+          // dtype by the following assignment, same as before.
           Scalar v = Scalar(this->_block.at({i, i}));
-          v += Scalar(rhs_diag.at({i}));
+          v = v + Scalar(rhs_diag.at({i}));
           this->_block.at({i, i}) = v;
         }
       } else {
@@ -1440,8 +1449,11 @@ namespace cytnx {
         (long long)n);
       if (this->_block.device() == Device.cpu) {
         for (cytnx_uint64 i = 0; i < n; i++) {
+          // See the analogous comment in Add_(): out-of-place subtraction
+          // avoids Ruling 1's in-place lossy-dtype throw between two
+          // independent UniTensors' potentially differing dtypes.
           Scalar v = Scalar(this->_block.at({i, i}));
-          v -= Scalar(rhs_diag.at({i}));
+          v = v - Scalar(rhs_diag.at({i}));
           this->_block.at({i, i}) = v;
         }
       } else {

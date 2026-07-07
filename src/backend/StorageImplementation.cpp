@@ -806,13 +806,31 @@ namespace cytnx {
 
   template <typename DType>
   void StorageImplementation<DType>::SetItem(cytnx_uint64 index, const Scalar &value) {
-    if constexpr (std::is_same_v<DType, cytnx_complex128>) {
-      this->at<DType>(index) = complex128(value);
-    } else if constexpr (std::is_same_v<DType, cytnx_complex64>) {
-      this->at<DType>(index) = complex64(value);
-    } else {
-      this->at<DType>(index) = static_cast<DType>(value);
-    }
+    // Dispatch on the Scalar's actual active alternative via std::visit,
+    // then forward the concretely-typed value into the existing templated
+    // SetItem<OtherDType> overload above -- rather than going through
+    // Scalar's static_cast<DType>() conversion operators (which route
+    // through Scalar::astype()/to_cytnx_XXX() and used to reject some
+    // otherwise-valid conversions, e.g. real-to-real narrowing performed
+    // differently than std::is_constructible_v allows). This keeps
+    // set_item(idx, Scalar) exactly as permissive as set_item(idx, T) for
+    // every concrete T, and gives a single, consistent error message
+    // (from the OtherDType overload) when a conversion is not constructible.
+    // A Void (monostate) Scalar has no concrete value to forward, so it is
+    // rejected explicitly rather than silently doing nothing.
+    std::visit(
+      [&](auto &&v) {
+        using OtherDType = std::decay_t<decltype(v)>;
+        if constexpr (std::is_same_v<OtherDType, std::monostate>) {
+          cytnx_error_msg(true,
+                          "[ERROR] Cannot set_item from a Void (uninitialized) Scalar into "
+                          "Storage of dtype %s%s",
+                          Type.getname(Type.cy_typeid(DType())).c_str(), "\n");
+        } else {
+          this->SetItem(index, v);
+        }
+      },
+      value._val);
   }
 
   template <typename DType>

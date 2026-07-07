@@ -5,2516 +5,69 @@
   #include "Type.hpp"
   #include "cytnx_error.hpp"
   #include "intrusive_ptr_base.hpp"
-  #include <vector>
-  #include <initializer_list>
-  #include <string>
-  #include <iostream>
-  #include <cmath>
+  #include <ostream>
   #include <type_traits>
-  #include <limits>
+  #include <variant>
 namespace cytnx {
 
   ///@cond
   class Storage_base;
-  class Tensor_base;
 
   // The following two declarations are necessary for ADL.
   void intrusive_ptr_add_ref(Storage_base *);
   void intrusive_ptr_release(Storage_base *);
-
-  // real implementation
-  class Scalar_base {
-   private:
-   public:
-    int _dtype;
-
-    // Scalar_base(const Scalar_base &rhs);
-    // Scalar_base& operator=(const Scalar_base &rhs);
-    Scalar_base() : _dtype(Type.Void){};
-
-    virtual cytnx_float to_cytnx_float() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_double to_cytnx_double() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_complex64 to_cytnx_complex64() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return cytnx_complex64(0, 0);
-    };
-    virtual cytnx_complex128 to_cytnx_complex128() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return cytnx_complex128(0, 0);
-    };
-    virtual cytnx_int64 to_cytnx_int64() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_uint64 to_cytnx_uint64() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_int32 to_cytnx_int32() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_uint32 to_cytnx_uint32() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_int16 to_cytnx_int16() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_uint16 to_cytnx_uint16() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    };
-    virtual cytnx_bool to_cytnx_bool() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot cast to anytype!!%s", "\n");
-      return 0;
-    }
-
-    virtual void iadd(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void iadd(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-
-    virtual void isub(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isub(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-
-    virtual void imul(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void imul(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-
-    virtual void idiv(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void idiv(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-
-    virtual bool less(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool less(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-
-    virtual bool greater(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    virtual bool greater(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-
-    virtual bool eq(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return 0;
-    }
-    // virtual bool approx_eq(const Scalar_base *c, const double &tol = 1e-8) {
-    //   cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    //   return 0;
-    // }
-
-    virtual void set_maxval() {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    };
-    virtual void set_minval() {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    };
-
-    virtual void conj_() {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual Scalar_base *get_real() {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return nullptr;
-    }
-    virtual Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return nullptr;
-    }
-
-    virtual void iabs() {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void isqrt() {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-
-    virtual void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-    virtual void assign_selftype(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-    }
-
-    virtual Scalar_base *astype(const unsigned int &dtype) {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return nullptr;
-    }
-
-    /**
-     * @deprecated This method is not in use anymore.
-     */
-    [[deprecated("This method is not in use anymore.")]] virtual void *get_raw_address() const {
-      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
-      return nullptr;
-    }
-
-    virtual void print(std::ostream &os) const {};
-    virtual Scalar_base *copy() const {
-      Scalar_base *tmp = new Scalar_base();
-      return tmp;
-    };
-
-    virtual ~Scalar_base(){};
-  };
-
-  typedef Scalar_base *(*pScalar_init)();
-  ///@endcond
-
-  ///@cond
-  class Scalar_init_interface : public Type_class {
-   public:
-    // std::vector<pScalar_init> UScIInit;
-    inline static pScalar_init UScIInit[N_Type];
-    inline static bool inited = false;
-    Scalar_init_interface();
-  };
-  extern Scalar_init_interface __ScII;
-  ///@endcond
-
-  ///@cond
-  class ComplexDoubleScalar : public Scalar_base {
-   public:
-    cytnx_complex128 _elem;
-
-    ComplexDoubleScalar() : _elem(0) { this->_dtype = Type.ComplexDouble; };
-    ComplexDoubleScalar(const cytnx_complex128 &in) : _elem(0) {
-      this->_dtype = Type.ComplexDouble;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_double to_cytnx_double() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_complex64 to_cytnx_complex64() const { return cytnx_complex64(this->_elem); };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_uint64 to_cytnx_uint64() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_int32 to_cytnx_int32() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_uint32 to_cytnx_uint32() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_int16 to_cytnx_int16() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_uint16 to_cytnx_uint16() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-    cytnx_bool to_cytnx_bool() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
-      return 0;
-    };
-
-    void assign_selftype(const cytnx_complex128 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_complex64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_complex128(); }
-    void iadd(const cytnx_complex128 &c) { this->_elem += c; }
-    void iadd(const cytnx_complex64 &c) { this->_elem += c; }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_complex128(); }
-    void isub(const cytnx_complex128 &c) { this->_elem -= c; }
-    void isub(const cytnx_complex64 &c) { this->_elem -= c; }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_complex128(); }
-    void imul(const cytnx_complex128 &c) { this->_elem *= c; }
-    void imul(const cytnx_complex64 &c) { this->_elem *= c; }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_complex128(); }
-    void idiv(const cytnx_complex128 &c) { this->_elem /= c; }
-    void idiv(const cytnx_complex64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(cytnx_complex128(this->_elem)); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-
-    bool greater(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_complex128(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs(this->_elem - c->to_cytnx_complex128()) <= tol;
-    // }
-
-    void set_maxval() {
-      cytnx_error_msg(true, "[ERROR] maxval not supported for complex type%s", "\n");
-    }
-    void set_minval() {
-      cytnx_error_msg(true, "[ERROR] minval not supported for complex type%s", "\n");
-    }
-
-    void conj_() { this->_elem = std::conj(this->_elem); }
-    Scalar_base *get_real() {
-      Scalar_base *tmp = __ScII.UScIInit[Type.Double]();
-      tmp->assign_selftype(this->_elem.real());
-      return tmp;
-    }
-    Scalar_base *get_imag() {
-      Scalar_base *tmp = __ScII.UScIInit[Type.Double]();
-      tmp->assign_selftype(this->_elem.imag());
-      return tmp;
-    }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-
-    Scalar_base *copy() const {
-      ComplexDoubleScalar *tmp = new ComplexDoubleScalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-
-  class ComplexFloatScalar : public Scalar_base {
-   public:
-    cytnx_complex64 _elem;
-
-    ComplexFloatScalar() : _elem(0) { this->_dtype = Type.ComplexFloat; };
-    ComplexFloatScalar(const cytnx_complex64 &in) : _elem(0) {
-      this->_dtype = Type.ComplexFloat;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_double to_cytnx_double() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return cytnx_complex128(this->_elem); };
-    cytnx_int64 to_cytnx_int64() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_uint64 to_cytnx_uint64() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_int32 to_cytnx_int32() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_uint32 to_cytnx_uint32() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_int16 to_cytnx_int16() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_uint16 to_cytnx_uint16() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-    cytnx_bool to_cytnx_bool() const {
-      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
-      return 0;
-    };
-
-    void assign_selftype(const cytnx_complex128 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_complex64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_complex64(); }
-    void iadd(const cytnx_complex128 &c) { this->_elem += c; }
-    void iadd(const cytnx_complex64 &c) { this->_elem += c; }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_complex64(); }
-    void isub(const cytnx_complex128 &c) { this->_elem -= c; }
-    void isub(const cytnx_complex64 &c) { this->_elem -= c; }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_complex64(); }
-    void imul(const cytnx_complex128 &c) { this->_elem *= c; }
-    void imul(const cytnx_complex64 &c) { this->_elem *= c; }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_complex64(); }
-    void idiv(const cytnx_complex128 &c) { this->_elem /= c; }
-    void idiv(const cytnx_complex64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    bool less(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-
-    bool greater(const Scalar_base *c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_float &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_uint64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_int64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_uint32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_int32 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_uint16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_int16 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_bool &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_complex64(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs(this->_elem - c->to_cytnx_complex64()) <= tol;
-    // }
-
-    void set_maxval() {
-      cytnx_error_msg(true, "[ERROR] maxval not supported for complex type%s", "\n");
-    }
-    void set_minval() {
-      cytnx_error_msg(true, "[ERROR] minval not supported for complex type%s", "\n");
-    }
-
-    void conj_() { this->_elem = std::conj(this->_elem); }
-    Scalar_base *get_real() {
-      Scalar_base *tmp = __ScII.UScIInit[Type.Float]();
-      tmp->assign_selftype(this->_elem.real());
-      return tmp;
-    }
-    Scalar_base *get_imag() {
-      Scalar_base *tmp = __ScII.UScIInit[Type.Float]();
-      tmp->assign_selftype(this->_elem.imag());
-      return tmp;
-    }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-
-    Scalar_base *copy() const {
-      ComplexFloatScalar *tmp = new ComplexFloatScalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-
-  class DoubleScalar : public Scalar_base {
-   public:
-    cytnx_double _elem;
-
-    DoubleScalar() : _elem(0) { this->_dtype = Type.Double; };
-    DoubleScalar(const cytnx_double &in) : _elem(0) {
-      this->_dtype = Type.Double;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_double(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_double(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_double(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_double(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_double(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_double(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_double(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs(this->_elem - c->to_cytnx_double()) <= tol;
-    // }
-
-    void set_maxval() { this->_elem = std::numeric_limits<double>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<double>::min(); }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      DoubleScalar *tmp = new DoubleScalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-
-  class FloatScalar : public Scalar_base {
-   public:
-    cytnx_float _elem;
-
-    FloatScalar() : _elem(0) { this->_dtype = Type.Float; };
-    FloatScalar(const cytnx_float &in) : _elem(0) {
-      this->_dtype = Type.Float;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_float(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_float(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_float(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_float(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_float(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_float(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_float(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs(this->_elem - c->to_cytnx_float()) <= tol;
-    // }
-
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = std::numeric_limits<float>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<float>::min(); }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      FloatScalar *tmp = new FloatScalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-
-  class Int64Scalar : public Scalar_base {
-   public:
-    cytnx_int64 _elem;
-
-    Int64Scalar() : _elem(0) { this->_dtype = Type.Int64; };
-    Int64Scalar(const cytnx_int64 &in) : _elem(0) {
-      this->_dtype = Type.Int64;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_int64(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_int64(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_int64(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_int64(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_int64(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_int64(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_int64(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_int64()) <= tol;
-    // }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = std::numeric_limits<cytnx_int64>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<cytnx_int64>::min(); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      Int64Scalar *tmp = new Int64Scalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-  class Uint64Scalar : public Scalar_base {
-   public:
-    cytnx_uint64 _elem;
-
-    Uint64Scalar() : _elem(0) { this->_dtype = Type.Uint64; };
-    Uint64Scalar(const cytnx_uint64 &in) : _elem(0) {
-      this->_dtype = Type.Uint64;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_uint64(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint64(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_uint64(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_uint64(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(cytnx_double(this->_elem)); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_uint64(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_uint64(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_uint64(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_uint64()) <= tol;
-    // }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = std::numeric_limits<cytnx_uint64>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<cytnx_uint64>::min(); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      Uint64Scalar *tmp = new Uint64Scalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-  class Int32Scalar : public Scalar_base {
-   public:
-    cytnx_int32 _elem;
-
-    Int32Scalar() : _elem(0) { this->_dtype = Type.Int32; };
-    Int32Scalar(const cytnx_int32 &in) : _elem(0) {
-      this->_dtype = Type.Int32;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_int32(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_int32(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_int32(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_int32(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_int32(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_int32(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_int32(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_int32()) <= tol;
-    // }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = std::numeric_limits<cytnx_int32>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<cytnx_int32>::min(); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      Int32Scalar *tmp = new Int32Scalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-  class Uint32Scalar : public Scalar_base {
-   public:
-    cytnx_uint32 _elem;
-
-    Uint32Scalar() : _elem(0) { this->_dtype = Type.Uint32; };
-    Uint32Scalar(const cytnx_uint32 &in) : _elem(0) {
-      this->_dtype = Type.Uint32;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_uint32(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint32(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_uint32(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_uint32(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(cytnx_double(this->_elem)); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_uint32(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_uint32(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_uint32(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_uint32()) <= tol;
-    // }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = std::numeric_limits<cytnx_uint32>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<cytnx_uint32>::min(); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      Uint32Scalar *tmp = new Uint32Scalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-  class Int16Scalar : public Scalar_base {
-   public:
-    cytnx_int16 _elem;
-
-    Int16Scalar() : _elem(0) { this->_dtype = Type.Int16; };
-    Int16Scalar(const cytnx_int16 &in) : _elem(0) {
-      this->_dtype = Type.Int16;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_int16(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_int16(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_int16(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_int16(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_int16(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_int16(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_int16(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_int16()) <= tol;
-    // }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = std::numeric_limits<cytnx_int16>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<cytnx_int16>::min(); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      Int16Scalar *tmp = new Int16Scalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-  class Uint16Scalar : public Scalar_base {
-   public:
-    cytnx_uint16 _elem;
-
-    Uint16Scalar() : _elem(0) { this->_dtype = Type.Uint16; };
-    Uint16Scalar(const cytnx_uint16 &in) : _elem(0) {
-      this->_dtype = Type.Uint16;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_uint16(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint16(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_uint16(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_uint16(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_uint16(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_uint16(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_uint16(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_uint16()) <= tol;
-    // }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = std::numeric_limits<cytnx_uint16>::max(); }
-    void set_minval() { this->_elem = std::numeric_limits<cytnx_uint16>::min(); }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      Uint16Scalar *tmp = new Uint16Scalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-  class BoolScalar : public Scalar_base {
-   public:
-    cytnx_bool _elem;
-
-    BoolScalar() : _elem(0) { this->_dtype = Type.Bool; };
-    BoolScalar(const cytnx_bool &in) : _elem(0) {
-      this->_dtype = Type.Bool;
-      this->_elem = in;
-    }
-
-    cytnx_float to_cytnx_float() const { return this->_elem; };
-    cytnx_double to_cytnx_double() const { return this->_elem; };
-    cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
-    cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
-    cytnx_int64 to_cytnx_int64() const { return this->_elem; };
-    cytnx_uint64 to_cytnx_uint64() const { return this->_elem; };
-    cytnx_int32 to_cytnx_int32() const { return this->_elem; };
-    cytnx_uint32 to_cytnx_uint32() const { return this->_elem; };
-    cytnx_int16 to_cytnx_int16() const { return this->_elem; };
-    cytnx_uint16 to_cytnx_uint16() const { return this->_elem; };
-    cytnx_bool to_cytnx_bool() const { return this->_elem; };
-
-    void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
-    }
-    void assign_selftype(const cytnx_double &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_float &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int64 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int32 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_uint16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_int16 &c) { this->_elem = c; }
-    void assign_selftype(const cytnx_bool &c) { this->_elem = c; }
-
-    void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_bool(); }
-    void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void iadd(const cytnx_double &c) { this->_elem += c; }
-    void iadd(const cytnx_float &c) { this->_elem += c; }
-    void iadd(const cytnx_uint64 &c) { this->_elem += c; }
-    void iadd(const cytnx_int64 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint32 &c) { this->_elem += c; }
-    void iadd(const cytnx_int32 &c) { this->_elem += c; }
-    void iadd(const cytnx_uint16 &c) { this->_elem += c; }
-    void iadd(const cytnx_int16 &c) { this->_elem += c; }
-    void iadd(const cytnx_bool &c) { this->_elem += c; }
-
-    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_bool(); }
-    void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void isub(const cytnx_double &c) { this->_elem -= c; }
-    void isub(const cytnx_float &c) { this->_elem -= c; }
-    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
-    void isub(const cytnx_int64 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
-    void isub(const cytnx_int32 &c) { this->_elem -= c; }
-    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
-    void isub(const cytnx_int16 &c) { this->_elem -= c; }
-    void isub(const cytnx_bool &c) { this->_elem -= c; }
-
-    void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_bool(); }
-    void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void imul(const cytnx_double &c) { this->_elem *= c; }
-    void imul(const cytnx_float &c) { this->_elem *= c; }
-    void imul(const cytnx_uint64 &c) { this->_elem *= c; }
-    void imul(const cytnx_int64 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint32 &c) { this->_elem *= c; }
-    void imul(const cytnx_int32 &c) { this->_elem *= c; }
-    void imul(const cytnx_uint16 &c) { this->_elem *= c; }
-    void imul(const cytnx_int16 &c) { this->_elem *= c; }
-    void imul(const cytnx_bool &c) { this->_elem *= c; }
-
-    void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_bool(); }
-    void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
-    }
-    void idiv(const cytnx_double &c) { this->_elem /= c; }
-    void idiv(const cytnx_float &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int64 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int32 &c) { this->_elem /= c; }
-    void idiv(const cytnx_uint16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_int16 &c) { this->_elem /= c; }
-    void idiv(const cytnx_bool &c) { this->_elem /= c; }
-
-    void iabs() { this->_elem = std::abs(this->_elem); }
-    void isqrt() { this->_elem = std::sqrt(this->_elem); }
-
-    bool less(const Scalar_base *c) { return this->_elem < c->to_cytnx_bool(); }
-    bool less(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool less(const cytnx_double &c) { return this->_elem < c; }
-    bool less(const cytnx_float &c) { return this->_elem < c; }
-    bool less(const cytnx_uint64 &c) { return this->_elem < c; }
-    bool less(const cytnx_int64 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint32 &c) { return this->_elem < c; }
-    bool less(const cytnx_int32 &c) { return this->_elem < c; }
-    bool less(const cytnx_uint16 &c) { return this->_elem < c; }
-    bool less(const cytnx_int16 &c) { return this->_elem < c; }
-    bool less(const cytnx_bool &c) { return this->_elem < c; }
-
-    bool greater(const Scalar_base *c) { return this->_elem > c->to_cytnx_bool(); }
-    bool greater(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
-      return 0;
-    }
-    bool greater(const cytnx_double &c) { return this->_elem > c; }
-    bool greater(const cytnx_float &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int64 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int32 &c) { return this->_elem > c; }
-    bool greater(const cytnx_uint16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_int16 &c) { return this->_elem > c; }
-    bool greater(const cytnx_bool &c) { return this->_elem > c; }
-
-    bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_bool(); }
-    // bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
-    //   return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_bool()) <= tol;
-    // }
-
-    void conj_() { return; }
-    Scalar_base *get_real() { return this->copy(); }
-    Scalar_base *get_imag() {
-      cytnx_error_msg(true, "[ERROR] real type Scalar does not have imag part!%s", "\n");
-      return nullptr;
-    }
-
-    void set_maxval() { this->_elem = true; }
-    void set_minval() { this->_elem = false; }
-
-    void *get_raw_address() const { return (void *)(&this->_elem); }
-    Scalar_base *astype(const unsigned int &dtype) {
-      Scalar_base *tmp = __ScII.UScIInit[dtype]();
-      tmp->assign_selftype(this->_elem);
-      return tmp;
-    }
-    Scalar_base *copy() const {
-      BoolScalar *tmp = new BoolScalar(this->_elem);
-      return tmp;
-    };
-    void print(std::ostream &os) const { os << "< " << this->_elem << " >"; };
-  };
-
   ///@endcond
 
   /**
    * @brief A class to represent a scalar.
    * @details This class is used to represent a scalar. You can construct a Scalar by
    * a given value and a dtype (see cytnx::Type for available dtype).
+   *
+   * @details Implementation note: the value is held inline in a std::variant
+   * (see #847), rather than a heap-allocated PIMPL hierarchy. std::monostate
+   * represents the Void/uninitialized state. All promotion routes through
+   * Type.type_promote() via std::visit; copy/move are `=default` (value
+   * semantics, no manual heap bookkeeping -- fixes #935's self-assignment UB
+   * and double-alloc copy ctor).
    */
   class Scalar {
    public:
     ///@cond
+    // The list of alternatives mirrors Type_list (see Type.hpp), with
+    // std::monostate standing in for "void" so an uninitialized Scalar is a
+    // real, distinguishable state rather than a null pointer.
+    using ScalarVariant =
+      std::variant<std::monostate, cytnx_complex128, cytnx_complex64, cytnx_double, cytnx_float,
+                   cytnx_int64, cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16,
+                   cytnx_bool>;
+
+    // ScalarVariant is index-aligned with Type_list: alternative i holds the
+    // type whose dtype id is i (monostate <-> void at index Type.Void == 0).
+    // This is load-bearing -- dtype() is implemented as _val.index() -- so
+    // pin it at compile time. Adding a dtype to Type_list without extending
+    // ScalarVariant (or vice versa) fails right here.
+    static_assert(std::variant_size_v<ScalarVariant> == N_Type,
+                  "ScalarVariant must have exactly one alternative per Type_list entry");
+    static_assert(
+      std::is_same_v<std::variant_alternative_t<Type_class::ComplexDouble, ScalarVariant>,
+                     cytnx_complex128> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::ComplexFloat, ScalarVariant>,
+                       cytnx_complex64> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Double, ScalarVariant>,
+                       cytnx_double> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Float, ScalarVariant>, cytnx_float> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Int64, ScalarVariant>, cytnx_int64> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Uint64, ScalarVariant>,
+                       cytnx_uint64> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Int32, ScalarVariant>, cytnx_int32> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Uint32, ScalarVariant>,
+                       cytnx_uint32> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Int16, ScalarVariant>, cytnx_int16> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Uint16, ScalarVariant>,
+                       cytnx_uint16> &&
+        std::is_same_v<std::variant_alternative_t<Type_class::Bool, ScalarVariant>, cytnx_bool>,
+      "each ScalarVariant alternative must sit at its Type_list dtype index");
+
     struct Sproxy {
       boost::intrusive_ptr<Storage_base> _insimpl;
       cytnx_uint64 _loc;
@@ -2556,45 +109,47 @@ namespace cytnx {
       // operator Scalar() const;
     };
 
-    Scalar_base *_impl;
-    ///@endcond
+    /// @cond
+    // The stored value. std::monostate == Void/uninitialized.
+    ScalarVariant _val;
+    /// @endcond
 
     /// @brief default constructor
-    Scalar() : _impl(new Scalar_base()){};
+    Scalar() : _val(std::monostate{}) {}
 
     // init!!
     /// @brief init a Scalar with a cytnx::cytnx_complex128
-    Scalar(const cytnx_complex128 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_complex128 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_complex64
-    Scalar(const cytnx_complex64 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_complex64 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_double
-    Scalar(const cytnx_double &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_double &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_float
-    Scalar(const cytnx_float &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_float &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_uint64
-    Scalar(const cytnx_uint64 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_uint64 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_int64
-    Scalar(const cytnx_int64 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_int64 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_uint32
-    Scalar(const cytnx_uint32 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_uint32 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_int32
-    Scalar(const cytnx_int32 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_int32 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_uint16
-    Scalar(const cytnx_uint16 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_uint16 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_int16
-    Scalar(const cytnx_int16 &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_int16 &in) : _val(in) {}
 
     /// @brief init a Scalar with a cytnx::cytnx_bool
-    Scalar(const cytnx_bool &in) : _impl(new Scalar_base()) { this->Init_by_number(in); }
+    Scalar(const cytnx_bool &in) : _val(in) {}
 
     /**
      * @brief Get the max value of the Scalar with the given \p dtype.
@@ -2604,11 +159,7 @@ namespace cytnx {
      * @param[in] dtype The data type of the Scalar.
      * @return The max value of the Scalar with the given \p dtype.
      */
-    static Scalar maxval(const unsigned int &dtype) {
-      Scalar out(0, dtype);
-      out._impl->set_maxval();
-      return out;
-    }
+    static Scalar maxval(const unsigned int &dtype);
 
     /**
      * @brief Get the min value of the Scalar with the given \p dtype.
@@ -2617,12 +168,11 @@ namespace cytnx {
      * \p dtype = cytnx::Type.Int16, then you will get the min value of a 16-bit integer -32768.
      * @param[in] dtype The data type of the Scalar.
      * @return The min value of the Scalar with the given \p dtype.
+     * @note For floating-point dtypes this returns the most negative finite value
+     * (`std::numeric_limits<T>::lowest()`), not the smallest positive normal
+     * value that `::min()` would give (fixes #935).
      */
-    static Scalar minval(const unsigned int &dtype) {
-      Scalar out(0, dtype);
-      out._impl->set_minval();
-      return out;
-    }
+    static Scalar minval(const unsigned int &dtype);
 
     /**
      * @brief The constructor of the Scalar class.
@@ -2634,82 +184,39 @@ namespace cytnx {
      * @note The \p dtype can be any of the cytnx::Type.
      */
     template <class T>
-    Scalar(const T &in, const unsigned int &dtype) : _impl(new Scalar_base()) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = __ScII.UScIInit[dtype]();
-      this->_impl->assign_selftype(in);
-    };
+    Scalar(const T &in, const unsigned int &dtype) {
+      this->Init_by_number(in);
+      *this = this->astype(dtype);
+    }
 
     /// @cond
     // move sproxy when use to get elements here.
     Scalar(const Sproxy &prox);
-
-    //[Internal!!]
-    Scalar(Scalar_base *in) { this->_impl = in; }
     /// @endcond
 
     // specialization of init:
     ///@cond
-    void Init_by_number(const cytnx_complex128 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new ComplexDoubleScalar(in);
-    };
-    void Init_by_number(const cytnx_complex64 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new ComplexFloatScalar(in);
-    };
-    void Init_by_number(const cytnx_double &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new DoubleScalar(in);
-    }
-    void Init_by_number(const cytnx_float &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new FloatScalar(in);
-    }
-    void Init_by_number(const cytnx_int64 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Int64Scalar(in);
-    }
-    void Init_by_number(const cytnx_uint64 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Uint64Scalar(in);
-    }
-    void Init_by_number(const cytnx_int32 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Int32Scalar(in);
-    }
-    void Init_by_number(const cytnx_uint32 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Uint32Scalar(in);
-    }
-    void Init_by_number(const cytnx_int16 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Int16Scalar(in);
-    }
-    void Init_by_number(const cytnx_uint16 &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new Uint16Scalar(in);
-    }
-    void Init_by_number(const cytnx_bool &in) {
-      if (this->_impl != nullptr) delete this->_impl;
-      this->_impl = new BoolScalar(in);
-    }
+    void Init_by_number(const cytnx_complex128 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_complex64 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_double &in) { this->_val = in; }
+    void Init_by_number(const cytnx_float &in) { this->_val = in; }
+    void Init_by_number(const cytnx_int64 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_uint64 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_int32 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_uint32 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_int16 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_uint16 &in) { this->_val = in; }
+    void Init_by_number(const cytnx_bool &in) { this->_val = in; }
+    ///@endcond
 
-    // The copy constructor
-    Scalar(const Scalar &rhs) : _impl(new Scalar_base()) {
-      if (this->_impl != nullptr) delete this->_impl;
-
-      this->_impl = rhs._impl->copy();
-    }
-    /// @endcond
-
-    /// @brief The copy assignment of the Scalar class.
-    Scalar &operator=(const Scalar &rhs) {
-      if (this->_impl != nullptr) delete this->_impl;
-
-      this->_impl = rhs._impl->copy();
-      return *this;
-    };
+    // Copy/move/assign are trivial value-type operations now: default them.
+    // This fixes #935's self-assignment UB (the old hand-rolled operator=
+    // deleted _impl before reading rhs._impl, and did not check for
+    // self-assignment) and the double-allocation copy ctor.
+    Scalar(const Scalar &rhs) = default;
+    Scalar(Scalar &&rhs) = default;
+    Scalar &operator=(const Scalar &rhs) = default;
+    Scalar &operator=(Scalar &&rhs) = default;
 
     // copy assignment [Number]:
     /** @brief The copy assignment operator of the Scalar class with a given number
@@ -2808,148 +315,142 @@ namespace cytnx {
      * cytnx::Scalar::real() or cytnx::Scalar::imag() to get the real or imaginary
      * part of the Scalar instead.
      */
-    Scalar astype(const unsigned int &dtype) const {
-      Scalar out(this->_impl->astype(dtype));
-      return out;
-    }
+    Scalar astype(const unsigned int &dtype) const;
 
     /**
      * @brief Get the conjugate of the Scalar. That means return \f$ c^* \f$ if
      * the Scalar is \f$ c \f$.
      * @return The conjugate of the Scalar.
      */
-    Scalar conj() const {
-      Scalar out = *this;
-      out._impl->conj_();
-      return out;
-    }
+    Scalar conj() const;
 
     /**
      * @brief Get the imaginary part of the Scalar. That means return \f$ \Im(c) \f$ if
      * the Scalar is \f$ c \f$.
      * @return The imaginary part of the Scalar.
      */
-    Scalar imag() const { return Scalar(this->_impl->get_imag()); }
+    Scalar imag() const;
 
     /**
      * @brief Get the real part of the Scalar. That means return \f$ \Re(c) \f$ if
      * the Scalar is \f$ c \f$.
      * @return The real part of the Scalar.
      */
-    Scalar real() const { return Scalar(this->_impl->get_real()); }
-    // Scalar& set_imag(const Scalar &in){   return *this;}
-    // Scalar& set_real(const Scalar &in){   return *this;}
+    Scalar real() const;
 
     /**
      * @brief Get the dtype of the Scalar (see cytnx::Type for more details).
      */
-    int dtype() const { return this->_impl->_dtype; }
+    int dtype() const;
 
     // print()
     /**
      * @brief Print the Scalar to the standard output.
      */
-    void print() const {
-      this->_impl->print(std::cout);
-      std::cout << std::string(" Scalar dtype: [") << Type.getname(this->_impl->_dtype)
-                << std::string("]") << std::endl;
-    }
+    void print() const;
 
     // casting
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_double.
-    explicit operator cytnx_double() const { return this->_impl->to_cytnx_double(); }
+    explicit operator cytnx_double() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_float
-    explicit operator cytnx_float() const { return this->_impl->to_cytnx_float(); }
+    explicit operator cytnx_float() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_uint64.
-    explicit operator cytnx_uint64() const { return this->_impl->to_cytnx_uint64(); }
+    explicit operator cytnx_uint64() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_int64.
-    explicit operator cytnx_int64() const { return this->_impl->to_cytnx_int64(); }
+    explicit operator cytnx_int64() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_uint32.
-    explicit operator cytnx_uint32() const { return this->_impl->to_cytnx_uint32(); }
+    explicit operator cytnx_uint32() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_int32.
-    explicit operator cytnx_int32() const { return this->_impl->to_cytnx_int32(); }
+    explicit operator cytnx_int32() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_uint16.
-    explicit operator cytnx_uint16() const { return this->_impl->to_cytnx_uint16(); }
+    explicit operator cytnx_uint16() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_int16.
-    explicit operator cytnx_int16() const { return this->_impl->to_cytnx_int16(); }
+    explicit operator cytnx_int16() const;
 
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_bool.
-    explicit operator cytnx_bool() const { return this->_impl->to_cytnx_bool(); }
+    explicit operator cytnx_bool() const;
+
+    // Also need explicit conversion to the complex types (used internally by
+    // complex128()/complex64() and by cross-type arithmetic); these were
+    // reachable in the old PIMPL via to_cytnx_complex128()/64() but had no
+    // public Scalar-level cast operator. Kept as named accessors, not
+    // operators, to avoid changing overload resolution of the public API.
+    /// @cond
+    cytnx_complex128 to_complex128() const;
+    cytnx_complex64 to_complex64() const;
+    ///@endcond
 
     /// @cond
-    // destructor
-    ~Scalar() {
-      if (this->_impl != nullptr) delete this->_impl;
-    };
+    // destructor: trivial, variant handles cleanup.
+    ~Scalar() = default;
     /// @endcond
 
     // arithmetic:
     ///@brief The addition assignment operator of the Scalar class with a given number (template).
     template <class T>
     void operator+=(const T &rc) {
-      this->_impl->iadd(rc);
+      *this += Scalar(rc);
     }
 
     ///@brief The addition assignment operator of the Scalar class with a given Scalar.
-    void operator+=(const Scalar &rhs) { this->_impl->iadd(rhs._impl); }
+    void operator+=(const Scalar &rhs);
 
     ///@brief The subtraction assignment operator of the Scalar class with a given number
     ///(template).
     template <class T>
     void operator-=(const T &rc) {
-      this->_impl->isub(rc);
+      *this -= Scalar(rc);
     }
 
     ///@brief The subtraction assignment operator of the Scalar class with a given Scalar.
-    void operator-=(const Scalar &rhs) { this->_impl->isub(rhs._impl); }
-    template <class T>
+    void operator-=(const Scalar &rhs);
 
     ///@brief The multiplication assignment operator of the Scalar class with a given number
     ///(template).
+    template <class T>
     void operator*=(const T &rc) {
-      this->_impl->imul(rc);
+      *this *= Scalar(rc);
     }
 
     ///@brief The multiplication assignment operator of the Scalar class with a given Scalar.
-    void operator*=(const Scalar &rhs) { this->_impl->imul(rhs._impl); }
-    template <class T>
+    void operator*=(const Scalar &rhs);
 
     /**
      * @brief The division assignment operator of the Scalar class with a given number (template).
      */
+    template <class T>
     void operator/=(const T &rc) {
-      this->_impl->idiv(rc);
+      *this /= Scalar(rc);
     }
 
     /**
      * @brief The division assignment operator of the Scalar class with a given Scalar.
      */
-    void operator/=(const Scalar &rhs) { this->_impl->idiv(rhs._impl); }
+    void operator/=(const Scalar &rhs);
 
     /// @brief Set the Scalar to absolute value. (inplace)
-    void iabs() { this->_impl->iabs(); }
+    void iabs();
 
     /// @brief Set the Scalar to square root. (inplace)
-    void isqrt() { this->_impl->isqrt(); }
+    void isqrt();
 
     /**
      * @brief The member function to get the absolute value of the Scalar.
      * @note Compare to the iabs() function, this function will return a new Scalar object.
+     * @details The result always has a real (non-complex) dtype: abs() of a complex
+     * Scalar returns the Float/Double magnitude, not a complex value with a zero
+     * imaginary part (fixes the iabs()/abs() dtype inconsistency documented in #935).
      * @return The absolute value of the Scalar.
      * @see iabs()
      */
-    Scalar abs() const {
-      Scalar out = *this;
-      out._impl->iabs();
-      return out.real();
-    }
+    Scalar abs() const;
 
     /**
      * @brief The member function to get the square root of the Scalar.
@@ -2957,11 +458,7 @@ namespace cytnx {
      * @return The square root of the Scalar.
      * @see isqrt()
      */
-    Scalar sqrt() const {
-      Scalar out = *this;
-      out._impl->isqrt();
-      return out;
-    }
+    Scalar sqrt() const;
 
     // comparison <
     /**
@@ -2972,14 +469,7 @@ namespace cytnx {
      */
     template <class T>
     bool less(const T &rc) const {
-      Scalar tmp;
-      int rid = Type.cy_typeid(rc);
-      if (rid < this->dtype()) {
-        tmp = this->astype(rid);
-        return tmp._impl->less(rc);
-      } else {
-        return this->_impl->less(rc);
-      }
+      return this->less(Scalar(rc));
     }
 
     /**
@@ -2988,15 +478,7 @@ namespace cytnx {
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator<(const Scalar &lhs, const Scalar &rhs)
      */
-    bool less(const Scalar &rhs) const {
-      Scalar tmp;
-      if (rhs.dtype() < this->dtype()) {
-        tmp = this->astype(rhs.dtype());
-        return tmp._impl->less(rhs._impl);
-      } else {
-        return this->_impl->less(rhs._impl);
-      }
-    }
+    bool less(const Scalar &rhs) const;
 
     // comparison <=
 
@@ -3009,14 +491,7 @@ namespace cytnx {
      */
     template <class T>
     bool leq(const T &rc) const {
-      Scalar tmp;
-      int rid = Type.cy_typeid(rc);
-      if (rid < this->dtype()) {
-        tmp = this->astype(rid);
-        return !(tmp._impl->greater(rc));
-      } else {
-        return !(this->_impl->greater(rc));
-      }
+      return this->leq(Scalar(rc));
     }
 
     /**
@@ -3025,15 +500,7 @@ namespace cytnx {
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator<=(const Scalar &lhs, const Scalar &rhs)
      */
-    bool leq(const Scalar &rhs) const {
-      Scalar tmp;
-      if (rhs.dtype() < this->dtype()) {
-        tmp = this->astype(rhs.dtype());
-        return !(tmp._impl->greater(rhs._impl));
-      } else {
-        return !(this->_impl->greater(rhs._impl));
-      }
-    }
+    bool leq(const Scalar &rhs) const;
 
     // comparison >
     /**
@@ -3044,14 +511,7 @@ namespace cytnx {
      */
     template <class T>
     bool greater(const T &rc) const {
-      Scalar tmp;
-      int rid = Type.cy_typeid(rc);
-      if (rid < this->dtype()) {
-        tmp = this->astype(rid);
-        return tmp._impl->greater(rc);
-      } else {
-        return this->_impl->greater(rc);
-      }
+      return this->greater(Scalar(rc));
     }
 
     /**
@@ -3060,15 +520,7 @@ namespace cytnx {
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator>(const Scalar &lhs, const Scalar &rhs)
      */
-    bool greater(const Scalar &rhs) const {
-      Scalar tmp;
-      if (rhs.dtype() < this->dtype()) {
-        tmp = this->astype(rhs.dtype());
-        return tmp._impl->greater(rhs._impl);
-      } else {
-        return this->_impl->greater(rhs._impl);
-      }
-    }
+    bool greater(const Scalar &rhs) const;
 
     // comparison >=
 
@@ -3081,14 +533,7 @@ namespace cytnx {
      */
     template <class T>
     bool geq(const T &rc) const {
-      Scalar tmp;
-      int rid = Type.cy_typeid(rc);
-      if (rid < this->dtype()) {
-        tmp = this->astype(rid);
-        return !(tmp._impl->less(rc));
-      } else {
-        return !(this->_impl->less(rc));
-      }
+      return this->geq(Scalar(rc));
     }
 
     /**
@@ -3097,15 +542,7 @@ namespace cytnx {
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator>=(const Scalar &lhs, const Scalar &rhs)
      */
-    bool geq(const Scalar &rhs) const {
-      Scalar tmp;
-      if (rhs.dtype() < this->dtype()) {
-        tmp = this->astype(rhs.dtype());
-        return !(tmp._impl->less(rhs._impl));
-      } else {
-        return !(this->_impl->less(rhs._impl));
-      }
-    }
+    bool geq(const Scalar &rhs) const;
 
     // comparison ==
 
@@ -3117,33 +554,8 @@ namespace cytnx {
      */
     template <class T>
     bool eq(const T &rc) const {
-      Scalar tmp;
-      int rid = Type.cy_typeid(rc);
-      if (rid < this->dtype()) {
-        tmp = this->astype(rid);
-        return tmp._impl->eq(rc);
-      } else {
-        return this->_impl->eq(rc);
-      }
+      return this->eq(Scalar(rc));
     }
-    // /**
-    //  * @brief Return whether the current Scalar is approximately equal to a given template number
-    //  \p
-    //  * rc.
-    //  * @details That is, whether \f$ abs(s-r)<tol \f$, where \f$ s \f$ is the current Scalar
-    //  * itself, \f$ r \f$ is the given number \p rc and \p tol is the tolerance value.
-    //  */
-    // template <class T>
-    // bool approx_eq(const T &rc, cytnx_double tol = 1e-8) const {
-    //   Scalar tmp;
-    //   int rid = Type.cy_typeid(rc);
-    //   if (rid < this->dtype()) {
-    //     tmp = this->astype(rid);
-    //     return tmp._impl->approx_eq(rc, tol);
-    //   } else {
-    //     return this->_impl->approx_eq(rc, tol);
-    //   }
-    // }
 
     /**
      * @brief Return whether the current Scalar is equal to a given Scalar \p rhs.
@@ -3151,29 +563,7 @@ namespace cytnx {
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator==(const Scalar &lhs, const Scalar &rhs)
      */
-    bool eq(const Scalar &rhs) const {
-      Scalar tmp;
-      if (rhs.dtype() < this->dtype()) {
-        tmp = this->astype(rhs.dtype());
-        return tmp._impl->eq(rhs._impl);
-      } else {
-        return this->_impl->eq(rhs._impl);
-      }
-    }
-    // /**
-    //  * @brief Return whether the current Scalar is approximately equal to a given Scalar \p rhs.
-    //  * @details That is, whether \f$ abs(s-r)<tol \f$, where \f$ s \f$ is the current Scalar
-    //  * itself, \f$ r \f$ is the given Scalar \p rhs and \p tol is the tolerance value.
-    //  */
-    // bool approx_eq(const Scalar &rhs, cytnx_double tol = 1e-8) const {
-    //   Scalar tmp;
-    //   if (rhs.dtype() < this->dtype()) {
-    //     tmp = this->astype(rhs.dtype());
-    //     return tmp._impl->approx_eq(rhs._impl, tol);
-    //   } else {
-    //     return this->_impl->approx_eq(rhs._impl, tol);
-    //   }
-    // }
+    bool eq(const Scalar &rhs) const;
 
     // radd: Scalar + c
 
@@ -3183,23 +573,14 @@ namespace cytnx {
      */
     template <class T>
     Scalar radd(const T &rc) const {
-      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
-      out._impl->iadd(rc);
-      return out;
+      return this->radd(Scalar(rc));
     }
 
     /**
      * @brief Return the addition of the current Scalar and a given Scalar \p rhs.
      * @see operator+(const Scalar &lhs, const Scalar &rhs)
      */
-    Scalar radd(const Scalar &rhs) const {
-      // promote across the real/complex boundary (e.g. ComplexFloat + Double -> ComplexDouble)
-      // rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
-      out._impl->iadd(rhs._impl);
-      return out;
-    }
+    Scalar radd(const Scalar &rhs) const;
 
     // rmul: Scalar * c
 
@@ -3209,23 +590,14 @@ namespace cytnx {
      */
     template <class T>
     Scalar rmul(const T &rc) const {
-      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
-      out._impl->imul(rc);
-      return out;
+      return this->rmul(Scalar(rc));
     }
 
     /**
      * @brief Return the multiplication of the current Scalar and a given Scalar \p rhs.
      * @see operator*(const Scalar &lhs, const Scalar &rhs)
      */
-    Scalar rmul(const Scalar &rhs) const {
-      // promote across the real/complex boundary (e.g. ComplexFloat * Double -> ComplexDouble)
-      // rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
-      out._impl->imul(rhs._impl);
-      return out;
-    }
+    Scalar rmul(const Scalar &rhs) const;
 
     // rsub: Scalar - c
 
@@ -3235,23 +607,14 @@ namespace cytnx {
      */
     template <class T>
     Scalar rsub(const T &rc) const {
-      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
-      out._impl->isub(rc);
-      return out;
+      return this->rsub(Scalar(rc));
     }
 
     /**
      * @brief Return the subtraction of the current Scalar and a given Scalar \p rhs.
      * @see operator-(const Scalar &lhs, const Scalar &rhs)
      */
-    Scalar rsub(const Scalar &rhs) const {
-      // promote across the real/complex boundary (e.g. ComplexFloat - Double -> ComplexDouble)
-      // rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
-      out._impl->isub(rhs._impl);
-      return out;
-    }
+    Scalar rsub(const Scalar &rhs) const;
 
     // rdiv: Scalar / c
 
@@ -3261,64 +624,14 @@ namespace cytnx {
      */
     template <class T>
     Scalar rdiv(const T &rc) const {
-      // promote across the real/complex boundary rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), Type.cy_typeid(rc)));
-      out._impl->idiv(rc);
-      return out;
+      return this->rdiv(Scalar(rc));
     }
 
     /**
      * @brief Return the division of the current Scalar and a given Scalar \p rhs.
      * @see operator/(const Scalar &lhs, const Scalar &rhs)
      */
-    Scalar rdiv(const Scalar &rhs) const {
-      // promote across the real/complex boundary (e.g. ComplexFloat / Double -> ComplexDouble)
-      // rather than keeping the lower-enum operand type.
-      Scalar out = this->astype(Type.type_promote(this->dtype(), rhs.dtype()));
-      out._impl->idiv(rhs._impl);
-      return out;
-    }
-
-    /*
-    //operator:
-    template<class T>
-    Scalar operator+(const T &rc){
-        return this->radd(rc);
-    }
-    template<class T>
-    Scalar operator*(const T &rc){
-        return this->rmul(rc);
-    }
-    template<class T>
-    Scalar operator-(const T &rc){
-        return this->rsub(rc);
-    }
-    template<class T>
-    Scalar operator/(const T &rc){
-        return this->rdiv(rc);
-    }
-
-    template<class T>
-    bool operator<(const T &rc){
-        return this->less(rc);
-    }
-
-    template<class T>
-    bool operator>(const T &rc){
-        return this->greater(rc);
-    }
-
-
-    template<class T>
-    bool operator<=(const T &rc){
-        return this->leq(rc);
-    }
-
-    template<class T>
-    bool operator>=(const T &rc){
-        return this->geq(rc);
-    }
-    */
+    Scalar rdiv(const Scalar &rhs) const;
   };
 
   // ladd: c + Scalar:
@@ -3329,7 +642,7 @@ namespace cytnx {
    * \f[ l+r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
-  Scalar operator+(const Scalar &lc, const Scalar &rs);  //{return rs.radd(lc);};
+  Scalar operator+(const Scalar &lc, const Scalar &rs);
 
   // lmul c * Scalar;
   /**
@@ -3338,7 +651,7 @@ namespace cytnx {
    * \f[ l \cdot r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
-  Scalar operator*(const Scalar &lc, const Scalar &rs);  //{return rs.rmul(lc);};
+  Scalar operator*(const Scalar &lc, const Scalar &rs);
 
   // lsub c * Scalar;
   /**
@@ -3347,7 +660,7 @@ namespace cytnx {
    * \f[ l-r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
-  Scalar operator-(const Scalar &lc, const Scalar &rs);  //{return Scalar(lc).rsub(rs);};
+  Scalar operator-(const Scalar &lc, const Scalar &rs);
 
   // ldiv c / Scalar;
   /**
@@ -3356,7 +669,7 @@ namespace cytnx {
    * \f[ l/r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
-  Scalar operator/(const Scalar &lc, const Scalar &rs);  //{return Scalar(lc).rdiv(rs);};
+  Scalar operator/(const Scalar &lc, const Scalar &rs);
 
   // lless c < Scalar;
   /**
