@@ -530,7 +530,7 @@ namespace cytnx {
     constexpr const char *type_spelling<bool> = "<bool>";
   }  // namespace
 
-  template <class T>
+  template <CytnxType T>
   T *Storage_base::data() const {
     // check type
     cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<T>,
@@ -582,11 +582,40 @@ namespace cytnx {
     cudaDeviceSynchronize();
     return static_cast<cuFloatComplex *>(this->data());
   }
+  // cuda::std::complex views -- the representation GPU kernels use internally (#1004).
+  template <>
+  cytnx_cuda_complex128 *Storage_base::data<cytnx_cuda_complex128>() const {
+    cytnx_error_msg(
+      this->dtype() != Type.ComplexDouble,
+      "[ERROR] type mismatch. try to get < cuda::std::complex<double> > type from raw "
+      "data of type %s",
+      Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(this->device() == Device.cpu, "%s",
+                    "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
+                    "cuda::std::complex<double>. use type <cytnx_complex128> or < "
+                    "std::complex<double> > instead.");
+    cudaDeviceSynchronize();
+    return static_cast<cytnx_cuda_complex128 *>(this->data());
+  }
+  template <>
+  cytnx_cuda_complex64 *Storage_base::data<cytnx_cuda_complex64>() const {
+    cytnx_error_msg(this->dtype() != Type.ComplexFloat,
+                    "[ERROR] type mismatch. try to get < cuda::std::complex<float> > type from raw "
+                    "data of type %s",
+                    Type.getname(this->dtype()).c_str());
+    cytnx_error_msg(
+      this->device() == Device.cpu, "%s",
+      "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
+      "cuda::std::complex<float>. use type <cytnx_complex64> or < std::complex<float> "
+      "> instead.");
+    cudaDeviceSynchronize();
+    return static_cast<cytnx_cuda_complex64 *>(this->data());
+  }
 #endif
 
   // instantiation:
   //====================================================
-  template <class T>
+  template <CytnxType T>
   T &Storage_base::at(const cytnx_uint64 &idx) const {
     cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<T>,
                     "[ERROR] type mismatch. try to get %s type from raw data of type %s",
@@ -618,7 +647,7 @@ namespace cytnx {
 
   // instantiation:
   //====================================================
-  template <class T>
+  template <CytnxType T>
   T &Storage_base::back() const {
     cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<T>,
                     "[ERROR] type mismatch. try to get %s type from raw data of type %s",

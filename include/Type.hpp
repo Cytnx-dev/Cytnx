@@ -185,6 +185,14 @@ namespace cytnx {
                  cytnx_bool>;
 #endif
 
+  // CytnxType<T> is satisfied by the element types that have a cytnx dtype (the members of
+  // Type_list, excluding the Void placeholder). Storage_base::data/at/back are constrained to it
+  // so that requesting an unsupported T is a compile-time error at the call site. The GPU cuComplex
+  // / cuda::std::complex pointer views are non-cytnx-dtype types and are provided separately as
+  // explicit specializations.
+  template <typename T>
+  concept CytnxType = variant_contains_v<T, Type_list> && !std::is_void_v<T>;
+
   // The number of supported types
   constexpr int N_Type = std::variant_size_v<Type_list>;
   constexpr int N_fType = 5;

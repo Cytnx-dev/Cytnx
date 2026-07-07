@@ -46,13 +46,23 @@ namespace cytnx {
     }
     virtual ~Storage_base();
 
-    template <class T>
+    // at/back/data are supported only for element types that have a cytnx dtype (CytnxType).
+    // The unconstrained primary is deleted, so requesting an unsupported T is a compile-time
+    // error at the call site rather than a link error or runtime surprise. The GPU cuComplex /
+    // cuda::std::complex pointer views are provided as explicit specializations in the .cpp.
+    template <typename T>
+    T &at(const cytnx_uint64 &idx) const = delete;
+    template <CytnxType T>
     T &at(const cytnx_uint64 &idx) const;
 
-    template <class T>
+    template <typename T>
+    T &back() const = delete;
+    template <CytnxType T>
     T &back() const;
 
-    template <class T>
+    template <typename T>
+    T *data() const = delete;
+    template <CytnxType T>
     T *data() const;
 
     // `Storage_base` can be instanitiated directly. It's deconstructor calls `data()`, so we cannot
