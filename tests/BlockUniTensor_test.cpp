@@ -327,6 +327,104 @@ TEST_F(BlockUniTensorTest, permute_2) {
     }
 }
 
+/*=====test info=====
+describe:regression test for issue #724 on the BlockUniTensor path. Two
+         UniTensors sharing the same underlying block Tensors (via
+         relabel(), documented to share data with the original) must not
+         corrupt each other's metadata when one of them is permuted in
+         place with permute_().
+====================*/
+TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = UT_permute_2.clone().set_name("uT");
+  UniTensor uT2 = uT.relabel({"a", "b"}).set_name("uT2");
+
+  // Precondition: the two UniTensors really do share the same block storage.
+  ASSERT_TRUE(uT.same_data(uT2));
+  ASSERT_EQ(uT.Nblocks(), uT2.Nblocks());
+
+  const auto orig_shape = uT.shape();
+  const auto orig_labels = uT.labels();
+  ASSERT_EQ(orig_shape, std::vector<cytnx_uint64>({10, 10}));
+  std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
+  std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      orig_exists[j][k] = uT.at({j, k}).exists();
+      if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
+    }
+
+  std::vector<cytnx_int64> a = {1, 0};
+  uT2.permute_(a, -1);
+
+  // uT2 changed as expected (matches the pre-existing permute_2 reference answer).
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      EXPECT_EQ(uT2.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
+      if (uT2.at({j, k}).exists())
+        EXPECT_EQ(double(uT2.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
+    }
+
+  // uT must be completely unaffected: shape, labels, and data all preserved. Reading uT after
+  // uT2's in-place permute must not even throw (a stale block/qnum mapping vs. a physically
+  // permuted shared block Tensor can manifest as an out-of-bound access), so guard each read.
+  ASSERT_EQ(uT.shape(), orig_shape);
+  EXPECT_EQ(uT.labels(), orig_labels);
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      try {
+        EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
+        if (orig_exists[j][k] && uT.at({j, k}).exists())
+          EXPECT_EQ(double(uT.at({j, k}).real()), orig_vals[j][k]);
+      } catch (const std::exception& e) {
+        ADD_FAILURE() << "uT.at({" << j << "," << k
+                      << "}) threw after uT2.permute_() (shared-block metadata corrupted): "
+                      << e.what();
+      }
+    }
+}
+
+/*=====test info=====
+describe:control test - when blocks are NOT shared (independent clone), an
+         in-place permute_() on one BlockUniTensor must not affect the
+         other. Guards against a fix that over-isolates or breaks normal
+         (non-shared) permute_ behavior.
+====================*/
+TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) {
+  UniTensor uT = UT_permute_2.clone().set_name("uT");
+  UniTensor uT_indep = uT.clone().set_name("uT_indep");
+
+  ASSERT_FALSE(uT.same_data(uT_indep));
+
+  const auto orig_shape = uT.shape();
+  std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
+  std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      orig_exists[j][k] = uT.at({j, k}).exists();
+      if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
+    }
+
+  std::vector<cytnx_int64> a = {1, 0};
+  uT_indep.permute_(a, -1);
+
+  // uT_indep must match the known permute_2 reference answer (proves the permute really ran).
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      EXPECT_EQ(uT_indep.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
+      if (uT_indep.at({j, k}).exists())
+        EXPECT_EQ(double(uT_indep.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
+    }
+
+  // uT (the clone source, independent storage) must be completely unaffected.
+  EXPECT_EQ(uT.shape(), orig_shape);
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
+      if (orig_exists[j][k] && uT.at({j, k}).exists())
+        EXPECT_EQ(double(uT.at({j, k}).real()), orig_vals[j][k]);
+    }
+}
+
 TEST_F(BlockUniTensorTest, contiguous) {
   auto bks = UT_pB_ans.permute({1, 2, 0}).contiguous().get_blocks();
 

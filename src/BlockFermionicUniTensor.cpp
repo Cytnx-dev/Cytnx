@@ -660,7 +660,10 @@ namespace cytnx {
       // inner_to_outer permute!
       for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
         this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
-        this->_blocks[b].permute_(mapper_u64);
+        // Build new block metadata via the non-mutating Tensor::permute() and rebind _blocks[b]
+        // to it, rather than mutating the (possibly shared) block Tensor in place with
+        // permute_(), so other UniTensors sharing the same block are not corrupted (#724).
+        this->_blocks[b] = this->_blocks[b].permute(mapper_u64);
       }
 
       if (rowrank >= 0) {
@@ -790,7 +793,10 @@ namespace cytnx {
       // inner_to_outer permute!
       for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
         this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
-        this->_blocks[b].permute_(mapper_u64);
+        // Build new block metadata via the non-mutating Tensor::permute() and rebind _blocks[b]
+        // to it, rather than mutating the (possibly shared) block Tensor in place with
+        // permute_(), so other UniTensors sharing the same block are not corrupted (#724).
+        this->_blocks[b] = this->_blocks[b].permute(mapper_u64);
       }
 
       if (rowrank >= 0) {
@@ -1540,6 +1546,12 @@ namespace cytnx {
             }
           }
         } else {
+          // KNOWN ISSUE (#724, not fixed by this change): same as the analogous branch in
+          // BlockUniTensor::contract() (src/BlockUniTensor.cpp) — the branches below temporarily
+          // mutate this->_blocks[a] / Rtn->_blocks[b] / tmp_Rtn->_blocks[b] in place via
+          // permute_()/reshape_(), then restore afterward. If those blocks are shared with
+          // another UniTensor, that other UniTensor is transiently (or, on an exception,
+          // permanently) corrupted. Left as a follow-up; see BlockUniTensor.cpp for details.
           BlockFermionicUniTensor *tmp_Rtn = Rtn;
           bool tmp_rtn_is_casted = false;
 
@@ -1715,6 +1727,8 @@ namespace cytnx {
           }  // end else (common_dtype <= 4)
         }
   #else
+          // NOTE: shared-block mutate/restore hazard — see KNOWN ISSUE (#724) at top of this
+          // else-block.
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
@@ -2694,7 +2708,9 @@ namespace cytnx {
           new_shape.push_back(this->_blocks[b].shape()[i]);
         }
       }
-      this->_blocks[b].reshape_(new_shape);
+      // Rebind to a freshly-reshaped block instead of mutating the (possibly shared) block
+      // Tensor in place, so other UniTensors sharing this block are not corrupted (#724).
+      this->_blocks[b] = this->_blocks[b].reshape(new_shape);
     }
 
     for (int b = 0; b < this->_blocks.size(); b++) {

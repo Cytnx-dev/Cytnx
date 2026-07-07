@@ -163,7 +163,7 @@ TEST_F(BlockFermionicUniTensorTest, SaveLoad) {
   UniTensor BFUT1_loaded = BFUT1_loaded.Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded));
   // for char*
-  const char *fname = temp_file_path.c_str();
+  const char* fname = temp_file_path.c_str();
   BFUT1.Save(fname);
   UniTensor BFUT1_loaded_char_save = BFUT1_loaded_char_save.Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_save));
@@ -217,6 +217,58 @@ TEST_F(BlockFermionicUniTensorTest, Transpose) {
   EXPECT_EQ(tmp2.bonds()[1].type(), BD_OUT);
   EXPECT_EQ(tmp2.bonds()[2].type(), BD_OUT);
   EXPECT_TRUE(AreEqUniTensor(tmp2, tmp));
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the BlockFermionicUniTensor path.
+         Two UniTensors sharing the same underlying block Tensors (via
+         relabel(), documented to share data with the original) must not
+         corrupt each other's metadata when one of them is permuted in
+         place with permute_(). BlockFermionicUniTensor::permute_ is a
+         distinct implementation from BlockUniTensor's (it additionally
+         updates the per-block sign-flip state), so it gets its own test.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = BFUT3.clone().set_name("uT");
+  UniTensor uT2 = uT.relabel({"p", "q", "r", "s", "t"}).set_name("uT2");
+
+  // Precondition: the two UniTensors really do share the same block storage.
+  ASSERT_TRUE(uT.same_data(uT2));
+  ASSERT_EQ(uT.Nblocks(), uT2.Nblocks());
+
+  const auto orig_shape = uT.shape();
+  const auto orig_labels = uT.labels();
+  const auto orig_signflip = uT.signflip();
+  // The 8 non-zero entries of BFUT3 as initialized in the fixture.
+  const std::vector<std::vector<cytnx_uint64>> nz_locs = {
+    {0, 0, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 1, 2, 0, 0}, {0, 1, 3, 0, 0},
+    {1, 0, 2, 0, 0}, {1, 0, 3, 0, 0}, {1, 1, 0, 0, 0}, {1, 1, 1, 0, 0}};
+  const std::vector<double> nz_vals = {1., 2., 3., 4., 5., 6., 7., 8.};
+
+  std::vector<cytnx_int64> a = {3, 1, 4, 2, 0};
+  uT2.permute_(a);
+
+  // uT2 changed as expected: after resolving the pending sign flips it must match the
+  // BFUT3PERM reference (same permutation as the pre-existing LinAlgElementwise test).
+  EXPECT_TRUE(AreEqUniTensor(BFUT3PERM, uT2.contiguous().apply()));
+
+  // uT must be completely unaffected: shape, labels, sign-flip state, and data all preserved.
+  ASSERT_EQ(uT.shape(), orig_shape);
+  EXPECT_EQ(uT.labels(), orig_labels);
+  EXPECT_EQ(uT.signflip(), orig_signflip);
+  EXPECT_TRUE(AreEqUniTensor(uT, BFUT3));
+  // Reading uT after uT2's in-place permute must not even throw (stale block/qnum mapping vs. a
+  // physically permuted shared block Tensor can manifest as an out-of-bound access).
+  for (size_t n = 0; n < nz_locs.size(); n++) {
+    try {
+      ASSERT_TRUE(uT.at(nz_locs[n]).exists());
+      EXPECT_DOUBLE_EQ(double(uT.at(nz_locs[n]).real()), nz_vals[n]);
+    } catch (const std::exception& e) {
+      ADD_FAILURE() << "uT.at(nz_locs[" << n
+                    << "]) threw after uT2.permute_() (shared-block metadata corrupted): "
+                    << e.what();
+    }
+  }
 }
 
 // ============ convert_from / from_ ============
