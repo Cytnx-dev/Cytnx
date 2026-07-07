@@ -249,13 +249,6 @@ target_include_directories(cytnx SYSTEM
 )
 
 target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
-if(MSVC)
-  # cytnx_error.hpp's cytnx_error_msg / cytnx_warning_msg macros use __VA_OPT__,
-  # which MSVC only supports under its conforming preprocessor; /std:c++20 alone
-  # does NOT enable it. PUBLIC so downstream code that uses the error macros gets
-  # it too. See the #983 review.
-  target_compile_options(cytnx PUBLIC /Zc:preprocessor)
-endif()
 add_subdirectory(src)
 
 if(USE_DEBUG)
