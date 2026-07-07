@@ -494,8 +494,18 @@ namespace cytnx {
   namespace {
     // C++ type spelling embedded in the at/back/data dtype-mismatch messages
     // (e.g. "<float>", "< std::complex<double> >").
+    //
+    // The primary template is ill-formed if instantiated: every type reaching those
+    // messages must have an explicit specialization below. Adding a new at/back/data
+    // instantiation without a matching spelling is therefore a compile error, rather
+    // than silently feeding a null pointer to the "%s" conversion (runtime UB).
     template <typename T>
-    constexpr const char *type_spelling = nullptr;
+    struct type_spelling_holder {
+      static_assert(always_false_v<T>, "type_spelling is not specialized for this type");
+      static constexpr const char *value = nullptr;
+    };
+    template <typename T>
+    constexpr const char *type_spelling = type_spelling_holder<T>::value;
     template <>
     constexpr const char *type_spelling<float> = "<float>";
     template <>
