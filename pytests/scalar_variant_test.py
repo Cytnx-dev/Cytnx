@@ -15,10 +15,9 @@ from cytnx import Type
 
 
 def _s(value, np_dtype):
-    """Construct a cytnx.Scalar with an explicit dtype via a numpy scalar,
-    since the Python binding only exposes the 11 single-arg typed
-    constructors (+ numpy-scalar overloads), not the C++-only (value, dtype)
-    two-argument constructor."""
+    """Construct a cytnx.Scalar with an explicit dtype via a numpy scalar:
+    each numpy scalar type maps to its own constructor overload, while the
+    C++-only (value, dtype) two-argument constructor is not bound."""
     return cytnx.Scalar(np_dtype(value))
 
 
@@ -83,13 +82,7 @@ def test_inplace_int_plus_float_raises_runtime_error():
 
 
 def test_inplace_signed_unsigned_mix_raises_runtime_error():
-    # Unsigned-dtype Scalars are constructed via astype() here: the pybind
-    # numpy-scalar constructor overloads currently resolve every integer
-    # numpy type except int64 to the Int64 constructor (a pre-existing
-    # binding quirk, see test_numpy_scalar_constructor_paths_narrower_ints_
-    # preexisting_quirk below), so astype() is the reliable way to pin an
-    # unsigned dtype from Python.
-    s = cytnx.Scalar(np.int64(3)).astype(Type.Uint64)
+    s = cytnx.Scalar(np.uint64(3))
     assert s.dtype() == Type.Uint64
     with pytest.raises(RuntimeError):
         s -= cytnx.Scalar(np.int64(2))
@@ -174,10 +167,10 @@ def test_self_assignment_and_self_inplace_are_safe():
 # Storage indexed assignment from a Scalar (the Python-visible entry point
 # into Scalar::Sproxy / Storage::set_item(idx, const Scalar&) -- see
 # pybind/storage_py.cpp's __setitem__/__getitem__, which cast the Scalar via
-# its __int__/__float__/__complex__ operators into self.at<T>(idx) rather
-# than returning a Scalar from __getitem__. Bool storage is excluded: casting
-# a Scalar to C++ bool has no pybind path today (no __bool__ registered in
-# scalar_py.cpp) -- a pre-existing gap, unchanged by this refactor.
+# its __bool__/__int__/__float__/__complex__ operators into self.at<T>(idx)
+# rather than returning a Scalar from __getitem__. The Bool row needs the
+# __bool__ binding: pybind's bool caster only accepts objects whose type
+# fills the nb_bool slot.
 # ---------------------------------------------------------------------------
 
 
@@ -194,14 +187,17 @@ def test_self_assignment_and_self_inplace_are_safe():
         (Type.Uint32, np.uint32),
         (Type.Int16, np.int16),
         (Type.Uint16, np.uint16),
+        (Type.Bool, np.bool_),
     ],
 )
 def test_storage_setitem_getitem_scalar_roundtrip(dtype, np_dtype):
     storage = cytnx.Storage(4, dtype)
-    value = cytnx.Scalar(np_dtype(3))
-    storage[1] = value
+    value = np_dtype(True) if dtype == Type.Bool else np_dtype(3)
+    storage[1] = cytnx.Scalar(value)
     got = storage[1]
-    if isinstance(got, (float, complex)):
+    if dtype == Type.Bool:
+        assert got is True
+    elif isinstance(got, (float, complex)):
         assert got == pytest.approx(3)
     else:
         assert got == 3
@@ -221,7 +217,13 @@ def test_tensor_setitem_with_scalar_still_works():
 
 
 # ---------------------------------------------------------------------------
-# numpy scalar constructor paths (all 11 dtypes + complex)
+# numpy scalar constructor paths (all 11 dtypes + complex): every numpy
+# scalar type resolves to its own constructor overload. Before the keep-set
+# reorder of scalar_py.cpp's __init__ overloads (see "KEEP-SET ORDERING" in
+# pybind/pyint_dispatch.hpp), the plain integral constructors were registered
+# ahead of the numpy_scalar ones, so every in-range numpy integer scalar was
+# consumed via __index__ by the first plain integral overload and came out
+# dtype Int64.
 # ---------------------------------------------------------------------------
 
 
@@ -233,6 +235,11 @@ def test_tensor_setitem_with_scalar_still_works():
         (np.float64, Type.Double),
         (np.float32, Type.Float),
         (np.int64, Type.Int64),
+        (np.uint64, Type.Uint64),
+        (np.int32, Type.Int32),
+        (np.uint32, Type.Uint32),
+        (np.int16, Type.Int16),
+        (np.uint16, Type.Uint16),
         (np.bool_, Type.Bool),
     ],
 )
@@ -242,23 +249,72 @@ def test_numpy_scalar_constructor_paths(np_dtype, dtype):
     assert s.dtype() == dtype
 
 
+def test_numpy_uint64_above_int64_max_preserves_value():
+    big = np.uint64(2**64 - 1)
+    s = cytnx.Scalar(big)
+    assert s.dtype() == Type.Uint64
+    assert float(s) == pytest.approx(float(big))
+
+
+# ---------------------------------------------------------------------------
+# plain Python scalar constructor keep-set: int dispatches on magnitude
+# (int64 when it fits, covering all negatives; uint64 otherwise; clean error
+# beyond uint64 range instead of a silent complex upcast), and bool/float/
+# complex map to Bool/Double/ComplexDouble.
+# ---------------------------------------------------------------------------
+
+
+def test_python_int_constructor_dispatches_on_magnitude():
+    assert cytnx.Scalar(5).dtype() == Type.Int64
+    assert cytnx.Scalar(-5).dtype() == Type.Int64
+    assert cytnx.Scalar(2**63).dtype() == Type.Uint64
+    assert cytnx.Scalar(2**64 - 1).dtype() == Type.Uint64
+
+
+def test_python_int_constructor_out_of_range_raises():
+    with pytest.raises(RuntimeError):
+        cytnx.Scalar(2**64)
+    with pytest.raises(RuntimeError):
+        cytnx.Scalar(-(2**63) - 1)
+
+
+def test_python_bool_float_complex_constructor_dtypes():
+    assert cytnx.Scalar(True).dtype() == Type.Bool
+    assert cytnx.Scalar(0.5).dtype() == Type.Double
+    assert cytnx.Scalar(1 + 2j).dtype() == Type.ComplexDouble
+
+
+# ---------------------------------------------------------------------------
+# __bool__: numpy-consistent truthiness (nonzero value -> True; for complex,
+# nonzero real OR imaginary part).
+# ---------------------------------------------------------------------------
+
+
 @pytest.mark.parametrize(
     "np_dtype",
-    [np.uint64, np.int32, np.uint32, np.int16, np.uint16],
+    [
+        np.complex128,
+        np.complex64,
+        np.float64,
+        np.float32,
+        np.int64,
+        np.uint64,
+        np.int32,
+        np.uint32,
+        np.int16,
+        np.uint16,
+        np.bool_,
+    ],
 )
-def test_numpy_scalar_constructor_paths_narrower_ints_preexisting_quirk(np_dtype):
-    # Pre-existing pybind11 overload-resolution behavior (confirmed present
-    # on master d6dcd160, before this refactor): numpy scalar types narrower
-    # than int64/uint64 (uint64, int32, uint32, int16, uint16) all resolve to
-    # the Int64 constructor overload instead of their own. This is a
-    # pre-existing pybind/numpy_scalar dispatch quirk in scalar_py.cpp's
-    # __init__ overload set, not something introduced or fixed by the
-    # Scalar->std::variant refactor (T2's scope is Scalar's internals; the
-    # pybind constructor overload set is unchanged). Documented here so a
-    # future fix has a regression test to flip green; not treated as a T2
-    # gate failure.
-    s = cytnx.Scalar(np_dtype(5))
-    assert s.dtype() == Type.Int64  # pinned pre-existing behavior, not the "correct" dtype
+def test_bool_matches_numpy_truthiness(np_dtype):
+    assert bool(cytnx.Scalar(np_dtype(0))) is False
+    assert bool(cytnx.Scalar(np_dtype(1))) is True
+
+
+def test_bool_complex_pure_imaginary_is_true():
+    # numpy: bool(np.complex128(1j)) is True -- truthiness must consider the
+    # imaginary part, not just the real part.
+    assert bool(cytnx.Scalar(np.complex128(1j))) is True
 
 
 def test_comparison_operators_across_dtypes():

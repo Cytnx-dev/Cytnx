@@ -13,10 +13,12 @@
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
 #include "complex.h"
+#include "pyint_dispatch.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
+using pybind_cytnx::dispatch_pyint;
 
 #ifdef BACKEND_TORCH
 #else
@@ -24,39 +26,22 @@ using namespace cytnx;
 void scalar_binding(py::module &m) {
   py::class_<cytnx::Scalar>(m, "Scalar")
     .def(py::init<>())
-    .def(py::init<const cytnx::cytnx_complex128 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_complex64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_double &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_float &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint32 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int32 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint16 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int16 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_bool &>(), py::arg("a"))
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in
+    // pybind/pyint_dispatch.hpp. Group-specific notes: Python bool must be
+    // bound ahead of the py::int_ overload (bool subclasses int, so the
+    // py::int_ caster accepts it even in the no-convert pass), and
+    // np.float64 / np.complex128 subclass float / complex, so the trailing
+    // cytnx_double / cytnx_complex128 constructors absorb them.
     .def(
       "__init__",
-      [](Scalar &self, const py::numpy_scalar<std::complex<double>> value) {
-        new (&self) Scalar(static_cast<cytnx::cytnx_complex128>(value));
+      [](Scalar &self, const py::numpy_scalar<float> value) {
+        new (&self) Scalar(static_cast<cytnx::cytnx_float>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<std::complex<float>> value) {
         new (&self) Scalar(static_cast<cytnx::cytnx_complex64>(value));
-      },
-      py::arg("a"))
-    .def(
-      "__init__",
-      [](Scalar &self, const py::numpy_scalar<double> value) {
-        new (&self) Scalar(static_cast<cytnx::cytnx_double>(value));
-      },
-      py::arg("a"))
-    .def(
-      "__init__",
-      [](Scalar &self, const py::numpy_scalar<float> value) {
-        new (&self) Scalar(static_cast<cytnx::cytnx_float>(value));
       },
       py::arg("a"))
     .def(
@@ -101,6 +86,12 @@ void scalar_binding(py::module &m) {
         new (&self) Scalar(static_cast<cytnx::cytnx_bool>(value));
       },
       py::arg("a"))
+    .def(py::init<const cytnx::cytnx_bool &>(), py::arg("a"))
+    .def(py::init(
+           [](const py::int_ &a) { return dispatch_pyint(a, [](auto v) { return Scalar(v); }); }),
+         py::arg("a"))
+    .def(py::init<const cytnx::cytnx_double &>(), py::arg("a"))
+    .def(py::init<const cytnx::cytnx_complex128 &>(), py::arg("a"))
 
     // ---- Static methods ----
     .def_static("maxval", &Scalar::maxval)
@@ -155,6 +146,17 @@ void scalar_binding(py::module &m) {
     .def(py::self >= py::self)
 
     // ---- Conversion operators ----
+    // numpy-consistent truthiness: nonzero value -> True; a complex Scalar
+    // is True when either component is nonzero (the plain double cast
+    // throws on complex dtypes, so branch first).
+    .def("__bool__",
+         [](const Scalar &s) {
+           if (Type.is_complex(s.dtype())) {
+             return static_cast<cytnx_double>(s.real()) != 0.0 ||
+                    static_cast<cytnx_double>(s.imag()) != 0.0;
+           }
+           return static_cast<cytnx_double>(s) != 0.0;
+         })
     .def("__float__", [](const Scalar &s) { return static_cast<cytnx_double>(s); })
     .def("__int__", [](const Scalar &s) { return static_cast<cytnx_int64>(s); })
     .def("__complex__",
