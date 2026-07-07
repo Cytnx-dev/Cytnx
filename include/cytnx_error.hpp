@@ -21,11 +21,9 @@
   #define CYTNX_HAS_EXECINFO 0
 #endif
 
-#ifdef _MSC_VER
-  #define CYTNX_FUNC_NAME __FUNCSIG__
-#else
-  #define CYTNX_FUNC_NAME __PRETTY_FUNCTION__
-#endif
+// Full function signature for error reports. __PRETTY_FUNCTION__ is a GCC/Clang
+// extension; those are the only supported compilers (Linux/macOS, and Windows via WSL).
+#define CYTNX_FUNC_NAME __PRETTY_FUNCTION__
 
 namespace cytnx {
 
