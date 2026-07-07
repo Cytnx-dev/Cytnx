@@ -443,7 +443,22 @@ namespace cytnx {
     }
   };
   extern Storage_init_interface __SII;
-  ///@endcond;
+    ///@endcond;
+
+  #ifdef UNI_GPU
+  // Explicit specialization declarations for the GPU complex pointer views, so they are visible
+  // (and reachable via Storage::data<T>()) from any TU, not only Storage_base.cpp where they are
+  // defined. They specialize the deleted primary -- the cu* types are not cytnx dtypes: the
+  // cuComplex ABI types for CUDA library calls, and cuda::std::complex<...> for kernel code.
+  template <>
+  cuDoubleComplex *Storage_base::data<cuDoubleComplex>() const;
+  template <>
+  cuFloatComplex *Storage_base::data<cuFloatComplex>() const;
+  template <>
+  cytnx_cuda_complex128 *Storage_base::data<cytnx_cuda_complex128>() const;
+  template <>
+  cytnx_cuda_complex64 *Storage_base::data<cytnx_cuda_complex64>() const;
+  #endif
 
   ///@brief an memeory storage with multi-type/multi-device support
   class Storage {
@@ -700,10 +715,9 @@ namespace cytnx {
       return out;
     }
 
-    // Constrained to CytnxType: the header-visible Storage_base::data<T>() overload only accepts
-    // cytnx dtypes. (The GPU cuComplex / cuda::std::complex views are Storage_base.cpp-local
-    // specializations, not declared in this header, so they are not reachable through the wrapper.)
-    template <CytnxType T>  // this is c++ only
+    // Constrained to StorageDataType: the cytnx dtypes plus the GPU cuComplex / cuda::std::complex
+    // pointer views (whose Storage_base specializations are declared above, so they resolve here).
+    template <StorageDataType T>  // this is c++ only
     T *data() const {
       return this->_impl->data<T>();
     }
