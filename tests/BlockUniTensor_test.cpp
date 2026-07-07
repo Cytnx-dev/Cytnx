@@ -1400,3 +1400,80 @@ TEST_F(BlockUniTensorTest, ContractIntegerDtype) {
   EXPECT_EQ(int64_t(out.at({0, 0}).real()), 3);
   EXPECT_EQ(int64_t(out.at({2, 2}).real()), 8);
 }
+
+/*=====test info=====
+describe:regression test for issue #724 on the contract() path. contract()
+         used to permute_/reshape_ the operands' blocks in place and restore
+         them afterward. When the two operands alias each other's blocks
+         (relabel() is documented to share block storage), the in-place
+         mutation of the left operand corrupts the right operand mid-
+         contraction: the contraction throws (rank-mismatched permute_ on an
+         already-reshaped shared block) or produces wrong values. contract()
+         must treat both operands' blocks as read-only.
+====================*/
+TEST_F(BlockUniTensorTest, ContractAliasedSharedBlocksOperandsIntact) {
+  Bond ba = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2});
+  Bond bb = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  Bond bc = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 2});
+  UniTensor A = UniTensor({ba, bb, bc}, {"a", "b", "c"});
+  random::uniform_(A, -1.0, 1.0, 42);
+  // B shares A's blocks; contracting over "a" and "c" makes the two operands
+  // of contract() alias each other's blocks (including block-with-itself pairs).
+  UniTensor B = A.relabel({"c", "d", "a"});
+  ASSERT_TRUE(A.same_data(B));
+
+  UniTensor Asnap = A.clone();  // pristine copy of the shared data
+  // reference result from fully independent operands
+  UniTensor expected = Contract(Asnap.clone(), Asnap.clone().relabel({"c", "d", "a"}));
+
+  UniTensor got;
+  try {
+    got = Contract(A, B);
+  } catch (const std::exception& e) {
+    FAIL() << "Contract() on operands sharing blocks threw: " << e.what();
+  }
+
+  ASSERT_EQ(got.Nblocks(), expected.Nblocks());
+  for (cytnx_uint64 i = 0; i < got.Nblocks(); i++) {
+    EXPECT_TRUE(AreNearlyEqTensor(got.get_blocks_()[i], expected.get_blocks_()[i], 1e-12));
+  }
+
+  // both operands must be intact: values, shapes, and contiguity
+  ASSERT_EQ(A.Nblocks(), Asnap.Nblocks());
+  for (cytnx_uint64 i = 0; i < A.Nblocks(); i++) {
+    EXPECT_EQ(A.get_blocks_()[i].shape(), Asnap.get_blocks_()[i].shape());
+    EXPECT_TRUE(AreNearlyEqTensor(A.get_blocks_()[i], Asnap.get_blocks_()[i], 0.0));
+  }
+  EXPECT_TRUE(A.is_contiguous());
+  EXPECT_TRUE(B.is_contiguous());
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the contract() path. A third
+         UniTensor sharing blocks with an operand (via relabel()) must not
+         observe any change from the contraction. The pre-fix mutate-and-
+         restore left the shared blocks with replaced, permuted storage
+         (non-contiguous), even though the values were restored.
+====================*/
+TEST_F(BlockUniTensorTest, ContractLeavesSharedBlockObserverUntouched) {
+  Bond ba = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2});
+  Bond bb = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  Bond bc = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 2});
+  UniTensor A = UniTensor({ba, bb, bc}, {"a", "b", "c"});
+  random::uniform_(A, -1.0, 1.0, 7);
+  UniTensor observer = A.relabel({"x", "y", "z"});  // shares A's blocks; not an operand
+  ASSERT_TRUE(A.same_data(observer));
+  UniTensor snap = A.clone();
+
+  UniTensor R = A.clone().relabel({"c", "d", "a"});  // independent right operand
+  UniTensor got = Contract(A, R);
+  (void)got;
+
+  ASSERT_EQ(observer.Nblocks(), snap.Nblocks());
+  for (cytnx_uint64 i = 0; i < observer.Nblocks(); i++) {
+    EXPECT_EQ(observer.get_blocks_()[i].shape(), snap.get_blocks_()[i].shape());
+    EXPECT_TRUE(AreNearlyEqTensor(observer.get_blocks_()[i], snap.get_blocks_()[i], 0.0));
+  }
+  EXPECT_TRUE(observer.is_contiguous());
+  EXPECT_TRUE(R.is_contiguous());
+}
