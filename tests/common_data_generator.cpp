@@ -201,6 +201,25 @@ namespace CommonDataGen {
     UT.Save(file_name);
   }
 
+  // Serialization fixtures for tests/Symmetry_test.cpp (byte-compatibility contract).
+  // The committed files under test_data_base/common/Symmetry/ were generated at the
+  // last commit of the boost::intrusive_ptr<Symmetry_base> implementation; the
+  // value-type (std::variant) Symmetry must keep reading AND writing these exact
+  // bytes (magic 777 : u32, stype_id : i32, n : i32).
+  TEST(CommonDataGen, Symmetry_gen) {
+    const std::string symDir = dataRoot + "Symmetry/";
+    Symmetry::U1().Save(symDir + "sym_U1.cysym");
+    Symmetry::Zn(3).Save(symDir + "sym_Z3.cysym");
+    Symmetry::FermionParity().Save(symDir + "sym_fPar.cysym");
+    Symmetry::FermionNumber().Save(symDir + "sym_fNum.cysym");
+
+    // A Bond carrying several symmetries: qnum rows are (U1, Z3, fPar, fNum).
+    Bond bd(
+      BD_KET, {{-1, 0, 0, 2}, {0, 1, 1, 1}, {2, 2, 0, -4}}, {2, 1, 3},
+      {Symmetry::U1(), Symmetry::Zn(3), Symmetry::FermionParity(), Symmetry::FermionNumber()});
+    bd.Save(symDir + "bond_mixed_syms.cybd");
+  }
+
 }  // namespace CommonDataGen
 
 #endif
