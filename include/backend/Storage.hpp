@@ -672,7 +672,7 @@ namespace cytnx {
     }
 
     ///@cond
-    template <class T>  // this is c++ only
+    template <CytnxType T>  // this is c++ only
     T &at(const cytnx_uint64 &idx) const {
       return this->_impl->at<T>(idx);
     }
@@ -686,7 +686,7 @@ namespace cytnx {
       return out;
     }
 
-    template <class T>  // this is c++ only
+    template <CytnxType T>  // this is c++ only
     T &back() const {
       return this->_impl->back<T>();
     }
@@ -700,7 +700,10 @@ namespace cytnx {
       return out;
     }
 
-    template <class T>  // this is c++ only
+    // Constrained to CytnxType: the header-visible Storage_base::data<T>() overload only accepts
+    // cytnx dtypes. (The GPU cuComplex / cuda::std::complex views are Storage_base.cpp-local
+    // specializations, not declared in this header, so they are not reachable through the wrapper.)
+    template <CytnxType T>  // this is c++ only
     T *data() const {
       return this->_impl->data<T>();
     }
