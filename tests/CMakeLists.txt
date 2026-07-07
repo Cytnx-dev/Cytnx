@@ -2,6 +2,25 @@
 if(BACKEND_TORCH)
 else()
 
+# GoogleTest (gtest + gmock) is a required prerequisite for the test suite and
+# must be provided by the toolchain / a config-mode install. It is deliberately
+# NOT fetched here so the CMake configuration stays free of network access
+# (see #944, which moved the other optional deps to submodules/finders).
+# find_package(GTest) can succeed with only gtest -- the GTest::gmock target
+# needs a config-mode install or CMake's FindGTest from 3.23+ -- so require the
+# gmock target explicitly and fail with actionable guidance when it is missing.
+find_package(GTest REQUIRED)
+if(NOT TARGET GTest::gmock)
+  message(FATAL_ERROR
+    "GoogleTest was found but the GTest::gmock target is missing, which the test "
+    "suite links against. Install a GoogleTest that also provides GMock (it is not "
+    "fetched automatically):\n"
+    "  macOS:         brew install googletest\n"
+    "  Ubuntu/Debian: apt install libgtest-dev libgmock-dev\n"
+    "  conda:         conda install -c conda-forge gtest gmock\n"
+    "or point CMake at such an install with -DCMAKE_PREFIX_PATH=<gtest-prefix>.")
+endif()
+
 # Define the path to the test data directory
 set(CYTNX_TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test_data_base")
 
@@ -72,9 +91,9 @@ target_include_directories(
 )
 target_link_libraries(
   test_main
-  gtest_main
-  gmock
-  gtest
+  GTest::gtest_main
+  GTest::gmock
+  GTest::gtest
 )
 target_link_libraries(test_main cytnx)
 
