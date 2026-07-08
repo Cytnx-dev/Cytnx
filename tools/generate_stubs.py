@@ -87,21 +87,40 @@ def sanitize(text: str) -> str:
 
 
 def find_installed_extension() -> Path | None:
-    """Return the extension of the installed ``cytnx.cytnx``, if importable.
+    """Return the extension of *this checkout's* editable install of ``cytnx.cytnx``.
 
     An editable install (``pip install --editable .``) places the freshly built
     extension on the import path, so this matches exactly what the developer
-    just compiled without pointing at a build directory. Returns None when cytnx
-    is not importable (e.g. only a bare ``build/`` tree exists).
+    just compiled without pointing at a build directory. Only trust it when the
+    installed ``cytnx`` package actually resolves to this checkout's
+    ``cytnx/`` source directory, so an unrelated ``cytnx`` install elsewhere on
+    the path (e.g. a released wheel) does not shadow a real local build.
     """
+    origin = None
     try:
         spec = importlib.util.find_spec(MODULE)
+        parent = sys.modules.get("cytnx")
+        if (
+            spec is not None
+            and spec.origin
+            and spec.origin != "built-in"
+            and parent is not None
+            and str(PACKAGE_DIR) in list(getattr(parent, "__path__", ()))
+        ):
+            origin = Path(spec.origin)
     except (ImportError, ValueError):
-        return None
-    if spec is None or not spec.origin or spec.origin == "built-in":
-        return None
-    origin = Path(spec.origin)
-    return origin if origin.is_file() else None
+        pass
+    finally:
+        # Resolving "cytnx.cytnx" imports the parent `cytnx` package as a side
+        # effect, and can leave `cytnx.cytnx` itself cached in sys.modules even
+        # when the overall import ultimately fails (cytnx/__init__.py imports
+        # `cytnx.cytnx` before checking it actually has real content). Drop
+        # both so a later import of the staged build/ extension in main()
+        # isn't shadowed by this probe's state.
+        sys.modules.pop("cytnx", None)
+        sys.modules.pop("cytnx.cytnx", None)
+
+    return origin if origin is not None and origin.is_file() else None
 
 
 def find_build_extension() -> Path | None:
