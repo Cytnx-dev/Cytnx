@@ -16,6 +16,8 @@ this keeps the assertion meaningful across faster/slower CI machines.
 import threading
 import time
 
+import pytest
+
 import cytnx
 
 
@@ -25,21 +27,35 @@ def _time_one_svd(a):
     return time.monotonic() - t0
 
 
-def test_svd_releases_gil():
-    # 400x400 is too fast on Accelerate/LAPACK-backed builds (~0.08s per
-    # call) to reliably exceed the ticker-starvation threshold even when the
-    # GIL is held for the whole call; 900x900 gives a single-call duration
-    # of several hundred ms, which is comfortably observable.
-    a = cytnx.random.normal([900, 900], mean=0.0, std=1.0)
+# A single serial Svd must take at least this long for the ticker-starvation
+# signal to be discriminating; otherwise the test would pass vacuously even
+# with the GIL held. It is comfortably above the ~0.2s scheduling-jitter floor
+# used by the assertion below.
+_CALIBRATION_FLOOR_S = 0.3
 
-    # Measure a single serial Svd call to calibrate the "GIL held too long"
-    # threshold to this machine's speed instead of a brittle fixed constant.
+
+def test_svd_releases_gil():
+    # Scale the matrix up until a single serial Svd reliably exceeds the
+    # discrimination floor, so the test stays meaningful regardless of how fast
+    # this machine's LAPACK backend is (a fixed 900x900 clears ~0.3s on typical
+    # runners but can drop to ~0.2s on the fastest ones). Svd is O(n^3), so each
+    # 1.5x growth in dim is ~3.4x the work. If even the largest size stays under
+    # the floor, the machine is simply too fast to discriminate -- skip rather
+    # than fail flakily.
+    dim = 900
+    max_dim = 2000
+    a = cytnx.random.normal([dim, dim], mean=0.0, std=1.0)
     serial_duration = _time_one_svd(a)
-    # If a single call is not clearly above the 0.2s jitter floor, the test
-    # would pass vacuously even with the GIL held; force a resize instead.
-    assert serial_duration > 0.25, (
-        "matrix too small to discriminate GIL hold from floor"
-    )
+    while serial_duration < _CALIBRATION_FLOOR_S and dim < max_dim:
+        dim = min(int(dim * 1.5), max_dim)
+        a = cytnx.random.normal([dim, dim], mean=0.0, std=1.0)
+        serial_duration = _time_one_svd(a)
+    if serial_duration < _CALIBRATION_FLOOR_S:
+        pytest.skip(
+            f"machine too fast to discriminate GIL hold from the timing floor "
+            f"(Svd of {dim}x{dim} took {serial_duration:.3f}s "
+            f"< {_CALIBRATION_FLOOR_S}s)"
+        )
 
     ticks = []
     stop = threading.Event()
