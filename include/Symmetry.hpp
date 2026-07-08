@@ -339,6 +339,13 @@ namespace cytnx {
       // accessor cleanup is tracked together with the #840-era API follow-ups.
       // The kind structs declare `n` mutable, so returning it is well-defined
       // even for genuinely const objects.
+      //
+      // Value-semantics note (the second observable change of the value-type
+      // refactor, alongside `is()` becoming address identity): the returned
+      // reference now points into *this* Symmetry's own variant, so writing
+      // through it no longer propagates to copies. Under the shared
+      // intrusive-ptr impl, `Symmetry b = a; a.n() = k;` also changed b;
+      // copies are now independent.
       return std::visit([](const auto &kind) -> int & { return kind.n; }, this->_impl);
     }
 
