@@ -24,3 +24,59 @@ When raising (or lowering) the minimum, update all three. There is no
 automated check for this — please grep for the old version string (e.g.
 `3.9`) across the repository before opening the PR to catch anything missed.
 
+## Regenerating the Python type stubs
+
+The `cytnx` Python package ships PEP 561 type stubs (`cytnx/cytnx/*.pyi`)
+committed to the repository and shipped unchanged in every wheel and conda
+package. They are generated from the built `cytnx.cytnx` pybind11 extension
+by `tools/generate_stubs.py`, not written by hand.
+
+**If your change touches any `pybind/*.cpp` binding** — a new function, a
+changed signature, a different default value, a different overload set — the
+committed stubs go stale and must be regenerated as part of the same PR.
+
+Stub generation is only reproducible when the tools that produce it are
+pinned, since both silently change the emitted annotations across versions:
+
+- `pybind11 ==3.0.4` — controls the type annotations baked into the compiled
+  extension (`[build-system].requires` in `pyproject.toml`).
+- `pybind11-stubgen ==2.5.5` — walks the built extension and renders the
+  `.pyi` files (`dev` extra in `pyproject.toml`).
+
+Do not bump either version incidentally; if a bump is needed, do it
+deliberately in its own commit and regenerate the stubs in the same PR so the
+diff shows exactly what the version change affected.
+
+To regenerate:
+
+1. Build the extension with any native CPU preset:
+   ```sh
+   cmake --preset openblas-cpu -B build/python
+   cmake --build build/python --target pycytnx
+   ```
+2. Install the pinned `pybind11-stubgen` into the interpreter that will run
+   the script (it imports `cytnx.cytnx`); the `dev` extra provides it:
+   ```sh
+   pip install --editable '.[dev]'
+   ```
+3. Regenerate the committed stubs:
+   ```sh
+   python tools/generate_stubs.py
+   ```
+   The extension is auto-discovered under `build/` for the running
+   interpreter's ABI; pass `--extension` to point at a specific `.so`/`.pyd`
+   if more than one build is present. Run this with the lowest supported
+   interpreter (Python 3.10+) so the emitted syntax stays parseable
+   everywhere the package is installed.
+4. Review the diff under `cytnx/cytnx/*.pyi` and commit it alongside the
+   binding change that caused it.
+
+`mypy.stubtest` compares the committed stubs against the live runtime module
+and catches mismatches (missing members, incompatible defaults, overloads
+that can never match). It is not yet wired into CI, so run it manually after
+regenerating:
+
+```sh
+python -m mypy.stubtest cytnx.cytnx
+```
+
