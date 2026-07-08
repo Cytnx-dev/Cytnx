@@ -69,6 +69,10 @@ dev = [
     # regen (new enum handling, changed overload ordering, etc.). Bump
     # deliberately alongside a stub regen.
     "pybind11-stubgen ==2.5.5",
+    # Validates the committed stubs against the runtime module (see
+    # CONTRIBUTING.md's stub regeneration section); not itself version-locked
+    # since it only reads/reports and does not affect the stubs' content.
+    "mypy",
 ]
 docs = [
     "sphinx>=7.4.7",
