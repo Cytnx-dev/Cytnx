@@ -9,7 +9,8 @@ requires = [
     # pybind11 version is fixed. When bumping this pin, regenerate the committed
     # stubs in the same PR (see CONTRIBUTING.md, "Regenerating the Python type
     # stubs"), and update the pybind11 version string in CMakeLists.txt's
-    # find_package(pybind11 ...) to match.
+    # find_package(pybind11 ...) and the pybind11 pin in the `dev` extra to
+    # match.
     "pybind11 ==3.0.4",
 ]
 build-backend = "scikit_build_core.build"
@@ -66,12 +67,16 @@ coverage = [
 #     pip install --editable .[dev]
 # pulls everything needed to build, run the test suite, collect both
 # Python and C++ coverage, and regenerate the committed PEP 561 type
-# stubs with `tools/generate_stubs.py`. Build-time deps (scikit-build-core,
-# pybind11) come from `[build-system].requires` automatically.
+# stubs with `tools/generate_stubs.py`. The isolated wheel build gets
+# scikit-build-core and pybind11 from `[build-system].requires`; pybind11 is
+# also listed below so it is present for CMake builds run outside that
+# isolation.
 dev = [
     "cytnx[viz]",
     "cytnx[test]",
     "cytnx[coverage]",
+    # Must match the pybind11 version pinned in [build-system].requires above.
+    "pybind11 ==3.0.4",
     # Pinned exactly, alongside pybind11 above: pybind11-stubgen is the tool
     # that walks the built extension and renders cytnx/cytnx/*.pyi, so a
     # floating version can reformat the committed stubs on an unrelated
