@@ -35,25 +35,18 @@ namespace cytnx {
       else
         diag_L = 0;
 
-      // check type:
-      Tensor _tl = Tl.contiguous(), _tr = Tr.contiguous();
+      // check type: promote to a common dtype. The promoted dtype can differ
+      // from both inputs (e.g. ComplexFloat x Double -> ComplexDouble), so
+      // cast both operands; astype is a no-op when the dtype already matches.
+      const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
+      Tensor _tl = Tl.contiguous().astype(out_dtype);
+      Tensor _tr = Tr.contiguous().astype(out_dtype);
       Tensor out;
-      if (Tl.dtype() != Tr.dtype()) {
-        // do conversion:
-        if (Tl.dtype() < Tr.dtype()) {
-          _tr = _tr.astype(Tl.dtype());
-          out.Init({Tl.shape()[0], Tr.shape().back()}, Tl.dtype(), Tl.device());
-        } else {
-          _tl = _tl.astype(Tr.dtype());
-          out.Init({Tl.shape()[0], Tr.shape().back()}, Tr.dtype(), Tr.device());
-        }
-      } else {
-        out.Init({Tl.shape()[0], Tr.shape().back()}, Tr.dtype(), Tr.device());
-      }
+      out.Init({Tl.shape()[0], Tr.shape().back()}, out_dtype, Tl.device());
       // out.storage().set_zeros();
 
       if (Tl.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Matmul_dg_ii[_tl.dtype()](
+        cytnx::linalg_internal::lii.Matmul_dg_ii[out.dtype()](
           out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
           _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
 
@@ -64,7 +57,7 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
-        cytnx::linalg_internal::lii.cuMatmul_dg_ii[_tl.dtype()](
+        cytnx::linalg_internal::lii.cuMatmul_dg_ii[out.dtype()](
           out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
           _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
         return out;

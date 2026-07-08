@@ -343,14 +343,12 @@ namespace cytnx {
     //============================================
 
     cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) {
-      UniTensor out;
-      if (Lt.dtype() > Rt.dtype()) {
-        out = Rt.clone();
-        out.Add_(Lt);
-      } else {
-        out = Lt.clone();
-        out.Add_(Rt);
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat + Double -> ComplexDouble)
+      // rather than adopting the lower-enum operand dtype.
+      UniTensor out = Lt.clone();
+      const unsigned int out_dtype = Type.type_promote(Lt.dtype(), Rt.dtype());
+      if (out.dtype() != out_dtype) out = out.astype(out_dtype);
+      out.Add_(Rt);
       out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
@@ -364,14 +362,10 @@ namespace cytnx {
       // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
-      UniTensor out;
-      if (Scalar(lc).dtype() < Rt.dtype()) {
-        out = Rt.astype(Scalar(lc).dtype());
-        out.Add_(lc);
-      } else {
-        out = Rt.clone();
-        out.Add_(lc);
-      }
+      UniTensor out = Rt.clone();
+      const unsigned int out_dtype = Type.type_promote(Scalar(lc).dtype(), Rt.dtype());
+      if (out.dtype() != out_dtype) out = out.astype(out_dtype);
+      out.Add_(lc);
       out.set_name("");
 
       return out;

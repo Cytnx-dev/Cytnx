@@ -111,15 +111,12 @@ namespace cytnx {
       //   return _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
       // }
 
-      Tensor _tl = Tl.contiguous(), _tr = Tr.contiguous();
-      if (Tl.dtype() != Tr.dtype()) {
-        // do conversion:
-        if (Tl.dtype() < Tr.dtype()) {
-          _tr = _tr.astype(Tl.dtype());
-        } else {
-          _tl = _tl.astype(Tr.dtype());
-        }
-      }
+      // promote to a common dtype. The promoted dtype can differ from both
+      // inputs (e.g. ComplexFloat x Double -> ComplexDouble), so cast both
+      // operands; astype is a no-op when the dtype already matches.
+      const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
+      Tensor _tl = Tl.contiguous().astype(out_dtype);
+      Tensor _tr = Tr.contiguous().astype(out_dtype);
 
       // checking + calculate comm_dim:
       for (cytnx_uint64 i = 0; i < idxl.size(); i++) {
@@ -145,10 +142,10 @@ namespace cytnx {
         new_shape.push_back(1);
       }
 
-      out.Init(new_shape, _tr.dtype(), _tr.device(), false);
+      out.Init(new_shape, out_dtype, _tr.device(), false);
 
       checkCudaErrors(cudaSetDevice(_tl.device()));
-      cytnx::linalg_internal::lii.cuTensordot_ii[_tl.dtype()](out, _tl, _tr, idxl, idxr);
+      cytnx::linalg_internal::lii.cuTensordot_ii[out.dtype()](out, _tl, _tr, idxl, idxr);
     }
   #endif
 

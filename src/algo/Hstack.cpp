@@ -41,12 +41,8 @@ namespace cytnx {
       bool need_convert = false;
       // checking:
       for (int i = 1; i < In_tensors.size(); i++) {
-        if (In_tensors[i].dtype() != dtype_id) {
-          need_convert = true;
-          if (In_tensors[i].dtype() < dtype_id) {
-            dtype_id = In_tensors[i].dtype();
-          }
-        }
+        // promote across the real/complex boundary rather than reducing to the lower-enum dtype.
+        dtype_id = Type.type_promote(dtype_id, In_tensors[i].dtype());
 
         cytnx_error_msg(
           In_tensors[i].device() != device_id,
@@ -60,6 +56,9 @@ namespace cytnx {
         Ds[i] = In_tensors[i].shape()[1];
         Dcomb += Ds[i];
       }
+      // any tensor whose dtype differs from the promoted dtype must be converted below.
+      for (size_t i = 0; i < In_tensors.size(); i++)
+        if (In_tensors[i].dtype() != dtype_id) need_convert = true;
       cytnx_error_msg(dtype_id == Type.Bool,
                       "[ERROR][Hstack] currently does not support Bool type!%s", "\n");
       // conversion type:

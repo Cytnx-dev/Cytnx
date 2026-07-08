@@ -64,6 +64,7 @@ add_executable(
   linalg_test/Svd_truncate_test.cpp
   linalg_test/Gesvd_truncate_test.cpp
   linalg_test/Rsvd_test.cpp
+  linalg_test/DtypePromotion_test.cpp
   linalg_test/Gemm_Batch_test.cpp
   linalg_test/Trace_test.cpp
   linalg_test/linalg_test.cpp
