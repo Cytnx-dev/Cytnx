@@ -49,17 +49,16 @@ diff shows exactly what the version change affected.
 
 To regenerate:
 
-1. Build the extension with any native CPU preset:
+1. Build the extension and install the pinned dev tools together, through
+   the editable install (not a direct `cmake` configure/build — that
+   bypasses `[build-system].requires` and can silently pick up an
+   unpinned `pybind11`, since `CMakeLists.txt` accepts any installed
+   `pybind11 >= 3.0.0` and falls back to `FetchContent`-ing `v3.0.1` if
+   none is found):
    ```sh
-   cmake --preset openblas-cpu -B build/python
-   cmake --build build/python --target pycytnx
+   pip install --editable '.[dev]' --config-settings=build-dir=build/python
    ```
-2. Install the pinned `pybind11-stubgen` into the interpreter that will run
-   the script (it imports `cytnx.cytnx`); the `dev` extra provides it:
-   ```sh
-   pip install --editable '.[dev]'
-   ```
-3. Regenerate the committed stubs:
+2. Regenerate the committed stubs:
    ```sh
    python tools/generate_stubs.py
    ```
@@ -68,7 +67,7 @@ To regenerate:
    if more than one build is present. Run this with the lowest supported
    interpreter (Python 3.10) so the emitted syntax stays parseable
    everywhere the package is installed.
-4. Review the diff under `cytnx/cytnx/*.pyi` and commit it alongside the
+3. Review the diff under `cytnx/cytnx/*.pyi` and commit it alongside the
    binding change that caused it.
 
 `mypy.stubtest` compares the committed stubs against the live runtime module
