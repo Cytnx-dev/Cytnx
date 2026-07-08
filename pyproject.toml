@@ -63,7 +63,12 @@ dev = [
     "cytnx[viz]",
     "cytnx[test]",
     "cytnx[coverage]",
-    "pybind11-stubgen",
+    # Pinned exactly, alongside pybind11 above: pybind11-stubgen is the tool
+    # that walks the built extension and renders cytnx/cytnx/*.pyi, so a
+    # floating version can reformat the committed stubs on an unrelated
+    # regen (new enum handling, changed overload ordering, etc.). Bump
+    # deliberately alongside a stub regen.
+    "pybind11-stubgen ==2.5.5",
 ]
 docs = [
     "sphinx>=7.4.7",
