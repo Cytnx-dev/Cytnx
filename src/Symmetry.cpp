@@ -165,8 +165,8 @@ namespace cytnx {
   }
 
   bool cytnx::FermionParitySymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) {
-    for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
-      if (!this->check_qnum(qnums[i])) return false;
+    for (const auto &qnum : qnums) {
+      if (!this->check_qnum(qnum)) return false;
     }
     return true;
   }
