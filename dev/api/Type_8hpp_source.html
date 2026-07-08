@@ -180,13 +180,13 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">struct </span>is_complex_floating_point_impl&lt;cuda::std::complex&lt;T&gt;&gt; : std::is_floating_point&lt;T&gt; {};</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> I, <span class="keyword">typename</span> T, <span class="keyword">typename</span> Tuple&gt;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> Idx, <span class="keyword">typename</span> T, <span class="keyword">typename</span> Tuple&gt;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">constexpr</span> std::size_t index_in_tuple_helper() {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      <span class="keyword">static_assert</span>(I &lt; std::tuple_size_v&lt;Tuple&gt;, <span class="stringliteral">&quot;Type not found!&quot;</span>);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, std::tuple_element_t&lt;I, Tuple&gt;&gt;) {</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">return</span> I;</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      <span class="keyword">static_assert</span>(Idx &lt; std::tuple_size_v&lt;Tuple&gt;, <span class="stringliteral">&quot;Type not found!&quot;</span>);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_same_v&lt;T, std::tuple_element_t&lt;Idx, Tuple&gt;&gt;) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        <span class="keywordflow">return</span> Idx;</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">return</span> index_in_tuple_helper&lt;I + 1, T, Tuple&gt;();</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">return</span> index_in_tuple_helper&lt;Idx + 1, T, Tuple&gt;();</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      }</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
