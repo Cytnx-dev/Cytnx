@@ -66,7 +66,7 @@ To regenerate:
    The extension is auto-discovered under `build/` for the running
    interpreter's ABI; pass `--extension` to point at a specific `.so`/`.pyd`
    if more than one build is present. Run this with the lowest supported
-   interpreter (Python 3.10+) so the emitted syntax stays parseable
+   interpreter (Python 3.10) so the emitted syntax stays parseable
    everywhere the package is installed.
 4. Review the diff under `cytnx/cytnx/*.pyi` and commit it alongside the
    binding change that caused it.
