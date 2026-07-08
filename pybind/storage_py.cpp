@@ -13,7 +13,6 @@
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;

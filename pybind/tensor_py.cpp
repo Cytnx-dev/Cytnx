@@ -12,7 +12,6 @@
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
-#include "complex.h"
 #include "pyint_dispatch.hpp"
 
 namespace py = pybind11;

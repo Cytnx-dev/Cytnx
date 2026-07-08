@@ -83,13 +83,13 @@ namespace cytnx {
     struct is_complex_floating_point_impl<cuda::std::complex<T>> : std::is_floating_point<T> {};
 #endif
 
-    template <std::size_t I, typename T, typename Tuple>
+    template <std::size_t Idx, typename T, typename Tuple>
     constexpr std::size_t index_in_tuple_helper() {
-      static_assert(I < std::tuple_size_v<Tuple>, "Type not found!");
-      if constexpr (std::is_same_v<T, std::tuple_element_t<I, Tuple>>) {
-        return I;
+      static_assert(Idx < std::tuple_size_v<Tuple>, "Type not found!");
+      if constexpr (std::is_same_v<T, std::tuple_element_t<Idx, Tuple>>) {
+        return Idx;
       } else {
-        return index_in_tuple_helper<I + 1, T, Tuple>();
+        return index_in_tuple_helper<Idx + 1, T, Tuple>();
       }
     }
 
