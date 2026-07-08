@@ -107,20 +107,30 @@ def find_installed_extension() -> Path | None:
             and parent is not None
             and str(PACKAGE_DIR) in list(getattr(parent, "__path__", ()))
         ):
-            origin = Path(spec.origin)
+            candidate = Path(spec.origin)
+            if candidate.is_file():
+                origin = candidate
     except (ImportError, ValueError):
         pass
-    finally:
-        # Resolving "cytnx.cytnx" imports the parent `cytnx` package as a side
-        # effect, and can leave `cytnx.cytnx` itself cached in sys.modules even
-        # when the overall import ultimately fails (cytnx/__init__.py imports
-        # `cytnx.cytnx` before checking it actually has real content). Drop
-        # both so a later import of the staged build/ extension in main()
-        # isn't shadowed by this probe's state.
-        sys.modules.pop("cytnx", None)
-        sys.modules.pop("cytnx.cytnx", None)
 
-    return origin if origin is not None and origin.is_file() else None
+    if origin is None:
+        # Resolving "cytnx.cytnx" imports the parent `cytnx` package as a side
+        # effect. When that ran cytnx/__init__.py to completion against a real
+        # (but ultimately rejected here, e.g. unrelated) extension, its
+        # `from .Storage_conti import *`-style imports ran too, and their
+        # `@add_method` decorators patched that extension's `Storage`/
+        # `Tensor`/... classes; those submodules then stay cached in
+        # sys.modules. If main() later imports a distinct copy of the correct
+        # extension, it would reuse the cached submodules without rerunning
+        # the decorators, silently dropping the patched methods from the
+        # regenerated stubs. Drop every "cytnx"/"cytnx.*" entry so nothing
+        # from this rejected probe survives. (Skipped when accepted above:
+        # the accepted extension is exactly what a later import should reuse,
+        # so its already-correct state must be left alone.)
+        for name in [n for n in sys.modules if n == "cytnx" or n.startswith("cytnx.")]:
+            del sys.modules[name]
+
+    return origin
 
 
 def find_build_extension() -> Path | None:
