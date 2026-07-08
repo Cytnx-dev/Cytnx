@@ -39,38 +39,6 @@ namespace cytnx {
         in._val);
     }
 
-    // Ruling 1 (issues #935/#937): in-place arithmetic (+= -= *= /=) throws
-    // unless combining the two dtypes under type_promote would stay at the
-    // LHS dtype. This is exactly the "does the in-place op need to silently
-    // change dtype" test:
-    //   - same dtype: promote(L,L) == L -> always allowed.
-    //   - Int64 += Int32, Double += Float, ComplexDouble += Double, etc.:
-    //     promote(L,R) == L -> allowed: the conversion of R into L is
-    //     value-preserving per the sanctioned type_promote table (see
-    //     include/Type.hpp type_promote; maintainer sign-off 2026-07-07).
-    //     Note this includes same-width unsigned->signed RHS conversions
-    //     (e.g. Int64 += Uint64), which the table resolves to the signed
-    //     LHS by explicit maintainer ruling: in-place and out-of-place stay
-    //     consistent, and any future tightening happens in the table.
-    //   - Uint64 += Int64, Int64 += Double, Double += ComplexDouble, Bool +=
-    //     anything-but-Bool: promote(L,R) != L -> would require changing the
-    //     LHS's dtype (or silently truncating, e.g. old integer-preserving
-    //     in-place division) -> throw, telling the caller to use astype().
-    void ensure_inplace_dtype_unchanged_by_promote(unsigned int lhs_dtype, unsigned int rhs_dtype,
-                                                   const char *op, const char *op_symbol) {
-      if (rhs_dtype == Type.Void || lhs_dtype == Type.Void) {
-        cytnx_error_msg(true, "[ERROR] Scalar %s: cannot operate on a Void Scalar.%s", op, "\n");
-      }
-      unsigned int promoted = Type_class::type_promote(lhs_dtype, rhs_dtype);
-      cytnx_error_msg(promoted != lhs_dtype,
-                      "[ERROR] Scalar in-place %s between dtype [%s] and [%s] would change or "
-                      "truncate the destination dtype (result dtype would be [%s]). Use "
-                      "out-of-place arithmetic (e.g. `a = a %s b`) or `astype()` to convert "
-                      "explicitly.%s",
-                      op, Type.getname(lhs_dtype).c_str(), Type.getname(rhs_dtype).c_str(),
-                      Type.getname(promoted).c_str(), op_symbol, "\n");
-    }
-
     // ---- generic per-alternative helpers ------------------------------------
 
     // Cast a source value of type TSrc to the destination type TDst,
@@ -91,68 +59,28 @@ namespace cytnx {
       }
     }
 
-    // Visitor: convert whatever is active into dtype `dtype` on the Type_list,
-    // returning a new ScalarVariant.
-    struct AstypeVisitor {
-      unsigned int dtype;
-
-      Scalar::ScalarVariant operator()(std::monostate) const { return std::monostate{}; }
-
-      template <typename TSrc>
-      Scalar::ScalarVariant operator()(const TSrc &src) const {
-        Scalar::ScalarVariant out;
-        VisitByDtype(dtype, [&](auto tag) {
-          using TDst = typename decltype(tag)::type;
-          out = convert_value<TDst>(src);
-        });
-        return out;
+    // Turn a runtime dtype id into a value-initialized ScalarVariant whose
+    // active alternative is the one at index `dtype`. This is the inverse of
+    // Scalar::dtype() (itself just _val.index()): ScalarVariant is
+    // index-aligned with Type_list -- pinned by the static_asserts in
+    // Scalar.hpp -- so alternative `dtype` holds exactly the C++ type that
+    // dtype names. std::visit-ing the returned prototype recovers that type at
+    // compile time, so astype() dispatches by *visiting the variant* instead
+    // of a hand-written dtype->type switch that could drift out of sync with
+    // Type_list. The fold emplaces the single alternative whose index matches
+    // `dtype` (short-circuiting on the first match); an out-of-range dtype
+    // matches nothing and errors.
+    Scalar::ScalarVariant variant_prototype(unsigned int dtype) {
+      Scalar::ScalarVariant proto;  // defaults to monostate (index 0 == Void)
+      const bool matched = [&]<std::size_t... Is>(std::index_sequence<Is...>) {
+        return ((Is == dtype ? (proto.template emplace<Is>(), true) : false) || ...);
       }
-
-      // Dispatch a runtime dtype id to a compile-time type tag, calling
-      // `fn(type_identity<T>{})`. Kept local to this visitor: it is the
-      // inverse operation of Scalar::dtype() and is only needed for astype().
-      template <typename Fn>
-      static void VisitByDtype(unsigned int dtype, Fn &&fn) {
-        switch (dtype) {
-          case Type.ComplexDouble:
-            fn(std::type_identity<cytnx_complex128>{});
-            return;
-          case Type.ComplexFloat:
-            fn(std::type_identity<cytnx_complex64>{});
-            return;
-          case Type.Double:
-            fn(std::type_identity<cytnx_double>{});
-            return;
-          case Type.Float:
-            fn(std::type_identity<cytnx_float>{});
-            return;
-          case Type.Int64:
-            fn(std::type_identity<cytnx_int64>{});
-            return;
-          case Type.Uint64:
-            fn(std::type_identity<cytnx_uint64>{});
-            return;
-          case Type.Int32:
-            fn(std::type_identity<cytnx_int32>{});
-            return;
-          case Type.Uint32:
-            fn(std::type_identity<cytnx_uint32>{});
-            return;
-          case Type.Int16:
-            fn(std::type_identity<cytnx_int16>{});
-            return;
-          case Type.Uint16:
-            fn(std::type_identity<cytnx_uint16>{});
-            return;
-          case Type.Bool:
-            fn(std::type_identity<cytnx_bool>{});
-            return;
-          default:
-            cytnx_error_msg(true, "[ERROR] invalid target dtype for Scalar::astype: %d%s", dtype,
-                            "\n");
-        }
-      }
-    };
+      (std::make_index_sequence<std::variant_size_v<Scalar::ScalarVariant>>{});
+      cytnx_error_msg(!matched,
+                      "[ERROR] invalid dtype id %u for Scalar (no matching Type_list entry).%s",
+                      dtype, "\n");
+      return proto;
+    }
 
     // ---- arithmetic -----------------------------------------------------
 
@@ -185,12 +113,19 @@ namespace cytnx {
       return out;
     }
 
-    template <typename CmpOp>
-    bool binary_cmp(const Scalar &lhs, const Scalar &rhs, CmpOp &&op, const char *opname,
-                    bool forbid_complex) {
+    // `forbid_complex` is a template parameter, not a runtime flag, so the
+    // complex-ordering branch below is discarded with `if constexpr`. That
+    // matters: with a runtime bool the compiler must still type-check
+    // `op(complex, complex)` for the ordering lambdas (< <= > >=), which has no
+    // built-in operator and would only compile by accidentally routing through
+    // operator<(Scalar, Scalar) via the implicit Scalar constructors -- a
+    // silent infinite-recursion hazard. Making it compile-time removes that
+    // branch entirely for ordering ops, so it is never instantiated.
+    template <bool forbid_complex, typename CmpOp>
+    bool binary_cmp(const Scalar &lhs, const Scalar &rhs, CmpOp &&op, const char *opname) {
       ensure_not_void(lhs, opname);
       ensure_not_void(rhs, opname);
-      if (forbid_complex) {
+      if constexpr (forbid_complex) {
         cytnx_error_msg(Type.is_complex(lhs.dtype()) || Type.is_complex(rhs.dtype()),
                         "[ERROR] Scalar %s: comparison not supported for complex type%s", opname,
                         "\n");
@@ -211,11 +146,12 @@ namespace cytnx {
           } else if constexpr (std::is_same_v<TL, std::monostate>) {
             cytnx_error_msg(true, "[ERROR] Scalar %s: unexpected Void operand.%s", opname, "\n");
           } else if constexpr (is_complex_v<TL>) {
-            // Ordering comparisons (< <= > >=) forbid complex entirely
-            // (checked eagerly above via `forbid_complex`, so this is
-            // unreachable in that case); equality (`forbid_complex == false`)
-            // is well-defined for complex via operator== and must not throw.
-            if (forbid_complex) {
+            // Ordering comparisons (< <= > >=) forbid complex entirely (also
+            // checked eagerly above); equality (forbid_complex == false) is
+            // well-defined for complex via operator== and must not throw.
+            // `if constexpr` here means `op(complex, complex)` is only
+            // instantiated for equality, never for the ordering lambdas.
+            if constexpr (forbid_complex) {
               cytnx_error_msg(true,
                               "[ERROR] Scalar %s: comparison not supported for complex type%s",
                               opname, "\n");
@@ -276,8 +212,28 @@ namespace cytnx {
   Scalar::Scalar(const Sproxy &prox) : _val(prox._insimpl->get_item(prox._loc)._val) {}
 
   Scalar Scalar::astype(const unsigned int &dtype) const {
+    // Dispatch by visiting the variant: materialize the *destination*
+    // alternative as a prototype at index `dtype`, then std::visit the
+    // (source, destination) pair to recover both compile-time types and
+    // perform the conversion. No dtype->type switch to keep in sync.
     Scalar out;
-    out._val = std::visit(AstypeVisitor{dtype}, this->_val);
+    ScalarVariant dst_proto = variant_prototype(dtype);
+    std::visit(
+      [&](auto &&src, auto &&dst) {
+        using TSrc = std::decay_t<decltype(src)>;
+        using TDst = std::decay_t<decltype(dst)>;
+        if constexpr (std::is_same_v<TSrc, std::monostate>) {
+          // Void source stays Void regardless of target: astype() of an
+          // uninitialized Scalar is a no-op (matches the pre-refactor behavior).
+          out._val = std::monostate{};
+        } else if constexpr (std::is_same_v<TDst, std::monostate>) {
+          // Void is not a valid conversion target for a non-Void Scalar.
+          cytnx_error_msg(true, "[ERROR] invalid target dtype for Scalar::astype: Void%s", "\n");
+        } else {
+          out._val = convert_value<TDst>(src);
+        }
+      },
+      this->_val, dst_proto);
     return out;
   }
 
@@ -377,54 +333,27 @@ namespace cytnx {
   cytnx_complex128 Scalar::to_complex128() const { return explicit_cast<cytnx_complex128>(*this); }
   cytnx_complex64 Scalar::to_complex64() const { return explicit_cast<cytnx_complex64>(*this); }
 
-  // ---- in-place arithmetic (Ruling 1: throw on lossy mixed-dtype) --------
+  // ---- in-place arithmetic ------------------------------------------------
+  //
+  // In-place binary arithmetic follows Python's value-type semantics: `a op= b`
+  // is exactly `a = a op b`, promoting the destination dtype via
+  // Type.type_promote just like the out-of-place operators (maintainer ruling
+  // 2026-07-08, adopting @ianmccul's point on #1011). It does NOT preserve the
+  // LHS dtype: e.g. `Int64 += Double` yields a Double, `Double *= ComplexDouble`
+  // yields a ComplexDouble. This is well-defined precisely because the variant
+  // rewrite routes every combination through type_promote (the dtype bugs that
+  // motivated #937's emergency disabling of these paths are structurally gone).
+  // Delegating to radd/rsub/rmul/rdiv keeps in-place and out-of-place bit-for-bit
+  // consistent, and the out-of-place result is a fresh Scalar, so `a += a` is
+  // safe (no aliasing during the visit).
 
-  namespace {
-    // Shared body of the four in-place operators, mirroring binary_arith();
-    // a future in-place op (e.g. %=) only needs a new one-line call. After
-    // `rhs.astype(lhs.dtype())`, the two variants are guaranteed to hold the
-    // *same* alternative (both equal to lhs.dtype()), so the std::visit
-    // callback only ever needs the TL==TR branch to be live at runtime. It
-    // must still be well-formed (if constexpr-guarded) for every (TL, TR)
-    // combination the compiler instantiates, including monostate and
-    // mismatched-type pairs, since std::visit requires the visitor to be
-    // callable for the full cross product of alternatives.
-    template <typename InplaceOp>
-    void inplace_arith(Scalar &lhs, const Scalar &rhs, InplaceOp &&op, const char *opname,
-                       const char *op_symbol) {
-      ensure_inplace_dtype_unchanged_by_promote(lhs.dtype(), rhs.dtype(), opname, op_symbol);
-      Scalar rhs_conv = rhs.astype(lhs.dtype());
-      std::visit(
-        [&](auto &&lv, auto &&rv) {
-          using TL = std::decay_t<decltype(lv)>;
-          using TR = std::decay_t<decltype(rv)>;
-          if constexpr (std::is_same_v<TL, TR> && !std::is_same_v<TL, std::monostate>) {
-            op(lv, rv);
-          }
-        },
-        lhs._val, rhs_conv._val);
-    }
-  }  // namespace
+  void Scalar::operator+=(const Scalar &rhs) { *this = this->radd(rhs); }
 
-  void Scalar::operator+=(const Scalar &rhs) {
-    inplace_arith(
-      *this, rhs, [](auto &lv, const auto &rv) { lv += rv; }, "addition (+=)", "+");
-  }
+  void Scalar::operator-=(const Scalar &rhs) { *this = this->rsub(rhs); }
 
-  void Scalar::operator-=(const Scalar &rhs) {
-    inplace_arith(
-      *this, rhs, [](auto &lv, const auto &rv) { lv -= rv; }, "subtraction (-=)", "-");
-  }
+  void Scalar::operator*=(const Scalar &rhs) { *this = this->rmul(rhs); }
 
-  void Scalar::operator*=(const Scalar &rhs) {
-    inplace_arith(
-      *this, rhs, [](auto &lv, const auto &rv) { lv *= rv; }, "multiplication (*=)", "*");
-  }
-
-  void Scalar::operator/=(const Scalar &rhs) {
-    inplace_arith(
-      *this, rhs, [](auto &lv, const auto &rv) { lv /= rv; }, "division (/=)", "/");
-  }
+  void Scalar::operator/=(const Scalar &rhs) { *this = this->rdiv(rhs); }
 
   void Scalar::iabs() {
     ensure_not_void(*this, "iabs");
@@ -434,16 +363,15 @@ namespace cytnx {
         if constexpr (std::is_same_v<T, std::monostate>) {
           // unreachable, guarded above.
         } else if constexpr (is_complex_v<T>) {
-          // #935: iabs() on a complex Scalar used to keep the dtype complex
-          // and store the (real) magnitude as the real part with a zero
-          // imaginary part -- inconsistent with the non-inplace abs(), which
-          // always returns a real dtype. We keep iabs() dtype-preserving
-          // (as every other in-place op is), so the chosen, documented
-          // semantics is: iabs() stores the magnitude as the real part and
-          // zeros the imaginary part. This matches abs()'s *value* (the
-          // magnitude), differing only in that iabs() cannot change dtype
-          // (no in-place op does), while abs() (out-of-place) additionally
-          // narrows the result to the real dtype.
+          // iabs()/isqrt() are *unary* in-place transforms of the stored value
+          // and are dtype-preserving by design -- unlike in-place binary
+          // arithmetic (+= etc.), which promotes, there is no second operand to
+          // promote against. So iabs() on a complex Scalar keeps the complex
+          // dtype and stores the magnitude as the real part with a zero
+          // imaginary part. Its *value* (the magnitude) matches the
+          // out-of-place abs() exactly; abs() additionally narrows the result
+          // to the real dtype (#935's abs()/iabs() consistency is thus by
+          // value, documented here and pinned in Scalar_test.cpp).
           v = T(std::abs(v), 0);
         } else if constexpr (std::is_unsigned_v<T>) {
           // Unsigned integer / bool: abs() is a no-op (already non-negative);
@@ -467,7 +395,9 @@ namespace cytnx {
         } else if constexpr (std::is_same_v<T, cytnx_bool>) {
           cytnx_error_msg(true, "[ERROR] isqrt not supported for Bool type%s", "\n");
         } else {
-          v = std::sqrt(v);
+          // For integer T, std::sqrt returns double; isqrt is dtype-preserving
+          // (unary in-place), so narrow back to T explicitly.
+          v = static_cast<T>(std::sqrt(v));
         }
       },
       this->_val);
@@ -503,24 +433,24 @@ namespace cytnx {
   }
 
   bool Scalar::less(const Scalar &rhs) const {
-    return binary_cmp(
-      *this, rhs, [](auto &&a, auto &&b) { return a < b; }, "less-than (<)", true);
+    return binary_cmp<true>(
+      *this, rhs, [](auto &&a, auto &&b) { return a < b; }, "less-than (<)");
   }
   bool Scalar::leq(const Scalar &rhs) const {
-    return binary_cmp(
-      *this, rhs, [](auto &&a, auto &&b) { return a <= b; }, "less-equal (<=)", true);
+    return binary_cmp<true>(
+      *this, rhs, [](auto &&a, auto &&b) { return a <= b; }, "less-equal (<=)");
   }
   bool Scalar::greater(const Scalar &rhs) const {
-    return binary_cmp(
-      *this, rhs, [](auto &&a, auto &&b) { return a > b; }, "greater-than (>)", true);
+    return binary_cmp<true>(
+      *this, rhs, [](auto &&a, auto &&b) { return a > b; }, "greater-than (>)");
   }
   bool Scalar::geq(const Scalar &rhs) const {
-    return binary_cmp(
-      *this, rhs, [](auto &&a, auto &&b) { return a >= b; }, "greater-equal (>=)", true);
+    return binary_cmp<true>(
+      *this, rhs, [](auto &&a, auto &&b) { return a >= b; }, "greater-equal (>=)");
   }
   bool Scalar::eq(const Scalar &rhs) const {
-    return binary_cmp(
-      *this, rhs, [](auto &&a, auto &&b) { return a == b; }, "equal (==)", false);
+    return binary_cmp<false>(
+      *this, rhs, [](auto &&a, auto &&b) { return a == b; }, "equal (==)");
   }
 
   Scalar Scalar::radd(const Scalar &rhs) const {

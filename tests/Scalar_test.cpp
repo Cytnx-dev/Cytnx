@@ -10,18 +10,18 @@
 #include "gtest/gtest.h"
 
 // This suite absorbs and extends PR #937's tests/Scalar_test.cpp (credit to
-// @ianmccul for the original guard semantics and test coverage). #937 disabled
-// a subset of lossy Scalar arithmetic by throwing std::logic_error; this
-// refactor (#847/#935) replaces the PIMPL+virtual-dispatch Scalar with
-// std::variant, and implements the maintainer's Ruling 1: in-place ops throw
-// cytnx::error (a std::logic_error) whenever the RHS dtype does not
-// losslessly convert into the LHS dtype (checked via
-// Type.type_promote(lhs, rhs) == lhs.dtype()). Same-dtype and lossless
-// widening in-place ops (Int64 += Int32, Double += Float, ComplexDouble +=
-// Double, ...) remain valid -- this is strictly more permissive than #937's
-// original "any differing integer dtype throws" guard, while still rejecting
-// every case #937 targeted (signed/unsigned mixes, int-with-float,
-// real-with-complex).
+// @ianmccul for the original correctness coverage). #937 disabled a subset of
+// lossy Scalar arithmetic by throwing, as an emergency guard against the old
+// PIMPL implementation's dtype bugs. This refactor (#847/#935) replaces the
+// PIMPL+virtual-dispatch Scalar with std::variant, which structurally fixes
+// those bugs -- so the guard is no longer needed. In-place arithmetic now
+// follows Python value-type semantics (maintainer ruling 2026-07-08, adopting
+// @ianmccul's point on #1011): `a op= b` is exactly `a = a op b`, promoting
+// the dtype via Type.type_promote rather than throwing. Same-dtype and
+// lossless-widening in-place ops keep the LHS dtype (because promote(L,R)==L
+// there); genuinely mixed ones (Int64 += Double, Uint64 -= Int64, ...) promote
+// the destination instead of throwing. Only complex ordering comparisons
+// (< <= > >=) still throw (complex has no total order).
 
 namespace {
 
@@ -262,13 +262,12 @@ TEST(ScalarTest, SameIntegerDtypeInPlaceArithmeticReturnsCorrectValues) {
   EXPECT_EQ(static_cast<cytnx_int32>(int32_value), cytnx_int32(6));
 }
 
-TEST(ScalarTest, LosslessWideningInPlaceArithmeticIsAllowed) {
-  // Ruling 1 (#935/#937): in-place ops are allowed whenever
-  // Type.type_promote(lhs, rhs) == lhs.dtype() -- i.e. the RHS converts
-  // losslessly into the LHS's dtype. This is strictly more permissive than
-  // #937's original guard (which disabled ALL differing-dtype integer
-  // in-place ops); Int64 += Int32 is a same-signedness lossless widening and
-  // must remain valid.
+TEST(ScalarTest, LosslessWideningInPlaceArithmeticKeepsLhsDtype) {
+  // When Type.type_promote(lhs, rhs) == lhs.dtype() -- i.e. the RHS converts
+  // losslessly into the LHS's dtype -- in-place arithmetic keeps the LHS dtype
+  // (promotion is a no-op). Int64 += Int32 is a same-signedness lossless
+  // widening; Double += Float, ComplexDouble += Double, Uint64 += Bool all
+  // stay at the LHS dtype.
   Scalar i64(cytnx_int64(3));
   i64 += Scalar(cytnx_int32(2));
   ExpectInt64ScalarEq(i64, cytnx_int64(5));
@@ -286,55 +285,54 @@ TEST(ScalarTest, LosslessWideningInPlaceArithmeticIsAllowed) {
   ExpectUint64ScalarEq(u64, cytnx_uint64(4));
 }
 
-TEST(ScalarTest, MixedSignedUnsignedIntegerInPlaceArithmeticIsDisabled) {
-  // Under Type.type_promote, a signed/unsigned mix of equal width promotes
-  // to the *signed* type (see Type.hpp's type_promote implementation and
-  // Type_test.cpp's documentation of it). So when the unsigned dtype is the
-  // in-place LHS, promotion picks the *other* (signed) dtype, which differs
-  // from the LHS -> throws. (When the signed dtype is the LHS, promotion
-  // stays at the LHS's own dtype, so it is allowed -- see
-  // LosslessWideningInPlaceArithmeticIsAllowed.)
-  ExpectThrows([] {
-    Scalar value(cytnx_uint64(3));
-    value -= Scalar(cytnx_int64(2));
-  });
-  ExpectThrows([] {
-    Scalar value(cytnx_uint32(3));
-    value -= Scalar(cytnx_int32(2));
-  });
-  ExpectThrows([] {
-    Scalar value(cytnx_uint16(3));
-    value *= Scalar(cytnx_int16(2));
-  });
+TEST(ScalarTest, MixedSignedUnsignedIntegerInPlacePromotes) {
+  // Under Type.type_promote, a signed/unsigned mix of equal width promotes to
+  // the *signed* type. When the unsigned dtype is the in-place LHS, `a op= b`
+  // == `a = a op b` promotes the destination to that signed dtype instead of
+  // throwing (Python value-type semantics).
+  Scalar u64(cytnx_uint64(3));
+  u64 -= Scalar(cytnx_int64(2));
+  EXPECT_EQ(u64.dtype(), Type_class::type_promote(Type.Uint64, Type.Int64));
+  ExpectInt64ScalarEq(u64, cytnx_int64(1));
+
+  Scalar u32(cytnx_uint32(3));
+  u32 -= Scalar(cytnx_int32(2));
+  EXPECT_EQ(u32.dtype(), Type_class::type_promote(Type.Uint32, Type.Int32));
+  EXPECT_EQ(static_cast<cytnx_int32>(u32), cytnx_int32(1));
+
+  Scalar u16(cytnx_uint16(3));
+  u16 *= Scalar(cytnx_int16(2));
+  EXPECT_EQ(u16.dtype(), Type_class::type_promote(Type.Uint16, Type.Int16));
+  EXPECT_EQ(static_cast<cytnx_int16>(u16), cytnx_int16(6));
 }
 
-TEST(ScalarTest, IntWithFloatInPlaceArithmeticIsDisabled) {
-  ExpectThrows([] {
-    Scalar value(cytnx_int64(3));
-    value += Scalar(cytnx_double(2.0));
-  });
-  ExpectThrows([] {
-    Scalar value(cytnx_uint32(3));
-    value /= Scalar(cytnx_double(2.0));
-  });
+TEST(ScalarTest, IntWithFloatInPlacePromotesToFloat) {
+  Scalar i64(cytnx_int64(3));
+  i64 += Scalar(cytnx_double(2.0));
+  ExpectDoubleScalarEq(i64, 5.0);
+
+  Scalar u32(cytnx_uint32(3));
+  u32 /= Scalar(cytnx_double(2.0));
+  ExpectDoubleScalarEq(u32, 1.5);
 }
 
-TEST(ScalarTest, RealWithComplexInPlaceArithmeticIsDisabled) {
-  ExpectThrows([] {
-    Scalar value(cytnx_double(3.0));
-    value += Scalar(cytnx_complex128(2.0, 1.0));
-  });
-  ExpectThrows([] {
-    Scalar value(cytnx_float(3.0));
-    value *= Scalar(cytnx_complex64(2.0, 1.0));
-  });
+TEST(ScalarTest, RealWithComplexInPlacePromotesToComplex) {
+  Scalar d(cytnx_double(3.0));
+  d += Scalar(cytnx_complex128(2.0, 1.0));
+  ExpectComplexDoubleScalarEq(d, cytnx_complex128(5.0, 1.0));
+
+  Scalar f(cytnx_float(3.0));
+  f *= Scalar(cytnx_complex64(2.0, 1.0));
+  EXPECT_EQ(f.dtype(), Type.ComplexFloat);
+  const cytnx_complex128 fv = AsComplex(f);
+  EXPECT_DOUBLE_EQ(fv.real(), 6.0);
+  EXPECT_DOUBLE_EQ(fv.imag(), 3.0);
 }
 
-TEST(ScalarTest, BoolInPlaceArithmeticWithNonBoolIsDisabled) {
-  ExpectThrows([] {
-    Scalar value(cytnx_bool(true));
-    value += Scalar(cytnx_int64(1));
-  });
+TEST(ScalarTest, BoolInPlaceArithmeticWithNonBoolPromotes) {
+  Scalar b(cytnx_bool(true));
+  b += Scalar(cytnx_int64(1));
+  ExpectInt64ScalarEq(b, cytnx_int64(2));
 }
 
 TEST(ScalarTest, SelfAssignmentPreservesValue) {
@@ -411,12 +409,13 @@ TEST(ScalarTest, AbsReturnsRealDtypeForComplex) {
 }
 
 TEST(ScalarTest, IabsOnComplexKeepsDtypeAndMatchesAbsMagnitude) {
-  // #935 asked for iabs()/abs() to be made *consistent*. Since no in-place
-  // op is allowed to change dtype (that is the whole point of "in-place"),
-  // iabs() on a complex Scalar keeps the ComplexDouble/ComplexFloat dtype
-  // and stores the magnitude as the real part with a zero imaginary part.
-  // Its *value* (the magnitude) matches abs()'s value exactly; only the
-  // dtype differs (abs() narrows to real, iabs() cannot narrow in place).
+  // #935 asked for iabs()/abs() to be made *consistent*. iabs()/isqrt() are
+  // unary in-place value transforms and are dtype-preserving by design (there
+  // is no second operand to promote against, unlike in-place binary +=). So
+  // iabs() on a complex Scalar keeps the ComplexDouble/ComplexFloat dtype and
+  // stores the magnitude as the real part with a zero imaginary part. Its
+  // *value* (the magnitude) matches abs()'s value exactly; only the dtype
+  // differs (abs() narrows to the real dtype, iabs() stays complex).
   Scalar z(cytnx_complex128(3.0, 4.0));
   Scalar reference_abs = z.abs();
   z.iabs();
@@ -607,30 +606,32 @@ INSTANTIATE_TEST_SUITE_P(AllDtypeCombinations, ScalarPromotionMatrixTest,
                          ::testing::ValuesIn(AllDtypePairs()), DtypePairTestName);
 
 // ===========================================================================
-// In-place throw matrix: for every ordered dtype pair, in-place += must
-// throw iff Type.type_promote(lhs, rhs) != lhs.dtype().
+// In-place promote matrix: for every ordered dtype pair, in-place += must
+// behave exactly like out-of-place + (`a += b` == `a = a + b`): never throw
+// (no Void operands here), promote the destination to Type.type_promote(lhs,
+// rhs), and produce the same value as the out-of-place operator.
 // ===========================================================================
 
-class ScalarInplaceThrowMatrixTest
+class ScalarInplacePromoteMatrixTest
     : public ::testing::TestWithParam<std::pair<unsigned int, unsigned int>> {};
 
-TEST_P(ScalarInplaceThrowMatrixTest, InplaceAddThrowsExactlyWhenLossy) {
+TEST_P(ScalarInplacePromoteMatrixTest, InplaceAddPromotesLikeOutOfPlace) {
   const unsigned int lt = GetParam().first;
   const unsigned int rt = GetParam().second;
-  const bool should_throw = Type_class::type_promote(lt, rt) != lt;
 
   Scalar lhs = RepresentativeValue(lt);
-  Scalar rhs = RepresentativeSecondValue(rt);
+  const Scalar rhs = RepresentativeSecondValue(rt);
+  // The out-of-place result is the reference: += must match it bit-for-bit.
+  const Scalar reference = RepresentativeValue(lt) + rhs;
 
-  if (should_throw) {
-    ExpectThrows([&] { lhs += rhs; });
-  } else {
-    EXPECT_NO_THROW({ lhs += rhs; }) << Type.getname(lt) << " += " << Type.getname(rt);
-    EXPECT_EQ(lhs.dtype(), lt);
-  }
+  EXPECT_NO_THROW({ lhs += rhs; }) << Type.getname(lt) << " += " << Type.getname(rt);
+  EXPECT_EQ(lhs.dtype(), Type_class::type_promote(lt, rt))
+    << Type.getname(lt) << " += " << Type.getname(rt);
+  EXPECT_EQ(lhs.dtype(), reference.dtype());
+  EXPECT_TRUE(lhs.eq(reference)) << Type.getname(lt) << " += " << Type.getname(rt);
 }
 
-INSTANTIATE_TEST_SUITE_P(AllDtypeCombinations, ScalarInplaceThrowMatrixTest,
+INSTANTIATE_TEST_SUITE_P(AllDtypeCombinations, ScalarInplacePromoteMatrixTest,
                          ::testing::ValuesIn(AllDtypePairs()), DtypePairTestName);
 
 // ===========================================================================

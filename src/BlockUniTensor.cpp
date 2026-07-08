@@ -1190,11 +1190,12 @@ namespace cytnx {
   };
 
   void BlockUniTensor::normalize_() {
-    // The accumulator must be seeded with the dtype linalg::Norm() actually
-    // produces, not this->dtype(): Norm() always returns a real
-    // floating-point result, so accumulating norm^2 into an integer-dtype
-    // Scalar would throw under Scalar's in-place dtype rule (Ruling 1,
-    // #935/#937) instead of silently truncating as it used to.
+    // Seed the accumulator with the dtype linalg::Norm() actually produces,
+    // not this->dtype(): Norm() always returns a real floating-point result,
+    // so seeding with the norm dtype keeps the whole accumulation in that
+    // dtype. (Seeding with an integer this->dtype() would instead let the
+    // first += promote the accumulator to floating -- correct in value, but
+    // seeding directly is clearer and avoids a mid-loop dtype change.)
     Scalar out(0, Type_class::norm_result_dtype(this->dtype()));
     for (auto &block : this->_blocks) {
       out += Scalar(linalg::Pow(linalg::Norm(block), 2).item());

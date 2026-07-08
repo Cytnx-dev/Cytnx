@@ -1,10 +1,11 @@
 """Tests for Phase-3 T2 (#847/#935/#937): Scalar's PIMPL+virtual-dispatch
 hierarchy replaced by a std::variant-backed value type.
 
-Covers the Python-visible surface: arithmetic across dtypes, the new
-mixed-dtype in-place throw behavior (Ruling 1 -- surfaces as RuntimeError on
-this base, since #989's cytnx.CytnxError translation has not merged here),
-Sproxy round-trip via Storage indexing, and numpy-scalar constructor paths.
+Covers the Python-visible surface: arithmetic across dtypes, in-place ops
+(which follow Python value-type semantics -- `a op= b` == `a = a op b`,
+promoting the dtype via Type.type_promote rather than throwing; maintainer
+ruling 2026-07-08 on #1011), Sproxy round-trip via Storage indexing, and
+numpy-scalar constructor paths.
 """
 
 import numpy as np
@@ -71,48 +72,52 @@ def test_mixed_signed_unsigned_binary_arithmetic_does_not_raise():
 
 
 # ---------------------------------------------------------------------------
-# Ruling 1: in-place mixed-dtype ops raise (RuntimeError on this base, ahead
-# of #989's cytnx.CytnxError translation).
+# In-place ops follow Python value-type semantics: `a op= b` == `a = a op b`,
+# promoting the dtype via Type.type_promote (they do NOT throw on a mixed
+# dtype, and they do NOT pin the LHS dtype).
 # ---------------------------------------------------------------------------
 
 
-def test_inplace_int_plus_float_raises_runtime_error():
+def test_inplace_int_plus_float_promotes_to_double():
     s = cytnx.Scalar(np.int64(3))
-    with pytest.raises(RuntimeError):
-        s += cytnx.Scalar(np.float64(2.0))
+    s += cytnx.Scalar(np.float64(2.0))
+    assert s.dtype() == Type.Double
+    assert float(s) == pytest.approx(5.0)
 
 
-def test_inplace_signed_unsigned_mix_raises_runtime_error():
+def test_inplace_signed_unsigned_mix_promotes_to_signed():
     # Unsigned-dtype Scalars are constructed via astype() here: the pybind
     # numpy-scalar constructor overloads currently resolve every integer
     # numpy type except int64 to the Int64 constructor (a pre-existing
     # binding quirk, see test_numpy_scalar_constructor_paths_narrower_ints_
     # preexisting_quirk below), so astype() is the reliable way to pin an
-    # unsigned dtype from Python.
+    # unsigned dtype from Python. type_promote(Uint64, Int64) == Int64, so the
+    # destination promotes to the signed dtype.
     s = cytnx.Scalar(np.int64(3)).astype(Type.Uint64)
     assert s.dtype() == Type.Uint64
-    with pytest.raises(RuntimeError):
-        s -= cytnx.Scalar(np.int64(2))
+    s -= cytnx.Scalar(np.int64(2))
+    assert s.dtype() == Type.Int64
+    assert int(s) == 1
 
 
-def test_inplace_real_complex_mix_raises_runtime_error():
+def test_inplace_real_complex_mix_promotes_to_complex():
     s = cytnx.Scalar(np.float64(3.0))
-    with pytest.raises(RuntimeError):
-        s *= cytnx.Scalar(np.complex128(2 + 1j))
+    s *= cytnx.Scalar(np.complex128(2 + 1j))
+    assert s.dtype() == Type.ComplexDouble
+    assert complex(s) == pytest.approx(6 + 3j)
 
 
-def test_inplace_bool_with_nonbool_raises_runtime_error():
+def test_inplace_bool_with_nonbool_promotes():
     s = cytnx.Scalar(np.bool_(True))
-    with pytest.raises(RuntimeError):
-        s += cytnx.Scalar(np.int64(1))
+    s += cytnx.Scalar(np.int64(1))
+    assert s.dtype() == Type.Int64
+    assert int(s) == 2
 
 
-def test_inplace_lossless_widening_does_not_raise():
-    # Ruling 1 is permissive whenever Type.type_promote(lhs, rhs) ==
-    # lhs.dtype(): Int64 += Int32, Double += Float, ComplexDouble += Double
-    # all remain valid in-place, matching #937's own migration guidance
-    # ("cast to a floating type first" is unnecessary when the destination
-    # already losslessly contains the source).
+def test_inplace_lossless_widening_keeps_lhs_dtype():
+    # When Type.type_promote(lhs, rhs) == lhs.dtype(), promotion is a no-op and
+    # the LHS dtype is kept: Int64 += Int32, Double += Float, ComplexDouble +=
+    # Double all stay at the LHS dtype.
     s = cytnx.Scalar(np.int64(3))
     s += cytnx.Scalar(np.int32(2))
     assert s.dtype() == Type.Int64
@@ -129,21 +134,23 @@ def test_inplace_lossless_widening_does_not_raise():
     assert complex(cd) == pytest.approx(5 + 0j)
 
 
-def test_inplace_same_dtype_never_raises():
+def test_inplace_same_dtype_keeps_dtype():
     s = cytnx.Scalar(np.int32(3))
     s += cytnx.Scalar(np.int32(2))
     s -= cytnx.Scalar(np.int32(1))
     s *= cytnx.Scalar(np.int32(2))
+    assert s.dtype() == Type.Int32
     assert int(s) == 8
 
 
-def test_numpy_scalar_inplace_operators_raise_on_lossy_mix():
+def test_numpy_scalar_inplace_operators_promote_on_mixed_dtype():
     # The pybind FOR_EACH_NUMPY_ITYPE overloads route through Scalar's C++
-    # operator+=/-=/*=//=, so a numpy-scalar RHS is subject to the same
-    # Ruling 1 guard as a Scalar RHS.
+    # operator+=/-=/*=//=, so a numpy-scalar RHS promotes just like a Scalar
+    # RHS -- int64 += float64 -> Double.
     s = cytnx.Scalar(np.int64(3))
-    with pytest.raises(RuntimeError):
-        s += np.float64(2.0)
+    s += np.float64(2.0)
+    assert s.dtype() == Type.Double
+    assert float(s) == pytest.approx(5.0)
 
 
 # ---------------------------------------------------------------------------
