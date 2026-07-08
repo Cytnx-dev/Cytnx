@@ -836,18 +836,18 @@ void unitensor_binding(py::module &m) {
       [](UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64 &idx) {
         self.put_block(in, idx);
       },
-      py::arg("in"), py::arg("idx") = (cytnx_uint64)(0))
+      py::arg("Tin"), py::arg("idx") = (cytnx_uint64)(0))
 
     .def("put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) {
         self.put_block(in, qnum);
       },
-      py::arg("in"), py::arg("qidx"))
+      py::arg("Tin"), py::arg("qidx"))
     .def("put_block",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) {
         self.put_block(in, lbls, qnum);
       },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"))
+      py::arg("Tin"), py::arg("labels"), py::arg("qidx"))
 
     // [Deprecated force argument!]
     .def("put_block",
@@ -857,50 +857,104 @@ void unitensor_binding(py::module &m) {
                               PyExc_FutureWarning, 2);
           self.put_block(in, qnum, force);
       },
-      py::arg("in"), py::arg("qidx"), py::arg("force"))
+      py::arg("Tin"), py::arg("qidx"), py::arg("force"))
     // [Deprecated force argument!]
     .def("put_block",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
          const bool &force) {
-          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block(in, lbls, qnum) without force argument instead.",
+          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block(Tin, labels, qidx) without force argument instead.",
                               PyExc_FutureWarning, 2);
           self.put_block(in, lbls, qnum, force);
       },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+      py::arg("Tin"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+
+    // [Deprecated 'in' keyword argument]
+    // The block tensor used to be exposed under the Python keyword 'in'. Because
+    // 'in' is a reserved word, put_block(in=...) was always a SyntaxError and the
+    // argument could only be passed as put_block(**{"in": block}). Catch that form
+    // through **kwargs so existing callers keep working, warn, and forward to the
+    // 'Tin' parameter handled by the typed overloads above.
+    .def("put_block",
+      [](UniTensor &self, py::args args, py::kwargs kwargs) {
+          if (!kwargs.contains("in"))
+            throw py::type_error(
+              "put_block(): incompatible arguments; see help(UniTensor.put_block).");
+          if (kwargs.contains("Tin"))
+            throw py::type_error(
+              "put_block(): got both the deprecated 'in' and 'Tin' for the same "
+              "argument; pass only 'Tin'.");
+          py::warnings::warn(
+            "The 'in' keyword argument of UniTensor.put_block is deprecated; use 'Tin' instead.",
+            PyExc_FutureWarning, 2);
+          py::dict forwarded;
+          for (auto item : kwargs) {
+            if (py::cast<std::string>(item.first) == "in")
+              forwarded["Tin"] = item.second;
+            else
+              forwarded[item.first] = item.second;
+          }
+          py::object pyself = py::cast(self, py::return_value_policy::reference);
+          return pyself.attr("put_block")(*args, **forwarded);
+      })
 
     .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const cytnx_uint64 &idx) { self.put_block_(in, idx); },
-      py::arg("in"), py::arg("idx") = (cytnx_uint64)(0))
+      py::arg("Tin"), py::arg("idx") = (cytnx_uint64)(0))
 
     .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) {
         self.put_block_(in, qnum);
       },
-      py::arg("in"), py::arg("qidx"))
+      py::arg("Tin"), py::arg("qidx"))
     .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) {
         self.put_block_(in, lbls, qnum);
       },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"))
+      py::arg("Tin"), py::arg("labels"), py::arg("qidx"))
 
     // [Deprecated force argument!]
     .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
          const bool &force) {
-          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block_(in, qnum) without force argument instead.",
+          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block_(Tin, qidx) without force argument instead.",
                               PyExc_FutureWarning, 2);
           self.put_block_(in, qnum, force);
       },
-      py::arg("in"), py::arg("qidx"), py::arg("force"))
+      py::arg("Tin"), py::arg("qidx"), py::arg("force"))
     // [Deprecated force argument!]
     .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
          const bool &force) {
-          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block_(in, lbls, qnum) without force argument instead.",
+          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block_(Tin, labels, qidx) without force argument instead.",
                               PyExc_FutureWarning, 2);
           self.put_block_(in, lbls, qnum, force);
       },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+      py::arg("Tin"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+
+    // [Deprecated 'in' keyword argument] See the put_block note above; accept the
+    // legacy put_block_(**{"in": block}) form, warn, and forward to 'Tin'.
+    .def("put_block_",
+      [](UniTensor &self, py::args args, py::kwargs kwargs) {
+          if (!kwargs.contains("in"))
+            throw py::type_error(
+              "put_block_(): incompatible arguments; see help(UniTensor.put_block_).");
+          if (kwargs.contains("Tin"))
+            throw py::type_error(
+              "put_block_(): got both the deprecated 'in' and 'Tin' for the same "
+              "argument; pass only 'Tin'.");
+          py::warnings::warn(
+            "The 'in' keyword argument of UniTensor.put_block_ is deprecated; use 'Tin' instead.",
+            PyExc_FutureWarning, 2);
+          py::dict forwarded;
+          for (auto item : kwargs) {
+            if (py::cast<std::string>(item.first) == "in")
+              forwarded["Tin"] = item.second;
+            else
+              forwarded[item.first] = item.second;
+          }
+          py::object pyself = py::cast(self, py::return_value_policy::reference);
+          return pyself.attr("put_block_")(*args, **forwarded);
+      })
 
     .def("__repr__",
       [](UniTensor &self) -> std::string {

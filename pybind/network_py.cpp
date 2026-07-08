@@ -99,8 +99,9 @@ void network_binding(py::module &m) {
     .def("Launch", &Network::Launch, py::arg("network_type") = (int)NtType.Regular)
 
     .def("construct", &Network::construct, py::arg("alias"), py::arg("labels"),
-         py::arg("outlabel") = std::vector<std::string>(), py::arg("outrk"), py::arg("order") = "",
-         py::arg("optim") = false, py::arg("network_type") = (int)NtType.Regular)
+         py::arg("outlabel") = std::vector<std::string>(), py::arg("outrk") = (cytnx_int64)0,
+         py::arg("order") = "", py::arg("optim") = false,
+         py::arg("network_type") = (int)NtType.Regular)
 
     .def("clear", &Network::clear)
     .def("clone", &Network::clone)
