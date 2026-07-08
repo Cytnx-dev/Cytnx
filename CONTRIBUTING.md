@@ -51,11 +51,11 @@ the lowest supported interpreter (see below).
 To regenerate:
 
 1. Build the extension and install the pinned dev tools together, through
-   the editable install (not a direct `cmake` configure/build — that
-   bypasses `[build-system].requires` and can silently pick up an
-   unpinned `pybind11`, since `CMakeLists.txt` accepts any installed
-   `pybind11 >= 3.0.0` and falls back to `FetchContent`-ing `v3.0.1` if
-   none is found):
+   the editable install. Go through `pip` rather than a direct `cmake`
+   configure/build: the `pip` path provisions the pinned `pybind11` from
+   `[build-system].requires` via build isolation, so the extension is built
+   against exactly that version. (`CMakeLists.txt` requires the pinned
+   `pybind11` outright — a direct `cmake` build needs it already installed.)
    ```sh
    pip install --editable '.[dev]' --config-settings=build-dir=build/python
    ```
