@@ -38,14 +38,15 @@ committed stubs go stale and must be regenerated as part of the same PR.
 Stub generation is only reproducible when the tools that produce it are
 pinned, since both silently change the emitted annotations across versions:
 
-- `pybind11 ==3.0.4` — controls the type annotations baked into the compiled
-  extension (`[build-system].requires` in `pyproject.toml`).
-- `pybind11-stubgen ==2.5.5` — walks the built extension and renders the
-  `.pyi` files (`dev` extra in `pyproject.toml`).
+- `pybind11` (`[build-system].requires` in `pyproject.toml`) — controls the
+  type annotations baked into the compiled extension.
+- `pybind11-stubgen` (`dev` extra in `pyproject.toml`) — walks the built
+  extension and renders the `.pyi` files.
 
-Do not bump either version incidentally; if a bump is needed, do it
-deliberately in its own commit and regenerate the stubs in the same PR so the
-diff shows exactly what the version change affected.
+Both are pinned to exact versions in `pyproject.toml`, where a comment beside
+each pin reminds you to regenerate the committed stubs whenever it is bumped.
+The `requires-python` floor matters too, since the stubs are generated with
+the lowest supported interpreter (see below).
 
 To regenerate:
 
@@ -65,8 +66,8 @@ To regenerate:
    The extension is auto-discovered under `build/` for the running
    interpreter's ABI; pass `--extension` to point at a specific `.so`/`.pyd`
    if more than one build is present. Run this with the lowest supported
-   interpreter (Python 3.10) so the emitted syntax stays parseable
-   everywhere the package is installed.
+   interpreter (the `requires-python` floor declared in `pyproject.toml`) so
+   the emitted syntax stays parseable everywhere the package is installed.
 3. Review the diff under `cytnx/cytnx/*.pyi` and commit it alongside the
    binding change that caused it.
 

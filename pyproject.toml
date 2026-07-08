@@ -6,7 +6,9 @@ requires = [
     # cytnx/cytnx/*.pyi stubs. A floating version silently rewrites those
     # annotations (e.g. 3.0.1 -> 3.0.4 added `typing.SupportsIndex` to integer
     # arguments), so the committed stubs only stay reproducible when the
-    # pybind11 version is fixed. Bump deliberately alongside a stub regen.
+    # pybind11 version is fixed. When bumping this pin, regenerate the committed
+    # stubs in the same PR (see CONTRIBUTING.md, "Regenerating the Python type
+    # stubs").
     "pybind11 ==3.0.4",
 ]
 build-backend = "scikit_build_core.build"
@@ -24,6 +26,12 @@ description = "A tensor network library"
 readme = "Readme.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
+# The committed cytnx/cytnx/*.pyi stubs are generated with the lowest
+# supported interpreter (this floor) so their syntax stays parseable on every
+# version the package supports. When raising this minimum, regenerate the
+# stubs with the new floor in the same PR (see CONTRIBUTING.md, "Regenerating
+# the Python type stubs"). See also CONTRIBUTING.md for the other places the
+# minimum version is declared.
 requires-python = ">=3.10"
 keywords = ["tensor", "network", "physics"]
 classifiers = [
@@ -66,8 +74,9 @@ dev = [
     # Pinned exactly, alongside pybind11 above: pybind11-stubgen is the tool
     # that walks the built extension and renders cytnx/cytnx/*.pyi, so a
     # floating version can reformat the committed stubs on an unrelated
-    # regen (new enum handling, changed overload ordering, etc.). Bump
-    # deliberately alongside a stub regen.
+    # regen (new enum handling, changed overload ordering, etc.). When bumping
+    # this pin, regenerate the committed stubs in the same PR (see
+    # CONTRIBUTING.md, "Regenerating the Python type stubs").
     "pybind11-stubgen ==2.5.5",
     # Validates the committed stubs against the runtime module (see
     # CONTRIBUTING.md's stub regeneration section); not itself version-locked
