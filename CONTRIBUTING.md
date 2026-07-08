@@ -60,15 +60,14 @@ To regenerate:
    ```sh
    pip install --editable '.[dev]'
    ```
-2. Regenerate the committed stubs, pointing the generator at the extension the
-   editable install just built:
+2. Regenerate the committed stubs:
    ```sh
-   python tools/generate_stubs.py --extension "$(python -c 'import cytnx.cytnx as c; print(c.__file__)')"
+   python tools/generate_stubs.py
    ```
-   `--extension` is passed explicitly because the editable install builds in a
-   temporary tree rather than under `build/`; without it the generator's
-   `build/` auto-discovery could pick up a stale build. Run this with the
-   lowest supported interpreter (the `requires-python` floor declared in
+   The generator introspects the installed `cytnx.cytnx` (the editable install
+   from step 1), falling back to a build under `build/`; pass `--extension` to
+   point at a specific `.so`/`.pyd` to override both. Run this with the lowest
+   supported interpreter (the `requires-python` floor declared in
    `pyproject.toml`) so the emitted syntax stays parseable everywhere the
    package is installed.
 3. Review the diff under `cytnx/cytnx/*.pyi` and commit it alongside the

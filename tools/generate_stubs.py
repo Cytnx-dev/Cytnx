@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.machinery
+import importlib.util
 import re
 import shutil
 import sys
@@ -85,21 +86,52 @@ def sanitize(text: str) -> str:
     return text
 
 
-def find_extension() -> Path:
-    """Locate a built cytnx extension matching the running interpreter's ABI."""
+def find_installed_extension() -> Path | None:
+    """Return the extension of the installed ``cytnx.cytnx``, if importable.
+
+    An editable install (``pip install --editable .``) places the freshly built
+    extension on the import path, so this matches exactly what the developer
+    just compiled without pointing at a build directory. Returns None when cytnx
+    is not importable (e.g. only a bare ``build/`` tree exists).
+    """
+    try:
+        spec = importlib.util.find_spec(MODULE)
+    except (ImportError, ValueError):
+        return None
+    if spec is None or not spec.origin or spec.origin == "built-in":
+        return None
+    origin = Path(spec.origin)
+    return origin if origin.is_file() else None
+
+
+def find_build_extension() -> Path | None:
+    """Return a built cytnx extension under ``build/`` for this interpreter's ABI."""
     # EXT_SUFFIX is e.g. ".cpython-311-x86_64-linux-gnu.so"; the extension file
     # is named cytnx<EXT_SUFFIX> because the submodule is itself named `cytnx`.
     ext_suffix = sysconfig.get_config_var("EXT_SUFFIX") or importlib.machinery.EXTENSION_SUFFIXES[0]
     candidates = sorted((REPO_ROOT / "build").rglob(f"cytnx{ext_suffix}"))
     if not candidates:
-        raise SystemExit(
-            f"No built extension 'cytnx{ext_suffix}' found under {REPO_ROOT / 'build'}.\n"
-            "Build it first (e.g. `cmake --build build/python --target pycytnx`) "
-            "with the same interpreter you are running this script with, or pass "
-            "--extension explicitly."
-        )
+        return None
     # Prefer the most recently modified build if several presets are present.
     return max(candidates, key=lambda p: p.stat().st_mtime)
+
+
+def find_extension() -> Path:
+    """Locate a built cytnx extension matching the running interpreter's ABI.
+
+    Prefer the installed ``cytnx.cytnx`` (an editable install exposes the
+    just-built extension), then fall back to scanning ``build/``.
+    """
+    extension = find_installed_extension() or find_build_extension()
+    if extension is None:
+        raise SystemExit(
+            "No cytnx extension found. Install cytnx so `cytnx.cytnx` is "
+            "importable (e.g. `pip install --editable .`), or build it under "
+            f"{REPO_ROOT / 'build'} (e.g. `cmake --build build/python --target "
+            "pycytnx`) with the interpreter you are running this script with, "
+            "or pass --extension explicitly."
+        )
+    return extension
 
 
 def main() -> int:
