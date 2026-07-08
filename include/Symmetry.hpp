@@ -359,7 +359,7 @@ namespace cytnx {
     @return [bool]
 
     */
-    bool check_qnum(const cytnx_int64 &qnum) {
+    bool check_qnum(const cytnx_int64 &qnum) const {
       return std::visit([&](const auto &kind) { return kind.check_qnum(qnum); }, this->_impl);
     }
 
@@ -370,7 +370,7 @@ namespace cytnx {
     @return [bool]
 
     */
-    bool check_qnums(const std::vector<cytnx_int64> &qnums) {
+    bool check_qnums(const std::vector<cytnx_int64> &qnums) const {
       return std::visit([&](const auto &kind) { return kind.check_qnums(qnums); }, this->_impl);
     }
 
@@ -381,7 +381,7 @@ namespace cytnx {
     @return the combined quantum numbers.
     */
     std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64> &inL,
-                                          const std::vector<cytnx_int64> &inR) {
+                                          const std::vector<cytnx_int64> &inR) const {
       std::vector<cytnx_int64> out;
       this->combine_rule_(out, inL, inR);
       return out;
@@ -395,7 +395,7 @@ namespace cytnx {
     @param[in] inR the #2 quantum number list that is to be combined.
     */
     void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
-                       const std::vector<cytnx_int64> &inR) {
+                       const std::vector<cytnx_int64> &inR) const {
       std::visit([&](const auto &kind) { kind.combine_rule_(out, inL, inR); }, this->_impl);
     }
 
@@ -421,7 +421,7 @@ namespace cytnx {
     @param[in] inR the #2 quantum number.
     */
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
-                       const bool &is_reverse = false) {
+                       const bool &is_reverse = false) const {
       std::visit([&](const auto &kind) { kind.combine_rule_(out, inL, inR, is_reverse); },
                  this->_impl);
     }
@@ -434,7 +434,7 @@ namespace cytnx {
     @param[out] out the output quantum number.
     @param[in] in the input quantum number.
     */
-    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
+    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) const {
       std::visit([&](const auto &kind) { kind.reverse_rule_(out, in); }, this->_impl);
     }
 
