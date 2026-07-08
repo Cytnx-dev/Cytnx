@@ -53,9 +53,10 @@ To regenerate:
 1. Build the extension and install the pinned dev tools together, through
    the editable install. Go through `pip` rather than a direct `cmake`
    configure/build: the `pip` path provisions the pinned `pybind11` from
-   `[build-system].requires` via build isolation, so the extension is built
-   against exactly that version. (`CMakeLists.txt` requires the pinned
-   `pybind11` outright — a direct `cmake` build needs it already installed.)
+   `[build-system].requires` via build isolation, so the extension — and thus
+   the regenerated stubs — are built against exactly that version. (A direct
+   `cmake` build instead uses whatever compatible `pybind11` is already
+   installed.)
    ```sh
    pip install --editable '.[dev]'
    ```

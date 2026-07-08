@@ -438,13 +438,14 @@ endif()
 # #######
 IF(BUILD_PYTHON)
   find_package (Python COMPONENTS Interpreter Development)
-  # Require the pybind11 provisioned from pyproject.toml's [build-system].requires
-  # (pinned to ==3.0.4). pybind11 controls the type annotations baked into the
-  # extension, which tools/generate_stubs.py reads to produce the committed
-  # cytnx/cytnx/*.pyi stubs; a FetchContent fallback to a different version would
-  # silently regenerate those stubs from the wrong pybind11. Fail loudly here
-  # instead so a stub regeneration always uses the pinned version.
-  find_package(pybind11 3.0.4 REQUIRED)
+  # Require a compatible pybind11 to be installed; the version is deliberately
+  # not pinned here. The committed cytnx/cytnx/*.pyi stubs are regenerated only
+  # via the `pip` path, which provisions the pybind11 pinned in
+  # [build-system].requires (==3.0.4); every other build (conda-forge, system)
+  # just compiles and ships those already-committed stubs, so any compatible
+  # pybind11 (e.g. conda-forge's 3.0.3) works here. Pinning an exact/newer-only
+  # version would break those builds without changing the committed stubs.
+  find_package(pybind11 3.0.0 REQUIRED)
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
     pybind/generator_py.cpp
