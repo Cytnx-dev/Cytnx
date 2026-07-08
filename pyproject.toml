@@ -8,7 +8,8 @@ requires = [
     # arguments), so the committed stubs only stay reproducible when the
     # pybind11 version is fixed. When bumping this pin, regenerate the committed
     # stubs in the same PR (see CONTRIBUTING.md, "Regenerating the Python type
-    # stubs").
+    # stubs"), and update the pybind11 version string in CMakeLists.txt's
+    # find_package(pybind11 ...) to match.
     "pybind11 ==3.0.4",
 ]
 build-backend = "scikit_build_core.build"

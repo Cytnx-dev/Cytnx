@@ -438,13 +438,13 @@ endif()
 # #######
 IF(BUILD_PYTHON)
   find_package (Python COMPONENTS Interpreter Development)
-  # Require a compatible pybind11 to be installed; the version is deliberately
-  # not pinned here. The committed cytnx/cytnx/*.pyi stubs are regenerated only
-  # via the `pip` path, which provisions the pybind11 pinned in
-  # [build-system].requires (==3.0.4); every other build (conda-forge, system)
-  # just compiles and ships those already-committed stubs, so any compatible
-  # pybind11 (e.g. conda-forge's 3.0.3) works here. Pinning an exact/newer-only
-  # version would break those builds without changing the committed stubs.
+  # Require a compatible pybind11 to be installed. The committed
+  # cytnx/cytnx/*.pyi stubs are regenerated only via the `pip` path, which
+  # provisions the pybind11 pinned in [build-system].requires (==3.0.4).
+  # TODO: bump this to `find_package(pybind11 3.0.4 REQUIRED)` to match the
+  # pyproject.toml pin once pybind11 3.0.4 is available on conda-forge. It
+  # currently ships 3.0.3, which a 3.0.4 requirement would reject and break the
+  # conda build.
   find_package(pybind11 3.0.0 REQUIRED)
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
