@@ -365,3 +365,31 @@ TEST(Tensor, ItemDtypeMismatchThrows) {
   EXPECT_THROW(t.item<double>(), std::logic_error);
   EXPECT_NO_THROW(t.item<float>());
 }
+
+TEST(Tensor, ReshapeRejectsMultipleUnknownDims) {
+  Tensor t = zeros({12}, Type.Double);
+  EXPECT_THROW(t.reshape({-1, -1}), std::logic_error);
+  EXPECT_THROW(t.reshape_({-1, -1}), std::logic_error);
+  EXPECT_THROW(t.reshape({-2, 6}), std::logic_error);
+  // a single -1 must keep working
+  Tensor r = t.reshape({3, -1});
+  EXPECT_EQ(r.shape(), (std::vector<cytnx_uint64>{3, 4}));
+}
+
+TEST(Tensor, ReshapeRejectsZeroDimWithUnknownDim) {
+  Tensor t = zeros({12}, Type.Double);
+  // new_N == 0 previously fed a modulo/division by zero (UB / SIGFPE on x86)
+  EXPECT_THROW(t.reshape({0, -1}), std::logic_error);
+  EXPECT_THROW(t.reshape_({0, -1}), std::logic_error);
+  EXPECT_THROW(t.reshape_({-1, 0}), std::logic_error);
+}
+
+TEST(Tensor, FailedReshapeLeavesShapeUnchanged) {
+  Tensor t = zeros({12}, Type.Double);
+  EXPECT_THROW(t.reshape_({7, 2}), std::logic_error);
+  EXPECT_EQ(t.shape(), (std::vector<cytnx_uint64>{12}));
+  EXPECT_THROW(t.reshape_({5, -1}), std::logic_error);
+  EXPECT_EQ(t.shape(), (std::vector<cytnx_uint64>{12}));
+  EXPECT_THROW(t.reshape_({0, -1}), std::logic_error);
+  EXPECT_EQ(t.shape(), (std::vector<cytnx_uint64>{12}));
+}
