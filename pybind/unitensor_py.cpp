@@ -986,7 +986,8 @@ void unitensor_binding(py::module &m) {
 
 
 
-    .def("contract", &UniTensor::contract, py::arg("inR"), py::arg("mv_elem_self")=false, py::arg("mv_elem_rhs")=false)
+    // GIL: see the guard discipline note in linalg_py.cpp
+    .def("contract", &UniTensor::contract, py::arg("inR"), py::arg("mv_elem_self")=false, py::arg("mv_elem_rhs")=false, py::call_guard<py::gil_scoped_release>())
 
     .def("getTotalQnums", &UniTensor::getTotalQnums, py::arg("physical")=false)
 
@@ -2095,20 +2096,24 @@ void unitensor_binding(py::module &m) {
 
   //   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
   //         py::arg("cacheR") = false);
+  // GIL: see the guard discipline note in linalg_py.cpp
   m.def(
     "Contract",
     [](const UniTensor &inL, const UniTensor &inR, const bool &cacheL,
        const bool &cacheR) -> UniTensor { return Contract(inL, inR, cacheL, cacheR); },
-    py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false, py::arg("cacheR") = false);
+    py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false, py::arg("cacheR") = false,
+    py::call_guard<py::gil_scoped_release>());
   m.def(
     "Contract",
     [](const std::vector<UniTensor> &TNs, const std::string &order,
        const bool &optimal) -> UniTensor { return Contract(TNs, order, optimal); },
-    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
+    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true,
+    py::call_guard<py::gil_scoped_release>());
   m.def(
     "Contracts",
     [](const std::vector<UniTensor> &TNs, const std::string &order,
        const bool &optimal) -> UniTensor { return Contracts(TNs, order, optimal); },
-    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
+    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true,
+    py::call_guard<py::gil_scoped_release>());
 }
 #endif
