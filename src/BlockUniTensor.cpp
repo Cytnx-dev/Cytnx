@@ -502,8 +502,7 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     } else {
-      BlockUniTensor *tmp = new BlockUniTensor();
-      tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (unsigned int b = 0; b < this->_blocks.size(); b++) {
         if (this->_blocks[b].is_contiguous()) {
@@ -512,8 +511,7 @@ namespace cytnx {
           tmp->_blocks[b] = this->_blocks[b].contiguous();
         }
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
   }
 
@@ -521,7 +519,7 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
@@ -558,14 +556,13 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
 
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -643,56 +640,50 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
     const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabel_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
     const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabels_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
                                                                const std::string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const std::string &inx,
                                                                const std::string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::to_dense() {
@@ -700,13 +691,12 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     }
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks.resize(this->_blocks.size());
     for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
       tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
     tmp->_is_diag = false;
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
   void BlockUniTensor::to_dense_() {
     if (this->_is_diag) {
