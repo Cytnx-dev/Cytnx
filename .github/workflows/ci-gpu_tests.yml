@@ -144,15 +144,12 @@ jobs:
           test -n "$CUDART_INCLUDE_DIR" || { echo "::error::cuda_runtime.h not found under $SITE_PACKAGES"; exit 1; }
           echo "CUDAToolkit_ROOT=$(dirname "$CUDART_INCLUDE_DIR")" >> "$GITHUB_ENV"
 
-          # nvlink resolves libnvJitLink.so via a hardcoded path relative to
-          # its own bin/ directory following the traditional standalone CUDA
-          # Toolkit layout (.../bin/nvlink -> .../lib64/libnvJitLink.so). A
-          # relative dlopen() path like that is resolved directly, bypassing
-          # LD_LIBRARY_PATH entirely, so exporting LD_LIBRARY_PATH alone
-          # (below) does not fix it — confirmed by still hitting "nvlink
-          # fatal: elfLink linker library load error" with LD_LIBRARY_PATH
-          # correctly set. The nvidia-cuda-nvcc/nvidia-cuda-runtime wheels
-          # install to lib/, not lib64/, so add the directory nvlink expects.
+          # nvidia-cuda-nvcc/nvidia-cuda-runtime install to lib/, not lib64/,
+          # which some CUDA tooling expects by convention (the traditional
+          # standalone CUDA Toolkit layout has .../bin/nvlink next to
+          # .../lib64/). Harmless to provide even though it alone didn't fix
+          # nvlink's device-link failure below (see the CMAKE_INTERPROCEDURAL_OPTIMIZATION
+          # override in the editable install step for the actual fix).
           ln -s lib "$(dirname "$CUDART_INCLUDE_DIR")/lib64"
 
           CUTENSOR_INCLUDE_DIR=$(dirname "$(find "$SITE_PACKAGES" -path '*/include/cutensor.h' | head -1)")
@@ -198,11 +195,27 @@ jobs:
         # CUDA-version-aware default (Turing sm_75 floor on CUDA >=13, since
         # CUDA 13.0 removed offline compilation support for Volta sm_70 and
         # below; Volta floor on older toolkits).
+        #
+        # CMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF overrides CMakeLists.txt's
+        # repo-wide default (ON on non-Apple platforms), which for CUDA
+        # targets makes CMake pass -dlto (device link-time optimization) to
+        # nvcc's device-link step. That -dlto step consistently failed here
+        # with "nvlink fatal: elfLink linker library load error (target:
+        # sm_75)" regardless of what the loader could find (confirmed against
+        # both a plain LD_LIBRARY_PATH export and a lib64 symlink pointing at
+        # nvidia-cuda-nvcc's lib/, neither changed the outcome) — the pip
+        # wheel toolchain doesn't satisfy whatever DLTO's device linking
+        # needs here, unlike the monolithic CUDA installs this repo's normal
+        # build path is validated against. Disabling IPO/LTO only affects
+        # this CI build's binary performance, not correctness, and isn't
+        # changed in CMakeLists.txt itself since the repo-wide default is
+        # presumably fine for those monolithic installs.
         run: |
           pip install --editable '.[dev]' --verbose \
             --config-settings=build-dir=build \
             --config-settings=cmake.args=--preset=openblas-cuda \
-            --config-settings=cmake.define.RUN_TESTS=ON
+            --config-settings=cmake.define.RUN_TESTS=ON \
+            --config-settings=cmake.define.CMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF
 
       - name: Sanity-check the install sees the GPU
         run: python -c "import cytnx; print('cytnx', cytnx.__version__); print('gpu devices:', cytnx.Device.Ngpus)"
