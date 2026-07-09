@@ -25,80 +25,33 @@ namespace cytnx {
     return (this->stype() == rhs.stype()) && (this->n() == rhs.n());
   }
   bool cytnx::Symmetry::operator!=(const cytnx::Symmetry &rhs) const { return !(*this == rhs); }
-  //=============================
-
-  std::vector<cytnx_int64> Symmetry_base::combine_rule(const std::vector<cytnx_int64> &inL,
-                                                       const std::vector<cytnx_int64> &inR) {
-    std::vector<cytnx_int64> out;
-    this->combine_rule_(out, inL, inR);
-    return out;
-  }
-
-  cytnx_int64 Symmetry_base::combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR,
-                                          const bool &is_reverse) {
-    cytnx_int64 out;
-    this->combine_rule_(out, inL, inR, is_reverse);
-    return out;
-  }
-  cytnx_int64 Symmetry_base::reverse_rule(const cytnx_int64 &in) {
-    cytnx_int64 out;
-    this->reverse_rule_(out, in);
-    return out;
-  }
-
-  bool cytnx::Symmetry_base::check_qnum(const cytnx_int64 &qnum) {
-    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
-    return false;
-  }
-  bool cytnx::Symmetry_base::check_qnums(const std::vector<cytnx_int64> &qnums) {
-    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
-    return false;
-  }
-  void cytnx::Symmetry_base::combine_rule_(std::vector<cytnx_int64> &out,
-                                           const std::vector<cytnx_int64> &inL,
-                                           const std::vector<cytnx_int64> &inR) {
-    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
-  }
-  void cytnx::Symmetry_base::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                           const cytnx_int64 &inR, const bool &is_reverse) {
-    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
-  }
-  void cytnx::Symmetry_base::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
-    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
-  }
-
-  fermionParity cytnx::Symmetry_base::get_fermion_parity(const cytnx_int64 &in_qnum) const {
-    return EVEN;
-  }
-
-  void cytnx::Symmetry_base::print_info() const {
-    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
-  }
-
-  std::string cytnx::Symmetry_base::stype_str() const {
-    cytnx_error_msg(true, "%s", "[ERROR][Internal] should not call Symmerty base!");
-  }
 
   ///=========================
-  bool cytnx::U1Symmetry::check_qnum(const cytnx_int64 &qnum) { return true; }
-  bool cytnx::U1Symmetry::check_qnums(const std::vector<cytnx_int64> &qnums) { return true; }
+  bool cytnx::U1Symmetry::check_qnum(const cytnx_int64 &qnum) const { return true; }
+  bool cytnx::U1Symmetry::check_qnums(const std::vector<cytnx_int64> &qnums) const { return true; }
 
   void cytnx::U1Symmetry::combine_rule_(std::vector<cytnx_int64> &out,
                                         const std::vector<cytnx_int64> &inL,
-                                        const std::vector<cytnx_int64> &inR) {
+                                        const std::vector<cytnx_int64> &inR) const {
     out.resize(inL.size() * inR.size());
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()];
     }
   }
   void cytnx::U1Symmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                        const cytnx_int64 &inR, const bool &is_reverse) {
+                                        const cytnx_int64 &inR, const bool &is_reverse) const {
     if (is_reverse)
       this->reverse_rule_(out, inL + inR);
     else
       out = inL + inR;
   }
-  void cytnx::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) { out = in * -1; }
+  void cytnx::U1Symmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) const {
+    out = in * -1;
+  }
+
+  fermionParity cytnx::U1Symmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
+    return EVEN;
+  }
 
   void cytnx::U1Symmetry::print_info() const {
     std::cout << "--------------------\n";
@@ -110,11 +63,11 @@ namespace cytnx {
   }
 
   ///========================
-  bool cytnx::ZnSymmetry::check_qnum(const cytnx_int64 &qnum) {
+  bool cytnx::ZnSymmetry::check_qnum(const cytnx_int64 &qnum) const {
     return (qnum >= 0) && (qnum < this->n);
   }
 
-  bool cytnx::ZnSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) {
+  bool cytnx::ZnSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) const {
     bool out = true;
     for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
       out = ((qnums[i] >= 0) && (qnums[i] < this->n));
@@ -125,7 +78,7 @@ namespace cytnx {
 
   void cytnx::ZnSymmetry::combine_rule_(std::vector<cytnx_int64> &out,
                                         const std::vector<cytnx_int64> &inL,
-                                        const std::vector<cytnx_int64> &inR) {
+                                        const std::vector<cytnx_int64> &inR) const {
     ValidateZnQnums(inL, this->n);
     ValidateZnQnums(inR, this->n);
     out.resize(inL.size() * inR.size());
@@ -136,7 +89,7 @@ namespace cytnx {
     }
   }
   void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                        const cytnx_int64 &inR, const bool &is_reverse) {
+                                        const cytnx_int64 &inR, const bool &is_reverse) const {
     ValidateZnQnum(inL, this->n);
     ValidateZnQnum(inR, this->n);
     const cytnx_int64 combined = (inL + inR) % this->n;
@@ -145,9 +98,13 @@ namespace cytnx {
     else
       out = combined;
   }
-  void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
+  void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) const {
     ValidateZnQnum(in, this->n);
     out = (this->n - in) % this->n;
+  }
+
+  fermionParity cytnx::ZnSymmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
+    return EVEN;
   }
 
   void cytnx::ZnSymmetry::print_info() const {
@@ -160,11 +117,14 @@ namespace cytnx {
   }
 
   ///========================
-  bool cytnx::FermionParitySymmetry::check_qnum(const cytnx_int64 &qnum) {
+  bool cytnx::FermionParitySymmetry::check_qnum(const cytnx_int64 &qnum) const {
     return (qnum >= 0) && (qnum < 2);
   }
 
-  bool cytnx::FermionParitySymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) {
+  bool cytnx::FermionParitySymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) const {
+    // Delegates to check_qnum so the two forms cannot diverge (#1012): the old
+    // hand-written comparison tested against this->n, which for fPar is the -2
+    // stype sentinel rather than a modulus, rejecting every non-empty input.
     for (const auto &qnum : qnums) {
       if (!this->check_qnum(qnum)) return false;
     }
@@ -173,20 +133,21 @@ namespace cytnx {
 
   void cytnx::FermionParitySymmetry::combine_rule_(std::vector<cytnx_int64> &out,
                                                    const std::vector<cytnx_int64> &inL,
-                                                   const std::vector<cytnx_int64> &inR) {
+                                                   const std::vector<cytnx_int64> &inR) const {
     out.resize(inL.size() * inR.size());
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % 2;
     }
   }
   void cytnx::FermionParitySymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                                   const cytnx_int64 &inR, const bool &is_reverse) {
+                                                   const cytnx_int64 &inR,
+                                                   const bool &is_reverse) const {
     if (is_reverse)
       this->reverse_rule_(out, (inL + inR) % 2);
     else
       out = (inL + inR) % 2;
   }
-  void cytnx::FermionParitySymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
+  void cytnx::FermionParitySymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) const {
     // out = -in<0?-in+this->n:-in;
     out = -in + 2;
   }
@@ -212,27 +173,28 @@ namespace cytnx {
   }
 
   ///=========================
-  bool cytnx::FermionNumberSymmetry::check_qnum(const cytnx_int64 &qnum) { return true; }
-  bool cytnx::FermionNumberSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) {
+  bool cytnx::FermionNumberSymmetry::check_qnum(const cytnx_int64 &qnum) const { return true; }
+  bool cytnx::FermionNumberSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) const {
     return true;
   }
 
   void cytnx::FermionNumberSymmetry::combine_rule_(std::vector<cytnx_int64> &out,
                                                    const std::vector<cytnx_int64> &inL,
-                                                   const std::vector<cytnx_int64> &inR) {
+                                                   const std::vector<cytnx_int64> &inR) const {
     out.resize(inL.size() * inR.size());
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()];
     }
   }
   void cytnx::FermionNumberSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
-                                                   const cytnx_int64 &inR, const bool &is_reverse) {
+                                                   const cytnx_int64 &inR,
+                                                   const bool &is_reverse) const {
     if (is_reverse)
       this->reverse_rule_(out, inL + inR);
     else
       out = inL + inR;
   }
-  void cytnx::FermionNumberSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
+  void cytnx::FermionNumberSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) const {
     out = in * -1;
   }
 
@@ -296,8 +258,10 @@ namespace cytnx {
     cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid std::fstream%s", "\n");
     unsigned int IDDs = 777;
     f.write((char *)&IDDs, sizeof(unsigned int));
-    f.write((char *)&this->_impl->stype_id, sizeof(int));
-    f.write((char *)&this->_impl->n, sizeof(int));
+    const int stype_id = this->stype();
+    const int n = this->n();
+    f.write((char *)&stype_id, sizeof(int));
+    f.write((char *)&n, sizeof(int));
   }
   void cytnx::Symmetry::_Load(std::fstream &f) {
     cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid std::fstream%s", "\n");
