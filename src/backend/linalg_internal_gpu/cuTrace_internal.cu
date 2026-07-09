@@ -5,6 +5,7 @@
 #include "backend/utils_internal_gpu/cuTypeTraits_gpu.hpp"
 
 #include <algorithm>
+#include <iterator>
 #include <limits>
 #include <vector>
 
@@ -40,23 +41,28 @@ namespace cytnx {
       constexpr cytnx_int64 kMaxGridDimX = 2147483647LL;
       constexpr cytnx_int64 kMaxGridDimY = 65535LL;
 
-      // Cap on the surviving (non-traced) rank TraceKernel handles via its
-      // stack-resident TraceLayout. Every surviving axis has extent >= 2 (a
-      // size-1 axis contributes nothing to a diagonal decode and would be
-      // squeezed away, not kept as a surviving axis), so a tensor with
-      // surviving_rank axes plus the two traced axes has at least
-      // 2^(surviving_rank + 2) elements. x86-64 addresses at most 2^52 bytes,
-      // so even a 1-byte-per-element dtype caps surviving_rank at 50 on any
-      // physically constructible machine -- there is no dtype/hardware
-      // combination that can reach 51. 50 costs nothing extra against CUDA's
-      // per-launch parameter/constant-memory budget, so there is no reason to
-      // size this any tighter, and no fallback path is needed: the case this
-      // constant would guard against cannot occur.
+      // Cap on the number of surviving (non-traced) axes with extent > 1 that
+      // TraceKernel handles via its stack-resident TraceLayout. Axes with
+      // extent 1 are not counted here and are never stored in TraceLayout at
+      // all (see TraceImplGpu) -- a size-1 axis's decode step is always a
+      // no-op, so it can be dropped from the layout without affecting any
+      // other axis's computed offset, and a tensor can carry an unbounded
+      // number of them regardless of this cap. For the axes that ARE counted
+      // (extent >= 2 each), a tensor with that many of them plus the two
+      // traced axes has at least 2^(non_trivial_rank + 2) elements. x86-64
+      // addresses at most 2^52 bytes, so even a 1-byte-per-element dtype caps
+      // non_trivial_rank at 50 on any physically constructible machine --
+      // there is no dtype/hardware combination that can reach 51. 50 costs
+      // nothing extra against CUDA's per-launch parameter/constant-memory
+      // budget, so there is no reason to size this any tighter.
       constexpr cytnx_int64 kMaxTraceRank = 50;
 
-      // Surviving-axis shape/stride, sized to kMaxTraceRank so it can be
-      // passed to TraceKernel by value as a __grid_constant__ parameter
-      // instead of two separate device allocations.
+      // Non-trivial (extent > 1) surviving-axis shape/stride, sized to
+      // kMaxTraceRank so it can be passed to TraceKernel by value as a
+      // __grid_constant__ parameter instead of two separate device
+      // allocations. rank here is the count of non-trivial axes, which can be
+      // smaller than the tensor's actual surviving rank if any surviving axis
+      // has extent 1 (see TraceImplGpu).
       struct TraceLayout {
         cytnx_int64 rank;
         cytnx_int64 shape[kMaxTraceRank];
@@ -93,24 +99,31 @@ namespace cytnx {
           value.imag() + __shfl_down_sync(0xffffffff, value.imag(), reduction_stride));
       }
 
-      // Decodes a flat output index into the input storage offset of that output
-      // element's diagonal start: walk the surviving axes, accumulating
+      // Decodes a flat output index into the input storage offset of that
+      // output element's diagonal start: walk the given axes, accumulating
       // (index_along_axis * input_stride_of_axis). For a rank-2 trace
-      // (surviving_rank == 0) the loop is empty and the offset is 0.
+      // (axis_count == 0) the loop is empty and the offset is 0.
+      //
+      // axis_count may be smaller than the tensor's actual surviving rank:
+      // TraceImplGpu omits surviving axes of extent 1 from these arrays
+      // entirely, since such an axis's step here is always a no-op
+      // (remaining_flat_index % 1 == 0, /= 1 leaves it unchanged, and its
+      // stride contributes * 0) -- skipping it changes nothing about the
+      // offsets this computes for the remaining axes.
       //
       // Every index/extent here is a single signed type (cytnx_int64), mirroring
       // the CPU TraceImpl (Trace_internal.cpp) so this arithmetic needs no casts
       // between calls.
       __device__ cytnx_int64 DecodeDiagonalStartOffset(cytnx_int64 output_index,
-                                                       const cytnx_int64 *surviving_shape,
-                                                       const cytnx_int64 *surviving_input_stride,
-                                                       cytnx_int64 surviving_rank) {
+                                                       const cytnx_int64 *axis_shape,
+                                                       const cytnx_int64 *axis_input_stride,
+                                                       cytnx_int64 axis_count) {
         cytnx_int64 remaining_flat_index = output_index;
         cytnx_int64 diagonal_start_offset = 0;
-        for (cytnx_int64 axis = surviving_rank; axis-- > 0;) {
+        for (cytnx_int64 axis = axis_count; axis-- > 0;) {
           diagonal_start_offset +=
-            (remaining_flat_index % surviving_shape[axis]) * surviving_input_stride[axis];
-          remaining_flat_index /= surviving_shape[axis];
+            (remaining_flat_index % axis_shape[axis]) * axis_input_stride[axis];
+          remaining_flat_index /= axis_shape[axis];
         }
         return diagonal_start_offset;
       }
@@ -167,15 +180,15 @@ namespace cytnx {
       // block; many short-diagonal outputs launch many small blocks running
       // concurrently across SMs.
       //
-      // The surviving-axis layout is a small fixed-size struct (TraceLayout)
-      // passed by value as a __grid_constant__ parameter rather than two
-      // device pointers, so a trace call needs no cudaMalloc/cudaMemcpy/
-      // cudaFree at all -- kMaxTraceRank comfortably covers every surviving
-      // rank reachable on any physically constructible machine (see its
-      // definition above), so there is no larger-rank fallback to dispatch
-      // to. __grid_constant__ places the parameter in read-only per-grid
-      // constant memory rather than copying it into every thread's local
-      // memory.
+      // The non-trivial surviving-axis layout is a small fixed-size struct
+      // (TraceLayout) passed by value as a __grid_constant__ parameter rather
+      // than two device pointers, so a trace call needs no cudaMalloc/
+      // cudaMemcpy/cudaFree at all -- kMaxTraceRank comfortably covers every
+      // non-trivial surviving rank reachable on any physically constructible
+      // machine (see its definition above), so there is no larger-rank
+      // fallback to dispatch to. __grid_constant__ places the parameter in
+      // read-only per-grid constant memory rather than copying it into every
+      // thread's local memory.
       template <class T>
       __global__ void TraceKernel(T *output_data, const T *input_data,
                                   const __grid_constant__ TraceLayout layout,
@@ -226,35 +239,39 @@ namespace cytnx {
         const cytnx_int64 diagonal_stride = input_strides[ax1] + input_strides[ax2];
 
         // Build the reduced output shape (needed for Tensor::reshape_ on every
-        // path) and, in the same pass, write directly into a stack-resident
-        // TraceLayout wherever it still fits (idx < kMaxTraceRank) -- the
-        // common case needs no heap allocation or host->device copy at all
-        // for the surviving-axis layout; see the dispatch below.
+        // path, and covers every surviving axis regardless of extent -- a
+        // size-1 surviving axis is a legitimate part of the output shape, not
+        // droppable there). In the same pass, write only the *non-trivial*
+        // (extent > 1) surviving axes into a stack-resident TraceLayout: a
+        // size-1 axis's odometer step in DecodeDiagonalStartOffset is always
+        // (remaining_flat_index % 1 == 0, remaining_flat_index /= 1 == itself,
+        // stride * 0 == 0) -- a no-op -- so omitting it from the decode array
+        // entirely changes nothing about the offsets it computes for the
+        // other axes. This is what makes kMaxTraceRank's derivation (every
+        // axis counted there has extent >= 2) actually true of what's stored,
+        // rather than merely assumed of the input: a tensor can carry an
+        // unbounded number of size-1 surviving axes without ever touching
+        // TraceLayout's fixed capacity.
         TraceLayout layout;
         std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_
-        cytnx_int64 idx = 0;
+        cytnx_int64 non_trivial_rank = 0;
         for (cytnx_uint64 axis = 0; axis < input_shape.size(); ++axis) {
           if (axis != ax1 && axis != ax2) {
             const cytnx_int64 dim = CheckedCastToInt64Gpu(input_shape[axis], "input_shape[axis]");
             output_shape.push_back(dim);
-            if (idx < kMaxTraceRank) {
-              layout.shape[idx] = dim;
-              layout.stride[idx] = input_strides[axis];
+            if (dim > 1) {
+              cytnx_error_msg(non_trivial_rank >= kMaxTraceRank,
+                              "[internal][cuTrace] more than %lld surviving axes with extent > 1; "
+                              "exceeds kMaxTraceRank.\n",
+                              static_cast<long long>(kMaxTraceRank));
+              layout.shape[non_trivial_rank] = dim;
+              layout.stride[non_trivial_rank] = input_strides[axis];
+              ++non_trivial_rank;
             }
-            ++idx;
           }
         }
-        const cytnx_int64 surviving_rank = idx;
-        // Defensive, not a supported case: kMaxTraceRank's derivation above
-        // shows no physically constructible tensor can reach this. If it were
-        // ever hit anyway, layout.shape/stride beyond kMaxTraceRank weren't
-        // populated by the loop above, so proceeding would read uninitialized
-        // stack memory on the device.
-        cytnx_error_msg(surviving_rank > kMaxTraceRank,
-                        "[internal][cuTrace] surviving_rank=%lld exceeds kMaxTraceRank (%lld).\n",
-                        static_cast<long long>(surviving_rank),
-                        static_cast<long long>(kMaxTraceRank));
-        layout.rank = surviving_rank;
+        const cytnx_int64 surviving_rank = std::ssize(output_shape);
+        layout.rank = non_trivial_rank;
         cytnx_int64 output_size = 1;
         for (cytnx_int64 dim : output_shape) output_size *= dim;
         const bool output_is_scalar = surviving_rank == 0;

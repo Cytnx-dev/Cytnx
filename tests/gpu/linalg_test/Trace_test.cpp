@@ -205,20 +205,35 @@ namespace {
     EXPECT_NEAR(gpu.at<cytnx::cytnx_double>({0}), expected, slack);
   }
 
-  TEST(LinalgGpuTraceTest, SurvivingRankAtTraceLayoutCapMatchesReference) {
-    // TraceImplGpu's stack-resident TraceLayout is sized to kMaxTraceRank
-    // (50); this pins correctness exactly at that array-bound edge -- not a
-    // realistic tensor (every surviving axis here has extent 1, so a real
-    // caller would never keep them rather than squeeze them away), just a
-    // cheap way to construct a maximal-rank tensor and catch a fencepost bug
-    // in the fixed-size shape/stride arrays. shape = {5, 5, 1x50}.
-    std::vector<cytnx_uint64> shape = {5, 5};
-    shape.insert(shape.end(), 50, 1);
+  TEST(LinalgGpuTraceTest, SingletonSurvivingAxesDoNotCountTowardTraceLayoutCap) {
+    // Regression test: a surviving axis of extent 1 must not count toward
+    // TraceImplGpu's kMaxTraceRank cap, since it contributes nothing to the
+    // kernel's per-output decode (its odometer step is always a no-op -- see
+    // DecodeDiagonalStartOffset) and TraceImplGpu omits it from TraceLayout
+    // entirely. Uses more singleton axes than kMaxTraceRank (50) to pin that
+    // the cap applies to non-trivial (extent > 1) axes only -- this tensor
+    // has just 4 elements total despite the rank, so it stays cheap.
+    std::vector<cytnx_uint64> shape = {2, 2};
+    shape.insert(shape.end(), 60, 1);
     auto cpu = cytnx::random::random_tensor(shape, -2.0, 2.0, Device.cpu, 0, Type.Double);
     auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
     auto reference = cytnx::linalg::Trace(cpu, 0, 1);
     EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu, reference, 1e-10));
-    EXPECT_EQ(gpu.shape().size(), 50u);
+    EXPECT_EQ(gpu.shape().size(), 60u);
+  }
+
+  TEST(LinalgGpuTraceTest, MixedSingletonAndNonTrivialSurvivingAxesPreserveShape) {
+    // Non-trivial (extent > 1) surviving axes interleaved with singleton
+    // ones: pins that TraceImplGpu counts and stores only the non-trivial
+    // axes in TraceLayout for the decode, while still keeping every
+    // surviving axis -- trivial or not -- in the output shape, in its
+    // original order.
+    std::vector<cytnx_uint64> shape = {3, 3, 1, 4, 1, 1, 2, 1};
+    auto cpu = cytnx::random::random_tensor(shape, -2.0, 2.0, Device.cpu, 0, Type.Double);
+    auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
+    auto reference = cytnx::linalg::Trace(cpu, 0, 1);
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu, reference, 1e-10));
+    EXPECT_EQ(gpu.shape().size(), 6u);
   }
 
   // The following three cases mirror tests/linalg_test/Trace_test.cpp's CPU
