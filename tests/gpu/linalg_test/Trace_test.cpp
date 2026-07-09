@@ -270,4 +270,21 @@ namespace {
     EXPECT_EQ(out.shape()[0], 0u);
   }
 
+  TEST(LinalgGpuTraceTest, ManyNonTrivialSurvivingAxesWithZeroExtentReturnsEmptyOutput) {
+    // Regression test: a surviving axis of extent 0 must take the
+    // empty-output early return before TraceImplGpu's kMaxTraceRank guard is
+    // ever consulted, even when the tensor also has more non-trivial
+    // (extent > 1) surviving axes than kMaxTraceRank (50) -- output_size is 0
+    // regardless of how many other axes exist, so the kernel launch (and
+    // thus TraceLayout's capacity) is never reached. Built via
+    // ZeroExtentGpuTensor since one axis is 0, so the tensor has 0 elements
+    // despite its rank.
+    std::vector<cytnx_int64> shape = {2, 2, 0};
+    shape.insert(shape.end(), 51, 2);
+    auto t = ZeroExtentGpuTensor(shape, Type.Double);
+    auto out = cytnx::linalg::Trace(t, 0, 1).to(Device.cpu);
+    ASSERT_EQ(out.shape().size(), 52u);
+    EXPECT_EQ(out.shape()[0], 0u);
+  }
+
 }  // namespace

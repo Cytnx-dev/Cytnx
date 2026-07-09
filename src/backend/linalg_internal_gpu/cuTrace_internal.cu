@@ -252,6 +252,12 @@ namespace cytnx {
         // rather than merely assumed of the input: a tensor can carry an
         // unbounded number of size-1 surviving axes without ever touching
         // TraceLayout's fixed capacity.
+        //
+        // non_trivial_rank can exceed kMaxTraceRank here without harm: writes
+        // into layout.shape/stride simply stop once the fixed arrays are
+        // full. Whether that matters at all depends on output_size, which
+        // isn't known until after this loop -- see the kMaxTraceRank check
+        // below, deliberately placed after the zero-extent early return.
         TraceLayout layout;
         std::vector<cytnx_int64> output_shape;  // for Tensor::reshape_
         cytnx_int64 non_trivial_rank = 0;
@@ -260,18 +266,15 @@ namespace cytnx {
             const cytnx_int64 dim = CheckedCastToInt64Gpu(input_shape[axis], "input_shape[axis]");
             output_shape.push_back(dim);
             if (dim > 1) {
-              cytnx_error_msg(non_trivial_rank >= kMaxTraceRank,
-                              "[internal][cuTrace] more than %lld surviving axes with extent > 1; "
-                              "exceeds kMaxTraceRank.\n",
-                              static_cast<long long>(kMaxTraceRank));
-              layout.shape[non_trivial_rank] = dim;
-              layout.stride[non_trivial_rank] = input_strides[axis];
+              if (non_trivial_rank < kMaxTraceRank) {
+                layout.shape[non_trivial_rank] = dim;
+                layout.stride[non_trivial_rank] = input_strides[axis];
+              }
               ++non_trivial_rank;
             }
           }
         }
         const cytnx_int64 surviving_rank = std::ssize(output_shape);
-        layout.rank = non_trivial_rank;
         cytnx_int64 output_size = 1;
         for (cytnx_int64 dim : output_shape) output_size *= dim;
         const bool output_is_scalar = surviving_rank == 0;
@@ -281,9 +284,22 @@ namespace cytnx {
           output_is_scalar ? cytnx_uint64{1} : static_cast<cytnx_uint64>(output_size), Tn.dtype(),
           Tn.device());
         if (diagonal_length == 0 || output_size == 0) {
+          // No kernel launch on this path, so TraceLayout's capacity is
+          // irrelevant here -- a surviving axis of extent 0 makes output_size
+          // 0 regardless of how many other (possibly non-trivial) surviving
+          // axes exist, and this must match the CPU path's empty-tensor
+          // result rather than reject on non_trivial_rank alone.
           output_storage.set_zeros();
           return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
         }
+
+        // Only reachable with a real kernel launch ahead, so this is the
+        // first point non_trivial_rank actually needs to fit TraceLayout.
+        cytnx_error_msg(non_trivial_rank > kMaxTraceRank,
+                        "[internal][cuTrace] more than %lld surviving axes with extent > 1; "
+                        "exceeds kMaxTraceRank.\n",
+                        static_cast<long long>(kMaxTraceRank));
+        layout.rank = non_trivial_rank;
 
         // Size each block to its diagonal: diagonal_length is known here, so the
         // block gets just enough threads to cover it (rounded up to a whole warp,
