@@ -144,13 +144,21 @@ jobs:
           test -n "$CUDART_INCLUDE_DIR" || { echo "::error::cuda_runtime.h not found under $SITE_PACKAGES"; exit 1; }
           echo "CUDAToolkit_ROOT=$(dirname "$CUDART_INCLUDE_DIR")" >> "$GITHUB_ENV"
 
-          # nvidia-cuda-nvcc/nvidia-cuda-runtime install to lib/, not lib64/,
-          # which some CUDA tooling expects by convention (the traditional
-          # standalone CUDA Toolkit layout has .../bin/nvlink next to
-          # .../lib64/). Harmless to provide even though it alone didn't fix
-          # nvlink's device-link failure below (see the CMAKE_INTERPROCEDURAL_OPTIMIZATION
-          # override in the editable install step for the actual fix).
-          ln -s lib "$(dirname "$CUDART_INCLUDE_DIR")/lib64"
+          # Cytnx enables CMAKE_INTERPROCEDURAL_OPTIMIZATION, which for CUDA
+          # separable compilation makes nvcc pass -dlto and have nvlink load
+          # the NVVM library during the device-link step. nvcc derives
+          # -nvvmpath from its own install prefix (nvidia-nvvm's wheel
+          # installs a nvvm/ directory alongside lib/, containing bin/cicc
+          # and libdevice/, but no lib64/) and tells nvlink to open
+          # "{nvvmpath}/lib64/libnvvm.so" — a path nvidia-nvvm's wheel never
+          # creates, since it puts the actual library at lib/libnvvm.so.N
+          # instead, alongside every other CUDA component here. Without this
+          # symlink the device link aborts with "nvlink fatal: elfLink
+          # linker library load error".
+          NVVM_LIB=$(find "$SITE_PACKAGES" -path '*/lib/libnvvm.so*' | head -1)
+          test -n "$NVVM_LIB" || { echo "::error::libnvvm.so not found under $SITE_PACKAGES"; exit 1; }
+          mkdir -p "$(dirname "$CUDART_INCLUDE_DIR")/nvvm/lib64"
+          ln -s "$NVVM_LIB" "$(dirname "$CUDART_INCLUDE_DIR")/nvvm/lib64/libnvvm.so"
 
           CUTENSOR_INCLUDE_DIR=$(dirname "$(find "$SITE_PACKAGES" -path '*/include/cutensor.h' | head -1)")
           test -n "$CUTENSOR_INCLUDE_DIR" || { echo "::error::cutensor.h not found under $SITE_PACKAGES"; exit 1; }
@@ -196,26 +204,16 @@ jobs:
         # CUDA 13.0 removed offline compilation support for Volta sm_70 and
         # below; Volta floor on older toolkits).
         #
-        # CMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF overrides CMakeLists.txt's
-        # repo-wide default (ON on non-Apple platforms), which for CUDA
-        # targets makes CMake pass -dlto (device link-time optimization) to
-        # nvcc's device-link step. That -dlto step consistently failed here
-        # with "nvlink fatal: elfLink linker library load error (target:
-        # sm_75)" regardless of what the loader could find (confirmed against
-        # both a plain LD_LIBRARY_PATH export and a lib64 symlink pointing at
-        # nvidia-cuda-nvcc's lib/, neither changed the outcome) — the pip
-        # wheel toolchain doesn't satisfy whatever DLTO's device linking
-        # needs here, unlike the monolithic CUDA installs this repo's normal
-        # build path is validated against. Disabling IPO/LTO only affects
-        # this CI build's binary performance, not correctness, and isn't
-        # changed in CMakeLists.txt itself since the repo-wide default is
-        # presumably fine for those monolithic installs.
+        # CMAKE_INTERPROCEDURAL_OPTIMIZATION is left at CMakeLists.txt's
+        # repo-wide default (ON on non-Apple platforms, enabling CUDA device
+        # LTO): the nvvm/lib64/libnvvm.so symlink created above is the actual
+        # fix for nvlink's device-link step, so DLTO no longer needs to be
+        # disabled here.
         run: |
           pip install --editable '.[dev]' --verbose \
             --config-settings=build-dir=build \
             --config-settings=cmake.args=--preset=openblas-cuda \
-            --config-settings=cmake.define.RUN_TESTS=ON \
-            --config-settings=cmake.define.CMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF
+            --config-settings=cmake.define.RUN_TESTS=ON
 
       - name: Sanity-check the install sees the GPU
         run: python -c "import cytnx; print('cytnx', cytnx.__version__); print('gpu devices:', cytnx.Device.Ngpus)"
