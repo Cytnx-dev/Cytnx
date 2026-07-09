@@ -547,20 +547,20 @@ namespace cytnx {
   }
 
   namespace {
-    // Wrap a scalar as a shape-{1} Tensor on `device` so scalar in-place
-    // arithmetic reuses the iAdd/iSub/iMul/iDiv kernels (which broadcast a
-    // length-1 RHS and mutate LHS storage in place). See #906.
+    // Wrap a scalar as a host-resident shape-{1} Tensor so scalar in-place arithmetic reuses the
+    // iAdd/iSub/iMul/iDiv kernels (which broadcast a length-1 RHS and mutate LHS storage in
+    // place). See #906. The wrapper deliberately stays on the CPU even when the LHS is on a GPU:
+    // for a length-1 RHS the GPU kernels read the scalar with a host-side dereference and pass it
+    // in by value, so keeping it on the host avoids a per-call H2D copy. See #988.
     template <class T>
-    Tensor _scalar_as_rank1_tensor(const T &rc, const int device) {
+    Tensor _scalar_as_rank1_tensor(const T &rc) {
       Tensor s({1}, Type.cy_typeid(rc), Device.cpu);
       s.storage().at<T>(0) = rc;
-      if (device != Device.cpu) s = s.to(device);
       return s;
     }
-    Tensor _scalar_as_rank1_tensor(const Scalar &rc, const int device) {
+    Tensor _scalar_as_rank1_tensor(const Scalar &rc) {
       Tensor s({1}, rc.dtype(), Device.cpu);
       s.item() = rc;  // Sproxy assignment
-      if (device != Device.cpu) s = s.to(device);
       return s;
     }
   }  // namespace
@@ -579,62 +579,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_double>(const cytnx_double &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_float>(const cytnx_float &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_int64>(const cytnx_int64 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_int32>(const cytnx_int32 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_int16>(const cytnx_int16 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_bool>(const cytnx_bool &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<Scalar>(const Scalar &rc) {
-    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iAdd(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
@@ -654,62 +654,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_double>(const cytnx_double &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_float>(const cytnx_float &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_int64>(const cytnx_int64 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_int32>(const cytnx_int32 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_int16>(const cytnx_int16 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_bool>(const cytnx_bool &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<Scalar>(const Scalar &rc) {
-    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iSub(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
@@ -729,62 +729,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_double>(const cytnx_double &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_float>(const cytnx_float &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_int64>(const cytnx_int64 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_int32>(const cytnx_int32 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_int16>(const cytnx_int16 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_bool>(const cytnx_bool &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<Scalar>(const Scalar &rc) {
-    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iMul(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
@@ -805,62 +805,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_double>(const cytnx_double &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_float>(const cytnx_float &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_int64>(const cytnx_int64 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_int32>(const cytnx_int32 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_int16>(const cytnx_int16 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_bool>(const cytnx_bool &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<Scalar>(const Scalar &rc) {
-    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc, this->device()));
+    cytnx::linalg::iDiv(*this, _scalar_as_rank1_tensor(rc));
     return *this;
   }
   template <>

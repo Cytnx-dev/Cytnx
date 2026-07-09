@@ -263,3 +263,105 @@ TEST_F(TensorTest, gpu_set) {
 //   EXPECT_FALSE(tar3456.approx_eq(tarcomplex3456));
 //   EXPECT_TRUE(tone3456.approx_eq(tone3456.astype(Type.ComplexFloat), 1e-5));
 // }
+
+// ---------------------------------------------------------------------------
+// GPU scalar in-place arithmetic (issue #988). These mirror the CPU-side
+// Tensor.ScalarInplace* tests on CUDA tensors and pin the non-contiguous
+// *= / /= behaviour on the GPU path. Test names avoid underscores (#857).
+// ---------------------------------------------------------------------------
+
+// Regression (#988): scalar *= on a *non-contiguous* GPU tensor used to throw
+// "[iMul][on GPU/CUDA] ... must be contiguous". It must now scale in place,
+// keeping the shared storage, with the layout mappers irrelevant to a
+// broadcast scalar.
+TEST(Tensor, GpuScalarInplaceNoncontigMul) {
+  Tensor a = arange(6).reshape({2, 3}).to(Device.cuda);  // Double, contiguous
+  Tensor v = a.permute({1, 0});  // distinct impl, shared storage, non-contiguous
+  ASSERT_FALSE(v.is_contiguous());
+  ASSERT_TRUE(is(a.storage(), v.storage()));
+  v *= 2.0;  // must not throw
+  EXPECT_TRUE(is(a.storage(), v.storage()));  // still in place / shared
+  Tensor a_cpu = a.to(Device.cpu);
+  for (cytnx_uint64 i = 0; i < 6; i++)
+    EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(i), 2.0 * i);
+}
+
+// Regression (#988): scalar /= on a non-contiguous GPU tensor.
+TEST(Tensor, GpuScalarInplaceNoncontigDiv) {
+  Tensor a = arange(6).reshape({2, 3}).to(Device.cuda);
+  Tensor v = a.permute({1, 0});
+  ASSERT_FALSE(v.is_contiguous());
+  ASSERT_TRUE(is(a.storage(), v.storage()));
+  v /= 2.0;  // must not throw
+  EXPECT_TRUE(is(a.storage(), v.storage()));
+  Tensor a_cpu = a.to(Device.cpu);
+  for (cytnx_uint64 i = 0; i < 6; i++)
+    EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(i), i / 2.0);
+}
+
+// Contiguous scalar ops on a GPU tensor still produce the right values. This
+// also exercises the #988 efficiency path: the scalar wrapper stays on the
+// host and is read by the GPU kernel with a host-side dereference.
+TEST(Tensor, GpuScalarInplaceContiguousValues) {
+  Tensor a = arange(6).to(Device.cuda);
+  a *= 3.0;
+  a += 1.0;
+  EXPECT_EQ(a.device(), Device.cuda);
+  Tensor a_cpu = a.to(Device.cpu);
+  for (cytnx_uint64 i = 0; i < 6; i++)
+    EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(i), 3.0 * i + 1.0);
+}
+
+// Scalar in-place ops mutate the LHS storage in place (never detach), so a
+// second handle onto the same GPU storage observes the change. Mirrors
+// Tensor.ScalarInplaceSubMulDivKeepStorageSharing on CUDA.
+TEST(Tensor, GpuScalarInplaceKeepsStorageSharing) {
+  Tensor a = zeros({4}, Type.Double, Device.cuda);
+  Tensor b = Tensor::from_storage(a.storage());  // distinct impl, shared storage
+  ASSERT_TRUE(is(a.storage(), b.storage()));
+  a += 1.0;
+  a -= 0.5;
+  a *= 4.0;
+  a /= 2.0;  // ((0 + 1 - 0.5) * 4) / 2 == 1
+  EXPECT_TRUE(is(a.storage(), b.storage()));
+  Tensor b_cpu = b.to(Device.cpu);
+  EXPECT_DOUBLE_EQ(b_cpu.storage().at<cytnx_double>(0), 1.0);
+}
+
+// A double scalar must not promote a Float GPU tensor to Double. Mirrors
+// Tensor.ScalarInplaceOpsPreserveDtype on CUDA.
+TEST(Tensor, GpuScalarInplacePreserveDtype) {
+  Tensor a = ones({2}, Type.Float, Device.cuda);
+  a += 1.0;  // double scalar
+  a -= 0.5;
+  a *= 2.0;
+  a /= 3.0;  // ((1 + 1 - 0.5) * 2) / 3 == 1
+  EXPECT_EQ(a.dtype(), Type.Float);
+  EXPECT_EQ(a.device(), Device.cuda);
+  Tensor a_cpu = a.to(Device.cpu);
+  EXPECT_FLOAT_EQ(a_cpu.storage().at<cytnx_float>(0), 1.0f);
+}
+
+// A real GPU tensor op= a complex scalar cannot store a complex result, so it
+// must throw (as on CPU) rather than silently reinterpreting the real buffer
+// as complex. Mirrors Tensor.ScalarInplaceRealPlusComplexThrows on CUDA.
+TEST(Tensor, GpuScalarInplaceRealOpComplexThrows) {
+  Tensor a = zeros({2}, Type.Double, Device.cuda);
+  EXPECT_THROW(a += cytnx_complex128(0, 1), std::logic_error);
+  EXPECT_THROW(a -= cytnx_complex128(0, 1), std::logic_error);
+  EXPECT_THROW(a *= cytnx_complex128(0, 1), std::logic_error);
+  EXPECT_THROW(a /= cytnx_complex128(0, 1), std::logic_error);
+}
+
+// The cuMul/cuDiv GPU kernels (unlike cuAdd/cuSub) do not consume layout
+// mappers, so a genuine non-contiguous tensor*=tensor must fail loudly instead
+// of silently pairing mismatched elements. (The scalar broadcast case above is
+// still supported because it ignores the mappers.)
+TEST(Tensor, GpuNoncontigTensorTensorMulDivThrows) {
+  Tensor a = arange(6).reshape({2, 3}).to(Device.cuda);
+  Tensor b = arange(6).reshape({3, 2}).to(Device.cuda).permute({1, 0});  // {2,3}, non-contiguous
+  ASSERT_EQ(a.shape(), b.shape());
+  ASSERT_FALSE(b.is_contiguous());
+  EXPECT_THROW(a *= b, std::logic_error);
+  EXPECT_THROW(a /= b, std::logic_error);
+}
