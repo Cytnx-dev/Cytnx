@@ -307,8 +307,10 @@ inline void expect_lowest_states(const UniTensor &A, const std::vector<UniTensor
   cytnx_uint64 k = low.size();
   auto s2 = ferm_sigma2(A);
   UniTensor evals = eigs[0];  // non-const handle so .at(...) returns a mutable proxy
+  Tensor eval_block = evals.get_block_();
   for (cytnx_uint64 i = 0; i < k; i++) {
-    double E = double(evals.at({i}).real());
+    double E =
+      eval_block.is_scalar() ? double(eval_block.item().real()) : double(evals.at({i}).real());
     EXPECT_NEAR(E, low[i].first, tol);
     // A is promoted to the eigenvector dtype here (only Arnoldi's complex eigenvector needs it).
     UniTensor Ov = ferm_ada_apply(A.astype(eigs[i + 1].dtype()), eigs[i + 1]);

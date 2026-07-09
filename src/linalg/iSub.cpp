@@ -27,7 +27,7 @@ namespace cytnx {
                       "stored in a real tensor.%s",
                       "\n");
 
-      if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {
+      if (!Rt.is_scalar()) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[iSub] error, the two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",

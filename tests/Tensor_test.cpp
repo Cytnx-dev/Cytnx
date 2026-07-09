@@ -1,9 +1,13 @@
 #include "Tensor_test.h"
 #include "test_tools.h"
 
+#include <filesystem>
+#include <fstream>
+
 TEST_F(TensorTest, Constructor) {
   Tensor A;
   EXPECT_EQ(A.dtype(), Type.Void);
+  EXPECT_FALSE(A.is_scalar());
   EXPECT_EQ(A.device(), Device.cpu);
   EXPECT_EQ(A.shape().size(), 0);
   EXPECT_EQ(A.is_contiguous(), true);
@@ -25,6 +29,15 @@ TEST_F(TensorTest, Constructor) {
   EXPECT_EQ(C.shape()[1], 4);
   EXPECT_EQ(C.shape()[2], 5);
   EXPECT_EQ(C.is_contiguous(), true);
+
+  Tensor S(std::vector<cytnx_uint64>{}, Type.Double);
+  EXPECT_EQ(S.dtype(), Type.Double);
+  EXPECT_EQ(S.device(), Device.cpu);
+  EXPECT_EQ(S.shape().size(), 0);
+  EXPECT_EQ(S.rank(), 0);
+  EXPECT_TRUE(S.is_scalar());
+  EXPECT_EQ(S.storage().size(), 1);
+  EXPECT_EQ(S.is_contiguous(), true);
 #ifdef UNI_GPU
   Tensor D({3, 4, 5}, Type.Double, Device.cuda);
   EXPECT_EQ(D.dtype(), Type.Double);
@@ -151,6 +164,13 @@ TEST_F(TensorTest, shape) {
   EXPECT_EQ(B.shape()[1], 1);
   EXPECT_EQ(B.shape()[2], 1);
 
+  B.reshape_(std::vector<cytnx_int64>{});
+  EXPECT_EQ(B.shape().size(), 0);
+  B.reshape_(std::vector<cytnx_uint64>{1});
+  EXPECT_EQ(B.shape().size(), 1);
+  EXPECT_EQ(B.shape()[0], 1);
+  EXPECT_FALSE(B.is_scalar());
+
   EXPECT_THROW(Tensor({0}, Type.Double, Device.cpu, true), std::logic_error);
 }
 
@@ -233,8 +253,10 @@ TEST_F(TensorTest, get) {
   EXPECT_EQ(tmp.is_contiguous(), true);
 
   tmp = tzero3456(0, 1, 4, 4);
-  EXPECT_EQ(tmp.shape().size(), 1);
-  EXPECT_EQ(tmp.shape()[0], 1);
+  EXPECT_EQ(tmp.dtype(), Type.ComplexDouble);
+  EXPECT_TRUE(tmp.is_scalar());
+  EXPECT_EQ(tmp.storage().size(), 1);
+  EXPECT_EQ(tmp.item<cytnx_complex128>(), cytnx_complex128(0, 0));
   EXPECT_EQ(tmp.is_contiguous(), true);
 
   tmp = tarcomplex3456.get({Accessor::all(), Accessor::all(), Accessor::all(), Accessor::all()});
@@ -289,6 +311,118 @@ TEST_F(TensorTest, set) {
           } else {
             EXPECT_EQ(tar3456(i, j, k, l).item().real(), tmp(i, j, k, l).item().real());
           }
+}
+
+TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 3.25;
+  EXPECT_DOUBLE_EQ(scalar.item<double>(), 3.25);
+  EXPECT_DOUBLE_EQ(scalar.at<double>({}), 3.25);
+
+  scalar.at<double>({}) = 4.5;
+  EXPECT_DOUBLE_EQ(scalar.item<double>(), 4.5);
+
+  Tensor selected = scalar.get(std::vector<Accessor>{});
+  EXPECT_EQ(selected.shape().size(), 0);
+  EXPECT_TRUE(selected.is_scalar());
+  EXPECT_DOUBLE_EQ(selected.item<double>(), 4.5);
+
+  Tensor replacement(std::vector<cytnx_uint64>{}, Type.Double);
+  replacement.item<double>() = -2.0;
+  scalar.set(std::vector<Accessor>{}, replacement);
+  EXPECT_DOUBLE_EQ(scalar.item<double>(), -2.0);
+
+  scalar.set(std::vector<Accessor>{}, 7.0);
+  EXPECT_DOUBLE_EQ(scalar.item<double>(), 7.0);
+}
+
+TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 2.0;
+  Tensor vec = arange(3).astype(Type.Double);
+
+  Tensor out = scalar + vec;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 3.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 4.0);
+
+  out = vec + scalar;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 3.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 4.0);
+
+  Tensor scalar2(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar2.item<double>() = 5.0;
+  out = scalar * scalar2;
+  EXPECT_EQ(out.shape().size(), 0);
+  EXPECT_DOUBLE_EQ(out.item<double>(), 10.0);
+
+  vec += scalar;
+  EXPECT_EQ(vec.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(vec.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({1}), 3.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({2}), 4.0);
+
+  EXPECT_THROW(scalar += vec, std::logic_error);
+
+  Tensor legacy_shape_one({1}, Type.Double);
+  legacy_shape_one.at<double>({0}) = 2.0;
+  EXPECT_FALSE(legacy_shape_one.is_scalar());
+  EXPECT_THROW((void)(legacy_shape_one + vec), std::logic_error);
+  EXPECT_THROW((void)(vec + legacy_shape_one), std::logic_error);
+  EXPECT_THROW(vec += legacy_shape_one, std::logic_error);
+}
+
+TEST_F(TensorTest, RankZeroBroadcastComparison) {
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 2.0;
+  Tensor vec = arange(3).astype(Type.Double);
+
+  Tensor out = linalg::Cpr(scalar, vec);
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_FALSE(out.at<cytnx_bool>({0}));
+  EXPECT_FALSE(out.at<cytnx_bool>({1}));
+  EXPECT_TRUE(out.at<cytnx_bool>({2}));
+}
+
+TEST_F(TensorTest, RankZeroSaveLoad) {
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 8.25;
+
+  const auto path = std::filesystem::temp_directory_path() / "cytnx_rank_zero_tensor.cytn";
+  scalar.Save(path.string());
+
+  {
+    std::ifstream header(path, std::ios::binary);
+    ASSERT_TRUE(header.is_open());
+    unsigned int magic = 0;
+    unsigned int version = 0;
+    header.read(reinterpret_cast<char *>(&magic), sizeof(magic));
+    header.read(reinterpret_cast<char *>(&version), sizeof(version));
+    EXPECT_EQ(magic, 889);
+    EXPECT_EQ(version, 1);
+  }
+
+  Tensor loaded = Tensor::Load(path.string());
+  EXPECT_EQ(loaded.shape().size(), 0);
+  EXPECT_EQ(loaded.rank(), 0);
+  EXPECT_EQ(loaded.dtype(), Type.Double);
+  EXPECT_DOUBLE_EQ(loaded.item<double>(), 8.25);
+  std::filesystem::remove(path);
+
+  Tensor vector_one({1}, Type.Double);
+  vector_one.at<double>({0}) = 3.5;
+  const auto vector_path =
+    std::filesystem::temp_directory_path() / "cytnx_rank_one_size_one_tensor.cytn";
+  vector_one.Save(vector_path.string());
+
+  Tensor loaded_vector_one = Tensor::Load(vector_path.string());
+  EXPECT_EQ(loaded_vector_one.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_FALSE(loaded_vector_one.is_scalar());
+  EXPECT_DOUBLE_EQ(loaded_vector_one.at<double>({0}), 3.5);
+  std::filesystem::remove(vector_path);
 }
 
 TEST_F(TensorTest, identity) {

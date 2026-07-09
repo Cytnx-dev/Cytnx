@@ -25,7 +25,7 @@ namespace cytnx {
                       "[iMul] Cannot perform real *= complex in-place: a complex result cannot be "
                       "stored in a real tensor.%s",
                       "\n");
-      if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {
+      if (!Rt.is_scalar()) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[iMul] The two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",

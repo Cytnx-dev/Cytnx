@@ -53,6 +53,58 @@ TEST_F(DenseUniTensorTest, Init_tagged) {
   EXPECT_ANY_THROW(dut.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
 }
 
+TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
+  UniTensor ut(std::vector<Bond>{}, std::vector<std::string>{}, 0, Type.Double, Device.cpu, false);
+  EXPECT_EQ(ut.rank(), 0);
+  EXPECT_EQ(ut.rowrank(), 0);
+  EXPECT_TRUE(ut.bonds().empty());
+  EXPECT_TRUE(ut.labels().empty());
+  EXPECT_TRUE(ut.shape().empty());
+  EXPECT_TRUE(ut.get_block_().is_scalar());
+  EXPECT_EQ(ut.get_block_().storage().size(), 1);
+
+  ut.get_block_().item<double>() = 6.25;
+  EXPECT_DOUBLE_EQ(ut.get_block_().item<double>(), 6.25);
+
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = -1.5;
+  UniTensor from_scalar(scalar, false, 0);
+  EXPECT_EQ(from_scalar.rank(), 0);
+  EXPECT_EQ(from_scalar.rowrank(), 0);
+  EXPECT_TRUE(from_scalar.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(from_scalar.get_block_().item<double>(), -1.5);
+}
+
+TEST_F(DenseUniTensorTest, RankZeroSaveLoadNormalizesBlock) {
+  UniTensor ut(std::vector<Bond>{}, std::vector<std::string>{}, 0, Type.Double, Device.cpu, false);
+  ut.get_block_().item<double>() = 2.5;
+
+  const auto path = std::filesystem::temp_directory_path() / "cytnx_rank_zero_unitensor.cytnx";
+  ut.Save(path.string());
+  UniTensor loaded = UniTensor::Load(path.string());
+  EXPECT_EQ(loaded.rank(), 0);
+  EXPECT_EQ(loaded.rowrank(), 0);
+  EXPECT_TRUE(loaded.bonds().empty());
+  EXPECT_TRUE(loaded.labels().empty());
+  EXPECT_TRUE(loaded.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(loaded.get_block_().item<double>(), 2.5);
+  std::filesystem::remove(path);
+
+  UniTensor legacy_like(std::vector<Bond>{}, std::vector<std::string>{}, 0, Type.Double, Device.cpu,
+                        false);
+  legacy_like.get_block_() = zeros({1}, Type.Double);
+  legacy_like.get_block_().at<double>({0}) = 7.5;
+
+  const auto legacy_path =
+    std::filesystem::temp_directory_path() / "cytnx_rank_zero_unitensor_legacy_block.cytnx";
+  legacy_like.Save(legacy_path.string());
+  UniTensor normalized = UniTensor::Load(legacy_path.string());
+  EXPECT_EQ(normalized.rank(), 0);
+  EXPECT_TRUE(normalized.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(normalized.get_block_().item<double>(), 7.5);
+  std::filesystem::remove(legacy_path);
+}
+
 /*=====test info=====
 describe:Test set_name
 ====================*/
@@ -661,7 +713,8 @@ describe:test shape with empty bonds
 ====================*/
 TEST_F(DenseUniTensorTest, shape_empty_bonds) {
   auto ut = UniTensor(std::vector<Bond>());
-  EXPECT_EQ(ut.shape(), std::vector<cytnx::cytnx_uint64>({1}));
+  EXPECT_TRUE(ut.shape().empty());
+  EXPECT_TRUE(ut.get_block_().is_scalar());
 }
 
 /*=====test info=====
@@ -2366,14 +2419,14 @@ TEST_F(DenseUniTensorTest, Add_UT_UT) {
 describe:test add two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] + ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Add_UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -2382,7 +2435,7 @@ TEST_F(DenseUniTensorTest, Add_UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(ut1.at({i, j, k}) + ut2.at({0}), out.at({i, j, k}));
+        EXPECT_EQ(ut1.at({i, j, k}) + ut2.at({}), out.at({i, j, k}));
         EXPECT_EQ(ut1.at({i, j, k}), clone.at({i, j, k}));  // check source not change
       }
     }
@@ -2568,14 +2621,14 @@ TEST_F(DenseUniTensorTest, Add__UT_UT) {
 describe:test Add_ two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] = ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] = ut1[i] + ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Add__UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -2584,7 +2637,7 @@ TEST_F(DenseUniTensorTest, Add__UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(clone.at({i, j, k}) + ut2.at({0}), ut1.at({i, j, k}));
+        EXPECT_EQ(clone.at({i, j, k}) + ut2.at({}), ut1.at({i, j, k}));
       }
     }
   }
@@ -2835,14 +2888,14 @@ TEST_F(DenseUniTensorTest, Sub_UT_UT) {
 describe:test sub two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] - ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Sub_UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -2851,7 +2904,7 @@ TEST_F(DenseUniTensorTest, Sub_UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(ut1.at({i, j, k}) - ut2.at({0}), out.at({i, j, k}));
+        EXPECT_EQ(ut1.at({i, j, k}) - ut2.at({}), out.at({i, j, k}));
         EXPECT_EQ(ut1.at({i, j, k}), clone.at({i, j, k}));  // check source not change
       }
     }
@@ -3038,14 +3091,14 @@ TEST_F(DenseUniTensorTest, Sub__UT_UT) {
 describe:test Sub_ two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] = ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] = ut1[i] - ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Sub__UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -3054,7 +3107,7 @@ TEST_F(DenseUniTensorTest, Sub__UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(clone.at({i, j, k}) - ut2.at({0}), ut1.at({i, j, k}));
+        EXPECT_EQ(clone.at({i, j, k}) - ut2.at({}), ut1.at({i, j, k}));
       }
     }
   }
@@ -3303,14 +3356,14 @@ TEST_F(DenseUniTensorTest, Mul_UT_UT) {
 describe:test mul two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] * ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Mul_UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -3319,7 +3372,7 @@ TEST_F(DenseUniTensorTest, Mul_UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(ut1.at({i, j, k}) * ut2.at({0}), out.at({i, j, k}));
+        EXPECT_EQ(ut1.at({i, j, k}) * ut2.at({}), out.at({i, j, k}));
         EXPECT_EQ(ut1.at({i, j, k}), clone.at({i, j, k}));  // check source not change
       }
     }
@@ -3506,14 +3559,14 @@ TEST_F(DenseUniTensorTest, Mul__UT_UT) {
 describe:test Mul_ two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] = ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] = ut1[i] * ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Mul__UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -3522,7 +3575,7 @@ TEST_F(DenseUniTensorTest, Mul__UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(clone.at({i, j, k}) * ut2.at({0}), ut1.at({i, j, k}));
+        EXPECT_EQ(clone.at({i, j, k}) * ut2.at({}), ut1.at({i, j, k}));
       }
     }
   }
@@ -3774,14 +3827,14 @@ TEST_F(DenseUniTensorTest, Div_UT_UT) {
 describe:test div two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] / ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Div_UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 1, 5.0, seed);
   random::uniform_(ut2, 1, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -3790,7 +3843,7 @@ TEST_F(DenseUniTensorTest, Div_UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(ut1.at({i, j, k}) / ut2.at({0}), out.at({i, j, k}));
+        EXPECT_EQ(ut1.at({i, j, k}) / ut2.at({}), out.at({i, j, k}));
         EXPECT_EQ(ut1.at({i, j, k}), clone.at({i, j, k}));  // check source not change
       }
     }
@@ -3977,14 +4030,14 @@ TEST_F(DenseUniTensorTest, Div__UT_UT) {
 describe:test Div_ two UniTensor, the second UniTensor only one element
 input:
   UT1:A UniTensor with shape [3, 4, 2]
-  UT2:A UniTensor with shape [1], only one element
-result: return ut1[i] = ut1[i] + ut2[0]
+  UT2:A rank-0 scalar UniTensor
+result: return ut1[i] = ut1[i] / ut2
 ====================*/
 TEST_F(DenseUniTensorTest, Div__UT_UT1) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
   UniTensor ut1 = UniTensor(bonds);
-  UniTensor ut2 = UniTensor({Bond(1)});
+  UniTensor ut2 = UniTensor(std::vector<Bond>{});
   random::uniform_(ut1, 1, 5.0, seed);
   random::uniform_(ut2, 1, 5.0, seed = 1);
   auto clone = ut1.clone();
@@ -3993,7 +4046,7 @@ TEST_F(DenseUniTensorTest, Div__UT_UT1) {
   for (size_t i = 0; i < shape[0]; i++) {
     for (size_t j = 0; j < shape[1]; j++) {
       for (size_t k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(clone.at({i, j, k}) / ut2.at({0}), ut1.at({i, j, k}));
+        EXPECT_EQ(clone.at({i, j, k}) / ut2.at({}), ut1.at({i, j, k}));
       }
     }
   }
@@ -4202,8 +4255,8 @@ TEST_F(DenseUniTensorTest, Div_uninit) {
 }
 
 TEST_F(DenseUniTensorTest, Norm) {
-  EXPECT_DOUBLE_EQ(double(utar345.Norm().at({0}).real()), std::sqrt(59.0 * 60.0 * 119.0 / 6.0));
-  EXPECT_DOUBLE_EQ(double(utarcomplex345.Norm().at({0}).real()),
+  EXPECT_DOUBLE_EQ(double(utar345.Norm().item().real()), std::sqrt(59.0 * 60.0 * 119.0 / 6.0));
+  EXPECT_DOUBLE_EQ(double(utarcomplex345.Norm().item().real()),
                    std::sqrt(2.0 * 59.0 * 60.0 * 119.0 / 6.0));
 }
 
@@ -4226,7 +4279,7 @@ TEST_F(DenseUniTensorTest, Norm_TypeInt32) {
     }
   }
   ans = std::sqrt(ans);
-  EXPECT_DOUBLE_EQ(norm.at<double>({0}), ans);
+  EXPECT_DOUBLE_EQ(norm.item<double>(), ans);
 }
 
 /*=====test info=====
@@ -4246,7 +4299,7 @@ TEST_F(DenseUniTensorTest, Norm_diag) {
     ans += std::norm(ut_diag.at<std::complex<double>>({i}));
   }
   ans = std::sqrt(ans);
-  EXPECT_DOUBLE_EQ(norm.at<double>({0}), ans);
+  EXPECT_DOUBLE_EQ(norm.item<double>(), ans);
 }
 
 /*=====test info=====
@@ -4507,7 +4560,7 @@ TEST_F(DenseUniTensorTest, normalize) {
   auto clone = ut.clone();
   auto ut_n = ut.normalize();
   auto norm = ut.Norm();
-  auto ans = ut / norm.at({0});
+  auto ans = ut / norm.item();
   EXPECT_TRUE(AreEqUniTensor(ut, clone));
   constexpr double tol = 1.0e-12;
   EXPECT_TRUE(AreNearlyEqUniTensor(ut_n, ans, tol));
@@ -4525,7 +4578,7 @@ TEST_F(DenseUniTensorTest, normalize_int_type) {
   auto clone = ut.clone();
   auto ut_n = ut.normalize();
   auto norm = ut.Norm();
-  auto ans = ut / norm.at({0});
+  auto ans = ut / norm.item();
   ans = ans.astype(Type.Int32);
   EXPECT_TRUE(AreEqUniTensor(ut, clone));
   EXPECT_TRUE(AreEqUniTensor(ut_n, ans));
@@ -4545,7 +4598,7 @@ TEST_F(DenseUniTensorTest, normalize_diag) {
   auto clone = ut_diag.clone();
   auto ut_n = ut_diag.normalize();
   auto norm = ut_diag.Norm();
-  auto ans = ut_diag / norm.at({0});
+  auto ans = ut_diag / norm.item();
   EXPECT_TRUE(AreEqUniTensor(ut_diag, clone));
   constexpr double tol = 1.0e-12;
   EXPECT_TRUE(AreNearlyEqUniTensor(ut_n, ans, tol));

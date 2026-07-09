@@ -56,7 +56,7 @@ TEST(Lanczos_Gnd, gpu_Lanczos_Gnd_test) {
   UniTensor v = UniTensor(tv).to(cytnx::Device.cuda);
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, v, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, false);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
+  cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
   std::cout << ev << ' ' << evans << std::endl;
   EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
   // EXPECT_DOUBLE_EQ(ev, evans);
@@ -94,7 +94,7 @@ TEST(Lanczos_Gnd, gpu_Bk_Lanczos_Gnd_test) {
 
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, lan_guess, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, true);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
+  cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
   std::cout << ev << ' ' << evans << std::endl;
   EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
   // EXPECT_DOUBLE_EQ(ev, evans);

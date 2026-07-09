@@ -120,7 +120,7 @@ namespace cytnx {
     // non symmetry, initialize memory.
     if (this->_bonds.size() == 0) {
       // scalar:
-      if (!no_alloc) this->_block = zeros({1}, dtype, device);
+      if (!no_alloc) this->_block = zeros(std::vector<cytnx_uint64>{}, dtype, device);
     } else {
       if (is_diag) {
         if (!no_alloc) this->_block = zeros({_bonds[0].dim()}, dtype, device);
@@ -1267,7 +1267,16 @@ namespace cytnx {
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
-  void DenseUniTensor::_load_dispatch(std::fstream &f) { this->_block._Load(f); }
+  void DenseUniTensor::_load_dispatch(std::fstream &f) {
+    this->_block._Load(f);
+    if (this->rank() == 0) {
+      cytnx_error_msg(this->_block.storage().size() != 1,
+                      "[ERROR][DenseUniTensor::_load_dispatch] rank-0 UniTensor block should have "
+                      "exactly one element.%s",
+                      "\n");
+      this->_block.reshape_(std::vector<cytnx_int64>{});
+    }
+  }
 
   void DenseUniTensor::truncate_(const std::string &bond_label, const cytnx_uint64 &dim) {
     // if it is diagonal tensor, truncate will be done on both index!

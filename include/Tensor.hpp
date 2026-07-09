@@ -617,6 +617,12 @@ namespace cytnx {
     cytnx_uint64 rank() const { return this->_impl->shape().size(); }
 
     /**
+    @brief whether the Tensor is an initialized rank-0 scalar Tensor
+    @return [bool] true if the Tensor has rank 0 and a non-void dtype
+    */
+    bool is_scalar() const { return this->dtype() != Type.Void && this->rank() == 0; }
+
+    /**
     @brief return a clone of the current Tensor.
     @return [Tensor]
     @details
@@ -781,7 +787,6 @@ namespace cytnx {
     @param[in] new_shape the new shape of the Tensor.
     @pre
         1. The size of input and output Tensor should be the same.
-        2. \p new_shape cannot be empty.
     @see \link Tensor::reshape Tensor::reshape() \endlink
     @note
         Compare to reshape(), this function will not create a new Tensor,
@@ -826,7 +831,6 @@ namespace cytnx {
     @return [Tensor]
     @pre
         1. The size of input and output Tensor should be the same.
-        2. \p new_shape cannot be empty.
     @note
         1. This function will not change the original Tensor.
         2. You can use Tensor::reshape_() to reshape the Tensor inplacely.
@@ -855,7 +859,9 @@ namespace cytnx {
      */
     Tensor reshape(const std::vector<cytnx_uint64> &new_shape) const {
       std::vector<cytnx_int64> tmp(new_shape.size());
-      memcpy(&tmp[0], &new_shape[0], sizeof(cytnx_uint64) * new_shape.size());
+      if (!new_shape.empty()) {
+        memcpy(&tmp[0], &new_shape[0], sizeof(cytnx_uint64) * new_shape.size());
+      }
       Tensor out;
       out._impl = this->_impl->reshape(tmp);
       return out;
@@ -944,6 +950,14 @@ namespace cytnx {
       return this->_impl->at<T>(locator);
     }
     /// @cond
+    template <class T>
+    T &at(const std::initializer_list<cytnx_uint64> &locator) {
+      return this->at<T>(std::vector<cytnx_uint64>(locator));
+    }
+    template <class T>
+    const T &at(const std::initializer_list<cytnx_uint64> &locator) const {
+      return this->at<T>(std::vector<cytnx_uint64>(locator));
+    }
     template <class T, class... Ts>
     const T &at(const cytnx_uint64 &e1, const Ts &...elems) const {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
@@ -960,6 +974,12 @@ namespace cytnx {
     }
 
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) { return this->_impl->at(locator); }
+    const Scalar::Sproxy at(const std::initializer_list<cytnx_uint64> &locator) const {
+      return this->at(std::vector<cytnx_uint64>(locator));
+    }
+    Scalar::Sproxy at(const std::initializer_list<cytnx_uint64> &locator) {
+      return this->at(std::vector<cytnx_uint64>(locator));
+    }
     /// @endcond
 
     /**

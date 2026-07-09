@@ -113,7 +113,6 @@ namespace cytnx {
                     "[ERROR] _Init_by_ptr cannot have not %dx cap_in.", STORAGE_DEFT_SZ);
 
 #ifdef UNI_DEBUG
-    cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
     cytnx_error_msg(this->capacity_ < this->size_, "%s",
                     "[ERROR] _Init_by_ptr cannot have capacity < size.");
 #endif
@@ -312,11 +311,15 @@ namespace cytnx {
 
       sprintf(buffer, "%s", "Shape :");
       os << std::string(buffer);
-      sprintf(buffer, " (%llu", shape[0]);
-      os << std::string(buffer);
-      for (cytnx_int32 i = 1; i < shape.size(); i++) {
-        sprintf(buffer, ",%llu", shape[i]);
+      if (shape.empty()) {
+        os << " (";
+      } else {
+        sprintf(buffer, " (%llu", shape[0]);
         os << std::string(buffer);
+        for (cytnx_int32 i = 1; i < shape.size(); i++) {
+          sprintf(buffer, ",%llu", shape[i]);
+          os << std::string(buffer);
+        }
       }
       os << ")" << std::endl;
 
@@ -329,6 +332,15 @@ namespace cytnx {
 
       cytnx_uint64 s;
       DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
+      if (shape.empty()) {
+        PrintValueAndSpace(os, elem_ptr_[0]);
+        os << std::endl << std::endl;
+        if (atDevice != Device.cpu) {
+          this->to_(atDevice);
+        }
+        free(buffer);
+        return;
+      }
 
       if (mapper.empty()) {
         cytnx_uint64 cnt = 0;

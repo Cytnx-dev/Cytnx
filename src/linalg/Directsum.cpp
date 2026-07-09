@@ -19,6 +19,8 @@ namespace cytnx {
                       "\n");
       cytnx_error_msg(T1.device() != T2.device(), "[ERROR] Two tensors must be on same devices.%s",
                       "\n");
+      cytnx_error_msg(T1.dtype() == Type.Void || T2.dtype() == Type.Void,
+                      "[ERROR] input tensors cannot have dtype Type.Void.%s", "\n");
 
       // checking duplication in shared_axes:
       auto tmp = vec_unique(shared_axes);

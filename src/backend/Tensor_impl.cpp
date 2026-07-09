@@ -12,8 +12,6 @@ namespace cytnx {
                          int device, const bool &init_zero) {
     // check:
     cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
-    cytnx_error_msg(shape.size() == 0, "%s",
-                    "[ERROR] invalid argument: shape. Must at least have one element.");
     cytnx_uint64 Nelem = 1;
     for (int i = 0; i < shape.size(); i++) {
       cytnx_error_msg(shape[i] == 0, "%s", "[ERROR] shape cannot have 0 dimension in any rank.");
@@ -192,11 +190,6 @@ namespace cytnx {
     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
     out->Init(get_shape, this->dtype(), this->device());
 
-    if (locators.size() == 0) {
-      locators.resize(1);
-      locators[0].push_back(0);
-    }
-
     // call storage
     this->storage()._impl->GetElem_byShape_v2(out->storage()._impl, curr_shape, locators, Nunit);
 
@@ -211,8 +204,7 @@ namespace cytnx {
         new_shape.push_back(out->shape()[i]);
     }
 
-    if (new_shape.size()) {  // exclude the case where only single element exists!
-
+    if (new_shape.size()) {
       out->reshape_(new_shape);  // remove size-1 axis
 
       std::vector<cytnx_uint64> perm;
@@ -229,7 +221,7 @@ namespace cytnx {
       }
       out->permute_(perm);
     } else {
-      out->reshape_({1});  // if it is only one element.
+      out->reshape_({});
     }
 
     return out;
@@ -264,7 +256,7 @@ namespace cytnx {
       if (get_shape[i] != 1) new_shape.push_back(get_shape[i]);
 
     if (new_shape.size() == 0)
-      out->reshape_({1});
+      out->reshape_({});
     else
       out->reshape_(new_shape);
     return out;
@@ -327,8 +319,6 @@ namespace cytnx {
           new_shape.push_back(get_shape[i]);
       }
 
-      if (new_shape.size() == 0) new_shape.push_back(1);
-
       // use current size to infer rhs permutation.
       std::vector<cytnx_uint64> perm;
       for (unsigned int i = 0; i < new_mapper.size(); i++) {
@@ -344,11 +334,14 @@ namespace cytnx {
         }
       }
 
-      std::vector<cytnx_uint64> iperm(perm.size());
-      for (unsigned int i = 0; i < iperm.size(); i++) iperm[perm[i]] = i;
-
       boost::intrusive_ptr<Tensor_impl> tmp;
-      tmp = rhs->permute(iperm)->contiguous();
+      if (perm.empty()) {
+        tmp = rhs->contiguous();
+      } else {
+        std::vector<cytnx_uint64> iperm(perm.size());
+        for (unsigned int i = 0; i < iperm.size(); i++) iperm[perm[i]] = i;
+        tmp = rhs->permute(iperm)->contiguous();
+      }
       cytnx_error_msg(new_shape != tmp->shape(), "[ERROR][Tensor.set_elems]%s",
                       "inconsistent shape");
       this->storage()._impl->SetElem_byShape_v2(tmp->storage()._impl, curr_shape, locators, Nunit,

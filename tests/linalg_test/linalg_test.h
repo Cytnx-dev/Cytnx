@@ -465,8 +465,10 @@ inline void expect_lowest_states(const UniTensor &A, const std::vector<UniTensor
                                  const std::vector<std::pair<double, UniTensor>> &low, double tol) {
   cytnx_uint64 k = low.size();
   UniTensor evals = eigs[0];  // non-const handle so .at(...) returns a mutable proxy
+  Tensor eval_block = evals.get_block_();
   for (cytnx_uint64 i = 0; i < k; i++) {
-    double E = double(evals.at({i}).real());
+    double E =
+      eval_block.is_scalar() ? double(eval_block.item().real()) : double(evals.at({i}).real());
     EXPECT_NEAR(E, low[i].first, tol);  // eigenvalue matches dense (both ascending)
     expect_ada_eigenpair(A, E, eigs[i + 1], tol);  // residual + sigma^2 membership
     EXPECT_NEAR(ferm_fidelity(eigs[i + 1], low[i].second), 1.0, 1e-5);  // per-state fidelity

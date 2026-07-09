@@ -159,6 +159,7 @@ void tensor_binding(py::module &m) {
     .def("device_str", &cytnx::Tensor::device_str)
     .def("shape", &cytnx::Tensor::shape)
     .def("rank", &cytnx::Tensor::rank)
+    .def("is_scalar", &cytnx::Tensor::is_scalar)
     .def("clone", &cytnx::Tensor::clone)
     .def("__copy__", &cytnx::Tensor::clone)
     .def("__deepcopy__", &cytnx::Tensor::clone)
@@ -315,10 +316,9 @@ void tensor_binding(py::module &m) {
          [](const cytnx::Tensor &self) {
            if (self.dtype() == cytnx::Type.Void) {
              cytnx_error_msg(true, "[ERROR] uninitialize Tensor does not have len!%s", "\n");
-
-           } else {
-             return self.shape()[0];
            }
+           cytnx_error_msg(self.rank() == 0, "[ERROR] rank-0 Tensor does not have len!%s", "\n");
+           return self.shape()[0];
          })
     .def("__getitem__",
          [](const cytnx::Tensor &self, py::object locators) {

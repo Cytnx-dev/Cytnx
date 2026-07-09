@@ -112,6 +112,7 @@ namespace cytnx {
     T &at(const std::vector<cytnx_uint64> &locator) const {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
+      if (this->_shape.empty()) return this->_storage.at<T>(0);
 
       cytnx_uint64 RealRank, mtplyr;
       // std::vector<cytnx_uint64> c_shape(this->_shape.size());
@@ -138,6 +139,7 @@ namespace cytnx {
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
+      if (this->_shape.empty()) return this->_storage.at(0);
 
       cytnx_uint64 RealRank, mtplyr;
       // std::vector<cytnx_uint64> c_shape(this->_shape.size());
@@ -164,6 +166,7 @@ namespace cytnx {
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
+      if (this->_shape.empty()) return this->_storage.at(0);
 
       cytnx_uint64 RealRank, mtplyr;
       // std::vector<cytnx_uint64> c_shape(this->_shape.size());

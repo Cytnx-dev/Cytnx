@@ -133,8 +133,8 @@ TEST_F(DenseUniTensorTest, gpu_relabel_) {
 }
 
 TEST_F(DenseUniTensorTest, gpu_Norm) {
-  EXPECT_DOUBLE_EQ(double(utar345.Norm().at({0}).real()), std::sqrt(59.0 * 60.0 * 119.0 / 6.0));
-  EXPECT_DOUBLE_EQ(double(utarcomplex345.Norm().at({0}).real()),
+  EXPECT_DOUBLE_EQ(double(utar345.Norm().item().real()), std::sqrt(59.0 * 60.0 * 119.0 / 6.0));
+  EXPECT_DOUBLE_EQ(double(utarcomplex345.Norm().item().real()),
                    std::sqrt(2.0 * 59.0 * 60.0 * 119.0 / 6.0));
 }
 

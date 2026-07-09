@@ -26,11 +26,11 @@ namespace cytnx {
       }
 
       if (Tl.dtype() == Type.ComplexDouble) {
-        out.Init({1}, Type.Double, _tl.device());
+        out.Init({}, Type.Double, _tl.device());
       } else if (Tl.dtype() == Type.ComplexFloat) {
-        out.Init({1}, Type.Float, _tl.device());
+        out.Init({}, Type.Float, _tl.device());
       } else {
-        out.Init({1}, _tl.dtype(), _tl.device());
+        out.Init({}, _tl.dtype(), _tl.device());
       }
 
       if (Tl.device() == Device.cpu) {
@@ -60,12 +60,12 @@ namespace cytnx {
       } else if ((uTl.uten_type() == UTenType.Block) ||
                  (uTl.uten_type() == UTenType.BlockFermionic)) {
         std::vector<Tensor> bks = uTl.get_blocks_();
-        Tensor res = zeros(1);
+        Tensor res = zeros(std::vector<cytnx_uint64>{});
         for (int i = 0; i < bks.size(); i++) {
           Tensor tmp = Norm(bks[i]);
-          res.at({0}) = res.at({0}) + tmp.at({0}) * tmp.at({0});
+          res.item() = res.item() + tmp.item() * tmp.item();
         }
-        res.at({0}) = sqrt(res.at({0}));
+        res.item() = sqrt(res.item());
         return res;
       } else {
         cytnx_error_msg(true, "[ERROR][Norm] UniTensor type '%s' not supported\n",

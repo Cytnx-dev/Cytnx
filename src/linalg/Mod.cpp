@@ -5,6 +5,7 @@
 
 #ifdef BACKEND_TORCH
 #else
+  #include "Arithmetic_shape.hpp"
   #include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
@@ -17,11 +18,8 @@ namespace cytnx {
       bool icnst = false;
       // The Mod kernels assign every output element (_out[i] = ...), so out is
       // fully overwritten -- pass false to skip the redundant zero-initialization.
-      if (Lt.shape().size() == 1 && Lt.shape()[0] == 1) {
-        out.Init(Rt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
-        icnst = true;
-      } else if (Rt.shape().size() == 1 && Rt.shape()[0] == 1) {
-        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
+      if (detail::InitBroadcastBinaryOutput(out, Lt, Rt, Type.type_promote(Lt.dtype(), Rt.dtype()),
+                                            false)) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
@@ -913,100 +911,100 @@ namespace cytnx {
 
   Tensor operator%(const Tensor &Lt, const Tensor &Rt) { return cytnx::linalg::Mod(Lt, Rt); }
   template <>
-  Tensor operator%<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_complex64>(const cytnx_complex64 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_complex64>(const cytnx_complex64 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_double>(const cytnx_double &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_double>(const cytnx_double &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_float>(const cytnx_float &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_float>(const cytnx_float &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_int64>(const cytnx_int64 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_int64>(const cytnx_int64 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_uint64>(const cytnx_uint64 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_uint64>(const cytnx_uint64 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_int32>(const cytnx_int32 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_int32>(const cytnx_int32 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt) {
+  Tensor operator% <cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
   template <>
-  Tensor operator%<Scalar>(const Scalar &lc, const Tensor &Rt) {
+  Tensor operator% <Scalar>(const Scalar &lc, const Tensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
 
   template <>
-  Tensor operator%<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc) {
+  Tensor operator% <cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_complex64>(const Tensor &Lt, const cytnx_complex64 &rc) {
+  Tensor operator% <cytnx_complex64>(const Tensor &Lt, const cytnx_complex64 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_double>(const Tensor &Lt, const cytnx_double &rc) {
+  Tensor operator% <cytnx_double>(const Tensor &Lt, const cytnx_double &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_float>(const Tensor &Lt, const cytnx_float &rc) {
+  Tensor operator% <cytnx_float>(const Tensor &Lt, const cytnx_float &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_int64>(const Tensor &Lt, const cytnx_int64 &rc) {
+  Tensor operator% <cytnx_int64>(const Tensor &Lt, const cytnx_int64 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_uint64>(const Tensor &Lt, const cytnx_uint64 &rc) {
+  Tensor operator% <cytnx_uint64>(const Tensor &Lt, const cytnx_uint64 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_int32>(const Tensor &Lt, const cytnx_int32 &rc) {
+  Tensor operator% <cytnx_int32>(const Tensor &Lt, const cytnx_int32 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_uint32>(const Tensor &Lt, const cytnx_uint32 &rc) {
+  Tensor operator% <cytnx_uint32>(const Tensor &Lt, const cytnx_uint32 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_int16>(const Tensor &Lt, const cytnx_int16 &rc) {
+  Tensor operator% <cytnx_int16>(const Tensor &Lt, const cytnx_int16 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc) {
+  Tensor operator% <cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc) {
+  Tensor operator% <cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
   template <>
-  Tensor operator%<Scalar>(const Tensor &Lt, const Scalar &rc) {
+  Tensor operator% <Scalar>(const Tensor &Lt, const Scalar &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }
 
@@ -1117,7 +1115,8 @@ namespace cytnx {
     <cytnx_int16>(const cytnx_int16 &lc, const cytnx::UniTensor &Rt);
   template cytnx::UniTensor operator%
     <cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
-  template cytnx::UniTensor operator%<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
+  template cytnx::UniTensor operator%
+    <cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
 
   template <class T>
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc) {
@@ -1144,7 +1143,8 @@ namespace cytnx {
     <cytnx_int16>(const cytnx::UniTensor &Lt, const cytnx_int16 &rc);
   template cytnx::UniTensor operator%
     <cytnx_uint16>(const cytnx::UniTensor &Lt, const cytnx_uint16 &rc);
-  template cytnx::UniTensor operator%<cytnx_bool>(const cytnx::UniTensor &Lt, const cytnx_bool &rc);
+  template cytnx::UniTensor operator%
+    <cytnx_bool>(const cytnx::UniTensor &Lt, const cytnx_bool &rc);
 
 }  // namespace cytnx
 

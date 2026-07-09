@@ -896,10 +896,10 @@ TEST_F(BlockUniTensorTest, LinAlgElementwise) {
 }
 
 TEST_F(BlockUniTensorTest, Norm) {
-  // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
-  EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()), 10.36019459497064);
+  // EXPECT_TRUE(Scalar(BUT4.Norm().item()-10.02330912178208).abs()<1e-5);
+  EXPECT_DOUBLE_EQ(double(BUT4.Norm().item().real()), 10.36019459497064);
 
-  cytnx_double tmp = double(UT_diag.Norm().at({0}).real());
+  cytnx_double tmp = double(UT_diag.Norm().item().real());
   cytnx_double ans = 0;
   for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];

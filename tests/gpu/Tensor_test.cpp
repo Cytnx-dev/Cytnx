@@ -184,8 +184,11 @@ TEST_F(TensorTest, gpu_get) {
   EXPECT_EQ(tmp.is_contiguous(), true);
 
   tmp = tzero3456(0, 1, 4, 4);
-  EXPECT_EQ(tmp.shape().size(), 1);
-  EXPECT_EQ(tmp.shape()[0], 1);
+  EXPECT_EQ(tmp.dtype(), Type.ComplexDouble);
+  EXPECT_EQ(tmp.device(), Device.cuda);
+  EXPECT_TRUE(tmp.is_scalar());
+  EXPECT_EQ(tmp.storage().size(), 1);
+  EXPECT_EQ(tmp.to(Device.cpu).item<cytnx_complex128>(), cytnx_complex128(0, 0));
   EXPECT_EQ(tmp.is_contiguous(), true);
 
   tmp = tarcomplex3456.get({Accessor::all(), Accessor::all(), Accessor::all(), Accessor::all()});
