@@ -290,11 +290,19 @@ endif()
 # for parallel compilation
 # It cannot enable on MacOS since it causes building errors when linking the library libcytnx.a.
 # Error message: Error running link command: no such file or directory make[2]: *** [CMakeFiles/cytnx.dir/build.make:3109: libcytnx.a]
-IF (APPLE)
-  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
-ELSE ()
-  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-ENDIF ()
+#
+# Only apply this default if the caller hasn't already set
+# CMAKE_INTERPROCEDURAL_OPTIMIZATION via -D/cache/preset: a plain set() (no
+# CACHE keyword) unconditionally shadows a cache value of the same name for
+# the rest of this script, so skipping the set() when the variable is
+# already DEFINED is what lets a caller's override actually take effect.
+if(NOT DEFINED CMAKE_INTERPROCEDURAL_OPTIMIZATION)
+  IF (APPLE)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+  ELSE ()
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+  ENDIF ()
+endif()
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
