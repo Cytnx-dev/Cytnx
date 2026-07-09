@@ -1,6 +1,7 @@
 #include "DenseUniTensor_test.h"
 
 #include <cstdio>
+#include <fstream>
 #include <filesystem>
 
 #include "test_tools.h"
@@ -4974,6 +4975,17 @@ TEST_F(DenseUniTensorTest, Save) {
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
   ut.Save(temp_file_path);
+  {
+    std::ifstream header(temp_file_path, std::ios::binary);
+    ASSERT_TRUE(header.is_open());
+    unsigned int magic = 0;
+    unsigned int version = 0;
+    header.read(reinterpret_cast<char *>(&magic), sizeof(magic));
+    header.read(reinterpret_cast<char *>(&version), sizeof(version));
+    EXPECT_EQ(magic, 556);
+    EXPECT_EQ(version, 1);
+  }
+
   UniTensor ut_loaded = UniTensor::Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(ut_loaded, ut));
   // for char*
