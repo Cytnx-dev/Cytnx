@@ -119,10 +119,8 @@ namespace cytnx {
     cytnx_uint32 len_name;
     f.read((char *)&len_name, sizeof(cytnx_uint32));
     if (len_name != 0) {
-      char *cname = (char *)malloc(sizeof(char) * len_name);
-      f.read(cname, sizeof(char) * len_name);
-      this->_impl->_name = std::string(cname);
-      free(cname);
+      this->_impl->_name.resize(len_name);
+      f.read(this->_impl->_name.data(), sizeof(char) * len_name);
     }
 
     cytnx_uint64 rank;
