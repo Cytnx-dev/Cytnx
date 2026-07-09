@@ -2,8 +2,10 @@
 
 Cytnx is a C++ tensor-network library with CUDA acceleration and pybind11 Python
 bindings. This file is the operational contract for coding agents (Claude Code,
-Codex). `AGENTS.md` is a symlink to it — edit only this file. For *what* to work
-on, see issue #759; this file is only about working *correctly*.
+Codex). `AGENTS.md` is a symlink to it — edit only this file. The Gemini review
+bot reads `GEMINI.md` (review-specific reminders); keep it in sync when review
+guidance changes. For *what* to work on, see issue #759; this file is only about
+working *correctly*.
 
 ## Build
 
@@ -59,6 +61,33 @@ pytest pytests/ --doctest-modules
   ```
 - The clang-format hook rewrites files in place and **aborts the commit** if it
   changed anything → `git add` the reformatted files and commit again.
+
+## Coding style
+
+New code follows the **Google style guides** — the project baseline
+(`.clang-format` is `BasedOnStyle: Google`). Two agent skills carry the full
+rules plus the Cytnx-specific overrides; invoke them when writing or reviewing
+code:
+
+- **`google-cpp-style`** — C++/CUDA (`.cpp`/`.hpp`/`.cu`).
+- **`google-python-style`** — Python (`cytnx/`, `pytests/`, `tools/`).
+
+The rules agents most often get wrong:
+
+- **No leading underscore in new code** (strict). `_foo` was the old
+  private-member convention and is being retired (#836); new members/locals must
+  not start with `_`.
+- **snake_case for new identifiers**; type names stay `PascalCase`. Existing code
+  is mixed — match a file's convention when it is consistent, don't propagate
+  messy naming, and don't reformat old files as churn.
+- **Trailing underscore = in-place mutator returning `*this`** (`Add_`,
+  `contiguous_`) — a Cytnx convention, *not* Google's data-member meaning.
+- **Pass scalars by value, not `const&`.** Built-ins, enums, `Scalar`, and
+  `complex<double>` are never faster by reference in Cytnx (a value rides in
+  registers; `const&` forces a stack spill + indirection). Reserve `const&` for
+  large objects (`Tensor`, `Storage`, `UniTensor`, containers).
+- **C++20 / CUDA 20 are the standard** — use them; never add C++17-compat
+  workarounds.
 
 ## Before you push — the CI gates
 
