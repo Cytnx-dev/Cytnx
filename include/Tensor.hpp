@@ -858,10 +858,7 @@ namespace cytnx {
      * @see reshape(const std::vector<cytnx_int64> &new_shape) const
      */
     Tensor reshape(const std::vector<cytnx_uint64> &new_shape) const {
-      std::vector<cytnx_int64> tmp(new_shape.size());
-      if (!new_shape.empty()) {
-        memcpy(&tmp[0], &new_shape[0], sizeof(cytnx_uint64) * new_shape.size());
-      }
+      std::vector<cytnx_int64> tmp(new_shape.begin(), new_shape.end());
       Tensor out;
       out._impl = this->_impl->reshape(tmp);
       return out;
