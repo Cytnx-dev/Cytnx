@@ -1,0 +1,188 @@
+name: GPU Tests
+
+# GitHub-hosted GPU runners are billed by uptime (#538), so this only runs
+# on pull requests (not push) plus manual dispatch, not on every push to
+# master.
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: gpu-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    # GPU_RUNNER_LABEL should be set as a repository (or org) Actions
+    # variable to the label of the GitHub-hosted GPU runner group (see
+    # #538) — the label was not yet known when this workflow was written.
+    # Until it's set, fall back to ubuntu-latest so the configure/build
+    # steps (which don't need a physical GPU — nvcc compiles fine without
+    # one) still run on every PR; only GPU-and-driver-info and the actual
+    # test execution steps need real hardware.
+    runs-on: ${{ vars.GPU_RUNNER_LABEL || 'ubuntu-latest' }}
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash -leo pipefail {0}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge with latest target branch (pull_request only)
+        if: github.event_name == 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+
+      - name: Init submodules
+        # Runs after the merge above (rather than via actions/checkout's
+        # submodules: input) so a merge that moves a gitlink only requires
+        # one submodule checkout instead of one before the merge and a
+        # second to refresh it afterward.
+        run: git submodule update --init --recursive
+
+      - name: GPU and driver info
+        # Not fatal: this runs on ubuntu-latest (no GPU/driver) whenever
+        # GPU_RUNNER_LABEL is unset, so nvidia-smi is expected to fail there.
+        continue-on-error: true
+        run: nvidia-smi
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: "3.11"
+          miniforge-version: latest
+          use-mamba: true
+          mamba-version: "*"
+
+      - name: Install native dependencies
+        # Same non-Python native deps as ci-cmake_tests.yml (compilers, cmake,
+        # OpenBLAS, gtest); the CUDA toolkit and cuTENSOR/cuQuantum come from
+        # PyPI below instead of conda, per #538.
+        run: |
+          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest
+
+      - name: Install CUDA toolkit, cuTENSOR and cuQuantum from PyPI
+        # nvidia-cuda-nvcc / nvidia-cuda-runtime / nvidia-cublas / nvidia-cusolver /
+        # nvidia-cusparse / nvidia-curand are the current (unsuffixed) NVIDIA
+        # PyPI packages; the older "-cu13" suffixed names (e.g.
+        # nvidia-cuda-nvcc-cu13) are deprecated 0.0.1 stub aliases for the
+        # same content and must NOT be used in place of these.
+        #
+        # cutensor and cuquantum are the opposite case: their unsuffixed
+        # packages are the ones to avoid.
+        #   - cuquantum (unsuffixed) ships no wheel at all, only an sdist.
+        #     Per its own PyPI description, it's a meta-package whose build
+        #     step probes for an already-installed CUDA Toolkit
+        #     (libnvrtc.so.*/libcudart.so.* on the loader path) to decide
+        #     which cuquantum-cuXX to fetch, and NVIDIA's own docs say that
+        #     detection "is not guaranteed to work in certain environments"
+        #     and recommend installing the -cuXX wheel directly. It can't
+        #     succeed here regardless of install order: no CUDA Toolkit
+        #     exists on this job's runner before this step by design
+        #     (installing one is the point of this step), and pip builds
+        #     sdists before installing any sibling wheels in the same
+        #     command, so even nvidia-cuda-nvcc/nvidia-cuda-runtime above
+        #     aren't unpacked to disk yet when cuquantum's build step runs.
+        #   - cutensor (unsuffixed, 1.6.0.3) is a stale package distinct
+        #     from cutensor-cu13 (2.7.0) — cuquantum-cu13 depends on
+        #     cutensor-cu13 itself, so requesting unsuffixed cutensor
+        #     installs both side by side, and the header-search step below
+        #     can pick up either one's cutensor.h non-deterministically.
+        #     Requesting cutensor-cu13 explicitly keeps this pinned to the
+        #     version cuquantum-cu13 actually uses.
+        run: |
+          pip install \
+            nvidia-cuda-nvcc \
+            nvidia-cuda-runtime \
+            nvidia-cuda-cccl \
+            nvidia-cublas \
+            nvidia-cusolver \
+            nvidia-cusparse \
+            nvidia-curand \
+            cutensor-cu13 \
+            cuquantum-cu13
+
+      - name: Locate CUDA toolkit and cuTENSOR/cuQuantum roots
+        # The wheels above install under site-packages rather than a single
+        # traditional CUDA_HOME tree, and FindCUTENSOR.cmake/FindCUQUANTUM.cmake
+        # each expect a single "<ROOT>/include" + "<ROOT>/lib" directory pair.
+        # Locating headers by name instead of hardcoding a path keeps this
+        # working if a future NVIDIA wheel release changes its internal layout.
+        run: |
+          SITE_PACKAGES=$(python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])")
+          echo "SITE_PACKAGES=$SITE_PACKAGES" >> "$GITHUB_ENV"
+
+          NVCC_BIN=$(find "$SITE_PACKAGES" -type f -name nvcc | head -1)
+          test -n "$NVCC_BIN" || { echo "::error::nvcc not found under $SITE_PACKAGES"; exit 1; }
+          echo "CUDA_NVCC_BIN=$NVCC_BIN" >> "$GITHUB_ENV"
+          echo "CUDACXX=$NVCC_BIN" >> "$GITHUB_ENV"
+
+          CUDART_INCLUDE_DIR=$(dirname "$(find "$SITE_PACKAGES" -path '*/include/cuda_runtime.h' | head -1)")
+          test -n "$CUDART_INCLUDE_DIR" || { echo "::error::cuda_runtime.h not found under $SITE_PACKAGES"; exit 1; }
+          echo "CUDAToolkit_ROOT=$(dirname "$CUDART_INCLUDE_DIR")" >> "$GITHUB_ENV"
+
+          CUTENSOR_INCLUDE_DIR=$(dirname "$(find "$SITE_PACKAGES" -path '*/include/cutensor.h' | head -1)")
+          test -n "$CUTENSOR_INCLUDE_DIR" || { echo "::error::cutensor.h not found under $SITE_PACKAGES"; exit 1; }
+          echo "CUTENSOR_ROOT=$(dirname "$CUTENSOR_INCLUDE_DIR")" >> "$GITHUB_ENV"
+
+          CUQUANTUM_INCLUDE_DIR=$(dirname "$(find "$SITE_PACKAGES" -path '*/include/cutensornet.h' | head -1)")
+          test -n "$CUQUANTUM_INCLUDE_DIR" || { echo "::error::cutensornet.h not found under $SITE_PACKAGES"; exit 1; }
+          echo "CUQUANTUM_ROOT=$(dirname "$CUQUANTUM_INCLUDE_DIR")" >> "$GITHUB_ENV"
+
+      - name: Report resolved CUDA locations
+        run: |
+          echo "CUDACXX=$CUDACXX"
+          echo "CUDAToolkit_ROOT=$CUDAToolkit_ROOT"
+          echo "CUTENSOR_ROOT=$CUTENSOR_ROOT"
+          echo "CUQUANTUM_ROOT=$CUQUANTUM_ROOT"
+
+      - name: Editable install (CUDA, Release, no coverage)
+        # pyproject.toml pins cmake.args to --preset=openblas-cpu, but
+        # scikit-build-core's cmake.args setting is override-not-merge (a
+        # config-settings value replaces the pyproject.toml one entirely, per
+        # scikit_build_core.settings.skbuild_model.CMakeSettings.args), so
+        # this cleanly selects openblas-cuda instead. RUN_TESTS=ON is layered
+        # on top via cmake.define, which is additive, the same way
+        # ci-cmake_tests.yml overrides CMAKE_BUILD_TYPE/RUN_TESTS on top of
+        # its own pinned preset. CUDACXX and CUDAToolkit_ROOT are standard
+        # CMake-recognized environment variables (exported above), so they
+        # don't need a cmake.define entry; CUTENSOR_ROOT/CUQUANTUM_ROOT are
+        # read from the environment directly by cmake/Modules/FindCUTENSOR.cmake
+        # and FindCUQUANTUM.cmake.
+        #
+        # Release (not Debug/ASan): this job doesn't collect coverage, and
+        # ASan is known to abort on startup under CUDA (see CLAUDE.md).
+        # CMAKE_CUDA_ARCHITECTURES is left unset here: CMakeLists.txt picks a
+        # CUDA-version-aware default (Turing sm_75 floor on CUDA >=13, since
+        # CUDA 13.0 removed offline compilation support for Volta sm_70 and
+        # below; Volta floor on older toolkits).
+        run: |
+          pip install --editable '.[dev]' --verbose \
+            --config-settings=build-dir=build \
+            --config-settings=cmake.args=--preset=openblas-cuda \
+            --config-settings=cmake.define.RUN_TESTS=ON
+
+      - name: Sanity-check the install sees the GPU
+        run: python -c "import cytnx; print('cytnx', cytnx.__version__); print('gpu devices:', cytnx.Device.Ngpus)"
+
+      - name: Build the GPU gtest binary
+        working-directory: ${{ github.workspace }}/build
+        run: cmake --build . --target gpu_test_main -j "$(nproc)"
+
+      - name: Run GPU tests via ctest
+        # -L gpu selects only tests/gpu/gpu_test_main's suite (see the "gpu"
+        # ctest label added in tests/gpu/CMakeLists.txt), so this doesn't
+        # re-run the free CPU suite that ci-cmake_tests.yml already covers.
+        working-directory: ${{ github.workspace }}/build
+        run: GTEST_COLOR=1 ctest -L gpu --output-on-failure --output-junit junit-gpu.xml
+
+      - name: Run pytest
+        # No --cov / Codecov upload for this job (#538): this is a
+        # correctness gate on the GPU build, not a coverage source.
+        run: pytest pytests/ --doctest-modules
