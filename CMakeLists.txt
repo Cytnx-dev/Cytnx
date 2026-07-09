@@ -247,19 +247,35 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
-  # Default to a portable fat binary unless the caller picked architectures via
-  # -D, the cache, a preset's cacheVariables, or the CUDAARCHS environment
-  # variable. This must run before enable_language(CUDA): afterwards
-  # CMAKE_CUDA_ARCHITECTURES is never empty (CMake fills in its own default), so
-  # the "not specified" case can no longer be detected. enable_language(CUDA)
-  # reads CUDAARCHS on its own, so we only avoid shadowing it here, not copy it.
-  # The default embeds SASS for each supported real architecture (Volta sm_70 is
-  # the floor required by cuTENSOR/cuQuantum, up through Hopper sm_90) plus PTX
-  # of the newest (90-virtual) so the driver can JIT for newer/unknown GPUs.
-  if(NOT CMAKE_CUDA_ARCHITECTURES AND NOT DEFINED ENV{CUDAARCHS})
-    set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+  # Record whether the caller already picked architectures via -D, the cache,
+  # a preset's cacheVariables, or the CUDAARCHS environment variable, before
+  # enable_language(CUDA) fills CMAKE_CUDA_ARCHITECTURES with its own default
+  # and makes the "not specified" case impossible to detect.
+  set(_cytnx_user_set_cuda_architectures FALSE)
+  if(CMAKE_CUDA_ARCHITECTURES OR DEFINED ENV{CUDAARCHS})
+    set(_cytnx_user_set_cuda_architectures TRUE)
   endif()
+  # enable_language(CUDA) runs its own internal compiler ABI-detection compile
+  # using whatever CMAKE_CUDA_ARCHITECTURES is set to at this point, so our own
+  # default below is applied only after this call returns (CMake's own default
+  # is toolchain-aware and won't pick an architecture the detected nvcc
+  # rejects; ours, chosen without knowing the CUDA version yet, might).
   enable_language(CUDA)
+  find_package(CUDAToolkit REQUIRED)
+  if(NOT _cytnx_user_set_cuda_architectures)
+    # Default to a portable fat binary, embedding SASS for each supported real
+    # architecture plus PTX of the newest (90-virtual) so the driver can JIT
+    # for newer/unknown GPUs. CUDA 13.0 removed offline compilation support
+    # for Maxwell/Pascal/Volta (sm_70 and below,
+    # https://docs.nvidia.com/cuda/archive/13.0.0/cuda-toolkit-release-notes/),
+    # so the floor is Turing (sm_75) on CUDA >=13 and Volta (sm_70) below that.
+    if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 13.0)
+      set(CMAKE_CUDA_ARCHITECTURES 75-real 80-real 86-real 89-real 90-real 90-virtual)
+    else()
+      set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+    endif()
+  endif()
+  unset(_cytnx_user_set_cuda_architectures)
   # Disable generation of "--option-file" flag in compile_commands.json.
   # This workaround helps VSCode's cpptools extension correctly locate CUDA
   # include files.
