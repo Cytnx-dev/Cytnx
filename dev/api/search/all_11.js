@@ -16,7 +16,7 @@ var searchData=
   ['reshape_5f_13',['reshape_',['../classcytnx_1_1Tensor.html#ad55b5e50d414b35cbe77091a82389f8b',1,'cytnx::Tensor::reshape_()'],['../classcytnx_1_1UniTensor.html#ad0984371a4b623a9d8f3ac090aae38f5',1,'cytnx::UniTensor::reshape_()']]],
   ['retype_14',['retype',['../classcytnx_1_1Bond.html#a31c8ff7b0817c37e67a80a225f5bd758',1,'cytnx::Bond']]],
   ['reverse_5frule_15',['reverse_rule',['../classcytnx_1_1Symmetry.html#a9f856245a37472cb51c74cff0777d15e',1,'cytnx::Symmetry']]],
-  ['reverse_5frule_5f_16',['reverse_rule_',['../classcytnx_1_1Symmetry.html#ac7dfa6758b9dfb1963f19f0eec7cc4a3',1,'cytnx::Symmetry']]],
+  ['reverse_5frule_5f_16',['reverse_rule_',['../classcytnx_1_1Symmetry.html#abbeeb1ababb26a90c7e9f7636bbbe347',1,'cytnx::Symmetry']]],
   ['rmunitensor_17',['rmunitensor',['../classcytnx_1_1Network.html#ab8921440814db09453b4c8c2f5529001',1,'cytnx::Network::RmUniTensor(const std::string &amp;name)'],['../classcytnx_1_1Network.html#a529e42dea93f665ac7ec9b5254614513',1,'cytnx::Network::RmUniTensor(const cytnx_uint64 &amp;idx)']]],
   ['rmunitensors_18',['RmUniTensors',['../classcytnx_1_1Network.html#a46dba7d89d63541b3b24e025d623dd43',1,'cytnx::Network']]],
   ['rowrank_19',['rowrank',['../classcytnx_1_1UniTensor.html#a373efd1b4ee3f0588f30f4795f2c5c16',1,'cytnx::UniTensor']]],

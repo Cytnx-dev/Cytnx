@@ -122,13 +122,13 @@
     <member refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" kind="function"><name>stype</name></member>
     <member refid="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" kind="function"><name>n</name></member>
     <member refid="classcytnx_1_1Symmetry_1a0ba15e919a5693923e54c2c6f7d376c6" kind="function"><name>stype_str</name></member>
-    <member refid="classcytnx_1_1Symmetry_1a066741cabfe04df9e9e2782f047188b0" kind="function"><name>check_qnum</name></member>
-    <member refid="classcytnx_1_1Symmetry_1a38c1572a027e289430434b56324e2ead" kind="function"><name>check_qnums</name></member>
-    <member refid="classcytnx_1_1Symmetry_1a0a31bbcdd3d98027dd31bce170879926" kind="function"><name>combine_rule</name></member>
-    <member refid="classcytnx_1_1Symmetry_1a7a2e6c3f679b5e6774f269b78c8239e8" kind="function"><name>combine_rule_</name></member>
+    <member refid="classcytnx_1_1Symmetry_1adbb60b9c777a1b3f68ea5ed90e16651b" kind="function"><name>check_qnum</name></member>
+    <member refid="classcytnx_1_1Symmetry_1a43e79d2cc3136ad1d993cdb20f897a8b" kind="function"><name>check_qnums</name></member>
+    <member refid="classcytnx_1_1Symmetry_1a507cb0075cf9a01a42d905959a9bb0f1" kind="function"><name>combine_rule</name></member>
+    <member refid="classcytnx_1_1Symmetry_1a3481cdc5418912367be6dedcec7e5393" kind="function"><name>combine_rule_</name></member>
     <member refid="classcytnx_1_1Symmetry_1a2aaefd177003560b4c12fbbefe30c3c3" kind="function"><name>combine_rule</name></member>
-    <member refid="classcytnx_1_1Symmetry_1a8542d45b69268355f0b07dea280ba1e3" kind="function"><name>combine_rule_</name></member>
-    <member refid="classcytnx_1_1Symmetry_1ac7dfa6758b9dfb1963f19f0eec7cc4a3" kind="function"><name>reverse_rule_</name></member>
+    <member refid="classcytnx_1_1Symmetry_1a0678a69d5a89546e3e5d948efd6a487d" kind="function"><name>combine_rule_</name></member>
+    <member refid="classcytnx_1_1Symmetry_1abbeeb1ababb26a90c7e9f7636bbbe347" kind="function"><name>reverse_rule_</name></member>
     <member refid="classcytnx_1_1Symmetry_1a9f856245a37472cb51c74cff0777d15e" kind="function"><name>reverse_rule</name></member>
     <member refid="classcytnx_1_1Symmetry_1afc87c723534df27c771d1277cf46c43a" kind="function"><name>get_fermion_parity</name></member>
     <member refid="classcytnx_1_1Symmetry_1a757a6e09bb23d5af48c1c2cd45658c62" kind="function"><name>is_fermionic</name></member>

@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="45" column="17" bodyfile="include/Symmetry.hpp" bodystart="45" bodyend="-1"/>
+        <location file="include/Symmetry.hpp" line="43" column="17" bodyfile="include/Symmetry.hpp" bodystart="43" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -47,7 +47,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="49" column="5" bodyfile="include/Symmetry.hpp" bodystart="49" bodyend="51"/>
+        <location file="include/Symmetry.hpp" line="47" column="5" bodyfile="include/Symmetry.hpp" bodystart="47" bodyend="49"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Qs_1ac0109bb5f8c190e4107037bb384291b9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -65,7 +65,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="53" column="5" bodyfile="include/Symmetry.hpp" bodystart="53" bodyend="53"/>
+        <location file="include/Symmetry.hpp" line="51" column="5" bodyfile="include/Symmetry.hpp" bodystart="51" bodyend="51"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Qs_1a675e53e190288b69181e18e2a1943b24" prot="public" static="no" const="yes" explicit="yes" inline="yes" virt="non-virtual">
         <type></type>
@@ -79,7 +79,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="56" column="14" bodyfile="include/Symmetry.hpp" bodystart="56" bodyend="56"/>
+        <location file="include/Symmetry.hpp" line="54" column="14" bodyfile="include/Symmetry.hpp" bodystart="54" bodyend="54"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Qs_1ae801e134abaa3aab35bb79f28d716d23" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt;</type>
@@ -97,14 +97,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="58" column="15" bodyfile="include/Symmetry.hpp" bodystart="58" bodyend="60"/>
+        <location file="include/Symmetry.hpp" line="56" column="15" bodyfile="include/Symmetry.hpp" bodystart="56" bodyend="58"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/Symmetry.hpp" line="43" column="3" bodyfile="include/Symmetry.hpp" bodystart="43" bodyend="61"/>
+    <location file="include/Symmetry.hpp" line="41" column="3" bodyfile="include/Symmetry.hpp" bodystart="41" bodyend="59"/>
     <listofallmembers>
       <member refid="classcytnx_1_1Qs_1a675e53e190288b69181e18e2a1943b24" prot="public" virt="non-virtual"><scope>cytnx::Qs</scope><name>operator std::vector&lt; cytnx_int64 &gt;</name></member>
       <member refid="classcytnx_1_1Qs_1ae801e134abaa3aab35bb79f28d716d23" prot="public" virt="non-virtual"><scope>cytnx::Qs</scope><name>operator&gt;&gt;</name></member>

@@ -174,7 +174,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="32" column="3" bodyfile="include/Symmetry.hpp" bodystart="32" bodyend="32"/>
+        <location file="include/Symmetry.hpp" line="30" column="3" bodyfile="include/Symmetry.hpp" bodystart="30" bodyend="30"/>
       </memberdef>
       <memberdef kind="enum" id="namespacecytnx_1af664ec40b8661447cc01a0e0d227795c" prot="public" static="no" strong="no">
         <type>bool</type>
@@ -204,7 +204,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="40" column="3" bodyfile="include/Symmetry.hpp" bodystart="40" bodyend="40"/>
+        <location file="include/Symmetry.hpp" line="38" column="3" bodyfile="include/Symmetry.hpp" bodystart="38" bodyend="38"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="var">

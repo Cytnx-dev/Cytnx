@@ -147,7 +147,7 @@ Deg&gt;&gt;    1   1   2   2   3   2   2   2   2   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="268" column="21" bodyfile="include/Symmetry.hpp" bodystart="268" bodyend="268"/>
+        <location file="include/Symmetry.hpp" line="226" column="21" bodyfile="include/Symmetry.hpp" bodystart="226" bodyend="226"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a066083aa705f8fc749b3bbb606f89359" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
@@ -358,7 +358,7 @@ Deg&gt;&gt;    3   3   3   3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="299" column="21" bodyfile="include/Symmetry.hpp" bodystart="299" bodyend="299"/>
+        <location file="include/Symmetry.hpp" line="257" column="21" bodyfile="include/Symmetry.hpp" bodystart="257" bodyend="257"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a15a92c5758c29203db128f4c02bee7c7" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
@@ -383,7 +383,7 @@ Deg&gt;&gt;    3   3   3   3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="320" column="21" bodyfile="include/Symmetry.hpp" bodystart="320" bodyend="320"/>
+        <location file="include/Symmetry.hpp" line="278" column="21" bodyfile="include/Symmetry.hpp" bodystart="278" bodyend="278"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a2cf087bac102c7131d3e661f98e71e73" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
@@ -407,7 +407,7 @@ Deg&gt;&gt;    3   3   3   3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="341" column="21" bodyfile="include/Symmetry.hpp" bodystart="341" bodyend="341"/>
+        <location file="include/Symmetry.hpp" line="299" column="21" bodyfile="include/Symmetry.hpp" bodystart="299" bodyend="299"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1af1fe28cc1afa852d01415b469b78a8b5" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
@@ -440,7 +440,7 @@ Deg&gt;&gt;    3   3   3   3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="512" column="21"/>
+        <location file="include/Symmetry.hpp" line="499" column="21"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1aa7e57944a9a2236d695c327fa0c971b1" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref></type>
@@ -459,7 +459,7 @@ Deg&gt;&gt;    3   3   3   3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="517" column="21"/>
+        <location file="include/Symmetry.hpp" line="504" column="21"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -490,10 +490,10 @@ Deg&gt;&gt;    3   3   3   3
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_A<sp/>=<sp/><ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>();</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_C<sp/>=<sp/><ref refid="classcytnx_1_1Symmetry_1a9218fd66fc9cca64cd3d792e0019592a" kindref="member">Symmetry::U1</ref>();</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_D<sp/>=<sp/>sym_A;<sp/><sp/></highlight><highlight class="comment">//<sp/>same<sp/>instance.</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref><sp/>sym_D<sp/>=<sp/>sym_A;<sp/><sp/></highlight><highlight class="comment">//<sp/>an<sp/>independent<sp/>copy<sp/>(Symmetry<sp/>is<sp/>a<sp/>value<sp/>type).</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>using<sp/>is()<sp/>to<sp/>check<sp/>if<sp/>they<sp/>are<sp/>the<sp/>same<sp/>instance.</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>is(sym_D,<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true.<sp/>same<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>using<sp/>is()<sp/>to<sp/>check<sp/>if<sp/>they<sp/>are<sp/>the<sp/>same<sp/>instance<sp/>(the<sp/>same<sp/>object).</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>is(sym_D,<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false.<sp/>independent<sp/>copy</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>(sym_D<sp/>==<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>true,<sp/>same<sp/>content</highlight><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>is(sym_C,<sp/>sym_A)<sp/>&lt;&lt;<sp/>std::endl;<sp/><sp/></highlight><highlight class="comment">//<sp/>false.<sp/>different<sp/>instance</highlight><highlight class="normal"></highlight></codeline>
@@ -503,7 +503,7 @@ Deg&gt;&gt;    3   3   3   3
 <codeline><highlight class="normal">}</highlight></codeline>
 </programlisting> <heading level="4">output&gt;</heading>
 </para>
-<para><verbatim>1
+<para><verbatim>0
 1
 0
 1
@@ -533,7 +533,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="357" column="14" bodyfile="include/Symmetry.hpp" bodystart="357" bodyend="361"/>
+        <location file="include/Symmetry.hpp" line="315" column="14" bodyfile="include/Symmetry.hpp" bodystart="315" bodyend="315"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>int</type>
@@ -551,7 +551,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="369" column="9" bodyfile="include/Symmetry.hpp" bodystart="369" bodyend="369"/>
+        <location file="include/Symmetry.hpp" line="323" column="9" bodyfile="include/Symmetry.hpp" bodystart="323" bodyend="325"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a5d9e73259f21dc79f7086f8418afca8e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>int &amp;</type>
@@ -575,7 +575,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="380" column="9" bodyfile="include/Symmetry.hpp" bodystart="380" bodyend="380"/>
+        <location file="include/Symmetry.hpp" line="336" column="9" bodyfile="include/Symmetry.hpp" bodystart="336" bodyend="350"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a0ba15e919a5693923e54c2c6f7d376c6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -593,12 +593,12 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="389" column="17" bodyfile="include/Symmetry.hpp" bodystart="389" bodyend="389"/>
+        <location file="include/Symmetry.hpp" line="359" column="17" bodyfile="include/Symmetry.hpp" bodystart="359" bodyend="361"/>
       </memberdef>
-      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a066741cabfe04df9e9e2782f047188b0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1adbb60b9c777a1b3f68ea5ed90e16651b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
         <definition>bool cytnx::Symmetry::check_qnum</definition>
-        <argsstring>(const cytnx_int64 &amp;qnum)</argsstring>
+        <argsstring>(const cytnx_int64 &amp;qnum) const</argsstring>
         <name>check_qnum</name>
         <qualifiedname>cytnx::Symmetry::check_qnum</qualifiedname>
         <param>
@@ -624,12 +624,12 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="397" column="10" bodyfile="include/Symmetry.hpp" bodystart="397" bodyend="397"/>
+        <location file="include/Symmetry.hpp" line="369" column="10" bodyfile="include/Symmetry.hpp" bodystart="369" bodyend="371"/>
       </memberdef>
-      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a38c1572a027e289430434b56324e2ead" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a43e79d2cc3136ad1d993cdb20f897a8b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
         <definition>bool cytnx::Symmetry::check_qnums</definition>
-        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;qnums)</argsstring>
+        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;qnums) const</argsstring>
         <name>check_qnums</name>
         <qualifiedname>cytnx::Symmetry::check_qnums</qualifiedname>
         <param>
@@ -655,12 +655,12 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="406" column="10" bodyfile="include/Symmetry.hpp" bodystart="406" bodyend="408"/>
+        <location file="include/Symmetry.hpp" line="380" column="10" bodyfile="include/Symmetry.hpp" bodystart="380" bodyend="382"/>
       </memberdef>
-      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a0a31bbcdd3d98027dd31bce170879926" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a507cb0075cf9a01a42d905959a9bb0f1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; cytnx_int64 &gt;</type>
         <definition>std::vector&lt; cytnx_int64 &gt; cytnx::Symmetry::combine_rule</definition>
-        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR)</argsstring>
+        <argsstring>(const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR) const</argsstring>
         <name>combine_rule</name>
         <qualifiedname>cytnx::Symmetry::combine_rule</qualifiedname>
         <param>
@@ -698,12 +698,12 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="416" column="17" bodyfile="include/Symmetry.hpp" bodystart="416" bodyend="419"/>
+        <location file="include/Symmetry.hpp" line="390" column="17" bodyfile="include/Symmetry.hpp" bodystart="390" bodyend="395"/>
       </memberdef>
-      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a7a2e6c3f679b5e6774f269b78c8239e8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a3481cdc5418912367be6dedcec7e5393" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
         <definition>void cytnx::Symmetry::combine_rule_</definition>
-        <argsstring>(std::vector&lt; cytnx_int64 &gt; &amp;out, const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR)</argsstring>
+        <argsstring>(std::vector&lt; cytnx_int64 &gt; &amp;out, const std::vector&lt; cytnx_int64 &gt; &amp;inL, const std::vector&lt; cytnx_int64 &gt; &amp;inR) const</argsstring>
         <name>combine_rule_</name>
         <qualifiedname>cytnx::Symmetry::combine_rule_</qualifiedname>
         <param>
@@ -751,7 +751,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="428" column="10" bodyfile="include/Symmetry.hpp" bodystart="428" bodyend="431"/>
+        <location file="include/Symmetry.hpp" line="404" column="10" bodyfile="include/Symmetry.hpp" bodystart="404" bodyend="407"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a2aaefd177003560b4c12fbbefe30c3c3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>cytnx_int64</type>
@@ -799,12 +799,12 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="439" column="17" bodyfile="include/Symmetry.hpp" bodystart="439" bodyend="442"/>
+        <location file="include/Symmetry.hpp" line="415" column="17" bodyfile="include/Symmetry.hpp" bodystart="415" bodyend="421"/>
       </memberdef>
-      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a8542d45b69268355f0b07dea280ba1e3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1a0678a69d5a89546e3e5d948efd6a487d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
         <definition>void cytnx::Symmetry::combine_rule_</definition>
-        <argsstring>(cytnx_int64 &amp;out, const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false)</argsstring>
+        <argsstring>(cytnx_int64 &amp;out, const cytnx_int64 &amp;inL, const cytnx_int64 &amp;inR, const bool &amp;is_reverse=false) const</argsstring>
         <name>combine_rule_</name>
         <qualifiedname>cytnx::Symmetry::combine_rule_</qualifiedname>
         <param>
@@ -865,12 +865,12 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="451" column="10" bodyfile="include/Symmetry.hpp" bodystart="451" bodyend="454"/>
+        <location file="include/Symmetry.hpp" line="430" column="10" bodyfile="include/Symmetry.hpp" bodystart="430" bodyend="434"/>
       </memberdef>
-      <memberdef kind="function" id="classcytnx_1_1Symmetry_1ac7dfa6758b9dfb1963f19f0eec7cc4a3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classcytnx_1_1Symmetry_1abbeeb1ababb26a90c7e9f7636bbbe347" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
         <definition>void cytnx::Symmetry::reverse_rule_</definition>
-        <argsstring>(cytnx_int64 &amp;out, const cytnx_int64 &amp;in)</argsstring>
+        <argsstring>(cytnx_int64 &amp;out, const cytnx_int64 &amp;in) const</argsstring>
         <name>reverse_rule_</name>
         <qualifiedname>cytnx::Symmetry::reverse_rule_</qualifiedname>
         <param>
@@ -906,7 +906,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="464" column="10" bodyfile="include/Symmetry.hpp" bodystart="464" bodyend="466"/>
+        <location file="include/Symmetry.hpp" line="444" column="10" bodyfile="include/Symmetry.hpp" bodystart="444" bodyend="446"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a9f856245a37472cb51c74cff0777d15e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>cytnx_int64</type>
@@ -937,7 +937,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="476" column="17" bodyfile="include/Symmetry.hpp" bodystart="476" bodyend="476"/>
+        <location file="include/Symmetry.hpp" line="456" column="17" bodyfile="include/Symmetry.hpp" bodystart="456" bodyend="460"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1afc87c723534df27c771d1277cf46c43a" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="namespacecytnx_1af664ec40b8661447cc01a0e0d227795c" kindref="member">fermionParity</ref></type>
@@ -968,7 +968,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="484" column="19" bodyfile="include/Symmetry.hpp" bodystart="484" bodyend="486"/>
+        <location file="include/Symmetry.hpp" line="468" column="19" bodyfile="include/Symmetry.hpp" bodystart="468" bodyend="471"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a757a6e09bb23d5af48c1c2cd45658c62" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -986,7 +986,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="492" column="10" bodyfile="include/Symmetry.hpp" bodystart="492" bodyend="492"/>
+        <location file="include/Symmetry.hpp" line="477" column="10" bodyfile="include/Symmetry.hpp" bodystart="477" bodyend="479"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1ae0aaa29d0445cfc85ffab300aa4a8174" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1017,7 +1017,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="499" column="10"/>
+        <location file="include/Symmetry.hpp" line="486" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a26e822590e88a8d865b6833bc0b3e368" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1036,7 +1036,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="504" column="10"/>
+        <location file="include/Symmetry.hpp" line="491" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a8f32669cdcdbf2dc1dff1f588c025981" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -1051,7 +1051,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="527" column="10" bodyfile="include/Symmetry.hpp" bodystart="527" bodyend="527"/>
+        <location file="include/Symmetry.hpp" line="514" column="10" bodyfile="include/Symmetry.hpp" bodystart="514" bodyend="516"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1a6726fdd96c12ddfa4b16adde9341aef0" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -1070,7 +1070,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="532" column="10"/>
+        <location file="include/Symmetry.hpp" line="521" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Symmetry_1ad102f58e1226ec26ae9a3bc2d6c366d2" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -1089,7 +1089,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Symmetry.hpp" line="537" column="10"/>
+        <location file="include/Symmetry.hpp" line="526" column="10"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -1097,15 +1097,15 @@ True
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/Symmetry.hpp" line="205" column="3" bodyfile="include/Symmetry.hpp" bodystart="205" bodyend="538"/>
+    <location file="include/Symmetry.hpp" line="167" column="3" bodyfile="include/Symmetry.hpp" bodystart="167" bodyend="527"/>
     <listofallmembers>
-      <member refid="classcytnx_1_1Symmetry_1a066741cabfe04df9e9e2782f047188b0" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>check_qnum</name></member>
-      <member refid="classcytnx_1_1Symmetry_1a38c1572a027e289430434b56324e2ead" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>check_qnums</name></member>
+      <member refid="classcytnx_1_1Symmetry_1adbb60b9c777a1b3f68ea5ed90e16651b" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>check_qnum</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a43e79d2cc3136ad1d993cdb20f897a8b" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>check_qnums</name></member>
       <member refid="classcytnx_1_1Symmetry_1a2b407bcad5cdad20edddffeeda6befe7" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>clone</name></member>
-      <member refid="classcytnx_1_1Symmetry_1a0a31bbcdd3d98027dd31bce170879926" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a507cb0075cf9a01a42d905959a9bb0f1" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule</name></member>
       <member refid="classcytnx_1_1Symmetry_1a2aaefd177003560b4c12fbbefe30c3c3" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule</name></member>
-      <member refid="classcytnx_1_1Symmetry_1a7a2e6c3f679b5e6774f269b78c8239e8" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule_</name></member>
-      <member refid="classcytnx_1_1Symmetry_1a8542d45b69268355f0b07dea280ba1e3" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule_</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a3481cdc5418912367be6dedcec7e5393" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule_</name></member>
+      <member refid="classcytnx_1_1Symmetry_1a0678a69d5a89546e3e5d948efd6a487d" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>combine_rule_</name></member>
       <member refid="classcytnx_1_1Symmetry_1a2cf087bac102c7131d3e661f98e71e73" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>FermionNumber</name></member>
       <member refid="classcytnx_1_1Symmetry_1a15a92c5758c29203db128f4c02bee7c7" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>FermionParity</name></member>
       <member refid="classcytnx_1_1Symmetry_1afc87c723534df27c771d1277cf46c43a" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>get_fermion_parity</name></member>
@@ -1117,7 +1117,7 @@ True
       <member refid="classcytnx_1_1Symmetry_1a6726fdd96c12ddfa4b16adde9341aef0" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>operator==</name></member>
       <member refid="classcytnx_1_1Symmetry_1a8f32669cdcdbf2dc1dff1f588c025981" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>print_info</name></member>
       <member refid="classcytnx_1_1Symmetry_1a9f856245a37472cb51c74cff0777d15e" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>reverse_rule</name></member>
-      <member refid="classcytnx_1_1Symmetry_1ac7dfa6758b9dfb1963f19f0eec7cc4a3" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>reverse_rule_</name></member>
+      <member refid="classcytnx_1_1Symmetry_1abbeeb1ababb26a90c7e9f7636bbbe347" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>reverse_rule_</name></member>
       <member refid="classcytnx_1_1Symmetry_1ae0aaa29d0445cfc85ffab300aa4a8174" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>Save</name></member>
       <member refid="classcytnx_1_1Symmetry_1a26e822590e88a8d865b6833bc0b3e368" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>Save</name></member>
       <member refid="classcytnx_1_1Symmetry_1a47a73a6248750acc221104e3079d652c" prot="public" virt="non-virtual"><scope>cytnx::Symmetry</scope><name>stype</name></member>

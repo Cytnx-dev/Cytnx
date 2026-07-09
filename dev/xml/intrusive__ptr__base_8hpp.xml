@@ -10,7 +10,6 @@
     <includedby refid="Bond_8hpp" local="yes">include/Bond.hpp</includedby>
     <includedby refid="LinOp_8hpp" local="yes">include/LinOp.hpp</includedby>
     <includedby refid="Network_8hpp" local="yes">include/Network.hpp</includedby>
-    <includedby refid="Symmetry_8hpp" local="yes">include/Symmetry.hpp</includedby>
     <includedby refid="Tensor_8hpp" local="yes">include/Tensor.hpp</includedby>
     <includedby refid="UniTensor_8hpp" local="yes">include/UniTensor.hpp</includedby>
     <incdepgraph>
@@ -53,7 +52,7 @@
         <childnode refid="5" relation="include">
         </childnode>
       </node>
-      <node id="14">
+      <node id="13">
         <label>include/Generator.hpp</label>
         <link refid="Generator_8hpp"/>
         <childnode refid="3" relation="include">
@@ -82,19 +81,9 @@
         </childnode>
       </node>
       <node id="12">
-        <label>include/Symmetry.hpp</label>
-        <link refid="Symmetry_8hpp"/>
-        <childnode refid="2" relation="include">
-        </childnode>
-        <childnode refid="3" relation="include">
-        </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
-      </node>
-      <node id="13">
         <label>include/Tensor.hpp</label>
         <link refid="Tensor_8hpp"/>
-        <childnode refid="14" relation="include">
+        <childnode refid="13" relation="include">
         </childnode>
         <childnode refid="4" relation="include">
         </childnode>
@@ -102,7 +91,7 @@
         </childnode>
         <childnode refid="3" relation="include">
         </childnode>
-        <childnode refid="15" relation="include">
+        <childnode refid="14" relation="include">
         </childnode>
         <childnode refid="5" relation="include">
         </childnode>
@@ -129,7 +118,7 @@
         <childnode refid="11" relation="include">
         </childnode>
       </node>
-      <node id="15">
+      <node id="14">
         <label>include/algo.hpp</label>
         <link refid="algo_8hpp"/>
         <childnode refid="5" relation="include">
@@ -159,8 +148,6 @@
         <childnode refid="8" relation="include">
         </childnode>
         <childnode refid="12" relation="include">
-        </childnode>
-        <childnode refid="13" relation="include">
         </childnode>
         <childnode refid="3" relation="include">
         </childnode>
