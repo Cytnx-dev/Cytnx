@@ -144,6 +144,17 @@ jobs:
           test -n "$CUDART_INCLUDE_DIR" || { echo "::error::cuda_runtime.h not found under $SITE_PACKAGES"; exit 1; }
           echo "CUDAToolkit_ROOT=$(dirname "$CUDART_INCLUDE_DIR")" >> "$GITHUB_ENV"
 
+          # nvlink resolves libnvJitLink.so via a hardcoded path relative to
+          # its own bin/ directory following the traditional standalone CUDA
+          # Toolkit layout (.../bin/nvlink -> .../lib64/libnvJitLink.so). A
+          # relative dlopen() path like that is resolved directly, bypassing
+          # LD_LIBRARY_PATH entirely, so exporting LD_LIBRARY_PATH alone
+          # (below) does not fix it — confirmed by still hitting "nvlink
+          # fatal: elfLink linker library load error" with LD_LIBRARY_PATH
+          # correctly set. The nvidia-cuda-nvcc/nvidia-cuda-runtime wheels
+          # install to lib/, not lib64/, so add the directory nvlink expects.
+          ln -s lib "$(dirname "$CUDART_INCLUDE_DIR")/lib64"
+
           CUTENSOR_INCLUDE_DIR=$(dirname "$(find "$SITE_PACKAGES" -path '*/include/cutensor.h' | head -1)")
           test -n "$CUTENSOR_INCLUDE_DIR" || { echo "::error::cutensor.h not found under $SITE_PACKAGES"; exit 1; }
           echo "CUTENSOR_ROOT=$(dirname "$CUTENSOR_INCLUDE_DIR")" >> "$GITHUB_ENV"
@@ -152,14 +163,11 @@ jobs:
           test -n "$CUQUANTUM_INCLUDE_DIR" || { echo "::error::cutensornet.h not found under $SITE_PACKAGES"; exit 1; }
           echo "CUQUANTUM_ROOT=$(dirname "$CUQUANTUM_INCLUDE_DIR")" >> "$GITHUB_ENV"
 
-          # nvcc's -dlto device-link mode invokes nvlink, which dlopen()s
-          # libnvJitLink.so at runtime to perform the actual link — a
-          # dynamic-loader lookup (LD_LIBRARY_PATH), entirely separate from
-          # CMake's find_library (used only for CMake's own configure-time
-          # variables, via the .so symlinks created above). Without these
-          # directories on the loader path, nvlink fails with "elfLink
-          # linker library load error". The built cytnx extension needs the
-          # same paths at import/test time too.
+          # Separately from nvlink's own hardcoded lib64 lookup above, the
+          # built cytnx extension needs these directories on the loader path
+          # at import/test time to resolve cudart/cublas/cutensor/etc. via
+          # their bare sonames (a normal dlopen() search, which does honor
+          # LD_LIBRARY_PATH, unlike nvlink's relative-path case).
           echo "LD_LIBRARY_PATH=$(dirname "$CUDART_INCLUDE_DIR")/lib:$(dirname "$CUTENSOR_INCLUDE_DIR")/lib:$(dirname "$CUQUANTUM_INCLUDE_DIR")/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
 
       - name: Report resolved CUDA locations
