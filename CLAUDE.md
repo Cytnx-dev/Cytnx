@@ -2,7 +2,7 @@
 
 Cytnx is a C++ tensor-network library with CUDA acceleration and pybind11 Python
 bindings. This file is the operational contract for coding agents (Claude Code,
-Codex). `AGENTS.md` is a symlink to it — edit only this file. The Gemini review
+Codex). `AGENTS.md` is a pointer to this file — edit only this file. The Gemini review
 bot reads `GEMINI.md` (review-specific reminders); keep it in sync when review
 guidance changes. For *what* to work on, see issue #759; this file is only about
 working *correctly*.
@@ -20,7 +20,9 @@ cmake --build --preset openblas-cpu
 
 Key toggles (set by presets): `USE_CUDA`, `USE_MKL`, `BUILD_PYTHON` (ON by
 default), `USE_HPTT`. CPU presets iterate fastest; only use a `*-cuda` preset
-when a change actually touches GPU code.
+when a change actually touches GPU code — but when it does, build the cuda preset
+to compile-check it **even without a GPU** (the CUDA toolkit installs on GPU-less
+machines, including cloud agents; only *running* GPU tests needs real hardware).
 
 ## Test
 
@@ -32,6 +34,10 @@ cmake --build --preset debug-openblas-cpu --target test_main
 ctest --preset cpu-only --output-on-failure
 # single suite: build/debug-openblas-cpu/tests/test_main --gtest_filter='Storage.*'
 ```
+
+Debug presets build with AddressSanitizer (`USE_DEBUG=ON` → `-fsanitize=address`).
+If a debug test binary aborts inside ASAN on startup — common under CUDA — run it
+with `ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'`.
 
 GPU tests — target `gpu_test_main` (binary under `tests/gpu/`), NOT `test_main`:
 
@@ -103,8 +109,9 @@ Green locally before opening a PR. CI enforces:
 ## Commits & PRs
 
 - Branch off `master`; never push straight to `master`.
-- Small, single-purpose commits; conventional subjects: `fix(linalg): …`,
-  `refactor(Storage): …`, `test(Type): …`.
+- Small, single-purpose commits following the
+  [Conventional Commits](https://www.conventionalcommits.org) standard:
+  `fix(linalg): …`, `refactor(Storage): …`, `test(Type): …`.
 - Attribute agent-authored commits with a `Co-Authored-By:` trailer naming the agent.
 - PR body: **problem → fix → testing**, and link the issue it closes.
 
