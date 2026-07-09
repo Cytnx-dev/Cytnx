@@ -108,6 +108,23 @@ jobs:
             cutensor-cu13 \
             cuquantum-cu13
 
+      - name: Symlink unversioned .so names for CMake's find_library
+        # These wheels ship only versioned sonames (e.g. libcudart.so.13,
+        # libcutensor.so.2, libcublas.so.13), never the unversioned libFOO.so
+        # that find_library(NAMES foo) — used internally by
+        # FindCUDAToolkit.cmake, FindCUTENSOR.cmake, and FindCUQUANTUM.cmake —
+        # requires to match. Confirmed by inspecting the actual wheel
+        # contents (e.g. nvidia-cuda-runtime's lib/ has only
+        # libcudart.so.13, no libcudart.so). This is a fresh job environment
+        # containing only the packages this workflow itself installs, so
+        # scoping the search to all of site-packages is safe.
+        run: |
+          SITE_PACKAGES=$(python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])")
+          find "$SITE_PACKAGES" -name '*.so.*' -type f | while read -r lib; do
+            base="${lib%.so.*}.so"
+            [ -e "$base" ] || ln -s "$(basename "$lib")" "$base"
+          done
+
       - name: Locate CUDA toolkit and cuTENSOR/cuQuantum roots
         # The wheels above install under site-packages rather than a single
         # traditional CUDA_HOME tree, and FindCUTENSOR.cmake/FindCUQUANTUM.cmake
