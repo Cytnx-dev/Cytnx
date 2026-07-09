@@ -152,12 +152,23 @@ jobs:
           test -n "$CUQUANTUM_INCLUDE_DIR" || { echo "::error::cutensornet.h not found under $SITE_PACKAGES"; exit 1; }
           echo "CUQUANTUM_ROOT=$(dirname "$CUQUANTUM_INCLUDE_DIR")" >> "$GITHUB_ENV"
 
+          # nvcc's -dlto device-link mode invokes nvlink, which dlopen()s
+          # libnvJitLink.so at runtime to perform the actual link — a
+          # dynamic-loader lookup (LD_LIBRARY_PATH), entirely separate from
+          # CMake's find_library (used only for CMake's own configure-time
+          # variables, via the .so symlinks created above). Without these
+          # directories on the loader path, nvlink fails with "elfLink
+          # linker library load error". The built cytnx extension needs the
+          # same paths at import/test time too.
+          echo "LD_LIBRARY_PATH=$(dirname "$CUDART_INCLUDE_DIR")/lib:$(dirname "$CUTENSOR_INCLUDE_DIR")/lib:$(dirname "$CUQUANTUM_INCLUDE_DIR")/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
+
       - name: Report resolved CUDA locations
         run: |
           echo "CUDACXX=$CUDACXX"
           echo "CUDAToolkit_ROOT=$CUDAToolkit_ROOT"
           echo "CUTENSOR_ROOT=$CUTENSOR_ROOT"
           echo "CUQUANTUM_ROOT=$CUQUANTUM_ROOT"
+          echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 
       - name: Editable install (CUDA, Release, no coverage)
         # pyproject.toml pins cmake.args to --preset=openblas-cpu, but
