@@ -37,7 +37,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
         H = Hxx(anet, psi.shape()[0]*psi.shape()[1]*psi.shape()[2]*psi.shape()[3])
         energy, psivec = cytnx.linalg.Lanczos(Hop = H, method = "Gnd", Maxiter = 4, CvgCrit = 9999999999, Tin = psi)
 
-        return psivec, energy[0].item()
+        return psivec, energy.item()
 
     d = 2 #physical dimension
     s = 0.5 #spin-half

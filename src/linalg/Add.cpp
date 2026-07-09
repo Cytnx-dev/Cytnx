@@ -73,6 +73,9 @@ namespace cytnx {
         out.Init(Lt.shape(), out_dtype, Lt.device());
       }
 
+      const Tensor left = detail::HostScalarForGpuBroadcast(Lt, Lt.device());
+      const Tensor right = detail::HostScalarForGpuBroadcast(Rt, Lt.device());
+
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section.
@@ -84,17 +87,17 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::AddInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
-                                          Rt._impl->storage()._impl,
+          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
+                                          right._impl->storage()._impl,
                                           out._impl->storage()._impl->size(), {}, {}, {});
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -111,20 +114,20 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::AddInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, Lt._impl->storage()._impl->size(), Lt._impl->shape(),
-                    Lt._impl->invmapper(), Rt._impl->invmapper());
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, left._impl->storage()._impl->size(),
+                    left._impl->shape(), left._impl->invmapper(), right._impl->invmapper());
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
-                                          Rt._impl->storage()._impl,
-                                          Lt._impl->storage()._impl->size(), Lt._impl->shape(),
-                                          Lt._impl->invmapper(), Rt._impl->invmapper());
+          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
+                                          right._impl->storage()._impl,
+                                          left._impl->storage()._impl->size(), left._impl->shape(),
+                                          left._impl->invmapper(), right._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");

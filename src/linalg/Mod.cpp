@@ -27,6 +27,9 @@ namespace cytnx {
         out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
       }
 
+      const Tensor left = detail::HostScalarForGpuBroadcast(Lt, Lt.device());
+      const Tensor right = detail::HostScalarForGpuBroadcast(Rt, Lt.device());
+
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section
         if (Lt.device() == Device.cpu) {
@@ -37,17 +40,17 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::ModInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
           cytnx::linalg_internal::cuMod_dispatch(
-            out._impl->storage()._impl, Lt._impl->storage()._impl, Rt._impl->storage()._impl,
+            out._impl->storage()._impl, left._impl->storage()._impl, right._impl->storage()._impl,
             out._impl->storage()._impl->size(), {}, {}, {});
   #else
           cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -64,13 +67,13 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::ModInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, Lt._impl->storage()._impl->size(), Lt._impl->shape(),
-                    Lt._impl->invmapper(), Rt._impl->invmapper());
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, left._impl->storage()._impl->size(),
+                    left._impl->shape(), left._impl->invmapper(), right._impl->invmapper());
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           cytnx_error_msg(true,

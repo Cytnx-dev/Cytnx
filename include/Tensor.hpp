@@ -1020,11 +1020,15 @@ namespace cytnx {
     }
 
     const Scalar::Sproxy item() const {
+      cytnx_error_msg(this->_impl->storage().size() != 1, "[ERROR][Tensor.item]%s",
+                      "item can only be called from a Tensor with only one element\n");
       Scalar::Sproxy out(this->storage()._impl, 0);
       return out;
     }
 
     Scalar::Sproxy item() {
+      cytnx_error_msg(this->_impl->storage().size() != 1, "[ERROR][Tensor.item]%s",
+                      "item can only be called from a Tensor with only one element\n");
       Scalar::Sproxy out(this->storage()._impl, 0);
       return out;
     }

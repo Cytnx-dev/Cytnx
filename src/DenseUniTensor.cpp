@@ -634,7 +634,10 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::get(const std::vector<Accessor> &accessors) {
-    if (accessors.empty()) return this->clone_meta();
+    if (accessors.empty()) {
+      if (this->_bonds.empty()) return this->clone();
+      return this->clone_meta();
+    }
     boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     std::vector<cytnx_int64> removed;  // bonds to be removed
     if (this->_is_diag) {
@@ -682,7 +685,10 @@ namespace cytnx {
   }
 
   void DenseUniTensor::set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
-    if (accessors.empty()) return;
+    if (accessors.empty()) {
+      if (this->_bonds.empty()) this->_block.set(accessors, rhs);
+      return;
+    }
     if (this->_is_diag) {
       if (accessors.size() == 1) {
         this->_block.set(accessors, rhs);
@@ -1182,6 +1188,8 @@ namespace cytnx {
     if (this->_is_diag) {
       // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
       this->_block = linalg::Sum(this->_block);
+      this->_block.reshape_({});
+      this->_is_diag = false;
     } else {
       this->_block = this->_block.Trace(ida, idb);
     }
@@ -1231,6 +1239,8 @@ namespace cytnx {
     if (this->_is_diag) {
       // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
       this->_block = linalg::Sum(this->_block);
+      this->_block.reshape_({});
+      this->_is_diag = false;
     } else {
       this->_block = this->_block.Trace(ida, idb);
     }

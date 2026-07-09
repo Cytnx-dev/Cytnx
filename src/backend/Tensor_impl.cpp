@@ -151,6 +151,12 @@ namespace cytnx {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to getitem from an uninitialized Tensor%s", "\n");
+      return this->clone();
+    }
+
     std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
       acc.push_back(Accessor::all());
@@ -232,6 +238,12 @@ namespace cytnx {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to getitem from an uninitialized Tensor%s", "\n");
+      return this->clone();
+    }
+
     std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
       acc.push_back(Accessor::all());
@@ -266,6 +278,18 @@ namespace cytnx {
                         const boost::intrusive_ptr<Tensor_impl> &rhs) {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
+
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+      cytnx_error_msg(rhs->storage().size() != 1, "[ERROR][Tensor.set_elems]%s",
+                      "inconsistent shape");
+      const std::vector<cytnx_uint64> scalar_shape = {1};
+      const std::vector<std::vector<cytnx_uint64>> scalar_locators(1);
+      this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl, scalar_shape, scalar_locators,
+                                                1, true);
+      return;
+    }
 
     std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
@@ -353,6 +377,19 @@ namespace cytnx {
   void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const T &rc) {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
+
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+      Scalar c = rc;
+
+      Storage tmp(1, c.dtype(), this->device());
+      tmp.set_item(0, rc);
+      const std::vector<cytnx_uint64> scalar_shape = {1};
+      const std::vector<std::vector<cytnx_uint64>> scalar_locators(1);
+      this->storage()._impl->SetElem_byShape_v2(tmp._impl, scalar_shape, scalar_locators, 1, true);
+      return;
+    }
 
     std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {

@@ -353,11 +353,64 @@ TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
   EXPECT_DOUBLE_EQ(out.at<double>({1}), 3.0);
   EXPECT_DOUBLE_EQ(out.at<double>({2}), 4.0);
 
+  out = scalar - vec;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 1.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 0.0);
+
+  out = vec - scalar;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), -2.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), -1.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 0.0);
+
   Tensor scalar2(std::vector<cytnx_uint64>{}, Type.Double);
   scalar2.item<double>() = 5.0;
   out = scalar * scalar2;
   EXPECT_EQ(out.shape().size(), 0);
   EXPECT_DOUBLE_EQ(out.item<double>(), 10.0);
+
+  out = scalar * vec;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 2.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 4.0);
+
+  out = vec * scalar;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 2.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 4.0);
+
+  Tensor denom = arange(1, 4, 1, Type.Double);
+  out = scalar / denom;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 1.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 2.0 / 3.0);
+
+  out = denom / scalar;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 0.5);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 1.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 1.5);
+
+  Tensor mod_scalar(std::vector<cytnx_uint64>{}, Type.Int64);
+  mod_scalar.item<cytnx_int64>() = 5;
+  Tensor mod_vec = arange(2, 5, 1, Type.Int64);
+
+  out = linalg::Mod(mod_scalar, mod_vec);
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_EQ(out.at<cytnx_int64>({0}), 1);
+  EXPECT_EQ(out.at<cytnx_int64>({1}), 2);
+  EXPECT_EQ(out.at<cytnx_int64>({2}), 1);
+
+  out = linalg::Mod(mod_vec, mod_scalar);
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_EQ(out.at<cytnx_int64>({0}), 2);
+  EXPECT_EQ(out.at<cytnx_int64>({1}), 3);
+  EXPECT_EQ(out.at<cytnx_int64>({2}), 4);
 
   vec += scalar;
   EXPECT_EQ(vec.shape(), (std::vector<cytnx_uint64>{3}));
@@ -370,9 +423,29 @@ TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
   Tensor legacy_shape_one({1}, Type.Double);
   legacy_shape_one.at<double>({0}) = 2.0;
   EXPECT_FALSE(legacy_shape_one.is_scalar());
+  EXPECT_DOUBLE_EQ(legacy_shape_one.item<double>(), 2.0);
+  Tensor legacy_shape_one_one({1, 1}, Type.Double);
+  legacy_shape_one_one.at<double>({0, 0}) = 3.0;
+  EXPECT_FALSE(legacy_shape_one_one.is_scalar());
+  EXPECT_DOUBLE_EQ(legacy_shape_one_one.item<double>(), 3.0);
   EXPECT_THROW((void)(legacy_shape_one + vec), std::logic_error);
   EXPECT_THROW((void)(vec + legacy_shape_one), std::logic_error);
   EXPECT_THROW(vec += legacy_shape_one, std::logic_error);
+}
+
+TEST_F(TensorTest, RankZeroVectordotIsScalar) {
+  Tensor vec = arange(3).astype(Type.Double);
+
+  Tensor dot = linalg::Vectordot(vec, vec, false);
+  EXPECT_TRUE(dot.is_scalar());
+  EXPECT_EQ(dot.shape().size(), 0);
+  EXPECT_DOUBLE_EQ(dot.item<double>(), 5.0);
+
+  Tensor scaled = dot * vec;
+  EXPECT_EQ(scaled.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(scaled.at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(scaled.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(scaled.at<double>({2}), 10.0);
 }
 
 TEST_F(TensorTest, RankZeroBroadcastComparison) {
@@ -385,6 +458,12 @@ TEST_F(TensorTest, RankZeroBroadcastComparison) {
   EXPECT_FALSE(out.at<cytnx_bool>({0}));
   EXPECT_FALSE(out.at<cytnx_bool>({1}));
   EXPECT_TRUE(out.at<cytnx_bool>({2}));
+}
+
+TEST_F(TensorTest, RankZeroDiagThrowsControlledError) {
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 2.0;
+  EXPECT_THROW(linalg::Diag(scalar), std::logic_error);
 }
 
 TEST_F(TensorTest, RankZeroSaveLoad) {

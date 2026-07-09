@@ -17,6 +17,13 @@ namespace cytnx {
         return true;
       }
 
+      inline Tensor HostScalarForGpuBroadcast(const Tensor &tensor, const int op_device) {
+        if (op_device != Device.cpu && tensor.is_scalar() && tensor.device() != Device.cpu) {
+          return tensor.to(Device.cpu);
+        }
+        return tensor;
+      }
+
     }  // namespace detail
   }  // namespace linalg
 }  // namespace cytnx

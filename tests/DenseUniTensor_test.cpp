@@ -73,6 +73,38 @@ TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
   EXPECT_EQ(from_scalar.rowrank(), 0);
   EXPECT_TRUE(from_scalar.get_block_().is_scalar());
   EXPECT_DOUBLE_EQ(from_scalar.get_block_().item<double>(), -1.5);
+
+  UniTensor selected = from_scalar.get(std::vector<Accessor>{});
+  EXPECT_EQ(selected.rank(), 0);
+  EXPECT_TRUE(selected.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(selected.get_block_().item<double>(), -1.5);
+
+  Tensor replacement(std::vector<cytnx_uint64>{}, Type.Double);
+  replacement.item<double>() = 4.0;
+  from_scalar.set(std::vector<Accessor>{}, replacement);
+  EXPECT_DOUBLE_EQ(from_scalar.get_block_().item<double>(), 4.0);
+}
+
+TEST_F(DenseUniTensorTest, RankZeroDenseContractActsAsScalar) {
+  Tensor left_block(std::vector<cytnx_uint64>{}, Type.Double);
+  left_block.item<double>() = 2.0;
+  UniTensor left(left_block, false, 0);
+
+  Tensor right_block(std::vector<cytnx_uint64>{}, Type.Double);
+  right_block.item<double>() = 5.0;
+  UniTensor right(right_block, false, 0);
+
+  UniTensor product = Contract(left, right);
+  EXPECT_EQ(product.rank(), 0);
+  EXPECT_TRUE(product.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(product.get_block_().item<double>(), 10.0);
+
+  UniTensor vector(arange(3).astype(Type.Double), false, 0);
+  product = Contract(left, vector);
+  EXPECT_EQ(product.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(product.get_block_().at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(product.get_block_().at<double>({1}), 2.0);
+  EXPECT_DOUBLE_EQ(product.get_block_().at<double>({2}), 4.0);
 }
 
 TEST_F(DenseUniTensorTest, RankZeroSaveLoadNormalizesBlock) {
@@ -4665,6 +4697,25 @@ TEST_F(DenseUniTensorTest, Trace_diag) {
   EXPECT_TRUE(AreEqUniTensor(ut_tr.to_dense(), ans));
 }
 #endif
+
+TEST_F(DenseUniTensorTest, TraceDiagRankZeroBlockIsScalar) {
+  UniTensor traced = ut_complex_diag.Trace("row", "col");
+  EXPECT_EQ(traced.rank(), 0);
+  EXPECT_TRUE(traced.get_block_().is_scalar());
+  EXPECT_EQ(traced.get_block_().shape().size(), 0);
+  auto value = traced.get_block_().item<cytnx_complex128>();
+  EXPECT_DOUBLE_EQ(value.real(), 6.0);
+  EXPECT_DOUBLE_EQ(value.imag(), 0.0);
+
+  UniTensor in_place = ut_complex_diag.clone();
+  in_place.Trace_("row", "col");
+  EXPECT_EQ(in_place.rank(), 0);
+  EXPECT_TRUE(in_place.get_block_().is_scalar());
+  EXPECT_EQ(in_place.get_block_().shape().size(), 0);
+  value = in_place.get_block_().item<cytnx_complex128>();
+  EXPECT_DOUBLE_EQ(value.real(), 6.0);
+  EXPECT_DOUBLE_EQ(value.imag(), 0.0);
+}
 
 /*=====test info=====
 describe:test Trace by string label

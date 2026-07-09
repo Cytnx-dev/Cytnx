@@ -21,9 +21,23 @@ using pybind_cytnx::dispatch_pyint;
 #ifdef BACKEND_TORCH
 #else
 
+namespace {
+  bool IsEmptyTuple(py::handle object) {
+    return py::isinstance<py::tuple>(object) &&
+           py::reinterpret_borrow<py::tuple>(object).size() == 0;
+  }
+}  // namespace
+
 template <class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc) {
-  cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s", "\n");
+  cytnx_error_msg(self.dtype() == cytnx::Type.Void,
+                  "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+  if (self.rank() == 0) {
+    cytnx_error_msg(!IsEmptyTuple(locators), "[ERROR] rank-0 Tensor can only be indexed with ().%s",
+                    "\n");
+    self.set(std::vector<cytnx::Accessor>{}, rc);
+    return;
+  }
 
   ssize_t start, stop, step, slicelength;
   std::vector<cytnx::Accessor> accessors;
@@ -322,8 +336,13 @@ void tensor_binding(py::module &m) {
          })
     .def("__getitem__",
          [](const cytnx::Tensor &self, py::object locators) {
-           cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s",
-                           "\n");
+           cytnx_error_msg(self.dtype() == cytnx::Type.Void,
+                           "[ERROR] try to getitem from an uninitialized Tensor%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!IsEmptyTuple(locators),
+                             "[ERROR] rank-0 Tensor can only be indexed with ().%s", "\n");
+             return self.get({});
+           }
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
@@ -374,8 +393,14 @@ void tensor_binding(py::module &m) {
 
     .def("__setitem__",
          [](cytnx::Tensor &self, py::object locators, const cytnx::Tensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s",
-                           "\n");
+           cytnx_error_msg(self.dtype() == cytnx::Type.Void,
+                           "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!IsEmptyTuple(locators),
+                             "[ERROR] rank-0 Tensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<cytnx::Accessor>{}, rhs);
+             return;
+           }
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;

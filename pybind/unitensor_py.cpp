@@ -24,6 +24,13 @@ using pybind_cytnx::dispatch_pyint;
 #ifdef BACKEND_TORCH
 #else
 
+namespace {
+  bool IsEmptyTuple(py::handle object) {
+    return py::isinstance<py::tuple>(object) &&
+           py::reinterpret_borrow<py::tuple>(object).size() == 0;
+  }
+}  // namespace
+
 class cHclass {
  public:
   Scalar::Sproxy proxy;
@@ -491,31 +498,48 @@ void unitensor_binding(py::module &m) {
 
      .def("__getitem__",
          [](const UniTensor &self, py::object locators) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to getitem from a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to getitem from an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
              "[ERROR] Cannot get element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!IsEmptyTuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             return self.get(std::vector<Accessor>{});
+           }
 
            auto accessors = build_accessors(self, locators);
            return self.get(accessors);
          })
     .def("__setitem__",
          [](UniTensor &self, py::object locators, const cytnx::Tensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to setelem to a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to setelem to an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(self.uten_type() == UTenType.Sparse, "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!IsEmptyTuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<Accessor>{}, rhs);
+             return;
+           }
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs);
          })
     .def("__setitem__",
          [](UniTensor &self, py::object locators, const cytnx::UniTensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to setelem to a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to setelem to an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
              "[ERROR] cannot set element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!IsEmptyTuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<Accessor>{}, rhs.get_block());
+             return;
+           }
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs.get_block());
