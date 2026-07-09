@@ -1,7 +1,6 @@
 #include "cuTrace_internal.hpp"
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
-#include "utils/cucomplex_arithmetic.hpp"
 
 #include "Generator.hpp"
 #include "utils/utils.hpp"
