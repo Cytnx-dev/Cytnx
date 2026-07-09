@@ -3031,45 +3031,6 @@ namespace cytnx {
     std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond = -1);
 
     /**
-    @brief Blas Axpy, performing \f$ a\textbf{x} + \textbf{y} \f$, inplacely.
-    @details
-    This function performs
-    \f[
-    a\textbf{x} + \textbf{y},
-    \f]
-    where \f$ \textbf{x},\textbf{y} \f$ are Tensor and \f$ a \f$ is a Scalar. The dtype of return
-    Tensor will be the strongest among \p x, \p y and \p a.
-    @param[in] a Scalar.
-    @param[in] x Tensor, can be any rank
-    @param[in] y Tensor, can be any rank
-    @return
-    [Tensor]
-    If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
-    @note This will return a new tensor.
-    */
-    Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor());
-
-    /**
-     * @brief Blas Axpy, performing \f$ \textbf{y} = a\textbf{x} + \textbf{y} \f$, inplacely.
-     * @details
-     * This function performs
-     * \f[
-     * \textbf{y} = a\textbf{x} + \textbf{y},
-     * \f]
-     * where \f$ \textbf{x},\textbf{y} \f$ are Tensor and a is a Scalar. The dtype of return
-     * Tensor will be the strongest among \p x, \p y and \p a.
-     * @param[in ] a Scalar.
-     * @param[in ] x Tensor, can be any rank
-     * @param[in ] y Tensor, can be any rank
-     * @return
-     * [Tensor]
-     * If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
-     * @note Compared to Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor()), this
-     * function will perform inplacely.
-     */
-    void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
-
-    /**
     @brief Blas Ger, performing return = a*vec(x)*vec(y)^T
     @details
         This function performs a*x*y^T where x,y are rank-1 Tensor with dimension nx and ny

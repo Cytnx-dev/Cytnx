@@ -8,10 +8,8 @@ target_sources(cytnx
     PRIVATE
     #linalg_internal_interface.hpp
     Add.cpp
-    Axpy.cpp
     Ger.cpp
     Arnoldi.cpp
-    Axpy.cpp
     Ger.cpp
     iAdd.cpp
     Min.cpp
