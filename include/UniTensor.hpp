@@ -452,8 +452,8 @@ namespace cytnx {
    public:
     Tensor _block;
     std::vector<Tensor> _interface_block;  // this is serves as interface for get_blocks_();
-    DenseUniTensor *clone_meta() const {
-      DenseUniTensor *tmp = new DenseUniTensor();
+    boost::intrusive_ptr<DenseUniTensor> clone_meta() const {
+      boost::intrusive_ptr<DenseUniTensor> tmp(new DenseUniTensor());
       tmp->_bonds = vec_clone(this->_bonds);
       tmp->_labels = this->_labels;
       tmp->_is_braket_form = this->_is_braket_form;
@@ -514,18 +514,16 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
-      DenseUniTensor *out_raw = this->clone_meta();
-      out_raw->_block = this->_block;
-      out_raw->set_rowrank_(new_rowrank);
-      boost::intrusive_ptr<UniTensor_base> out(out_raw);
+      boost::intrusive_ptr<DenseUniTensor> out = this->clone_meta();
+      out->_block = this->_block;
+      out->set_rowrank_(new_rowrank);
       return out;
     }
 
     boost::intrusive_ptr<UniTensor_base> clone() const {
-      DenseUniTensor *tmp = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
       tmp->_block = this->_block.clone();
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
     bool is_contiguous() const { return this->_block.is_contiguous(); }
     unsigned int dtype() const { return this->_block.dtype(); }
@@ -595,9 +593,8 @@ namespace cytnx {
                                                  const std::string &new_label);
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
-      DenseUniTensor *tmp = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
       tmp->_block = this->_block.astype(dtype);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
       return tmp;
     }
 
@@ -621,10 +618,9 @@ namespace cytnx {
         boost::intrusive_ptr<UniTensor_base> out(this);
         return out;
       } else {
-        DenseUniTensor *tmp = this->clone_meta();
+        boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
         tmp->_block = this->_block.contiguous();
-        boost::intrusive_ptr<UniTensor_base> out(tmp);
-        return out;
+        return tmp;
       }
     }
 
