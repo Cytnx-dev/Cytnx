@@ -8,8 +8,8 @@
 namespace cytnx {
 
   //-----------------------------------------------
-  void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
-                         int device, const bool &init_zero) {
+  void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, unsigned int dtype, int device,
+                         bool init_zero) {
     // check:
     cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
     cytnx_uint64 Nelem = 1;

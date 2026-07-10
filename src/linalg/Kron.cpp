@@ -16,8 +16,7 @@
 namespace cytnx {
 
   namespace linalg {
-    Tensor Kron(const Tensor &lhs, const Tensor &rhs, const bool &lhs_pad_left,
-                const bool &rhs_pad_left) {
+    Tensor Kron(const Tensor &lhs, const Tensor &rhs, bool lhs_pad_left, bool rhs_pad_left) {
       // checking:
       cytnx_error_msg(lhs.device() != rhs.device(),
                       "[ERROR] two tensor cannot on different devices.%s", "\n");

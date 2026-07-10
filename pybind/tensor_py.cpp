@@ -161,7 +161,7 @@ void tensor_binding(py::module &m) {
     .def(py::init<>())
     .def(py::init<const cytnx::Tensor &>())
     .def(
-      py::init<const std::vector<cytnx::cytnx_uint64> &, const unsigned int &, int, const bool &>(),
+      py::init<const std::vector<cytnx::cytnx_uint64> &, unsigned int, int, bool>(),
       py::arg("shape"), py::arg("dtype") = (cytnx::cytnx_uint64)cytnx::Type.Double,
       py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("Init",

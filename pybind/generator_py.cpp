@@ -23,7 +23,7 @@ using namespace cytnx;
 void generator_binding(py::module &m) {
   m.def(
     "zeros",
-    [](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) -> Tensor {
+    [](cytnx_uint64 Nelem, unsigned int dtype, int device) -> Tensor {
       return cytnx::zeros({Nelem}, dtype, device);
     },
     py::arg("size"), py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
@@ -31,7 +31,7 @@ void generator_binding(py::module &m) {
 
   m.def(
     "zeros",
-    [](py::object Nelem, const unsigned int &dtype, const int &device) -> Tensor {
+    [](py::object Nelem, unsigned int dtype, int device) -> Tensor {
       std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64>>();
       return cytnx::zeros(tmp, dtype, device);
     },
@@ -40,7 +40,7 @@ void generator_binding(py::module &m) {
 
   m.def(
     "ones",
-    [](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) -> Tensor {
+    [](cytnx_uint64 Nelem, unsigned int dtype, int device) -> Tensor {
       return cytnx::ones({Nelem}, dtype, device);
     },
     py::arg("size"), py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
@@ -48,7 +48,7 @@ void generator_binding(py::module &m) {
 
   m.def(
     "ones",
-    [](py::object Nelem, const unsigned int &dtype, const int &device) -> Tensor {
+    [](py::object Nelem, unsigned int dtype, int device) -> Tensor {
       std::vector<cytnx_uint64> tmp = Nelem.cast<std::vector<cytnx_uint64>>();
       return cytnx::ones(tmp, dtype, device);
     },
@@ -62,22 +62,20 @@ void generator_binding(py::module &m) {
         py::arg("device") = (int)(cytnx::Device.cpu));
 
   m.def(
-    "arange", [](const cytnx_uint64 &Nelem) -> Tensor { return cytnx::arange(Nelem); },
-    py::arg("size"));
+    "arange", [](cytnx_uint64 Nelem) -> Tensor { return cytnx::arange(Nelem); }, py::arg("size"));
 
   m.def(
     "arange",
-    [](const cytnx_double &start, const cytnx_double &end, const cytnx_double &step,
-       const unsigned int &dtype,
-       const int &device) -> Tensor { return cytnx::arange(start, end, step, dtype, device); },
+    [](cytnx_double start, cytnx_double end, cytnx_double step, unsigned int dtype,
+       int device) -> Tensor { return cytnx::arange(start, end, step, dtype, device); },
     py::arg("start"), py::arg("end"), py::arg("step") = double(1),
     py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
     py::arg("device") = (int)(cytnx::Device.cpu));
 
   m.def(
     "linspace",
-    [](const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
-       const bool &endpoint, const unsigned int &dtype, const int &device) -> Tensor {
+    [](cytnx_double start, cytnx_double end, cytnx_uint64 Nelem, bool endpoint, unsigned int dtype,
+       int device) -> Tensor {
       return cytnx::linspace(start, end, Nelem, endpoint, dtype, device);
     },
     py::arg("start"), py::arg("end"), py::arg("Nelem"), py::arg("endpoint") = true,

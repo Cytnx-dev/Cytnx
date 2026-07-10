@@ -2444,8 +2444,8 @@ namespace cytnx {
     @pre two tensor should on same device.
 
     */
-    Tensor Kron(const Tensor &lhs, const Tensor &rhs, const bool &lhs_pad_left = false,
-                const bool &rhs_pad_left = false);
+    Tensor Kron(const Tensor &lhs, const Tensor &rhs, bool lhs_pad_left = false,
+                bool rhs_pad_left = false);
 
     // Directsum:
     //==================================================

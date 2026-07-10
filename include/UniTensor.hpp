@@ -5751,13 +5751,13 @@ namespace cytnx {
     */
     static UniTensor zeros(const std::vector<cytnx_uint64> &shape,
                            const std::vector<std::string> &in_labels = {},
-                           const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                           unsigned int dtype = Type.Double, int device = Device.cpu,
                            const std::string &name = "") {
       return UniTensor(cytnx::zeros(shape, dtype, device), false, -1, in_labels, name);
     }
     static UniTensor zeros(std::initializer_list<cytnx_uint64> shape,
                            const std::vector<std::string> &in_labels = {},
-                           const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                           unsigned int dtype = Type.Double, int device = Device.cpu,
                            const std::string &name = "") {
       return zeros(std::vector<cytnx_uint64>(shape), in_labels, dtype, device, name);
     }
@@ -5775,11 +5775,9 @@ namespace cytnx {
     @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if
     is_diag is true (false).
     */
-    static UniTensor identity(const cytnx_uint64 &dim,
-                              const std::vector<std::string> &in_labels = {},
-                              const cytnx_bool &is_diag = false,
-                              const unsigned int &dtype = Type.Double,
-                              const int &device = Device.cpu, const std::string &name = "") {
+    static UniTensor identity(cytnx_uint64 dim, const std::vector<std::string> &in_labels = {},
+                              cytnx_bool is_diag = false, unsigned int dtype = Type.Double,
+                              int device = Device.cpu, const std::string &name = "") {
       if (is_diag) {
         return UniTensor(cytnx::ones({dim}, dtype, device), is_diag, -1, in_labels, name);
       } else {
@@ -5802,9 +5800,9 @@ namespace cytnx {
     @see cytnx::UniTensor::identity
     @note This function is a alias of cytnx::UniTensor::identity().
     */
-    static UniTensor eye(const cytnx_uint64 &dim, const std::vector<std::string> &in_labels = {},
-                         const cytnx_bool &is_diag = false, const unsigned int &dtype = Type.Double,
-                         const int &device = Device.cpu, const std::string &name = "") {
+    static UniTensor eye(cytnx_uint64 dim, const std::vector<std::string> &in_labels = {},
+                         cytnx_bool is_diag = false, unsigned int dtype = Type.Double,
+                         int device = Device.cpu, const std::string &name = "") {
       return identity(dim, in_labels, is_diag, dtype, device, name);
     }
 
@@ -5822,13 +5820,13 @@ namespace cytnx {
     */
     static UniTensor ones(const std::vector<cytnx_uint64> &shape,
                           const std::vector<std::string> &in_labels = {},
-                          const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                          unsigned int dtype = Type.Double, int device = Device.cpu,
                           const std::string &name = "") {
       return UniTensor(cytnx::ones(shape, dtype, device), false, -1, in_labels, name);
     }
     static UniTensor ones(std::initializer_list<cytnx_uint64> shape,
                           const std::vector<std::string> &in_labels = {},
-                          const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                          unsigned int dtype = Type.Double, int device = Device.cpu,
                           const std::string &name = "") {
       return ones(std::vector<cytnx_uint64>(shape), in_labels, dtype, device, name);
     }
@@ -5847,8 +5845,7 @@ namespace cytnx {
     std::string &name) \n
     @see arange(const cytnx_int64 &Nelem)
     */
-    static UniTensor arange(const cytnx_int64 &Nelem,
-                            const std::vector<std::string> &in_labels = {},
+    static UniTensor arange(cytnx_int64 Nelem, const std::vector<std::string> &in_labels = {},
                             const std::string &name = "") {
       return UniTensor(cytnx::arange(Nelem), false, -1, in_labels, name);
     }
@@ -5870,10 +5867,9 @@ namespace cytnx {
     @see arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const
     unsigned int &dtype, const int &device)
     */
-    static UniTensor arange(const cytnx_double &start, const cytnx_double &end,
-                            const cytnx_double &step = 1,
+    static UniTensor arange(cytnx_double start, cytnx_double end, cytnx_double step = 1,
                             const std::vector<std::string> &in_labels = {},
-                            const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                            unsigned int dtype = Type.Double, int device = Device.cpu,
                             const std::string &name = "") {
       return UniTensor(cytnx::arange(start, end, step, dtype, device), false, -1, in_labels, name);
     }
@@ -5897,11 +5893,10 @@ namespace cytnx {
     @see linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
     const bool &endpoint, const unsigned int &dtype, const int &device)
     */
-    static UniTensor linspace(const cytnx_double &start, const cytnx_double &end,
-                              const cytnx_uint64 &Nelem, const bool &endpoint = true,
-                              const std::vector<std::string> &in_labels = {},
-                              const unsigned int &dtype = Type.Double,
-                              const int &device = Device.cpu, const std::string &name = "") {
+    static UniTensor linspace(cytnx_double start, cytnx_double end, cytnx_uint64 Nelem,
+                              bool endpoint = true, const std::vector<std::string> &in_labels = {},
+                              unsigned int dtype = Type.Double, int device = Device.cpu,
+                              const std::string &name = "") {
       return UniTensor(cytnx::linspace(start, end, Nelem, endpoint, dtype, device), false, -1,
                        in_labels, name);
     }
