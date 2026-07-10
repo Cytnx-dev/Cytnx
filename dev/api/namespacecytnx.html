@@ -1348,6 +1348,7 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>] The result of the multiplication. </dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd><code>Lt</code> and <code>Rt</code> must have the same shape. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#a8705f85e347439577708173ab963f909" title="The multiplication function between two UniTensor.">linalg::Mul(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>internal/advanced: not a TN operation; python surface removed per #934; see <a class="el" href="namespacecytnx.html#ad1f97cdff6a9825441592b906d8ae330" title="The addition operator between two UniTensor.">operator+(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</a> for the full rationale. </dd></dl>
 
 </div>
 </div>
@@ -1648,6 +1649,7 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>] The result of the addition. </dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd><code>Lt</code> and <code>Rt</code> must have the same shape. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#ac61bd0f99306496fae81f8601fa4070c" title="The addition function between two UniTensor.">linalg::Add(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>internal/advanced: not a TN operation; python surface removed per #934 (decision record 2026-07-06). This note is the canonical rationale for every UniTensor-vs-UniTensor elementwise arithmetic entry point: the free operators in this header ('+', '-', '*', '/') and the <a class="el" href="classcytnx_1_1UniTensor.html#af8db9e12557098f0c424dabfb3a45ac3" title="The addition function of the UniTensor.">UniTensor::Add</a>/Sub/Mul/Div member functions (in-place and out-of-place). The python <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> dunders raise TypeError for the UniTensor-vs-UniTensor case (see pybind/unitensor_py.cpp, raise_unitensor_elementwise_removed) while the C++ layer remains. operator+ and operator- are load-bearing: src/linalg/Lanczos_Gnd_Ut.cpp and src/linalg/Lanczos_Exp.cpp use them as genuine Krylov-subspace vector-space arithmetic (axpy) inside the solvers backing <a class="el" href="namespacecytnx_1_1linalg.html#a91b798c44c9479338b03e13f73284b3f" title="perform Lanczos for hermitian/symmetric matrices or linear function.">linalg::Lanczos</a>(method="Gnd") and <a class="el" href="namespacecytnx_1_1linalg.html#a74e4c9a9cfe97d7ca523012078a3f5e1" title="Perform the Lanczos algorithm for hermitian operator  to approximate .">linalg::Lanczos_Exp()</a>. operator* (elementwise/Hadamard product) and operator/ (elementwise division) are basis-dependent, have no tensor-network meaning, and no in-tree C++ caller as of the audit; they are kept un-deprecated only because the removal task's scope was the python surface. </dd></dl>
 
 </div>
 </div>
@@ -1948,6 +1950,7 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>] The result of the subtraction. </dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd><code>Lt</code> and <code>Rt</code> must have the same shape. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#a9918295b0d2d78fa475390e91ccbf57b" title="The subtraction function between two UniTensor.">linalg::Sub(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>internal/advanced: not a TN operation; python surface removed per #934; see <a class="el" href="namespacecytnx.html#ad1f97cdff6a9825441592b906d8ae330" title="The addition operator between two UniTensor.">operator+(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</a> for the full rationale. </dd></dl>
 
 </div>
 </div>
@@ -2248,6 +2251,7 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a>] The result of the division. </dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd><code>Lt</code> and <code>Rt</code> must have the same shape. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#affc6138760ac67505ae194edf14525e8" title="The division function between two UniTensor.">linalg::Div(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>internal/advanced: not a TN operation; python surface removed per #934; see <a class="el" href="namespacecytnx.html#ad1f97cdff6a9825441592b906d8ae330" title="The addition operator between two UniTensor.">operator+(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</a> for the full rationale. </dd></dl>
 
 </div>
 </div>
