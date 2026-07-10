@@ -9,7 +9,7 @@ namespace cytnx {
     Tensor Sum(const Tensor &Tin) {
       cytnx_error_msg(Tin.dtype() == Type.Void,
                       "[Cannot have void (uninitialized) Tensor as input]%s", "\n");
-      Tensor out({1}, Tin.dtype(), Tin.device());
+      Tensor out({}, Tin.dtype(), Tin.device());
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Sum_ii[out.dtype()](out._impl->storage()._impl,

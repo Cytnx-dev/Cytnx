@@ -82,13 +82,13 @@ namespace {
     ASSERT_FALSE(p.is_contiguous());
     auto out_p = cytnx::linalg::Trace(p, 0, 1);
     auto out_c = cytnx::linalg::Trace(t, 0, 1);  // tr(A) == tr(A^T)
-    ASSERT_EQ(out_p.shape().size(), 1u);
-    ASSERT_EQ(out_p.shape()[0], 1u);
+    ASSERT_TRUE(out_p.is_scalar());
+    ASSERT_TRUE(out_c.is_scalar());
     EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(out_p, out_c, 1e-12));
   }
 
   TEST(LinalgTraceTest, OutputRankIsInputMinusTwo) {
-    // tr(rank-N) -> rank-(N-2); tr(rank-2) -> a 1-element rank-1 tensor.
+    // tr(rank-N) -> rank-(N-2); tr(rank-2) -> a rank-0 scalar tensor.
     auto r4 = cytnx::random::random_tensor({2, 3, 2, 4}, -1.0, 1.0, Device.cpu, 0, Type.Double);
     auto out4 = cytnx::linalg::Trace(r4, 0, 2);
     EXPECT_EQ(out4.shape().size(), 2u);
@@ -102,8 +102,7 @@ namespace {
 
     auto r2 = cytnx::random::random_tensor({5, 5}, -1.0, 1.0, Device.cpu, 0, Type.Double);
     auto out2 = cytnx::linalg::Trace(r2, 0, 1);
-    EXPECT_EQ(out2.shape().size(), 1u);
-    EXPECT_EQ(out2.shape()[0], 1u);
+    EXPECT_TRUE(out2.is_scalar());
   }
 
   TEST(LinalgTraceTest, SwappedAxisOrderMatches) {
@@ -122,9 +121,8 @@ namespace {
   TEST(LinalgTraceTest, Rank2ZeroExtentReturnsZeroScalar) {
     auto t = ZeroExtentTensor({0, 0}, Type.Double);
     auto out = cytnx::linalg::Trace(t, 0, 1);
-    ASSERT_EQ(out.shape().size(), 1u);
-    EXPECT_EQ(out.shape()[0], 1u);
-    EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), 0.0);
+    ASSERT_TRUE(out.is_scalar());
+    EXPECT_DOUBLE_EQ(out.item<cytnx_double>(), 0.0);
   }
 
   TEST(LinalgTraceTest, ZeroTracedAxisReturnsZeroFilledOutput) {

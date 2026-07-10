@@ -1125,7 +1125,7 @@ namespace cytnx {
         } else {
           tmp->_block = linalg::Vectordot(this->_block, rhs->get_block_());
         }
-        tmp->_is_diag = true;
+        tmp->_is_diag = !tmp->_bonds.empty();
       } else {
         if (this->is_diag() != rhs->is_diag()) {
           // diag x dense:
@@ -1184,6 +1184,8 @@ namespace cytnx {
       }
     }
 
+    const bool trace_to_scalar = this->_bonds.size() == 2;
+
     // trace the block:
     if (this->_is_diag) {
       // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
@@ -1192,6 +1194,10 @@ namespace cytnx {
       this->_is_diag = false;
     } else {
       this->_block = this->_block.Trace(ida, idb);
+    }
+    if (trace_to_scalar) {
+      this->_block.reshape_({});
+      this->_is_diag = false;
     }
 
     // update rowrank:
@@ -1235,6 +1241,8 @@ namespace cytnx {
       }
     }
 
+    const bool trace_to_scalar = this->_bonds.size() == 2;
+
     // trace the block:
     if (this->_is_diag) {
       // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
@@ -1243,6 +1251,10 @@ namespace cytnx {
       this->_is_diag = false;
     } else {
       this->_block = this->_block.Trace(ida, idb);
+    }
+    if (trace_to_scalar) {
+      this->_block.reshape_({});
+      this->_is_diag = false;
     }
 
     // update rowrank:

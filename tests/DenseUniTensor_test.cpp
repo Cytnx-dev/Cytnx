@@ -4717,6 +4717,41 @@ TEST_F(DenseUniTensorTest, TraceDiagRankZeroBlockIsScalar) {
   EXPECT_DOUBLE_EQ(value.imag(), 0.0);
 }
 
+TEST_F(DenseUniTensorTest, TraceDenseRankZeroBlockIsScalar) {
+  Tensor matrix = arange(4).astype(Type.Double).reshape({2, 2});
+  UniTensor dense(matrix, false, 1);
+
+  UniTensor traced = dense.Trace(0, 1);
+  EXPECT_EQ(traced.rank(), 0);
+  EXPECT_FALSE(traced.is_diag());
+  EXPECT_TRUE(traced.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(traced.get_block_().item<double>(), 3.0);
+
+  UniTensor in_place = dense.clone();
+  in_place.Trace_(0, 1);
+  EXPECT_EQ(in_place.rank(), 0);
+  EXPECT_FALSE(in_place.is_diag());
+  EXPECT_TRUE(in_place.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(in_place.get_block_().item<double>(), 3.0);
+}
+
+TEST_F(DenseUniTensorTest, ContractDiagFullContractionIsScalarNotDiag) {
+  UniTensor diag({Bond(4), Bond(4)}, {"row", "col"}, 1, Type.Double, Device.cpu, true);
+  diag.put_block(arange(4).astype(Type.Double));
+
+  UniTensor contracted = Contract(diag, diag);
+  EXPECT_EQ(contracted.rank(), 0);
+  EXPECT_FALSE(contracted.is_diag());
+  EXPECT_TRUE(contracted.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(contracted.get_block_().item<double>(), 14.0);
+
+  UniTensor dense = contracted.to_dense();
+  EXPECT_EQ(dense.rank(), 0);
+  EXPECT_FALSE(dense.is_diag());
+  EXPECT_TRUE(dense.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(dense.get_block_().item<double>(), 14.0);
+}
+
 /*=====test info=====
 describe:test Trace by string label
 ====================*/
@@ -5495,8 +5530,8 @@ TEST_F(DenseUniTensorTest, normal_1d) {
   // just check min < mean < max
   auto min = linalg::Min(ut.get_block());
   auto max = linalg::Max(ut.get_block());
-  EXPECT_TRUE(min.at({0}) < mean);
-  EXPECT_TRUE(max.at({0}) > mean);
+  EXPECT_TRUE(min.item().real() < mean);
+  EXPECT_TRUE(max.item().real() > mean);
 }
 
 /*=====test info=====
@@ -5511,8 +5546,8 @@ TEST_F(DenseUniTensorTest, normal) {
   // just check min < mean < max
   auto min = linalg::Min(ut.get_block());
   auto max = linalg::Max(ut.get_block());
-  EXPECT_TRUE(min.at({0}) < mean);
-  EXPECT_TRUE(max.at({0}) > mean);
+  EXPECT_TRUE(min.item().real() < mean);
+  EXPECT_TRUE(max.item().real() > mean);
 }
 
 TEST_F(DenseUniTensorTest, identity) {

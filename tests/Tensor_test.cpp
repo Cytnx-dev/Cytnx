@@ -448,6 +448,28 @@ TEST_F(TensorTest, RankZeroVectordotIsScalar) {
   EXPECT_DOUBLE_EQ(scaled.at<double>({2}), 10.0);
 }
 
+TEST_F(TensorTest, RankZeroReductionsAreScalarAndBroadcast) {
+  Tensor vec = arange(1, 4, 1, Type.Double);
+
+  Tensor sum = linalg::Sum(vec);
+  EXPECT_TRUE(sum.is_scalar());
+  EXPECT_DOUBLE_EQ(sum.item<double>(), 6.0);
+
+  Tensor max = linalg::Max(vec);
+  EXPECT_TRUE(max.is_scalar());
+  EXPECT_DOUBLE_EQ(max.item<double>(), 3.0);
+
+  Tensor min = linalg::Min(vec);
+  EXPECT_TRUE(min.is_scalar());
+  EXPECT_DOUBLE_EQ(min.item<double>(), 1.0);
+
+  Tensor shifted = sum + vec;
+  EXPECT_EQ(shifted.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(shifted.at<double>({0}), 7.0);
+  EXPECT_DOUBLE_EQ(shifted.at<double>({1}), 8.0);
+  EXPECT_DOUBLE_EQ(shifted.at<double>({2}), 9.0);
+}
+
 TEST_F(TensorTest, RankZeroBroadcastComparison) {
   Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
   scalar.item<double>() = 2.0;
