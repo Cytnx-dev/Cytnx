@@ -423,6 +423,7 @@ void unitensor_binding(py::module &m) {
     .def("uten_type", &UniTensor::uten_type)
     .def("uten_type_str",&UniTensor::uten_type_str)
     .def("is_void", &UniTensor::is_void)
+    .def("is_scalar", &UniTensor::is_scalar)
     .def("syms", &UniTensor::syms)
     .def("dtype", &UniTensor::dtype)
     .def("dtype_str", &UniTensor::dtype_str)
