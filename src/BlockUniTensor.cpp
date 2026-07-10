@@ -23,13 +23,13 @@ namespace cytnx {
   namespace {
     void save_symmetry_cache(std::fstream &f, const std::vector<Symmetry> &syms) {
       cytnx_uint64 nsyms = syms.size();
-      f.write((char *)&nsyms, sizeof(cytnx_uint64));
+      f.write(reinterpret_cast<const char *>(&nsyms), sizeof(cytnx_uint64));
       for (const auto &sym : syms) sym._Save(f);
     }
 
     std::vector<Symmetry> load_symmetry_cache(std::fstream &f) {
       cytnx_uint64 nsyms;
-      f.read((char *)&nsyms, sizeof(cytnx_uint64));
+      f.read(reinterpret_cast<char *>(&nsyms), sizeof(cytnx_uint64));
       std::vector<Symmetry> syms(nsyms);
       for (auto &sym : syms) sym._Load(f);
       return syms;
@@ -1221,7 +1221,7 @@ namespace cytnx {
   };
 
   void BlockUniTensor::Transpose_() {
-    const int rank = this->rank();
+    const cytnx_int64 rank = this->rank();
     for (auto &bond : this->_bonds) bond.redirect_();
     // Make reverse sequence [rank - 1, rank - 2, ..., 0].
     auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;

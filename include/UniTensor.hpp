@@ -3120,6 +3120,12 @@ namespace cytnx {
     bool is_void() const { return this->uten_type() == UTenType.Void; }
 
     /**
+    @brief whether the UniTensor is an initialized rank-0 scalar UniTensor
+    @return [bool] true if the UniTensor has rank 0 and is initialized
+    */
+    bool is_scalar() const { return !this->is_void() && this->rank() == 0; }
+
+    /**
     @brief Return the device of the UniTensor.
         @details The function return the device of the UniTensor.
     @return int

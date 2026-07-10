@@ -14,7 +14,7 @@ namespace cytnx {
       detail::check_binary_tensor_inputs(Lt, Rt, "Mod");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mod] The two tensors cannot be on different devices.%s", "\n");
-      if (Lt.is_scalar() && Rt.is_scalar() && Lt.device() != Device.cpu) {
+      if ((Lt.is_scalar() || Rt.is_scalar()) && Lt.device() != Device.cpu) {
         return Mod(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
       }
 

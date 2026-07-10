@@ -86,7 +86,7 @@ namespace cytnx {
                                                const std::vector<cytnx_uint64> &invmapper_L,
                                                const std::vector<cytnx_uint64> &invmapper_R) {
         const cytnx_uint64 len = Lt._impl->storage()._impl->size();
-        const bool rhs_is_scalar = (Rt._impl->storage()._impl->size() == 1);
+        const bool rhs_is_scalar = Rt.is_scalar();
 
         std::visit(
           [&](auto *lptr) {

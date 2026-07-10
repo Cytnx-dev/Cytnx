@@ -1,4 +1,5 @@
 #include "linalg.hpp"
+#include <cmath>
 #include <iostream>
 #include "Tensor.hpp"
 #include "cytnx.hpp"
@@ -61,11 +62,12 @@ namespace cytnx {
                  (uTl.uten_type() == UTenType.BlockFermionic)) {
         std::vector<Tensor> bks = uTl.get_blocks_();
         Tensor res = zeros(std::vector<cytnx_uint64>{});
+        cytnx_double accum = 0.0;
         for (int i = 0; i < bks.size(); i++) {
-          Tensor tmp = Norm(bks[i]);
-          res.item() = res.item() + tmp.item() * tmp.item();
+          const cytnx_double tmp = double(Norm(bks[i]).item().real());
+          accum += tmp * tmp;
         }
-        res.item() = sqrt(res.item());
+        res.item() = std::sqrt(accum);
         return res;
       } else {
         cytnx_error_msg(true, "[ERROR][Norm] UniTensor type '%s' not supported\n",

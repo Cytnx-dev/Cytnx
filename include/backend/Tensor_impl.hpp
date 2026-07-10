@@ -72,6 +72,8 @@ namespace cytnx {
 
     unsigned int dtype() const { return this->_storage.dtype(); }
     bool is_void() const { return this->dtype() == Type.Void; }
+    cytnx_uint64 rank() const { return this->_shape.size(); }
+    bool is_scalar() const { return !this->is_void() && this->rank() == 0; }
     int device() const { return this->_storage.device(); }
 
     std::string dtype_str() const { return Type.getname(this->_storage.dtype()); }

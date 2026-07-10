@@ -349,6 +349,27 @@ TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
 
   scalar.set(std::vector<Accessor>{}, 7.0);
   EXPECT_DOUBLE_EQ(scalar.item<double>(), 7.0);
+
+  Tensor vector = zeros({3}, Type.Double);
+  Tensor shape_one({1}, Type.Double);
+  shape_one.at<double>({0}) = 9.0;
+  EXPECT_THROW(scalar.set(std::vector<Accessor>{}, shape_one), std::logic_error);
+  EXPECT_THROW(vector.set(std::vector<Accessor>{}, shape_one), std::logic_error);
+  EXPECT_THROW(vector.set(std::vector<Accessor>{Accessor(0)}, shape_one), std::logic_error);
+
+  Tensor scalar_rhs(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar_rhs.item<double>() = 8.0;
+  vector.set(std::vector<Accessor>{Accessor(0)}, scalar_rhs);
+  EXPECT_DOUBLE_EQ(vector.at<double>({0}), 8.0);
+
+  Tensor scalar_plus_shape_one = scalar_rhs + shape_one;
+  EXPECT_EQ(scalar_plus_shape_one.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_FALSE(scalar_plus_shape_one.is_scalar());
+  EXPECT_DOUBLE_EQ(scalar_plus_shape_one.at<double>({0}), 17.0);
+
+  Tensor scalar_plus_scalar = scalar + scalar_rhs;
+  EXPECT_TRUE(scalar_plus_scalar.is_scalar());
+  EXPECT_DOUBLE_EQ(scalar_plus_scalar.item<double>(), 15.0);
 }
 
 TEST_F(TensorTest, RankZeroBroadcastArithmetic) {

@@ -282,10 +282,10 @@ namespace cytnx {
     if (this->_shape.empty()) {
       cytnx_error_msg(this->dtype() == Type.Void,
                       "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
-      cytnx_error_msg(rhs->storage().size() != 1, "[ERROR][Tensor.set_elems]%s",
-                      "inconsistent shape");
+      cytnx_error_msg(!rhs->is_scalar() || rhs->storage().size() != 1,
+                      "[ERROR][Tensor.set_elems]%s", "inconsistent shape");
       const std::vector<cytnx_uint64> scalar_shape = {1};
-      const std::vector<std::vector<cytnx_uint64>> scalar_locators(1);
+      const std::vector<std::vector<cytnx_uint64>> scalar_locators = {{0}};
       this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl, scalar_shape, scalar_locators,
                                                 1, true);
       return;
@@ -323,8 +323,10 @@ namespace cytnx {
       acc[i].get_len_pos(curr_shape[i], get_shape[i], locators[i]);
     }
 
-    /// checking if its scalar assign!
-    if (rhs->storage().size() == 1) {
+    /// checking if its rank-0 scalar assign!
+    if (rhs->is_scalar()) {
+      cytnx_error_msg(rhs->storage().size() != 1, "[ERROR][Tensor.set_elems]%s",
+                      "rank-0 scalar Tensor should have exactly one element");
       this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl, curr_shape, locators, Nunit,
                                                 true);
     } else {
@@ -386,7 +388,7 @@ namespace cytnx {
       Storage tmp(1, c.dtype(), this->device());
       tmp.set_item(0, rc);
       const std::vector<cytnx_uint64> scalar_shape = {1};
-      const std::vector<std::vector<cytnx_uint64>> scalar_locators(1);
+      const std::vector<std::vector<cytnx_uint64>> scalar_locators = {{0}};
       this->storage()._impl->SetElem_byShape_v2(tmp._impl, scalar_shape, scalar_locators, 1, true);
       return;
     }

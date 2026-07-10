@@ -14,6 +14,10 @@ namespace cytnx {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mul] The two tensors cannot be on different devices.%s", "\n");
 
+      if (detail::needs_gpu_size_one_dispatch_fallback(Lt, Rt)) {
+        return Mul(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
+      }
+
       Tensor out;
       bool icnst = false;
       if (detail::init_broadcast_binary_output(out, Lt, Rt,

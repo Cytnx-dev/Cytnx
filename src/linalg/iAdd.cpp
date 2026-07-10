@@ -12,8 +12,8 @@ namespace cytnx {
   namespace linalg {
 
     void iAdd(Tensor &Lt, const Tensor &Rt) {
-      // A length-1 RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
-      // read it with a host-side dereference and pass it into the kernel by value, so it needs
+      // A rank-0 RHS that stays on the host is treated as a broadcast scalar: the GPU kernels read
+      // it with a host-side dereference and pass it into the kernel by value, so it needs
       // neither a device match nor a per-call H2D copy of the scalar. See #988.
       const bool rhs_is_scalar = Rt.is_scalar();
       const bool rhs_is_host_scalar = (Rt.device() == Device.cpu && rhs_is_scalar);

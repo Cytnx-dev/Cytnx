@@ -26,6 +26,20 @@ namespace cytnx {
         return true;
       }
 
+      inline bool is_gpu_scalar_broadcast(const Tensor &Lt, const Tensor &Rt) {
+        return Lt.device() != Device.cpu && (Lt.is_scalar() != Rt.is_scalar());
+      }
+
+      inline bool needs_gpu_size_one_dispatch_fallback(const Tensor &Lt, const Tensor &Rt) {
+        if (!is_gpu_scalar_broadcast(Lt, Rt)) return false;
+        // The legacy CUDA binary dispatchers infer scalar operands from Storage::size()==1.
+        // For rank-0 scalar op rank-1 shape {1}, that loses the rank distinction and can
+        // dereference a device pointer on the host. Route this tiny case through the CPU until
+        // the CUDA dispatch API accepts explicit scalar flags.
+        const Tensor &nonscalar = Lt.is_scalar() ? Rt : Lt;
+        return nonscalar.storage().size() == 1;
+      }
+
       inline Tensor host_scalar_for_gpu_broadcast(const Tensor &tensor, const int op_device) {
         if (op_device != Device.cpu && tensor.is_scalar() && tensor.device() != Device.cpu) {
           return tensor.to(Device.cpu);

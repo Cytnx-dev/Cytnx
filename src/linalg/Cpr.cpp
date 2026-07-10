@@ -15,7 +15,7 @@ namespace cytnx {
       detail::check_binary_tensor_inputs(Lt, Rt, "Cpr");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Cpr] error, two tensor cannot on different devices.%s", "\n");
-      if (Lt.is_scalar() && Rt.is_scalar() && Lt.device() != Device.cpu) {
+      if ((Lt.is_scalar() || Rt.is_scalar()) && Lt.device() != Device.cpu) {
         return Cpr(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
       }
       Tensor out;

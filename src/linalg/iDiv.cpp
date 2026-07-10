@@ -12,8 +12,8 @@ namespace cytnx {
   namespace linalg {
 
     void iDiv(Tensor &Lt, const Tensor &Rt) {
-      // A length-1 RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
-      // read it with a host-side dereference and pass it into the kernel by value, so it needs
+      // A rank-0 RHS that stays on the host is treated as a broadcast scalar: the GPU kernels read
+      // it with a host-side dereference and pass it into the kernel by value, so it needs
       // neither a device match nor a per-call H2D copy of the scalar. See #988.
       const bool rhs_is_scalar = Rt.is_scalar();
       const bool rhs_is_host_scalar = (Rt.device() == Device.cpu && rhs_is_scalar);
@@ -90,7 +90,7 @@ namespace cytnx {
                                                   Rt._impl->invmapper());
         } else {
   #ifdef UNI_GPU
-          if (R._impl->storage()._impl->size() == 1) {
+          if (rhs_is_scalar) {
             // Broadcast scalar RHS: the rconst kernel path divides every element of the
             // (possibly non-contiguous) LHS storage by the scalar in place, so the layout
             // mappers are irrelevant and the result is correct. This is the #988 regression fix

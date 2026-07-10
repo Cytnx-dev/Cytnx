@@ -19,7 +19,7 @@ namespace cytnx {
                       "\n");
       cytnx_error_msg(T1.device() != T2.device(), "[ERROR] Two tensors must be on same devices.%s",
                       "\n");
-      cytnx_error_msg(T1.dtype() == Type.Void || T2.dtype() == Type.Void,
+      cytnx_error_msg(T1.is_void() || T2.is_void(),
                       "[ERROR] input tensors cannot have dtype Type.Void.%s", "\n");
       cytnx_error_msg(T1.is_scalar() || T2.is_scalar(),
                       "[ERROR] Directsum does not support rank-0 scalar tensors.%s", "\n");

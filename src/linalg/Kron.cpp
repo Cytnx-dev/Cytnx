@@ -21,9 +21,9 @@ namespace cytnx {
       // checking:
       cytnx_error_msg(lhs.device() != rhs.device(),
                       "[ERROR] two tensor cannot on different devices.%s", "\n");
-      if (lhs.is_scalar() || rhs.is_scalar()) return lhs * rhs;
       cytnx_error_msg(lhs.is_void(), "[ERROR] pass empty tensor in param #1%s", "\n");
       cytnx_error_msg(rhs.is_void(), "[ERROR] pass empty tensor in param #2%s", "\n");
+      if (lhs.is_scalar() || rhs.is_scalar()) return lhs * rhs;
       // cytnx_error_msg(!Tl.is_contiguous(),"[ERROR] tensor #1 should be contiguous. suggestion:
       // call Tensor.contiguous() or Tensor.contiguous_() first.%s","\n");
       // cytnx_error_msg(!Tr.is_contiguous(),"[ERROR] tensor #2 should be contiguous. suggestion:

@@ -1286,7 +1286,7 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Transpose_() {
-    const int rank = this->rank();
+    const cytnx_int64 rank = this->rank();
     if (this->is_tag()) {
       for (auto &bond : this->_bonds) bond.redirect_();
     }

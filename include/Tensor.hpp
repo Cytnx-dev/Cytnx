@@ -614,7 +614,7 @@ namespace cytnx {
         @brief the rank of the Tensor
         @return [cytnx_uint64] the rank of the Tensor
     */
-    cytnx_uint64 rank() const { return this->_impl->shape().size(); }
+    cytnx_uint64 rank() const { return this->_impl->rank(); }
 
     /**
     @brief whether the Tensor is uninitialized.
@@ -626,7 +626,7 @@ namespace cytnx {
     @brief whether the Tensor is an initialized rank-0 scalar Tensor
     @return [bool] true if the Tensor has rank 0 and a non-void dtype
     */
-    bool is_scalar() const { return !this->is_void() && this->rank() == 0; }
+    bool is_scalar() const { return this->_impl->is_scalar(); }
 
     /**
     @brief return a clone of the current Tensor.

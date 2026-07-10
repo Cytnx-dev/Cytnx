@@ -392,6 +392,41 @@ TEST_F(TensorTest, gpu_RankZeroScalarAccessAndBroadcast) {
   EXPECT_DOUBLE_EQ(host.at<double>({0}), 0.0);
   EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
   EXPECT_DOUBLE_EQ(host.at<double>({2}), 10.0);
+
+  Tensor shape_one = zeros({1}, Type.Double, Device.cuda);
+  shape_one.set(std::vector<Accessor>{Accessor(0)}, 4.0);
+  out = scalar + shape_one;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_FALSE(host.is_scalar());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 6.0);
+
+  out = shape_one - scalar;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_FALSE(host.is_scalar());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 2.0);
+
+  Tensor complex_scalar(std::vector<cytnx_uint64>{}, Type.ComplexDouble, Device.cuda);
+  complex_scalar.set(std::vector<Accessor>{}, cytnx_complex128(4.0, 0.0));
+  cmp = linalg::Cpr(complex_scalar, shape_one);
+  cmp_host = cmp.to(Device.cpu);
+  EXPECT_EQ(cmp_host.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_TRUE(cmp_host.at<cytnx_bool>({0}));
+
+  Tensor float_mod_scalar(std::vector<cytnx_uint64>{}, Type.Float, Device.cuda);
+  float_mod_scalar.set(std::vector<Accessor>{}, cytnx_float(5.5));
+  Tensor float_mod_vec = arange(2, 5, 1, Type.Float).to(Device.cuda);
+  out = linalg::Mod(float_mod_scalar, float_mod_vec);
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_FLOAT_EQ(host.at<cytnx_float>({0}), 1.5f);
+  EXPECT_FLOAT_EQ(host.at<cytnx_float>({1}), 2.5f);
+  EXPECT_FLOAT_EQ(host.at<cytnx_float>({2}), 1.5f);
+
+  EXPECT_THROW((void)(shape_one + vec), std::logic_error);
+  EXPECT_THROW((void)(vec + shape_one), std::logic_error);
+  EXPECT_THROW(vec += shape_one, std::logic_error);
 }
 
 // TEST_F(TensorTest, gpu_approx_eq) {

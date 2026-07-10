@@ -8,21 +8,23 @@
 namespace cytnx {
   namespace linalg {
     Tensor Matmul_dg(const Tensor &Tl, const Tensor &Tr) {
-      cytnx_error_msg(Tl.shape().size() > 2,
+      const cytnx_uint64 rank_l = Tl.rank();
+      const cytnx_uint64 rank_r = Tr.rank();
+      cytnx_error_msg(rank_l > 2,
                       "[Matmul_dg] error, tensor Tl ,Matmul_dg can only operate on rank-2 x rank-1 "
                       "(rank-1 x rank-2) Tensor.%s",
                       "\n");
-      cytnx_error_msg(Tr.shape().size() > 2,
+      cytnx_error_msg(rank_r > 2,
                       "[Matmul_dg] error, tensor Tr ,Matmul_dg can only operate on rank-2 x rank-1 "
                       "(rank-1 x rank-2) Tensor.%s",
                       "\n");
-      cytnx_error_msg(Tl.shape().empty() || Tr.shape().empty(),
+      cytnx_error_msg(rank_l == 0 || rank_r == 0,
                       "[Matmul_dg] error, Matmul_dg does not support rank-0 Tensor operands.%s",
                       "\n");
-      cytnx_error_msg(Tl.shape().size() == Tr.shape().size(),
+      cytnx_error_msg(rank_l == rank_r,
                       "[Matmul_dg] error, tensor Tr:rank[%d] Tl:rank[%d] ,Matmul_dg can only "
                       "operate on rank-2 x rank-1 (rank-1 x rank-2) Tensor.\n",
-                      Tl.shape().size(), Tr.shape().size());
+                      static_cast<int>(rank_l), static_cast<int>(rank_r));
 
       // check device:
       cytnx_error_msg(Tl.device() != Tr.device(),
@@ -33,7 +35,7 @@ namespace cytnx {
                       "[Matmul_dg] error, dimension not match.%s", "\n");
 
       int diag_L;
-      if (Tl.shape().size() == 1)
+      if (rank_l == 1)
         diag_L = 1;
       else
         diag_L = 0;

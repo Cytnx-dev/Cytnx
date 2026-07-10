@@ -60,6 +60,10 @@ namespace cytnx {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Add] The two tensors cannot be on different devices.%s", "\n");
 
+      if (detail::needs_gpu_size_one_dispatch_fallback(Lt, Rt)) {
+        return Add(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
+      }
+
       const unsigned int out_dtype =
         detail::SelectAddOutputType(Lt.dtype(), Rt.dtype(), Lt.device());
 
