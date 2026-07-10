@@ -1801,7 +1801,7 @@ namespace cytnx {
     // The bonds are redirected, and the order of the indices is reversed with a permutation WITHOUT
     // signflips.
 
-    const cytnx_int64 rank = this->rank();
+    const int rank = this->rank();
     for (auto &bond : this->_bonds) bond.redirect_();
     // Make reverse sequence [rank - 1, rank - 2, ..., 0].
     auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;

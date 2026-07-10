@@ -1221,7 +1221,7 @@ namespace cytnx {
   };
 
   void BlockUniTensor::Transpose_() {
-    const cytnx_int64 rank = this->rank();
+    const int rank = this->rank();
     for (auto &bond : this->_bonds) bond.redirect_();
     // Make reverse sequence [rank - 1, rank - 2, ..., 0].
     auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
