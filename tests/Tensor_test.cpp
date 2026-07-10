@@ -68,6 +68,16 @@ TEST_F(TensorTest, Constructor) {
 #endif
 }
 
+TEST_F(TensorTest, VoidTensorAtEmptyLocatorThrows) {
+  Tensor uninitialized;
+  EXPECT_EQ(uninitialized.dtype(), Type.Void);
+  EXPECT_THROW(uninitialized.at<double>({}), std::logic_error);
+  EXPECT_THROW(uninitialized.at({}), std::logic_error);
+
+  const Tensor &const_uninitialized = uninitialized;
+  EXPECT_THROW(const_uninitialized.at({}), std::logic_error);
+}
+
 TEST_F(TensorTest, CopyConstructor) {
 #ifdef UNI_GPU
   Tensor A({3, 4, 5}, Type.Double, Device.cuda, false);
