@@ -4,26 +4,27 @@
 #include "cytnx.hpp"
 #include <gtest/gtest.h>
 #include <algorithm>
+#include <complex>
 #include <cmath>
 #include <utility>
 #include <vector>
 
 using namespace cytnx;
+using namespace std::complex_literals;
 
 class linalg_Test : public ::testing::Test {
  public:
   // ==================== general ===================
-  Tensor arange3x3d = arange(0, 9, 1, Type.Double).reshape(3, 3).to(cytnx::Device.cuda);
-  Tensor ones3x3d = ones(9, Type.Double).reshape(3, 3).to(cytnx::Device.cuda);
-  Tensor eye3x3d = eye(3, Type.Double).to(cytnx::Device.cuda);
-  Tensor zeros3x3d = zeros(9, Type.Double).reshape(3, 3).to(cytnx::Device.cuda);
+  Tensor arange3x3d = arange(0, 9, 1, Type.Double, cytnx::Device.cuda).reshape(3, 3);
+  Tensor ones3x3d = ones({3, 3}, Type.Double, cytnx::Device.cuda);
+  Tensor eye3x3d = eye(3, Type.Double, cytnx::Device.cuda);
+  Tensor zeros3x3d = zeros({3, 3}, Type.Double, cytnx::Device.cuda);
 
-  Tensor arange3x3cd = arange(0, 9, 1, Type.ComplexDouble).reshape(3, 3).to(cytnx::Device.cuda) +
-                       cytnx_complex128(0, 1) *
-                         arange(0, 9, 1, Type.ComplexDouble).reshape(3, 3).to(cytnx::Device.cuda);
-  Tensor ones3x3cd = ones(9, Type.ComplexDouble).reshape(3, 3).to(cytnx::Device.cuda);
-  Tensor eye3x3cd = eye(3, Type.ComplexDouble).to(cytnx::Device.cuda);
-  Tensor zeros3x3cd = zeros(9, Type.ComplexDouble).reshape(3, 3).to(cytnx::Device.cuda);
+  Tensor arange3x3cd = arange(0, 9, 1, Type.ComplexDouble, cytnx::Device.cuda).reshape(3, 3) +
+                       1.0i * arange(0, 9, 1, Type.ComplexDouble, cytnx::Device.cuda).reshape(3, 3);
+  Tensor ones3x3cd = ones({3, 3}, Type.ComplexDouble, cytnx::Device.cuda);
+  Tensor eye3x3cd = eye(3, Type.ComplexDouble, cytnx::Device.cuda);
+  Tensor zeros3x3cd = zeros({3, 3}, Type.ComplexDouble, cytnx::Device.cuda);
 
   std::string data_dir = CYTNX_TEST_DATA_DIR "/linalg/";
   // ==================== svd_truncate ===================
@@ -38,7 +39,7 @@ class linalg_Test : public ::testing::Test {
                       .to(cytnx::Device.cuda);
 
   UniTensor svd_T_dense =
-    UniTensor(arange(0, 11 * 13, 1).reshape(11, 13)).astype(Type.ComplexDouble).to(Device.cuda);
+    UniTensor(arange(0, 11 * 13, 1, Type.ComplexDouble, Device.cuda).reshape(11, 13));
 
   Tensor svd_Sans;
   //==================== Lanczos_Gnd_Ut ===================

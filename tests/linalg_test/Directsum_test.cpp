@@ -207,8 +207,8 @@ namespace DirectsumTest {
   }
 
   TEST(Directsum, err_rank_zero_scalar_tens) {
-    Tensor T1(std::vector<cytnx_uint64>{}, Type.Double);
-    Tensor T2(std::vector<cytnx_uint64>{}, Type.Double);
+    Tensor T1({}, Type.Double);
+    Tensor T2({}, Type.Double);
     T1.item<double>() = 1.0;
     T2.item<double>() = 2.0;
     std::vector<cytnx_uint64> shared_axes = {};

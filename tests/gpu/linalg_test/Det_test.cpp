@@ -18,7 +18,7 @@ namespace cytnx {
     // Regardless of whether the input tensor is on the GPU or CPU, the result tensor of Det is
     // always on the CPU, so we always initialize `determinant` on the CPU to avoid the error of
     // adding two tensors on different devices.
-    Tensor determinant = zeros(std::vector<cytnx_uint64>{}, T.dtype(), Device.cpu);
+    Tensor determinant = zeros({}, T.dtype(), Device.cpu);
     size_t n = T.shape()[0];
     if (n == 1) {
       determinant.item() = T.at({0, 0});

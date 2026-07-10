@@ -58,7 +58,7 @@ namespace cytnx {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         if (return_err == 1) {
-          terr.Init(std::vector<cytnx_uint64>{}, in.dtype(), in.device());
+          terr.Init({}, in.dtype(), in.device());
         } else {
           terr.Init({1}, in.dtype(), in.device());
         }
@@ -76,7 +76,7 @@ namespace cytnx {
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
           if (return_err == 1) {
-            terr.Init(std::vector<cytnx_uint64>{}, in.dtype(), in.device());
+            terr.Init({}, in.dtype(), in.device());
           } else {
             terr.Init({1}, in.dtype(), in.device());
           }

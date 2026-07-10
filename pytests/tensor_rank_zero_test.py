@@ -4,6 +4,52 @@ import cytnx
 from cytnx import Type
 
 
+def test_python_generators_distinguish_integer_size_and_empty_shape():
+    vector = cytnx.zeros(5, dtype=Type.Double)
+    assert vector.rank() == 1
+    assert list(vector.shape()) == [5]
+    assert not vector.is_scalar()
+
+    scalar = cytnx.zeros([], dtype=Type.Double)
+    assert scalar.rank() == 0
+    assert list(scalar.shape()) == []
+    assert scalar.is_scalar()
+    assert scalar.item() == 0.0
+
+    ones_vector = cytnx.ones(5, dtype=Type.Float)
+    assert ones_vector.rank() == 1
+    assert list(ones_vector.shape()) == [5]
+    assert not ones_vector.is_scalar()
+
+    ones_scalar = cytnx.ones([], dtype=Type.Float)
+    assert ones_scalar.rank() == 0
+    assert list(ones_scalar.shape()) == []
+    assert ones_scalar.is_scalar()
+    assert ones_scalar.item() == 1.0
+
+
+def test_python_unitensor_generators_distinguish_integer_size_and_empty_shape():
+    vector = cytnx.UniTensor.zeros(5, dtype=Type.Double)
+    assert vector.rank() == 1
+    assert list(vector.shape()) == [5]
+
+    scalar = cytnx.UniTensor.zeros([], dtype=Type.Double)
+    assert scalar.rank() == 0
+    assert list(scalar.shape()) == []
+    assert scalar.get_block_().is_scalar()
+    assert scalar.item() == 0.0
+
+    ones_vector = cytnx.UniTensor.ones(5, dtype=Type.Float)
+    assert ones_vector.rank() == 1
+    assert list(ones_vector.shape()) == [5]
+
+    ones_scalar = cytnx.UniTensor.ones([], dtype=Type.Float)
+    assert ones_scalar.rank() == 0
+    assert list(ones_scalar.shape()) == []
+    assert ones_scalar.get_block_().is_scalar()
+    assert ones_scalar.item() == 1.0
+
+
 def test_rank_zero_tensor_empty_tuple_get_set():
     tensor = cytnx.zeros([], dtype=Type.Double)
     assert tensor.rank() == 0
@@ -114,7 +160,7 @@ def test_rank_zero_block_unitensor_item():
         unitensor.item()
 
     traced = unitensor.Trace(0, 1)
-    assert traced.uten_type() == cytnx.UTenType.Block
+    assert traced.uten_type_str() == "Block"
     assert traced.rank() == 0
     assert list(traced.shape()) == []
     assert traced.item() == 5.0

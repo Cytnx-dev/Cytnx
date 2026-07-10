@@ -14,22 +14,8 @@ namespace cytnx {
 
   //@{
   /**
-  @brief Create a rank-1 Tensor with all elements initialized to zero.
-  @param Nelem the number of elements
-  @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
-  \endlink
-  @param device the device that the Tensor is put on. It can be any device defined in \link
-  cytnx::Device cytnx::Device \endlink
-
-  @return
-      [Tensor]
-
-  */
-  Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype = Type.Double,
-               const int &device = Device.cpu);
-  /**
   @brief Create a Tensor with all elements initialized to zero.
-  @param Nelem the shape of the Tensor
+  @param shape the shape of the Tensor
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
   @param device the device that the Tensor is put on. It can be any device defined in \link
@@ -39,7 +25,9 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype = Type.Double,
+  Tensor zeros(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
+               const int &device = Device.cpu);
+  Tensor zeros(std::initializer_list<cytnx_uint64> shape, const unsigned int &dtype = Type.Double,
                const int &device = Device.cpu);
   //@}
 
@@ -80,22 +68,8 @@ namespace cytnx {
 
   //@{
   /**
-  @brief Create a rank-1 Tensor with all elements initialized to one.
-  @param Nelem the number of elements
-  @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
-  \endlink
-  @param device the device that the Tensor is put on. It can be any device defined in \link
-  cytnx::Device cytnx::Device \endlink
-
-  @return
-      [Tensor]
-
-  */
-  Tensor ones(const cytnx_uint64 &Nelem, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu);
-  /**
   @brief Create a Tensor with all elements initialized to one.
-  @param Nelem the shape of the Tensor
+  @param shape the shape of the Tensor
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
   @param device the device that the Tensor is put on. It can be any device defined in \link
@@ -105,7 +79,9 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype = Type.Double,
+  Tensor ones(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu);
+  Tensor ones(std::initializer_list<cytnx_uint64> shape, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu);
   //@}
 

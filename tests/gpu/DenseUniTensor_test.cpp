@@ -533,9 +533,9 @@ TEST_F(DenseUniTensorTest, gpu_Add) {
             EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).imag()),
                              double(tmp.at({i - 1, j - 1, k - 1, l - 1}).imag()) + 9);
           }
-  utarcomplex3456 = UniTensor(arange(3 * 4 * 5 * 6)).astype(Type.ComplexDouble).to(Device.cuda);
-  for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) utarcomplex3456.at({i}) = cytnx_complex128(i, i);
-  utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6});
+  utarcomplex3456 =
+    UniTensor((1.0 + 1.0i) * arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble, Device.cuda))
+      .reshape({3, 4, 5, 6});
   out = utarcomplex3456.Add(utone3456);
   for (size_t i = 1; i <= 3; i++)
     for (size_t j = 1; j <= 4; j++)
@@ -586,9 +586,9 @@ TEST_F(DenseUniTensorTest, gpu_Sub) {
             EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).imag()),
                              double(tmp.at({i - 1, j - 1, k - 1, l - 1}).imag()) - 9);
           }
-  utarcomplex3456 = UniTensor(arange(3 * 4 * 5 * 6)).astype(Type.ComplexDouble).to(Device.cuda);
-  for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) utarcomplex3456.at({i}) = cytnx_complex128(i, i);
-  utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6});
+  utarcomplex3456 =
+    UniTensor((1.0 + 1.0i) * arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble, Device.cuda))
+      .reshape({3, 4, 5, 6});
   out = utarcomplex3456.Sub(utone3456);
   for (size_t i = 1; i <= 3; i++)
     for (size_t j = 1; j <= 4; j++)
@@ -665,9 +665,9 @@ TEST_F(DenseUniTensorTest, gpu_Div) {
                              double(out.at({i - 1, j - 1, k - 1, l - 1}).imag() / 9));
           }
 
-  utarcomplex3456 = UniTensor(arange(3 * 4 * 5 * 6)).astype(Type.ComplexDouble).to(Device.cuda);
-  for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) utarcomplex3456.at({i}) = cytnx_complex128(i, i);
-  utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6});
+  utarcomplex3456 =
+    UniTensor((1.0 + 1.0i) * arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble, Device.cuda))
+      .reshape({3, 4, 5, 6});
   out = utarcomplex3456.Div(utone3456);
   for (size_t i = 1; i <= 3; i++)
     for (size_t j = 1; j <= 4; j++)

@@ -5737,25 +5737,6 @@ namespace cytnx {
 
     // Generators:
     /**
-    @brief Generate a one-bond UniTensor with all elements set to zero.
-    @param[in] Nelem the number of elements.
-    @param[in] in_labels the labels of the UniTensor.
-    @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
-    @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
-    @param[in] name the name of the UniTensor.
-    @return
-        [UniTensor]
-
-    @see zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)
-    */
-    static UniTensor zeros(const cytnx_uint64 &Nelem,
-                           const std::vector<std::string> &in_labels = {},
-                           const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
-                           const std::string &name = "") {
-      return UniTensor(cytnx::zeros(Nelem, dtype, device), false, -1, in_labels, name);
-    }
-
-    /**
     @brief Generate a UniTensor with all elements set to zero.
     @param[in] shape the shape of the UniTensor.
     @param[in] in_labels the labels of the UniTensor.
@@ -5774,22 +5755,11 @@ namespace cytnx {
                            const std::string &name = "") {
       return UniTensor(cytnx::zeros(shape, dtype, device), false, -1, in_labels, name);
     }
-
-    /**
-    @brief Generate a one-bond UniTensor with all elements set to one.
-    @param[in] Nelem the number of elements.
-    @param[in] in_labels the labels of the UniTensor.
-    @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
-    @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
-    @param[in] name the name of the UniTensor.
-    @return
-        [UniTensor]
-    @see ones(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device)
-    */
-    static UniTensor ones(const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels = {},
-                          const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
-                          const std::string &name = "") {
-      return UniTensor(cytnx::ones(Nelem, dtype, device), false, -1, in_labels, name);
+    static UniTensor zeros(std::initializer_list<cytnx_uint64> shape,
+                           const std::vector<std::string> &in_labels = {},
+                           const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                           const std::string &name = "") {
+      return zeros(std::vector<cytnx_uint64>(shape), in_labels, dtype, device, name);
     }
 
     /**
@@ -5811,7 +5781,7 @@ namespace cytnx {
                               const unsigned int &dtype = Type.Double,
                               const int &device = Device.cpu, const std::string &name = "") {
       if (is_diag) {
-        return UniTensor(cytnx::ones(dim, dtype, device), is_diag, -1, in_labels, name);
+        return UniTensor(cytnx::ones({dim}, dtype, device), is_diag, -1, in_labels, name);
       } else {
         return UniTensor(cytnx::identity(dim, dtype, device), is_diag, -1, in_labels, name);
       }
@@ -5855,6 +5825,12 @@ namespace cytnx {
                           const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
                           const std::string &name = "") {
       return UniTensor(cytnx::ones(shape, dtype, device), false, -1, in_labels, name);
+    }
+    static UniTensor ones(std::initializer_list<cytnx_uint64> shape,
+                          const std::vector<std::string> &in_labels = {},
+                          const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                          const std::string &name = "") {
+      return ones(std::vector<cytnx_uint64>(shape), in_labels, dtype, device, name);
     }
 
     /**

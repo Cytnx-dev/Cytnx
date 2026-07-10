@@ -132,7 +132,7 @@ namespace cytnx {
     // non symmetry, initialize memory.
     if (this->_bonds.size() == 0) {
       // scalar:
-      if (!no_alloc) this->_block = zeros(std::vector<cytnx_uint64>{}, dtype, device);
+      if (!no_alloc) this->_block = zeros({}, dtype, device);
     } else {
       if (is_diag) {
         if (!no_alloc) this->_block = zeros({_bonds[0].dim()}, dtype, device);

@@ -78,10 +78,10 @@ int main(int argc, char *argv[]) {
   Tensor C = linalg::Vectordot(A, B);
   std::cout << C.item<double>();
 
-  A = zeros(4);
+  A = zeros({4});
   A.at<double>({1}) = 1;
   A.at<double>({2}) = 1;
-  B = zeros(4);
+  B = zeros({4});
   B.at<double>({0}) = 1;
   B.at<double>({3}) = 1;
 
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
   std::vector<Tensor> out = linalg::Svd(a, false, false);
   std::cout << out[0];
 
-  Tensor Zo = zeros(10, Type.Double, Device.cpu);
+  Tensor Zo = zeros({10}, Type.Double, Device.cpu);
   Tensor Zo2 = zeros({3, 4});
   Tensor Zp = arange(10);
   Tensor Zc = arange(0.1, 0, -0.2, Type.ComplexDouble);

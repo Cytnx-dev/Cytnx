@@ -9,9 +9,7 @@ class UniTensor_baseTest : public ::testing::Test {
   cytnx::UniTensor utzero345;
 
  protected:
-  void SetUp() override {
-    utzero345 = cytnx::UniTensor(cytnx::zeros(3 * 4 * 5)).reshape({3, 4, 5});
-  }
+  void SetUp() override { utzero345 = cytnx::UniTensor(cytnx::zeros({3, 4, 5})); }
   void TearDown() override {}
 };
 

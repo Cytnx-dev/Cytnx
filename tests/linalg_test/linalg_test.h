@@ -5,25 +5,27 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <complex>
 #include <cmath>
 #include <utility>
 #include <vector>
 
 using namespace cytnx;
+using namespace std::complex_literals;
 
 class linalg_Test : public ::testing::Test {
  public:
   // ==================== general ===================
   Tensor arange3x3d = arange(0, 9, 1, Type.Double).reshape(3, 3);
-  Tensor ones3x3d = ones(9, Type.Double).reshape(3, 3);
+  Tensor ones3x3d = ones({3, 3}, Type.Double);
   Tensor eye3x3d = eye(3, Type.Double);
-  Tensor zeros3x3d = zeros(9, Type.Double).reshape(3, 3);
+  Tensor zeros3x3d = zeros({3, 3}, Type.Double);
 
   Tensor arange3x3cd = arange(0, 9, 1, Type.ComplexDouble).reshape(3, 3) +
-                       cytnx_complex128(0, 1) * arange(0, 9, 1, Type.ComplexDouble).reshape(3, 3);
-  Tensor ones3x3cd = ones(9, Type.ComplexDouble).reshape(3, 3);
+                       1.0i * arange(0, 9, 1, Type.ComplexDouble).reshape(3, 3);
+  Tensor ones3x3cd = ones({3, 3}, Type.ComplexDouble);
   Tensor eye3x3cd = eye(3, Type.ComplexDouble);
-  Tensor zeros3x3cd = zeros(9, Type.ComplexDouble).reshape(3, 3);
+  Tensor zeros3x3cd = zeros({3, 3}, Type.ComplexDouble);
 
   Tensor invertable3x3cd = arange(1, 10, 1, Type.ComplexDouble).reshape(3, 3);
 
@@ -43,7 +45,7 @@ class linalg_Test : public ::testing::Test {
                               Device.cpu, false);
 
   UniTensor svd_T_dense =
-    UniTensor(arange(0, 11 * 13, 1).reshape(11, 13)).astype(Type.ComplexDouble).to(Device.cpu);
+    UniTensor(arange(0, 11 * 13, 1, Type.ComplexDouble, Device.cpu).reshape(11, 13));
   Tensor svd_Sans;
   //==================== Lanczos_Gnd_Ut ===================
   Tensor A = Tensor::Load(data_dir + "Lanczos_Gnd/lan_block_A.cytn");

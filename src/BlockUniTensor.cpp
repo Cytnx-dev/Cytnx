@@ -58,9 +58,9 @@ namespace cytnx {
       this->_is_braket_form = false;
       this->_is_diag = false;
       if (!no_alloc) {
-        this->_blocks.push_back(zeros(std::vector<cytnx_uint64>{}, dtype, device));
+        this->_blocks.push_back(zeros({}, dtype, device));
       } else {
-        this->_blocks.push_back(Tensor(std::vector<cytnx_uint64>{}, dtype, device, false));
+        this->_blocks.push_back(Tensor({}, dtype, device, false));
       }
       return;
     }
@@ -166,7 +166,7 @@ namespace cytnx {
       for (int b = 0; b < this->_bonds[0].qnums().size(); b++) {
         this->_inner_to_outer_idx.push_back({(cytnx_uint64)b, (cytnx_uint64)b});
         if (!no_alloc) {
-          this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b], dtype, device));
+          this->_blocks.push_back(zeros({this->_bonds[0]._impl->_degs[b]}, dtype, device));
         } else {
           this->_blocks.push_back(Tensor({this->_bonds[0]._impl->_degs[b]}, dtype, device, false));
         }
@@ -1292,7 +1292,7 @@ namespace cytnx {
     std::vector<Tensor> new_blocks;
     vec2d<cytnx_uint64> new_itoi;
     if (this->_labels.size() == 0) {
-      new_blocks.push_back(zeros(std::vector<cytnx_uint64>{}, this->dtype(), this->device()));
+      new_blocks.push_back(zeros({}, this->dtype(), this->device()));
       new_itoi.push_back({});
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
@@ -1345,7 +1345,7 @@ namespace cytnx {
     }
 
     t = sqrt(t);
-    Tensor R(std::vector<cytnx_uint64>{}, t.dtype());
+    Tensor R({}, t.dtype());
 
     R.item() = t;
     return R;

@@ -385,7 +385,7 @@ namespace GesvdTruncateTest {
     std::vector<UniTensor> gsvds_max =
       linalg::Gesvd_truncate(src_T, keepdim, min_blockdim, 0., true, true, 1, 1);
     Tensor terr_max = gsvds_max.back().get_block_();
-    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>{});
+    ASSERT_TRUE(terr_max.is_scalar());
     EXPECT_NEAR(std::abs(terr_max.storage().at<double>(0)), max_abs, 1e-10 * (1.0 + max_abs));
   }
 

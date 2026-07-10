@@ -360,7 +360,7 @@ namespace SvdTruncateTest {
     std::vector<UniTensor> svds_max =
       linalg::Svd_truncate(src_T, keepdim, min_blockdim, 0., true, 1, 1);
     Tensor terr_max = svds_max.back().get_block_();
-    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>{});
+    ASSERT_TRUE(terr_max.is_scalar());
     EXPECT_NEAR(std::abs(terr_max.storage().at<double>(0)), max_abs, 1e-10 * (1.0 + max_abs));
   }
 

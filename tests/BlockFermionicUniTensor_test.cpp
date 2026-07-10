@@ -463,7 +463,7 @@ TEST_F(BlockFermionicUniTensorTest, convert_from_diagonal_dense_target_throws) {
   Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   UniTensor BKF = UniTensor({bi, bi.redirect()});
 
-  UniTensor Ddiag = UniTensor(zeros(2), true);  // diagonal Dense, shape (2,2)
+  UniTensor Ddiag = UniTensor(zeros({2}), true);  // diagonal Dense, shape (2,2)
   EXPECT_ANY_THROW(Ddiag.convert_from(BKF));
 }
 

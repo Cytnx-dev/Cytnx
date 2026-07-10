@@ -2114,7 +2114,7 @@ void unitensor_binding(py::module &m) {
                   const int &device,
                   const std::string &name)
                 {
-                  return UniTensor::ones(Nelem, in_labels,dtype,device,name);
+                  return UniTensor::ones({Nelem}, in_labels,dtype,device,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
@@ -2132,7 +2132,7 @@ void unitensor_binding(py::module &m) {
                   const int &device,
                   const std::string &name)
                 {
-                  return UniTensor::zeros(Nelem, in_labels,dtype,device,name);
+                  return UniTensor::zeros({Nelem}, in_labels,dtype,device,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))

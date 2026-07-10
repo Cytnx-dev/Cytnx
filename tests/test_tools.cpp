@@ -580,9 +580,12 @@ namespace cytnx {
       if (!truncated) {
         // no truncation -> return_err=1 is a scalar zero; return_err>1 preserves the legacy
         // one-element zero tensor.
-        const std::vector<cytnx_uint64> expected_shape =
-          return_err == 1 ? std::vector<cytnx_uint64>{} : std::vector<cytnx_uint64>{1};
-        ASSERT_EQ(out.back().shape(), expected_shape) << prefix << "terr shape (no truncation)";
+        if (return_err == 1) {
+          ASSERT_TRUE(out.back().is_scalar()) << prefix << "terr shape (no truncation)";
+        } else {
+          ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>{1})
+            << prefix << "terr shape (no truncation)";
+        }
         EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
           << prefix << "terr value (no truncation)";
         return;
@@ -590,8 +593,7 @@ namespace cytnx {
 
       if (return_err == 1) {
         // scalar: the first discarded singular value, full_sv[k]
-        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>{})
-          << prefix << "terr shape (return_err=1)";
+        ASSERT_TRUE(out.back().is_scalar()) << prefix << "terr shape (return_err=1)";
         const double got = terr_d.storage().at<double>(0);
         const double exp = ref.storage().at<double>(k);
         EXPECT_NEAR(got, exp, rtol * (1.0 + std::abs(exp))) << prefix << "terr (return_err=1)";

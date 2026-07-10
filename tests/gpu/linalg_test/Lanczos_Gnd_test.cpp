@@ -12,7 +12,7 @@ class MyOp : public LinOp {
   MyOp() : LinOp("mv", 27) {}
 
   UniTensor matvec(const UniTensor& v) override {
-    Tensor tA = arange(27 * 27).reshape(27, 27).to(cytnx::Device.cuda);
+    Tensor tA = arange(0, 27 * 27, 1, Type.Double, cytnx::Device.cuda).reshape(27, 27);
     UniTensor A = UniTensor(tA).to(cytnx::Device.cuda);
     A = A + A.Transpose();
     return UniTensor(linalg::Dot(A.get_block_(), v.get_block_())).to(cytnx::Device.cuda);
@@ -52,7 +52,7 @@ TEST(Lanczos_Gnd, gpu_Lanczos_Gnd_test) {
   cytnx_double evans = -1628.9964650426593;
 
   MyOp H = MyOp();
-  Tensor tv = arange(27).to(cytnx::Device.cuda);
+  Tensor tv = arange(0, 27, 1, Type.Double, cytnx::Device.cuda);
   UniTensor v = UniTensor(tv).to(cytnx::Device.cuda);
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, v, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, false);

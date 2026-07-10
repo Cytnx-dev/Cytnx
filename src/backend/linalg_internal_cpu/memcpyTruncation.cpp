@@ -39,9 +39,9 @@ namespace cytnx {
               // nothing to truncate; there are no discarded values, so the truncation error is
               // zero.
               if (return_err == 1) {
-                terr = zeros(std::vector<cytnx_uint64>{}, tens[0].dtype(), tens[0].device());
+                terr = zeros({}, tens[0].dtype(), tens[0].device());
               } else if (return_err) {
-                terr = zeros(1, tens[0].dtype(), tens[0].device());
+                terr = zeros({1}, tens[0].dtype(), tens[0].device());
               }
               return;  // escapes lambda
             }
@@ -50,7 +50,7 @@ namespace cytnx {
             std::memcpy(newS.ptr_as<T>(), sptr, trunc_dim * sizeof(T));
 
             if (return_err == 1) {
-              terr = Tensor(std::vector<cytnx_uint64>{}, S.dtype(), S.device());
+              terr = Tensor({}, S.dtype(), S.device());
               terr.ptr_as<T>()[0] = sptr[trunc_dim];
             } else if (return_err) {
               const cytnx_uint64 discarded_dim = nums - trunc_dim;

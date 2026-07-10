@@ -33,7 +33,7 @@ TEST_F(TensorTest, Constructor) {
   EXPECT_EQ(C.shape()[2], 5);
   EXPECT_EQ(C.is_contiguous(), true);
 
-  Tensor S(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor S({}, Type.Double);
   EXPECT_EQ(S.dtype(), Type.Double);
   EXPECT_FALSE(S.is_void());
   EXPECT_EQ(S.device(), Device.cpu);
@@ -70,6 +70,27 @@ TEST_F(TensorTest, Constructor) {
   EXPECT_EQ(F.shape()[2], 5);
   EXPECT_EQ(F.is_contiguous(), true);
 #endif
+}
+
+TEST_F(TensorTest, ShapeGeneratorsDistinguishScalarAndRankOne) {
+  Tensor zero_scalar = zeros({});
+  EXPECT_EQ(zero_scalar.shape().size(), 0);
+  EXPECT_TRUE(zero_scalar.is_scalar());
+  EXPECT_DOUBLE_EQ(zero_scalar.item<double>(), 0.0);
+
+  Tensor one_scalar = ones({}, Type.Float);
+  EXPECT_EQ(one_scalar.shape().size(), 0);
+  EXPECT_TRUE(one_scalar.is_scalar());
+  EXPECT_FLOAT_EQ(one_scalar.item<cytnx_float>(), 1.0f);
+
+  Tensor zero_vector = zeros({5});
+  EXPECT_EQ(zero_vector.shape(), (std::vector<cytnx_uint64>{5}));
+  EXPECT_FALSE(zero_vector.is_scalar());
+
+  Tensor one_vector = ones({5}, Type.Int64);
+  EXPECT_EQ(one_vector.shape(), (std::vector<cytnx_uint64>{5}));
+  EXPECT_FALSE(one_vector.is_scalar());
+  EXPECT_EQ(one_vector.at<cytnx_int64>({0}), 1);
 }
 
 TEST_F(TensorTest, VoidTensorAtEmptyLocatorThrows) {
@@ -329,7 +350,7 @@ TEST_F(TensorTest, set) {
 }
 
 TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 3.25;
   EXPECT_DOUBLE_EQ(scalar.item<double>(), 3.25);
   EXPECT_DOUBLE_EQ(scalar.at<double>({}), 3.25);
@@ -342,7 +363,7 @@ TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
   EXPECT_TRUE(selected.is_scalar());
   EXPECT_DOUBLE_EQ(selected.item<double>(), 4.5);
 
-  Tensor replacement(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor replacement({}, Type.Double);
   replacement.item<double>() = -2.0;
   scalar.set(std::vector<Accessor>{}, replacement);
   EXPECT_DOUBLE_EQ(scalar.item<double>(), -2.0);
@@ -357,7 +378,7 @@ TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
   EXPECT_THROW(vector.set(std::vector<Accessor>{}, shape_one), std::logic_error);
   EXPECT_THROW(vector.set(std::vector<Accessor>{Accessor(0)}, shape_one), std::logic_error);
 
-  Tensor scalar_rhs(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar_rhs({}, Type.Double);
   scalar_rhs.item<double>() = 8.0;
   vector.set(std::vector<Accessor>{Accessor(0)}, scalar_rhs);
   EXPECT_DOUBLE_EQ(vector.at<double>({0}), 8.0);
@@ -373,9 +394,9 @@ TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
 }
 
 TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 2.0;
-  Tensor vec = arange(3).astype(Type.Double);
+  Tensor vec = arange(0, 3, 1, Type.Double);
 
   Tensor out = scalar + vec;
   EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
@@ -401,7 +422,7 @@ TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
   EXPECT_DOUBLE_EQ(out.at<double>({1}), -1.0);
   EXPECT_DOUBLE_EQ(out.at<double>({2}), 0.0);
 
-  Tensor scalar2(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar2({}, Type.Double);
   scalar2.item<double>() = 5.0;
   out = scalar * scalar2;
   EXPECT_EQ(out.shape().size(), 0);
@@ -432,7 +453,7 @@ TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
   EXPECT_DOUBLE_EQ(out.at<double>({1}), 1.0);
   EXPECT_DOUBLE_EQ(out.at<double>({2}), 1.5);
 
-  Tensor mod_scalar(std::vector<cytnx_uint64>{}, Type.Int64);
+  Tensor mod_scalar({}, Type.Int64);
   mod_scalar.item<cytnx_int64>() = 5;
   Tensor mod_vec = arange(2, 5, 1, Type.Int64);
 
@@ -470,7 +491,7 @@ TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
 }
 
 TEST_F(TensorTest, RankZeroVectordotIsScalar) {
-  Tensor vec = arange(3).astype(Type.Double);
+  Tensor vec = arange(0, 3, 1, Type.Double);
 
   Tensor dot = linalg::Vectordot(vec, vec, false);
   EXPECT_TRUE(dot.is_scalar());
@@ -507,9 +528,9 @@ TEST_F(TensorTest, RankZeroReductionsAreScalarAndBroadcast) {
 }
 
 TEST_F(TensorTest, RankZeroBroadcastComparison) {
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 2.0;
-  Tensor vec = arange(3).astype(Type.Double);
+  Tensor vec = arange(0, 3, 1, Type.Double);
 
   Tensor out = linalg::Cpr(scalar, vec);
   EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
@@ -520,9 +541,9 @@ TEST_F(TensorTest, RankZeroBroadcastComparison) {
 
 TEST_F(TensorTest, VoidTensorArithmeticThrowsControlledError) {
   Tensor uninitialized;
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 2.0;
-  Tensor vec = arange(3).astype(Type.Double);
+  Tensor vec = arange(0, 3, 1, Type.Double);
 
   EXPECT_THROW((void)(uninitialized + scalar), std::logic_error);
   EXPECT_THROW((void)(scalar + uninitialized), std::logic_error);
@@ -530,8 +551,8 @@ TEST_F(TensorTest, VoidTensorArithmeticThrowsControlledError) {
 }
 
 TEST_F(TensorTest, RankZeroAppendAsScalarElement) {
-  Tensor vec = arange(2).astype(Type.Double);
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor vec = arange(0, 2, 1, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 3.5;
 
   vec.append(scalar);
@@ -560,7 +581,7 @@ TEST_F(TensorTest, RankZeroAppendAsScalarElement) {
 }
 
 TEST_F(TensorTest, RankZeroSortReturnsScalar) {
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 7.5;
 
   Tensor sorted = algo::Sort(scalar);
@@ -569,13 +590,13 @@ TEST_F(TensorTest, RankZeroSortReturnsScalar) {
 }
 
 TEST_F(TensorTest, RankZeroDiagThrowsControlledError) {
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 2.0;
   EXPECT_THROW(linalg::Diag(scalar), std::logic_error);
 }
 
 TEST_F(TensorTest, RankZeroSaveLoad) {
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = 8.25;
 
   const auto path = std::filesystem::temp_directory_path() / "cytnx_rank_zero_tensor.cytn";

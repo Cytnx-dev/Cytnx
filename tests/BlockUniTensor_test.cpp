@@ -1427,7 +1427,7 @@ TEST_F(BlockUniTensorTest, convert_from_diagonal_dense_target_throws) {
   B.at({0, 0}) = 1.0;
   B.at({1, 1}) = 2.0;
 
-  UniTensor Ddiag = UniTensor(zeros(2), true);  // diagonal Dense, shape (2,2)
+  UniTensor Ddiag = UniTensor(zeros({2}), true);  // diagonal Dense, shape (2,2)
   EXPECT_ANY_THROW(Ddiag.convert_from(B));
 }
 

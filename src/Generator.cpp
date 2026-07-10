@@ -13,33 +13,30 @@
 
 namespace cytnx {
 
-  Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
-    Tensor out({Nelem}, dtype, device, true);  // init_zero
-    // out is already init as zeros
+  Tensor zeros(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
+               const int &device) {
+    Tensor out(shape, dtype, device, true);
     // out._impl->storage().set_zeros();
     return out;
   }
-  Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
+  Tensor zeros(std::initializer_list<cytnx_uint64> shape, const unsigned int &dtype,
                const int &device) {
-    Tensor out(Nelem, dtype, device, true);
-    // out._impl->storage().set_zeros();
-    return out;
+    return zeros(std::vector<cytnx_uint64>(shape), dtype, device);
   }
   //-----------------
-  Tensor ones(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
-    Tensor out({Nelem}, dtype, device);  // the default
+  Tensor ones(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
+              const int &device) {
+    Tensor out(shape, dtype, device);
     out._impl->storage().fill(1);
     return out;
   }
-  Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
+  Tensor ones(std::initializer_list<cytnx_uint64> shape, const unsigned int &dtype,
               const int &device) {
-    Tensor out(Nelem, dtype, device);
-    out._impl->storage().fill(1);
-    return out;
+    return ones(std::vector<cytnx_uint64>(shape), dtype, device);
   }
 
   Tensor identity(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device) {
-    Tensor out = ones(Dim, dtype, device);
+    Tensor out = ones({Dim}, dtype, device);
     return linalg::Diag(out);
   }
   Tensor eye(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device) {

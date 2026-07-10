@@ -24,7 +24,7 @@ void generator_binding(py::module &m) {
   m.def(
     "zeros",
     [](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) -> Tensor {
-      return cytnx::zeros(Nelem, dtype, device);
+      return cytnx::zeros({Nelem}, dtype, device);
     },
     py::arg("size"), py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
     py::arg("device") = (int)(cytnx::Device.cpu));
@@ -41,7 +41,7 @@ void generator_binding(py::module &m) {
   m.def(
     "ones",
     [](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) -> Tensor {
-      return cytnx::ones(Nelem, dtype, device);
+      return cytnx::ones({Nelem}, dtype, device);
     },
     py::arg("size"), py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
     py::arg("device") = (int)(cytnx::Device.cpu));

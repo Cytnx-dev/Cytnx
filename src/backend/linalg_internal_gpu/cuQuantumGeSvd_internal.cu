@@ -118,7 +118,7 @@ namespace cytnx {
         vT = newvT;
       }
       if (return_err == 1) {
-        Tensor newterr = Tensor(std::vector<cytnx_uint64>{}, S.dtype(), S.device());
+        Tensor newterr = Tensor({}, S.dtype(), S.device());
         ((cytnx_double *)newterr._impl->storage()._impl->data())[0] =
           ((cytnx_double *)S._impl->storage()._impl->data())[truc_dim];
         terr = newterr;
@@ -166,7 +166,7 @@ namespace cytnx {
         vT = newvT;
       }
       if (return_err == 1) {
-        Tensor newterr = Tensor(std::vector<cytnx_uint64>{}, S.dtype(), S.device());
+        Tensor newterr = Tensor({}, S.dtype(), S.device());
         ((cytnx_double *)newterr._impl->storage()._impl->data())[0] =
           ((cytnx_double *)S._impl->storage()._impl->data())[truc_dim];
         terr = newterr;
@@ -213,7 +213,7 @@ namespace cytnx {
         vT = newvT;
       }
       if (return_err == 1) {
-        Tensor newterr = Tensor(std::vector<cytnx_uint64>{}, S.dtype(), S.device());
+        Tensor newterr = Tensor({}, S.dtype(), S.device());
         ((cytnx_double *)newterr._impl->storage()._impl->data())[0] =
           ((cytnx_double *)S._impl->storage()._impl->data())[truc_dim];
         terr = newterr;
@@ -260,7 +260,7 @@ namespace cytnx {
         vT = newvT;
       }
       if (return_err == 1) {
-        Tensor newterr = Tensor(std::vector<cytnx_uint64>{}, S.dtype(), S.device());
+        Tensor newterr = Tensor({}, S.dtype(), S.device());
         ((cytnx_double *)newterr._impl->storage()._impl->data())[0] =
           ((cytnx_double *)S._impl->storage()._impl->data())[truc_dim];
         terr = newterr;

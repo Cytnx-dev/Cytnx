@@ -574,12 +574,12 @@ namespace cytnx {
     // keeping it on the host avoids a per-call H2D copy. See #988.
     template <class T>
     Tensor scalar_as_rank0_tensor(const T &rc) {
-      Tensor s(std::vector<cytnx_uint64>{}, Type.cy_typeid(rc), Device.cpu);
+      Tensor s({}, Type.cy_typeid(rc), Device.cpu);
       s.storage().at<T>(0) = rc;
       return s;
     }
     Tensor scalar_as_rank0_tensor(const Scalar &rc) {
-      Tensor s(std::vector<cytnx_uint64>{}, rc.dtype(), Device.cpu);
+      Tensor s({}, rc.dtype(), Device.cpu);
       s.item() = rc;  // Sproxy assignment
       return s;
     }

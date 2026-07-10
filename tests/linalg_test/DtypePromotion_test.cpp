@@ -108,7 +108,7 @@ namespace cytnx {
   }
 
   TEST(DtypePromotion, Matmul_dg_rank_zero_throws_controlled_error) {
-    Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+    Tensor scalar({}, Type.Double);
     scalar.item<cytnx_double>() = 2.0;
     Tensor vector = zeros({2}, Type.Double, Device.cpu);
 

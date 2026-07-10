@@ -76,7 +76,7 @@ TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
   ut.get_block_().item<double>() = 6.25;
   EXPECT_DOUBLE_EQ(ut.get_block_().item<double>(), 6.25);
 
-  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor scalar({}, Type.Double);
   scalar.item<double>() = -1.5;
   UniTensor from_scalar(scalar, false, 0);
   EXPECT_EQ(from_scalar.rank(), 0);
@@ -89,7 +89,7 @@ TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
   EXPECT_TRUE(selected.get_block_().is_scalar());
   EXPECT_DOUBLE_EQ(selected.get_block_().item<double>(), -1.5);
 
-  Tensor replacement(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor replacement({}, Type.Double);
   replacement.item<double>() = 4.0;
   from_scalar.set(std::vector<Accessor>{}, replacement);
   EXPECT_DOUBLE_EQ(from_scalar.get_block_().item<double>(), 4.0);
@@ -114,11 +114,11 @@ TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
 }
 
 TEST_F(DenseUniTensorTest, RankZeroDenseContractActsAsScalar) {
-  Tensor left_block(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor left_block({}, Type.Double);
   left_block.item<double>() = 2.0;
   UniTensor left(left_block, false, 0);
 
-  Tensor right_block(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor right_block({}, Type.Double);
   right_block.item<double>() = 5.0;
   UniTensor right(right_block, false, 0);
 
@@ -127,7 +127,7 @@ TEST_F(DenseUniTensorTest, RankZeroDenseContractActsAsScalar) {
   EXPECT_TRUE(product.get_block_().is_scalar());
   EXPECT_DOUBLE_EQ(product.get_block_().item<double>(), 10.0);
 
-  UniTensor vector(arange(3).astype(Type.Double), false, 0);
+  UniTensor vector(arange(0, 3, 1, Type.Double), false, 0);
   product = Contract(left, vector);
   EXPECT_EQ(product.shape(), (std::vector<cytnx_uint64>{3}));
   EXPECT_DOUBLE_EQ(product.get_block_().at<double>({0}), 0.0);
@@ -136,11 +136,11 @@ TEST_F(DenseUniTensorTest, RankZeroDenseContractActsAsScalar) {
 }
 
 TEST_F(DenseUniTensorTest, RankZeroUniTensorArithmeticRequiresMatchingStructure) {
-  Tensor left_block(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor left_block({}, Type.Double);
   left_block.item<double>() = 2.0;
   UniTensor left_scalar(left_block, false, 0);
 
-  Tensor right_block(std::vector<cytnx_uint64>{}, Type.Double);
+  Tensor right_block({}, Type.Double);
   right_block.item<double>() = 5.0;
   UniTensor right_scalar(right_block, false, 0);
 
@@ -149,7 +149,7 @@ TEST_F(DenseUniTensorTest, RankZeroUniTensorArithmeticRequiresMatchingStructure)
   EXPECT_TRUE(sum.get_block_().is_scalar());
   EXPECT_DOUBLE_EQ(sum.get_block_().item<double>(), 7.0);
 
-  UniTensor vector(arange(3).astype(Type.Double), false, 0);
+  UniTensor vector(arange(0, 3, 1, Type.Double), false, 0);
   EXPECT_THROW((void)(left_scalar + vector), std::logic_error);
   EXPECT_THROW((void)(vector + left_scalar), std::logic_error);
   EXPECT_THROW((void)(left_scalar - vector), std::logic_error);
@@ -4698,7 +4698,7 @@ TEST_F(DenseUniTensorTest, TraceDiagRankZeroBlockIsScalar) {
 }
 
 TEST_F(DenseUniTensorTest, TraceDenseRankZeroBlockIsScalar) {
-  Tensor matrix = arange(4).astype(Type.Double).reshape({2, 2});
+  Tensor matrix = arange(0, 4, 1, Type.Double).reshape({2, 2});
   UniTensor dense(matrix, false, 1);
 
   UniTensor traced = dense.Trace(0, 1);
@@ -4717,7 +4717,7 @@ TEST_F(DenseUniTensorTest, TraceDenseRankZeroBlockIsScalar) {
 
 TEST_F(DenseUniTensorTest, ContractDiagFullContractionIsScalarNotDiag) {
   UniTensor diag({Bond(4), Bond(4)}, {"row", "col"}, 1, Type.Double, Device.cpu, true);
-  diag.put_block(arange(4).astype(Type.Double));
+  diag.put_block(arange(0, 4, 1, Type.Double));
 
   UniTensor contracted = Contract(diag, diag);
   EXPECT_EQ(contracted.rank(), 0);
@@ -4733,8 +4733,8 @@ TEST_F(DenseUniTensorTest, ContractDiagFullContractionIsScalarNotDiag) {
 }
 
 TEST_F(DenseUniTensorTest, ContractDenseFullContractionBlockIsScalar) {
-  UniTensor left(arange(3).astype(Type.Double), false, 1);
-  UniTensor right(arange(3).astype(Type.Double), false, 0);
+  UniTensor left(arange(0, 3, 1, Type.Double), false, 1);
+  UniTensor right(arange(0, 3, 1, Type.Double), false, 0);
   left.relabel_({"shared"});
   right.relabel_({"shared"});
 
@@ -5330,7 +5330,7 @@ describe:test zeros_1
 ====================*/
 TEST_F(DenseUniTensorTest, zeros_1d) {
   const cytnx_uint64 Nelem = 5;
-  auto ut = UniTensor::zeros(Nelem, {"b"});
+  auto ut = UniTensor::zeros({Nelem}, {"b"});
   EXPECT_EQ(ut.shape(), std::vector<cytnx_uint64>({Nelem}));
   EXPECT_EQ(ut.rank(), 1);
   EXPECT_EQ(ut.labels(), std::vector<std::string>({"b"}));
@@ -5339,11 +5339,19 @@ TEST_F(DenseUniTensorTest, zeros_1d) {
   }
 }
 
+TEST_F(DenseUniTensorTest, zeros_scalar) {
+  auto ut = UniTensor::zeros({});
+  EXPECT_EQ(ut.shape().size(), 0);
+  EXPECT_EQ(ut.rank(), 0);
+  EXPECT_TRUE(ut.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(ut.get_block_().item<double>(), 0.0);
+}
+
 /*=====test info=====
 describe:test zeros_1 error, labels more than 2
 ====================*/
 TEST_F(DenseUniTensorTest, zeros_1d_err) {
-  EXPECT_THROW(UniTensor::zeros(3, {"a", "b"}), std::logic_error);
+  EXPECT_THROW(UniTensor::zeros({3}, {"a", "b"}), std::logic_error);
 }
 
 /*=====test info=====
@@ -5377,7 +5385,7 @@ describe:test ones_1
 ====================*/
 TEST_F(DenseUniTensorTest, ones_1d) {
   const cytnx_uint64 Nelem = 5;
-  auto ut = UniTensor::ones(Nelem, {"b"});
+  auto ut = UniTensor::ones({Nelem}, {"b"});
   EXPECT_EQ(ut.shape(), std::vector<cytnx_uint64>({Nelem}));
   EXPECT_EQ(ut.rank(), 1);
   EXPECT_EQ(ut.labels(), std::vector<std::string>({"b"}));
@@ -5386,11 +5394,19 @@ TEST_F(DenseUniTensorTest, ones_1d) {
   }
 }
 
+TEST_F(DenseUniTensorTest, ones_scalar) {
+  auto ut = UniTensor::ones({}, {}, Type.Float);
+  EXPECT_EQ(ut.shape().size(), 0);
+  EXPECT_EQ(ut.rank(), 0);
+  EXPECT_TRUE(ut.get_block_().is_scalar());
+  EXPECT_FLOAT_EQ(ut.get_block_().item<cytnx_float>(), 1.0f);
+}
+
 /*=====test info=====
 describe:test ones_1 error, labels more than 2
 ====================*/
 TEST_F(DenseUniTensorTest, ones_1d_err) {
-  EXPECT_THROW(UniTensor::ones(3, {"a", "b"}), std::logic_error);
+  EXPECT_THROW(UniTensor::ones({3}, {"a", "b"}), std::logic_error);
 }
 
 /*=====test info=====

@@ -449,6 +449,10 @@ namespace cytnx {
       this->_impl = tmp;
       this->_impl->Init(shape, dtype, device, init_zero);
     }
+    void Init(std::initializer_list<cytnx_uint64> shape, const unsigned int &dtype = Type.Double,
+              const int &device = -1, const bool &init_zero = true) {
+      this->Init(std::vector<cytnx_uint64>(shape), dtype, device, init_zero);
+    }
     // void Init(const Storage& storage) {
     //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
     //   this->_impl = tmp;
@@ -474,6 +478,11 @@ namespace cytnx {
      * @see cytnx::Tensor::Init
      */
     Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
+           const int &device = -1, const bool &init_zero = 1)
+        : _impl(new Tensor_impl()) {
+      this->Init(shape, dtype, device, init_zero);
+    }
+    Tensor(std::initializer_list<cytnx_uint64> shape, const unsigned int &dtype = Type.Double,
            const int &device = -1, const bool &init_zero = 1)
         : _impl(new Tensor_impl()) {
       this->Init(shape, dtype, device, init_zero);
