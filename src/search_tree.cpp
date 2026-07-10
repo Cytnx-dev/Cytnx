@@ -1,5 +1,8 @@
 #include "search_tree.hpp"
 #include <stack>
+#include <queue>
+#include <functional>
+#include <algorithm>
 
 #ifdef BACKEND_TORCH
 #else
@@ -103,6 +106,26 @@ namespace cytnx {
       return components;
     }
 
+    // A candidate contraction of the two adjacent nodes with adjacency-matrix
+    // rows lhs_adj_index and rhs_adj_index (kept lhs_adj_index < rhs_adj_index),
+    // tagged with its already-computed get_cost. get_cost depends only on the
+    // two nodes' shapes/labels/costs, all fixed once a node is created, so this
+    // cost never needs recomputing while the pair survives -- caching it here
+    // is what turns the per-round rescan into a heap pop.
+    struct PairCandidate {
+      cytnx_float cost;
+      std::size_t lhs_adj_index;
+      std::size_t rhs_adj_index;
+
+      // Order by cost, then by the node indices, so the min-heap reproduces a
+      // deterministic tie-break (lowest lhs_adj_index, then rhs_adj_index).
+      bool operator>(const PairCandidate& rhs) const {
+        if (cost != rhs.cost) return cost > rhs.cost;
+        if (lhs_adj_index != rhs.lhs_adj_index) return lhs_adj_index > rhs.lhs_adj_index;
+        return rhs_adj_index > rhs.rhs_adj_index;
+      }
+    };
+
     std::unique_ptr<PseudoUniTensor> solve(const std::vector<PseudoUniTensor>& tensors,
                                            bool verbose) {
       if (tensors.empty()) {
@@ -152,110 +175,123 @@ namespace cytnx {
       }
 
       // Find connected components
-      auto components = findConnectedComponents(adjacencyMatrix);
+      std::vector<std::vector<std::size_t>> components = findConnectedComponents(adjacencyMatrix);
       if (verbose && components.size() > 1) {
         std::cout << "Found " << components.size() << " disconnected components" << std::endl;
       }
 
       // Process each component separately
       std::vector<std::unique_ptr<PseudoUniTensor>> component_results;
-      for (const auto& component : components) {
-        // Move this component's leaves into the working set directly -- no
-        // separate index-into-a-master-list bookkeeping needed, since each
-        // node already knows its own adjacencyMatrix row via adj_index.
-        std::vector<std::unique_ptr<PseudoUniTensor>> remaining_nodes;
-        remaining_nodes.reserve(component.size());
+      for (const std::vector<std::size_t>& component : components) {
+        // Alive nodes of this component, keyed by their adjacencyMatrix row
+        // (adj_index) so a candidate pair can be validated and its nodes
+        // fetched in O(1). Each node already knows its own row via adj_index,
+        // so no separate index-into-a-master-list bookkeeping is needed.
+        std::unordered_map<std::size_t, std::unique_ptr<PseudoUniTensor>> alive_nodes;
+        alive_nodes.reserve(component.size());
         for (std::size_t leaf_idx : component) {
-          remaining_nodes.push_back(std::move(leaves[leaf_idx]));
+          std::size_t adj = leaves[leaf_idx]->adj_index;
+          alive_nodes.emplace(adj, std::move(leaves[leaf_idx]));
         }
 
-        while (remaining_nodes.size() > 1) {
-          // Find best contraction pair within component
-          std::size_t best_i = 0, best_j = 1;
-          cytnx_float min_cost = std::numeric_limits<cytnx_float>::max();
+        // Min-heap of candidate contractions. Every adjacent pair's cost is
+        // computed exactly once -- when the pair first forms -- and stays
+        // valid until one of its nodes is contracted (get_cost is a pure
+        // function of the two nodes). A round then costs one O(log) pop plus
+        // O(degree) fresh pushes for the new merged node, instead of an
+        // O(alive^2) rescan; a candidate whose node has since been contracted
+        // is skipped lazily on pop.
+        std::priority_queue<PairCandidate, std::vector<PairCandidate>, std::greater<>> candidates;
 
-          for (std::size_t ii = 0; ii < remaining_nodes.size(); ++ii) {
-            for (std::size_t jj = ii + 1; jj < remaining_nodes.size(); ++jj) {
-              if (adjacencyMatrix[remaining_nodes[ii]->adj_index].test(
-                    remaining_nodes[jj]->adj_index)) {
-                cytnx_float cost = get_cost(*remaining_nodes[ii], *remaining_nodes[jj]);
-                if (cost < min_cost) {
-                  min_cost = cost;
-                  best_i = ii;
-                  best_j = jj;
-                }
-              }
+        // Seed the heap with the component's current adjacent pairs.
+        for (std::size_t a = 0; a < component.size(); ++a) {
+          for (std::size_t b = a + 1; b < component.size(); ++b) {
+            std::size_t a_adj = component[a];
+            std::size_t b_adj = component[b];
+            if (adjacencyMatrix[a_adj].test(b_adj)) {
+              PseudoUniTensor& na = *alive_nodes[a_adj];
+              PseudoUniTensor& nb = *alive_nodes[b_adj];
+              candidates.push({get_cost(na, nb), std::min(a_adj, b_adj), std::max(a_adj, b_adj)});
             }
+          }
+        }
+
+        while (alive_nodes.size() > 1) {
+          // Pop the cheapest candidate whose two nodes are both still alive.
+          PairCandidate best = candidates.top();
+          candidates.pop();
+          if (alive_nodes.find(best.lhs_adj_index) == alive_nodes.end() ||
+              alive_nodes.find(best.rhs_adj_index) == alive_nodes.end()) {
+            continue;
           }
 
           if (verbose) {
-            std::cout << "Contracting nodes " << remaining_nodes[best_i]->adj_index << " and "
-                      << remaining_nodes[best_j]->adj_index << " with cost " << min_cost
-                      << std::endl;
+            std::cout << "Contracting nodes " << best.lhs_adj_index << " and " << best.rhs_adj_index
+                      << " with cost " << best.cost << std::endl;
           }
 
-          // Contract best pair
-          std::unique_ptr<PseudoUniTensor> left = std::move(remaining_nodes[best_i]);
-          std::unique_ptr<PseudoUniTensor> right = std::move(remaining_nodes[best_j]);
+          std::unique_ptr<PseudoUniTensor> left =
+            std::move(alive_nodes.extract(best.lhs_adj_index).mapped());
+          std::unique_ptr<PseudoUniTensor> right =
+            std::move(alive_nodes.extract(best.rhs_adj_index).mapped());
 
           // The merged node is adjacent to exactly the union of what its two
           // parents were adjacent to: any label surviving into the merged
           // node's label list came from one parent or the other, so a node
           // sharing a label with either parent still shares it with the
           // merge. Bits for the parents' own rows are harmless leftovers in
-          // that union -- neither parent remains in remaining_nodes, so
-          // those bits are never looked up again.
+          // that union -- neither parent remains alive, so those bits are
+          // never looked up again.
           std::size_t merged_adj_index = adjacencyMatrix.size();
           IndexSet merged_row =
             adjacencyMatrix[left->adj_index] | adjacencyMatrix[right->adj_index];
-
-          // Record the edge from the neighbour's side too, keeping the matrix
-          // symmetric. The merged node's index is the largest, so it is always
-          // the second operand of adjacencyMatrix[i].test(j) in the loop above;
-          // without setting the bit in each neighbour's (i's) row, that edge
-          // would only live in the merged node's own row and never be seen.
-          for (std::size_t k = 0; k < adjacencyMatrix.size(); ++k) {
-            if (merged_row.test(k)) {
-              adjacencyMatrix[k].set(merged_adj_index);
-            }
-          }
           adjacencyMatrix.push_back(merged_row);
 
-          auto result = pContract(*left, *right);
+          PseudoUniTensor result = pContract(*left, *right);
           auto result_ptr = std::make_unique<PseudoUniTensor>(std::move(result));
           result_ptr->adj_index = merged_adj_index;
 
-          // Update remaining nodes
-          remaining_nodes.erase(remaining_nodes.begin() + best_j);
-          remaining_nodes.erase(remaining_nodes.begin() + best_i);
-          remaining_nodes.push_back(std::move(result_ptr));
+          // Record the edge from the neighbour's side and add candidates for the merged node
+          // against every still-alive neighbour it inherited an edge to.
+          for (const auto& [neighbour_adj, neighbour] : alive_nodes) {
+            if (merged_row.test(neighbour_adj)) {
+              adjacencyMatrix[neighbour_adj].set(merged_adj_index);
+              candidates.push({get_cost(*result_ptr, *neighbour), neighbour_adj, merged_adj_index});
+            }
+          }
+          alive_nodes.emplace(merged_adj_index, std::move(result_ptr));
         }
 
         // Store the component result
-        component_results.push_back(std::move(remaining_nodes[0]));
+        component_results.push_back(std::move(alive_nodes.begin()->second));
       }
 
-      // If there were multiple components, combine them
-      while (component_results.size() > 1) {
-        // Create new node for combining components
-        auto new_node = std::make_unique<PseudoUniTensor>();
-        new_node->isLeaf = false;
-
-        // Move the first two components as children
-        new_node->left = std::move(component_results[0]);
-        new_node->right = std::move(component_results[1]);
+      std::unique_ptr<PseudoUniTensor> root_node = std::move(component_results[0]);
+      /**
+       * If there were multiple components, combine them. The final structure looks like:
+       *
+       *     x
+       *    / \
+       *   x   2
+       *  / \
+       * 0   1
+       *
+       * The numbers are the index in `component_results` and `x` are the new nodes.
+       */
+      for (size_t i = 1; i < components.size(); ++i) {
+        auto new_node =
+          std::make_unique<PseudoUniTensor>(std::move(root_node), std::move(component_results[i]));
 
         // Calculate cost and set properties
+        // XXX: `left` and `right` are not connected. Should the product of their dimensions also be
+        // included in the cost?
         new_node->cost = get_cost(*new_node->left, *new_node->right);
         new_node->accu_str = "(" + new_node->left->accu_str + "," + new_node->right->accu_str + ")";
         new_node->ID = new_node->left->ID ^ new_node->right->ID;
-
-        // Update component list
-        component_results.erase(component_results.begin(), component_results.begin() + 2);
-        component_results.insert(component_results.begin(), std::move(new_node));
+        root_node = std::move(new_node);
       }
 
-      return std::move(component_results[0]);
+      return std::move(root_node);
     }
   }  // namespace OptimalTreeSolver
 
@@ -266,7 +302,7 @@ namespace cytnx {
     }
 
     // Run optimal tree solver directly with base_nodes
-    root_ptr = OptimalTreeSolver::solve(base_nodes, false);
+    this->root_ptr = OptimalTreeSolver::solve(base_nodes, false);
   }
 
   PseudoUniTensor& PseudoUniTensor::operator=(const PseudoUniTensor& rhs) {
