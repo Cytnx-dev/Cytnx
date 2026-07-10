@@ -1,6 +1,7 @@
 #include "cytnx.hpp"
 #include "search_tree.hpp"
 #include <algorithm>
+#include <set>
 #include <gtest/gtest.h>
 
 using namespace cytnx;
@@ -300,4 +301,70 @@ TEST_F(SearchTreeTest, DisconnectedNetwork) {
 
   EXPECT_EQ(result->cost, 120);  // 2*3*4*5 = 120
   EXPECT_EQ(result->accu_str, "(0,1)");
+}
+
+/*=====test info=====
+describe:regression test for issue #506. The 21-tensor iPEPS observable
+         network below is the one whose optimal contraction order the CPU
+         solver "could not finish in 1 day". It is a single connected
+         component that needs 20 sequential contractions, so an
+         O(nodes^2)-per-round rescan that recomputes every pair's cost each
+         round spends O(nodes^3) get_cost calls -- each allocating -- and does
+         not terminate in practical time. Guards that solve() completes and
+         fully contracts the network (every shared bond is summed, the network
+         file's TOUT is empty, so no label survives). The exact cost is not
+         asserted: the greedy planner's tie-breaking is not part of the
+         contract here, only that it terminates and collapses the whole
+         network.
+
+         Bonds are taken verbatim from iPEPS_observe.net; bond dimensions are
+         chi = 8 for every leg except the physical d = 2 legs (O's four legs
+         and the A/B tensors' last legs: labels 7, 8, 11, 12, 25, 30).
+====================*/
+TEST_F(SearchTreeTest, IPEPSObservableNetworkContractsQuickly) {
+  // Labels carrying the physical dimension d = 2; every other bond is chi = 8.
+  const std::set<std::string> d2 = {"7", "8", "11", "12", "25", "30"};
+  auto dim_of = [&](const std::string& label) -> cytnx_uint64 { return d2.count(label) ? 2 : 8; };
+
+  const std::vector<std::vector<std::string>> net = {
+    {"1", "2"},  // C1
+    {"34", "35"},  // C2
+    {"41", "42"},  // C3
+    {"19", "16"},  // C4
+    {"1", "20", "3", "4"},  // T1b
+    {"20", "34", "21", "22"},  // T1a
+    {"35", "38", "36", "37"},  // T2a
+    {"38", "41", "39", "40"},  // T2b
+    {"42", "33", "31", "32"},  // T3b
+    {"33", "19", "17", "18"},  // T3a
+    {"16", "13", "14", "15"},  // T4a
+    {"13", "2", "5", "6"},  // T4b
+    {"4", "24", "10", "6", "8"},  // A1
+    {"3", "23", "9", "5", "7"},  // A1T
+    {"22", "37", "27", "24", "25"},  // B1
+    {"21", "36", "26", "23", "25"},  // B1T
+    {"27", "40", "32", "29", "30"},  // A2
+    {"26", "39", "31", "28", "30"},  // A2T
+    {"10", "29", "18", "15", "12"},  // B2
+    {"9", "28", "17", "14", "11"},  // B2T
+    {"7", "8", "11", "12"},  // O
+  };
+
+  SearchTree tree;
+  for (cytnx_uint64 i = 0; i < net.size(); ++i) {
+    PseudoUniTensor t(i);
+    t.labels = net[i];
+    for (const std::string& label : net[i]) t.shape.push_back(dim_of(label));
+    t.cost = 0;
+    tree.base_nodes.push_back(t);
+  }
+
+  ASSERT_NO_THROW(tree.search_order());
+  auto result = tree.get_root().back()[0];
+  ASSERT_NE(result, nullptr);
+
+  // Every one of the 21 leaves is folded into the result exactly once.
+  EXPECT_EQ(result->ID, (1ULL << net.size()) - 1);
+  // The network is fully contracted: no bond survives (TOUT is empty).
+  EXPECT_TRUE(result->labels.empty());
 }
