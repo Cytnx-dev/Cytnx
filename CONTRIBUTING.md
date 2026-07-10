@@ -81,4 +81,3 @@ regenerating:
 ```sh
 python -m mypy.stubtest cytnx.cytnx
 ```
-
