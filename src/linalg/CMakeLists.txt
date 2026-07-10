@@ -10,7 +10,6 @@ target_sources(cytnx
     Add.cpp
     Ger.cpp
     Arnoldi.cpp
-    Ger.cpp
     iAdd.cpp
     Min.cpp
     Max.cpp
