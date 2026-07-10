@@ -75,6 +75,11 @@ def delete_version(version: str, token: str) -> None:
         if error.code == 404:
             print(f"{version}: already gone, skipping")
             return
+        if error.code in (401, 403):
+            sys.exit(
+                f"{version}: permission denied ({error.code}) deleting release -- "
+                "the token needs delete permission on the channel, not just upload"
+            )
         raise
     print(f"{version}: deleted")
 
