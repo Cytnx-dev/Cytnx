@@ -18,6 +18,19 @@ namespace cytnx {
   void intrusive_ptr_release(Storage_base *);
   ///@endcond
 
+  // The 11 concrete value types a Scalar can hold -- exactly Type_list minus
+  // Void. Duplicated one-liner from #979 per the review thread (merges
+  // trivially with #979 in either order); constrains the templated Scalar
+  // API surface so non-cytnx types get one crisp "constraint not satisfied"
+  // instead of an 11-way overload ambiguity.
+  template <typename T>
+  concept CytnxType = std::is_same_v<T, cytnx_complex128> || std::is_same_v<T, cytnx_complex64> ||
+    std::is_same_v<T, cytnx_double> || std::is_same_v<T, cytnx_float> ||
+    std::is_same_v<T, cytnx_int64> || std::is_same_v<T, cytnx_uint64> ||
+    std::is_same_v<T, cytnx_int32> || std::is_same_v<T, cytnx_uint32> ||
+    std::is_same_v<T, cytnx_int16> || std::is_same_v<T, cytnx_uint16> ||
+    std::is_same_v<T, cytnx_bool>;
+
   /**
    * @brief A class to represent a scalar.
    * @details This class is used to represent a scalar. You can construct a Scalar by
@@ -82,17 +95,15 @@ namespace cytnx {
 
       // When used to set elems:
       Sproxy &operator=(const Scalar &rc);
-      Sproxy &operator=(const cytnx_complex128 &rc);
-      Sproxy &operator=(const cytnx_complex64 &rc);
-      Sproxy &operator=(const cytnx_double &rc);
-      Sproxy &operator=(const cytnx_float &rc);
-      Sproxy &operator=(const cytnx_uint64 &rc);
-      Sproxy &operator=(const cytnx_int64 &rc);
-      Sproxy &operator=(const cytnx_uint32 &rc);
-      Sproxy &operator=(const cytnx_int32 &rc);
-      Sproxy &operator=(const cytnx_uint16 &rc);
-      Sproxy &operator=(const cytnx_int16 &rc);
-      Sproxy &operator=(const cytnx_bool &rc);
+
+      // One constrained template replaces the former 11 per-type overloads;
+      // it delegates through Scalar, whose set_item path they all shared.
+      // (Defined inline: the enclosing Scalar class is complete inside
+      // member bodies of a nested class.)
+      template <CytnxType T>
+      Sproxy &operator=(const T &rc) {
+        return *this = Scalar(rc);
+      }
 
       Sproxy &operator=(const Sproxy &rc);
 
@@ -350,41 +361,43 @@ namespace cytnx {
     void print() const;
 
     // casting
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_double.
-    explicit operator cytnx_double() const;
+    /**
+     * @brief The explicit casting operator of the Scalar class to any cytnx
+     * value type (see cytnx::Type).
+     * @details One constrained template replaces the former 9 per-type cast
+     * operators (and extends the castable set to the complex types, which
+     * were previously reachable only through named accessors). The
+     * `requires` clause admits exactly the conversions the language can
+     * perform on the held value: complex -> real has no static_cast, so it
+     * errors with a hint to use real()/imag(); a Void (monostate) Scalar
+     * converts to nothing and errors naming the dtypes.
+     */
+    template <CytnxType To>
+    explicit operator To() const {
+      return std::visit(
+        []<typename U>(const U &from) -> To {
+          if constexpr (requires { static_cast<To>(from); }) {
+            return static_cast<To>(from);
+          } else if constexpr (is_complex_v<U>) {
+            cytnx_error_msg(true,
+                            "[ERROR] Cannot convert Scalar from dtype [%s] to dtype [%s]. Use "
+                            "real() or imag() to extract a component first.%s",
+                            Type_enum_name<U>, Type_enum_name<To>, "\n");
+            return To{};
+          } else {
+            cytnx_error_msg(true, "[ERROR] Cannot convert Scalar from dtype [%s] to dtype [%s].%s",
+                            Type_enum_name<U>, Type_enum_name<To>, "\n");
+            return To{};
+          }
+        },
+        _val);
+    }
 
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_float
-    explicit operator cytnx_float() const;
-
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_uint64.
-    explicit operator cytnx_uint64() const;
-
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_int64.
-    explicit operator cytnx_int64() const;
-
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_uint32.
-    explicit operator cytnx_uint32() const;
-
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_int32.
-    explicit operator cytnx_int32() const;
-
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_uint16.
-    explicit operator cytnx_uint16() const;
-
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_int16.
-    explicit operator cytnx_int16() const;
-
-    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_bool.
-    explicit operator cytnx_bool() const;
-
-    // Also need explicit conversion to the complex types (used internally by
-    // complex128()/complex64() and by cross-type arithmetic); these were
-    // reachable in the old PIMPL via to_cytnx_complex128()/64() but had no
-    // public Scalar-level cast operator. Kept as named accessors, not
-    // operators, to avoid changing overload resolution of the public API.
+    // Named complex accessors, kept for the existing internal/public callers;
+    // they now simply delegate to the cast-operator template above.
     /// @cond
-    cytnx_complex128 to_complex128() const;
-    cytnx_complex64 to_complex64() const;
+    cytnx_complex128 to_complex128() const { return static_cast<cytnx_complex128>(*this); }
+    cytnx_complex64 to_complex64() const { return static_cast<cytnx_complex64>(*this); }
     ///@endcond
 
     /// @cond

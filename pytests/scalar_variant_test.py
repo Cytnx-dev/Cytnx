@@ -135,10 +135,14 @@ def test_inplace_lossless_widening_keeps_lhs_dtype():
 
 
 def test_inplace_same_dtype_keeps_dtype():
-    s = cytnx.Scalar(np.int32(3))
-    s += cytnx.Scalar(np.int32(2))
-    s -= cytnx.Scalar(np.int32(1))
-    s *= cytnx.Scalar(np.int32(2))
+    # Int32 operands are pinned via astype(): the pybind Scalar(np.int32)
+    # constructor currently collapses to Int64 (preexisting ctor-collapse
+    # quirk; #1014 fixes it, after which the direct constructor works and
+    # this workaround can be dropped).
+    s = cytnx.Scalar(np.int64(3)).astype(Type.Int32)
+    s += cytnx.Scalar(np.int64(2)).astype(Type.Int32)
+    s -= cytnx.Scalar(np.int64(1)).astype(Type.Int32)
+    s *= cytnx.Scalar(np.int64(2)).astype(Type.Int32)
     assert s.dtype() == Type.Int32
     assert int(s) == 8
 

@@ -119,8 +119,9 @@ namespace {
 
 // ===========================================================================
 // #937-derived core suite (credit: @ianmccul). Adjusted for the variant
-// rewrite: `abs`/`sqrt`/bool-arithmetic are no longer blanket-disabled --
-// only genuinely lossy in-place combinations throw.
+// rewrite: `abs`/`sqrt`/bool-arithmetic are no longer blanket-disabled, and
+// in-place arithmetic promotes (`a op= b` is exactly `a = a op b`) instead
+// of throwing on mixed dtypes.
 // ===========================================================================
 
 TEST(ScalarTest, FloatingBinaryArithmeticReturnsCorrectValues) {
@@ -661,4 +662,32 @@ TEST(ScalarStorageSproxyTest, SetItemFromVoidScalarThrows) {
   cytnx::Storage s(2, Type.Double);
   Scalar void_scalar;
   EXPECT_THROW({ s(0) = void_scalar; }, std::logic_error);
+}
+
+// ===========================================================================
+// Void-operand guards: every explicit use of an uninitialized Scalar must
+// fail loudly, matching the old PIMPL (whose Void base threw) instead of
+// silently propagating Void (review findings on #1011).
+// ===========================================================================
+
+TEST(ScalarTest, ConjOnVoidScalarThrows) {
+  Scalar v;
+  EXPECT_THROW({ v.conj(); }, std::logic_error);
+}
+
+TEST(ScalarTest, AstypeOnVoidScalarThrows) {
+  // Previously a silent no-op (Void in -> Void out); now an error, since an
+  // explicit conversion of an uninitialized Scalar is a caller bug.
+  Scalar v;
+  EXPECT_THROW({ v.astype(Type.Double); }, std::logic_error);
+}
+
+TEST(ScalarTest, CastVoidScalarThrows) {
+  Scalar v;
+  EXPECT_THROW({ static_cast<cytnx_double>(v); }, std::logic_error);
+  EXPECT_THROW({ static_cast<cytnx_bool>(v); }, std::logic_error);
+}
+
+TEST(ScalarTest, NormResultDtypeRejectsVoid) {
+  EXPECT_THROW({ Type_class::norm_result_dtype(Type.Void); }, std::logic_error);
 }

@@ -41,24 +41,6 @@ namespace cytnx {
 
     // ---- generic per-alternative helpers ------------------------------------
 
-    // Cast a source value of type TSrc to the destination type TDst,
-    // following the pre-existing Scalar conversion rules:
-    //  - real <- complex is disallowed (use real()/imag() instead).
-    //  - anything else is a plain static_cast (matches the old
-    //    assign_selftype()/to_cytnx_XXX() behavior).
-    template <typename TDst, typename TSrc>
-    TDst convert_value(const TSrc &src) {
-      if constexpr (is_complex_v<TDst> || !is_complex_v<TSrc>) {
-        return static_cast<TDst>(src);
-      } else {
-        cytnx_error_msg(true,
-                        "[ERROR] Cannot convert a complex Scalar to a real dtype. Use real() or "
-                        "imag() to extract a component first.%s",
-                        "\n");
-        return TDst{};
-      }
-    }
-
     // Turn a runtime dtype id into a value-initialized ScalarVariant whose
     // active alternative is the one at index `dtype`. This is the inverse of
     // Scalar::dtype() (itself just _val.index()): ScalarVariant is
@@ -223,14 +205,24 @@ namespace cytnx {
         using TSrc = std::decay_t<decltype(src)>;
         using TDst = std::decay_t<decltype(dst)>;
         if constexpr (std::is_same_v<TSrc, std::monostate>) {
-          // Void source stays Void regardless of target: astype() of an
-          // uninitialized Scalar is a no-op (matches the pre-refactor behavior).
-          out._val = std::monostate{};
+          // An explicit conversion of an uninitialized Scalar is a caller
+          // bug; error instead of silently staying Void (review thread on
+          // the earlier no-op behavior).
+          cytnx_error_msg(true,
+                          "[ERROR] Cannot astype a Void (uninitialized) Scalar. Assign a value "
+                          "first.%s",
+                          "\n");
         } else if constexpr (std::is_same_v<TDst, std::monostate>) {
           // Void is not a valid conversion target for a non-Void Scalar.
           cytnx_error_msg(true, "[ERROR] invalid target dtype for Scalar::astype: Void%s", "\n");
+        } else if constexpr (requires { static_cast<TDst>(src); }) {
+          out._val = static_cast<TDst>(src);
         } else {
-          out._val = convert_value<TDst>(src);
+          // The only cytnx pair with no static_cast is complex -> real.
+          cytnx_error_msg(true,
+                          "[ERROR] Cannot convert Scalar from dtype [%s] to dtype [%s]. Use "
+                          "real() or imag() to extract a component first.%s",
+                          Type_enum_name<TSrc>, Type_enum_name<TDst>, "\n");
         }
       },
       this->_val, dst_proto);
@@ -238,6 +230,9 @@ namespace cytnx {
   }
 
   Scalar Scalar::conj() const {
+    // The old PIMPL's Void base threw here; keep that contract instead of
+    // silently returning another Void (codex review finding).
+    ensure_not_void(*this, "conj");
     Scalar out = *this;
     std::visit(
       [](auto &&v) {
@@ -302,36 +297,10 @@ namespace cytnx {
               << std::endl;
   }
 
-  namespace {
-    template <typename TDst>
-    TDst explicit_cast(const Scalar &s) {
-      TDst out{};
-      std::visit(
-        [&](auto &&v) {
-          using T = std::decay_t<decltype(v)>;
-          if constexpr (std::is_same_v<T, std::monostate>) {
-            cytnx_error_msg(
-              true, "[ERROR] Cannot cast a Void (uninitialized) Scalar to any type.%s", "\n");
-          } else {
-            out = convert_value<TDst>(v);
-          }
-        },
-        s._val);
-      return out;
-    }
-  }  // namespace
-
-  Scalar::operator cytnx_double() const { return explicit_cast<cytnx_double>(*this); }
-  Scalar::operator cytnx_float() const { return explicit_cast<cytnx_float>(*this); }
-  Scalar::operator cytnx_uint64() const { return explicit_cast<cytnx_uint64>(*this); }
-  Scalar::operator cytnx_int64() const { return explicit_cast<cytnx_int64>(*this); }
-  Scalar::operator cytnx_uint32() const { return explicit_cast<cytnx_uint32>(*this); }
-  Scalar::operator cytnx_int32() const { return explicit_cast<cytnx_int32>(*this); }
-  Scalar::operator cytnx_uint16() const { return explicit_cast<cytnx_uint16>(*this); }
-  Scalar::operator cytnx_int16() const { return explicit_cast<cytnx_int16>(*this); }
-  Scalar::operator cytnx_bool() const { return explicit_cast<cytnx_bool>(*this); }
-  cytnx_complex128 Scalar::to_complex128() const { return explicit_cast<cytnx_complex128>(*this); }
-  cytnx_complex64 Scalar::to_complex64() const { return explicit_cast<cytnx_complex64>(*this); }
+  // The per-type cast operators and to_complex128()/to_complex64() are now
+  // defined inline in Scalar.hpp as one constrained operator template (see
+  // the review thread); the explicit_cast/convert_value helpers they used
+  // are gone with them.
 
   // ---- in-place arithmetic ------------------------------------------------
   //
@@ -532,50 +501,6 @@ namespace cytnx {
     }
   }
   Scalar::Sproxy &Scalar::Sproxy::operator=(const Scalar &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_complex128 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_complex64 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_double &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_float &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_uint64 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_int64 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_uint32 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_int32 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_uint16 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_int16 &rc) {
-    this->_insimpl->set_item(this->_loc, rc);
-    return *this;
-  }
-  Scalar::Sproxy &Scalar::Sproxy::operator=(const cytnx_bool &rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
