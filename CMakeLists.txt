@@ -369,8 +369,6 @@ else()
 endif() # Backend torch
 
 #ARPACK
-find_library(ARPACK_LIB arpack REQUIRED)
-message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
 target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
 
 
@@ -523,7 +521,7 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
   COMPONENT libraries
   ARCHIVE
   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  COMPONENT libraries
+  COMPONENT Development
   PUBLIC_HEADER
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   COMPONENT Development
@@ -541,6 +539,7 @@ install(EXPORT cytnx_targets
   FILE CytnxTargets.cmake
   NAMESPACE Cytnx::
   DESTINATION ${INSTALL_CONFIGDIR}
+  COMPONENT Development
 )
 install(DIRECTORY include/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -567,6 +566,7 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfigVersion.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
+  COMPONENT Development
 )
 
 # #############################################
@@ -643,9 +643,9 @@ message(STATUS "")
 message(STATUS "")
 message(STATUS "")
 
-install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
-install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
-install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
+install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
 
 if(BUILD_PACKAGES)
   include("Package.cmake")

@@ -96,6 +96,15 @@ cmake.args = [
     # Use the default preset defined in CMakePresets.json
     "--preset=openblas-cpu",
 ]
+# Only install the "libraries" CMake COMPONENT (the compiled pycytnx
+# extension module and the small runtime .tmp files cytnx/__init__.py reads)
+# into the wheel. This skips the "Development"/"headers" components - the
+# static libraries, C++ headers, and CMake export files - none of which
+# the installed Python package uses. Those C++-consumer artifacts remain
+# available through a plain `cmake --install` (see
+# ci-downstream-find-package.yml), which performs an unfiltered install
+# of every component.
+install.components = ["libraries"]
 
 [tool.scikit-build.metadata.version]
 provider = "scikit_build_core.metadata.regex"
