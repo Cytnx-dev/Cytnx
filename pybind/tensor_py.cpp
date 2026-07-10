@@ -26,6 +26,14 @@ namespace {
     return py::isinstance<py::tuple>(object) &&
            py::reinterpret_borrow<py::tuple>(object).size() == 0;
   }
+
+  void check_tuple_rank(py::tuple args, cytnx::cytnx_uint64 rank, const char *type_name) {
+    const auto index_count = static_cast<cytnx::cytnx_uint64>(args.size());
+    cytnx_error_msg(index_count > rank,
+                    "[ERROR] too many indices for %s: got %llu indices for rank-%llu object.%s",
+                    type_name, static_cast<unsigned long long>(index_count),
+                    static_cast<unsigned long long>(rank), "\n");
+  }
 }  // namespace
 
 template <class T>
@@ -43,6 +51,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
   std::vector<cytnx::Accessor> accessors;
   if (py::isinstance<py::tuple>(locators)) {
     py::tuple Args = locators.cast<py::tuple>();
+    check_tuple_rank(Args, self.rank(), "Tensor");
     cytnx::cytnx_uint64 cnt = 0;
     // mixing of slice and ints
     for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
@@ -135,6 +144,10 @@ void tensor_binding(py::module &m) {
           chr_dtype = py::format_descriptor<cytnx::cytnx_uint32>::format();
         } else if (tmpIN.dtype() == cytnx::Type.Int32) {
           chr_dtype = py::format_descriptor<cytnx::cytnx_int32>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Uint16) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_uint16>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Int16) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_int16>::format();
         } else if (tmpIN.dtype() == cytnx::Type.Bool) {
           chr_dtype = py::format_descriptor<cytnx::cytnx_bool>::format();
         } else {
@@ -354,6 +367,7 @@ void tensor_binding(py::module &m) {
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
+             check_tuple_rank(Args, self.rank(), "Tensor");
              cytnx::cytnx_uint64 cnt = 0;
              // mixing of slice and ints
              for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
@@ -378,7 +392,6 @@ void tensor_binding(py::module &m) {
              if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
                throw py::error_already_set();
              // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-             std::cout << start << " " << stop << " " << step << std::endl;
              accessors.push_back(cytnx::Accessor::range(start, stop, step));
              for (cytnx::cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
                accessors.push_back(cytnx::Accessor::all());
@@ -412,6 +425,7 @@ void tensor_binding(py::module &m) {
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
+             check_tuple_rank(Args, self.rank(), "Tensor");
              cytnx::cytnx_uint64 cnt = 0;
              // mixing of slice and ints
              for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {

@@ -2800,7 +2800,7 @@ namespace cytnx {
                     cytnx_double tol) {
     //[14 May 2026] This is a copy from BlockUniTensor; The name is changed (BKF instead of BK);
     // signflips are initialized to be all false
-    if (!force) {
+    if (!force && !rhs->bonds().empty()) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
         for (int i = 0; i < rhs->bonds().size(); i++) {

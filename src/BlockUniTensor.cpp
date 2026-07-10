@@ -2062,7 +2062,7 @@ namespace cytnx {
   }
 
   void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, bool force, cytnx_double tol) {
-    if (!force) {
+    if (!force && !rhs->bonds().empty()) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
         for (int i = 0; i < rhs->bonds().size(); i++) {

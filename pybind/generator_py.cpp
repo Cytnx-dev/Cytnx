@@ -88,54 +88,37 @@ void generator_binding(py::module &m) {
     // check type:
     int dtype;
     std::vector<cytnx_uint64> shape(info.shape.begin(), info.shape.end());
-    ssize_t Totbytes;
+    const ssize_t total_bytes = info.size * info.itemsize;
 
     if (info.format == py::format_descriptor<cytnx_complex128>::format()) {
       dtype = Type.ComplexDouble;
-      Totbytes = info.strides[0] * info.shape[0];
     } else if (info.format == py::format_descriptor<cytnx_complex64>::format()) {
       dtype = Type.ComplexFloat;
-      Totbytes = info.strides[0] * info.shape[0];
     } else if (info.format == py::format_descriptor<cytnx_double>::format()) {
       dtype = Type.Double;
-      Totbytes = info.strides[0] * info.shape[0];
     } else if (info.format == py::format_descriptor<cytnx_float>::format()) {
       dtype = Type.Float;
-      Totbytes = info.strides[0] * info.shape[0];
     } else if (info.format == py::format_descriptor<uint64_t>::format() || info.format == "L") {
       dtype = Type.Uint64;
-      Totbytes = info.strides[0] * info.shape[0];
     } else if (info.format == py::format_descriptor<int64_t>::format() || info.format == "l") {
       dtype = Type.Int64;
-      Totbytes = info.strides[0] * info.shape[0];
     } else if (info.format == py::format_descriptor<uint32_t>::format()) {
       dtype = Type.Uint32;
-      Totbytes = info.strides[0] * info.shape[0];
     } else if (info.format == py::format_descriptor<int32_t>::format()) {
       dtype = Type.Int32;
-      Totbytes = info.strides[0] * info.shape[0];
+    } else if (info.format == py::format_descriptor<uint16_t>::format()) {
+      dtype = Type.Uint16;
+    } else if (info.format == py::format_descriptor<int16_t>::format()) {
+      dtype = Type.Int16;
     } else if (info.format == py::format_descriptor<cytnx_bool>::format()) {
       dtype = Type.Bool;
-      Totbytes = info.strides[0] * info.shape[0];
     } else {
       cytnx_error_msg(true, "[ERROR] invalid type from numpy.ndarray to Tensor%s", "\n");
     }
-    /*
-    for( int i=0;i<info.strides.size();i++)
-        std::cout << info.strides[i] << " ";
-    std::cout << std::endl;
-    for( int i=0;i<info.shape.size();i++)
-        std::cout << info.shape[i] << " ";
-    std::cout << std::endl;
-
-    std::cout << Type.getname(dtype) << std::endl;
-    std::cout << Totbytes << std::endl;
-    */
-    // Totbytes *= cytnx::Type.typeSize(dtype);
 
     Tensor m;
     m.Init(shape, dtype);
-    memcpy(m.storage()._impl->data(), info.ptr, Totbytes);
+    memcpy(m.storage()._impl->data(), info.ptr, total_bytes);
     return m;
   });
 }

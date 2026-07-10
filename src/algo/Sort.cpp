@@ -12,6 +12,8 @@
 namespace cytnx {
   namespace algo {
     Tensor Sort(const Tensor &Tin) {
+      cytnx_error_msg(Tin.is_void(), "[ERROR][Sort] cannot sort a void Tensor.%s", "\n");
+
       Tensor out;
       if (Tin.is_contiguous())
         out = Tin.clone();

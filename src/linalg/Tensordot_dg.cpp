@@ -18,6 +18,11 @@ namespace cytnx {
                           "[ERROR][Tensordot_dg] axis %s=%llu is out of bounds for rank %llu.%s",
                           side, static_cast<unsigned long long>(indices[i]),
                           static_cast<unsigned long long>(rank), "\n");
+          for (cytnx_uint64 j = i + 1; j < indices.size(); j++) {
+            cytnx_error_msg(indices[i] == indices[j],
+                            "[ERROR][Tensordot_dg] duplicate contracted axis %s=%llu.%s", side,
+                            static_cast<unsigned long long>(indices[i]), "\n");
+          }
         }
       }
     }  // namespace

@@ -1598,7 +1598,7 @@ namespace cytnx {
   }
 
   void _DN_from_DN(DenseUniTensor *ths, DenseUniTensor *rhs, bool force) {
-    if (!force) {
+    if (!force && !ths->bonds().empty() && !rhs->bonds().empty()) {
       // more checking:
       if ((int(ths->bond_(0).type()) != bondType::BD_NONE) &&
           (int(rhs->bond_(0).type()) != bondType::BD_NONE)) {
@@ -1613,7 +1613,7 @@ namespace cytnx {
   }
 
   void _DN_from_BK(DenseUniTensor *ths, BlockUniTensor *rhs, bool force) {
-    if (!force) {
+    if (!force && !ths->bonds().empty()) {
       // more checking:
       if (int(ths->bond_(0).type()) != bondType::BD_NONE) {
         for (int i = 0; i < ths->bonds().size(); i++) {
@@ -1645,7 +1645,7 @@ namespace cytnx {
   }
 
   void _DN_from_BKF(DenseUniTensor *ths, BlockFermionicUniTensor *rhs, bool force) {
-    if (!force) {
+    if (!force && !ths->bonds().empty()) {
       // more checking:
       if (int(ths->bond_(0).type()) != bondType::BD_NONE) {
         for (int i = 0; i < ths->bonds().size(); i++) {

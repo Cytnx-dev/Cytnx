@@ -29,6 +29,14 @@ namespace {
     return py::isinstance<py::tuple>(object) &&
            py::reinterpret_borrow<py::tuple>(object).size() == 0;
   }
+
+  void check_tuple_rank(py::tuple args, cytnx_uint64 rank, const char *type_name) {
+    const auto index_count = static_cast<cytnx_uint64>(args.size());
+    cytnx_error_msg(index_count > rank,
+                    "[ERROR] too many indices for %s: got %llu indices for rank-%llu object.%s",
+                    type_name, static_cast<unsigned long long>(index_count),
+                    static_cast<unsigned long long>(rank), "\n");
+  }
 }  // namespace
 
 class cHclass {
@@ -190,6 +198,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   if (self.is_diag()) {
     if (py::isinstance<py::tuple>(locators)) {
       py::tuple Args = locators.cast<py::tuple>();
+      check_tuple_rank(Args, self.rank(), "UniTensor");
       cytnx_error_msg(Args.size() > 2,
                       "[ERROR][slicing] A diagonal UniTensor can only be accessed with one- or "
                       "two dimensional slicing.%s",
@@ -218,6 +227,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   } else {
     if (py::isinstance<py::tuple>(locators)) {
       py::tuple Args = locators.cast<py::tuple>();
+      check_tuple_rank(Args, self.rank(), "UniTensor");
       cytnx_uint64 cnt = 0;
       // mixing of slice and ints
       for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
