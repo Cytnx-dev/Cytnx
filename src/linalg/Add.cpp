@@ -18,6 +18,8 @@ namespace cytnx {
 
       template <typename TL>
       Tensor AddScalarTensorImpl(const TL &lc, const Tensor &Rt) {
+        cytnx_error_msg(Rt.is_void(), "[Add] cannot add a scalar to an uninitialized Tensor.%s",
+                        "\n");
         const unsigned int lhs_dtype = Type.cy_typeid_v<TL>;
         Storage Cnst(1, lhs_dtype);
         Cnst.at<TL>(0) = lc;
@@ -54,6 +56,7 @@ namespace cytnx {
     }  // namespace detail
 
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
+      detail::CheckBinaryTensorInputs(Lt, Rt, "Add");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Add] The two tensors cannot be on different devices.%s", "\n");
 
@@ -147,6 +150,8 @@ namespace cytnx {
 
     template <>
     Tensor Add<Scalar>(const Scalar &lc, const Tensor &Rt) {
+      cytnx_error_msg(Rt.is_void(), "[Add] cannot add a scalar to an uninitialized Tensor.%s",
+                      "\n");
       Storage Cnst(1, lc.dtype());
       Cnst.set_item(0, lc);
 

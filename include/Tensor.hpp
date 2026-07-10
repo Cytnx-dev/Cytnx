@@ -1489,11 +1489,12 @@ namespace cytnx {
      */
     void append(const Tensor &rhs) {
       // Tensor in;
+      // check Tensor in shape:
+      cytnx_error_msg(rhs.is_void() || this->is_void(), "[ERROR] try to append a null Tensor.%s",
+                      "\n");
+      cytnx_error_msg(this->shape().empty(), "[ERROR] try to append to a rank-0 Tensor.%s", "\n");
       if (!this->is_contiguous()) this->contiguous_();
 
-      // check Tensor in shape:
-      cytnx_error_msg(rhs.shape().size() == 0 || this->shape().size() == 0,
-                      "[ERROR] try to append a null Tensor.%s", "\n");
       cytnx_error_msg(rhs.shape().size() != (this->shape().size() - 1),
                       "[ERROR] try to append a Tensor with rank not match.%s", "\n");
       cytnx_uint64 Nelem = 1;
@@ -1510,7 +1511,7 @@ namespace cytnx {
         in = rhs.astype(this->dtype());
         if (!in.is_contiguous()) in.contiguous_();
       } else {
-        if (!in.is_contiguous())
+        if (!rhs.is_contiguous())
           in = rhs.contiguous();
         else
           in = rhs;

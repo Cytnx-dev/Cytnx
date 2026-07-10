@@ -1911,9 +1911,9 @@ namespace cytnx {
     }
 
     t = sqrt(t);
-    Tensor R({1}, t.dtype());
+    Tensor R(std::vector<cytnx_uint64>{}, t.dtype());
 
-    R(0) = t;
+    R.item() = t;
     return R;
   }
 

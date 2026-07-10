@@ -497,6 +497,42 @@ TEST_F(TensorTest, RankZeroBroadcastComparison) {
   EXPECT_TRUE(out.at<cytnx_bool>({2}));
 }
 
+TEST_F(TensorTest, VoidTensorArithmeticThrowsControlledError) {
+  Tensor uninitialized;
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 2.0;
+  Tensor vec = arange(3).astype(Type.Double);
+
+  EXPECT_THROW((void)(uninitialized + scalar), std::logic_error);
+  EXPECT_THROW((void)(scalar + uninitialized), std::logic_error);
+  EXPECT_THROW((void)(uninitialized + vec), std::logic_error);
+}
+
+TEST_F(TensorTest, RankZeroAppendAsScalarElement) {
+  Tensor vec = arange(2).astype(Type.Double);
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 3.5;
+
+  vec.append(scalar);
+  EXPECT_EQ(vec.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(vec.at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({1}), 1.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({2}), 3.5);
+
+  Tensor uninitialized;
+  EXPECT_THROW(vec.append(uninitialized), std::logic_error);
+  EXPECT_THROW(scalar.append(scalar), std::logic_error);
+}
+
+TEST_F(TensorTest, RankZeroSortReturnsScalar) {
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+  scalar.item<double>() = 7.5;
+
+  Tensor sorted = algo::Sort(scalar);
+  EXPECT_TRUE(sorted.is_scalar());
+  EXPECT_DOUBLE_EQ(sorted.item<double>(), 7.5);
+}
+
 TEST_F(TensorTest, RankZeroDiagThrowsControlledError) {
   Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
   scalar.item<double>() = 2.0;

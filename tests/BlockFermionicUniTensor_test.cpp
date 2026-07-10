@@ -31,6 +31,12 @@ TEST_F(BlockFermionicUniTensorTest, ContractMixedDtype) {
   EXPECT_TRUE(abs(L.contract(R).item() - 32.0) < 1e-5);
 }
 
+TEST_F(BlockFermionicUniTensorTest, NormReturnsScalarTensor) {
+  Tensor norm = BFUT1.Norm();
+  EXPECT_TRUE(norm.is_scalar());
+  EXPECT_GT(double(norm.item().real()), 0.0);
+}
+
 TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata) {
   Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   UniTensor bkf = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu);

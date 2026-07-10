@@ -16,6 +16,9 @@ namespace cytnx {
                       "[Matmul_dg] error, tensor Tr ,Matmul_dg can only operate on rank-2 x rank-1 "
                       "(rank-1 x rank-2) Tensor.%s",
                       "\n");
+      cytnx_error_msg(Tl.shape().empty() || Tr.shape().empty(),
+                      "[Matmul_dg] error, Matmul_dg does not support rank-0 Tensor operands.%s",
+                      "\n");
       cytnx_error_msg(Tl.shape().size() == Tr.shape().size(),
                       "[Matmul_dg] error, tensor Tr:rank[%d] Tl:rank[%d] ,Matmul_dg can only "
                       "operate on rank-2 x rank-1 (rank-1 x rank-2) Tensor.\n",

@@ -12,6 +12,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Cpr(const Tensor &Lt, const Tensor &Rt) {
+      detail::CheckBinaryTensorInputs(Lt, Rt, "Cpr");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Cpr] error, two tensor cannot on different devices.%s", "\n");
       if (Lt.is_scalar() && Rt.is_scalar() && Lt.device() != Device.cpu) {

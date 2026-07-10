@@ -107,6 +107,15 @@ namespace cytnx {
     ExpectComplexNear(out, {1, 1}, 0, 1.5);
   }
 
+  TEST(DtypePromotion, Matmul_dg_rank_zero_throws_controlled_error) {
+    Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+    scalar.item<cytnx_double>() = 2.0;
+    Tensor vector = zeros({2}, Type.Double, Device.cpu);
+
+    EXPECT_THROW(linalg::Matmul_dg(scalar, vector), std::logic_error);
+    EXPECT_THROW(linalg::Matmul_dg(vector, scalar), std::logic_error);
+  }
+
   TEST(DtypePromotion, Tensordot_complexfloat_double) {
     Tensor out = linalg::Tensordot(MakeComplexFloatA(), MakeDoubleB(), {1}, {0});
     ASSERT_EQ(out.dtype(), Type.ComplexDouble);

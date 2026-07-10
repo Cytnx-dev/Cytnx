@@ -7,8 +7,15 @@ namespace cytnx {
   namespace linalg {
     namespace detail {
 
+      inline void CheckBinaryTensorInputs(const Tensor &Lt, const Tensor &Rt, const char *op_name) {
+        cytnx_error_msg(Lt.is_void() || Rt.is_void(),
+                        "[%s] cannot perform arithmetic on an uninitialized Tensor.%s", op_name,
+                        "\n");
+      }
+
       inline bool InitBroadcastBinaryOutput(Tensor &out, const Tensor &Lt, const Tensor &Rt,
                                             const unsigned int dtype, const bool init_zero = true) {
+        CheckBinaryTensorInputs(Lt, Rt, "Tensor arithmetic");
         if (!Lt.is_scalar() && !Rt.is_scalar()) return false;
 
         const Tensor &meta = Lt.is_scalar() ? Rt : Lt;

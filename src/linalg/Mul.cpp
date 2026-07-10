@@ -10,6 +10,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Mul(const Tensor &Lt, const Tensor &Rt) {
+      detail::CheckBinaryTensorInputs(Lt, Rt, "Mul");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mul] The two tensors cannot be on different devices.%s", "\n");
 

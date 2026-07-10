@@ -11,6 +11,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Mod(const Tensor &Lt, const Tensor &Rt) {
+      detail::CheckBinaryTensorInputs(Lt, Rt, "Mod");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mod] The two tensors cannot be on different devices.%s", "\n");
       if (Lt.is_scalar() && Rt.is_scalar() && Lt.device() != Device.cpu) {

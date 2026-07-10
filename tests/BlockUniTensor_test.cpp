@@ -897,9 +897,13 @@ TEST_F(BlockUniTensorTest, LinAlgElementwise) {
 
 TEST_F(BlockUniTensorTest, Norm) {
   // EXPECT_TRUE(Scalar(BUT4.Norm().item()-10.02330912178208).abs()<1e-5);
-  EXPECT_DOUBLE_EQ(double(BUT4.Norm().item().real()), 10.36019459497064);
+  Tensor but_norm = BUT4.Norm();
+  EXPECT_TRUE(but_norm.is_scalar());
+  EXPECT_DOUBLE_EQ(double(but_norm.item().real()), 10.36019459497064);
 
-  cytnx_double tmp = double(UT_diag.Norm().item().real());
+  Tensor diag_norm = UT_diag.Norm();
+  EXPECT_TRUE(diag_norm.is_scalar());
+  cytnx_double tmp = double(diag_norm.item().real());
   cytnx_double ans = 0;
   for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
