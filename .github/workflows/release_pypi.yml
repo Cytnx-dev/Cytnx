@@ -16,6 +16,11 @@ name: Release wheels
 #     `cytnx-nightly-wheels` organisation channel on anaconda.org. The
 #     official `cytnx` PyPI project is never touched by this path, so
 #     production PyPI only ever holds tagged stable releases.
+#     anaconda.org enforces a 10GB storage quota on the channel, so
+#     before each upload tools/prune_nightly_wheels.py deletes old
+#     nightly releases down to 4, keeping the channel at 5 versions
+#     (4 kept + the one about to be uploaded) regardless of how the
+#     channel got there (#1021).
 #
 # Pull requests always resolve to the nightly channel with publishing
 # disabled: the PR is merged with its target branch and the nightly
@@ -258,7 +263,26 @@ jobs:
     needs: [DetermineChannel, BuildWheel]
     if: needs.DetermineChannel.outputs.channel == 'nightly' && needs.DetermineChannel.outputs.publish == 'true'
     runs-on: ubuntu-24.04
+    concurrency:
+      # Serializes prune+upload pairs so two nearby master merges can't
+      # interleave their prunes; a run that loses the race simply
+      # waits its turn rather than racing the channel state.
+      group: publish-nightly-anaconda
+      cancel-in-progress: false
     steps:
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      with:
+        sparse-checkout: tools
+
+    - name: Prune old nightly releases
+      # Deletes nightly releases beyond the newest 4, so the channel
+      # holds at most 5 versions after this job's upload step runs.
+      # Runs before the upload so an already-over-quota channel (#1021)
+      # is brought back under budget instead of failing the upload.
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_ORG_UPLOAD_TOKEN }}
+      run: python3 tools/prune_nightly_wheels.py --keep 4
+
     - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
       with:
         pattern: cibw-wheels-*
