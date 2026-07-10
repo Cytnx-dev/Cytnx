@@ -1,6 +1,9 @@
 DTYPES_SIMPLE = ["cd", "cf", "d", "f", "i64", "u64", "i32", "u32", "i16", "u16", "b"]
 DTYPES_FULL = ["cytnx_complex128", "cytnx_complex64", "cytnx_double", "cytnx_float", "cytnx_int64", "cytnx_uint64", "cytnx_int32", "cytnx_uint32", "cytnx_int16", "cytnx_uint16", "bool"]
-cuDTYPES_FULL = ["cuDoubleComplex", "cuFloatComplex", "cytnx_double", "cytnx_float", "cytnx_int64", "cytnx_uint64", "cytnx_int32", "cytnx_uint32", "cytnx_int16", "cytnx_uint16", "bool"]
+# GPU kernels use cuda::std::complex for complex arithmetic (native operators,
+# correct promotion); cast to the cuComplex ABI only at cuBLAS/cuSOLVER call
+# boundaries. See include/Type.hpp (cytnx_cuda_complex128/64, from #1004).
+cuDTYPES_FULL = ["cytnx_cuda_complex128", "cytnx_cuda_complex64", "cytnx_double", "cytnx_float", "cytnx_int64", "cytnx_uint64", "cytnx_int32", "cytnx_uint32", "cytnx_int16", "cytnx_uint16", "bool"]
 SIGNED = [1,1,1,1,1,0,1,0,1,0,0]
 
 def typeid_promote(typeid1,typeid2):

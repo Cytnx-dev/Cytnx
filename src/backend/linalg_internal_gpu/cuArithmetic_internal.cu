@@ -20,9 +20,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtcd(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtcd(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -43,9 +40,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtcf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -68,9 +62,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtd(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
@@ -91,9 +82,6 @@ namespace cytnx {
                                                     invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtf(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtf(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtf(out, Lin, Rin, len, shape, invmapper_L,
@@ -116,9 +104,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtu64(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtu64(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -139,9 +124,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdti64(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -164,9 +146,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtu32(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtu32(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -187,9 +166,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdti32(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -212,9 +188,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdti16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdti16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -236,9 +209,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtu16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtu16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -259,9 +229,6 @@ namespace cytnx {
                                                     invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cdtb(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cdtb(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cdtb(out, Lin, Rin, len, shape, invmapper_L,
@@ -285,9 +252,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftcd(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftcd(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -308,9 +272,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftcf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -333,9 +294,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftd(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
@@ -356,9 +314,6 @@ namespace cytnx {
                                                     invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftf(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftf(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftf(out, Lin, Rin, len, shape, invmapper_L,
@@ -381,9 +336,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftu64(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftu64(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -404,9 +356,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cfti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cfti64(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cfti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -429,9 +378,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftu32(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftu32(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -452,9 +398,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cfti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cfti32(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cfti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -477,9 +420,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cfti16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cfti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cfti16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -501,9 +441,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftu16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftu16(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -524,9 +461,6 @@ namespace cytnx {
                                                     invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_cftb(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_cftb(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_cftb(out, Lin, Rin, len, shape, invmapper_L,
@@ -550,9 +484,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtcd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtcd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
@@ -573,9 +504,6 @@ namespace cytnx {
                                                     invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtcf(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -600,9 +528,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtd(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtd(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtd(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -626,9 +551,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtf(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtf(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtf(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -649,9 +571,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtu64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtu64(out, Lin, Rin, len, shape, invmapper_L,
@@ -674,9 +593,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dti64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dti64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -697,9 +613,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtu32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtu32(out, Lin, Rin, len, shape, invmapper_L,
@@ -722,9 +635,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dti32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dti32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -746,9 +656,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dti16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dti16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -769,9 +676,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtu16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtu16(out, Lin, Rin, len, shape, invmapper_L,
@@ -796,9 +700,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_dtb(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_dtb(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_dtb(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -821,9 +722,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftcd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftcd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
@@ -844,9 +742,6 @@ namespace cytnx {
                                                     invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftcf(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -871,9 +766,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftd(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftd(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftd(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -897,9 +789,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftf(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftf(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftf(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -920,9 +809,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftu64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftu64(out, Lin, Rin, len, shape, invmapper_L,
@@ -945,9 +831,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_fti64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_fti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_fti64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -968,9 +851,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftu32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftu32(out, Lin, Rin, len, shape, invmapper_L,
@@ -993,9 +873,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_fti32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_fti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_fti32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -1017,9 +894,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_fti16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_fti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_fti16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -1040,9 +914,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftu16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftu16(out, Lin, Rin, len, shape, invmapper_L,
@@ -1067,9 +938,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_ftb(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_ftb(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_ftb(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -1093,9 +961,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64tcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -1116,9 +981,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64tcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64tcf(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64tcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1141,9 +1003,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64td(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -1164,9 +1023,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64tf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64tf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64tf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1189,9 +1045,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64tu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1212,9 +1065,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64ti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64ti64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64ti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -1237,9 +1087,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64tu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1260,9 +1107,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64ti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64ti32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64ti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -1285,9 +1129,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64ti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1309,9 +1150,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64tu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1332,9 +1170,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u64tb(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u64tb(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u64tb(out, Lin, Rin, len, shape, invmapper_L,
@@ -1358,9 +1193,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64tcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -1381,9 +1213,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64tcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64tcf(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64tcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1406,9 +1235,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64td(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -1429,9 +1255,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64tf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64tf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64tf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1454,9 +1277,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64tu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1477,9 +1297,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64ti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64ti64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64ti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -1502,9 +1319,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64tu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1525,9 +1339,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64ti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64ti32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64ti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -1568,9 +1379,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64tu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1591,9 +1399,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64tb(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i64tb(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i64tb(out, Lin, Rin, len, shape, invmapper_L,
@@ -1618,9 +1423,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32tcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -1641,9 +1443,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32tcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32tcf(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32tcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1666,9 +1465,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32td(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -1689,9 +1485,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32tf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32tf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32tf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1714,9 +1507,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32tu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1737,9 +1527,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32ti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32ti64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32ti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -1762,9 +1549,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32tu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1785,9 +1569,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32ti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32ti32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32ti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -1810,9 +1591,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32ti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1834,9 +1612,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32tu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -1857,9 +1632,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u32tb(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u32tb(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u32tb(out, Lin, Rin, len, shape, invmapper_L,
@@ -1884,9 +1656,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32tcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -1907,9 +1676,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32tcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32tcf(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32tcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1932,9 +1698,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32td(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -1955,9 +1718,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32tf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32tf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32tf(out, Lin, Rin, len, shape, invmapper_L,
@@ -1980,9 +1740,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32tu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2003,9 +1760,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32ti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32ti64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32ti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -2028,9 +1782,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32tu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2051,9 +1802,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32ti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32ti32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32ti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -2076,9 +1824,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32ti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2100,9 +1845,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32tu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2123,9 +1865,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i32tb(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i32tb(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i32tb(out, Lin, Rin, len, shape, invmapper_L,
@@ -2149,9 +1888,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16tcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -2172,9 +1908,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16tcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16tcf(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16tcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -2197,9 +1930,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16td(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -2220,9 +1950,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16tf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16tf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16tf(out, Lin, Rin, len, shape, invmapper_L,
@@ -2245,9 +1972,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16tu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2268,9 +1992,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16ti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16ti64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16ti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -2293,9 +2014,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16tu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2316,9 +2034,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16ti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16ti32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16ti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -2341,9 +2056,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16ti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2365,9 +2077,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16tu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2388,9 +2097,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i16tb(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_i16tb(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_i16tb(out, Lin, Rin, len, shape, invmapper_L,
@@ -2415,9 +2121,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16tcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16tcd(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
@@ -2438,9 +2141,6 @@ namespace cytnx {
                                                       invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16tcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16tcf(out, Lin, Rin, len, shape, invmapper_L,
                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16tcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -2463,9 +2163,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16td(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16td(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -2486,9 +2183,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16tf(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16tf(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16tf(out, Lin, Rin, len, shape, invmapper_L,
@@ -2511,9 +2205,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16tu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16tu64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2534,9 +2225,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16ti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16ti64(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16ti64(out, Lin, Rin, len, shape, invmapper_L,
@@ -2559,9 +2247,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16tu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16tu32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2582,9 +2267,6 @@ namespace cytnx {
                                                        invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16ti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16ti32(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16ti32(out, Lin, Rin, len, shape, invmapper_L,
@@ -2607,9 +2289,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16ti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2631,9 +2310,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16tu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                       invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16tu16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
@@ -2654,9 +2330,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_u16tb(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_u16tb(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_u16tb(out, Lin, Rin, len, shape, invmapper_L,
@@ -2680,9 +2353,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btcd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btcd(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btcd(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
@@ -2703,9 +2373,6 @@ namespace cytnx {
                                                     invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btcf(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btcf(out, Lin, Rin, len, shape, invmapper_L,
                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btcf(out, Lin, Rin, len, shape, invmapper_L,
@@ -2730,9 +2397,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btd(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btd(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btd(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -2756,9 +2420,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btf(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btf(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btf(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
@@ -2779,9 +2440,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btu64(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btu64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btu64(out, Lin, Rin, len, shape, invmapper_L,
@@ -2804,9 +2462,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_bti64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_bti64(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_bti64(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -2827,9 +2482,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btu32(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btu32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btu32(out, Lin, Rin, len, shape, invmapper_L,
@@ -2852,9 +2504,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_bti32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_bti32(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_bti32(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -2876,9 +2525,6 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_bti16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_bti16(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_bti16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
@@ -2899,9 +2545,6 @@ namespace cytnx {
                                                      invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btu16(out, Lin, Rin, len, shape, invmapper_L,
-                                                     invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btu16(out, Lin, Rin, len, shape, invmapper_L,
                                                      invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btu16(out, Lin, Rin, len, shape, invmapper_L,
@@ -2925,9 +2568,6 @@ namespace cytnx {
                                                    invmapper_R);
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_btb(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
-      else if (type == 4)
-        cytnx::linalg_internal::cuCpr_internal_btb(out, Lin, Rin, len, shape, invmapper_L,
                                                    invmapper_R);
       else
         cytnx::linalg_internal::cuMod_internal_btb(out, Lin, Rin, len, shape, invmapper_L,
