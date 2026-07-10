@@ -1,0 +1,936 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacecytnx_1_1random" kind="namespace" language="C++">
+    <compoundname>cytnx::random</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" prot="public" static="no" extern="yes" mutable="no">
+        <type>std::random_device</type>
+        <definition>std::random_device cytnx::random::__static_random_device</definition>
+        <argsstring></argsstring>
+        <name>__static_random_device</name>
+        <qualifiedname>cytnx::random::__static_random_device</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="25" column="31" bodyfile="include/UniTensor.hpp" bodystart="29" bodyend="-1" declfile="include/random.hpp" declline="25" declcolumn="31"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="namespacecytnx_1_1random_1a41ed636f5c24eacbf4460c468ec8eaf3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::random::normal_</definition>
+        <argsstring>(cytnx::Storage &amp;Sin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=__static_random_device())</argsstring>
+        <name>normal_</name>
+        <qualifiedname>cytnx::random::normal_</qualifiedname>
+        <param>
+          <type>cytnx::Storage &amp;</type>
+          <declname>Sin</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>mean</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>std</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <briefdescription>
+<para>Randomize the memory of a Storage with normal distributon. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Sin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a Storage </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">mean</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the mean of a normal distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">std</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] Using device entropy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>The Storage sould be real floating type or complex type. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="40" column="10" declfile="include/random.hpp" declline="40" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1a4338fa831047fbf286059f55cdba7a87" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::random::uniform_</definition>
+        <argsstring>(cytnx::Storage &amp;Sin, const double &amp;low=0, const double &amp;high=1, const unsigned int &amp;seed=__static_random_device())</argsstring>
+        <name>uniform_</name>
+        <qualifiedname>cytnx::random::uniform_</qualifiedname>
+        <param>
+          <type>cytnx::Storage &amp;</type>
+          <declname>Sin</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>low</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>high</declname>
+          <defval>1</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <briefdescription>
+<para>Randomize the memory of a Storage with uniform distributon. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Sin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a Storage </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the lower-bound of the uniform distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the higher-bound of the uniform distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] Using device entropy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para><orderedlist>
+<listitem><para>The Storage sould be real floating type or complex type.</para>
+</listitem><listitem><para>In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10) </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="56" column="10" declfile="include/random.hpp" declline="56" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1a104df82fa7e6ae683463324443dfd07d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::random::normal_</definition>
+        <argsstring>(cytnx::Tensor &amp;Tin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=__static_random_device())</argsstring>
+        <name>normal_</name>
+        <qualifiedname>cytnx::random::normal_</qualifiedname>
+        <param>
+          <type><ref refid="classcytnx_1_1Tensor" kindref="compound">cytnx::Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>mean</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>std</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <briefdescription>
+<para>Randomize the memory of a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with normal distributon. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">mean</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the mean of a normal distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">std</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] Using device entropy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>The <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> sould be real floating type or complex type. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="72" column="10" declfile="include/random.hpp" declline="72" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1a30714c12a0d05d267ec1934f30b1e0a9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::random::uniform_</definition>
+        <argsstring>(cytnx::Tensor &amp;Tin, const double &amp;low=0, const double &amp;high=1, const unsigned int &amp;seed=__static_random_device())</argsstring>
+        <name>uniform_</name>
+        <qualifiedname>cytnx::random::uniform_</qualifiedname>
+        <param>
+          <type><ref refid="classcytnx_1_1Tensor" kindref="compound">cytnx::Tensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>low</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>high</declname>
+          <defval>1</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <briefdescription>
+<para>Randomize the memory of a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with uniform distributon. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the lower-bound of the uniform distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the higher-bound of the uniform distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] Using device entropy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para><orderedlist>
+<listitem><para>The <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> sould be real floating type or complex type.</para>
+</listitem><listitem><para>In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10) </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="89" column="10" declfile="include/random.hpp" declline="89" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1ac1f51aa39149f407b9e9b5aaa1964e91" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::random::normal_</definition>
+        <argsstring>(cytnx::UniTensor &amp;Tin, const double &amp;mean, const double &amp;std, const unsigned int &amp;seed=__static_random_device())</argsstring>
+        <name>normal_</name>
+        <qualifiedname>cytnx::random::normal_</qualifiedname>
+        <param>
+          <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>mean</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>std</declname>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <briefdescription>
+<para>Randomize the memory of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with normal distributon. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">mean</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the mean of a normal distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">std</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] Using device entropy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>The <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> sould be real floating type or complex type. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="105" column="10" declfile="include/random.hpp" declline="105" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1acd72bde9159b9345b77c1b972396ec27" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cytnx::random::uniform_</definition>
+        <argsstring>(cytnx::UniTensor &amp;Tin, const double &amp;low=0, const double &amp;high=1, const unsigned int &amp;seed=__static_random_device())</argsstring>
+        <name>uniform_</name>
+        <qualifiedname>cytnx::random::uniform_</qualifiedname>
+        <param>
+          <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>low</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>high</declname>
+          <defval>1</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <briefdescription>
+<para>Randomize the memory of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with uniform distributon. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the lower-bound of the uniform distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the higher-bound of the uniform distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] Using device entropy. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para><orderedlist>
+<listitem><para>The <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> sould be real floating type or complex type.</para>
+</listitem><listitem><para>In cpu, it generate random number in domain [low,high); but in gpu(cuda), it generate random number in domain (low,high]; (cuRandv10) </para>
+</listitem></orderedlist>
+</para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="121" column="10" declfile="include/random.hpp" declline="121" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1a076c253a37a3342146cc941f17d68ca0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::random::normal</definition>
+        <argsstring>(const cytnx_uint64 &amp;Nelem, const double &amp;mean, const double &amp;std, const int &amp;device=Device.cpu, const unsigned int &amp;seed=__static_random_device(), const unsigned int &amp;dtype=Type.Double)</argsstring>
+        <name>normal</name>
+        <qualifiedname>cytnx::random::normal</qualifiedname>
+        <param>
+          <type>const cytnx_uint64 &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>mean</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>std</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <briefdescription>
+<para>create an <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all the elements are initialized with normal distribution </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number of elements </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">mean</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the mean of the normal distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">std</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] using device entropy </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the data type of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. [Default] cytnx::Type.Double <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] using device entropy </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="139" column="12" declfile="include/random.hpp" declline="139" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1afc0908ae0a3f7224a06f4e2cb5161c74" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::random::normal</definition>
+        <argsstring>(const std::vector&lt; cytnx_uint64 &gt; &amp;Nelem, const double &amp;mean, const double &amp;std, const int &amp;device=Device.cpu, const unsigned int &amp;seed=__static_random_device(), const unsigned int &amp;dtype=Type.Double)</argsstring>
+        <name>normal</name>
+        <qualifiedname>cytnx::random::normal</qualifiedname>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>mean</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>std</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <briefdescription>
+<para>create an <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all the elements are initialized with normal distribution </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the shape of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">mean</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the mean of the normal distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">std</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the standard deviation (sigma) of the normal distribution </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] using device entropy </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the data type of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. [Default] cytnx::Type.Double </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="156" column="12" declfile="include/random.hpp" declline="156" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1a306b7409aa88887b931ee420267fd3c8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::random::uniform</definition>
+        <argsstring>(const cytnx_uint64 &amp;Nelem, const double &amp;low, const double &amp;high, const int &amp;device=Device.cpu, const unsigned int &amp;seed=__static_random_device(), const unsigned int &amp;dtype=Type.Double)</argsstring>
+        <name>uniform</name>
+        <qualifiedname>cytnx::random::uniform</qualifiedname>
+        <param>
+          <type>const cytnx_uint64 &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>low</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>high</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <briefdescription>
+<para>create an <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all the elements are initialized with uniform distribution </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number of elements </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the lower-bound of range </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the upper-bound of range </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] using device entropy </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the data type of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. [Default] cytnx::Type.Double </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="176" column="12" declfile="include/random.hpp" declline="176" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1a526bd27b4f67395742c5633c2f8343de" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::random::uniform</definition>
+        <argsstring>(const std::vector&lt; cytnx_uint64 &gt; &amp;Nelem, const double &amp;low, const double &amp;high, const int &amp;device=Device.cpu, const unsigned int &amp;seed=__static_random_device(), const unsigned int &amp;dtype=Type.Double)</argsstring>
+        <name>uniform</name>
+        <qualifiedname>cytnx::random::uniform</qualifiedname>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>Nelem</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>low</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>high</declname>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <briefdescription>
+<para>create an <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all the elements are initialized with uniform distribution </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Nelem</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number of elements </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the lower-bound of range </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the upper-bound of range </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] using device entropy </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the data type of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. [Default] cytnx::Type.Double </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="194" column="12" declfile="include/random.hpp" declline="194" declcolumn="12"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1random_1af0b01447d0dcdf05b7cb268df806478c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
+        <definition>Tensor cytnx::random::random_tensor</definition>
+        <argsstring>(const std::vector&lt; cytnx_uint64 &gt; &amp;shape, const double &amp;low=-10.0, const double &amp;high=10.0, const int &amp;device=Device.cpu, const unsigned int &amp;seed=__static_random_device(), const unsigned int &amp;dtype=Type.Double)</argsstring>
+        <name>random_tensor</name>
+        <qualifiedname>cytnx::random::random_tensor</qualifiedname>
+        <param>
+          <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
+          <declname>shape</declname>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>low</declname>
+          <defval>-10.0</defval>
+        </param>
+        <param>
+          <type>const double &amp;</type>
+          <declname>high</declname>
+          <defval>10.0</defval>
+        </param>
+        <param>
+          <type>const int &amp;</type>
+          <declname>device</declname>
+          <defval>Device.cpu</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>seed</declname>
+          <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">__static_random_device</ref>()</defval>
+        </param>
+        <param>
+          <type>const unsigned int &amp;</type>
+          <declname>dtype</declname>
+          <defval>Type.Double</defval>
+        </param>
+        <briefdescription>
+<para>create a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with random values for any data type </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">shape</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the shape of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">low</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the lower-bound of range (inclusive for integers) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">high</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the upper-bound of range (inclusive for integers, exclusive for floats) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">device</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the device that the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is put on. It can be any device defined in <ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">cytnx::Device</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">seed</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the seed for the random generator. [Default] using device entropy </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">dtype</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the data type of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/random.hpp" line="212" column="12" declfile="include/random.hpp" declline="212" declcolumn="12"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>The randomization related functions. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/random.hpp" line="20" column="1"/>
+  </compounddef>
+</doxygen>

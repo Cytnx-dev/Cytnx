@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="deprecated" kind="page">
+    <compoundname>deprecated</compoundname>
+    <title>Deprecated List</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><variablelist>
+<varlistentry><term>Member <ref refid="namespacecytnx_1ac17fa8d955067a516de44a7704a731ba" kindref="member">cytnx::Contracts</ref>  (const <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;in, const T &amp;...args, const std::string &amp;order, const bool &amp;optimal)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000002"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="namespacecytnx_1aded169a56c47928185057cc8f24b4d66" kindref="member">Contract(const UniTensor &amp;in, const T &amp;...args, const std::string &amp;order, const bool
+&amp;optimal)</ref><linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="namespacecytnx_1ab3eaecf9ef354a43851bb3e4fd24147a" kindref="member">cytnx::Contracts</ref>  (const std::vector&lt; UniTensor &gt; &amp;TNs, const std::string &amp;order, const bool &amp;optimal)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000001"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="namespacecytnx_1ae707018c91a03ba0c43b9b0b20830a62" kindref="member">Contract(const std::vector&lt;UniTensor&gt; &amp;TNs, const std::string &amp;order, const bool
+&amp;optimal)</ref><linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a286ea6434384864cc38f3b4c0736fdc9" kindref="member">cytnx::UniTensor::combineBonds</ref>  (const std::vector&lt; cytnx_int64 &gt; &amp;indicators, const bool &amp;force=false)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000020"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a8963181b34820940d2f33813c33a4f78" kindref="member">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</ref> <linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a893a7715779cd9b7369ac2e0011aee99" kindref="member">cytnx::UniTensor::combineBonds</ref>  (const std::vector&lt; std::string &gt; &amp;indicators, const bool &amp;force=false)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000019"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a8963181b34820940d2f33813c33a4f78" kindref="member">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</ref> <linebreak/>
+ instead. </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1aaadfa8d665c76353ea6eef35d5be976d" kindref="member">cytnx::UniTensor::combineBonds</ref>  (const std::vector&lt; cytnx_int64 &gt; &amp;indicators, const bool &amp;force, const bool &amp;by_label)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000018"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a8963181b34820940d2f33813c33a4f78" kindref="member">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</ref> <linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a0c5a3ca425fdb2467007c3bf9816dde7" kindref="member">cytnx::UniTensor::get_elem</ref>  (const std::vector&lt; cytnx_uint64 &gt; &amp;locator) const</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000021"/> This function is deprecated, please use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> instread.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a0eaa545881f5de347199910555b9532f" kindref="member">cytnx::UniTensor::put_block</ref>  (const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;in, const cytnx_uint64 &amp;idx, const bool &amp;force)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000013"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a9c894a11bd5e9a1d5c042c5bb61c8e48" kindref="member">put_block(const Tensor &amp;in, const cytnx_uint64 &amp;idx)</ref> <linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a9df943e88dec88c5ee1a9723797d9179" kindref="member">cytnx::UniTensor::put_block</ref>  (const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;in_tens, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000014"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a3858de1d359d85ecdaa54bb7d73a75a3" kindref="member">put_block(const Tensor &amp;in_tens, const std::vector&lt;cytnx_int64&gt; &amp;qidx)</ref> <linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1addf4ec2c8db5c4172eb8bc5acb843665" kindref="member">cytnx::UniTensor::put_block</ref>  (<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;in, const std::vector&lt; std::string &gt; &amp;lbls, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000015"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a5771a65dbc78c563fd1556af159d3adb" kindref="member">put_block(Tensor &amp;in, const std::vector&lt;std::string&gt; &amp;lbls, const std::vector&lt;cytnx_int64&gt;
+&amp;qidx)</ref> <linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1ae9cda7e4b96ae82e7d8e4eea3b8d17f3" kindref="member">cytnx::UniTensor::put_block_</ref>  (<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;in, const std::vector&lt; std::string &gt; &amp;lbls, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000017"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a6c19f2c2119009097a4b9f26151cc4aa" kindref="member">put_block_(Tensor &amp;in, const std::vector&lt;std::string&gt; &amp;lbls, const std::vector&lt;cytnx_int64&gt;
+&amp;qidx)</ref> <linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a94e1b0c5abad291972ad29598cfd4bbd" kindref="member">cytnx::UniTensor::put_block_</ref>  (<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;in, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000016"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor_1a085299bccf586326e0b82b434255e3c1" kindref="member">put_block_(Tensor &amp;in, const std::vector&lt;cytnx_int64&gt; &amp;qidx)</ref> <linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1aea30e0417a4b6552a016d77ff10cc032" kindref="member">cytnx::UniTensor::relabels</ref>  (const std::vector&lt; std::string &gt; &amp;new_labels) const</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000006"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1a8368a52036f9ff25572bd455ecece2dd" kindref="member">relabel(const std::vector&lt;std::string&gt; &amp;new_labels) const</ref><linebreak/>
+ instead. </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1abb243634aaeecdde1c973e78fa66acbc" kindref="member">cytnx::UniTensor::relabels</ref>  (const std::initializer_list&lt; char * &gt; &amp;new_labels) const</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000007"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1af19f7b1442c93f00f46d14b49bd4eec3" kindref="member">relabel(const std::initializer_list&lt;char *&gt; &amp;new_labels) const</ref><linebreak/>
+ instead. </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a7f59300d4e1226d80c701ee5181cdf49" kindref="member">cytnx::UniTensor::relabels</ref>  (const std::vector&lt; std::string &gt; &amp;old_labels, const std::vector&lt; std::string &gt; &amp;new_labels) const</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000009"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1a9bc53d5c8da90d3c9321b1e4128c786d" kindref="member">relabel(const std::vector&lt;std::string&gt; &amp;old_labels, const std::vector&lt;std::string&gt;
+&amp;new_labels) const</ref><linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1ad1e94c2ce8a085b471b4ea2e21dacc70" kindref="member">cytnx::UniTensor::relabels</ref>  (const std::initializer_list&lt; char * &gt; &amp;old_labels, const std::initializer_list&lt; char * &gt; &amp;new_labels) const</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000011"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1aeb569a5ea02641e9814bb50004a2c534" kindref="member">relabel(const std::initializer_list&lt;char *&gt; &amp;old_labels, const
+std::initializer_list&lt;char *&gt; &amp;new_labels) const </ref><linebreak/>
+ instead. </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1ab28f13002b796f7b741574b4d5fa6644" kindref="member">cytnx::UniTensor::relabels_</ref>  (const std::initializer_list&lt; char * &gt; &amp;old_labels, const std::initializer_list&lt; char * &gt; &amp;new_labels)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000012"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1ad5a368eb5eaf1223de1e63c90f7d25b2" kindref="member">relabel_(const std::initializer_list&lt;char *&gt; &amp;old_labels, const
+std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
+ instead. </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a38cb9dcf09a704aa10567f77e7354f37" kindref="member">cytnx::UniTensor::relabels_</ref>  (const std::vector&lt; std::string &gt; &amp;old_labels, const std::vector&lt; std::string &gt; &amp;new_labels)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000010"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1abfc0b1faeef378712dab6124dc26930f" kindref="member">relabel_(const std::vector&lt;std::string&gt; &amp;old_labels, const std::vector&lt;std::string&gt;
+&amp;new_labels)</ref><linebreak/>
+ instead. </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a2c1273dcc551489e466999bb5cee57b3" kindref="member">cytnx::UniTensor::relabels_</ref>  (const std::initializer_list&lt; char * &gt; &amp;new_labels)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000008"/>This function is deprecated. Please use <linebreak/>
+<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a3fdf3353f8cf66739814b047e174edac" kindref="member">relabel_(const std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
+ instead. </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1afb9812c7247f573bf659a98f24b12715" kindref="member">cytnx::UniTensor::relabels_</ref>  (const std::vector&lt; std::string &gt; &amp;new_labels)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000005"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a8241712bf34eee2ce6e2963833c1a156" kindref="member">relabel_(const std::vector&lt;std::string&gt; &amp;new_labels)</ref><linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a066c45760deaa7a5c109ddb94827717d" kindref="member">cytnx::UniTensor::set_elem</ref>  (const std::vector&lt; cytnx_uint64 &gt; &amp;locator, const T2 &amp;rc)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000022"/> This function is deprecated, please use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> instread.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a3edc556b2b60d672d1e1b40d2ccd69e6" kindref="member">cytnx::UniTensor::set_labels</ref>  (const std::initializer_list&lt; char * &gt; &amp;new_labels)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000004"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a3fdf3353f8cf66739814b047e174edac" kindref="member">relabel_(const std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
+ instead.  </para>
+</listitem>
+<varlistentry><term>Member <ref refid="classcytnx_1_1UniTensor_1a54712d4aedcfe01324bd7d4aa042cf8c" kindref="member">cytnx::UniTensor::set_labels</ref>  (const std::vector&lt; std::string &gt; &amp;new_labels)</term></varlistentry>
+<listitem><para><anchor id="deprecated_1_deprecated000003"/>This function is deprecated. Please use <linebreak/>
+ <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a8241712bf34eee2ce6e2963833c1a156" kindref="member">relabel_(const std::vector&lt;std::string&gt; &amp;new_labels)</ref><linebreak/>
+ instead. </para>
+</listitem>
+</variablelist>
+</para>
+    </detaileddescription>
+    <location file="deprecated"/>
+  </compounddef>
+</doxygen>

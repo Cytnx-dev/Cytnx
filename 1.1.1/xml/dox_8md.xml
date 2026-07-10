@@ -1,0 +1,339 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dox_8md" kind="file" language="Markdown">
+    <compoundname>dox.md</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline><highlight class="normal">#<sp/>Cytnx</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Feature:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Python<sp/>x<sp/>C++</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Benefit<sp/>from<sp/>both<sp/>side.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>One<sp/>can<sp/>do<sp/>simple<sp/>prototype<sp/>on<sp/>python<sp/>side</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>and<sp/>easy<sp/>transfer<sp/>to<sp/>C++<sp/>with<sp/>small<sp/>effort!</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```{.cpp}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>//<sp/>c++<sp/>version:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>#include<sp/>&quot;cytnx.hpp&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>cytnx::Tensor<sp/>A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```{.py}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>#<sp/>python<sp/>version:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>import<sp/>cytnx</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>A<sp/>=<sp/><sp/>cytnx.Tensor([3,4,5],dtype=cytnx.Type.Double,device=cytnx.Device.cpu)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>1.<sp/>All<sp/>the<sp/>Storage<sp/>and<sp/>Tensor<sp/>have<sp/>mulitple<sp/>type<sp/>support.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Avaliable<sp/>types<sp/>are<sp/>:<sp/>(please<sp/>refer<sp/>to<sp/>\link<sp/>Type<sp/>Type<sp/>\endlink)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx<sp/>type<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>c++<sp/>type<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type<sp/>object</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|------------------|----------------------|--------------------</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_double<sp/><sp/><sp/><sp/><sp/>|<sp/>double<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Double</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_float<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>float<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Float</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_uint64<sp/><sp/><sp/><sp/><sp/>|<sp/>uint64_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Uint64</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_uint32<sp/><sp/><sp/><sp/><sp/>|<sp/>uint32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Uint32</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_uint16<sp/><sp/><sp/><sp/><sp/>|<sp/>uint16_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Uint16</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_int64<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>int64_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Int64</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_int32<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>int32_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Int32</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_int16<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>int16_t<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Int16</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_complex128<sp/>|<sp/>std::complex&lt;double&gt;<sp/>|<sp/>Type.ComplexDouble</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_complex64<sp/><sp/>|<sp/>std::complex&lt;float&gt;<sp/><sp/>|<sp/>Type.ComplexFloat</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|<sp/>cytnx_bool<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>bool<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Type.Bool</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>2.<sp/>Multiple<sp/>devices<sp/>support.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>simple<sp/>moving<sp/>btwn<sp/>CPU<sp/>and<sp/>GPU<sp/>(see<sp/>\link<sp/>cytnx::Device<sp/>Device<sp/>\endlink<sp/>and<sp/>below)</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Objects:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Storage<sp/><sp/><sp/>[Python<sp/>binded]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>\link<sp/>cytnx::Tensor<sp/>Tensor<sp/>\endlink<sp/><sp/><sp/>[Python<sp/>binded]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>\link<sp/>cytnx::Bond<sp/>Bond<sp/>\endlink<sp/><sp/><sp/><sp/><sp/>[Python<sp/>binded]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>\link<sp/>cytnx::Accessor<sp/>Accessor<sp/>\endlink<sp/>[C++<sp/>only]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>\link<sp/>cytnx::Symmetry<sp/>Symmetry<sp/>\endlink<sp/>[Python<sp/>binded]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>\link<sp/>cytnx::UniTensor<sp/>UniTensor<sp/>\endlink<sp/>[Python<sp/>binded]</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>\link<sp/>cytnx::Network<sp/>Network<sp/>\endlink<sp/>[Python<sp/>binded]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>linear<sp/>algebra<sp/>functions:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">See<sp/>\link<sp/>cytnx::linalg<sp/>cytnx::linalg<sp/>\endlink<sp/>for<sp/>further<sp/>details</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|func<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/>inplace<sp/>|<sp/>CPU<sp/>|<sp/>GPU<sp/><sp/>|<sp/>callby<sp/>Tensor<sp/><sp/><sp/>|<sp/>Tensor<sp/>|<sp/>UniTensor|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|-------------|-----------|-----|------|-----------------|--------|-----------|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Add<sp/>|<sp/>\link<sp/>cytnx::Tensor::Add_(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Add_\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Add(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Add\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Add(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>Add\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Add(<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt<sp/>)<sp/>Add\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Sub<sp/>|<sp/>\link<sp/>cytnx::Tensor::Sub_(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Sub_\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Sub(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Sub\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Sub(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>Sub\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Sub(<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt<sp/>)<sp/>Sub\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Mul<sp/>|<sp/>\link<sp/>cytnx::Tensor::Mul_(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Mul_\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Mul(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Mul\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Mul(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>Mul\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Mul(<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt<sp/>)<sp/>Mul\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Div<sp/>|<sp/>\link<sp/>cytnx::Tensor::Div_(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Div_\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Div(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Div\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Div(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>Div\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Div(<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt<sp/>)<sp/>Div\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Mod<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Mod(const<sp/>T&amp;<sp/>rhs)<sp/>Mod\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Mod(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>Mod\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Mod(<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt<sp/>)<sp/>Mod\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Cpr<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Cpr(<sp/>const<sp/>T&amp;<sp/>rhs)<sp/>Cpr\endlink<sp/>|<sp/>\link<sp/>cytnx::linalg::Cpr(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>Cpr\endlink<sp/>|<sp/>x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>+,+=|<sp/><sp/><sp/>\link<sp/>cytnx::Tensor::operator+=(const<sp/>T&amp;<sp/>rc)<sp/>+=\endlink<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::operator+=(const<sp/>T&amp;<sp/>rc)<sp/>+=\endlink<sp/>|<sp/>\link<sp/>cytnx::operator+(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>+\endlink,\link<sp/>cytnx::Tensor::operator+=(const<sp/>T&amp;<sp/>rc)<sp/>+=\endlink|<sp/>\link<sp/>cytnx::operator+(const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt)<sp/>+\endlink,\link<sp/>cytnx::UniTensor::operator+=(const<sp/>cytnx::UniTensor&amp;<sp/>rhs)<sp/>+=\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>-,-=|<sp/><sp/><sp/>\link<sp/>cytnx::Tensor::operator-=(const<sp/>T&amp;<sp/>rc)<sp/>-=\endlink<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::operator-=(const<sp/>T&amp;<sp/>rc)<sp/>-=\endlink<sp/>|<sp/>\link<sp/>cytnx::operator-(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>-\endlink,\link<sp/>cytnx::Tensor::operator-=(const<sp/>T&amp;<sp/>rc)<sp/>-=\endlink|<sp/>\link<sp/>cytnx::operator-(const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt)<sp/>-\endlink,\link<sp/>cytnx::UniTensor::operator-=(const<sp/>cytnx::UniTensor&amp;<sp/>rhs)<sp/>-=\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*,*=|<sp/><sp/><sp/>\link<sp/>cytnx::Tensor::operator*=(const<sp/>T&amp;<sp/>rc)<sp/>*=\endlink<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::operator*=(const<sp/>T&amp;<sp/>rc)<sp/>*=\endlink<sp/>|<sp/>\link<sp/>cytnx::operator*(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>*\endlink,\link<sp/>cytnx::Tensor::operator*=(const<sp/>T&amp;<sp/>rc)<sp/>*=\endlink|<sp/>\link<sp/>cytnx::operator*(const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt)<sp/>*\endlink,\link<sp/>cytnx::UniTensor::operator*=(const<sp/>cytnx::UniTensor&amp;<sp/>rhs)<sp/>*=\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>/,/=|<sp/><sp/><sp/>\link<sp/>cytnx::Tensor::operator/=(const<sp/>T&amp;<sp/>rc)<sp/>/=\endlink<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::operator/=(const<sp/>T&amp;<sp/>rc)<sp/>/=\endlink<sp/>|<sp/>\link<sp/>cytnx::operator/(const<sp/>cytnx::Tensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Rt)<sp/>/\endlink,\link<sp/>cytnx::Tensor::operator/=(const<sp/>T&amp;<sp/>rc)<sp/>/=\endlink|<sp/>\link<sp/>cytnx::operator/(const<sp/>cytnx::UniTensor&amp;<sp/>Lt,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Rt)<sp/>/\endlink,\link<sp/>cytnx::UniTensor::operator/=(const<sp/>cytnx::UniTensor&amp;<sp/>rhs)<sp/>/=\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Svd<sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Svd(const<sp/>bool&amp;<sp/>is_UvT)<sp/>const<sp/>Svd\endlink|\link<sp/>cytnx::linalg::Svd(const<sp/>cytnx::Tensor<sp/>&amp;<sp/>Tin,<sp/>const<sp/>bool<sp/>&amp;<sp/>is_UvT)<sp/>Svd\endlink|\link<sp/>cytnx::linalg::Svd(const<sp/>cytnx::UniTensor<sp/>&amp;<sp/>Tin,<sp/>const<sp/>bool<sp/>&amp;<sp/>is_UvT<sp/>)<sp/>Svd\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Gesvd<sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Gesvd(const<sp/>cytnx::Tensor<sp/>&amp;<sp/>Tin,<sp/>const<sp/>bool<sp/>&amp;<sp/>is_U,<sp/>const<sp/>bool&amp;<sp/>is_vT)<sp/>Gesvd\endlink|\link<sp/>cytnx::linalg::Gesvd(const<sp/>cytnx::UniTensor<sp/>&amp;<sp/>Tin,<sp/>const<sp/>bool<sp/>&amp;<sp/>is_U,<sp/>const<sp/>bool&amp;<sp/>is_vT)<sp/>Gesvd\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Svd_truncate<sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Svd_truncate(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>cytnx_uint64&amp;<sp/>keepdim,<sp/>const<sp/>double&amp;<sp/>err,<sp/>const<sp/>bool&amp;<sp/>is_UvT,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>return_err,<sp/>const<sp/>cytnx_uint64&amp;<sp/>mindim)<sp/>Svd_truncate\endlink|\link<sp/>cytnx::linalg::Svd_truncate(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>cytnx_uint64&amp;<sp/>keepdim,<sp/>const<sp/>double&amp;<sp/>err,<sp/>const<sp/>bool&amp;<sp/>is_UvT,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>return_err,<sp/>const<sp/>cytnx_uint64&amp;<sp/>mindim)<sp/>Svd_truncate\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Gesvd_truncate<sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>x<sp/><sp/><sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Gesvd_truncate(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>cytnx_uint64&amp;<sp/>keepdim,<sp/>const<sp/>double&amp;<sp/>err,<sp/>const<sp/>bool&amp;<sp/>is_U,<sp/>const<sp/>bool&amp;<sp/>is_vT,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>return_err,<sp/>const<sp/>cytnx_uint64&amp;<sp/>mindim)<sp/>Gesvd_truncate\endlink|\link<sp/>cytnx::linalg::Gesvd_truncate(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>cytnx_uint64&amp;<sp/>keepdim,<sp/>const<sp/>double&amp;<sp/>err,<sp/>const<sp/>bool&amp;<sp/>is_U,<sp/>const<sp/>bool&amp;<sp/>is_vT,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>return_err,<sp/>const<sp/>cytnx_uint64&amp;<sp/>mindim)<sp/>Gesvd_truncate\endlink|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>InvM<sp/>|<sp/>\link<sp/>cytnx::linalg::InvM_(cytnx::Tensor&amp;<sp/>Tin)<sp/>InvM_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::InvM()const<sp/>InvM<sp/>\endlink<sp/>|\link<sp/>cytnx::linalg::InvM(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>InvM<sp/>\endlink|\link<sp/>cytnx::linalg::InvM(const<sp/>cytnx::UniTensor&amp;<sp/>Tin)<sp/>InvM<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Inv<sp/>|<sp/>\link<sp/>cytnx::linalg::Inv_(cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>clip)<sp/>Inv_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Inv(const<sp/>double&amp;<sp/>clip)const<sp/>Inv<sp/>\endlink<sp/>|\link<sp/>cytnx::linalg::Inv(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>clip)<sp/>Inv<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Conj<sp/>|<sp/>\link<sp/>cytnx::linalg::Conj_(cytnx::Tensor&amp;<sp/>Tin)<sp/>Conj_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Conj()<sp/>Conj<sp/>\endlink<sp/>|\link<sp/>cytnx::linalg::Conj(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>Conj<sp/>\endlink|\link<sp/>cytnx::linalg::Conj(const<sp/>cytnx::UniTensor&amp;<sp/>Tin)<sp/>Conj<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Exp<sp/>|<sp/>\link<sp/>cytnx::linalg::Exp_(cytnx::Tensor&amp;<sp/>Tin)<sp/>Exp_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Exp()<sp/>Exp<sp/>\endlink<sp/>|\link<sp/>cytnx::linalg::Exp(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>Exp<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Expf<sp/>|<sp/>\link<sp/>cytnx::linalg::Expf_(cytnx::Tensor&amp;<sp/>Tin)<sp/>Expf_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Expf(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>Expf<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Eigh<sp/>|<sp/>x<sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Eigh(const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool&amp;<sp/>row_v)const<sp/>Eigh\endlink<sp/>|\link<sp/>cytnx::linalg::Eigh(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool&amp;<sp/>row_v)<sp/>Eigh\endlink|\link<sp/>cytnx::linalg::Eigh(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool&amp;<sp/>row_v)<sp/>Eigh\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ExpH<sp/>|<sp/>x<sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::ExpH(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>T&amp;<sp/>a,<sp/>const<sp/>T&amp;<sp/>b)<sp/>ExpH<sp/>\endlink|\link<sp/>cytnx::linalg::ExpH(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>T&amp;<sp/>a,<sp/>const<sp/>T&amp;<sp/>b)<sp/>ExpH<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>ExpM<sp/>|<sp/>x<sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::ExpM(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>T&amp;<sp/>a,<sp/>const<sp/>T&amp;<sp/>b)<sp/>ExpM<sp/>\endlink|\link<sp/>cytnx::linalg::ExpM(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>T&amp;<sp/>a,<sp/>const<sp/>T&amp;<sp/>b)<sp/>ExpM<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Matmul<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Matmul(const<sp/>cytnx::Tensor&amp;<sp/>TL,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>TR)<sp/>Matmul<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Diag<sp/>|<sp/>x<sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Diag(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>Diag<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Tensordot<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Tensordot(const<sp/>cytnx::Tensor&amp;<sp/>Tl,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tr,<sp/>const<sp/>std::vector&lt;cytnx_uint64&gt;&amp;<sp/>idxl,<sp/>const<sp/>std::vector&lt;cytnx_uint64&gt;&amp;<sp/>idxr,<sp/>const<sp/>bool&amp;<sp/>cacheL,<sp/>const<sp/>bool&amp;<sp/>cacheR)<sp/>Tensordot<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Outer<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Outer(const<sp/>cytnx::Tensor&amp;<sp/>Tl,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tr)<sp/>Outer<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Vectordot<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Vectordot(const<sp/>cytnx::Tensor&amp;<sp/>Tl,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tr,<sp/>const<sp/>bool&amp;<sp/>is_conj)<sp/>Vectordot<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Tridiag<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Tridiag(const<sp/>cytnx::Tensor&amp;<sp/>Diag,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Sub_diag,<sp/>const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool&amp;<sp/>is_row,<sp/>bool<sp/>throw_excp)<sp/>Tridiag<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Kron<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Kron(const<sp/>cytnx::Tensor&amp;<sp/>Tl,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tr,<sp/>const<sp/>bool&amp;<sp/>Tl_pad_left,<sp/>const<sp/>bool&amp;<sp/>Tr_pad_left)<sp/>Kron<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Norm<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Norm()<sp/>Norm\endlink<sp/>|\link<sp/>cytnx::linalg::Norm(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>Norm<sp/>\endlink|\link<sp/>cytnx::linalg::Norm(const<sp/>cytnx::UniTensor&amp;<sp/>Tin)<sp/>Norm<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Dot<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Dot(const<sp/>cytnx::Tensor&amp;<sp/>Tl,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tr)<sp/>Dot<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Eig<sp/>|<sp/>x<sp/><sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Eig(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool&amp;<sp/>row_v)<sp/>Eig\endlink|\link<sp/>cytnx::linalg::Eig(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool&amp;<sp/>row_v)<sp/>Eig\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Pow<sp/>|<sp/>\link<sp/>cytnx::linalg::Pow_(cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>p)<sp/>Pow_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Pow(const<sp/>cytnx_double&amp;<sp/>p)const<sp/>Pow<sp/>\endlink<sp/>|\link<sp/>cytnx::linalg::Pow(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>p)<sp/>Pow<sp/>\endlink|\link<sp/>cytnx::linalg::Pow(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>p)<sp/>Pow<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Abs<sp/>|<sp/>\link<sp/>cytnx::linalg::Abs_(cytnx::Tensor&amp;<sp/>Tin)<sp/>Abs_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Abs()const<sp/>Abs<sp/>\endlink<sp/>|\link<sp/>cytnx::linalg::Abs(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>Abs<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Qr<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Qr(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_tau)<sp/>Qr<sp/>\endlink|\link<sp/>cytnx::linalg::Qr(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_tau)<sp/>Qr<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Qdr<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Qdr(const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_tau)<sp/>Qdr<sp/>\endlink|\link<sp/>cytnx::linalg::Qdr(const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>bool&amp;<sp/>is_tau)<sp/>Qdr<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Det<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Det(const<sp/>cytnx::Tensor&amp;<sp/>Tin)<sp/>Det<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Min<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Min()const<sp/>Min\endlink<sp/>|\link<sp/>cytnx::linalg::Min(const<sp/>cytnx::Tensor&amp;<sp/>Tn)<sp/>Min\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Max<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Max()const<sp/>Max\endlink<sp/>|\link<sp/>cytnx::linalg::Max(const<sp/>cytnx::Tensor&amp;<sp/>Tn)<sp/>Max\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Sum<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Sum(const<sp/>cytnx::Tensor&amp;<sp/>Tn)<sp/>Sum\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Trace<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::Tensor::Trace(const<sp/>cytnx_uint64&amp;<sp/>a,<sp/>const<sp/>cytnx_uint64&amp;<sp/>b)const<sp/>Trace\endlink<sp/>|\link<sp/>cytnx::linalg::Trace(const<sp/>cytnx::Tensor&amp;<sp/>Tn,<sp/>const<sp/>cytnx_uint64&amp;<sp/>axisA,<sp/>const<sp/>cytnx_uint64&amp;<sp/>axisB)<sp/>Trace\endlink|\link<sp/>cytnx::linalg::Trace(const<sp/>cytnx::UniTensor&amp;<sp/>Tn,<sp/>const<sp/>std::string&amp;<sp/>a,<sp/>const<sp/>std::string&amp;<sp/>b)<sp/>Trace<sp/>\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Matmul_dg<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Matmul_dg(const<sp/>cytnx::Tensor&amp;<sp/>TL,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>TR)<sp/>Matmul_dg<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Tensordot_dg<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Tensordot_dg(const<sp/>cytnx::Tensor&amp;<sp/>Tl,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tr,<sp/>const<sp/>std::vector&lt;cytnx_uint64&gt;&amp;<sp/>idxl,<sp/>const<sp/>std::vector&lt;cytnx_uint64&gt;&amp;<sp/>idxr,<sp/>const<sp/>bool&amp;<sp/>diag_L)<sp/>Tensordot_dg<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Lstsq<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Lstsq(const<sp/>cytnx::Tensor<sp/>&amp;A,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;b,<sp/>const<sp/>float<sp/>&amp;rcond)<sp/>Lstsq\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Axpy<sp/>|<sp/>\link<sp/>cytnx::linalg::Axpy_(const<sp/>Scalar<sp/>&amp;a,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;x,<sp/>cytnx::Tensor<sp/>&amp;y)<sp/>Axpy_<sp/>\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Axpy(const<sp/>Scalar<sp/>&amp;a,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;x,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;y)<sp/>Axpy<sp/>\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Ger<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Ger(const<sp/>cytnx::Tensor<sp/>&amp;x,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;y,<sp/>const<sp/>Scalar<sp/>&amp;a)<sp/>Ger\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Gemm<sp/>|<sp/>\link<sp/>cytnx::linalg::Gemm_(const<sp/>Scalar<sp/>&amp;a,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;x,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;y,<sp/>const<sp/>Scalar&amp;<sp/>b,<sp/>cytnx::Tensor&amp;<sp/>c)<sp/>Gemm_\endlink<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Gemm(const<sp/>Scalar<sp/>&amp;a,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;x,<sp/>const<sp/>cytnx::Tensor<sp/>&amp;y)<sp/>Gemm\endlink|x</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Gemm_Batch<sp/>|<sp/>x<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Gemm_Batch(const<sp/>std::vector&lt;<sp/>cytnx_int64<sp/>&gt;&amp;<sp/>m_array,<sp/>const<sp/>std::vector&lt;<sp/>cytnx_int64<sp/>&gt;&amp;<sp/>n_array,<sp/>const<sp/>std::vector&lt;<sp/>cytnx_int64<sp/>&gt;&amp;<sp/>k_array,<sp/>const<sp/>std::vector&lt;<sp/>Scalar<sp/>&gt;&amp;<sp/><sp/><sp/><sp/>alpha_array,<sp/>const<sp/>std::vector&lt;<sp/>cytnx::Tensor<sp/>&gt;&amp;<sp/>a_tensors,<sp/>const<sp/>std::vector&lt;<sp/>cytnx::Tensor<sp/>&gt;&amp;<sp/>b_tensors,<sp/>const<sp/>std::vector&lt;<sp/>Scalar<sp/>&gt;&amp;<sp/>beta_array,<sp/>std::vector&lt;<sp/>cytnx::Tensor<sp/>&gt;&amp;<sp/>c_tensors,<sp/>const<sp/>cytnx_int64<sp/>group_count,<sp/>const<sp/>std::vector&lt;<sp/>cytnx_int64<sp/>&gt;&amp;<sp/>group_size<sp/>)<sp/>Gemm_Batch\endlink|x</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">**iterative<sp/>solver:**</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|func<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>CPU<sp/>|<sp/>GPU<sp/><sp/>|<sp/>Tensor<sp/>|<sp/>UniTensor|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|------------|-----|------|--------|----------|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|Lanczos<sp/>|✓<sp/><sp/><sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::linalg::Lanczos(cytnx::LinOp<sp/>*Hop,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>std::string<sp/>method,<sp/>const<sp/>double<sp/>&amp;CvgCrit,<sp/>const<sp/>unsigned<sp/>int<sp/>&amp;Maxiter,<sp/>const<sp/>cytnx_uint64<sp/>&amp;k,<sp/>const<sp/>bool<sp/>&amp;is_V,<sp/>const<sp/>bool<sp/>&amp;is_row,<sp/>const<sp/>cytnx_uint32<sp/>&amp;max_krydim,<sp/>const<sp/>bool<sp/>&amp;verbose)<sp/>Lanczos\endlink|\link<sp/>cytnx::linalg::Lanczos(cytnx::LinOp<sp/>*Hop,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>std::string<sp/>method,<sp/>const<sp/>double<sp/>&amp;CvgCrit,<sp/>const<sp/>unsigned<sp/>int<sp/>&amp;Maxiter,<sp/>const<sp/>cytnx_uint64<sp/>&amp;k,<sp/>const<sp/>bool<sp/>&amp;is_V,<sp/>const<sp/>bool<sp/>&amp;is_row,<sp/>const<sp/>cytnx_uint32<sp/>&amp;max_krydim,<sp/>const<sp/>bool<sp/>&amp;verbose)<sp/>Lanczos\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|Lanczos_Exp<sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>x<sp/>|\link<sp/>cytnx::linalg::Lanczos_Exp(cytnx::LinOp<sp/>*Hop,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>Scalar&amp;<sp/>tau,<sp/>const<sp/>double<sp/>&amp;CvgCrit,<sp/>const<sp/>unsigned<sp/>int<sp/>&amp;Maxiter,<sp/>const<sp/>bool<sp/>&amp;verbose)<sp/>Lanczos_Exp\endlink</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>|Arnoldi<sp/>|✓<sp/><sp/><sp/>|<sp/>x<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::linalg::Arnoldi(cytnx::LinOp<sp/>*Hop,<sp/>const<sp/>cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>std::string<sp/>which,<sp/>const<sp/>cytnx_uint64&amp;<sp/>maxiter,<sp/>const<sp/>cytnx_double<sp/>&amp;cvg_crit,<sp/>const<sp/>cytnx_uint64&amp;<sp/>k,<sp/>const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool<sp/>&amp;verbose)<sp/>Arnoli\endlink<sp/>|\link<sp/>cytnx::linalg::Arnoldi(cytnx::LinOp<sp/>*Hop,<sp/>const<sp/>cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>std::string<sp/>which,<sp/>const<sp/>cytnx_uint64&amp;<sp/>maxiter,<sp/>const<sp/>cytnx_double<sp/>&amp;cvg_crit,<sp/>const<sp/>cytnx_uint64&amp;<sp/>k,<sp/>const<sp/>bool&amp;<sp/>is_V,<sp/>const<sp/>bool<sp/>&amp;verbose)<sp/>Arnoli\endlink</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Container<sp/>Generators</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Tensor:<sp/>\link<sp/>cytnx::zeros<sp/>zeros()\endlink,<sp/>\link<sp/>cytnx::ones<sp/>ones()\endlink,<sp/>\link<sp/>cytnx::arange<sp/>arange()\endlink,<sp/>\link<sp/>cytnx::identity<sp/>identity()\endlink,<sp/>\link<sp/>cytnx::eye<sp/>eye()\endlink,</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Physics<sp/>Category</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Tensor:<sp/>\link<sp/>cytnx::physics::spin<sp/>spin(),\endlink<sp/><sp/>\link<sp/>cytnx::physics::pauli<sp/>pauli()\endlink</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Random</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>See<sp/>\link<sp/>cytnx::random<sp/>cytnx::random<sp/>\endlink<sp/>for<sp/>further<sp/>details</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>func<sp/><sp/><sp/><sp/>|<sp/>UniTensor<sp/>|<sp/>Tensor<sp/>|<sp/>Storage<sp/>|<sp/>CPU<sp/>|<sp/>GPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>----------|-----------|--------|---------|-----|-----</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>^normal<sp/><sp/><sp/>|<sp/>x<sp/>|<sp/>\link<sp/>cytnx::random::normal(const<sp/>std::vector&lt;<sp/>cytnx_uint64<sp/>&gt;<sp/>&amp;Nelem,<sp/>const<sp/>double<sp/>&amp;mean,<sp/>const<sp/>double<sp/>&amp;std,<sp/>const<sp/>int<sp/>&amp;device,<sp/>const<sp/>unsigned<sp/>int<sp/>&amp;seed,<sp/>const<sp/>unsigned<sp/>int<sp/>&amp;dtype)<sp/>normal\endlink<sp/>|<sp/>x<sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/><sp/>✓</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>^uniform<sp/><sp/>|<sp/>x<sp/>|<sp/>\link<sp/>cytnx::random::uniform(const<sp/>std::vector&lt;<sp/>cytnx_uint64<sp/>&gt;<sp/>&amp;Nelem,<sp/>const<sp/>double<sp/>&amp;low,<sp/>const<sp/>double<sp/>&amp;high,<sp/>const<sp/>int<sp/>&amp;device,<sp/>const<sp/>unsigned<sp/>int<sp/>&amp;seed,<sp/>const<sp/>unsigned<sp/>int<sp/>&amp;dtype)<sp/>uniform\endlink<sp/>|<sp/>x<sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/><sp/>✓</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*normal_<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::random::normal_(cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>mean,<sp/>const<sp/>double&amp;<sp/>std,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>seed)<sp/>normal_<sp/>\endlink<sp/>|<sp/>\link<sp/>cytnx::random::normal_(cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>mean,<sp/>const<sp/>double&amp;<sp/>std,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>seed)<sp/>normal_<sp/>\endlink<sp/><sp/>|<sp/>\link<sp/>cytnx::random::normal_(cytnx::Storage&amp;<sp/>Sin,<sp/>const<sp/>double&amp;<sp/>mean,<sp/>const<sp/>double&amp;<sp/>std,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>seed)<sp/>normal_<sp/>\endlink<sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/><sp/>✓</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*uniform_<sp/><sp/><sp/>|<sp/>\link<sp/>cytnx::random::uniform_(cytnx::UniTensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>low,<sp/>const<sp/>double&amp;<sp/>high,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>seed)<sp/>uniform_<sp/>\endlink<sp/>|<sp/>\link<sp/>cytnx::random::uniform_(cytnx::Tensor&amp;<sp/>Tin,<sp/>const<sp/>double&amp;<sp/>low,<sp/>const<sp/>double&amp;<sp/>high,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>seed)<sp/>uniform_<sp/>\endlink<sp/><sp/>|<sp/>\link<sp/>cytnx::random::uniform_(cytnx::Storage&amp;<sp/>Sin,<sp/>const<sp/>double&amp;<sp/>low,<sp/>const<sp/>double&amp;<sp/>high,<sp/>const<sp/>unsigned<sp/>int&amp;<sp/>seed)<sp/>uniform_<sp/>\endlink<sp/>|<sp/>✓<sp/><sp/><sp/>|<sp/><sp/>✓</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`*`<sp/>this<sp/>is<sp/>initializer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>`^`<sp/>this<sp/>is<sp/>generator</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>\note<sp/>The<sp/>difference<sp/>of<sp/>initializer<sp/>and<sp/>generator<sp/>is<sp/>that<sp/>initializer<sp/>is<sp/>used<sp/>to<sp/>initialize<sp/>the<sp/>Tensor,<sp/>and<sp/>generator<sp/>generates<sp/>a<sp/>new<sp/>Tensor.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>conda<sp/>install</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>**[Currently<sp/>Linux<sp/>only]**</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>without<sp/>CUDA</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>python<sp/>3.6/3.7/3.8:<sp/>conda<sp/>install<sp/>-c<sp/>kaihsinwu<sp/>cytnx</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>with<sp/>CUDA</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>python<sp/>3.6/3.7/3.8:<sp/>conda<sp/>install<sp/>-c<sp/>kaihsinwu<sp/>cytnx_cuda</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Some<sp/>snippets:</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Storage</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Memory<sp/>container<sp/>with<sp/>GPU/CPU<sp/>support.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>Type<sp/>conversions<sp/>(type<sp/>casting<sp/>between<sp/>Storages)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>and<sp/>moving<sp/>between<sp/>devices<sp/>easily<sp/>possible.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Generic<sp/>type<sp/>object,<sp/>the<sp/>behavior<sp/>is<sp/>very<sp/>similar<sp/>to<sp/>Python.</highlight></codeline>
+<codeline><highlight class="normal">```{.cpp}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Storage<sp/>A(400,Type.Double);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>for(int<sp/>i=0;i&lt;400;i++)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A.at&lt;double&gt;(i)<sp/>=<sp/>i;</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Storage<sp/>B<sp/>=<sp/>A;<sp/>//<sp/>A<sp/>and<sp/>B<sp/>share<sp/>same<sp/>memory,<sp/>this<sp/>is<sp/>similar<sp/>to<sp/>Python</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Storage<sp/>C<sp/>=<sp/>A.to(Device.cuda+0);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>Tensor</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>A<sp/>tensor,<sp/>API<sp/>very<sp/>similar<sp/>to<sp/>numpy<sp/>and<sp/>pytorch.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Simple<sp/>moving<sp/>btwn<sp/>CPU<sp/>and<sp/>GPU:</highlight></codeline>
+<codeline><highlight class="normal">```{.cpp}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>A({3,4},Type.Double,Device.cpu);<sp/>//<sp/>create<sp/>tensor<sp/>on<sp/>CPU<sp/>(default)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>B({3,4},Type.Double,Device.cuda+0);<sp/>//<sp/>create<sp/>tensor<sp/>on<sp/>GPU<sp/>with<sp/>gpu-id=0</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>C<sp/>=<sp/>B;<sp/>//<sp/>C<sp/>and<sp/>B<sp/>share<sp/>same<sp/>memory.</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>move<sp/>A<sp/>to<sp/>GPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>D<sp/>=<sp/>A.to(Device.cuda+0);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>inplace<sp/>move<sp/>A<sp/>to<sp/>GPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A.to_(Device.cuda+0);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Type<sp/>conversion<sp/>possible:</highlight></codeline>
+<codeline><highlight class="normal">```{.cpp}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>A({3,4},Type.Double);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>B<sp/>=<sp/>A.astype(Type.Uint64);<sp/>//<sp/>cast<sp/>double<sp/>to<sp/>uint64_t</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Virtual<sp/>swap<sp/>and<sp/>permute.<sp/>All<sp/>the<sp/>permute<sp/>and<sp/>swap<sp/>operations<sp/>do<sp/>not<sp/>change<sp/>the<sp/>underlying<sp/>memory<sp/>immediately.<sp/>Minimized<sp/>cost<sp/>of<sp/>moving<sp/>elements.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Use<sp/>`contiguous()`<sp/>when<sp/>needed<sp/>to<sp/>actually<sp/>move<sp/>the<sp/>memory<sp/>layout.</highlight></codeline>
+<codeline><highlight class="normal">```{.cpp}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>A({3,4,5,2},Type.Double);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A.permute_(0,3,1,2);<sp/>//<sp/>this<sp/>will<sp/>not<sp/>change<sp/>the<sp/>memory,<sp/>only<sp/>the<sp/>shape<sp/>info<sp/>is<sp/>changed.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/>//<sp/>false</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>A.contiguous_();<sp/>//<sp/>call<sp/>contiguous()<sp/>to<sp/>actually<sp/>move<sp/>the<sp/>memory.</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>cout<sp/>&lt;&lt;<sp/>A.is_contiguous()<sp/>&lt;&lt;<sp/>endl;<sp/>//<sp/>this<sp/>will<sp/>be<sp/>true!</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Access<sp/>single<sp/>element<sp/>using<sp/>`.at`</highlight></codeline>
+<codeline><highlight class="normal">```{.cpp}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>A({3,4,5},Type.Double);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>double<sp/>val<sp/>=<sp/>A.at&lt;double&gt;(0,2,2);</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>Access<sp/>elements<sp/>similar<sp/>to<sp/>Python<sp/>slices:</highlight></codeline>
+<codeline><highlight class="normal">```{.cpp}</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>typedef<sp/>Accessor<sp/>ac;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>A({3,4,5},Type.Double);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tensor<sp/>out<sp/>=<sp/>A(0,&quot;:&quot;,&quot;1:4&quot;);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>//<sp/>equivalent<sp/>to<sp/>Python:<sp/>out<sp/>=<sp/>A[0,:,1:4]</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">###<sp/>UniTensor</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Extension<sp/>of<sp/>Tensor,<sp/>specifically<sp/>designed<sp/>for<sp/>Tensor<sp/>network<sp/>simulations.</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>`UniTensor`<sp/>is<sp/>a<sp/>tensor<sp/>with<sp/>additional<sp/>information<sp/>such<sp/>as<sp/>`Bond`,<sp/>`Symmetry`<sp/>and<sp/>`labels`.<sp/>With<sp/>these<sp/>information,<sp/>one<sp/>can<sp/>easily<sp/>implement<sp/>the<sp/>tensor<sp/>contraction.</highlight></codeline>
+<codeline><highlight class="normal">```c++</highlight></codeline>
+<codeline><highlight class="normal">Tensor<sp/>A({3,4,5},Type.Double);</highlight></codeline>
+<codeline><highlight class="normal">UniTensor<sp/>tA<sp/>=<sp/>UniTensor(A);<sp/>//<sp/>convert<sp/>directly.</highlight></codeline>
+<codeline><highlight class="normal">UniTensor<sp/>tB<sp/>=<sp/>UniTensor({Bond(3),Bond(4),Bond(5)},{});<sp/>//<sp/>init<sp/>from<sp/>scratch.</highlight></codeline>
+<codeline><highlight class="normal">//<sp/>Relabel<sp/>the<sp/>tensor<sp/>and<sp/>then<sp/>contract.</highlight></codeline>
+<codeline><highlight class="normal">tA.relabel_({&quot;common_1&quot;,<sp/>&quot;common_2&quot;,<sp/>&quot;out_a&quot;});</highlight></codeline>
+<codeline><highlight class="normal">tB.relabel_({&quot;common_1&quot;,<sp/>&quot;common_2&quot;,<sp/>&quot;out_b&quot;});</highlight></codeline>
+<codeline><highlight class="normal">UniTensor<sp/>out<sp/>=<sp/>cytnx::Contract(tA,tB);</highlight></codeline>
+<codeline><highlight class="normal">tA.print_diagram();</highlight></codeline>
+<codeline><highlight class="normal">tB.print_diagram();</highlight></codeline>
+<codeline><highlight class="normal">out.print_diagram();</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">Output:</highlight></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline><highlight class="normal">-----------------------</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Name<sp/>:</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Rank<sp/>:<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">block_form<sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">is_diag<sp/><sp/><sp/><sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>device<sp/><sp/><sp/>:<sp/>cytnx<sp/>device:<sp/>CPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>common_1<sp/>____|<sp/>3<sp/><sp/><sp/><sp/><sp/>4<sp/>|____<sp/>common_2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal">-----------------------</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Name<sp/>:</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Rank<sp/>:<sp/>3</highlight></codeline>
+<codeline><highlight class="normal">block_form<sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">is_diag<sp/><sp/><sp/><sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>device<sp/><sp/><sp/>:<sp/>cytnx<sp/>device:<sp/>CPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/>common_1<sp/>____|<sp/>3<sp/><sp/><sp/><sp/><sp/>4<sp/>|____<sp/>common_2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_b</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>---------</highlight></codeline>
+<codeline><highlight class="normal">-----------------------</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Name<sp/>:</highlight></codeline>
+<codeline><highlight class="normal">tensor<sp/>Rank<sp/>:<sp/>2</highlight></codeline>
+<codeline><highlight class="normal">block_form<sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">is_diag<sp/><sp/><sp/><sp/><sp/>:<sp/>False</highlight></codeline>
+<codeline><highlight class="normal">on<sp/>device<sp/><sp/><sp/>:<sp/>cytnx<sp/>device:<sp/>CPU</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>--------</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_a</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/><sp/><sp/><sp/><sp/><sp/>5<sp/>|____<sp/>out_b</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>\<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>/</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>--------</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">```</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>`UniTensor`<sp/>supports<sp/>`Block`<sp/>form,<sp/>which<sp/>is<sp/>useful<sp/>if<sp/>the<sp/>physical<sp/>system<sp/>has<sp/>a<sp/>symmetry.<sp/>See<sp/>[user<sp/>guide](https://cytnx-dev.github.io/Cytnx/)<sp/>for<sp/>more<sp/>details.</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">------------------------------</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>Developers<sp/>&amp;<sp/>Maintainers</highlight></codeline>
+<codeline><highlight class="normal">Creator<sp/>and<sp/>Project<sp/>manager<sp/>|<sp/>Affiliation<sp/><sp/><sp/><sp/><sp/>|<sp/>Email</highlight></codeline>
+<codeline><highlight class="normal">----------------------------|-----------------|---------</highlight></codeline>
+<codeline><highlight class="normal">Kai-Hsin<sp/>Wu<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|Boston<sp/>Univ.,<sp/>USA|kaihsinwu@gmail.com</highlight></codeline>
+<codeline><highlight class="normal">\n</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">Developers<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>Affiliation<sp/>|<sp/>Roles</highlight></codeline>
+<codeline><highlight class="normal">-----------------|-------------|---------</highlight></codeline>
+<codeline><highlight class="normal">Chang-Teng<sp/>Lin<sp/><sp/><sp/>|NTU,<sp/>Taiwan<sp/><sp/>|major<sp/>maintainer<sp/>and<sp/>developer</highlight></codeline>
+<codeline><highlight class="normal">Ke<sp/>Hsu<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>|NTU,<sp/>Taiwan<sp/><sp/>|major<sp/>maintainer<sp/>and<sp/>developer</highlight></codeline>
+<codeline><highlight class="normal">Ivana<sp/>Gyro<sp/><sp/><sp/><sp/><sp/><sp/><sp/>|NTU,<sp/>Taiwan<sp/><sp/>|major<sp/>maintainer<sp/>and<sp/>developer</highlight></codeline>
+<codeline><highlight class="normal">Hao-Ti<sp/>Hung<sp/><sp/><sp/><sp/><sp/>|NTU,<sp/>Taiwan<sp/><sp/>|documentation<sp/>and<sp/>linalg</highlight></codeline>
+<codeline><highlight class="normal">Ying-Jer<sp/>Kao<sp/><sp/><sp/><sp/>|NTU,<sp/>Taiwan<sp/><sp/>|setuptool,<sp/>cmake</highlight></codeline>
+<codeline><highlight class="normal">Manuel<sp/>Schneider<sp/>|NYCU,<sp/>Taiwan<sp/>|developer</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>Contributors</highlight></codeline>
+<codeline><highlight class="normal">Contributors<sp/><sp/><sp/><sp/>|<sp/>Affiliation</highlight></codeline>
+<codeline><highlight class="normal">----------------|-----------------</highlight></codeline>
+<codeline><highlight class="normal">PoChung<sp/>Chen<sp/><sp/><sp/><sp/>|<sp/>NTHU,<sp/>Taiwan</highlight></codeline>
+<codeline><highlight class="normal">Chia-Min<sp/>Chung<sp/><sp/>|<sp/>NYCU,<sp/>Taiwan</highlight></codeline>
+<codeline><highlight class="normal">Ian<sp/>McCulloch<sp/><sp/><sp/>|<sp/>NTHU,<sp/>Taiwan</highlight></codeline>
+<codeline><highlight class="normal">Yen-Hsin<sp/>Wu<sp/><sp/><sp/><sp/><sp/>|<sp/>NTU,<sp/>Taiwan</highlight></codeline>
+<codeline><highlight class="normal">Po-Kwan<sp/>Wu<sp/><sp/><sp/><sp/><sp/><sp/>|<sp/>OSU,<sp/>USA</highlight></codeline>
+<codeline><highlight class="normal">Wen-Han<sp/>Kao<sp/><sp/><sp/><sp/><sp/>|<sp/>UMN,<sp/>USA</highlight></codeline>
+<codeline><highlight class="normal">Yu-Hsueh<sp/>Chen<sp/><sp/><sp/>|<sp/>NTU,<sp/>Taiwan</highlight></codeline>
+<codeline><highlight class="normal">Yu-Cheng<sp/>Lin<sp/><sp/><sp/><sp/>|<sp/>NTU,<sp/>Taiwan</highlight></codeline>
+<codeline></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">##<sp/>References</highlight></codeline>
+<codeline><highlight class="normal">*<sp/>Paper:</highlight></codeline>
+<codeline><highlight class="normal">[https://arxiv.org/abs/2401.01921](https://arxiv.org/abs/2401.01921)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>Example/DMRG:</highlight></codeline>
+<codeline><highlight class="normal">[https://www.tensors.net/dmrg](https://www.tensors.net/dmrg)</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal">*<sp/>hptt<sp/>library:</highlight></codeline>
+<codeline><highlight class="normal">[https://github.com/springer13/hptt](https://github.com/springer13/hptt)</highlight></codeline>
+    </programlisting>
+    <location file="dox.md"/>
+  </compounddef>
+</doxygen>
