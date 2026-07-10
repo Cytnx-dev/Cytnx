@@ -20,13 +20,14 @@
 namespace cytnx {
   typedef Accessor ac;
 
-  namespace linalg {
-    // See the friend declaration + comment in include/UniTensor.hpp next to
-    // BlockFermionicUniTensor::_signflip.
-    std::vector<cytnx_bool> &_fermionic_signflip_(BlockFermionicUniTensor &self) {
-      return self._signflip;
-    }
-  }  // namespace linalg
+  void BlockFermionicUniTensor::erase_signflip_(const std::vector<cytnx_uint64> &positions) {
+    vec_erase_(this->_signflip, positions);
+    cytnx_error_msg(this->_signflip.size() != this->_blocks.size(),
+                    "[ERROR][BlockFermionicUniTensor][erase_signflip_] after erasing, _signflip "
+                    "(len %d) is out of lockstep with _blocks (len %d); erase the blocks with the "
+                    "same index list before erasing the signflips.%s",
+                    (int)this->_signflip.size(), (int)this->_blocks.size(), "\n");
+  }
 
   void BlockFermionicUniTensor::Init(const std::vector<Bond> &bonds,
                                      const std::vector<std::string> &in_labels,
@@ -2760,7 +2761,7 @@ namespace cytnx {
     cytnx_uint64 total_elem = rhs->_block.storage().size();
 
     std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
-    linalg::_fermionic_signflip_(*ths) = std::vector<bool>(ths->_blocks.size(), false);
+    ths->reset_signflip_();
     for (int i = (rhs->rank() - 2); i >= 0; i--) {
       stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
     }

@@ -108,9 +108,7 @@ namespace cytnx {
     static void ExpH_BlockUT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
                                       const T &b) {
       std::vector<bool> signflip;
-      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        signflip =
-          linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(Tin._impl.get()));
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) signflip = Tin.signflip();
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
@@ -227,8 +225,7 @@ namespace cytnx {
       // the sign was already included when creating the per-qcharge blocks, so the resulting
       // signflip is all false.
       if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        linalg::_fermionic_signflip_(*(BUT *)out._impl.get()) =
-          std::vector<bool>(out_blocks_.size(), false);
+        ((BUT *)out._impl.get())->reset_signflip_();
     }
 
     template <typename T>

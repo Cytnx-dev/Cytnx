@@ -290,9 +290,7 @@ namespace cytnx {
         vec_erase_(S.get_blocks_(), to_be_removed);
         vec_erase_(S._impl->_bonds[0]._impl->_qnums, to_be_removed);
         if (Tin.uten_type() == UTenType.BlockFermionic) {
-          vec_erase_(
-            linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(S._impl.get())),
-            to_be_removed);
+          static_cast<BlockFermionicUniTensor *>(S._impl.get())->erase_signflip_(to_be_removed);
         }
       }
       S._impl->_bonds[0]._impl->_degs = new_dims;
@@ -325,9 +323,7 @@ namespace cytnx {
           vec_erase_(U.get_itoi(), to_be_removed);
           vec_erase_(U.get_blocks_(), to_be_removed);
           if (Tin.uten_type() == UTenType.BlockFermionic) {
-            vec_erase_(
-              linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(U._impl.get())),
-              to_be_removed);
+            static_cast<BlockFermionicUniTensor *>(U._impl.get())->erase_signflip_(to_be_removed);
           }
         }
 
@@ -358,9 +354,7 @@ namespace cytnx {
           vec_erase_(vT.get_itoi(), to_be_removed);
           vec_erase_(vT.get_blocks_(), to_be_removed);
           if (Tin.uten_type() == UTenType.BlockFermionic) {
-            vec_erase_(
-              linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(vT._impl.get())),
-              to_be_removed);
+            static_cast<BlockFermionicUniTensor *>(vT._impl.get())->erase_signflip_(to_be_removed);
           }
         }
 
@@ -577,9 +571,7 @@ namespace cytnx {
           vec_erase_(S.get_blocks_(), to_be_removed);
           vec_erase_(S._impl->_bonds[0]._impl->_qnums, to_be_removed);
           if (Tin.uten_type() == UTenType.BlockFermionic) {
-            vec_erase_(
-              linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(S._impl.get())),
-              to_be_removed);
+            static_cast<BlockFermionicUniTensor *>(S._impl.get())->erase_signflip_(to_be_removed);
           }
         }
         S._impl->_bonds[0]._impl->_degs = new_dims;
@@ -612,9 +604,7 @@ namespace cytnx {
             vec_erase_(U.get_itoi(), to_be_removed);
             vec_erase_(U.get_blocks_(), to_be_removed);
             if (Tin.uten_type() == UTenType.BlockFermionic) {
-              vec_erase_(linalg::_fermionic_signflip_(
-                           *static_cast<BlockFermionicUniTensor *>(U._impl.get())),
-                         to_be_removed);
+              static_cast<BlockFermionicUniTensor *>(U._impl.get())->erase_signflip_(to_be_removed);
             }
           }
 
@@ -645,9 +635,8 @@ namespace cytnx {
             vec_erase_(vT.get_itoi(), to_be_removed);
             vec_erase_(vT.get_blocks_(), to_be_removed);
             if (Tin.uten_type() == UTenType.BlockFermionic) {
-              vec_erase_(linalg::_fermionic_signflip_(
-                           *static_cast<BlockFermionicUniTensor *>(vT._impl.get())),
-                         to_be_removed);
+              static_cast<BlockFermionicUniTensor *>(vT._impl.get())
+                ->erase_signflip_(to_be_removed);
             }
           }
 

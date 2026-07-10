@@ -1101,9 +1101,10 @@ TEST_F(linalg_Test, BkFUt_GesvdTruncateUnitaryAndReconstruction) {
 /*=====test info=====
 describe:#841 regression -- after Svd_truncate/Gesvd_truncate genuinely drops blocks (small
   keepdim) on a sign-flip-active BlockFermionicUniTensor, U/S/vT's signflip() must stay in
-  lockstep with Nblocks() (this is exactly the invariant the friend-granted
-  linalg::_fermionic_signflip_() accessor exists to protect -- see Svd_truncate.cpp /
-  Gesvd_truncate.cpp). Also confirms U/S/vT still reconstruct M correctly post-truncation.
+  lockstep with Nblocks() (this is exactly the invariant the narrow mutators
+  BlockFermionicUniTensor::reset_signflip_()/erase_signflip_() enforce -- see
+  Svd_truncate.cpp / Gesvd_truncate.cpp). Also confirms U/S/vT still reconstruct M correctly
+  post-truncation.
 ====================*/
 TEST_F(linalg_Test, BkFUt_TruncateKeepsSignflipInLockstepWithNblocks) {
   const double tol = 1e-8;

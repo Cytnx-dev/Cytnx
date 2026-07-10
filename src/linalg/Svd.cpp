@@ -187,9 +187,7 @@ namespace cytnx {
                                      const cytnx::UniTensor &Tin, const bool &compute_uv) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
       std::vector<bool> signflip;
-      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        signflip =
-          linalg::_fermionic_signflip_(*static_cast<BlockFermionicUniTensor *>(Tin._impl.get()));
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) signflip = Tin.signflip();
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
@@ -382,8 +380,7 @@ namespace cytnx {
         U_ptr->_is_braket_form = U_ptr->_update_braket();
         U_ptr->_inner_to_outer_idx = U_itoi;
         U_ptr->_blocks = U_blocks;
-        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-          linalg::_fermionic_signflip_(*U_ptr) = std::vector<bool>(U_blocks.size(), false);
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) U_ptr->reset_signflip_();
         UniTensor U;
         U._impl = boost::intrusive_ptr<UniTensor_base>(U_ptr);
         outCyT.push_back(U);
@@ -403,8 +400,7 @@ namespace cytnx {
         vT_ptr->_is_braket_form = vT_ptr->_update_braket();
         vT_ptr->_inner_to_outer_idx = vT_itoi;
         vT_ptr->_blocks = vT_blocks;
-        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-          linalg::_fermionic_signflip_(*vT_ptr) = std::vector<bool>(vT_blocks.size(), false);
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) vT_ptr->reset_signflip_();
         UniTensor vT;
         vT._impl = boost::intrusive_ptr<UniTensor_base>(vT_ptr);
         outCyT.push_back(vT);

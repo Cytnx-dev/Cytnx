@@ -1825,17 +1825,6 @@ namespace cytnx {
   /// @endcond
 
   //======================================================================
-  class BlockFermionicUniTensor;
-
-  namespace linalg {
-    // Internal accessor granting the fermionic sign-flip bookkeeping to the SVD/QR/Eig/Exp
-    // decomposition internals that legitimately construct or truncate BlockFermionicUniTensor
-    // blocks (see #841). Not part of the public API: _signflip must stay in lockstep with
-    // _blocks/_inner_to_outer_idx and the qnums on the contracted bond, so no other code may
-    // touch it.
-    std::vector<cytnx_bool> &_fermionic_signflip_(BlockFermionicUniTensor &self);
-  }  // namespace linalg
-
   /// @cond
   class BlockFermionicUniTensor : public UniTensor_base {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally sign flips are stored as
@@ -1847,10 +1836,11 @@ namespace cytnx {
     Tensor NullRefTensor;  // this returns when accessed block does not exists!
 
    private:
-    // additional information for fermions:
-    std::vector<cytnx_bool>
-      _signflip;  // if true, the sign of the corresponding block needs to be flipped
-    friend std::vector<cytnx_bool> &linalg::_fermionic_signflip_(BlockFermionicUniTensor &self);
+    // additional information for fermions (#841): if true, the sign of the corresponding
+    // block needs to be flipped. Must stay in lockstep with _blocks (one entry per block);
+    // outside the class it can only be modified through reset_signflip_()/erase_signflip_()
+    // below, each of which preserves that invariant.
+    std::vector<cytnx_bool> _signflip;
 
    public:
     // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums
@@ -1963,6 +1953,17 @@ namespace cytnx {
     };
 
     std::vector<bool> signflip() const override { return this->_signflip; };
+
+    /// Reset the sign-flip bookkeeping to all-false, sized to the current number of blocks.
+    /// The decomposition internals (Svd*/Gesvd*/Rsvd/Qr/Eig*/Exp*) call this right after
+    /// (re)building _blocks, so the _signflip/_blocks lockstep (#841) holds by construction.
+    void reset_signflip_() { this->_signflip.assign(this->_blocks.size(), false); }
+
+    /// Erase the sign-flip entries at [positions] during truncation, using the same index
+    /// list that erased the corresponding _blocks. Throws if _signflip and _blocks disagree
+    /// in size afterwards (i.e. the blocks were not erased first), so a desynchronizing
+    /// caller fails loudly instead of corrupting the #841 lockstep silently.
+    void erase_signflip_(const std::vector<cytnx_uint64> &positions);
 
     void to_(const int &device) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
