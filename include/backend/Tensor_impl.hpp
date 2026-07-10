@@ -125,7 +125,7 @@ namespace cytnx {
       RealRank = 0;
       mtplyr = 1;
 
-      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+      for (cytnx_uint64 i = this->_shape.size(); i-- > 0;) {
         if (locator[i] >= this->_shape[i]) {
           cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
         }
@@ -154,7 +154,7 @@ namespace cytnx {
       RealRank = 0;
       mtplyr = 1;
 
-      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+      for (cytnx_uint64 i = this->_shape.size(); i-- > 0;) {
         if (locator[i] >= this->_shape[i]) {
           cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
         }
@@ -183,7 +183,7 @@ namespace cytnx {
       RealRank = 0;
       mtplyr = 1;
 
-      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+      for (cytnx_uint64 i = this->_shape.size(); i-- > 0;) {
         if (locator[i] >= this->_shape[i]) {
           cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
         }

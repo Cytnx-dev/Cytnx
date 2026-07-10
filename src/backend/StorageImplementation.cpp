@@ -396,7 +396,7 @@ namespace cytnx {
         for (cytnx_uint32 i = 0; i < shape.size(); i++) {
           c_shape[i] = shape[mapper[i]];
         }
-        for (cytnx_int64 i = c_shape.size() - 1; i >= 0; i--) {
+        for (cytnx_uint64 i = c_shape.size(); i-- > 0;) {
           c_offj[i] = accu;
           accu *= c_shape[i];
         }

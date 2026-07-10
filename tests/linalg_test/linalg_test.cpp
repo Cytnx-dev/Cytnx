@@ -17,6 +17,24 @@ namespace {
   }
 }  // namespace
 
+TEST(linalgKronTest, PadsLowerRankLhsOnLeft) {
+  Tensor lhs = zeros({2}, Type.Double);
+  lhs.at<double>({0}) = 10.0;
+  lhs.at<double>({1}) = 20.0;
+  Tensor rhs = arange(1, 13, 1, Type.Double).reshape(3, 4);
+
+  Tensor out = linalg::Kron(lhs, rhs, true, false);
+
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3, 8}));
+  for (cytnx_uint64 i = 0; i < out.shape()[0]; i++) {
+    for (cytnx_uint64 j = 0; j < out.shape()[1]; j++) {
+      const double expected =
+        lhs.at<double>({j / rhs.shape()[1]}) * rhs.at<double>({i, j % rhs.shape()[1]});
+      EXPECT_DOUBLE_EQ(out.at<double>({i, j}), expected);
+    }
+  }
+}
+
 TEST_F(linalg_Test, BkUt_Svd_truncate1) {
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
   std::vector<double> vnm_S;

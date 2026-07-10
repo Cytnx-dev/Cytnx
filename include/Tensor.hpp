@@ -1492,10 +1492,10 @@ namespace cytnx {
       // check Tensor in shape:
       cytnx_error_msg(rhs.is_void() || this->is_void(), "[ERROR] try to append a null Tensor.%s",
                       "\n");
-      cytnx_error_msg(this->shape().empty(), "[ERROR] try to append to a rank-0 Tensor.%s", "\n");
+      cytnx_error_msg(this->is_scalar(), "[ERROR] try to append to a rank-0 Tensor.%s", "\n");
       if (!this->is_contiguous()) this->contiguous_();
 
-      cytnx_error_msg(rhs.shape().size() != (this->shape().size() - 1),
+      cytnx_error_msg(rhs.rank() != this->rank() - 1,
                       "[ERROR] try to append a Tensor with rank not match.%s", "\n");
       cytnx_uint64 Nelem = 1;
       for (unsigned int i = 0; i < rhs.shape().size(); i++) {
@@ -1551,13 +1551,13 @@ namespace cytnx {
      * @see append(const Tensor &rhs)
      */
     void append(const Storage &srhs) {
+      // check Tensor in shape:
+      cytnx_error_msg(this->is_void(), "[ERROR] try to append to an uninitialized Tensor.%s", "\n");
+      cytnx_error_msg(srhs.size() == 0, "[ERROR] try to append an empty Storage.%s", "\n");
+      cytnx_error_msg(this->rank() != 2,
+                      "[ERROR] append a storage to Tensor can only accept rank-2 Tensor.%s", "\n");
       if (!this->is_contiguous()) this->contiguous_();
 
-      // check Tensor in shape:
-      cytnx_error_msg(srhs.size() == 0 || this->shape().size() == 0,
-                      "[ERROR] try to append a null Tensor.%s", "\n");
-      cytnx_error_msg((this->shape().size() - 1) != 1,
-                      "[ERROR] append a storage to Tensor can only accept rank-2 Tensor.%s", "\n");
       cytnx_error_msg(this->shape().back() != srhs.size(), "[ERROR] Tensor dmension mismatch!%s",
                       "\n");
 
@@ -1614,7 +1614,8 @@ namespace cytnx {
      */
     template <class T>
     void append(const T &rhs) {
-      cytnx_error_msg(this->shape().size() != 1,
+      cytnx_error_msg(this->is_void(), "[ERROR] try to append to an uninitialized Tensor.%s", "\n");
+      cytnx_error_msg(this->rank() != 1,
                       "[ERROR] trying to append a scalar into multidimentional Tensor is not "
                       "allow.\n Only rank-1 Tensor can accept scalar append.%s",
                       "\n");

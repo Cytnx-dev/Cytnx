@@ -113,7 +113,7 @@ void tensor_binding(py::module &m) {
         std::vector<ssize_t> stride(tmpIN.shape().size());
         std::vector<ssize_t> shape(tmpIN.shape().begin(), tmpIN.shape().end());
         ssize_t accu = 1;
-        for (int i = shape.size() - 1; i >= 0; i--) {
+        for (auto i = shape.size(); i-- > 0;) {
           stride[i] = accu * cytnx::Type.typeSize(tmpIN.dtype());
           accu *= shape[i];
         }

@@ -522,6 +522,20 @@ TEST_F(TensorTest, RankZeroAppendAsScalarElement) {
   Tensor uninitialized;
   EXPECT_THROW(vec.append(uninitialized), std::logic_error);
   EXPECT_THROW(scalar.append(scalar), std::logic_error);
+
+  Tensor matrix = zeros({1, 2}, Type.Double);
+  Storage row(2, Type.Double);
+  row.at<double>(0) = 4.0;
+  row.at<double>(1) = 5.0;
+  matrix.append(row);
+  EXPECT_EQ(matrix.shape(), (std::vector<cytnx_uint64>{2, 2}));
+  EXPECT_DOUBLE_EQ(matrix.at<double>({1, 0}), 4.0);
+  EXPECT_DOUBLE_EQ(matrix.at<double>({1, 1}), 5.0);
+
+  Storage empty;
+  EXPECT_THROW(matrix.append(empty), std::logic_error);
+  EXPECT_THROW(scalar.append(row), std::logic_error);
+  EXPECT_THROW(uninitialized.append(row), std::logic_error);
 }
 
 TEST_F(TensorTest, RankZeroSortReturnsScalar) {
