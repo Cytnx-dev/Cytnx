@@ -109,6 +109,16 @@ namespace cytnx {
         return nullptr;
       }
 
+      // A leaf's ID is 1ULL << leaf_index (a 64-bit mask), and the adjacency
+      // rows are IndexSet = std::bitset<128>. Contracting a single connected
+      // component of k leaves creates k-1 merged nodes, so up to 2k-1 nodes
+      // and adjacency indices exist; with k <= 64 that is <= 127 < 128, and
+      // the leaf index stays <= 63 so 1ULL << leaf_index does not overflow.
+      // More than 64 tensors would shift past the width of both, so reject it.
+      cytnx_error_msg(tensors.size() > 64,
+                      "[ERROR][OptimalTreeSolver] solve() supports at most 64 tensors, got %d.\n",
+                      static_cast<int>(tensors.size()));
+
       // Build leaf nodes. Each leaf's adj_index is its row in adjacencyMatrix;
       // merged nodes get theirs assigned below, as adjacencyMatrix is extended
       // for them.
