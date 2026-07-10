@@ -50,10 +50,29 @@ TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata
   EXPECT_TRUE(traced.bonds().empty());
   EXPECT_TRUE(traced.shape().empty());
   EXPECT_EQ(traced.syms(), bkf.syms());
+  EXPECT_FALSE(traced.is_diag());
   EXPECT_EQ(traced.signflip(), std::vector<bool>({false}));
   EXPECT_TRUE(traced.get_block_().is_scalar());
   EXPECT_TRUE(traced.get_block_({}).is_scalar());
   EXPECT_DOUBLE_EQ(double(traced.at({}).real()), -1.0);
+  EXPECT_NO_THROW(traced.to_dense());
+
+  UniTensor loaded_scalar;
+  traced.Save(temp_file_path);
+  EXPECT_NO_THROW(loaded_scalar = UniTensor::Load(temp_file_path));
+  EXPECT_EQ(loaded_scalar.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(loaded_scalar.rank(), 0);
+  EXPECT_EQ(loaded_scalar.syms(), bkf.syms());
+  EXPECT_EQ(loaded_scalar.signflip(), std::vector<bool>({false}));
+  EXPECT_DOUBLE_EQ(double(loaded_scalar.at({}).real()), -1.0);
+
+  UniTensor scalar_contract;
+  EXPECT_NO_THROW(scalar_contract = traced.contract(loaded_scalar));
+  EXPECT_EQ(scalar_contract.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(scalar_contract.rank(), 0);
+  EXPECT_EQ(scalar_contract.syms(), bkf.syms());
+  EXPECT_EQ(scalar_contract.signflip(), std::vector<bool>({false}));
+  EXPECT_DOUBLE_EQ(double(scalar_contract.at({}).real()), 1.0);
 
   UniTensor traced_inplace = bkf.clone();
   traced_inplace.Trace_("a", "b");
@@ -63,9 +82,21 @@ TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata
   EXPECT_TRUE(traced_inplace.bonds().empty());
   EXPECT_TRUE(traced_inplace.shape().empty());
   EXPECT_EQ(traced_inplace.syms(), bkf.syms());
+  EXPECT_FALSE(traced_inplace.is_diag());
   EXPECT_EQ(traced_inplace.signflip(), std::vector<bool>({false}));
   EXPECT_TRUE(traced_inplace.get_block_().is_scalar());
   EXPECT_DOUBLE_EQ(double(traced_inplace.at({}).real()), -1.0);
+  EXPECT_NO_THROW(traced_inplace.to_dense());
+
+  UniTensor diag = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  diag.get_block_(0).fill(2.0);
+  diag.get_block_(1).fill(3.0);
+  UniTensor traced_diag = diag.Trace("a", "b");
+  EXPECT_EQ(traced_diag.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced_diag.rank(), 0);
+  EXPECT_FALSE(traced_diag.is_diag());
+  EXPECT_EQ(traced_diag.syms(), diag.syms());
+  EXPECT_NO_THROW(traced_diag.to_dense());
 }
 
 /*=====test info=====

@@ -18,6 +18,22 @@
 #else
 
 namespace cytnx {
+  namespace {
+    void SaveSymmetryCache(std::fstream &f, const std::vector<Symmetry> &syms) {
+      cytnx_uint64 nsyms = syms.size();
+      f.write((char *)&nsyms, sizeof(cytnx_uint64));
+      for (const auto &sym : syms) sym._Save(f);
+    }
+
+    std::vector<Symmetry> LoadSymmetryCache(std::fstream &f) {
+      cytnx_uint64 nsyms;
+      f.read((char *)&nsyms, sizeof(cytnx_uint64));
+      std::vector<Symmetry> syms(nsyms);
+      for (auto &sym : syms) sym._Load(f);
+      return syms;
+    }
+  }  // namespace
+
   typedef Accessor ac;
   void BlockFermionicUniTensor::Init(const std::vector<Bond> &bonds,
                                      const std::vector<std::string> &in_labels,
@@ -26,6 +42,32 @@ namespace cytnx {
                                      const std::string &name) {
     //[21 Aug 2024] This is a copy from BlockUniTensor
     this->_name = name;
+    if (bonds.empty()) {
+      cytnx_error_msg(!in_labels.empty(),
+                      "[ERROR][BlockFermionicUniTensor] rank-0 tensor cannot have labels.%s", "\n");
+      cytnx_error_msg((rowrank != 0) && (rowrank != -1),
+                      "[ERROR][BlockFermionicUniTensor] rank-0 tensor must have rowrank 0.%s",
+                      "\n");
+      cytnx_error_msg(is_diag,
+                      "[ERROR][BlockFermionicUniTensor] rank-0 tensor cannot be diagonal.%s", "\n");
+      cytnx_error_msg(this->syms_cache.empty(),
+                      "[ERROR][BlockFermionicUniTensor] rank-0 tensor needs symmetry metadata.%s",
+                      "\n");
+      this->_rowrank = 0;
+      this->_labels.clear();
+      this->_bonds.clear();
+      this->_blocks.clear();
+      this->_inner_to_outer_idx = {{}};
+      this->_signflip = {false};
+      this->_is_braket_form = false;
+      this->_is_diag = false;
+      if (!no_alloc) {
+        this->_blocks.push_back(zeros(std::vector<cytnx_uint64>{}, dtype, device));
+      } else {
+        this->_blocks.push_back(Tensor(std::vector<cytnx_uint64>{}, dtype, device, false));
+      }
+      return;
+    }
     // the entering is already check all the bonds have symmetry.
     //  need to check:
     //  1. the # of symmetry and their type across all bonds
@@ -1266,6 +1308,7 @@ namespace cytnx {
       out_rowrank = this->rowrank() + rhs->rowrank();
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
+      if (out_bonds.empty()) tmp->syms_cache = vec_clone(this->syms());
       tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false);
 
       // tmp->_name = this->_name + "+" + rhs->_name;
@@ -1275,10 +1318,14 @@ namespace cytnx {
       std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  // buffer
       std::vector<bool> signfliprhs = rhs->signflip();
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
-        memcpy(&Lidx[0], &tmp->_inner_to_outer_idx[b][0],
-               sizeof(cytnx_uint64) * this->_bonds.size());
-        memcpy(&Ridx[0], &tmp->_inner_to_outer_idx[b][this->_bonds.size()],
-               sizeof(cytnx_uint64) * rhs->_bonds.size());
+        if (!Lidx.empty()) {
+          memcpy(Lidx.data(), tmp->_inner_to_outer_idx[b].data(),
+                 sizeof(cytnx_uint64) * this->_bonds.size());
+        }
+        if (!Ridx.empty()) {
+          memcpy(Ridx.data(), tmp->_inner_to_outer_idx[b].data() + this->_bonds.size(),
+                 sizeof(cytnx_uint64) * rhs->_bonds.size());
+        }
 
         auto IDL = vec_argwhere(this->_inner_to_outer_idx, Lidx);
         auto IDR = vec_argwhere(Rtn->_inner_to_outer_idx, Ridx);
@@ -1862,6 +1909,7 @@ namespace cytnx {
       }
       this->_rowrank = 0;
       this->_is_braket_form = false;
+      this->_is_diag = false;
 
     } else {
       std::map<std::vector<cytnx_uint64>, cytnx_uint64> tmap;
@@ -2189,6 +2237,8 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::_save_dispatch(std::fstream &f) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; saves signs as well
+    if (this->rank() == 0) SaveSymmetryCache(f, this->syms_cache);
+
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -2213,7 +2263,11 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::_load_dispatch(std::fstream &f) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; reads signs as well
-    if (!this->_bonds.empty()) this->syms_cache = vec_clone(this->_bonds[0].syms());
+    if (this->_bonds.empty()) {
+      this->syms_cache = LoadSymmetryCache(f);
+    } else {
+      this->syms_cache = vec_clone(this->_bonds[0].syms());
+    }
 
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));

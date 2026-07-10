@@ -1057,10 +1057,27 @@ TEST_F(BlockUniTensorTest, Trace) {
   EXPECT_TRUE(tmp.bonds().empty());
   EXPECT_TRUE(tmp.shape().empty());
   EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_FALSE(tmp.is_diag());
   EXPECT_TRUE(tmp.get_block_().is_scalar());
   EXPECT_TRUE(tmp.get_block_({}).is_scalar());
   EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
   EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
+  EXPECT_NO_THROW(tmp.to_dense());
+
+  UniTensor loaded_scalar;
+  tmp.Save(temp_file_path);
+  EXPECT_NO_THROW(loaded_scalar = UniTensor::Load(temp_file_path));
+  EXPECT_EQ(loaded_scalar.uten_type(), UTenType.Block);
+  EXPECT_EQ(loaded_scalar.rank(), 0);
+  EXPECT_EQ(loaded_scalar.syms(), UT_diag.syms());
+  EXPECT_DOUBLE_EQ(double(loaded_scalar.at({}).real()), double(ans));
+
+  UniTensor scalar_contract;
+  EXPECT_NO_THROW(scalar_contract = tmp.contract(loaded_scalar));
+  EXPECT_EQ(scalar_contract.uten_type(), UTenType.Block);
+  EXPECT_EQ(scalar_contract.rank(), 0);
+  EXPECT_EQ(scalar_contract.syms(), UT_diag.syms());
+  EXPECT_DOUBLE_EQ(double(scalar_contract.at({}).real()), double(ans * ans));
 
   tmp = UT_diag.clone();
   tmp.Trace_(0, 1);
@@ -1070,9 +1087,11 @@ TEST_F(BlockUniTensorTest, Trace) {
   EXPECT_TRUE(tmp.bonds().empty());
   EXPECT_TRUE(tmp.shape().empty());
   EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_FALSE(tmp.is_diag());
   EXPECT_TRUE(tmp.get_block_().is_scalar());
   EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
   EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
+  EXPECT_NO_THROW(tmp.to_dense());
 
   EXPECT_NO_THROW(BUT1.Trace(0, 3));
   EXPECT_THROW(BUT1.Trace(), std::logic_error);
