@@ -209,56 +209,50 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
     const std::vector<std::string> &new_labels) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    DenseUniTensor *tmp = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
     tmp->_block = this->_block;
     tmp->relabel_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<std::string> &new_labels) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    DenseUniTensor *tmp = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
     tmp->_block = this->_block;
     tmp->relabels_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx,
                                                                const std::string &new_label) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const std::string &inx,
                                                                const std::string &new_label) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
@@ -266,8 +260,7 @@ namespace cytnx {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
     // out->permute_(mapper,rowrank,by_label);
     // return out;
-    DenseUniTensor *out_raw = this->clone_meta();
-    // boost::intrusive_ptr<UniTensor_base> out(this->clone_meta());
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
 
     std::vector<cytnx_uint64> mapper_u64;
 
@@ -297,8 +290,7 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
@@ -306,8 +298,7 @@ namespace cytnx {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
     // out->permute_(mapper,rowrank,by_label);
     // return out;
-    DenseUniTensor *out_raw = this->clone_meta();
-    // boost::intrusive_ptr<UniTensor_base> out(this->clone_meta());
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
 
     std::vector<cytnx_uint64> mapper_u64;
     // cytnx_error_msg(true,"[Developing!]%s","\n");
@@ -347,8 +338,7 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
   void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
                                 const cytnx_int64 &rowrank) {
@@ -645,7 +635,7 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::get(const std::vector<Accessor> &accessors) {
     if (accessors.empty()) return this->clone_meta();
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     std::vector<cytnx_int64> removed;  // bonds to be removed
     if (this->_is_diag) {
       if (accessors.size() == 1) {
@@ -1007,11 +997,10 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     }
-    DenseUniTensor *tmp = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
     tmp->_block = cytnx::linalg::Diag(this->_block);
     tmp->_is_diag = false;
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
   void DenseUniTensor::to_dense_() {
     if (this->_is_diag) {

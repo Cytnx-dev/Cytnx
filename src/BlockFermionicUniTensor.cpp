@@ -520,8 +520,7 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     } else {
-      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
-      tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (unsigned int b = 0; b < this->_blocks.size(); b++) {
         if (this->_blocks[b].is_contiguous()) {
@@ -530,8 +529,7 @@ namespace cytnx {
           tmp->_blocks[b] = this->_blocks[b].contiguous();
         }
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
   }
 
@@ -546,7 +544,7 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply() {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       if (tmp->_signflip[i]) {
         tmp->_blocks.push_back(-(this->_blocks[i]));
@@ -555,7 +553,7 @@ namespace cytnx {
         tmp->_blocks.push_back(this->_blocks[i].clone());
       }
     }
-    return boost::intrusive_ptr<UniTensor_base>(tmp);
+    return tmp;
   }
 
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
@@ -567,7 +565,7 @@ namespace cytnx {
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, _swapsigns_ is called to
     // update the sign struture
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
@@ -606,16 +604,15 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
 
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; calls permute(std::vector<cytnx_int64>)
     // which takes care of the fermionic sign struture; also, creates a BlockFermionicUniTensor
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -699,7 +696,7 @@ namespace cytnx {
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
     // this is usually not what you want!!!
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     // based on BlockUniTensor.permute but calls _swapsigns_
@@ -739,16 +736,15 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
 
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute_nosignflip(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
     // this is usually not what you want!!!
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -1154,61 +1150,55 @@ namespace cytnx {
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabel_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabels_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     const cytnx_int64 &inx, const std::string &new_label) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     const std::string &inx, const std::string &new_label) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::to_dense() {
@@ -1216,13 +1206,12 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     }
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks.resize(this->_blocks.size());
     for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
       tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
     tmp->_is_diag = false;
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
   void BlockFermionicUniTensor::to_dense_() {
     if (this->_is_diag) {

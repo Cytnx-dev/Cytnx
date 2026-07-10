@@ -250,17 +250,18 @@ namespace cytnx {
         return out;
       } else if (Tin.uten_type() == UTenType.Block) {
         // copy everything except _blocks and _inner_to_outer_idx
-        BlockUniTensor *raw_out = ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
+        boost::intrusive_ptr<BlockUniTensor> raw_out =
+          ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
         UniTensor out;
-        out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
+        out._impl = raw_out;
         ExpH_BlockUT_internal<BlockUniTensor>(out, Tin, a, b);
         return out;
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
         // copy everything except _blocks and _inner_to_outer_idx
-        BlockFermionicUniTensor *raw_out =
+        boost::intrusive_ptr<BlockFermionicUniTensor> raw_out =
           ((BlockFermionicUniTensor *)Tin._impl.get())->clone_meta(false, true);
         UniTensor out;
-        out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
+        out._impl = raw_out;
         ExpH_BlockUT_internal<BlockFermionicUniTensor>(out, Tin, a, b);
         return out;
       } else {
