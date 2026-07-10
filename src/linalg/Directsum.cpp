@@ -21,6 +21,8 @@ namespace cytnx {
                       "\n");
       cytnx_error_msg(T1.dtype() == Type.Void || T2.dtype() == Type.Void,
                       "[ERROR] input tensors cannot have dtype Type.Void.%s", "\n");
+      cytnx_error_msg(T1.is_scalar() || T2.is_scalar(),
+                      "[ERROR] Directsum does not support rank-0 scalar tensors.%s", "\n");
 
       // checking duplication in shared_axes:
       auto tmp = vec_unique(shared_axes);

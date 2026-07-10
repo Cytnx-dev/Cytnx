@@ -433,6 +433,23 @@ TEST(Tensor, GpuScalarInplaceContiguousValues) {
     EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(i), 3.0 * i + 1.0);
 }
 
+TEST(Tensor, GpuRankZeroTensorRhsInplacePreserveDtype) {
+  Tensor rhs(std::vector<cytnx_uint64>{}, Type.Double, Device.cuda);
+  rhs.set(std::vector<Accessor>{}, 2.0);
+
+  Tensor a = ones({2}, Type.Float, Device.cuda);
+  a += rhs;
+  a -= rhs;
+  a *= rhs;
+  a /= rhs;
+
+  EXPECT_EQ(a.dtype(), Type.Float);
+  EXPECT_EQ(a.device(), Device.cuda);
+  Tensor a_cpu = a.to(Device.cpu);
+  EXPECT_FLOAT_EQ(a_cpu.storage().at<cytnx_float>(0), 1.0f);
+  EXPECT_FLOAT_EQ(a_cpu.storage().at<cytnx_float>(1), 1.0f);
+}
+
 // Scalar in-place ops mutate the LHS storage in place (never detach), so a
 // second handle onto the same GPU storage observes the change. Mirrors
 // Tensor.ScalarInplaceSubMulDivKeepStorageSharing on CUDA.

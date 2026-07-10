@@ -206,6 +206,15 @@ namespace DirectsumTest {
     ErrorTestExcute(T1, T2, shared_axes);
   }
 
+  TEST(Directsum, err_rank_zero_scalar_tens) {
+    Tensor T1(std::vector<cytnx_uint64>{}, Type.Double);
+    Tensor T2(std::vector<cytnx_uint64>{}, Type.Double);
+    T1.item<double>() = 1.0;
+    T2.item<double>() = 2.0;
+    std::vector<cytnx_uint64> shared_axes = {};
+    ErrorTestExcute(T1, T2, shared_axes);
+  }
+
   /*=====test info=====
   describe:Test the rank of the input tensors are not same.
   input:

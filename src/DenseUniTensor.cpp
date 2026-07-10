@@ -1148,6 +1148,10 @@ namespace cytnx {
         }
         tmp->_is_diag = false;
       }
+      if (tmp->_bonds.empty()) {
+        tmp->_block.reshape_({});
+        tmp->_is_diag = false;
+      }
       tmp->_is_braket_form = tmp->_update_braket();
 
     }  // check if no common index

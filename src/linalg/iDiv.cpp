@@ -5,6 +5,7 @@
 #ifdef BACKEND_TORCH
 #else
   #include "backend/linalg_internal_interface.hpp"
+  #include "Arithmetic_shape.hpp"
   #include "iArithmetic_visit.hpp"
 
 namespace cytnx {
@@ -14,8 +15,8 @@ namespace cytnx {
       // A length-1 RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
       // read it with a host-side dereference and pass it into the kernel by value, so it needs
       // neither a device match nor a per-call H2D copy of the scalar. See #988.
-      const bool rhs_is_host_scalar =
-        (Rt.device() == Device.cpu && Rt._impl->storage()._impl->size() == 1);
+      const bool rhs_is_scalar = Rt.is_scalar();
+      const bool rhs_is_host_scalar = (Rt.device() == Device.cpu && rhs_is_scalar);
       cytnx_error_msg(Lt.device() != Rt.device() && !rhs_is_host_scalar,
                       "[iDiv] The two tensors cannot be on different devices.%s", "\n");
       // In-place ops write the result back into the LHS storage, so a complex result cannot be
@@ -27,7 +28,7 @@ namespace cytnx {
                       "stored in a real tensor.%s",
                       "\n");
 
-      if (!Rt.is_scalar()) {
+      if (!rhs_is_scalar) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[iDiv] The two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",
@@ -40,6 +41,7 @@ namespace cytnx {
       } else {
         R = Rt;
       }
+      R = detail::HostScalarForGpuBroadcast(R, Lt.device());
 
       // GPU broadcast scalar with a LHS *narrower* than the promoted dtype (e.g. a Float tensor
       // over a Double scalar, or an integer tensor over a fractional scalar): the in-place GPU
@@ -48,7 +50,7 @@ namespace cytnx {
       // back to the LHS dtype -- this matches the CPU element-wise semantics (compute in the
       // promoted type, store into the LHS type). See #988. The CPU path already does this
       // in place, and real /= complex is rejected above.
-      if (rhs_is_host_scalar && Lt.device() != Device.cpu && Lt.dtype() > Rt.dtype()) {
+      if (rhs_is_scalar && Lt.device() != Device.cpu && Lt.dtype() > Rt.dtype()) {
         Tensor promoted = Lt.astype(Type.type_promote(Lt.dtype(), Rt.dtype()));
         iDiv(promoted, R);
         Lt = promoted.astype(Lt.dtype());

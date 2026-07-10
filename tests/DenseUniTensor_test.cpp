@@ -4762,6 +4762,19 @@ TEST_F(DenseUniTensorTest, ContractDiagFullContractionIsScalarNotDiag) {
   EXPECT_DOUBLE_EQ(dense.get_block_().item<double>(), 14.0);
 }
 
+TEST_F(DenseUniTensorTest, ContractDenseFullContractionBlockIsScalar) {
+  UniTensor left(arange(3).astype(Type.Double), false, 1);
+  UniTensor right(arange(3).astype(Type.Double), false, 0);
+  left.relabel_({"shared"});
+  right.relabel_({"shared"});
+
+  UniTensor contracted = left.contract(right);
+  EXPECT_EQ(contracted.rank(), 0);
+  EXPECT_FALSE(contracted.is_diag());
+  EXPECT_TRUE(contracted.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(contracted.get_block_().item<double>(), 5.0);
+}
+
 /*=====test info=====
 describe:test Trace by string label
 ====================*/
