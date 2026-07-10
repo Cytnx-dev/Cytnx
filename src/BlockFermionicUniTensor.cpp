@@ -643,6 +643,7 @@ namespace cytnx {
         cytnx_error_msg(rowrank != 1,
                         "[ERROR][BlockFermionicUniTensor] is_diag=true must have rowrank=1.%s",
                         "\n");
+      out_raw->_blocks = this->_blocks;
       out_raw->_is_braket_form = out_raw->_update_braket();
 
     } else {
@@ -775,6 +776,7 @@ namespace cytnx {
         cytnx_error_msg(rowrank != 1,
                         "[ERROR][BlockFermionicUniTensor] is_diag=true must have rowrank=1.%s",
                         "\n");
+      out_raw->_blocks = this->_blocks;
       out_raw->_is_braket_form = out_raw->_update_braket();
 
     } else {
@@ -1409,7 +1411,11 @@ namespace cytnx {
         // All the legs are contracted, the return will be a scalar
 
         // output instance;
-        DenseUniTensor *tmp = new DenseUniTensor();
+        BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
+        const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
+        tmp->syms_cache = vec_clone(this->syms());
+        tmp->Init(std::vector<Bond>{}, std::vector<std::string>{}, 0, common_dtype, this->device(),
+                  false);
 
         // sign flip for this tensor is computed explictly, then a permutation without signflip is
         // performed; sign flip of rhs is accounted for in usual permutation
@@ -1429,26 +1435,17 @@ namespace cytnx {
           for (unsigned int a = 0; a < Rperm_raw->_blocks.size(); a++) {
             if (Lperm_raw->_inner_to_outer_idx[b] == Rperm_raw->_inner_to_outer_idx[a]) {
               if (signfliplhs[b] != signfliprhs[a]) {  // sign flip
-                if (tmp->_block.dtype() == Type.Void)
-                  tmp->_block = -linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                   Rperm_raw->_blocks[a].flatten());
-                else
-                  tmp->_block -= linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                   Rperm_raw->_blocks[a].flatten());
+                tmp->_blocks[0] -= linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
+                                                     Rperm_raw->_blocks[a].flatten())
+                                     .astype(common_dtype);
               } else {  // no sign flip
-                if (tmp->_block.dtype() == Type.Void)
-                  tmp->_block = linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                  Rperm_raw->_blocks[a].flatten());
-                else
-                  tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                   Rperm_raw->_blocks[a].flatten());
+                tmp->_blocks[0] += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
+                                                     Rperm_raw->_blocks[a].flatten())
+                                     .astype(common_dtype);
               }
             }
           }
         }
-
-        tmp->_rowrank = 0;
-        tmp->_is_tag = false;
         /*
         if(mv_elem_self){
             // calculate reverse mapper:

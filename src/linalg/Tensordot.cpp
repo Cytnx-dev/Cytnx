@@ -10,6 +10,18 @@
 namespace cytnx {
 
   namespace linalg {
+    namespace {
+      void check_tensordot_axis_bounds(const char *function, const char *side,
+                                       const std::vector<cytnx_uint64> &indices,
+                                       const cytnx_uint64 rank) {
+        for (cytnx_uint64 i = 0; i < indices.size(); i++) {
+          cytnx_error_msg(indices[i] >= rank,
+                          "[ERROR][%s] axis %s=%llu is out of bounds for rank %llu.%s", function,
+                          side, static_cast<unsigned long long>(indices[i]),
+                          static_cast<unsigned long long>(rank), "\n");
+        }
+      }
+    }  // namespace
 
     void _Tensordot_generic(Tensor &out, const Tensor &Tl, const Tensor &Tr,
                             const std::vector<cytnx_uint64> &idxl,
@@ -154,6 +166,8 @@ namespace cytnx {
         "\n");
       cytnx_error_msg(Tl.device() != Tr.device(),
                       "[ERROR] two tensor for Tensordot cannot on different devices.%s", "\n");
+      check_tensordot_axis_bounds("Tensordot", "L", idxl, Tl.rank());
+      check_tensordot_axis_bounds("Tensordot", "R", idxr, Tr.rank());
 
       // check if two tensor has same data, to prevent conflict!
       if (cacheL && cacheR) {

@@ -35,6 +35,20 @@ TEST(linalgKronTest, PadsLowerRankLhsOnLeft) {
   }
 }
 
+TEST(linalgTensordotTest, RejectsRankZeroAxis) {
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+
+  EXPECT_THROW({ linalg::Tensordot(scalar, scalar, {0}, {0}); }, std::logic_error);
+}
+
+TEST(linalgTensordotTest, RejectsDiagRankZeroAxis) {
+  Tensor diag = zeros({2}, Type.Double);
+  Tensor scalar(std::vector<cytnx_uint64>{}, Type.Double);
+
+  EXPECT_THROW({ linalg::Tensordot_dg(diag, scalar, {0}, {0}, true); }, std::logic_error);
+  EXPECT_THROW({ linalg::Tensordot_dg(scalar, diag, {0}, {0}, false); }, std::logic_error);
+}
+
 TEST_F(linalg_Test, BkUt_Svd_truncate1) {
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
   std::vector<double> vnm_S;

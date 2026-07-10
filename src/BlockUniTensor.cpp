@@ -592,6 +592,7 @@ namespace cytnx {
       if (rowrank >= 0)
         cytnx_error_msg(rowrank != 1, "[ERROR][BlockUniTensor] is_diag=true must have rowrank=1.%s",
                         "\n");
+      out_raw->_blocks = this->_blocks;
       out_raw->_is_braket_form = out_raw->_update_braket();
 
     } else {
@@ -875,7 +876,11 @@ namespace cytnx {
         // All the legs are contracted, the return will be a scalar
 
         // output instance;
-        DenseUniTensor *tmp = new DenseUniTensor();
+        BlockUniTensor *tmp = new BlockUniTensor();
+        const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
+        tmp->syms_cache = vec_clone(this->syms());
+        tmp->Init(std::vector<Bond>{}, std::vector<std::string>{}, 0, common_dtype, this->device(),
+                  false);
 
         boost::intrusive_ptr<UniTensor_base> Lperm = this->permute(_shadow_comm_idx1);
         boost::intrusive_ptr<UniTensor_base> Rperm = rhs->permute(_shadow_comm_idx2);
@@ -888,18 +893,12 @@ namespace cytnx {
         for (unsigned int b = 0; b < Lperm_raw->_blocks.size(); b++) {
           for (unsigned int a = 0; a < Rperm_raw->_blocks.size(); a++) {
             if (Lperm_raw->_inner_to_outer_idx[b] == Rperm_raw->_inner_to_outer_idx[a]) {
-              if (tmp->_block.dtype() == Type.Void)
-                tmp->_block = linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                Rperm_raw->_blocks[a].flatten());
-              else
-                tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                 Rperm_raw->_blocks[a].flatten());
+              tmp->_blocks[0] +=
+                linalg::Vectordot(Lperm_raw->_blocks[b].flatten(), Rperm_raw->_blocks[a].flatten())
+                  .astype(common_dtype);
             }
           }
         }
-
-        tmp->_rowrank = 0;
-        tmp->_is_tag = false;
         /*
         if(mv_elem_self){
             // calculate reverse mapper:

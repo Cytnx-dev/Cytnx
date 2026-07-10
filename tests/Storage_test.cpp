@@ -289,6 +289,13 @@ TEST_F(StorageTest, FromfileCountZeroReturnsEmptyStorage) {
   EXPECT_EQ(loaded.size(), 0);
 }
 
+TEST_F(StorageTest, InitByPtrRejectsZeroLength) {
+  Storage storage(1, Type.Double);
+  cytnx_double value = 1.0;
+
+  EXPECT_THROW(storage._impl->_Init_byptr(&value, 0, Device.cpu), std::logic_error);
+}
+
 TEST_F(StorageTest, FromfileCountEqualsTotalElementsReadsAll) {
   const std::string path = ::testing::TempDir() + "cytnx_storage_fromfile_count_exact.bin";
   std::remove(path.c_str());

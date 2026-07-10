@@ -140,7 +140,13 @@ namespace cytnx {
     }
 
     const std::string &name() const { return this->_name; }
-    cytnx_uint64 rank() const { return this->_labels.size(); }
+    cytnx_uint64 rank() const {
+      cytnx_error_msg(this->_labels.size() != this->_bonds.size(),
+                      "[ERROR][UniTensor_base][rank] inconsistent metadata: labels.size()=%zu, "
+                      "bonds.size()=%zu.%s",
+                      this->_labels.size(), this->_bonds.size(), "\n");
+      return this->_labels.size();
+    }
     void set_name(const std::string &in) { this->_name = in; }
 
     /**
@@ -3062,20 +3068,28 @@ namespace cytnx {
 
     template <class T>
     T &item() {
-      cytnx_error_msg(this->is_blockform(),
-                      "[ERROR] Cannot use item on UniTensor with Symmetry.\n suggestion: use "
-                      "get_block()/get_blocks() first.%s",
-                      "\n");
+      if (this->is_blockform()) {
+        cytnx_error_msg(
+          !this->is_scalar(),
+          "[ERROR] Cannot use item on a non-scalar UniTensor with Symmetry.\n suggestion: use "
+          "get_block()/get_blocks() first.%s",
+          "\n");
+        return this->_impl->get_block_(0).item<T>();
+      }
 
       DenseUniTensor *tmp = static_cast<DenseUniTensor *>(this->_impl.get());
       return tmp->_block.item<T>();
     }
 
     Scalar::Sproxy item() const {
-      cytnx_error_msg(this->is_blockform(),
-                      "[ERROR] Cannot use item on UniTensor with Symmetry.\n suggestion: use "
-                      "get_block()/get_blocks() first.%s",
-                      "\n");
+      if (this->is_blockform()) {
+        cytnx_error_msg(
+          !this->is_scalar(),
+          "[ERROR] Cannot use item on a non-scalar UniTensor with Symmetry.\n suggestion: use "
+          "get_block()/get_blocks() first.%s",
+          "\n");
+        return this->_impl->get_block_(0).item();
+      }
 
       DenseUniTensor *tmp = static_cast<DenseUniTensor *>(this->_impl.get());
       return tmp->_block.item();

@@ -8,7 +8,18 @@ describe:scalar product between two vectors
 ====================*/
 TEST_F(BlockFermionicUniTensorTest, VectorContract) {
   // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32
-  EXPECT_TRUE(abs(BFUT1.contract(BFUT2).item() - 32) < 1e-12);
+  UniTensor out = BFUT1.contract(BFUT2);
+  EXPECT_EQ(out.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(out.rank(), 0);
+  EXPECT_EQ(out.rowrank(), 0);
+  EXPECT_TRUE(out.bonds().empty());
+  EXPECT_TRUE(out.shape().empty());
+  EXPECT_EQ(out.syms(), BFUT1.syms());
+  EXPECT_EQ(out.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(out.get_block_().is_scalar());
+  EXPECT_TRUE(std::abs(double(out.item().real()) - 32.0) < 1e-12);
+  EXPECT_DOUBLE_EQ(out.item<cytnx_double>(), 32.0);
+  EXPECT_THROW(BFUT1.item(), cytnx::error);
 }
 
 /*=====test info=====
@@ -28,7 +39,13 @@ TEST_F(BlockFermionicUniTensorTest, ContractMixedDtype) {
   UniTensor L = BFUT1.astype(Type.Double);
   UniTensor R = BFUT2.astype(Type.Float);
   // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32 (same as VectorContract; verifies sign flip preserved)
-  EXPECT_TRUE(abs(L.contract(R).item() - 32.0) < 1e-5);
+  UniTensor out = L.contract(R);
+  EXPECT_EQ(out.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(out.dtype(), Type.Double);
+  EXPECT_EQ(out.rank(), 0);
+  EXPECT_EQ(out.syms(), L.syms());
+  EXPECT_EQ(out.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(std::abs(double(out.item().real()) - 32.0) < 1e-5);
 }
 
 TEST_F(BlockFermionicUniTensorTest, NormReturnsScalarTensor) {
@@ -124,6 +141,27 @@ TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata
   EXPECT_FALSE(traced_diag.is_diag());
   EXPECT_EQ(traced_diag.syms(), diag.syms());
   EXPECT_NO_THROW(traced_diag.to_dense());
+}
+
+TEST_F(BlockFermionicUniTensorTest, DiagonalPermutePreservesBlocks) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+  UniTensor diag = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  diag.get_block_(0).fill(2.0);
+  diag.get_block_(1).fill(3.0);
+
+  UniTensor permuted = diag.permute({"b", "a"});
+  EXPECT_TRUE(permuted.is_diag());
+  EXPECT_FALSE(permuted.get_block_(0).is_void());
+  EXPECT_FALSE(permuted.get_block_(1).is_void());
+  EXPECT_DOUBLE_EQ(permuted.get_block_(0).item<cytnx_double>(), 2.0);
+  EXPECT_DOUBLE_EQ(permuted.get_block_(1).item<cytnx_double>(), 3.0);
+
+  UniTensor no_signflip = diag.permute_nosignflip({"b", "a"});
+  EXPECT_TRUE(no_signflip.is_diag());
+  EXPECT_FALSE(no_signflip.get_block_(0).is_void());
+  EXPECT_FALSE(no_signflip.get_block_(1).is_void());
+  EXPECT_DOUBLE_EQ(no_signflip.get_block_(0).item<cytnx_double>(), 2.0);
+  EXPECT_DOUBLE_EQ(no_signflip.get_block_(1).item<cytnx_double>(), 3.0);
 }
 
 /*=====test info=====

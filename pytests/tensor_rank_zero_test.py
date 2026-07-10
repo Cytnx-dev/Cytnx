@@ -66,6 +66,13 @@ def test_tensordot_full_contraction_returns_rank_zero_tensor():
     assert (dot + vec)[2].item() == 7.0
 
 
+def test_tensordot_rank_zero_axis_out_of_bounds():
+    scalar = cytnx.zeros([], dtype=Type.Double)
+
+    with pytest.raises(cytnx.CytnxError, match="axis .*out of bounds"):
+        cytnx.linalg.Tensordot(scalar, scalar, [0], [0])
+
+
 def test_rank_zero_unitensor_empty_tuple_get_set():
     tensor = cytnx.zeros([], dtype=Type.Double)
     tensor[()] = 3.25
@@ -93,3 +100,21 @@ def test_rank_zero_unitensor_empty_tuple_get_set():
         _ = unitensor[0]
     with pytest.raises(cytnx.CytnxError, match="rank-0 UniTensor"):
         unitensor[0] = replacement
+
+
+def test_rank_zero_block_unitensor_item():
+    bond = cytnx.Bond(cytnx.BD_IN,
+                      [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1],
+                      [cytnx.Symmetry.U1()])
+    unitensor = cytnx.UniTensor([bond, bond.redirect()])
+    unitensor.at([0, 0]).value = 2.0
+    unitensor.at([1, 1]).value = 3.0
+
+    with pytest.raises(cytnx.CytnxError, match="non-scalar UniTensor"):
+        unitensor.item()
+
+    traced = unitensor.Trace(0, 1)
+    assert traced.uten_type() == cytnx.UTenType.Block
+    assert traced.rank() == 0
+    assert list(traced.shape()) == []
+    assert traced.item() == 5.0

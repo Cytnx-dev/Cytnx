@@ -1,6 +1,7 @@
 #include "backend/Storage.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
@@ -65,8 +66,8 @@ namespace cytnx {
                                           const bool &init_zero) {
     this->size_ = len_in;
 
-    // check:
-    // cytnx_error_msg(len_in < 1, "%s", "[ERROR] Cannot init a Storage with zero element");
+    // Storage::Fromfile(..., count=0) intentionally constructs empty owned storage. Rank-0
+    // tensors still allocate one element; do not use size 0 for scalar tensors.
     dtype_ = Type.cy_typeid(DType());
 
     if (this->size_ % STORAGE_DEFT_SZ) {
@@ -101,21 +102,18 @@ namespace cytnx {
     //[note], this is an internal function, the device should match the device_id that allocate the
     // pointer if the pointer is on GPU device.
 
-    this->start_ = rawptr;
-    this->size_ = len_in;
-    if (iscap) {
-      this->capacity_ = cap_in;
-    } else {
-      this->capacity_ = len_in;
-    }
+    cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot wrap zero elements.");
 
-    cytnx_error_msg(this->capacity_ % STORAGE_DEFT_SZ != 0,
+    const std::size_t capacity = iscap ? cap_in : len_in;
+
+    cytnx_error_msg(capacity % STORAGE_DEFT_SZ != 0,
                     "[ERROR] _Init_by_ptr cannot have not %dx cap_in.", STORAGE_DEFT_SZ);
 
-#ifdef UNI_DEBUG
-    cytnx_error_msg(this->capacity_ < this->size_, "%s",
-                    "[ERROR] _Init_by_ptr cannot have capacity < size.");
-#endif
+    cytnx_error_msg(capacity < len_in, "%s", "[ERROR] _Init_by_ptr cannot have capacity < size.");
+
+    this->start_ = rawptr;
+    this->size_ = len_in;
+    this->capacity_ = capacity;
     this->dtype_ = Type.cy_typeid(DType());
     this->device_ = device;
   }

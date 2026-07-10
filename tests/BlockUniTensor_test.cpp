@@ -702,6 +702,42 @@ TEST_F(BlockUniTensorTest, contract_mixed_dtype_order_independent) {
   EXPECT_TRUE(AreNearlyEqUniTensor(out_complex_real, ref_complex_real, 1e-10));
 }
 
+TEST_F(BlockUniTensorTest, full_contract_preserves_symmetry_metadata) {
+  UniTensor left = UT_diag.clone();
+  left.set_labels({"a", "b"});
+  UniTensor right = UT_diag.clone();
+  right.Transpose_();
+  right.set_labels({"b", "a"});
+
+  UniTensor out = left.contract(right);
+  EXPECT_EQ(out.uten_type(), UTenType.Block);
+  EXPECT_EQ(out.rank(), 0);
+  EXPECT_EQ(out.rowrank(), 0);
+  EXPECT_TRUE(out.bonds().empty());
+  EXPECT_TRUE(out.shape().empty());
+  EXPECT_EQ(out.syms(), left.syms());
+  EXPECT_TRUE(out.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(out.item().real()), 161.0);
+  EXPECT_DOUBLE_EQ(double(out.item().imag()), 0.0);
+  EXPECT_DOUBLE_EQ(std::real(out.item<cytnx_complex128>()), 161.0);
+  EXPECT_DOUBLE_EQ(std::imag(out.item<cytnx_complex128>()), 0.0);
+  EXPECT_THROW(left.item(), cytnx::error);
+}
+
+TEST_F(BlockUniTensorTest, diagonal_permute_preserves_blocks) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1});
+  UniTensor diag = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  diag.get_block_(0).fill(2.0);
+  diag.get_block_(1).fill(3.0);
+
+  UniTensor permuted = diag.permute({"b", "a"});
+  EXPECT_TRUE(permuted.is_diag());
+  EXPECT_FALSE(permuted.get_block_(0).is_void());
+  EXPECT_FALSE(permuted.get_block_(1).is_void());
+  EXPECT_DOUBLE_EQ(permuted.get_block_(0).item<cytnx_double>(), 2.0);
+  EXPECT_DOUBLE_EQ(permuted.get_block_(1).item<cytnx_double>(), 3.0);
+}
+
 TEST_F(BlockUniTensorTest, same_data) {
   UniTensor B = UT_pB_ans.permute({1, 0, 2});
   UniTensor C = B.contiguous();
