@@ -618,7 +618,7 @@ if you choose the <code class="docutils literal notranslate"><span class="pre">o
 <em>CMake Tools</em> extension, which provides built-in support for selecting and
 running CMake presets directly from the editor.</p>
 </div>
-<p><strong>Option B. Using cmake install</strong></p>
+<p id="option-b-cmake-install"><strong>Option B. Using cmake install</strong></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Use Option B when you need a bare CMake install of the <strong>C++</strong> library
@@ -720,7 +720,7 @@ hptt</p></td>
 </div></blockquote>
 </li>
 </ol>
-<p><strong>Option C. Install the Python API via pip (recommended for Python users)</strong></p>
+<p id="option-c-pip-install"><strong>Option C. Install the Python API via pip (recommended for Python users)</strong></p>
 <p>If you only need to use Cytnx from Python, the simplest path is to let
 <code class="docutils literal notranslate"><span class="pre">pip</span></code> drive the build through scikit-build-core. From the repository
 root:</p>
@@ -767,19 +767,14 @@ Shape : (4)
 </pre></div>
 </div>
 </section>
-<section id="using-c-api-after-self-build-install">
-<h3>Using C++ API after self-build install<a class="headerlink" href="#using-c-api-after-self-build-install" title="Link to this heading">¶</a></h3>
-<p>In the case that Cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling variables:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LDFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LIB<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
+<section id="using-the-c-api-after-a-self-build-install">
+<h3>Using the C++ API after a self-build install<a class="headerlink" href="#using-the-c-api-after-a-self-build-install" title="Link to this heading">¶</a></h3>
+<p>Cytnx no longer exposes <code class="docutils literal notranslate"><span class="pre">__cpp_include__</span></code>/<code class="docutils literal notranslate"><span class="pre">__cpp_lib__</span></code> Python attributes to introspect the C++ headers and library paths – pip and conda installs don’t carry those files at all (see <a class="reference internal" href="#option-c-pip-install"><span class="std std-ref">Option C</span></a> above). To compile your own C++ code against Cytnx, use <a class="reference internal" href="#option-b-cmake-install"><span class="std std-ref">Option B (bare CMake install)</span></a> and consume the installed package the standard CMake way:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">Cytnx</span><span class="w"> </span><span class="s">CONFIG</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">PATHS</span><span class="w"> </span><span class="o">${</span><span class="nv">CYTNX_ROOT</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">your_target</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">Cytnx::cytnx</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>CYTNX_ROOT is the path where Cytnx is installed from binary build.</p>
-</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">CYTNX_ROOT</span></code> is the <code class="docutils literal notranslate"><span class="pre">-DCMAKE_INSTALL_PREFIX</span></code> used for the <a class="reference internal" href="#option-b-cmake-install"><span class="std std-ref">Option B</span></a> install. <code class="docutils literal notranslate"><span class="pre">tests/downstream_find_package/</span></code> in the Cytnx repository is a minimal example of a project consuming Cytnx this way.</p>
 </section>
 </section>
 <section id="build-troubleshooting">
@@ -926,7 +921,7 @@ runtime performance cost for compatibility with the unmodified apt package.</p>
 <li><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li><a class="reference internal" href="#compiling-process">Compiling process</a></li>
 <li><a class="reference internal" href="#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li><a class="reference internal" href="#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
+<li><a class="reference internal" href="#using-the-c-api-after-a-self-build-install">Using the C++ API after a self-build install</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#build-troubleshooting">Build troubleshooting</a><ul>

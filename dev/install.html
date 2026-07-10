@@ -450,7 +450,7 @@
           <section id="install-usage-of-cytnx">
 <h1>Install &amp; Usage of Cytnx<a class="headerlink" href="#install-usage-of-cytnx" title="Link to this heading">¶</a></h1>
 <p>To install Cytnx, we recommend user to use anaconda/miniconda to install. However, advanced users can also build from source if necessary.
-Note that both Python API and C++ API will be installed together regardless of which method you use.</p>
+Both the conda package and the PyPI wheel install only the Python API; the C++ headers and library are not included. See <a class="reference internal" href="#using-the-c-api">Using the C++ API</a> below for how to build against Cytnx’s C++ library instead.</p>
 <section id="conda-install">
 <h2>Conda install<a class="headerlink" href="#conda-install" title="Link to this heading">¶</a></h2>
 <p>In the following we show how to install Cytnx with conda.</p>
@@ -526,70 +526,9 @@ Shape : (4)
 </pre></div>
 </div>
 </section>
-<section id="using-c-api-after-conda-install">
-<h3>Using C++ API after Conda install<a class="headerlink" href="#using-c-api-after-conda-install" title="Link to this heading">¶</a></h3>
-<p>One important feature of Cytnx is that the installation also provides a C++ API.
-There are fundamental differences between C++ and Python, where C++ requires compiling and linking of the code, while Python as an interpreted language does not require both steps.</p>
-<p>Cytnx provides a simple way for users to easily compile their C++ code. In the cytnx package, we provide three pre-set variables:</p>
-<ul class="simple">
-<li><p>In Python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span><span class="w"> </span><span class="nn">cytnx</span>
-<span class="linenos">2</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_include__</span>
-<span class="linenos">3</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_lib__</span>
-<span class="linenos">4</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_linkflags__</span>
-<span class="linenos">5</span><span class="n">cytnx</span><span class="o">.</span><span class="n">__cpp_flags__</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>The first one <strong>cytnx.__cpp_include__</strong> gives you the cytnx header files directory path.</p></li>
-<li><p>The second one <strong>cytnx.__cpp_lib__</strong> gives you the cytnx library file directory path.</p></li>
-<li><p>The third one <strong>cytnx.__cpp_linkflags__</strong> gives you the essential linking flags that are required when you link your own programs that using cytnx.</p></li>
-<li><p>The fourth one <strong>cytnx.__cpp_flags__</strong> gives you the essential compiling flags that are required when you link your own programs that use cytnx.</p></li>
-</ul>
-<p>Let us consider the same example as before for Python. Here, we want to compile the <strong>test.cpp</strong> that uses Cytnx:</p>
-<ul class="simple">
-<li><p>test.cpp; in C++:</p></li>
-</ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cytnx.hpp&quot;</span>
-<span class="linenos">2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
-<span class="linenos">3</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
-<span class="linenos">4</span>
-<span class="linenos">5</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(){</span>
-<span class="linenos">6</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">7</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">8</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="linenos">9</span><span class="p">}</span>
-</pre></div>
-</div>
-<p>Now, to compile and link the above <strong>test.cpp</strong> which produces an executable <strong>test</strong>, we can simply use the following bash script:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_INC</span><span class="o">=</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-<span class="linenos">2</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_LIB</span><span class="o">=</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-<span class="linenos">3</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_LINK</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="linenos">4</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_CXXFLAGS</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="linenos">5</span>
-<span class="linenos">6</span>g++<span class="w"> </span>-I<span class="si">${</span><span class="nv">CYTNX_INC</span><span class="si">}</span><span class="w"> </span><span class="si">${</span><span class="nv">CYTNX_CXXFLAGS</span><span class="si">}</span><span class="w"> </span>test.cpp<span class="w"> </span><span class="si">${</span><span class="nv">CYTNX_LIB</span><span class="si">}</span><span class="w"> </span><span class="si">${</span><span class="nv">CYTNX_LINK</span><span class="si">}</span><span class="w"> </span>-o<span class="w"> </span><span class="nb">test</span>
-</pre></div>
-</div>
-<p>The first four lines are the Python inline executions to get the three required attributes and store them into <strong>CYTNX_INC</strong>, <strong>CYTNX_LIB</strong>, <strong>CYTNX_LINK</strong> and <strong>CYTNX_CXXFLAGS</strong> variables. The last line is the usual compiling and linking of the C++ code <strong>test.cpp</strong>. After executing these steps, we can then run the program with the executable <strong>test</strong>.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>./test
-</pre></div>
-</div>
-<p>Output&gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 4
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (4)
-[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-</pre></div>
-</div>
-<p>For users who what to use cmake/make to integrate Cytnx into more complex projects, one can use the following lines to extract the essential variables for cmake:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LDFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LIB<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
-</pre></div>
-</div>
+<section id="using-the-c-api">
+<h3>Using the C++ API<a class="headerlink" href="#using-the-c-api" title="Link to this heading">¶</a></h3>
+<p>The conda package and the PyPI wheel install only the compiled Python extension; they no longer carry the C++ headers or a linkable <code class="docutils literal notranslate"><span class="pre">libcytnx</span></code>. To build your own C++ code against Cytnx, build and install the C++ library directly with CMake and consume it via <code class="docutils literal notranslate"><span class="pre">find_package(Cytnx)</span></code>, as described in <a class="reference internal" href="adv_install.html"><span class="doc">Advanced Install of Cytnx</span></a>.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -654,7 +593,7 @@ CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> 
 <li><a class="reference internal" href="#">Install &amp; Usage of Cytnx</a><ul>
 <li><a class="reference internal" href="#conda-install">Conda install</a><ul>
 <li><a class="reference internal" href="#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
-<li><a class="reference internal" href="#using-c-api-after-conda-install">Using C++ API after Conda install</a></li>
+<li><a class="reference internal" href="#using-the-c-api">Using the C++ API</a></li>
 </ul>
 </li>
 </ul>
