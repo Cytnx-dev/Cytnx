@@ -3059,6 +3059,12 @@ namespace cytnx {
     int uten_type() const { return this->_impl->uten_type(); }
 
     /**
+    @brief Return whether the UniTensor is uninitialized.
+    @return bool
+    */
+    bool is_void() const { return this->uten_type() == UTenType.Void; }
+
+    /**
     @brief Return the device of the UniTensor.
         @details The function return the device of the UniTensor.
     @return int

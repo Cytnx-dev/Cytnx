@@ -173,6 +173,7 @@ void tensor_binding(py::module &m) {
     .def("device_str", &cytnx::Tensor::device_str)
     .def("shape", &cytnx::Tensor::shape)
     .def("rank", &cytnx::Tensor::rank)
+    .def("is_void", &cytnx::Tensor::is_void)
     .def("is_scalar", &cytnx::Tensor::is_scalar)
     .def("clone", &cytnx::Tensor::clone)
     .def("__copy__", &cytnx::Tensor::clone)

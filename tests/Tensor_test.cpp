@@ -7,6 +7,7 @@
 TEST_F(TensorTest, Constructor) {
   Tensor A;
   EXPECT_EQ(A.dtype(), Type.Void);
+  EXPECT_TRUE(A.is_void());
   EXPECT_FALSE(A.is_scalar());
   EXPECT_EQ(A.device(), Device.cpu);
   EXPECT_EQ(A.shape().size(), 0);
@@ -14,6 +15,7 @@ TEST_F(TensorTest, Constructor) {
 
   Tensor B({3, 4, 5});
   EXPECT_EQ(B.dtype(), Type.Double);
+  EXPECT_FALSE(B.is_void());
   EXPECT_EQ(B.device(), Device.cpu);
   EXPECT_EQ(B.shape().size(), 3);
   EXPECT_EQ(B.shape()[0], 3);
@@ -23,6 +25,7 @@ TEST_F(TensorTest, Constructor) {
 
   Tensor C({3, 4, 5}, Type.Double);
   EXPECT_EQ(C.dtype(), Type.Double);
+  EXPECT_FALSE(C.is_void());
   EXPECT_EQ(C.device(), Device.cpu);
   EXPECT_EQ(C.shape().size(), 3);
   EXPECT_EQ(C.shape()[0], 3);
@@ -32,6 +35,7 @@ TEST_F(TensorTest, Constructor) {
 
   Tensor S(std::vector<cytnx_uint64>{}, Type.Double);
   EXPECT_EQ(S.dtype(), Type.Double);
+  EXPECT_FALSE(S.is_void());
   EXPECT_EQ(S.device(), Device.cpu);
   EXPECT_EQ(S.shape().size(), 0);
   EXPECT_EQ(S.rank(), 0);
@@ -71,6 +75,7 @@ TEST_F(TensorTest, Constructor) {
 TEST_F(TensorTest, VoidTensorAtEmptyLocatorThrows) {
   Tensor uninitialized;
   EXPECT_EQ(uninitialized.dtype(), Type.Void);
+  EXPECT_TRUE(uninitialized.is_void());
   EXPECT_THROW(uninitialized.at<double>({}), std::logic_error);
   EXPECT_THROW(uninitialized.at({}), std::logic_error);
 

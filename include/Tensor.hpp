@@ -617,10 +617,16 @@ namespace cytnx {
     cytnx_uint64 rank() const { return this->_impl->shape().size(); }
 
     /**
+    @brief whether the Tensor is uninitialized.
+    @return [bool] true if the Tensor has Type.Void dtype.
+    */
+    bool is_void() const { return this->_impl->is_void(); }
+
+    /**
     @brief whether the Tensor is an initialized rank-0 scalar Tensor
     @return [bool] true if the Tensor has rank 0 and a non-void dtype
     */
-    bool is_scalar() const { return this->dtype() != Type.Void && this->rank() == 0; }
+    bool is_scalar() const { return !this->is_void() && this->rank() == 0; }
 
     /**
     @brief return a clone of the current Tensor.

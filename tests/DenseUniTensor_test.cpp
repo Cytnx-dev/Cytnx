@@ -53,8 +53,18 @@ TEST_F(DenseUniTensorTest, Init_tagged) {
   EXPECT_ANY_THROW(dut.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
 }
 
+TEST_F(DenseUniTensorTest, IsVoidPredicate) {
+  UniTensor uninitialized;
+  EXPECT_TRUE(uninitialized.is_void());
+
+  UniTensor scalar(std::vector<Bond>{}, std::vector<std::string>{}, 0, Type.Double, Device.cpu,
+                   false);
+  EXPECT_FALSE(scalar.is_void());
+}
+
 TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
   UniTensor ut(std::vector<Bond>{}, std::vector<std::string>{}, 0, Type.Double, Device.cpu, false);
+  EXPECT_FALSE(ut.is_void());
   EXPECT_EQ(ut.rank(), 0);
   EXPECT_EQ(ut.rowrank(), 0);
   EXPECT_TRUE(ut.bonds().empty());
