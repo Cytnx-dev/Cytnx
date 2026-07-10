@@ -55,25 +55,7 @@ namespace cytnx {
       }
     }
 
-    Tensor Norm(const UniTensor& uTl) {
-      if (uTl.uten_type() == UTenType.Dense) {
-        return Norm(uTl.get_block_());
-      } else if ((uTl.uten_type() == UTenType.Block) ||
-                 (uTl.uten_type() == UTenType.BlockFermionic)) {
-        std::vector<Tensor> bks = uTl.get_blocks_();
-        Tensor res = zeros(std::vector<cytnx_uint64>{});
-        cytnx_double accum = 0.0;
-        for (int i = 0; i < bks.size(); i++) {
-          const cytnx_double tmp = double(Norm(bks[i]).item().real());
-          accum += tmp * tmp;
-        }
-        res.item() = std::sqrt(accum);
-        return res;
-      } else {
-        cytnx_error_msg(true, "[ERROR][Norm] UniTensor type '%s' not supported\n",
-                        uTl.uten_type_str().c_str());
-      }
-    }
+    Tensor Norm(const UniTensor& uTl) { return uTl.Norm(); }
 
   }  // namespace linalg
 }  // namespace cytnx
