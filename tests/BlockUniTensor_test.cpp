@@ -1048,8 +1048,27 @@ TEST_F(BlockUniTensorTest, Trace) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
     for (int j = 0; j < deg; j++) ans += i + 1;
   }
-  EXPECT_DOUBLE_EQ(double(tmp.at({0}).real()), double(ans));
-  EXPECT_DOUBLE_EQ(double(tmp.at({0}).imag()), double(0));
+  EXPECT_EQ(tmp.rank(), 0);
+  EXPECT_EQ(tmp.rowrank(), 0);
+  EXPECT_TRUE(tmp.bonds().empty());
+  EXPECT_TRUE(tmp.shape().empty());
+  EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_TRUE(tmp.get_block_().is_scalar());
+  EXPECT_TRUE(tmp.get_block_({}).is_scalar());
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
+
+  tmp = UT_diag.clone();
+  tmp.Trace_(0, 1);
+  EXPECT_EQ(tmp.uten_type(), UTenType.Block);
+  EXPECT_EQ(tmp.rank(), 0);
+  EXPECT_EQ(tmp.rowrank(), 0);
+  EXPECT_TRUE(tmp.bonds().empty());
+  EXPECT_TRUE(tmp.shape().empty());
+  EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_TRUE(tmp.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
 
   EXPECT_NO_THROW(BUT1.Trace(0, 3));
   EXPECT_THROW(BUT1.Trace(), std::logic_error);

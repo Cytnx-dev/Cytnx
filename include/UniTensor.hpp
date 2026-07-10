@@ -67,6 +67,7 @@ namespace cytnx {
     std::string _name;
     std::vector<std::string> _labels;
     std::vector<Bond> _bonds;
+    std::vector<Symmetry> syms_cache;
 
     bool _update_braket() {
       if (_bonds.size() == 0) return false;
@@ -125,8 +126,8 @@ namespace cytnx {
     std::vector<Bond> &bonds() { return this->_bonds; }
 
     Bond &bond_(const cytnx_uint64 &idx) {
-      cytnx_error_msg(idx >= this->_bonds.size(), "[ERROR][bond] index %d out of bound, total %d\n",
-                      idx, this->_bonds.size());
+      cytnx_error_msg(idx >= this->rank(), "[ERROR][bond] index %d out of bound, total %d\n", idx,
+                      this->rank());
       return this->_bonds[idx];
     }
 
@@ -461,6 +462,7 @@ namespace cytnx {
       boost::intrusive_ptr<DenseUniTensor> tmp(new DenseUniTensor());
       tmp->_bonds = vec_clone(this->_bonds);
       tmp->_labels = this->_labels;
+      tmp->syms_cache = vec_clone(this->syms_cache);
       tmp->_is_braket_form = this->_is_braket_form;
       tmp->_rowrank = this->_rowrank;
       tmp->_is_diag = this->_is_diag;
@@ -1150,6 +1152,7 @@ namespace cytnx {
       if (outer) {
         tmp->_bonds = vec_clone(this->_bonds);
         tmp->_labels = this->_labels;
+        tmp->syms_cache = vec_clone(this->syms_cache);
         tmp->_is_braket_form = this->_is_braket_form;
         tmp->_rowrank = this->_rowrank;
         tmp->_name = this->_name;
@@ -1193,6 +1196,7 @@ namespace cytnx {
     }
 
     std::vector<cytnx_uint64> shape() const {
+      if (this->rank() == 0) return {};
       std::vector<cytnx_uint64> out(this->_bonds.size());
       for (cytnx_uint64 i = 0; i < out.size(); i++) {
         out[i] = this->_bonds[i].dim();
@@ -1274,6 +1278,15 @@ namespace cytnx {
 
     // this one for Block will return the indicies!!
     Tensor get_block(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
+      if (this->rank() == 0) {
+        cytnx_error_msg(!indices.empty(),
+                        "[ERROR][get_block][BlockUniTensor] rank-0 scalar block expects no "
+                        "qnum indices.%s",
+                        "\n");
+        cytnx_error_msg(this->_blocks.empty(), "[ERROR][BlockUniTensor] index out of range%s",
+                        "\n");
+        return this->_blocks[0].clone();
+      }
       cytnx_error_msg(indices.size() != this->rank(),
                       "[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the "
                       "Tensor rank (number of legs).%s",
@@ -1321,6 +1334,15 @@ namespace cytnx {
 
     const Tensor &get_block_(const std::vector<cytnx_int64> &indices,
                              const bool &force_return) const {
+      if (this->rank() == 0) {
+        cytnx_error_msg(!indices.empty(),
+                        "[ERROR][get_block][BlockUniTensor] rank-0 scalar block expects no "
+                        "qnum indices.%s",
+                        "\n");
+        cytnx_error_msg(this->_blocks.empty(), "[ERROR][BlockUniTensor] index out of range%s",
+                        "\n");
+        return this->_blocks[0];
+      }
       cytnx_error_msg(indices.size() != this->rank(),
                       "[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the "
                       "Tensor rank (number of legs).%s",
@@ -1355,6 +1377,15 @@ namespace cytnx {
     }
 
     Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return) {
+      if (this->rank() == 0) {
+        cytnx_error_msg(!indices.empty(),
+                        "[ERROR][get_block][BlockUniTensor] rank-0 scalar block expects no "
+                        "qnum indices.%s",
+                        "\n");
+        cytnx_error_msg(this->_blocks.empty(), "[ERROR][BlockUniTensor] index out of range%s",
+                        "\n");
+        return this->_blocks[0];
+      }
       cytnx_error_msg(indices.size() != this->rank(),
                       "[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the "
                       "Tensor rank (number of legs).%s",
@@ -1688,21 +1719,11 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
-      if (out->rank() == 0) {
-        DenseUniTensor *tmp = new DenseUniTensor();
-        tmp->_block = ((BlockUniTensor *)out.get())->_blocks[0];
-        out = boost::intrusive_ptr<UniTensor_base>(tmp);
-      }
       return out;
     }
     boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
-      if (out->rank() == 0) {
-        DenseUniTensor *tmp = new DenseUniTensor();
-        tmp->_block = ((BlockUniTensor *)out.get())->_blocks[0];
-        out = boost::intrusive_ptr<UniTensor_base>(tmp);
-      }
       return out;
     }
 
@@ -1877,6 +1898,7 @@ namespace cytnx {
       if (outer) {
         tmp->_bonds = vec_clone(this->_bonds);
         tmp->_labels = this->_labels;
+        tmp->syms_cache = vec_clone(this->syms_cache);
         tmp->_is_braket_form = this->_is_braket_form;
         tmp->_rowrank = this->_rowrank;
         tmp->_name = this->_name;
@@ -1922,6 +1944,7 @@ namespace cytnx {
 
     std::vector<cytnx_uint64> shape() const {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
+      if (this->rank() == 0) return {};
       std::vector<cytnx_uint64> out(this->_bonds.size());
       for (cytnx_uint64 i = 0; i < out.size(); i++) {
         out[i] = this->_bonds[i].dim();
@@ -2020,6 +2043,15 @@ namespace cytnx {
     // this one for Block will return the indicies!!
     Tensor get_block(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
+      if (this->rank() == 0) {
+        cytnx_error_msg(!indices.empty(),
+                        "[ERROR][get_block][BlockFermionicUniTensor] rank-0 scalar block expects "
+                        "no qnum indices.%s",
+                        "\n");
+        cytnx_error_msg(this->_blocks.empty(),
+                        "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+        return this->_blocks[0].clone();
+      }
       cytnx_error_msg(
         indices.size() != this->rank(),
         "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
@@ -2071,6 +2103,15 @@ namespace cytnx {
     const Tensor &get_block_(const std::vector<cytnx_int64> &indices,
                              const bool &force_return) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
+      if (this->rank() == 0) {
+        cytnx_error_msg(!indices.empty(),
+                        "[ERROR][get_block][BlockFermionicUniTensor] rank-0 scalar block expects "
+                        "no qnum indices.%s",
+                        "\n");
+        cytnx_error_msg(this->_blocks.empty(),
+                        "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+        return this->_blocks[0];
+      }
       cytnx_error_msg(
         indices.size() != this->rank(),
         "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
@@ -2107,6 +2148,15 @@ namespace cytnx {
 
     Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
+      if (this->rank() == 0) {
+        cytnx_error_msg(!indices.empty(),
+                        "[ERROR][get_block][BlockFermionicUniTensor] rank-0 scalar block expects "
+                        "no qnum indices.%s",
+                        "\n");
+        cytnx_error_msg(this->_blocks.empty(),
+                        "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+        return this->_blocks[0];
+      }
       cytnx_error_msg(
         indices.size() != this->rank(),
         "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
@@ -2482,22 +2532,12 @@ namespace cytnx {
       //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
-      if (out->rank() == 0) {
-        DenseUniTensor *tmp = new DenseUniTensor();
-        tmp->_block = ((BlockFermionicUniTensor *)out.get())->_blocks[0];
-        out = boost::intrusive_ptr<UniTensor_base>(tmp);
-      }
       return out;
     }
     boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
       //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Trace_(a, b);
-      if (out->rank() == 0) {
-        DenseUniTensor *tmp = new DenseUniTensor();
-        tmp->_block = ((BlockFermionicUniTensor *)out.get())->_blocks[0];
-        out = boost::intrusive_ptr<UniTensor_base>(tmp);
-      }
       return out;
     }
 
@@ -5390,14 +5430,6 @@ namespace cytnx {
         */
     UniTensor &Trace_(const std::string &a, const std::string &b) {
       this->_impl->Trace_(a, b);
-      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
-        // handle if no leg left case for BlockUniTensor.
-        if (this->rank() == 0) {
-          DenseUniTensor *tmp = new DenseUniTensor();
-          tmp->_block = this->get_blocks_(true)[0];
-          this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
-        }
-      }
       return *this;
     }
 
@@ -5412,14 +5444,6 @@ namespace cytnx {
         */
     UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
       this->_impl->Trace_(a, b);
-      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
-        // handle if no leg left case for BlockUniTensor.
-        if (this->rank() == 0) {
-          DenseUniTensor *tmp = new DenseUniTensor();
-          tmp->_block = this->get_blocks_(true)[0];
-          this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
-        }
-      }
       return *this;
     }
 

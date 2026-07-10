@@ -34,6 +34,7 @@ namespace cytnx {
     // check Symmetry for all bonds
     cytnx_uint32 N_symmetry = bonds[0].Nsym();
     std::vector<Symmetry> tmpSyms = bonds[0].syms();
+    this->syms_cache = vec_clone(tmpSyms);
 
     cytnx_uint32 N_ket = 0;
     for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
@@ -558,6 +559,7 @@ namespace cytnx {
 
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
+    if (!this->syms_cache.empty() || this->_bonds.empty()) return this->syms_cache;
     return this->_bonds[0].syms();
   }
 
@@ -1840,9 +1842,8 @@ namespace cytnx {
     std::vector<bool> new_signflips;
     vec2d<cytnx_uint64> new_itoi;
     if (this->_labels.size() == 0) {
-      // if there is no leg left, leaving only one block, and let API to handle the
-      // BlockFermionicUniTensor->DenseUniTensor!
-      new_blocks.push_back(zeros(1, this->dtype(), this->device()));
+      new_blocks.push_back(zeros(std::vector<cytnx_uint64>{}, this->dtype(), this->device()));
+      new_itoi.push_back({});
       new_signflips.push_back(false);
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
@@ -1859,6 +1860,8 @@ namespace cytnx {
           }
         }
       }
+      this->_rowrank = 0;
+      this->_is_braket_form = false;
 
     } else {
       std::map<std::vector<cytnx_uint64>, cytnx_uint64> tmap;
@@ -1919,6 +1922,15 @@ namespace cytnx {
                                                 std::vector<cytnx_uint64> &loc_in_T,
                                                 const std::vector<cytnx_uint64> &locator) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; error message differs
+    if (this->rank() == 0) {
+      cytnx_error_msg(!locator.empty(),
+                      "[ERROR][BlockFermionicUniTensor][elem_exists] rank-0 scalar expects no "
+                      "locator indices.%s",
+                      "\n");
+      bidx = this->_blocks.empty() ? -1 : 0;
+      loc_in_T.clear();
+      return;
+    }
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -2182,7 +2194,9 @@ namespace cytnx {
 
     // save inner_to_outer_idx:
     for (unsigned int b = 0; b < Nblocks; b++) {
-      f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
+      if (this->rank() != 0) {
+        f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->rank());
+      }
     }
 
     for (unsigned int b = 0; b < Nblocks; b++) {
@@ -2199,6 +2213,8 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::_load_dispatch(std::fstream &f) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; reads signs as well
+    if (!this->_bonds.empty()) this->syms_cache = vec_clone(this->_bonds[0].syms());
+
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -2206,7 +2222,9 @@ namespace cytnx {
       Nblocks, std::vector<cytnx_uint64>(this->_bonds.size()));
     // read inner_to_outer_idx:
     for (unsigned int b = 0; b < Nblocks; b++) {
-      f.read((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
+      if (this->rank() != 0) {
+        f.read((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->rank());
+      }
     }
 
     this->_blocks.resize(Nblocks);

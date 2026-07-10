@@ -31,6 +31,37 @@ TEST_F(BlockFermionicUniTensorTest, ContractMixedDtype) {
   EXPECT_TRUE(abs(L.contract(R).item() - 32.0) < 1e-5);
 }
 
+TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+  UniTensor bkf = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu);
+  bkf.at({0, 0}) = 2.0;
+  bkf.at({1, 1}) = 3.0;
+
+  UniTensor traced = bkf.Trace("a", "b");
+  EXPECT_EQ(traced.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced.rank(), 0);
+  EXPECT_EQ(traced.rowrank(), 0);
+  EXPECT_TRUE(traced.bonds().empty());
+  EXPECT_TRUE(traced.shape().empty());
+  EXPECT_EQ(traced.syms(), bkf.syms());
+  EXPECT_EQ(traced.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(traced.get_block_().is_scalar());
+  EXPECT_TRUE(traced.get_block_({}).is_scalar());
+  EXPECT_DOUBLE_EQ(double(traced.at({}).real()), -1.0);
+
+  UniTensor traced_inplace = bkf.clone();
+  traced_inplace.Trace_("a", "b");
+  EXPECT_EQ(traced_inplace.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced_inplace.rank(), 0);
+  EXPECT_EQ(traced_inplace.rowrank(), 0);
+  EXPECT_TRUE(traced_inplace.bonds().empty());
+  EXPECT_TRUE(traced_inplace.shape().empty());
+  EXPECT_EQ(traced_inplace.syms(), bkf.syms());
+  EXPECT_EQ(traced_inplace.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(traced_inplace.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(traced_inplace.at({}).real()), -1.0);
+}
+
 /*=====test info=====
 describe:some elementwise linear algebra functions
 ====================*/
