@@ -1,5 +1,6 @@
 #include "UniTensor.hpp"
 
+#include <algorithm>
 #include <map>
 #include <numeric>
 #include <ranges>
@@ -1322,10 +1323,14 @@ namespace cytnx {
 
       // check each valid block:
       const std::vector<bool> signflip_rhs = rhs->signflip();
+      const auto lhs_rank = this->_bonds.size();
+      const auto rhs_rank = rhs->_bonds.size();
+      std::vector<cytnx_uint64> lidx(lhs_rank);
+      std::vector<cytnx_uint64> ridx(rhs_rank);
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
-        auto &outer_idx = tmp->_inner_to_outer_idx[b];
-        std::vector<cytnx_uint64> lidx(outer_idx.begin(), outer_idx.begin() + this->_bonds.size());
-        std::vector<cytnx_uint64> ridx(outer_idx.begin() + this->_bonds.size(), outer_idx.end());
+        const auto &outer_idx = tmp->_inner_to_outer_idx[b];
+        std::copy_n(outer_idx.begin(), lhs_rank, lidx.begin());
+        std::copy_n(outer_idx.begin() + lhs_rank, rhs_rank, ridx.begin());
 
         auto idl = vec_argwhere(this->_inner_to_outer_idx, lidx);
         auto idr = vec_argwhere(rtn->_inner_to_outer_idx, ridx);
