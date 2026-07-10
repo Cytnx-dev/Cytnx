@@ -1,5 +1,6 @@
 #include "cytnx.hpp"
 #include "search_tree.hpp"
+#include <algorithm>
 #include <gtest/gtest.h>
 
 using namespace cytnx;
@@ -109,6 +110,75 @@ TEST_F(SearchTreeTest, BasicSearchOrder2) {
   EXPECT_EQ(result->accu_str, "((2,3),(0,1))");
 }
 
+/*=====test info=====
+describe:regression test for issue #853. A single connected component of 5
+         tensors needs 4 sequential contractions to collapse to one node, so
+         by the second contraction the pair-selection loop must look up
+         adjacency for a merged node whose index is >= the original leaf
+         count. Bounds-checking that lookup (e.g. adjacencyMatrix.at(i))
+         instead of re-deriving adjacency from the merged node's current
+         labels would turn the heap-buffer-overflow into a clean
+         std::out_of_range, which still fails this test: the merged node's
+         index is used for every remaining node, so search_order() would
+         throw before result->labels/result->ID could be checked. Reproduces
+         the exact node count (n=4 leaves reachable) and connectivity shape
+         called out in the issue's ASan trace, extended by one node to also
+         exercise a second out-of-range lookup.
+====================*/
+TEST_F(SearchTreeTest, ChainNetworkNoOutOfBoundsOnMultiStepContraction) {
+  // Chain topology a-T0-b-T1-c-T2-d-T3-e-T4-f: every adjacent pair shares
+  // exactly one label, so the whole network is one connected component and
+  // only "a" and "f" remain uncontracted in the final result.
+  std::vector<PseudoUniTensor> tensors;
+
+  PseudoUniTensor t0(0);
+  t0.shape = {2, 3};
+  t0.labels = {"a", "b"};
+  t0.cost = 0;
+  tensors.push_back(t0);
+
+  PseudoUniTensor t1(1);
+  t1.shape = {3, 4};
+  t1.labels = {"b", "c"};
+  t1.cost = 0;
+  tensors.push_back(t1);
+
+  PseudoUniTensor t2(2);
+  t2.shape = {4, 5};
+  t2.labels = {"c", "d"};
+  t2.cost = 0;
+  tensors.push_back(t2);
+
+  PseudoUniTensor t3(3);
+  t3.shape = {5, 6};
+  t3.labels = {"d", "e"};
+  t3.cost = 0;
+  tensors.push_back(t3);
+
+  PseudoUniTensor t4(4);
+  t4.shape = {6, 7};
+  t4.labels = {"e", "f"};
+  t4.cost = 0;
+  tensors.push_back(t4);
+
+  SearchTree tree;
+  tree.base_nodes = tensors;
+
+  EXPECT_NO_THROW(tree.search_order());
+
+  auto result = tree.get_root().back()[0];
+  ASSERT_NE(result, nullptr);
+
+  // All 5 leaves must be folded into the result (ID is the XOR, i.e. union,
+  // of the leaves' distinct power-of-two IDs).
+  EXPECT_EQ(result->ID, (1ULL << 0) | (1ULL << 1) | (1ULL << 2) | (1ULL << 3) | (1ULL << 4));
+
+  // Only the two external labels survive contraction.
+  std::vector<std::string> labels = result->labels;
+  std::sort(labels.begin(), labels.end());
+  EXPECT_EQ(labels, std::vector<std::string>({"a", "f"}));
+}
+
 TEST_F(SearchTreeTest, EmptyTree) {
   SearchTree tree;
 
@@ -128,6 +198,64 @@ TEST_F(SearchTreeTest, SingleNode) {
 
   // Should throw error - need at least 2 nodes
   EXPECT_THROW(tree.search_order(), std::logic_error);
+}
+
+/*=====test info=====
+describe:guards that a merged node's adjacency is visible from BOTH
+         directions. When two nodes are contracted, the incremental
+         adjacency scheme must record the merged node as a neighbour of
+         every node it inherits an edge from -- not only store the merged
+         node's own outgoing row. The merged node always has the largest
+         index and is compared as the second operand of the pair-selection
+         loop's adjacencyMatrix[i].test(j), so if only its own row were
+         updated the edge (older_node -> merged_node) would never be seen
+         and the greedy planner would skip a cheap contraction it should
+         have taken.
+
+         Topology (chain, one shared label per adjacent pair):
+           t0{x,y} t1{y,z} t2{z,w} t3{w,v}, dims x=y=10, z=3, w=4, v=2.
+         With correct adjacency the greedy order is (t2,t3) -> t1 -> t0 at
+         total cost 284. If the merged (t2,t3) node's adjacency to t1 is
+         missed, the planner instead contracts (t0,t1) and finishes at the
+         higher cost 384, so asserting on the cost (and accu_str) distinguishes
+         the two.
+====================*/
+TEST_F(SearchTreeTest, MergedNodeAdjacencyIsSymmetric) {
+  std::vector<PseudoUniTensor> tensors;
+
+  PseudoUniTensor t0(0);
+  t0.shape = {10, 10};
+  t0.labels = {"x", "y"};
+  t0.cost = 0;
+  tensors.push_back(t0);
+
+  PseudoUniTensor t1(1);
+  t1.shape = {10, 3};
+  t1.labels = {"y", "z"};
+  t1.cost = 0;
+  tensors.push_back(t1);
+
+  PseudoUniTensor t2(2);
+  t2.shape = {3, 4};
+  t2.labels = {"z", "w"};
+  t2.cost = 0;
+  tensors.push_back(t2);
+
+  PseudoUniTensor t3(3);
+  t3.shape = {4, 2};
+  t3.labels = {"w", "v"};
+  t3.cost = 0;
+  tensors.push_back(t3);
+
+  SearchTree tree;
+  tree.base_nodes = tensors;
+  tree.search_order();
+  auto result = tree.get_root().back()[0];
+  ASSERT_NE(result, nullptr);
+
+  // Cheapest greedy order keeps the merged (t2,t3) node adjacent to t1.
+  EXPECT_EQ(result->cost, 284);
+  EXPECT_EQ(result->accu_str, "(0,(1,(2,3)))");
 }
 
 TEST_F(SearchTreeTest, DisconnectedNetwork) {
