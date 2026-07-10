@@ -117,6 +117,34 @@ TEST_F(DenseUniTensorTest, RankZeroDenseContractActsAsScalar) {
   EXPECT_DOUBLE_EQ(product.get_block_().at<double>({2}), 4.0);
 }
 
+TEST_F(DenseUniTensorTest, RankZeroUniTensorArithmeticRequiresMatchingStructure) {
+  Tensor left_block(std::vector<cytnx_uint64>{}, Type.Double);
+  left_block.item<double>() = 2.0;
+  UniTensor left_scalar(left_block, false, 0);
+
+  Tensor right_block(std::vector<cytnx_uint64>{}, Type.Double);
+  right_block.item<double>() = 5.0;
+  UniTensor right_scalar(right_block, false, 0);
+
+  UniTensor sum = left_scalar + right_scalar;
+  EXPECT_EQ(sum.rank(), 0);
+  EXPECT_TRUE(sum.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(sum.get_block_().item<double>(), 7.0);
+
+  UniTensor vector(arange(3).astype(Type.Double), false, 0);
+  EXPECT_THROW((void)(left_scalar + vector), std::logic_error);
+  EXPECT_THROW((void)(vector + left_scalar), std::logic_error);
+  EXPECT_THROW((void)(left_scalar - vector), std::logic_error);
+  EXPECT_THROW((void)(vector - left_scalar), std::logic_error);
+  EXPECT_THROW((void)(left_scalar * vector), std::logic_error);
+  EXPECT_THROW((void)(vector * left_scalar), std::logic_error);
+  EXPECT_THROW((void)(left_scalar / vector), std::logic_error);
+  EXPECT_THROW((void)(vector / left_scalar), std::logic_error);
+
+  EXPECT_THROW((void)(ut_complex_diag + left_scalar), std::logic_error);
+  EXPECT_THROW((void)(ut_complex_diag * left_scalar), std::logic_error);
+}
+
 TEST_F(DenseUniTensorTest, RankZeroSaveLoadNormalizesBlock) {
   UniTensor ut(std::vector<Bond>{}, std::vector<std::string>{}, 0, Type.Double, Device.cpu, false);
   ut.get_block_().item<double>() = 2.5;

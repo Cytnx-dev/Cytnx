@@ -13,6 +13,9 @@ namespace cytnx {
     Tensor Mod(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mod] The two tensors cannot be on different devices.%s", "\n");
+      if (Lt.is_scalar() && Rt.is_scalar() && Lt.device() != Device.cpu) {
+        return Mod(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
+      }
 
       Tensor out;
       bool icnst = false;

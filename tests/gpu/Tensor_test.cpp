@@ -357,12 +357,29 @@ TEST_F(TensorTest, gpu_RankZeroScalarAccessAndBroadcast) {
   EXPECT_EQ(host.at<cytnx_int64>({1}), 3);
   EXPECT_EQ(host.at<cytnx_int64>({2}), 4);
 
+  Tensor mod_rhs(std::vector<cytnx_uint64>{}, Type.Int64, Device.cuda);
+  mod_rhs.set(std::vector<Accessor>{}, cytnx_int64(3));
+  out = linalg::Mod(mod_scalar, mod_rhs);
+  host = out.to(Device.cpu);
+  EXPECT_TRUE(host.is_scalar());
+  EXPECT_EQ(host.item<cytnx_int64>(), 2);
+
   Tensor cmp = linalg::Cpr(scalar, vec);
   Tensor cmp_host = cmp.to(Device.cpu);
   EXPECT_EQ(cmp_host.shape(), (std::vector<cytnx_uint64>{3}));
   EXPECT_FALSE(cmp_host.at<cytnx_bool>({0}));
   EXPECT_FALSE(cmp_host.at<cytnx_bool>({1}));
   EXPECT_TRUE(cmp_host.at<cytnx_bool>({2}));
+
+  cmp = linalg::Cpr(scalar, scalar);
+  cmp_host = cmp.to(Device.cpu);
+  EXPECT_TRUE(cmp_host.is_scalar());
+  EXPECT_TRUE(cmp_host.item<cytnx_bool>());
+
+  cmp = linalg::Cpr(scalar, scalar2);
+  cmp_host = cmp.to(Device.cpu);
+  EXPECT_TRUE(cmp_host.is_scalar());
+  EXPECT_FALSE(cmp_host.item<cytnx_bool>());
 
   Tensor dot = linalg::Vectordot(vec, vec, false);
   Tensor dot_host = dot.to(Device.cpu);
