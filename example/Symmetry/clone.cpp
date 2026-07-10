@@ -9,10 +9,10 @@ int main() {
   Symmetry sym_A = Symmetry::U1();
   Symmetry sym_C = Symmetry::U1();
 
-  Symmetry sym_D = sym_A;  // same instance.
+  Symmetry sym_D = sym_A;  // an independent copy (Symmetry is a value type).
 
-  // using is() to check if they are the same instance.
-  std::cout << is(sym_D, sym_A) << std::endl;  // true. same instance
+  // using is() to check if they are the same instance (the same object).
+  std::cout << is(sym_D, sym_A) << std::endl;  // false. independent copy
   std::cout << (sym_D == sym_A) << std::endl;  // true, same content
 
   std::cout << is(sym_C, sym_A) << std::endl;  // false. different instance

@@ -156,9 +156,16 @@ jobs:
         #   - C++ paths exercised through the Python bindings under pytest
         # pybind/ is intentionally kept; codecov.yml gives it its own
         # component in the PR comment.
+        #
+        # --exclude-branches-by-pattern '.*' strips ALL branch records from
+        # the XML, so the `cpp` flag gates on line coverage only (#932):
+        # gcov branch data counts compiler-generated CFG arcs (exception
+        # unwind, destructors, inlined STL) that tests cannot exercise.
+        # Python coverage is unaffected and keeps --cov-branch.
         run: |
           gcovr -r ${{ github.workspace }} . \
             --xml-pretty -o coverage-cpp.xml \
+            --exclude-branches-by-pattern '.*' \
             --exclude '.*_deps.*' \
             --exclude '.*thirdparty.*' \
             --exclude '.*tests/.*' \

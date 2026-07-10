@@ -349,6 +349,11 @@ namespace cytnx {
     virtual std::vector<Symmetry> syms() const;
 
     // arithmetic
+    // internal/advanced: the UniTensor-vs-UniTensor overloads below (Add_/Mul_/Sub_/Div_
+    // taking a boost::intrusive_ptr<UniTensor_base>) are not TN operations; python surface
+    // removed per #934. See operator+(const UniTensor&, const UniTensor&) in
+    // include/linalg.hpp for the full rationale. The Scalar overloads (scalar scaling)
+    // remain fully public, including from python.
     virtual void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     virtual void Add_(const Scalar &rhs);
 
@@ -452,8 +457,8 @@ namespace cytnx {
    public:
     Tensor _block;
     std::vector<Tensor> _interface_block;  // this is serves as interface for get_blocks_();
-    DenseUniTensor *clone_meta() const {
-      DenseUniTensor *tmp = new DenseUniTensor();
+    boost::intrusive_ptr<DenseUniTensor> clone_meta() const {
+      boost::intrusive_ptr<DenseUniTensor> tmp(new DenseUniTensor());
       tmp->_bonds = vec_clone(this->_bonds);
       tmp->_labels = this->_labels;
       tmp->_is_braket_form = this->_is_braket_form;
@@ -514,18 +519,16 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
-      DenseUniTensor *out_raw = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
       out_raw->_block = this->_block;
       out_raw->set_rowrank_(new_rowrank);
-      boost::intrusive_ptr<UniTensor_base> out(out_raw);
-      return out;
+      return out_raw;
     }
 
     boost::intrusive_ptr<UniTensor_base> clone() const {
-      DenseUniTensor *tmp = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
       tmp->_block = this->_block.clone();
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
     bool is_contiguous() const { return this->_block.is_contiguous(); }
     unsigned int dtype() const { return this->_block.dtype(); }
@@ -595,9 +598,8 @@ namespace cytnx {
                                                  const std::string &new_label);
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
-      DenseUniTensor *tmp = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
       tmp->_block = this->_block.astype(dtype);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
       return tmp;
     }
 
@@ -621,10 +623,9 @@ namespace cytnx {
         boost::intrusive_ptr<UniTensor_base> out(this);
         return out;
       } else {
-        DenseUniTensor *tmp = this->clone_meta();
+        boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
         tmp->_block = this->_block.contiguous();
-        boost::intrusive_ptr<UniTensor_base> out(tmp);
-        return out;
+        return tmp;
       }
     }
 
@@ -1162,9 +1163,9 @@ namespace cytnx {
       }
     }
 
-    BlockUniTensor *clone_meta(const bool &inner, const bool &outer) const {
-      BlockUniTensor *tmp = new BlockUniTensor();
-      this->set_meta(tmp, inner, outer);
+    boost::intrusive_ptr<BlockUniTensor> clone_meta(const bool &inner, const bool &outer) const {
+      boost::intrusive_ptr<BlockUniTensor> tmp(new BlockUniTensor());
+      this->set_meta(tmp.get(), inner, outer);
       return tmp;
     };
 
@@ -1227,10 +1228,9 @@ namespace cytnx {
     };
 
     boost::intrusive_ptr<UniTensor_base> clone() const {
-      BlockUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = vec_clone(this->_blocks);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     unsigned int dtype() const {
@@ -1416,11 +1416,10 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
-      BlockUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = this->_blocks;
       tmp->set_rowrank_(new_rowrank);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
 
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
@@ -1500,13 +1499,12 @@ namespace cytnx {
     void to_dense_();
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
-      BlockUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
         tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     // this will only work on non-symm tensor (DenseUniTensor)
@@ -1894,10 +1892,11 @@ namespace cytnx {
       }
     }
 
-    BlockFermionicUniTensor *clone_meta(const bool &inner, const bool &outer) const {
+    boost::intrusive_ptr<BlockFermionicUniTensor> clone_meta(const bool &inner,
+                                                             const bool &outer) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
-      this->set_meta(tmp, inner, outer);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp(new BlockFermionicUniTensor());
+      this->set_meta(tmp.get(), inner, outer);
       return tmp;
     };
 
@@ -1973,10 +1972,9 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> clone() const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; changed to BlockFermionicUniTensor as
       // output
-      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = vec_clone(this->_blocks);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     unsigned int dtype() const {
@@ -2184,11 +2182,10 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; output type changed to
       // BlockFermionicUniTensor
-      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = this->_blocks;
       tmp->set_rowrank_(new_rowrank);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
 
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
@@ -2270,13 +2267,12 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
-      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
         tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     // this will only work on non-symm tensor (DenseUniTensor)
@@ -4791,6 +4787,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Add(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Add_(const Scalar&), Add(const UniTensor&)const, Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4812,6 +4811,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Mul(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Mul_(const Scalar&), Mul(const UniTensor&)const, Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4833,6 +4835,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Sub(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Sub_(const Scalar&), Sub(const UniTensor&)const, Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -4854,6 +4859,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Div(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Div_(const Scalar&), Div(const UniTensor&)const, Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -4935,6 +4943,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Add_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Add_(const UniTensor&), Add_(const Scalar&), Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4965,6 +4976,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Mul_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Mul_(const UniTensor&), Mul_(const Scalar&), Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4995,6 +5009,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Div_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Div_(const UniTensor&), Div_(const Scalar&), Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -5025,6 +5042,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Sub_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Sub_(const UniTensor&), Sub_(const Scalar&), Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */

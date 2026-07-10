@@ -3,6 +3,7 @@ target_sources(cytnx
     cuAlloc_gpu.hpp
     cuCast_gpu.hpp
     cuFill_gpu.hpp
+    cuTypeTraits_gpu.hpp
     cuGetElems_gpu.hpp
     cuGetElems_contiguous_gpu.hpp
     cuMovemem_gpu.hpp

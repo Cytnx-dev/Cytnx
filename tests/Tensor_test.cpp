@@ -393,3 +393,93 @@ TEST(Tensor, FailedReshapeLeavesShapeUnchanged) {
   EXPECT_THROW(t.reshape_({0, -1}), std::logic_error);
   EXPECT_EQ(t.shape(), (std::vector<cytnx_uint64>{12}));
 }
+
+// NOTE: `Tensor b = a;` makes `b` an alias of the *same* Tensor_impl as `a`
+// (Tensor's copy ctor just copies the intrusive_ptr), so `is(a.storage(),
+// b.storage())` would trivially read the same Storage field twice and could
+// never observe the #906 detach bug. To exercise a genuine "two independent
+// Tensor handles sharing one Storage" scenario (e.g. what a view/slice would
+// produce), we build `b` via Tensor::from_storage(a.storage()), which creates
+// a brand-new Tensor_impl whose _storage is a copy of the Storage handle
+// (same underlying Storage_base, distinct Tensor_impl).
+TEST(Tensor, ScalarInplaceAddKeepsStorageSharing) {
+  Tensor a = zeros({4}, Type.Double);
+  Tensor b = Tensor::from_storage(a.storage());  // distinct Tensor_impl, shared Storage
+  ASSERT_TRUE(is(a.storage(), b.storage()));
+  a += 1.0;
+  EXPECT_TRUE(is(a.storage(), b.storage()));
+  EXPECT_DOUBLE_EQ(b.storage().at<double>(0), 1.0);
+}
+
+TEST(Tensor, ScalarInplaceOpsPreserveDtype) {
+  Tensor a = ones({2}, Type.Float);
+  a += 1.0;  // double scalar must not promote the tensor
+  a -= 0.5;
+  a *= 2.0;
+  a /= 3.0;
+  EXPECT_EQ(a.dtype(), Type.Float);
+  EXPECT_FLOAT_EQ(a.storage().at<float>(0), 1.0f);
+}
+
+TEST(Tensor, ScalarInplaceRealPlusComplexThrows) {
+  Tensor a = zeros({2}, Type.Double);
+  EXPECT_THROW(a += cytnx_complex128(0, 1), std::logic_error);
+  EXPECT_THROW(a -= cytnx_complex128(0, 1), std::logic_error);
+  EXPECT_THROW(a *= cytnx_complex128(0, 1), std::logic_error);
+  EXPECT_THROW(a /= cytnx_complex128(0, 1), std::logic_error);
+}
+
+TEST(Tensor, ScalarInplaceIntTensorTruncatesFractionalScalar) {
+  Tensor a = ones({2}, Type.Int64);
+  a += 2.7;  // was: promoted to Double (3.7); now: stays Int64, truncates
+  EXPECT_EQ(a.dtype(), Type.Int64);
+  EXPECT_EQ(a.storage().at<cytnx_int64>(0), 3);
+}
+
+// Mirrors the actual #906 report through public API: permute() produces a
+// distinct Tensor_impl sharing the same Storage (Tensor_impl::permute does
+// `out->_storage = this->_storage`) flagged non-contiguous, so this also
+// exercises the non-contiguous scalar broadcast path of iAdd.
+TEST(Tensor, ScalarInplaceOnPermutedViewMutatesSharedStorage) {
+  Tensor a = zeros({2, 3}, Type.Double);
+  Tensor v = a.permute({1, 0});  // distinct impl, shared storage, non-contiguous
+  ASSERT_FALSE(v.is_contiguous());
+  ASSERT_TRUE(is(a.storage(), v.storage()));
+  v += 1.0;
+  EXPECT_TRUE(is(a.storage(), v.storage()));
+  EXPECT_DOUBLE_EQ(a.storage().at<double>(0), 1.0);
+}
+
+TEST(Tensor, ScalarInplaceSubMulDivKeepStorageSharing) {
+  Tensor a = ones({3}, Type.Double);
+  Tensor b = Tensor::from_storage(a.storage());
+  a -= 0.5;
+  a *= 4.0;
+  a /= 2.0;
+  EXPECT_TRUE(is(a.storage(), b.storage()));
+  EXPECT_DOUBLE_EQ(b.storage().at<double>(2), 1.0);
+}
+
+TEST(Tensor, CytnxScalarInplaceAddKeepsStorageSharing) {
+  Tensor a = zeros({2}, Type.Double);
+  Tensor b = Tensor::from_storage(a.storage());
+  a += Scalar(2.5);
+  EXPECT_TRUE(is(a.storage(), b.storage()));
+  EXPECT_DOUBLE_EQ(b.storage().at<double>(1), 2.5);
+}
+
+TEST(Tensor, ScalarInplaceRealTimesComplexErrorNamesOperator) {
+  Tensor a = zeros({2}, Type.Double);
+  try {
+    a *= cytnx_complex128(0, 1);
+    FAIL() << "expected real *= complex to throw";
+  } catch (const std::logic_error &e) {
+    EXPECT_NE(std::string(e.what()).find("*="), std::string::npos) << e.what();
+  }
+  try {
+    a /= cytnx_complex128(0, 1);
+    FAIL() << "expected real /= complex to throw";
+  } catch (const std::logic_error &e) {
+    EXPECT_NE(std::string(e.what()).find("/="), std::string::npos) << e.what();
+  }
+}

@@ -95,6 +95,87 @@ inline bool parse_get_blocks_silent_arg(const py::args &args, const py::kwargs &
   return silent;
 }
 
+// Phase-2 Task 3 (issue #934, decision record 2026-07-06, amended): the four
+// elementwise UniTensor(+)UniTensor operator families split by whether the
+// operation is well defined:
+//
+//   * '+' '-' '+=' '-=' are KEPT but guarded. They require the two operands to
+//     describe the same tensor slot -- matching type, rank, labels (in order),
+//     rowrank, diagonal-ness, and bonds. With matching metadata the sum /
+//     difference is unambiguous and label-preserving; with mismatched metadata
+//     the labels would be silently discarded (the #934/#753/#675 complaint), so
+//     they raise TypeError instead (see unitensor_addsub_metadata_mismatch).
+//   * '*' '/' '*=' '/=' are REMOVED: the elementwise (Hadamard) product /
+//     quotient of two UniTensors is basis-dependent and has no tensor-network
+//     meaning. Their dunders raise TypeError via raise_unitensor_elementwise_removed.
+//
+// Scalar<->UniTensor arithmetic (both directions, out-of-place and in-place) is
+// unaffected. The C++ operator+/operator- are unchanged -- the Krylov solvers
+// rely on them as vector-space operations.
+inline constexpr const char *kUniTensorMulRemovedGuidance =
+  "Use Contract() for tensor contraction or Kron() for tensor (outer) products; for a "
+  "genuinely elementwise (Hadamard) product, operate on the raw blocks instead -- "
+  "Tensor-level elementwise arithmetic is fully supported via ut.get_block(). The Hadamard "
+  "product of two UniTensors is basis-dependent and not a tensor-network operation. Scalar "
+  "multiplication ('2.0 * ut', 'ut *= 2.0') is unaffected.";
+
+inline constexpr const char *kUniTensorDivRemovedGuidance =
+  "Use Contract() with an inverted operator, or scalar division ('ut / 2.0', 'ut /= 2.0') "
+  "if that is what you meant; for a genuinely elementwise division, operate on the raw "
+  "blocks instead -- Tensor-level elementwise arithmetic is fully supported via "
+  "ut.get_block(). Division of two UniTensors has no well-defined tensor-network meaning.";
+
+[[noreturn]] inline void raise_unitensor_elementwise_removed(const std::string &op_name,
+                                                             const std::string &alt) {
+  throw py::type_error(std::format(
+    "elementwise UniTensor{}UniTensor arithmetic was removed (issue #934): {}", op_name, alt));
+}
+
+// Render a label list for diagnostics, e.g. ['a', 'b'].
+inline std::string format_labels(const std::vector<std::string> &labels) {
+  std::string s = "[";
+  for (std::size_t i = 0; i < labels.size(); ++i) {
+    if (i) s += ", ";
+    s += "'" + labels[i] + "'";
+  }
+  s += "]";
+  return s;
+}
+
+// Returns "" when a and b have matching metadata for elementwise +/-, otherwise a
+// human-readable reason for the mismatch. +/- is only well-defined (and label-preserving)
+// when both operands describe the same tensor slot.
+inline std::string unitensor_addsub_metadata_mismatch(const UniTensor &a, const UniTensor &b) {
+  if (a.uten_type() != b.uten_type())
+    return std::format("different UniTensor types ({} vs {})", a.uten_type_str(),
+                       b.uten_type_str());
+  if (a.rank() != b.rank()) return std::format("different rank ({} vs {})", a.rank(), b.rank());
+  if (a.labels() != b.labels())
+    return std::format("different labels ({} vs {})", format_labels(a.labels()),
+                       format_labels(b.labels()));
+  if (a.rowrank() != b.rowrank())
+    return std::format("different rowrank ({} vs {})", a.rowrank(), b.rowrank());
+  if (a.is_diag() != b.is_diag())
+    return std::string("one is diagonal (is_diag=True) and the other is not");
+  const std::vector<Bond> &ba = a.bonds();
+  const std::vector<Bond> &bb = b.bonds();
+  for (std::size_t i = 0; i < ba.size(); ++i) {
+    if (ba[i] != bb[i])
+      return std::format("bond at leg {} (label '{}') does not match", i, a.labels()[i]);
+  }
+  return std::string();
+}
+
+[[noreturn]] inline void raise_unitensor_addsub_metadata_mismatch(const std::string &op_name,
+                                                                  const std::string &reason) {
+  throw py::type_error(std::format(
+    "UniTensor{}UniTensor requires the two operands to have matching metadata, but they have {}. "
+    "Elementwise +/- is only defined when both describe the same tensor slot (same labels, bonds, "
+    "rowrank, ...); align them first (e.g. permute()/relabel_()), or use Contract() / operate on "
+    "ut.get_block() for genuinely elementwise math. See issue #934.",
+    op_name, reason));
+}
+
 // Lambda used for _getitem__ and _setitem__
 auto build_accessors = [](const UniTensor &self, py::object locators) {
   ssize_t start, stop, step, slicelength;
@@ -986,7 +1067,8 @@ void unitensor_binding(py::module &m) {
 
 
 
-    .def("contract", &UniTensor::contract, py::arg("inR"), py::arg("mv_elem_self")=false, py::arg("mv_elem_rhs")=false)
+    // GIL: see the guard discipline note in linalg_py.cpp
+    .def("contract", &UniTensor::contract, py::arg("inR"), py::arg("mv_elem_self")=false, py::arg("mv_elem_rhs")=false, py::call_guard<py::gil_scoped_release>())
 
     .def("getTotalQnums", &UniTensor::getTotalQnums, py::arg("physical")=false)
 
@@ -1011,7 +1093,19 @@ void unitensor_binding(py::module &m) {
     // NOTE: no __eq__/__ne__/__bool__ on UniTensor (intentional, Task 3 scope) -- Python falls
     // back to identity semantics; see Tensor's __ne__/__bool__ notes in tensor_py.cpp.
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__add__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Add(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor+UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
+    .def("__add__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" + ", reason);
+           // Add() dtype-promotes but resets labels to a plain range and clears the name;
+           // restore the shared metadata since the operands matched.
+           UniTensor out = self.Add(rhs);
+           out.relabel_(self.labels());
+           out.set_name(self.name());
+           return out;
+         })
     .def("__add__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Add(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1106,8 +1200,14 @@ void unitensor_binding(py::module &m) {
     .def("__radd__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Add(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor+=UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
     .def("__iadd__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Add_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" += ", reason);
+           return self.Add_(rhs);  // in-place; preserves self's labels and name
+         })
     .def("__iadd__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Add_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1155,7 +1255,19 @@ void unitensor_binding(py::module &m) {
     .def("__iadd__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Add_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__sub__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Sub(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor-UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
+    .def("__sub__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" - ", reason);
+           // Sub() dtype-promotes but resets labels to a plain range and clears the name;
+           // restore the shared metadata since the operands matched.
+           UniTensor out = self.Sub(rhs);
+           out.relabel_(self.labels());
+           out.set_name(self.name());
+           return out;
+         })
     .def("__sub__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Sub(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1250,8 +1362,14 @@ void unitensor_binding(py::module &m) {
     .def("__rsub__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Sub(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor-=UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
     .def("__isub__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Sub_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" -= ", reason);
+           return self.Sub_(rhs);  // in-place; preserves self's labels and name
+         })
     .def("__isub__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Sub_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1299,7 +1417,13 @@ void unitensor_binding(py::module &m) {
     .def("__isub__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Sub_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__mul__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Mul(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*UniTensor (Hadamard/elementwise
+    // product) removed from the python surface -- it is basis-dependent and not a
+    // tensor-network operation (#934); see raise_unitensor_elementwise_removed above.
+    .def("__mul__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" * ", kUniTensorMulRemovedGuidance);
+         })
     .def("__mul__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Mul(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1394,8 +1518,12 @@ void unitensor_binding(py::module &m) {
     .def("__rmul__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Mul(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*=UniTensor (Hadamard/elementwise
+    // product) removed from the python surface; see __mul__'s comment above.
     .def("__imul__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Mul_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" *= ", kUniTensorMulRemovedGuidance);
+         })
     .def("__imul__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Mul_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1443,7 +1571,14 @@ void unitensor_binding(py::module &m) {
     .def("__imul__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Mul_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__truediv__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Div(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/UniTensor (elementwise division)
+    // removed from the python surface -- per #934 it has no well-defined tensor-network
+    // meaning (basis-dependent, and typically produces inf/nan); see
+    // raise_unitensor_elementwise_removed's doc comment above.
+    .def("__truediv__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" / ", kUniTensorDivRemovedGuidance);
+         })
     .def("__truediv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Div(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1538,8 +1673,12 @@ void unitensor_binding(py::module &m) {
     .def("__rtruediv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/=UniTensor (elementwise
+    // division) removed from the python surface; see __truediv__'s comment above.
     .def("__itruediv__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Div_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" /= ", kUniTensorDivRemovedGuidance);
+         })
     .def("__itruediv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Div_(static_cast<cytnx::cytnx_float>(rhs));
@@ -2095,20 +2234,24 @@ void unitensor_binding(py::module &m) {
 
   //   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
   //         py::arg("cacheR") = false);
+  // GIL: see the guard discipline note in linalg_py.cpp
   m.def(
     "Contract",
     [](const UniTensor &inL, const UniTensor &inR, const bool &cacheL,
        const bool &cacheR) -> UniTensor { return Contract(inL, inR, cacheL, cacheR); },
-    py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false, py::arg("cacheR") = false);
+    py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false, py::arg("cacheR") = false,
+    py::call_guard<py::gil_scoped_release>());
   m.def(
     "Contract",
     [](const std::vector<UniTensor> &TNs, const std::string &order,
        const bool &optimal) -> UniTensor { return Contract(TNs, order, optimal); },
-    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
+    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true,
+    py::call_guard<py::gil_scoped_release>());
   m.def(
     "Contracts",
     [](const std::vector<UniTensor> &TNs, const std::string &order,
        const bool &optimal) -> UniTensor { return Contracts(TNs, order, optimal); },
-    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
+    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true,
+    py::call_guard<py::gil_scoped_release>());
 }
 #endif
