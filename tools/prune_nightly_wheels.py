@@ -93,6 +93,8 @@ def main() -> int:
         help="print the versions that would be deleted without deleting them",
     )
     args = parser.parse_args()
+    if args.keep < 0:
+        parser.error("--keep must be a non-negative integer")
 
     versions = fetch_versions()
     to_delete = select_versions_to_delete(versions, args.keep)
