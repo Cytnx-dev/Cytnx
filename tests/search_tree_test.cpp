@@ -258,6 +258,26 @@ TEST_F(SearchTreeTest, MergedNodeAdjacencyIsSymmetric) {
   EXPECT_EQ(result->accu_str, "(0,(1,(2,3)))");
 }
 
+TEST_F(SearchTreeTest, TooManyNodesThrows) {
+  // The solver caps at 64 tensors: leaf IDs are 1ULL << leaf_index (64-bit)
+  // and adjacency rows are std::bitset<128> (up to 2*64-1 = 127 nodes), so a
+  // 65th tensor would shift/index past both. Expect a clean error, not UB.
+  //
+  // solve() rejects the input on size alone, before building any leaf, so the
+  // dummy nodes' contents are irrelevant. Use a fixed in-range constructor
+  // index: PseudoUniTensor sets ID to 1ULL << index, so passing 64 would be
+  // undefined behavior at construction, before the guard runs.
+  SearchTree tree;
+  for (cytnx_uint64 i = 0; i < 65; ++i) {
+    PseudoUniTensor t(0);
+    t.shape = {2, 2};
+    t.labels = {std::to_string(i), std::to_string(i + 1)};
+    t.cost = 0;
+    tree.base_nodes.push_back(t);
+  }
+  EXPECT_THROW(tree.search_order(), std::logic_error);
+}
+
 TEST_F(SearchTreeTest, DisconnectedNetwork) {
   SearchTree tree;
 
