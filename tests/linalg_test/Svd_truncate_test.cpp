@@ -356,11 +356,11 @@ namespace SvdTruncateTest {
       max_abs = std::max(max_abs, std::abs(terr_all.storage().at<double>(i)));
     EXPECT_GT(max_abs, 0.0) << "terr values are all zero (previous bug)";
 
-    // return_err = 1: terr is a single element = largest dropped singular value
+    // return_err = 1: terr is a scalar = largest dropped singular value
     std::vector<UniTensor> svds_max =
       linalg::Svd_truncate(src_T, keepdim, min_blockdim, 0., true, 1, 1);
     Tensor terr_max = svds_max.back().get_block_();
-    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>({1}));
+    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>{});
     EXPECT_NEAR(std::abs(terr_max.storage().at<double>(0)), max_abs, 1e-10 * (1.0 + max_abs));
   }
 

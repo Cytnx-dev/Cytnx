@@ -445,7 +445,7 @@ namespace cytnx {
     virtual vec2d<cytnx_uint64> &get_itoi();
 
     virtual void _save_dispatch(std::fstream &f) const;
-    virtual void _load_dispatch(std::fstream &f);
+    virtual void _load_dispatch(std::fstream &f, unsigned int version);
 
     virtual ~UniTensor_base(){};
   };
@@ -1081,7 +1081,7 @@ namespace cytnx {
     }
 
     void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void _load_dispatch(std::fstream &f, unsigned int version);
 
     const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const {
       cytnx_error_msg(true, "[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s",
@@ -1775,7 +1775,7 @@ namespace cytnx {
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
     void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void _load_dispatch(std::fstream &f, unsigned int version);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -2597,7 +2597,7 @@ namespace cytnx {
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
     void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void _load_dispatch(std::fstream &f, unsigned int version);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);

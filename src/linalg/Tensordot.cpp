@@ -38,10 +38,6 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
         new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
 
-      if (new_shape.size() == 0) {
-        new_shape.push_back(1);
-      }
-
       Tensor tmpL = Tl;
       Tensor tmpR = Tr;
 
@@ -137,10 +133,6 @@ namespace cytnx {
         new_shape[i] = _tl.shape()[non_contract_l[i]];
       for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
         new_shape[non_contract_l.size() + i] = _tr.shape()[non_contract_r[i]];
-
-      if (new_shape.size() == 0) {
-        new_shape.push_back(1);
-      }
 
       out.Init(new_shape, out_dtype, _tr.device(), false);
 

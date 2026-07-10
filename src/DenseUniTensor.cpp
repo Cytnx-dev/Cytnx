@@ -1299,7 +1299,7 @@ namespace cytnx {
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
-  void DenseUniTensor::_load_dispatch(std::fstream &f) {
+  void DenseUniTensor::_load_dispatch(std::fstream &f, unsigned int version) {
     this->_block._Load(f);
     if (this->rank() == 0) {
       cytnx_error_msg(this->_block.storage().size() != 1,

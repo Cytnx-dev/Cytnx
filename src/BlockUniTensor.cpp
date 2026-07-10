@@ -1612,12 +1612,13 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::_load_dispatch(std::fstream &f) {
+  void BlockUniTensor::_load_dispatch(std::fstream &f, unsigned int version) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
-    if (this->_bonds.empty()) {
+    if (this->_bonds.empty() && version > 0) {
       this->syms_cache = load_symmetry_cache(f);
     } else {
-      this->syms_cache = vec_clone(this->_bonds[0].syms());
+      this->syms_cache =
+        this->_bonds.empty() ? std::vector<Symmetry>{} : vec_clone(this->_bonds[0].syms());
     }
 
     cytnx_uint64 Nblocks;

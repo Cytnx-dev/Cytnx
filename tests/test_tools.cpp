@@ -578,17 +578,19 @@ namespace cytnx {
       const Tensor terr_d = out.back().astype(Type.Double).contiguous();
 
       if (!truncated) {
-        // no truncation -> terr is a 1-element zero regardless of return_err
-        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>({1}))
-          << prefix << "terr shape (no truncation)";
+        // no truncation -> return_err=1 is a scalar zero; return_err>1 preserves the legacy
+        // one-element zero tensor.
+        const std::vector<cytnx_uint64> expected_shape =
+          return_err == 1 ? std::vector<cytnx_uint64>{} : std::vector<cytnx_uint64>{1};
+        ASSERT_EQ(out.back().shape(), expected_shape) << prefix << "terr shape (no truncation)";
         EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
           << prefix << "terr value (no truncation)";
         return;
       }
 
       if (return_err == 1) {
-        // 1 element: the first discarded singular value, full_sv[k]
-        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>({1}))
+        // scalar: the first discarded singular value, full_sv[k]
+        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>{})
           << prefix << "terr shape (return_err=1)";
         const double got = terr_d.storage().at<double>(0);
         const double exp = ref.storage().at<double>(k);

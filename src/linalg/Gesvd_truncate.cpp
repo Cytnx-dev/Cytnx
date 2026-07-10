@@ -57,7 +57,11 @@ namespace cytnx {
                in.device());  // if type is complex, S should be real
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-        terr.Init({1}, in.dtype(), in.device());
+        if (return_err == 1) {
+          terr.Init(std::vector<cytnx_uint64>{}, in.dtype(), in.device());
+        } else {
+          terr.Init({1}, in.dtype(), in.device());
+        }
 
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
                                                                   S, vT, terr);
@@ -71,7 +75,11 @@ namespace cytnx {
           S.Init({n_singlu}, Type.to_real(in.dtype()), in.device());
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-          terr.Init({1}, in.dtype(), in.device());
+          if (return_err == 1) {
+            terr.Init(std::vector<cytnx_uint64>{}, in.dtype(), in.device());
+          } else {
+            terr.Init({1}, in.dtype(), in.device());
+          }
           cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
                                                                     0., return_err, U, S, vT, terr);
         }

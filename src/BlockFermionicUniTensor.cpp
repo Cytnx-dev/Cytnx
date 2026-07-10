@@ -2268,12 +2268,13 @@ namespace cytnx {
     }
   }
 
-  void BlockFermionicUniTensor::_load_dispatch(std::fstream &f) {
+  void BlockFermionicUniTensor::_load_dispatch(std::fstream &f, unsigned int version) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; reads signs as well
-    if (this->_bonds.empty()) {
+    if (this->_bonds.empty() && version > 0) {
       this->syms_cache = load_symmetry_cache(f);
     } else {
-      this->syms_cache = vec_clone(this->_bonds[0].syms());
+      this->syms_cache =
+        this->_bonds.empty() ? std::vector<Symmetry>{} : vec_clone(this->_bonds[0].syms());
     }
 
     cytnx_uint64 Nblocks;

@@ -56,6 +56,16 @@ def test_vectordot_returns_rank_zero_tensor():
     assert (dot * vec)[2].item() == 10.0
 
 
+def test_tensordot_full_contraction_returns_rank_zero_tensor():
+    vec = cytnx.arange(3).astype(Type.Double)
+    dot = cytnx.linalg.Tensordot(vec, vec, [0], [0])
+
+    assert dot.is_scalar()
+    assert list(dot.shape()) == []
+    assert dot.item() == 5.0
+    assert (dot + vec)[2].item() == 7.0
+
+
 def test_rank_zero_unitensor_empty_tuple_get_set():
     tensor = cytnx.zeros([], dtype=Type.Double)
     tensor[()] = 3.25
