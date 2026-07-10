@@ -2718,7 +2718,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1af8aa7e619c030f80c
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6042" column="13" declfile="include/UniTensor.hpp" declline="6042" declcolumn="13"/>
+        <location file="include/UniTensor.hpp" line="6033" column="13" declfile="include/UniTensor.hpp" declline="6033" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ae707018c91a03ba0c43b9b0b20830a62" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2773,7 +2773,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6057" column="13" declfile="include/UniTensor.hpp" declline="6057" declcolumn="13"/>
+        <location file="include/UniTensor.hpp" line="6048" column="13" declfile="include/UniTensor.hpp" declline="6048" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ab3eaecf9ef354a43851bb3e4fd24147a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2804,7 +2804,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6070" column="5" declfile="include/UniTensor.hpp" declline="6070" declcolumn="5"/>
+        <location file="include/UniTensor.hpp" line="6061" column="5" declfile="include/UniTensor.hpp" declline="6061" declcolumn="5"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1aded169a56c47928185057cc8f24b4d66" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2862,7 +2862,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6093" column="13" bodyfile="include/UniTensor.hpp" bodystart="6093" bodyend="6098"/>
+        <location file="include/UniTensor.hpp" line="6084" column="13" bodyfile="include/UniTensor.hpp" bodystart="6084" bodyend="6089"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ac17fa8d955067a516de44a7704a731ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2904,7 +2904,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6111" column="5" bodyfile="include/UniTensor.hpp" bodystart="6111" bodyend="6116"/>
+        <location file="include/UniTensor.hpp" line="6102" column="5" bodyfile="include/UniTensor.hpp" bodystart="6102" bodyend="6107"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
