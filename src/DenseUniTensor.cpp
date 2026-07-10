@@ -1,6 +1,7 @@
 #include "UniTensor.hpp"
 
 #include <algorithm>
+#include <ranges>
 #include <utility>
 #include <vector>
 
@@ -1051,14 +1052,13 @@ namespace cytnx {
     tmp->_bonds.clear();
     tmp->_labels.clear();
 
-    if (comm_idx1.size() == 0) {
+    if (comm_idx1.empty()) {
       // process meta
       vec_concatenate_(tmp->_labels, this->labels(), rhs->labels());
 
-      for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++)
-        tmp->_bonds.push_back(this->_bonds[i].clone());
-      for (cytnx_uint64 i = 0; i < rhs->_bonds.size(); i++)
-        tmp->_bonds.push_back(rhs->_bonds[i].clone());
+      tmp->_bonds.reserve(this->_bonds.size() + rhs->_bonds.size());
+      for (const auto &bond : this->_bonds) tmp->_bonds.push_back(bond.clone());
+      for (const auto &bond : rhs->_bonds) tmp->_bonds.push_back(bond.clone());
 
       tmp->_is_tag = this->is_tag();
       tmp->_rowrank = this->rowrank() + rhs->rowrank();
@@ -1286,19 +1286,14 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Transpose_() {
-    std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    cytnx_int64 idxnum = this->bonds().size() - 1;
+    const int rank = this->rank();
     if (this->is_tag()) {
-      for (cytnx_int64 i = 0; i <= idxnum; i++) {
-        this->bonds()[i].redirect_();
-        idxorder[i] = idxnum - i;
-      }
-    } else {
-      for (cytnx_int64 i = 0; i <= idxnum; i++) {
-        idxorder[i] = idxnum - i;
-      }
+      for (auto &bond : this->_bonds) bond.redirect_();
     }
-    this->permute_(idxorder, idxnum + 1 - this->_rowrank);
+    // Make reverse sequence [rank - 1, rank - 2, ..., 0].
+    auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
+    std::vector<cytnx_int64> idxorder(idxorder_view.begin(), idxorder_view.end());
+    this->permute_(idxorder, rank - this->_rowrank);
   };
 
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }

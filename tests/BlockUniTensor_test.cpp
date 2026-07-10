@@ -1096,6 +1096,30 @@ TEST_F(BlockUniTensorTest, Trace) {
   EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
   EXPECT_NO_THROW(tmp.to_dense());
 
+  UniTensor transposed = tmp.Transpose();
+  EXPECT_EQ(transposed.uten_type(), UTenType.Block);
+  EXPECT_EQ(transposed.rank(), 0);
+  EXPECT_EQ(transposed.rowrank(), 0);
+  EXPECT_TRUE(transposed.bonds().empty());
+  EXPECT_TRUE(transposed.shape().empty());
+  EXPECT_EQ(transposed.syms(), UT_diag.syms());
+  EXPECT_FALSE(transposed.is_diag());
+  EXPECT_TRUE(transposed.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(transposed.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(transposed.at({}).imag()), double(0));
+
+  tmp.Transpose_();
+  EXPECT_EQ(tmp.uten_type(), UTenType.Block);
+  EXPECT_EQ(tmp.rank(), 0);
+  EXPECT_EQ(tmp.rowrank(), 0);
+  EXPECT_TRUE(tmp.bonds().empty());
+  EXPECT_TRUE(tmp.shape().empty());
+  EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_FALSE(tmp.is_diag());
+  EXPECT_TRUE(tmp.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
+
   EXPECT_NO_THROW(BUT1.Trace(0, 3));
   EXPECT_THROW(BUT1.Trace(), std::logic_error);
   EXPECT_THROW(BUT1.Trace(0, 1), std::logic_error);

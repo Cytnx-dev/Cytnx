@@ -93,6 +93,24 @@ TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
   replacement.item<double>() = 4.0;
   from_scalar.set(std::vector<Accessor>{}, replacement);
   EXPECT_DOUBLE_EQ(from_scalar.get_block_().item<double>(), 4.0);
+
+  UniTensor transposed = from_scalar.Transpose();
+  EXPECT_EQ(transposed.rank(), 0);
+  EXPECT_EQ(transposed.rowrank(), 0);
+  EXPECT_TRUE(transposed.bonds().empty());
+  EXPECT_TRUE(transposed.labels().empty());
+  EXPECT_TRUE(transposed.shape().empty());
+  EXPECT_TRUE(transposed.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(transposed.get_block_().item<double>(), 4.0);
+
+  from_scalar.Transpose_();
+  EXPECT_EQ(from_scalar.rank(), 0);
+  EXPECT_EQ(from_scalar.rowrank(), 0);
+  EXPECT_TRUE(from_scalar.bonds().empty());
+  EXPECT_TRUE(from_scalar.labels().empty());
+  EXPECT_TRUE(from_scalar.shape().empty());
+  EXPECT_TRUE(from_scalar.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(from_scalar.get_block_().item<double>(), 4.0);
 }
 
 TEST_F(DenseUniTensorTest, RankZeroDenseContractActsAsScalar) {

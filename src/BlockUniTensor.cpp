@@ -1,6 +1,7 @@
 #include "UniTensor.hpp"
 
 #include <map>
+#include <ranges>
 #include <stack>
 #include <vector>
 
@@ -777,23 +778,19 @@ namespace cytnx {
     std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
 
-    if (comm_idx1.size() == 0) {
+    if (comm_idx1.empty()) {
       // output instance;
       BlockUniTensor *tmp = new BlockUniTensor();
-      BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
-      const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
+      auto *rtn = static_cast<BlockUniTensor *>(rhs.get());
       std::vector<std::string> out_labels;
       std::vector<Bond> out_bonds;
-      cytnx_int64 out_rowrank;
 
       // no-common label:
-      vec_concatenate_(out_labels, this->labels(), rhs->labels());
-      for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++)
-        out_bonds.push_back(this->_bonds[i].clone());
-      for (cytnx_uint64 i = 0; i < rhs->_bonds.size(); i++)
-        out_bonds.push_back(rhs->_bonds[i].clone());
+      out_bonds.reserve(this->_bonds.size() + rhs->_bonds.size());
+      for (const auto &bond : this->_bonds) out_bonds.push_back(bond.clone());
+      for (const auto &bond : rhs->_bonds) out_bonds.push_back(bond.clone());
 
-      out_rowrank = this->rowrank() + rhs->rowrank();
+      const cytnx_int64 out_rowrank = this->rowrank() + rhs->rowrank();
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
       if (out_bonds.empty()) tmp->syms_cache = vec_clone(this->syms());
@@ -802,45 +799,38 @@ namespace cytnx {
       // tmp->_name = this->_name + "+" + rhs->_name;
 
       // check each valid block:
-      std::vector<cytnx_uint64> Lidx(this->_bonds.size());  // buffer
-      std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  // buffer
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
-        if (!Lidx.empty()) {
-          memcpy(Lidx.data(), tmp->_inner_to_outer_idx[b].data(),
-                 sizeof(cytnx_uint64) * this->_bonds.size());
-        }
-        if (!Ridx.empty()) {
-          memcpy(Ridx.data(), tmp->_inner_to_outer_idx[b].data() + this->_bonds.size(),
-                 sizeof(cytnx_uint64) * rhs->_bonds.size());
-        }
+        auto &outer_idx = tmp->_inner_to_outer_idx[b];
+        std::vector<cytnx_uint64> lidx(outer_idx.begin(), outer_idx.begin() + this->_bonds.size());
+        std::vector<cytnx_uint64> ridx(outer_idx.begin() + this->_bonds.size(), outer_idx.end());
 
-        auto IDL = vec_argwhere(this->_inner_to_outer_idx, Lidx);
-        auto IDR = vec_argwhere(Rtn->_inner_to_outer_idx, Ridx);
+        auto idl = vec_argwhere(this->_inner_to_outer_idx, lidx);
+        auto idr = vec_argwhere(rtn->_inner_to_outer_idx, ridx);
 
         if (User_debug) {
           cytnx_error_msg(
-            IDL.size() > 1,
+            idl.size() > 1,
             "[ERROR][BlockUniTensor][contract] IDL has more than two ambiguous locations!%s", "\n");
           cytnx_error_msg(
-            IDR.size() > 1,
+            idr.size() > 1,
             "[ERROR][BlockUniTensor][contract] IDR has more than two ambiguous locations!%s", "\n");
-          cytnx_error_msg(IDL.size() == 0, "[ERROR][BlockUniTensor][contract] IDL not found!%s",
-                          "\n");
-          cytnx_error_msg(IDR.size() == 0, "[ERROR][BlockUniTensor][contract] IDR not found!%s",
-                          "\n");
+          cytnx_error_msg(idl.empty(), "[ERROR][BlockUniTensor][contract] IDL not found!%s", "\n");
+          cytnx_error_msg(idr.empty(), "[ERROR][BlockUniTensor][contract] IDR not found!%s", "\n");
         }
-        if (IDL.size()) {
-          auto tmpR = Rtn->is_diag() ? linalg::Diag(Rtn->_blocks[IDR[0]]) : Rtn->_blocks[IDR[0]];
-          auto tmpL = this->is_diag() ? linalg::Diag(this->_blocks[IDL[0]]) : this->_blocks[IDL[0]];
-          std::vector<cytnx_uint64> shape_L =
-            vec_concatenate(tmpL.shape(), std::vector<cytnx_uint64>(tmpR.shape().size(), 1));
+        if (!idl.empty()) {
+          auto rhs_block =
+            rtn->is_diag() ? linalg::Diag(rtn->_blocks[idr[0]]) : rtn->_blocks[idr[0]];
+          auto lhs_block =
+            this->is_diag() ? linalg::Diag(this->_blocks[idl[0]]) : this->_blocks[idl[0]];
+          std::vector<cytnx_uint64> lhs_shape = vec_concatenate(
+            lhs_block.shape(), std::vector<cytnx_uint64>(rhs_block.shape().size(), 1));
 
-          tmpL = tmpL.reshape(shape_L);
-          auto Ott = linalg::Kron(tmpL, tmpR, false, true);
+          lhs_block = lhs_block.reshape(lhs_shape);
+          auto out_block = linalg::Kron(lhs_block, rhs_block, false, true);
           // checking:
-          cytnx_error_msg(Ott.shape() != tmp->_blocks[b].shape(),
+          cytnx_error_msg(out_block.shape() != tmp->_blocks[b].shape(),
                           "[ERROR][BlockUniTensor][contract] Mismatching shape!%s", "\n");
-          tmp->_blocks[b] = Ott;
+          tmp->_blocks[b] = out_block;
         }
       }
 
@@ -1226,13 +1216,12 @@ namespace cytnx {
   };
 
   void BlockUniTensor::Transpose_() {
-    std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    cytnx_int64 idxnum = this->bonds().size() - 1;
-    for (cytnx_int64 i = 0; i <= idxnum; i++) {
-      this->bonds()[i].redirect_();
-      idxorder[i] = idxnum - i;
-    }
-    this->permute_(idxorder, idxnum + 1 - this->_rowrank);
+    const int rank = this->rank();
+    for (auto &bond : this->_bonds) bond.redirect_();
+    // Make reverse sequence [rank - 1, rank - 2, ..., 0].
+    auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
+    std::vector<cytnx_int64> idxorder(idxorder_view.begin(), idxorder_view.end());
+    this->permute_(idxorder, rank - this->_rowrank);
   };
 
   void BlockUniTensor::normalize_() {

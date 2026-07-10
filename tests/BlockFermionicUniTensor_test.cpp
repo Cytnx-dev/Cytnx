@@ -91,6 +91,30 @@ TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata
   EXPECT_DOUBLE_EQ(double(traced_inplace.at({}).real()), -1.0);
   EXPECT_NO_THROW(traced_inplace.to_dense());
 
+  UniTensor transposed = traced_inplace.Transpose();
+  EXPECT_EQ(transposed.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(transposed.rank(), 0);
+  EXPECT_EQ(transposed.rowrank(), 0);
+  EXPECT_TRUE(transposed.bonds().empty());
+  EXPECT_TRUE(transposed.shape().empty());
+  EXPECT_EQ(transposed.syms(), bkf.syms());
+  EXPECT_FALSE(transposed.is_diag());
+  EXPECT_EQ(transposed.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(transposed.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(transposed.at({}).real()), -1.0);
+
+  traced_inplace.Transpose_();
+  EXPECT_EQ(traced_inplace.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced_inplace.rank(), 0);
+  EXPECT_EQ(traced_inplace.rowrank(), 0);
+  EXPECT_TRUE(traced_inplace.bonds().empty());
+  EXPECT_TRUE(traced_inplace.shape().empty());
+  EXPECT_EQ(traced_inplace.syms(), bkf.syms());
+  EXPECT_FALSE(traced_inplace.is_diag());
+  EXPECT_EQ(traced_inplace.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(traced_inplace.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(traced_inplace.at({}).real()), -1.0);
+
   UniTensor diag = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
   diag.get_block_(0).fill(2.0);
   diag.get_block_(1).fill(3.0);
