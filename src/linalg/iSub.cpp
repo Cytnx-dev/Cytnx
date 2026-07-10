@@ -41,7 +41,7 @@ namespace cytnx {
       } else {
         R = Rt;
       }
-      R = detail::HostScalarForGpuBroadcast(R, Lt.device());
+      R = detail::host_scalar_for_gpu_broadcast(R, Lt.device());
 
       // GPU broadcast scalar with a LHS *narrower* than the promoted dtype (e.g. a Float tensor
       // minus a Double scalar, or an integer tensor minus a fractional scalar): the in-place GPU

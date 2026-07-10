@@ -14,9 +14,9 @@ typedef cytnx::Accessor ac;
 
 namespace cytnx {
   namespace {
-    void CheckDenseUniTensorArithmeticScalarStructure(const Tensor &lhs_block,
-                                                      const Tensor &rhs_block,
-                                                      const char *op_name) {
+    void check_dense_unitensor_arithmetic_scalar_structure(const Tensor &lhs_block,
+                                                           const Tensor &rhs_block,
+                                                           const char *op_name) {
       cytnx_error_msg(
         lhs_block.is_scalar() != rhs_block.is_scalar(),
         "[ERROR][DenseUniTensor][%s] rank-0 scalar UniTensor arithmetic requires both UniTensor "
@@ -1407,7 +1407,7 @@ namespace cytnx {
       }
     }
     const Tensor &rhs_block = rhs->get_block_();
-    CheckDenseUniTensorArithmeticScalarStructure(this->_block, rhs_block, "Add_");
+    check_dense_unitensor_arithmetic_scalar_structure(this->_block, rhs_block, "Add_");
     if (this->_is_diag == rhs->_is_diag) {
       this->_block += rhs_block;
     } else if (this->_is_diag) {
@@ -1458,7 +1458,7 @@ namespace cytnx {
       }
     }
     const Tensor &rhs_block = rhs->get_block_();
-    CheckDenseUniTensorArithmeticScalarStructure(this->_block, rhs_block, "Sub_");
+    check_dense_unitensor_arithmetic_scalar_structure(this->_block, rhs_block, "Sub_");
     if (this->_is_diag == rhs->_is_diag) {
       this->_block -= rhs_block;
     } else if (this->_is_diag) {
@@ -1518,7 +1518,7 @@ namespace cytnx {
       }
     }
     const Tensor &rhs_block = rhs->get_block_();
-    CheckDenseUniTensorArithmeticScalarStructure(this->_block, rhs_block, "Mul_");
+    check_dense_unitensor_arithmetic_scalar_structure(this->_block, rhs_block, "Mul_");
     if (this->_is_diag == rhs->_is_diag) {
       this->_block *= rhs_block;
     } else if (this->_is_diag) {
@@ -1574,7 +1574,7 @@ namespace cytnx {
       }
     }
     const Tensor &rhs_block = rhs->get_block_();
-    CheckDenseUniTensorArithmeticScalarStructure(this->_block, rhs_block, "Div_");
+    check_dense_unitensor_arithmetic_scalar_structure(this->_block, rhs_block, "Div_");
     if (this->_is_diag == rhs->_is_diag) {
       this->_block /= rhs_block;
     } else if (this->_is_diag) {

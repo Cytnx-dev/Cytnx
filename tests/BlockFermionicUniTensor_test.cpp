@@ -56,6 +56,9 @@ TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata
   EXPECT_TRUE(traced.get_block_({}).is_scalar());
   EXPECT_DOUBLE_EQ(double(traced.at({}).real()), -1.0);
   EXPECT_NO_THROW(traced.to_dense());
+  testing::internal::CaptureStdout();
+  EXPECT_NO_THROW(traced.print_block(0, false));
+  EXPECT_NE(testing::internal::GetCapturedStdout().find("rank-0 scalar block"), std::string::npos);
 
   UniTensor loaded_scalar;
   traced.Save(temp_file_path);

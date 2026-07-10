@@ -25,7 +25,7 @@ using pybind_cytnx::dispatch_pyint;
 #else
 
 namespace {
-  bool IsEmptyTuple(py::handle object) {
+  bool is_empty_tuple(py::handle object) {
     return py::isinstance<py::tuple>(object) &&
            py::reinterpret_borrow<py::tuple>(object).size() == 0;
   }
@@ -505,7 +505,7 @@ void unitensor_binding(py::module &m) {
              self.uten_type() != UTenType.Dense,
              "[ERROR] Cannot get element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
            if (self.rank() == 0) {
-             cytnx_error_msg(!IsEmptyTuple(locators),
+             cytnx_error_msg(!is_empty_tuple(locators),
                              "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
              return self.get(std::vector<Accessor>{});
            }
@@ -519,7 +519,7 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to setelem to an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(self.uten_type() == UTenType.Sparse, "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
            if (self.rank() == 0) {
-             cytnx_error_msg(!IsEmptyTuple(locators),
+             cytnx_error_msg(!is_empty_tuple(locators),
                              "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
              self.set(std::vector<Accessor>{}, rhs);
              return;
@@ -536,7 +536,7 @@ void unitensor_binding(py::module &m) {
              self.uten_type() != UTenType.Dense,
              "[ERROR] cannot set element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
            if (self.rank() == 0) {
-             cytnx_error_msg(!IsEmptyTuple(locators),
+             cytnx_error_msg(!is_empty_tuple(locators),
                              "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
              self.set(std::vector<Accessor>{}, rhs.get_block());
              return;

@@ -12,7 +12,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Cpr(const Tensor &Lt, const Tensor &Rt) {
-      detail::CheckBinaryTensorInputs(Lt, Rt, "Cpr");
+      detail::check_binary_tensor_inputs(Lt, Rt, "Cpr");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Cpr] error, two tensor cannot on different devices.%s", "\n");
       if (Lt.is_scalar() && Rt.is_scalar() && Lt.device() != Device.cpu) {
@@ -20,7 +20,7 @@ namespace cytnx {
       }
       Tensor out;
       bool icnst = false;
-      if (detail::InitBroadcastBinaryOutput(out, Lt, Rt, Type.Bool)) {
+      if (detail::init_broadcast_binary_output(out, Lt, Rt, Type.Bool)) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
@@ -28,8 +28,8 @@ namespace cytnx {
         out.Init(Lt.shape(), Type.Bool, Lt.device());
       }
 
-      const Tensor left = detail::HostScalarForGpuBroadcast(Lt, Lt.device());
-      const Tensor right = detail::HostScalarForGpuBroadcast(Rt, Lt.device());
+      const Tensor left = detail::host_scalar_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_scalar_for_gpu_broadcast(Rt, Lt.device());
 
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {

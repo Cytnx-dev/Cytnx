@@ -1063,6 +1063,9 @@ TEST_F(BlockUniTensorTest, Trace) {
   EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
   EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
   EXPECT_NO_THROW(tmp.to_dense());
+  testing::internal::CaptureStdout();
+  EXPECT_NO_THROW(tmp.print_block(0, false));
+  EXPECT_NE(testing::internal::GetCapturedStdout().find("rank-0 scalar block"), std::string::npos);
 
   UniTensor loaded_scalar;
   tmp.Save(temp_file_path);

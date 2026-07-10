@@ -1120,7 +1120,14 @@ namespace cytnx {
     //             2. total_qns are feeded with size len(symmetry)
     void _fx_get_total_fluxs(std::vector<cytnx_uint64> &loc, const std::vector<Symmetry> &syms,
                              std::vector<cytnx_int64> &total_qns) {
-      memset(&total_qns[0], 0, sizeof(cytnx_int64) * total_qns.size());
+      cytnx_error_msg(
+        loc.size() != this->_bonds.size(),
+        "[ERROR][BlockUniTensor] qnum location rank does not match the number of bonds.%s", "\n");
+      cytnx_error_msg(total_qns.size() != syms.size(),
+                      "[ERROR][BlockUniTensor] total_qns size does not match symmetry count.%s",
+                      "\n");
+      std::fill(total_qns.begin(), total_qns.end(), 0);
+      if (this->_bonds.empty()) return;
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
@@ -1865,7 +1872,15 @@ namespace cytnx {
     void _fx_get_total_fluxs(std::vector<cytnx_uint64> &loc, const std::vector<Symmetry> &syms,
                              std::vector<cytnx_int64> &total_qns) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      memset(&total_qns[0], 0, sizeof(cytnx_int64) * total_qns.size());
+      cytnx_error_msg(
+        loc.size() != this->_bonds.size(),
+        "[ERROR][BlockFermionicUniTensor] qnum location rank does not match the number of bonds.%s",
+        "\n");
+      cytnx_error_msg(
+        total_qns.size() != syms.size(),
+        "[ERROR][BlockFermionicUniTensor] total_qns size does not match symmetry count.%s", "\n");
+      std::fill(total_qns.begin(), total_qns.end(), 0);
+      if (this->_bonds.empty()) return;
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)

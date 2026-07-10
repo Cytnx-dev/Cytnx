@@ -10,14 +10,14 @@
 namespace cytnx {
   namespace linalg {
     Tensor Mul(const Tensor &Lt, const Tensor &Rt) {
-      detail::CheckBinaryTensorInputs(Lt, Rt, "Mul");
+      detail::check_binary_tensor_inputs(Lt, Rt, "Mul");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mul] The two tensors cannot be on different devices.%s", "\n");
 
       Tensor out;
       bool icnst = false;
-      if (detail::InitBroadcastBinaryOutput(out, Lt, Rt,
-                                            Type.type_promote(Lt.dtype(), Rt.dtype()))) {
+      if (detail::init_broadcast_binary_output(out, Lt, Rt,
+                                               Type.type_promote(Lt.dtype(), Rt.dtype()))) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
@@ -25,8 +25,8 @@ namespace cytnx {
         out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
       }
 
-      const Tensor left = detail::HostScalarForGpuBroadcast(Lt, Lt.device());
-      const Tensor right = detail::HostScalarForGpuBroadcast(Rt, Lt.device());
+      const Tensor left = detail::host_scalar_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_scalar_for_gpu_broadcast(Rt, Lt.device());
 
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section

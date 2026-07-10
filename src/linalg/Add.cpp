@@ -56,7 +56,7 @@ namespace cytnx {
     }  // namespace detail
 
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
-      detail::CheckBinaryTensorInputs(Lt, Rt, "Add");
+      detail::check_binary_tensor_inputs(Lt, Rt, "Add");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Add] The two tensors cannot be on different devices.%s", "\n");
 
@@ -66,7 +66,7 @@ namespace cytnx {
       Tensor out;
       bool icnst = false;
 
-      if (detail::InitBroadcastBinaryOutput(out, Lt, Rt, out_dtype)) {
+      if (detail::init_broadcast_binary_output(out, Lt, Rt, out_dtype)) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
@@ -76,8 +76,8 @@ namespace cytnx {
         out.Init(Lt.shape(), out_dtype, Lt.device());
       }
 
-      const Tensor left = detail::HostScalarForGpuBroadcast(Lt, Lt.device());
-      const Tensor right = detail::HostScalarForGpuBroadcast(Rt, Lt.device());
+      const Tensor left = detail::host_scalar_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_scalar_for_gpu_broadcast(Rt, Lt.device());
 
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {

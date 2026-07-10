@@ -19,13 +19,13 @@
 
 namespace cytnx {
   namespace {
-    void SaveSymmetryCache(std::fstream &f, const std::vector<Symmetry> &syms) {
+    void save_symmetry_cache(std::fstream &f, const std::vector<Symmetry> &syms) {
       cytnx_uint64 nsyms = syms.size();
       f.write((char *)&nsyms, sizeof(cytnx_uint64));
       for (const auto &sym : syms) sym._Save(f);
     }
 
-    std::vector<Symmetry> LoadSymmetryCache(std::fstream &f) {
+    std::vector<Symmetry> load_symmetry_cache(std::fstream &f) {
       cytnx_uint64 nsyms;
       f.read((char *)&nsyms, sizeof(cytnx_uint64));
       std::vector<Symmetry> syms(nsyms);
@@ -236,6 +236,15 @@ namespace cytnx {
   void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
                           const std::vector<cytnx_uint64> &qn_indices,
                           const std::vector<Bond> &bonds, const Tensor &block) {
+    if (bonds.empty()) {
+      cytnx_error_msg(Nin != 0 || Nout != 0 || !qn_indices.empty(),
+                      "[ERROR][BlockUniTensor] invalid rank-0 block metadata.%s", "\n");
+      os << "   rank-0 scalar block\n";
+      os << "   shape:\t";
+      vec_print_simple(os, block.shape());
+      return;
+    }
+
     cytnx_uint64 Total_line = Nin < Nout ? Nout : Nin;
 
     std::vector<std::string> Lside(Total_line);
@@ -1593,7 +1602,7 @@ namespace cytnx {
   void BlockUniTensor::_save_dispatch(std::fstream &f) const {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
-    if (this->rank() == 0) SaveSymmetryCache(f, this->syms_cache);
+    if (this->rank() == 0) save_symmetry_cache(f, this->syms_cache);
 
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
@@ -1612,7 +1621,7 @@ namespace cytnx {
   void BlockUniTensor::_load_dispatch(std::fstream &f) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
     if (this->_bonds.empty()) {
-      this->syms_cache = LoadSymmetryCache(f);
+      this->syms_cache = load_symmetry_cache(f);
     } else {
       this->syms_cache = vec_clone(this->_bonds[0].syms());
     }

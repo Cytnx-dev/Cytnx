@@ -11,7 +11,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Mod(const Tensor &Lt, const Tensor &Rt) {
-      detail::CheckBinaryTensorInputs(Lt, Rt, "Mod");
+      detail::check_binary_tensor_inputs(Lt, Rt, "Mod");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mod] The two tensors cannot be on different devices.%s", "\n");
       if (Lt.is_scalar() && Rt.is_scalar() && Lt.device() != Device.cpu) {
@@ -22,8 +22,8 @@ namespace cytnx {
       bool icnst = false;
       // The Mod kernels assign every output element (_out[i] = ...), so out is
       // fully overwritten -- pass false to skip the redundant zero-initialization.
-      if (detail::InitBroadcastBinaryOutput(out, Lt, Rt, Type.type_promote(Lt.dtype(), Rt.dtype()),
-                                            false)) {
+      if (detail::init_broadcast_binary_output(out, Lt, Rt,
+                                               Type.type_promote(Lt.dtype(), Rt.dtype()), false)) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
@@ -31,8 +31,8 @@ namespace cytnx {
         out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
       }
 
-      const Tensor left = detail::HostScalarForGpuBroadcast(Lt, Lt.device());
-      const Tensor right = detail::HostScalarForGpuBroadcast(Rt, Lt.device());
+      const Tensor left = detail::host_scalar_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_scalar_for_gpu_broadcast(Rt, Lt.device());
 
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section
