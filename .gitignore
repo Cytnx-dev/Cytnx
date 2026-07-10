@@ -25,7 +25,10 @@ dev_test
 # Personal AI/coding-agent notes & local config (per-user, not shared)
 # Claude Code
 CLAUDE.local.md
-.claude/
+.claude/*
+# ...but the project's shared agent skills (e.g. the Google style enforcers) are
+# committed so every contributor's Claude Code picks them up.
+!.claude/skills/
 # OpenAI Codex
 AGENTS.local.md
 .codex/

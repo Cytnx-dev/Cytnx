@@ -177,7 +177,7 @@ struct StoragePutValue : testing::Test {
     if constexpr (is_complex_v<ValueDType> && is_complex_v<StorageDType>) {
       using ValueDTypeInComplex = typename ValueDType::value_type;
       using StorageDTypeInComplex = typename StorageDType::value_type;
-      if constexpr (is_convertible_v<ValueDTypeInComplex, StorageDTypeInComplex>) {
+      if constexpr (std::is_convertible_v<ValueDTypeInComplex, StorageDTypeInComplex>) {
         return StorageDType{StorageDTypeInComplex(value.real()),
                             StorageDTypeInComplex(value.imag())};
       } else {
@@ -304,4 +304,54 @@ TEST_F(StorageTest, FromfileCountEqualsTotalElementsReadsAll) {
   ASSERT_EQ(loaded_default.size(), 4);
   for (cytnx_uint64 i = 0; i < 4; i++)
     EXPECT_DOUBLE_EQ(loaded_explicit.at<cytnx_double>(i), loaded_default.at<cytnx_double>(i));
+}
+
+TEST_F(StorageTest, AtDtypeMismatchThrows) {
+  Storage s(4, Type.Float);
+  EXPECT_THROW(s.at<double>(0), std::logic_error);
+  EXPECT_THROW(s.at<cytnx_int64>(0), std::logic_error);
+  EXPECT_NO_THROW(s.at<float>(0));
+}
+
+TEST_F(StorageTest, AtOutOfBoundMessageReportsIndexAndSize) {
+  Storage s(4, Type.Double);
+  try {
+    s.at<cytnx_double>(5);
+    FAIL() << "expected out-of-bound access to throw";
+  } catch (const std::logic_error& e) {
+    const std::string msg = e.what();
+    EXPECT_NE(msg.find("[5]"), std::string::npos) << msg;
+    EXPECT_NE(msg.find("[4]"), std::string::npos) << msg;
+  }
+}
+
+TEST_F(StorageTest, AtDtypeMismatchThrowsForAllDtypes) {
+  for (auto dt : TestTools::dtype_list) {
+    Storage s(2, dt);
+    const std::string name = Type.getname(dt);
+    // Every mismatching at<T> specialization must throw, so that no single
+    // specialization can silently lose its dtype check again.
+    if (dt != Type.ComplexDouble)
+      EXPECT_THROW(s.at<cytnx_complex128>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.ComplexFloat)
+      EXPECT_THROW(s.at<cytnx_complex64>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Double)
+      EXPECT_THROW(s.at<cytnx_double>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Float)
+      EXPECT_THROW(s.at<cytnx_float>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Int64)
+      EXPECT_THROW(s.at<cytnx_int64>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Uint64)
+      EXPECT_THROW(s.at<cytnx_uint64>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Int32)
+      EXPECT_THROW(s.at<cytnx_int32>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Uint32)
+      EXPECT_THROW(s.at<cytnx_uint32>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Int16)
+      EXPECT_THROW(s.at<cytnx_int16>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Uint16)
+      EXPECT_THROW(s.at<cytnx_uint16>(0), std::logic_error) << "storage dtype " << name;
+    if (dt != Type.Bool)
+      EXPECT_THROW(s.at<cytnx_bool>(0), std::logic_error) << "storage dtype " << name;
+  }
 }

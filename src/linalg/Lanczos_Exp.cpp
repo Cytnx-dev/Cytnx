@@ -19,7 +19,6 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    using namespace std;
 
     namespace {
       constexpr double kBetaBreakdownRoundoff = 100.0;
@@ -301,7 +300,7 @@ namespace cytnx {
         UniTensor v_old;
         Tensor Hp_sub;
 
-        for (int i = 1; i < imp_maxiter; ++i) {
+        for (cytnx_uint32 i = 1; i < imp_maxiter; ++i) {
           if (verbose) {
             std::cout << "Lanczos iteration:" << i << std::endl;
           }
@@ -336,13 +335,16 @@ namespace cytnx {
           B_mat = linalg::ExpM(Hp_sub * tau);
           // Set the error as the element of bottom left of the exp(H_sub*tau)
           auto error = abs(B_mat.at({(cytnx_uint64)i, 0}));
-          if (error < CvgCrit || i == imp_maxiter - 1) {
-            if (i == imp_maxiter - 1 && error > CvgCrit) {
+          if (error < CvgCrit) {
+            break;
+          }
+          if (i == imp_maxiter - 1) {
+            if (Maxiter < vec_len) {
               cytnx_warning_msg(
                 true,
-                "[WARNING][Lanczos_Exp] Fail to converge at eigv [%d], try increasing "
-                "maxiter?\n Note:: ignore if this is intended.%s",
-                imp_maxiter, "\n");
+                "[WARNING][Lanczos_Exp] Did not converge after Maxiter [%u] iterations; try "
+                "increasing maxiter.",
+                imp_maxiter);
             }
             break;
           }

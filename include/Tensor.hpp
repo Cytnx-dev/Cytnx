@@ -514,9 +514,10 @@ namespace cytnx {
 
     // Convert storage to the logical Cytnx element pointer type.
     //
-    // Use ptr_as<T>() for host code and raw memory copies, including cudaMemcpy. For complex
-    // tensors, T is std::complex<...>. Use gpu_ptr_as<T>() only for CUDA APIs that require CUDA
-    // ABI element types such as cuDoubleComplex or cuComplex.
+    // Use ptr_as<T>() for host code and raw memory copies. For complex tensors, T is
+    // std::complex<...>. Use gpu_ptr_as<T>() for CUDA kernel code; for complex tensors, T is
+    // cuda::std::complex<...>. CUDA library APIs that require cuComplex ABI pointers should cast
+    // explicitly at the library-call boundary.
     template <typename T>
     T *ptr_as() const {
       cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
@@ -535,10 +536,11 @@ namespace cytnx {
     // convert this->_impl->_storage->Mem to a typed variant of pointers, excluding void*
     gpu_pointer_types gpu_ptr() const;
 
-    // Convert storage to the CUDA ABI element pointer type.
+    // Convert storage to the CUDA kernel element pointer type.
     //
-    // This is for CUDA/cuBLAS/cuSOLVER/kernel interfaces. Generic host code and cudaMemcpy byte
-    // copies should use ptr_as<T>() so the logical Cytnx dtype mapping is checked.
+    // This is for CUDA kernel interfaces. Generic host code should use ptr_as<T>() so the logical
+    // Cytnx dtype mapping is checked. CUDA library APIs that require cuComplex ABI pointers should
+    // cast explicitly at the library-call boundary.
     template <typename T>
     T *gpu_ptr_as() const {
       cytnx_error_msg(
@@ -596,6 +598,17 @@ namespace cytnx {
     @return [std::vector<cytnx_uint64>] the shape of the Tensor
     */
     const std::vector<cytnx_uint64> &shape() const { return this->_impl->shape(); }
+
+    /**
+    @brief the storage strides of the Tensor
+    @return [std::vector<cytnx_int64>] for each logical axis, the distance in the
+    underlying storage between consecutive elements along that axis
+    @details cytnx tensors store a dense permutation of their logical axes, so the
+    stride of every axis is well defined (this is the layout Tensor::at indexes
+    through). For a contiguous tensor these are the row-major strides; for a
+    permuted (non-contiguous) view they reflect the permuted memory order.
+    */
+    std::vector<cytnx_int64> strides() const;
 
     /**
         @brief the rank of the Tensor

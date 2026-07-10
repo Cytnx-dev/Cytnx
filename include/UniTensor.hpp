@@ -49,7 +49,7 @@ namespace cytnx {
    *  Block          |  2, block UniTensor
    *  BlockFermionic |  3, fermionic UniTensor (block form)
    *
-   *  @warning the type \em Sparse is deprecated. Use \em Block instead.
+   *  @warning the type \em Sparse is deprecated. Use \em Block instead or create a \em LinOp.
    *  @see UniTensor::uten_type(), UniTensor::uten_type_str()
    */
 
@@ -57,7 +57,6 @@ namespace cytnx {
 
   /// @cond
   // class DenseUniTensor;
-  // class SparseUniTensor;
   class UniTensor_base : public intrusive_ptr_base<UniTensor_base> {
    public:
     int uten_type_id;  // the unitensor type id.
@@ -89,7 +88,6 @@ namespace cytnx {
 
     friend class UniTensor;  // allow wrapper to access the private elems
     friend class DenseUniTensor;
-    // friend class SparseUniTensor;
     friend class BlockUniTensor;
     friend class BlockFermionicUniTensor;
 
@@ -351,6 +349,11 @@ namespace cytnx {
     virtual std::vector<Symmetry> syms() const;
 
     // arithmetic
+    // internal/advanced: the UniTensor-vs-UniTensor overloads below (Add_/Mul_/Sub_/Div_
+    // taking a boost::intrusive_ptr<UniTensor_base>) are not TN operations; python surface
+    // removed per #934. See operator+(const UniTensor&, const UniTensor&) in
+    // include/linalg.hpp for the full rationale. The Scalar overloads (scalar scaling)
+    // remain fully public, including from python.
     virtual void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     virtual void Add_(const Scalar &rhs);
 
@@ -454,8 +457,8 @@ namespace cytnx {
    public:
     Tensor _block;
     std::vector<Tensor> _interface_block;  // this is serves as interface for get_blocks_();
-    DenseUniTensor *clone_meta() const {
-      DenseUniTensor *tmp = new DenseUniTensor();
+    boost::intrusive_ptr<DenseUniTensor> clone_meta() const {
+      boost::intrusive_ptr<DenseUniTensor> tmp(new DenseUniTensor());
       tmp->_bonds = vec_clone(this->_bonds);
       tmp->_labels = this->_labels;
       tmp->_is_braket_form = this->_is_braket_form;
@@ -516,18 +519,16 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
-      DenseUniTensor *out_raw = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
       out_raw->_block = this->_block;
       out_raw->set_rowrank_(new_rowrank);
-      boost::intrusive_ptr<UniTensor_base> out(out_raw);
-      return out;
+      return out_raw;
     }
 
     boost::intrusive_ptr<UniTensor_base> clone() const {
-      DenseUniTensor *tmp = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
       tmp->_block = this->_block.clone();
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
     bool is_contiguous() const { return this->_block.is_contiguous(); }
     unsigned int dtype() const { return this->_block.dtype(); }
@@ -597,9 +598,8 @@ namespace cytnx {
                                                  const std::string &new_label);
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
-      DenseUniTensor *tmp = this->clone_meta();
+      boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
       tmp->_block = this->_block.astype(dtype);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
       return tmp;
     }
 
@@ -610,7 +610,11 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
-      this->_block.contiguous_();
+      // Rebind _block to the non-mutating Tensor::contiguous() result instead of calling
+      // contiguous_() in place, so a block Tensor shared with another UniTensor (e.g. via
+      // relabel()) is not corrupted (#724). Tensor::contiguous() is cheap when the block is
+      // already contiguous (no data copy; same impl returned).
+      this->_block = this->_block.contiguous();
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
     boost::intrusive_ptr<UniTensor_base> contiguous() {
@@ -619,10 +623,9 @@ namespace cytnx {
         boost::intrusive_ptr<UniTensor_base> out(this);
         return out;
       } else {
-        DenseUniTensor *tmp = this->clone_meta();
+        boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
         tmp->_block = this->_block.contiguous();
-        boost::intrusive_ptr<UniTensor_base> out(tmp);
-        return out;
+        return tmp;
       }
     }
 
@@ -1160,9 +1163,9 @@ namespace cytnx {
       }
     }
 
-    BlockUniTensor *clone_meta(const bool &inner, const bool &outer) const {
-      BlockUniTensor *tmp = new BlockUniTensor();
-      this->set_meta(tmp, inner, outer);
+    boost::intrusive_ptr<BlockUniTensor> clone_meta(const bool &inner, const bool &outer) const {
+      boost::intrusive_ptr<BlockUniTensor> tmp(new BlockUniTensor());
+      this->set_meta(tmp.get(), inner, outer);
       return tmp;
     };
 
@@ -1225,10 +1228,9 @@ namespace cytnx {
     };
 
     boost::intrusive_ptr<UniTensor_base> clone() const {
-      BlockUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = vec_clone(this->_blocks);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     unsigned int dtype() const {
@@ -1414,11 +1416,10 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
-      BlockUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = this->_blocks;
       tmp->set_rowrank_(new_rowrank);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
 
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
@@ -1443,7 +1444,12 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
-      for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
+      // Rebind each block to the non-mutating Tensor::contiguous() result instead of calling
+      // contiguous_() in place, so a block Tensor shared with another UniTensor (e.g. via
+      // relabel()) is not corrupted (#724). Tensor::contiguous() is cheap when the block is
+      // already contiguous (no data copy; same impl returned).
+      for (unsigned int b = 0; b < this->_blocks.size(); b++)
+        this->_blocks[b] = this->_blocks[b].contiguous();
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
     boost::intrusive_ptr<UniTensor_base> contiguous();
@@ -1493,13 +1499,12 @@ namespace cytnx {
     void to_dense_();
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
-      BlockUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
         tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     // this will only work on non-symm tensor (DenseUniTensor)
@@ -1887,10 +1892,11 @@ namespace cytnx {
       }
     }
 
-    BlockFermionicUniTensor *clone_meta(const bool &inner, const bool &outer) const {
+    boost::intrusive_ptr<BlockFermionicUniTensor> clone_meta(const bool &inner,
+                                                             const bool &outer) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
-      this->set_meta(tmp, inner, outer);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp(new BlockFermionicUniTensor());
+      this->set_meta(tmp.get(), inner, outer);
       return tmp;
     };
 
@@ -1966,10 +1972,9 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> clone() const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; changed to BlockFermionicUniTensor as
       // output
-      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = vec_clone(this->_blocks);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     unsigned int dtype() const {
@@ -2177,11 +2182,10 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; output type changed to
       // BlockFermionicUniTensor
-      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks = this->_blocks;
       tmp->set_rowrank_(new_rowrank);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
 
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
@@ -2215,7 +2219,11 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
+      // Rebind each block to the non-mutating Tensor::contiguous() result instead of calling
+      // contiguous_() in place, so a block Tensor shared with another UniTensor (e.g. via
+      // relabel()) is not corrupted (#724).
+      for (unsigned int b = 0; b < this->_blocks.size(); b++)
+        this->_blocks[b] = this->_blocks[b].contiguous();
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
     boost::intrusive_ptr<UniTensor_base> contiguous();
@@ -2259,13 +2267,12 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
-      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
         tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     };
 
     // this will only work on non-symm tensor (DenseUniTensor)
@@ -2849,28 +2856,16 @@ namespace cytnx {
   #ifdef UNI_DEBUG
         cytnx_warning_msg(true, "[DEBUG] message: entry dispatch: UniTensor: symmetric%s", "\n");
   #endif
-        // cytnx_warning_msg(true,"[warning, still developing, some functions will display
-        // \"[Developing]\"][SparseUniTensor]%s","\n");
-        if (sym_fver == 0) {
-          // boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
-          // this->_impl = out;
-          cytnx_error_msg(true,
-                          "[ERROR] internal error! [legacy Sparse entry] the Bond is symmetry but "
-                          "the version is not properly determined!%s",
-                          "\n")
-        } else if (sym_fver == -1) {
-          cytnx_error_msg(true,
-                          "[ERROR] internal error! the Bond is symmetry but the version is not "
-                          "properly determined!%s",
-                          "\n");
+        cytnx_error_msg(
+          sym_fver < 1,
+          "[ERROR] Symmetric tensor, but no degeneracies given. The UniTensor seems broken.%s",
+          "\n");
+        if (fermionic) {
+          boost::intrusive_ptr<UniTensor_base> out(new BlockFermionicUniTensor());
+          this->_impl = out;
         } else {
-          if (fermionic) {
-            boost::intrusive_ptr<UniTensor_base> out(new BlockFermionicUniTensor());
-            this->_impl = out;
-          } else {
-            boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
-            this->_impl = out;
-          }
+          boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
+          this->_impl = out;
         }
       } else {
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
@@ -3917,17 +3912,16 @@ namespace cytnx {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
-
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          T aux;
-          return this->_impl->at_for_sparse(locator, aux);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at<T>(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 
@@ -3945,17 +3939,16 @@ namespace cytnx {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
-
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          T aux;  // [workaround] use aux to dispatch.
-          return this->_impl->at_for_sparse(locator, aux);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at<T>(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 
@@ -4013,15 +4006,16 @@ namespace cytnx {
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          return this->_impl->at_for_sparse(locator);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 
@@ -4035,15 +4029,16 @@ namespace cytnx {
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
-      } else if (this->uten_type() == UTenType.Sparse) {
-        if (this->_impl->elem_exists(locator)) {
-          return this->_impl->at_for_sparse(locator);
-        } else {
-          cytnx_error_msg(true, "[ERROR][SparseUniTensor] invalid location. break qnum block.%s",
-                          "\n");
-        }
-      } else {
+      } else if (this->uten_type() == UTenType.Dense) {
         return this->get_block_().at(locator);
+      } else {
+        cytnx_error_msg(this->uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          this->uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] UniTensor type '%s' not supported\n",
+                        this->uten_type_str().c_str());
       }
     }
 
@@ -4792,6 +4787,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Add(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Add_(const Scalar&), Add(const UniTensor&)const, Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4813,6 +4811,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Mul(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Mul_(const Scalar&), Mul(const UniTensor&)const, Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4834,6 +4835,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Sub(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Sub_(const Scalar&), Sub(const UniTensor&)const, Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -4855,6 +4859,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Div(const UniTensor&)const, this is an inplace function.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Div_(const Scalar&), Div(const UniTensor&)const, Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -4936,6 +4943,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Add_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Add_(const UniTensor&), Add_(const Scalar&), Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4966,6 +4976,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Mul_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Mul_(const UniTensor&), Mul_(const Scalar&), Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4996,6 +5009,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Div_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Div_(const UniTensor&), Div_(const Scalar&), Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -5026,6 +5042,9 @@ namespace cytnx {
         @pre
         The two UniTensor need to have same structure.
         @note Compared to Sub_(const UniTensor&), this function will create a new UniTensor.
+        @note internal/advanced: not a TN operation; python surface removed per #934; see
+        operator+(const UniTensor&, const UniTensor&) in include/linalg.hpp for the
+        full rationale.
         @see Sub_(const UniTensor&), Sub_(const Scalar&), Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */

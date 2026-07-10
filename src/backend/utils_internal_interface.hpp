@@ -25,7 +25,6 @@
 #include "Type.hpp"
 #include "utils/complex_arithmetic.hpp"
 #ifdef UNI_GPU
-  #include "utils/cucomplex_arithmetic.hpp"
 #endif
 
 #include "backend/Storage.hpp"
@@ -53,22 +52,23 @@ namespace cytnx {
                                       const std::vector<cytnx_uint64> &,
                                       const std::vector<std::vector<cytnx_uint64>> &,
                                       const cytnx_uint64 &, const cytnx_uint64 &, const bool &);
-    // typedef void (*blocks_mvelems_io)(vector<Storage> &, const vector<Storage> &,
-    //     const vector<vector<cytnx_uint64>> &, const vector<vector<cytnx_uint64>> &,
-    //     const vector<cytnx_uint64> &,
-    //     const vector<vector<cytnx_uint64>>  &, const vector<vector<cytnx_uint64>>  &,
-    //     map<cytnx_uint64, pair<cytnx_uint64,cytnx_uint64>>  &, map<cytnx_uint64,
-    //     pair<cytnx_uint64,cytnx_uint64>> &, const vector<cytnx_uint64> &, const
-    //     vector<cytnx_uint64> &, const cytnx_uint64 &,  const cytnx_uint64 &);
+    // typedef void (*blocks_mvelems_io)(std::vector<Storage> &, const std::vector<Storage> &,
+    //     const std::vector<std::vector<cytnx_uint64>> &, const
+    //     std::vector<std::vector<cytnx_uint64>> &, const std::vector<cytnx_uint64> &, const
+    //     std::vector<std::vector<cytnx_uint64>>  &, const std::vector<std::vector<cytnx_uint64>>
+    //     &, std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64>>  &,
+    //     std::map<cytnx_uint64, std::pair<cytnx_uint64,cytnx_uint64>> &, const
+    //     std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const cytnx_uint64 &,
+    //     const cytnx_uint64 &);
 
-    typedef void (*blocks_mvelems_io)(vector<Tensor> &, const vector<Tensor> &,
-                                      const vector<cytnx_uint64> &,
-                                      const vector<vector<cytnx_uint64>> &,
-                                      const vector<vector<cytnx_uint64>> &,
-                                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &,
-                                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &,
-                                      const vector<cytnx_uint64> &, const vector<cytnx_uint64> &,
-                                      const cytnx_uint64 &, const cytnx_uint64 &);
+    typedef void (*blocks_mvelems_io)(
+      std::vector<Tensor> &, const std::vector<Tensor> &, const std::vector<cytnx_uint64> &,
+      const std::vector<std::vector<cytnx_uint64>> &,
+      const std::vector<std::vector<cytnx_uint64>> &,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const cytnx_uint64 &,
+      const cytnx_uint64 &);
 
     class utils_internal_interface {
      public:

@@ -51,8 +51,6 @@ TEST(Lanczos_Gnd, gpu_Lanczos_Gnd_test) {
   // cytnx_double evans = -0.6524758424985271;
   cytnx_double evans = -1628.9964650426593;
 
-  // Tensor testtmp = arange(16).reshape(4, 4);
-  // std::cout<<testtmp<<std::endl;
   MyOp H = MyOp();
   Tensor tv = arange(27).to(cytnx::Device.cuda);
   UniTensor v = UniTensor(tv).to(cytnx::Device.cuda);

@@ -178,11 +178,7 @@ namespace cytnx {
     typedef void (*Sumfunc_oii)(boost::intrusive_ptr<Storage_base> &,
                                 const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
 
-    typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &,
-                                  const cytnx_uint64 &, const std::vector<cytnx_uint64> &,
-                                  const std::vector<cytnx_uint64> &,
-                                  const std::vector<cytnx_int64> &, const cytnx_uint64 &,
-                                  const cytnx_uint64 &);
+    typedef Tensor (*Tracefunc_oii)(const Tensor &, cytnx_uint64, cytnx_uint64);
 
     typedef void (*Tensordotfunc_oii)(Tensor &out, const Tensor &Lin, const Tensor &Rin,
                                       const std::vector<cytnx_uint64> &idxl,

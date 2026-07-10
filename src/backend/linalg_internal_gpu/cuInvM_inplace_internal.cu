@@ -8,13 +8,13 @@ namespace cytnx {
 
     void cuInvM_inplace_internal_d(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_int32 *ipiv;
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_double *d_work = NULL;
+      cytnx_double *d_work = nullptr;
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
@@ -58,13 +58,13 @@ namespace cytnx {
     }
     void cuInvM_inplace_internal_f(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_int32 *ipiv;
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_float *d_work = NULL;
+      cytnx_float *d_work = nullptr;
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
@@ -108,13 +108,13 @@ namespace cytnx {
     }
     void cuInvM_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_int32 *ipiv;
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_complex128 *d_work = NULL;
+      cytnx_complex128 *d_work = nullptr;
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
@@ -160,13 +160,13 @@ namespace cytnx {
 
     void cuInvM_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
       // create handles:
-      cusolverDnHandle_t cusolverH = NULL;
+      cusolverDnHandle_t cusolverH = nullptr;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_int32 *ipiv;
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_complex64 *d_work = NULL;
+      cytnx_complex64 *d_work = nullptr;
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));

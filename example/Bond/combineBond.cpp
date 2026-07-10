@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   /* 1.
       create a non-symmetry, regular bond (BD_REG)
@@ -11,9 +10,9 @@ int main() {
   Bond bd_a = Bond(10, BD_KET);
   Bond bd_b = Bond(15, BD_KET);
   Bond bd_c = bd_a.combineBond(bd_b);
-  cout << bd_c << endl;
-  cout << bd_a << endl;
-  cout << bd_b << endl;
+  std::cout << bd_c << std::endl;
+  std::cout << bd_a << std::endl;
+  std::cout << bd_b << std::endl;
 
   /* 2.
       combine symmetry bonds,
@@ -26,8 +25,8 @@ int main() {
                    {Symmetry::U1(), Symmetry::Zn(2)});
 
   Bond bd_f = bd_d.combineBond(bd_e);
-  cout << bd_f << endl;
-  cout << bd_d << endl;
-  cout << bd_e << endl;
+  std::cout << bd_f << std::endl;
+  std::cout << bd_d << std::endl;
+  std::cout << bd_e << std::endl;
   return 0;
 }

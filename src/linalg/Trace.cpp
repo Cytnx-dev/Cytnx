@@ -9,7 +9,6 @@
 #else
   #include "backend/linalg_internal_interface.hpp"
 
-using namespace std;
 namespace cytnx {
   namespace linalg {
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a,
@@ -45,73 +44,17 @@ namespace cytnx {
                       "shape(%d) = %ld and shape(%d) = %ld do not match.%s",
                       axisA, Tn.shape()[axisA], axisB, Tn.shape()[axisB], "\n");
 
-      cytnx_uint64 ax1, ax2;
-      if (axisA < axisB) {
-        ax1 = axisA;
-        ax2 = axisB;
-      } else {
-        ax1 = axisB;
-        ax2 = axisA;
+      if (Tn.device() == Device.cpu) {
+        return linalg_internal::lii.Trace_ii[Tn.dtype()](Tn, axisA, axisB);
       }
-
-      // 1) get redundant rank:
-      vector<cytnx_int64> shape(Tn.shape().begin(), Tn.shape().end());
-      vector<cytnx_uint64> accu;
-      shape.erase(shape.begin() + ax2);
-      shape.erase(shape.begin() + ax1);
-      // 2) get output element size.
-      cytnx_uint64 Nelem = 1;
-      for (int i = 0; i < shape.size(); i++) Nelem *= shape[i];
-
-      Tensor out = Tensor({Nelem}, Tn.dtype(), Tn.device());
-      out.storage().set_zeros();
-
-      if (shape.size() == 0) {
-        // 2d
-        if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](true, out, Tn, Tn.shape()[ax1], 0, {}, {}, {},
-                                                    0,
-                                                    0);  // only the first 4 args will be used.
-        else {
   #ifdef UNI_GPU
-          checkCudaErrors(cudaSetDevice(Tn.device()));
-          linalg_internal::lii.cuTrace_ii[Tn.dtype()](true, out, Tn, Tn.shape()[ax1], 0, {}, {}, {},
-                                                      0,
-                                                      0);  // only the first 4 args will be used.
+      checkCudaErrors(cudaSetDevice(Tn.device()));
+      return linalg_internal::lii.cuTrace_ii[Tn.dtype()](Tn, axisA, axisB);
   #else
-          cytnx_error_msg(true, "[Trace] fatal error,%s",
-                          "try to call the gpu section without CUDA support.\n");
-          return out;
+      cytnx_error_msg(true, "[Trace] fatal error,%s",
+                      "try to call the gpu section without CUDA support.\n");
+      return Tensor();
   #endif
-        }
-      } else {
-        // nd
-        vector<cytnx_uint64> remain_rank_id;
-        vector<cytnx_uint64> accu(shape.size());
-        accu.back() = 1;
-        for (int i = shape.size() - 1; i > 0; i--) accu[i - 1] = accu[i] * shape[i];
-
-        for (cytnx_uint64 i = 0; i < Tn.shape().size(); i++) {
-          if (i != ax1 && i != ax2) remain_rank_id.push_back(i);
-        }
-        if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Tn.shape()[ax1], Nelem, accu,
-                                                    remain_rank_id, shape, ax1, ax2);
-        else {
-  #ifdef UNI_GPU
-          checkCudaErrors(cudaSetDevice(Tn.device()));
-          linalg_internal::lii.cuTrace_ii[Tn.dtype()](false, out, Tn, Tn.shape()[ax1], Nelem, accu,
-                                                      remain_rank_id, shape, ax1, ax2);
-  #else
-          cytnx_error_msg(true, "[Trace] fatal error,%s",
-                          "try to call the gpu section without CUDA support.\n");
-          return out;
-  #endif
-        }
-        out.reshape_(shape);
-      }
-
-      return out;
     }
 
   }  // namespace linalg

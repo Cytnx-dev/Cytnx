@@ -53,7 +53,7 @@ namespace cytnx {
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
         // prepare U, S, vT
         Tensor U, S, vT, terr;
-        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+        S.Init({n_singlu}, Type.to_real(in.dtype()),
                in.device());  // if type is complex, S should be real
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
@@ -68,7 +68,7 @@ namespace cytnx {
           // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
           // output tensor descriptors from the passed buffer shapes, so the buffers must be
           // re-initialized to the full size before restarting.
-          S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(), in.device());
+          S.Init({n_singlu}, Type.to_real(in.dtype()), in.device());
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
           terr.Init({1}, in.dtype(), in.device());
@@ -242,6 +242,9 @@ namespace cytnx {
         smidx++;
         Smin = Sall.storage()(smidx);
       }
+      // the per-block scans below keep every value >= Smin, so an exact degeneracy at the
+      // cut is kept entirely; only values strictly below Smin are dropped.
+      smidx = CountDroppedSingularValues(Sall, smidx, Smin);
 
       // traversal each block and truncate!
       UniTensor &S = outCyT[0];
@@ -496,6 +499,14 @@ namespace cytnx {
             if (keep_dim == 0) break;  // this is needed, keep_dim can be 0
             smidx++;
             Smin = Sall.storage()(smidx);
+          }
+          if (keep_dim == 0) {
+            // the err threshold dropped every value in Sall; nothing above the cut is kept
+            smidx = Sshape;
+          } else {
+            // the per-block scans below keep every value >= Smin, so an exact degeneracy at
+            // the cut is kept entirely; only values strictly below Smin are dropped.
+            smidx = CountDroppedSingularValues(Sall, smidx, Smin);
           }
           // handle return_err!
           if (return_err) {

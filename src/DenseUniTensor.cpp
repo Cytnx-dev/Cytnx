@@ -209,56 +209,50 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
     const std::vector<std::string> &new_labels) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    DenseUniTensor *tmp = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
     tmp->_block = this->_block;
     tmp->relabel_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<std::string> &new_labels) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    DenseUniTensor *tmp = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
     tmp->_block = this->_block;
     tmp->relabels_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx,
                                                                const std::string &new_label) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const std::string &inx,
                                                                const std::string &new_label) {
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
     out_raw->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
@@ -266,8 +260,7 @@ namespace cytnx {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
     // out->permute_(mapper,rowrank,by_label);
     // return out;
-    DenseUniTensor *out_raw = this->clone_meta();
-    // boost::intrusive_ptr<UniTensor_base> out(this->clone_meta());
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
 
     std::vector<cytnx_uint64> mapper_u64;
 
@@ -297,8 +290,7 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
@@ -306,8 +298,7 @@ namespace cytnx {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
     // out->permute_(mapper,rowrank,by_label);
     // return out;
-    DenseUniTensor *out_raw = this->clone_meta();
-    // boost::intrusive_ptr<UniTensor_base> out(this->clone_meta());
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
 
     std::vector<cytnx_uint64> mapper_u64;
     // cytnx_error_msg(true,"[Developing!]%s","\n");
@@ -347,8 +338,7 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
+    return out_raw;
   }
   void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
                                 const cytnx_int64 &rowrank) {
@@ -368,7 +358,11 @@ namespace cytnx {
     } else {
       this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
       this->_labels = vec_map(this->labels(), mapper_u64);
-      this->_block.permute_(mapper_u64);
+      // Build new block metadata via the non-mutating Tensor::permute() and rebind _block to it,
+      // rather than mutating the (possibly shared) block Tensor in place with permute_(). This
+      // keeps Storage shared (no data copy) while giving this UniTensor's block its own fresh
+      // metadata, so other UniTensors sharing the same block are not corrupted (#724).
+      this->_block = this->_block.permute(mapper_u64);
       if (rowrank >= 0) {
         cytnx_error_msg((rowrank > this->_bonds.size()) || (rowrank < 0),
                         "[ERROR] rowrank cannot exceed the rank of UniTensor, and should be >=0.%s",
@@ -404,7 +398,8 @@ namespace cytnx {
     } else {
       this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
       this->_labels = vec_map(this->labels(), mapper_u64);
-      this->_block.permute_(mapper_u64);
+      // See the analogous comment in the cytnx_int64-mapper overload above (#724).
+      this->_block = this->_block.permute(mapper_u64);
       if (rowrank >= 0) {
         cytnx_error_msg((rowrank > this->_bonds.size()) || (rowrank < 0),
                         "[ERROR] rowrank cannot exceed the rank of UniTensor, and should be >=0.%s",
@@ -559,8 +554,6 @@ namespace cytnx {
       std::cout << std::string(buffer);
       sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
       std::cout << std::string(buffer);
-      // sprintf(buffer, "%s", "\n");
-      // std::cout << std::string(buffer);
 
     } else {
       sprintf(buffer, "%s     %s     %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
@@ -642,7 +635,7 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::get(const std::vector<Accessor> &accessors) {
     if (accessors.empty()) return this->clone_meta();
-    DenseUniTensor *out_raw = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     std::vector<cytnx_int64> removed;  // bonds to be removed
     if (this->_is_diag) {
       if (accessors.size() == 1) {
@@ -715,6 +708,8 @@ namespace cytnx {
                     "[ERROR] rowrank cannot larger than the rank of reshaped UniTensor.%s", "\n");
     if (this->is_diag()) {
       // if(new_shape.size()!=2){
+      // cytnx::linalg::Diag() always allocates a brand new Tensor (never shared with any other
+      // UniTensor), so mutating it in place here is safe.
       this->_block = cytnx::linalg::Diag(this->_block);
       this->_block.reshape_(new_shape);
       this->Init_by_Tensor(this->_block, false, rowrank, this->_name);
@@ -724,7 +719,9 @@ namespace cytnx {
       //    is_diag=True should have rowrank=1.%s","\n");
       //}
     } else {
-      this->_block.reshape_(new_shape);
+      // Build new block metadata via the non-mutating Tensor::reshape() and rebind _block to it,
+      // rather than mutating the (possibly shared) block Tensor in place with reshape_() (#724).
+      this->_block = this->_block.reshape(new_shape);
       this->Init_by_Tensor(this->_block, false, rowrank, this->_name);
     }
   }
@@ -843,7 +840,9 @@ namespace cytnx {
     }
     new_shape.resize(this->rank());  // rank follows this->_labels.size()!
 
-    this->_block.reshape_(new_shape);
+    // Rebind to a freshly-reshaped block instead of mutating the (possibly shared) block Tensor
+    // in place, so other UniTensors sharing this block are not corrupted (#724).
+    this->_block = this->_block.reshape(new_shape);
 
     // change rowrank:
     this->_rowrank = newrowrank;
@@ -998,11 +997,10 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     }
-    DenseUniTensor *tmp = this->clone_meta();
+    boost::intrusive_ptr<DenseUniTensor> tmp = this->clone_meta();
     tmp->_block = cytnx::linalg::Diag(this->_block);
     tmp->_is_diag = false;
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
   void DenseUniTensor::to_dense_() {
     if (this->_is_diag) {
@@ -1073,9 +1071,13 @@ namespace cytnx {
       std::vector<cytnx_int64> old_shape_L(tmpL.shape().begin(), tmpL.shape().end());
       std::vector<cytnx_int64> shape_L =
         vec_concatenate(old_shape_L, std::vector<cytnx_int64>(tmpR.shape().size(), 1));
-      tmpL.reshape_(shape_L);
+      // tmpL may still alias the same Tensor_impl as this->_block (see the "share view!!" copy
+      // above when already contiguous), which may itself be shared with other UniTensors.
+      // Rebind via the non-mutating reshape() instead of reshape_() so we don't transiently (or,
+      // if Kron() throws, permanently) corrupt that shared block's metadata (#724). tmpL is a
+      // local scratch variable not used after Kron(), so no "reshape back" is needed anymore.
+      tmpL = tmpL.reshape(shape_L);
       tmp->_block = linalg::Kron(tmpL, tmpR, false, true);
-      tmpL.reshape_(old_shape_L);
       tmp->_is_diag = false;
 
       //}

@@ -1,5 +1,4 @@
 #include "SetArange_cpu.hpp"
-using namespace std;
 
 namespace cytnx {
   namespace utils_internal {

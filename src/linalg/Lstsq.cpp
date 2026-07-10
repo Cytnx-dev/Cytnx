@@ -32,10 +32,12 @@ namespace cytnx {
       else
         bin = b.contiguous();
 
-      int type_ = A.dtype() < b.dtype() ? A.dtype() : b.dtype();
+      // promote across the real/complex boundary (e.g. ComplexFloat x Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type.
+      int type_ = Type.type_promote(A.dtype(), b.dtype());
 
       if (type_ > Type.Float) {
-        type_ = Type.Double;  // if the strongest type is < int, then convert to double
+        type_ = Type.Double;  // integer/bool promotions floor to double (BLAS-only kernels)
       }
 
       Ain = Ain.astype(type_);
@@ -49,8 +51,7 @@ namespace cytnx {
 
       std::vector<Tensor> out;
 
-      Tensor s =
-        zeros(m < n ? m : n, Ain.dtype() <= 2 ? Ain.dtype() + 2 : Ain.dtype(), Ain.device());
+      Tensor s = zeros(m < n ? m : n, Type.to_real(Ain.dtype()), Ain.device());
       Tensor r = zeros(1, Type.Int64, Ain.device());
 
       if (A.device() == Device.cpu) {

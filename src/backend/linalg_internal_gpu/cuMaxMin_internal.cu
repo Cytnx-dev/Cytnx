@@ -5,7 +5,6 @@
 
 namespace cytnx {
   namespace linalg_internal {
-    using namespace std;
 
 #define _TNinB_REDUCE_ 512
 

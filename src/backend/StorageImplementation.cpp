@@ -817,7 +817,7 @@ namespace cytnx {
 
   template <typename DType>
   StorageImplementation<DType>::~StorageImplementation() {
-    if (this->data() != NULL) {
+    if (this->data() != nullptr) {
       if (this->device() == Device.cpu) {
         free(this->data());
       } else {

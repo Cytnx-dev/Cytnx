@@ -1,11 +1,11 @@
 #include "DenseUniTensor_test.h"
 
 #include <cstdio>
+#include <fstream>
 #include <filesystem>
 
 #include "test_tools.h"
 
-using namespace std;
 using namespace cytnx;
 using namespace std::complex_literals;
 
@@ -50,7 +50,6 @@ TEST_F(DenseUniTensorTest, Init_tagged) {
     dut.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cpu, true, false));
 
   // is_diag = true, but no outward bond
-  // cout << phy << endl;
   EXPECT_ANY_THROW(dut.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
 }
 
@@ -565,7 +564,7 @@ TEST_F(DenseUniTensorTest, slice_diag_two_accessors_convert_dense) {
 
   EXPECT_FALSE(out.is_diag());
   EXPECT_EQ(out.name(), ut.name());
-  std::vector<string> newlabels = {"col"};
+  std::vector<std::string> newlabels = {"col"};
   EXPECT_EQ(out.labels(), newlabels);
   EXPECT_EQ(out.rowrank(), 0);
   EXPECT_EQ(out.shape(), std::vector<cytnx_uint64>({4}));
@@ -588,7 +587,7 @@ TEST_F(DenseUniTensorTest, get_diag_two_accessors_convert_dense) {
 
   EXPECT_FALSE(out.is_diag());
   EXPECT_EQ(out.name(), ut_complex_diag.name());
-  std::vector<string> newlabels = {"row", "col"};
+  std::vector<std::string> newlabels = {"row", "col"};
   EXPECT_EQ(out.labels(), newlabels);
   EXPECT_EQ(out.rowrank(), 1);
   EXPECT_EQ(out.shape(), std::vector<cytnx_uint64>({4, 2}));
@@ -615,7 +614,7 @@ TEST_F(DenseUniTensorTest, slice_nondiag_keeps_metadata) {
 
   EXPECT_FALSE(out.is_diag());
   EXPECT_EQ(out.name(), ut.name());
-  std::vector<string> newlabels = {"a", "b"};
+  std::vector<std::string> newlabels = {"a", "b"};
   EXPECT_EQ(out.labels(), newlabels);
   EXPECT_EQ(out.shape(), std::vector<cytnx_uint64>({3, 2}));
   EXPECT_EQ(out.at({0, 0}), cytnx_complex128(8.0, 0.0));
@@ -1350,28 +1349,28 @@ describe:test at
 ====================*/
 TEST_F(DenseUniTensorTest, at) {
   auto ut_src = UniTensor({Bond(3), Bond(4), Bond(2)});
-  const UniTensor cut = UniTensor({Bond(3), Bond(4), Bond(2)});
   auto loc = std::vector<cytnx_uint64>({0, 1, 0});
   for (auto dtype : dtype_list) {
     auto ut = ut_src.clone();
+    const UniTensor cut = ut_src.clone().astype(dtype);
     switch (dtype) {
       case Type.ComplexDouble: {
         ut = ut.astype(dtype);
-        auto elem = complex<double>(1, -1);
+        auto elem = std::complex<double>(1, -1);
         ut.at(loc) = elem;
         EXPECT_EQ(ut.at(loc), elem);
-        EXPECT_EQ(ut.at<complex<double>>(loc), elem);
-        EXPECT_EQ(cut.at(loc), complex<double>());
-        EXPECT_EQ(cut.at<complex<double>>(loc), complex<double>());
+        EXPECT_EQ(ut.at<std::complex<double>>(loc), elem);
+        EXPECT_EQ(cut.at(loc), std::complex<double>());
+        EXPECT_EQ(cut.at<std::complex<double>>(loc), std::complex<double>());
       } break;
       case Type.ComplexFloat: {
         ut = ut.astype(dtype);
-        auto elem = complex<float>(1, -1);
+        auto elem = std::complex<float>(1, -1);
         ut.at(loc) = elem;
         EXPECT_EQ(ut.at(loc), elem);
-        EXPECT_EQ(ut.at<complex<float>>(loc), elem);
-        EXPECT_EQ(cut.at(loc), complex<float>());
-        EXPECT_EQ(cut.at<complex<float>>(loc), complex<float>());
+        EXPECT_EQ(ut.at<std::complex<float>>(loc), elem);
+        EXPECT_EQ(cut.at(loc), std::complex<float>());
+        EXPECT_EQ(cut.at<std::complex<float>>(loc), std::complex<float>());
       } break;
       case Type.Double: {
         ut = ut.astype(dtype);
@@ -2009,6 +2008,122 @@ describe:test reshape with uninitialized UniTensor.
 TEST_F(DenseUniTensorTest, reshape_utuninit) {
   EXPECT_ANY_THROW(ut_uninit.reshape({}));
   EXPECT_ANY_THROW(ut_uninit.reshape_({}));
+}
+
+/*=====test info=====
+describe:regression test for issue #724. Two UniTensors sharing the same
+         underlying block Tensor (via relabel(), which is documented to
+         return a new UniTensor whose data is still shared with the
+         original) must not corrupt each other's metadata when one of them
+         is permuted in place with permute_(). Reproduces the exact
+         scenario from the issue report.
+====================*/
+TEST_F(DenseUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = UniTensor::arange(6).reshape({2, 3}).set_name("uT").set_rowrank(1);
+  UniTensor uT2 = uT.relabel({"a", "b"}).set_name("uT2");
+
+  // Precondition: the two UniTensors really do share the same block storage.
+  ASSERT_TRUE(uT.same_data(uT2));
+
+  const auto orig_shape = uT.shape();
+  const auto orig_labels = uT.labels();
+  std::vector<std::vector<double>> orig_vals(2, std::vector<double>(3));
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) orig_vals[i][j] = double(uT.at({i, j}).real());
+
+  uT2.permute_(std::vector<cytnx_int64>{1, 0});
+
+  // uT2 changed as expected.
+  EXPECT_EQ(uT2.shape(), std::vector<cytnx_uint64>({3, 2}));
+
+  // uT must be completely unaffected: shape, labels, and data all preserved. Reading uT after
+  // uT2's in-place permute must not even throw (metadata desynced from the physically permuted
+  // shared block Tensor can manifest as an out-of-bound access), so guard each read.
+  EXPECT_EQ(uT.shape(), orig_shape);
+  EXPECT_EQ(uT.labels(), orig_labels);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) {
+      try {
+        EXPECT_DOUBLE_EQ(double(uT.at({i, j}).real()), orig_vals[i][j]);
+      } catch (const std::exception &e) {
+        ADD_FAILURE() << "uT.at({" << i << "," << j
+                      << "}) threw after uT2.permute_() (shared-block metadata corrupted): "
+                      << e.what();
+      }
+    }
+
+  // uT2 must still read back the correct (permuted) data.
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++)
+      EXPECT_DOUBLE_EQ(double(uT2.at({j, i}).real()), orig_vals[i][j]);
+}
+
+/*=====test info=====
+describe:regression test for issue #724, reshape_() variant. Same sharing
+         setup as PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder, but
+         calling reshape_() on the shared-block holder instead of
+         permute_(), per manuschneider's comment that reshape_() is
+         similarly affected.
+====================*/
+TEST_F(DenseUniTensorTest, ReshapeInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = UniTensor::arange(6).reshape({2, 3}).set_name("uT");
+  UniTensor uT2 = uT.relabel({"a", "b"}).set_name("uT2");
+
+  ASSERT_TRUE(uT.same_data(uT2));
+
+  const auto orig_shape = uT.shape();
+  std::vector<double> orig_vals(6);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) orig_vals[i * 3 + j] = double(uT.at({i, j}).real());
+
+  uT2.reshape_({3, 2});
+
+  EXPECT_EQ(uT2.shape(), std::vector<cytnx_uint64>({3, 2}));
+
+  // uT must be unaffected by uT2's in-place reshape. Guard reads since a metadata/storage
+  // mismatch from the bug can manifest as an out-of-bound access rather than just wrong data.
+  EXPECT_EQ(uT.shape(), orig_shape);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) {
+      try {
+        EXPECT_DOUBLE_EQ(double(uT.at({i, j}).real()), orig_vals[i * 3 + j]);
+      } catch (const std::exception &e) {
+        ADD_FAILURE() << "uT.at({" << i << "," << j
+                      << "}) threw after uT2.reshape_() (shared-block metadata corrupted): "
+                      << e.what();
+      }
+    }
+
+  // uT2 must read back the correctly reshaped data.
+  for (cytnx_uint64 i = 0; i < 3; i++)
+    for (cytnx_uint64 j = 0; j < 2; j++)
+      EXPECT_DOUBLE_EQ(double(uT2.at({i, j}).real()), orig_vals[i * 2 + j]);
+}
+
+/*=====test info=====
+describe:control test - when blocks are NOT shared (independent clone),
+         in-place permute_() on one UniTensor must obviously not affect the
+         other; this guards against a fix that accidentally over-isolates
+         or breaks normal (non-shared) permute_ behavior.
+====================*/
+TEST_F(DenseUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) {
+  UniTensor uT = UniTensor::arange(6).reshape({2, 3}).set_name("uT");
+  UniTensor uT_indep = uT.clone().set_name("uT_indep");
+
+  ASSERT_FALSE(uT.same_data(uT_indep));
+
+  const auto orig_shape = uT.shape();
+  std::vector<double> orig_vals(6);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++) orig_vals[i * 3 + j] = double(uT.at({i, j}).real());
+
+  uT_indep.permute_(std::vector<cytnx_int64>{1, 0});
+
+  EXPECT_EQ(uT_indep.shape(), std::vector<cytnx_uint64>({3, 2}));
+  EXPECT_EQ(uT.shape(), orig_shape);
+  for (cytnx_uint64 i = 0; i < 2; i++)
+    for (cytnx_uint64 j = 0; j < 3; j++)
+      EXPECT_DOUBLE_EQ(double(uT.at({i, j}).real()), orig_vals[i * 3 + j]);
 }
 
 /*=====test info=====
@@ -4087,9 +4202,9 @@ TEST_F(DenseUniTensorTest, Div_uninit) {
 }
 
 TEST_F(DenseUniTensorTest, Norm) {
-  EXPECT_DOUBLE_EQ(double(utar345.Norm().at({0}).real()), sqrt(59.0 * 60.0 * 119.0 / 6.0));
+  EXPECT_DOUBLE_EQ(double(utar345.Norm().at({0}).real()), std::sqrt(59.0 * 60.0 * 119.0 / 6.0));
   EXPECT_DOUBLE_EQ(double(utarcomplex345.Norm().at({0}).real()),
-                   sqrt(2.0 * 59.0 * 60.0 * 119.0 / 6.0));
+                   std::sqrt(2.0 * 59.0 * 60.0 * 119.0 / 6.0));
 }
 
 /*=====test info=====
@@ -4128,7 +4243,7 @@ TEST_F(DenseUniTensorTest, Norm_diag) {
   auto norm = ut_diag.Norm();
   double ans = 0;
   for (cytnx_uint64 i = 0; i < ut_diag.shape()[0]; i++) {
-    ans += std::norm(ut_diag.at<complex<double>>({i}));
+    ans += std::norm(ut_diag.at<std::complex<double>>({i}));
   }
   ans = std::sqrt(ans);
   EXPECT_DOUBLE_EQ(norm.at<double>({0}), ans);
@@ -4231,10 +4346,10 @@ TEST_F(DenseUniTensorTest, Conj_diag) {
   random::uniform_(ut_diag, -5.0, 5.0, seed);
   auto ut_conj = ut_diag.Conj();
   for (cytnx_uint64 i = 0; i < ut_diag.shape()[0]; ++i) {
-    EXPECT_DOUBLE_EQ(real(ut_diag.at<complex<double>>({i})),
-                     real(ut_conj.at<complex<double>>({i})));
-    EXPECT_DOUBLE_EQ(imag(ut_diag.at<complex<double>>({i})),
-                     -imag(ut_conj.at<complex<double>>({i})));
+    EXPECT_DOUBLE_EQ(std::real(ut_diag.at<std::complex<double>>({i})),
+                     std::real(ut_conj.at<std::complex<double>>({i})));
+    EXPECT_DOUBLE_EQ(std::imag(ut_diag.at<std::complex<double>>({i})),
+                     -std::imag(ut_conj.at<std::complex<double>>({i})));
   }
 }
 
@@ -4338,8 +4453,8 @@ TEST_F(DenseUniTensorTest, Transpose_tagged) {
   EXPECT_EQ(bonds_t[1].type(), BD_IN);
   EXPECT_EQ(bonds_t[2].type(), BD_OUT);
   // test labels
-  std::vector<string> labels = Spcd.labels();
-  std::vector<string> labels_t = Spcd_t.labels();
+  std::vector<std::string> labels = Spcd.labels();
+  std::vector<std::string> labels_t = Spcd_t.labels();
   EXPECT_EQ(labels_t[0], labels[2]);
   EXPECT_EQ(labels_t[1], labels[1]);
   EXPECT_EQ(labels_t[2], labels[0]);
@@ -4705,14 +4820,14 @@ TEST_F(DenseUniTensorTest, Pow) {
           std::vector<cytnx_uint64> loc = {i, j, k};
           switch (dtype) {
             case Type.ComplexDouble: {
-              auto ans = std::pow(clone.at<complex<double>>(loc), p);
-              EXPECT_DOUBLE_EQ(static_cast<double>(ut_pow.at(loc).real()), real(ans));
-              EXPECT_DOUBLE_EQ(static_cast<double>(ut_pow.at(loc).imag()), imag(ans));
+              auto ans = std::pow(clone.at<std::complex<double>>(loc), p);
+              EXPECT_DOUBLE_EQ(static_cast<double>(ut_pow.at(loc).real()), std::real(ans));
+              EXPECT_DOUBLE_EQ(static_cast<double>(ut_pow.at(loc).imag()), std::imag(ans));
             } break;
             case Type.ComplexFloat: {
-              auto ans = std::pow(clone.at<complex<float>>(loc), p);
-              EXPECT_FLOAT_EQ(static_cast<float>(ut_pow.at(loc).real()), real(ans));
-              EXPECT_FLOAT_EQ(static_cast<float>(ut_pow.at(loc).imag()), imag(ans));
+              auto ans = std::pow(clone.at<std::complex<float>>(loc), p);
+              EXPECT_FLOAT_EQ(static_cast<float>(ut_pow.at(loc).real()), std::real(ans));
+              EXPECT_FLOAT_EQ(static_cast<float>(ut_pow.at(loc).imag()), std::imag(ans));
             } break;
             case Type.Double: {
               auto ans = std::pow(clone.at<double>(loc), p);
@@ -4800,7 +4915,8 @@ TEST_F(DenseUniTensorTest, Pow_diag) {
   auto ut_pow = ut_diag.Pow(p);
   EXPECT_TRUE(ut_pow.is_diag());
   for (cytnx_uint64 i = 0; i < ut_diag.shape()[0]; i++) {
-    EXPECT_EQ(ut_pow.at<complex<double>>({i}), std::pow(ut_diag.at<complex<double>>({i}), p));
+    EXPECT_EQ(ut_pow.at<std::complex<double>>({i}),
+              std::pow(ut_diag.at<std::complex<double>>({i}), p));
   }
 }
 
@@ -4859,6 +4975,17 @@ TEST_F(DenseUniTensorTest, Save) {
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
   ut.Save(temp_file_path);
+  {
+    std::ifstream header(temp_file_path, std::ios::binary);
+    ASSERT_TRUE(header.is_open());
+    unsigned int magic = 0;
+    unsigned int version = 0;
+    header.read(reinterpret_cast<char *>(&magic), sizeof(magic));
+    header.read(reinterpret_cast<char *>(&version), sizeof(version));
+    EXPECT_EQ(magic, 556);
+    EXPECT_EQ(version, 1);
+  }
+
   UniTensor ut_loaded = UniTensor::Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(ut_loaded, ut));
   // for char*
@@ -5304,8 +5431,8 @@ TEST_F(DenseUniTensorTest, identity) {
   EXPECT_EQ(ut.shape().size(), 2);
   EXPECT_EQ(ut.shape()[0], 2);
   EXPECT_EQ(ut.shape()[1], 2);
-  vec_print(cout, ut.labels());
-  vec_print(cout, ut.shape());
+  vec_print(std::cout, ut.labels());
+  vec_print(std::cout, ut.shape());
   EXPECT_EQ(ut.is_contiguous(), true);
   EXPECT_EQ(ut.labels()[0], "row");
   EXPECT_EQ(ut.labels()[1], "col");
@@ -5371,8 +5498,8 @@ TEST_F(DenseUniTensorTest, eye) {
   EXPECT_EQ(ut.shape().size(), 2);
   EXPECT_EQ(ut.shape()[0], 2);
   EXPECT_EQ(ut.shape()[1], 2);
-  vec_print(cout, ut.labels());
-  vec_print(cout, ut.shape());
+  vec_print(std::cout, ut.labels());
+  vec_print(std::cout, ut.shape());
   EXPECT_EQ(ut.is_contiguous(), true);
   EXPECT_EQ(ut.labels()[0], "row");
   EXPECT_EQ(ut.labels()[1], "col");

@@ -19,14 +19,14 @@ namespace cytnx {
       // should be the same.%s","\n");
 
       if (Tin.device() == Device.cpu) {
-        if (Tin.dtype() < 3)
+        if (Type.is_complex(Tin.dtype()))
           cytnx::linalg_internal::lii.Conj_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,
                                                                    Tin._impl->storage().size());
 
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
-        if (Tin.dtype() < 3)
+        if (Type.is_complex(Tin.dtype()))
           cytnx::linalg_internal::lii.cuConj_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,
                                                                      Tin._impl->storage().size());
 

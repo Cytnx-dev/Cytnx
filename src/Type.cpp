@@ -22,8 +22,6 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-using namespace std;
-
 // global debug flag!
 namespace cytnx {
   bool User_debug = false;

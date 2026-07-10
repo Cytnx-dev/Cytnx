@@ -20,7 +20,7 @@ namespace {
     auto tmp_mul = linalg::Mul(tmp, r);
     Tensor ans = Tensor({1}, tmp_mul.dtype());
     ans.at({0}) = 0;
-    for (int i = 0; i < len; ++i) {
+    for (cytnx_uint64 i = 0; i < len; ++i) {
       ans += tmp_mul.at({i});
     }
     double tol = (tmp_mul.dtype() == Type.Float || Type.ComplexFloat) ? 1.0e-4 : 1.0e-12;
@@ -30,7 +30,7 @@ namespace {
     return TestTools::AreNearlyEqTensor(ans, out, tol);
   }
 
-  Tensor InitTensor(const int len, const unsigned int dtype, const int seed = 0) {
+  Tensor InitTensor(const cytnx_uint64 len, const unsigned int dtype, const int seed = 0) {
     Tensor t;
     if (Type.is_float(dtype)) {
       double low = -1.0;

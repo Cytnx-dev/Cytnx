@@ -12,7 +12,6 @@
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -44,7 +43,6 @@ void linalg_binding(py::module &m);
 void algo_binding(py::module &m);
 void physics_related_binding(py::module &m);
 void random_binding(py::module &m);
-void tnalgo_binding(py::module &m);
 void scalar_binding(py::module &m);
 
 void ncon_binding(py::module &m);
@@ -54,6 +52,17 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__version__") = CYTNX_VERSION;
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
+
+  // Map cytnx::error (thrown by cytnx_error_msg) to cytnx.CytnxError, a subclass
+  // of RuntimeError so existing `except RuntimeError` call sites keep working.
+  // Only cytnx_error_msg-originated errors are reclassified; every other C++
+  // exception keeps its default pybind11 translation (a plain RuntimeError,
+  // TypeError, etc.). Exception translators are module-global and consulted when
+  // an exception propagates out of C++ -- not at binding time -- so this works for
+  // every submodule below regardless of registration order relative to them.
+  py::register_exception<cytnx::error>(m, "CytnxError", PyExc_RuntimeError).attr("__doc__") =
+    "Raised when a cytnx C++ operation fails (via cytnx_error_msg). Subclass of "
+    "RuntimeError; only cytnx_error_msg-originated errors are reclassified as CytnxError.";
 
   symmetry_binding(m);
   bond_binding(m);
@@ -116,10 +125,15 @@ PYBIND11_MODULE(cytnx, m) {
   //   py::arg("cont_order") = std::vector<cytnx_int64>(),
   //   py::arg("out_labels") = std::vector<std::string>());
 
-  generator_binding(m);
   scalar_binding(m);
   storage_binding(m);
   tensor_binding(m);
+  // generator_binding defines the module-level Tensor factories (zeros, ones,
+  // arange, ...). It must run after tensor_binding so the Tensor class is
+  // already registered when these functions are bound; otherwise pybind11
+  // cannot resolve their `-> Tensor` return type and emits a raw C++ type that
+  // pybind11-stubgen renders as an untyped `...` in the committed stubs.
+  generator_binding(m);
   network_binding(m);
   linop_binding(m);
   unitensor_binding(m);
@@ -127,7 +141,6 @@ PYBIND11_MODULE(cytnx, m) {
   algo_binding(m);
   physics_related_binding(m);
   random_binding(m);
-  tnalgo_binding(m);
   ncon_binding(m);
 #endif
 }

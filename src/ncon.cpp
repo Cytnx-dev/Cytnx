@@ -1,7 +1,5 @@
 #include "ncon.hpp"
 
-using namespace std;
-
 #ifdef BACKEND_TORCH
 #else
 
@@ -11,20 +9,20 @@ namespace cytnx {
                  const bool check_network /*= false*/, const bool optimize /*= false*/,
                  std::vector<cytnx_int64> cont_order /*= std::vector<cytnx_int64>()*/,
                  const std::vector<std::string> &out_labels /*= std::vector<std::string>()*/) {
-    vector<string> alias;
-    vector<vector<string>> labels;
-    map<cytnx_int64, vector<cytnx_uint64>> posbond2tensor;
+    std::vector<std::string> alias;
+    std::vector<std::vector<std::string>> labels;
+    std::map<cytnx_int64, std::vector<cytnx_uint64>> posbond2tensor;
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
-      string name = "t" + to_string(i);
+      std::string name = "t" + std::to_string(i);
       alias.push_back(name);
 
-      vector<string> label;
+      std::vector<std::string> label;
       for (cytnx_uint64 j = 0; j < connect_list_in[i].size(); j++) {
-        label.push_back(to_string(connect_list_in[i][j]));
+        label.push_back(std::to_string(connect_list_in[i][j]));
       }
       labels.push_back(label);
     }
-    vector<cytnx_int64> positive;
+    std::vector<cytnx_int64> positive;
     for (cytnx_uint64 i = 0; i < connect_list_in.size(); i++) {
       for (cytnx_uint64 j = 0; j < connect_list_in[i].size(); j++) {
         if (connect_list_in[i][j] > 0) {
@@ -44,29 +42,29 @@ namespace cytnx {
         }
       }
     }
-    stack<string> st;
-    vector<bool> vis(tensor_list_in.size(), 0);
+    std::stack<std::string> st;
+    std::vector<bool> vis(tensor_list_in.size(), 0);
     for (cytnx_uint64 i = 0; i < cont_order.size(); i++) {
       cytnx_int64 ta = posbond2tensor[cont_order[i]][0], tb = posbond2tensor[cont_order[i]][1];
       if (!vis[ta] or !vis[tb]) st.push("*");
-      if (!vis[ta]) st.push("t" + to_string(ta));
-      if (!vis[tb]) st.push("t" + to_string(tb));
+      if (!vis[ta]) st.push("t" + std::to_string(ta));
+      if (!vis[tb]) st.push("t" + std::to_string(tb));
       vis[ta] = vis[tb] = 1;
     }
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
       if (!vis[i]) {
         st.push("*");
-        st.push("t" + to_string(i));
+        st.push("t" + std::to_string(i));
         vis[i] = 1;
       }
     }
-    string str_order = "";
+    std::string str_order = "";
     if (!st.empty()) str_order.append(st.top()), st.pop();
-    string op[2];
+    std::string op[2];
     cytnx_int64 oprcnt = 0;
     cytnx_int64 needed_parentheses = tensor_list_in.size() - 1;
     while (!st.empty()) {
-      string ele = st.top();
+      std::string ele = st.top();
       st.pop();
       if (ele != "*") {
         op[oprcnt] = ele;
@@ -81,7 +79,7 @@ namespace cytnx {
         oprcnt = 0;
       }
     }
-    str_order = string(needed_parentheses, '(').append(str_order);
+    str_order = std::string(needed_parentheses, '(').append(str_order);
     UniTensor out;
     Network N;
     N.construct(alias, labels, out_labels, 1, str_order, optimize);

@@ -8,7 +8,6 @@
 namespace cytnx {
 
   namespace linalg {
-    using namespace std;
     Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj) {
       // checking:
       cytnx_error_msg(Tl.device() != Tr.device(),
@@ -20,23 +19,15 @@ namespace cytnx {
       cytnx_error_msg(Tr.shape()[0] != Tl.shape()[0],
                       "[ERROR] Two tensors for Vectordot should have the same length.%s", "\n");
 
-      Tensor L, R;
+      // Promote to a common dtype via the centralized rule so the output dtype agrees
+      // with the elementwise ops (fixes mixed complex/real pairs, e.g. ComplexFloat
+      // x Double -> ComplexDouble instead of the old lower-enum-index ComplexFloat).
+      const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
+      // astype is a no-op (ref, no copy) when the dtype already matches - don't modify L/R!
+      Tensor L = Tl.astype(out_dtype);
+      Tensor R = Tr.astype(out_dtype);
       Tensor out;
-      if (Tl.dtype() != Tr.dtype()) {
-        if (Tl.dtype() < Tr.dtype()) {
-          L = Tl;  // this is ref!!! no copy, so please don't modify this!!
-          R = Tr.astype(Tl.dtype());
-          out.Init({1}, Tl.dtype(), Tl.device());
-        } else {
-          L = Tl.astype(Tr.dtype());
-          R = Tr;  // this is ref!!! no copy, so please don't modify this!!
-          out.Init({1}, Tr.dtype(), Tr.device());
-        }
-      } else {
-        L = Tl;
-        R = Tr;
-        out.Init({1}, Tr.dtype(), Tr.device());
-      }
+      out.Init({1}, out_dtype, Tl.device());
 
       if (out.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Vd_ii[out.dtype()](

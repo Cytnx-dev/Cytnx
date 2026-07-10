@@ -27,6 +27,20 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934
+   * (decision record 2026-07-06). This note is the canonical rationale for every
+   * UniTensor-vs-UniTensor elementwise arithmetic entry point: the free operators in
+   * this header ('+', '-', '*', '/') and the UniTensor::Add/Sub/Mul/Div member
+   * functions (in-place and out-of-place). The python UniTensor dunders raise
+   * TypeError for the UniTensor-vs-UniTensor case (see pybind/unitensor_py.cpp,
+   * raise_unitensor_elementwise_removed) while the C++ layer remains. operator+ and
+   * operator- are load-bearing: src/linalg/Lanczos_Gnd_Ut.cpp and
+   * src/linalg/Lanczos_Exp.cpp use them as genuine Krylov-subspace vector-space
+   * arithmetic (axpy) inside the solvers backing linalg::Lanczos(method="Gnd") and
+   * linalg::Lanczos_Exp(). operator* (elementwise/Hadamard product) and operator/
+   * (elementwise division) are basis-dependent, have no tensor-network meaning, and
+   * no in-tree C++ caller as of the audit; they are kept un-deprecated only because
+   * the removal task's scope was the python surface.
    */
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -63,6 +77,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -99,6 +116,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -135,6 +155,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -2491,8 +2514,8 @@ namespace cytnx {
     @param[in] k: Return k lowest eigen vector if is_V=True
     @param[in] throw_excp: Whether to throw exception when error occurs in Tridiag internal function
     @return
-        [vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor is
-    eigenvector of shape [k,L].
+        [std::vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor
+    is eigenvector of shape [k,L].
 
     @pre
         two Tensors must be Rank-1, with length of Diag = L and Sub_diag length = L-1.

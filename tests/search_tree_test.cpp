@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 using namespace cytnx;
-using namespace std;
 
 class SearchTreeTest : public ::testing::Test {
  protected:
@@ -13,7 +12,7 @@ class SearchTreeTest : public ::testing::Test {
 
 TEST_F(SearchTreeTest, BasicSearchOrder) {
   // Create a simple network of 3 tensors
-  vector<PseudoUniTensor> tensors;
+  std::vector<PseudoUniTensor> tensors;
 
   // Create tensor 1 with shape [2,3] and labels ["i","j"]
   PseudoUniTensor t1(0);
@@ -55,7 +54,7 @@ TEST_F(SearchTreeTest, BasicSearchOrder) {
 
 TEST_F(SearchTreeTest, BasicSearchOrder2) {
   // Create a network of 4 tensors to test more complex contraction ordering
-  vector<PseudoUniTensor> tensors;
+  std::vector<PseudoUniTensor> tensors;
 
   // Create tensor 1 with shape [2,10] and labels ["i","j"]
   // This will connect with tensor 2 through index j
@@ -106,7 +105,7 @@ TEST_F(SearchTreeTest, BasicSearchOrder2) {
 
   // Verify the contraction sequence string matches expected optimal order
   // Format is (tensor_id,(tensor_id,tensor_id)) showing order of pairwise contractions
-  cout << result->accu_str << endl;
+  std::cout << result->accu_str << std::endl;
   EXPECT_EQ(result->accu_str, "((2,3),(0,1))");
 }
 

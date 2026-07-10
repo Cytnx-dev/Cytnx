@@ -124,10 +124,10 @@ Tensor B = A.astype(Type.Uint64); // cast double to uint64_t
 ```c++
 Tensor A({3,4,5,2},Type.Double);
 A.permute_(0,3,1,2); // this will not change the memory, only the shape info is changed.
-cout << A.is_contiguous() << endl; // false
+std::cout << A.is_contiguous() << std::endl; // false
 
 A.contiguous_(); // call Contiguous() to actually move the memory.
-cout << A.is_contiguous() << endl; // true
+std::cout << A.is_contiguous() << std::endl; // true
 ```
 
 * Access a single element using `.at`
@@ -232,6 +232,8 @@ See the examples in the folder `example`
 ## How to contribute & get in contact
 If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
 Also, if you have any questions or suggestions, feel free to reach out to us.
+
+Maintainers cutting a tagged release should follow [RELEASING.md](RELEASING.md).
 
 You can contact us by:
 * Discord:

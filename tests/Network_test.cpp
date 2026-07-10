@@ -200,3 +200,27 @@ TEST_F(NetworkTest, Network_fermionic_matches_contract) {
   EXPECT_EQ(res.uten_type(), UTenType.BlockFermionic);
   EXPECT_TRUE((res.apply() - ref.apply()).Norm().item() < 1e-8);
 }
+
+TEST_F(NetworkTest, Network_static_Contract_default_order) {
+  UniTensor A = utdnA.relabel({"a", "b", "c"});
+  UniTensor B = utdnB.relabel({"c", "d"});
+  UniTensor C = utdnC.relabel({"d", "e"});
+  UniTensor res = Network::Contract({A, B, C}, "a,b;e").Launch();
+  EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
+}
+
+TEST_F(NetworkTest, Network_static_Contract_specified_order) {
+  UniTensor A = utdnA.relabel({"a", "b", "c"});
+  UniTensor B = utdnB.relabel({"c", "d"});
+  UniTensor C = utdnC.relabel({"d", "e"});
+  UniTensor res = Network::Contract({A, B, C}, "a,b;e", {"A", "B", "C"}, "(A,(B,C))").Launch();
+  EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
+
+  // The static builder should agree with the equivalent FromString + PutUniTensors network.
+  auto net = Network();
+  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "ORDER:(A,(B,C))", "TOUT: a,b;e"});
+  net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
+  UniTensor res_net = net.Launch();
+
+  EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), res_net.get_block(), 1e-12));
+}

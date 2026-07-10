@@ -10,7 +10,6 @@
 #include <vector>
 
 using namespace cytnx;
-using namespace std;
 
 class linalg_Test : public ::testing::Test {
  public:
@@ -417,7 +416,7 @@ inline std::vector<std::pair<double, UniTensor>> ferm_dense_lowest(const UniTens
     e.at(comps[i]) = 1.0;
     basis[i] = e;
   }
-  Tensor M = zeros({(cytnx_int64)n, (cytnx_int64)n});
+  Tensor M = zeros({n, n});
   for (cytnx_uint64 c = 0; c < n; c++) {
     UniTensor w = ferm_ada_apply(A, basis[c]);
     for (cytnx_uint64 j = 0; j < n; j++) M.at({j, c}) = ferm_fdot_real(basis[j], w);

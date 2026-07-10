@@ -121,9 +121,9 @@ TEST_F(BlockUniTensorTest, is_blockform) {
 }
 TEST_F(BlockUniTensorTest, clone) {
   UniTensor cloned = UT_pB_ans.clone();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(cloned.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (cloned.at({i, j, k}).exists()) EXPECT_EQ(cloned.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -278,9 +278,9 @@ TEST_F(BlockUniTensorTest, permute1) {
   // rank-3 tensor
   std::vector<cytnx_int64> a = {1, 2, 0};
   auto permuted = UT_permute_1.permute(a, -1);
-  for (cytnx_int64 i = 0; i < 10; i++)
-    for (cytnx_int64 j = 0; j < 6; j++)
-      for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 i = 0; i < 10; i++)
+    for (cytnx_uint64 j = 0; j < 6; j++)
+      for (cytnx_uint64 k = 0; k < 10; k++) {
         EXPECT_EQ(permuted.at({i, j, k}).exists(), UT_permute_ans1.at({i, j, k}).exists());
         if (permuted.at({i, j, k}).exists())
           EXPECT_EQ(double(permuted.at({i, j, k}).real()),
@@ -292,8 +292,8 @@ TEST_F(BlockUniTensorTest, permute2) {
   std::vector<cytnx_int64> a = {1, 0};
   auto permuted = UT_permute_2.permute(a, -1);
 
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(permuted.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (permuted.at({j, k}).exists())
         EXPECT_EQ(double(permuted.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
@@ -305,9 +305,9 @@ TEST_F(BlockUniTensorTest, permute_1) {
   std::vector<cytnx_int64> a = {1, 2, 0};
   auto permuted = UT_permute_1.clone();
   permuted.permute_(a, -1);
-  for (cytnx_int64 i = 0; i < 10; i++)
-    for (cytnx_int64 j = 0; j < 6; j++)
-      for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 i = 0; i < 10; i++)
+    for (cytnx_uint64 j = 0; j < 6; j++)
+      for (cytnx_uint64 k = 0; k < 10; k++) {
         EXPECT_EQ(permuted.at({i, j, k}).exists(), UT_permute_ans1.at({i, j, k}).exists());
         if (permuted.at({i, j, k}).exists())
           EXPECT_EQ(double(permuted.at({i, j, k}).real()),
@@ -319,11 +319,109 @@ TEST_F(BlockUniTensorTest, permute_2) {
   std::vector<cytnx_int64> a = {1, 0};
   auto permuted = UT_permute_2.clone();
   permuted.permute_(a, -1);
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(permuted.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (permuted.at({j, k}).exists())
         EXPECT_EQ(double(permuted.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
+    }
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the BlockUniTensor path. Two
+         UniTensors sharing the same underlying block Tensors (via
+         relabel(), documented to share data with the original) must not
+         corrupt each other's metadata when one of them is permuted in
+         place with permute_().
+====================*/
+TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = UT_permute_2.clone().set_name("uT");
+  UniTensor uT2 = uT.relabel({"a", "b"}).set_name("uT2");
+
+  // Precondition: the two UniTensors really do share the same block storage.
+  ASSERT_TRUE(uT.same_data(uT2));
+  ASSERT_EQ(uT.Nblocks(), uT2.Nblocks());
+
+  const auto orig_shape = uT.shape();
+  const auto orig_labels = uT.labels();
+  ASSERT_EQ(orig_shape, std::vector<cytnx_uint64>({10, 10}));
+  std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
+  std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      orig_exists[j][k] = uT.at({j, k}).exists();
+      if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
+    }
+
+  std::vector<cytnx_int64> a = {1, 0};
+  uT2.permute_(a, -1);
+
+  // uT2 changed as expected (matches the pre-existing permute_2 reference answer).
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      EXPECT_EQ(uT2.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
+      if (uT2.at({j, k}).exists())
+        EXPECT_EQ(double(uT2.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
+    }
+
+  // uT must be completely unaffected: shape, labels, and data all preserved. Reading uT after
+  // uT2's in-place permute must not even throw (a stale block/qnum mapping vs. a physically
+  // permuted shared block Tensor can manifest as an out-of-bound access), so guard each read.
+  ASSERT_EQ(uT.shape(), orig_shape);
+  EXPECT_EQ(uT.labels(), orig_labels);
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      try {
+        EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
+        if (orig_exists[j][k] && uT.at({j, k}).exists())
+          EXPECT_EQ(double(uT.at({j, k}).real()), orig_vals[j][k]);
+      } catch (const std::exception& e) {
+        ADD_FAILURE() << "uT.at({" << j << "," << k
+                      << "}) threw after uT2.permute_() (shared-block metadata corrupted): "
+                      << e.what();
+      }
+    }
+}
+
+/*=====test info=====
+describe:control test - when blocks are NOT shared (independent clone), an
+         in-place permute_() on one BlockUniTensor must not affect the
+         other. Guards against a fix that over-isolates or breaks normal
+         (non-shared) permute_ behavior.
+====================*/
+TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) {
+  UniTensor uT = UT_permute_2.clone().set_name("uT");
+  UniTensor uT_indep = uT.clone().set_name("uT_indep");
+
+  ASSERT_FALSE(uT.same_data(uT_indep));
+
+  const auto orig_shape = uT.shape();
+  std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
+  std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      orig_exists[j][k] = uT.at({j, k}).exists();
+      if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
+    }
+
+  std::vector<cytnx_int64> a = {1, 0};
+  uT_indep.permute_(a, -1);
+
+  // uT_indep must match the known permute_2 reference answer (proves the permute really ran).
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      EXPECT_EQ(uT_indep.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
+      if (uT_indep.at({j, k}).exists())
+        EXPECT_EQ(double(uT_indep.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
+    }
+
+  // uT (the clone source, independent storage) must be completely unaffected.
+  EXPECT_EQ(uT.shape(), orig_shape);
+  for (cytnx_int64 j = 0; j < 10; j++)
+    for (cytnx_int64 k = 0; k < 10; k++) {
+      EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
+      if (orig_exists[j][k] && uT.at({j, k}).exists())
+        EXPECT_EQ(double(uT.at({j, k}).real()), orig_vals[j][k]);
     }
 }
 
@@ -441,9 +539,9 @@ TEST_F(BlockUniTensorTest, put_block_byidx) {
   UT_pB.put_block(t1a, 1);
   UT_pB.put_block(t1b, 2);
   UT_pB.put_block(t2, 3);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -466,9 +564,9 @@ TEST_F(BlockUniTensorTest, put_block__byidx) {
   UT_pB.put_block_(t1a, 1);
   UT_pB.put_block_(t1b, 2);
   UT_pB.put_block_(t2, 3);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -491,9 +589,9 @@ TEST_F(BlockUniTensorTest, put_block_byqnum) {
   UT_pB.put_block(t1a, {0, 1, 1});
   UT_pB.put_block(t1b, {1, 0, 1});
   UT_pB.put_block(t2, {1, 1, 2});
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -516,9 +614,9 @@ TEST_F(BlockUniTensorTest, put_block__byqnum) {
   UT_pB.put_block_(t1a, {0, 1, 1});
   UT_pB.put_block_(t1b, {1, 0, 1});
   UT_pB.put_block_(t2, {1, 1, 2});
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 1; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 1; k < 30; k++) {
         EXPECT_EQ(UT_pB.at({i, j, k}).exists(), UT_pB_ans.at({i, j, k}).exists());
         if (UT_pB.at({i, j, k}).exists()) EXPECT_EQ(UT_pB.at({i, j, k}), UT_pB_ans.at({i, j, k}));
       }
@@ -549,8 +647,6 @@ TEST_F(BlockUniTensorTest, contract1) {
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans1.get_blocks();
   for (int i = 0; i < ansbks.size(); i++) {
-    // std::cout << outbks[i] << std::endl;
-    // std::cout << ansbks[i] << std::endl;
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], ansbks[i], 1e-5), true);
   }
 }
@@ -564,8 +660,6 @@ TEST_F(BlockUniTensorTest, contract2) {
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans2.get_blocks();
   for (int i = 0; i < ansbks.size(); i++) {
-    // std::cout << outbks[i] << std::endl;
-    // std::cout << ansbks[i] << std::endl;
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], ansbks[i], 1e-5), true);
   }
 }
@@ -579,8 +673,6 @@ TEST_F(BlockUniTensorTest, contract3) {
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans3.get_blocks();
   for (int i = 0; i < ansbks.size(); i++) {
-    // std::cout << outbks[i] << std::endl;
-    // std::cout << ansbks[i] << std::endl;
     EXPECT_EQ(AreNearlyEqTensor(outbks[i], ansbks[i], 1e-5), true);
   }
 }
@@ -640,10 +732,10 @@ TEST_F(BlockUniTensorTest, Add) {
   //     }
   BUT4 = BUT4.Load(data_dir + "OriginalBUT.cytnx");
   auto out2 = BUT4.Add(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out2.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out2.at({i, j, k, l}).real()),
                              double(BUTpT2.at({i, j, k, l}).real()));
@@ -651,10 +743,10 @@ TEST_F(BlockUniTensorTest, Add) {
                              double(BUTpT2.at({i, j, k, l}).imag()));
           }
   BUT4.Add_(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTpT2.at({i, j, k, l}).real()));
@@ -665,10 +757,10 @@ TEST_F(BlockUniTensorTest, Add) {
 
 TEST_F(BlockUniTensorTest, Mul) {
   auto out = BUT4.Mul(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out.at({i, j, k, l}).real()),
                              double(BUTm9.at({i, j, k, l}).real()));
@@ -676,10 +768,10 @@ TEST_F(BlockUniTensorTest, Mul) {
                              double(BUTm9.at({i, j, k, l}).imag()));
           }
   BUT4.Mul_(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTm9.at({i, j, k, l}).real()));
@@ -711,10 +803,10 @@ TEST_F(BlockUniTensorTest, Sub) {
   //     }
   BUT4 = BUT4.Load(data_dir + "OriginalBUT.cytnx");
   auto out2 = BUT4.Sub(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out2.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out2.at({i, j, k, l}).real()),
                              double(BUTsT2.at({i, j, k, l}).real()));
@@ -722,10 +814,10 @@ TEST_F(BlockUniTensorTest, Sub) {
                              double(BUTsT2.at({i, j, k, l}).imag()));
           }
   BUT4.Sub_(BUT4_2);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTsT2.at({i, j, k, l}).real()));
@@ -736,10 +828,10 @@ TEST_F(BlockUniTensorTest, Sub) {
 
 TEST_F(BlockUniTensorTest, Div) {
   auto out = BUT4.Div(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (out.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(out.at({i, j, k, l}).real()),
                              double(BUTd9.at({i, j, k, l}).real()));
@@ -747,10 +839,10 @@ TEST_F(BlockUniTensorTest, Div) {
                              double(BUTd9.at({i, j, k, l}).imag()));
           }
   BUT4.Div_(9);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
                              double(BUTd9.at({i, j, k, l}).real()));
@@ -804,13 +896,12 @@ TEST_F(BlockUniTensorTest, LinAlgElementwise) {
 }
 
 TEST_F(BlockUniTensorTest, Norm) {
-  // std::cout<<BUT4<<std::endl;
   // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
   EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()), 10.36019459497064);
 
   cytnx_double tmp = double(UT_diag.Norm().at({0}).real());
   cytnx_double ans = 0;
-  for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
     for (int j = 0; j < deg; j++) ans += (i + 1) * (i + 1);
   }
@@ -831,10 +922,10 @@ TEST_F(BlockUniTensorTest, Inv) {
   tmp.Inv_(clip);  // test inline version
   EXPECT_TRUE(AreEqUniTensor(BUT4.Inv(clip), tmp));
   tmp = BUT4.clone();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++) {
           auto proxy = tmp.at({i, j, k, l});
           if (proxy.exists()) {
             Scalar val = proxy;
@@ -858,10 +949,10 @@ TEST_F(BlockUniTensorTest, Pow) {
   EXPECT_TRUE(AreEqUniTensor(BUT4.Pow(2.3), tmp));
   for (double p = 0.; p < 1.6; p += 0.5) {
     tmp = BUT4.clone();
-    for (cytnx_int64 i = 0; i < 5; i++)
-      for (cytnx_int64 j = 0; j < 11; j++)
-        for (cytnx_int64 k = 0; k < 3; k++)
-          for (cytnx_int64 l = 0; l < 5; l++) {
+    for (cytnx_uint64 i = 0; i < 5; i++)
+      for (cytnx_uint64 j = 0; j < 11; j++)
+        for (cytnx_uint64 k = 0; k < 3; k++)
+          for (cytnx_uint64 l = 0; l < 5; l++) {
             auto proxy = tmp.at({i, j, k, l});
             if (proxy.exists()) {
               Scalar val = proxy;
@@ -875,10 +966,10 @@ TEST_F(BlockUniTensorTest, Pow) {
 
 TEST_F(BlockUniTensorTest, Conj) {
   auto tmp = BUT4.Conj();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(tmp.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(tmp.at({i, j, k, l}).real()),
@@ -888,10 +979,10 @@ TEST_F(BlockUniTensorTest, Conj) {
           }
   tmp = BUT4.clone();
   tmp.Conj_();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(BUT4.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
@@ -901,9 +992,9 @@ TEST_F(BlockUniTensorTest, Conj) {
           }
 
   tmp = UT_diag_cplx.Conj();
-  for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
-    for (cytnx_int64 j = 0; j < deg; j++) {
+    for (cytnx_uint64 j = 0; j < deg; j++) {
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).real()),
                        double(UT_diag_cplx.get_block_(i).at({j}).real()));
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).imag()),
@@ -943,21 +1034,17 @@ TEST_F(BlockUniTensorTest, Transpose) {
 }
 
 TEST_F(BlockUniTensorTest, Trace) {
-  // std::cout<<BUT4<<std::endl;
   auto tmp = BUT4.Trace(0, 3);
-  // std::cout<<BUtrT4<<std::endl;
-  // std::cout<<tmp<<std::endl;
-  for (cytnx_int64 j = 0; j < 11; j++)
-    for (cytnx_int64 k = 0; k < 3; k++)
+  for (cytnx_uint64 j = 0; j < 11; j++)
+    for (cytnx_uint64 k = 0; k < 3; k++)
       if (BUtrT4.at({j, k}).exists()) {
         // EXPECT_TRUE(Scalar(tmp.at({j-1,k-1})-BUtrT4.at({j-1,k-1})).abs()<1e-5);
         EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).real()), double(BUtrT4.at({j, k}).real()));
         EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).imag()), double(BUtrT4.at({j, k}).imag()));
       }
-  // std::cout<<tmp<<std::endl;
   tmp = UT_diag.Trace(0, 1);
   cytnx_double ans = 0;
-  for (cytnx_int64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
     for (int j = 0; j < deg; j++) ans += i + 1;
   }
@@ -1007,18 +1094,11 @@ TEST_F(BlockUniTensorTest, Dagger) {
             std::vector<std::vector<cytnx_int64>>({{0, 2}, {1, 5}, {1, 6}, {0, 1}}));
 
   tmp = BUT4.Dagger().set_name("BUT4.Dagger");
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
-            // EXPECT_TRUE(Scalar(tmp.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
-            // std::cout << "       BUT4(i=" << i << ", j=" << j << ", k=" << k << ", l=" << l
-            //           << ") = " << double(BUT4.at({i, j, k, l}).real()) << " + i * "
-            //           << double(BUT4.at({i, j, k, l}).imag()) << std::endl;
-            // std::cout << "BUT4.Dagger(k=" << k << ", l=" << l << ", i=" << i << ", j=" << j
-            //           << ") = " << double(tmp.at({k, l, i, j}).real()) << " + i * "
-            //           << double(tmp.at({k, l, i, j}).imag()) << std::endl;
             EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).real()),
                              double(BUT4.at({i, j, k, l}).real()));
             EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).imag()),
@@ -1029,10 +1109,10 @@ TEST_F(BlockUniTensorTest, Dagger) {
         }
   tmp = BUT4.clone();
   tmp.Dagger_();
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(BUT4.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
@@ -1049,9 +1129,9 @@ TEST_F(BlockUniTensorTest, Dagger) {
   EXPECT_EQ(tmp.bonds()[0].type(), BD_IN);
   EXPECT_EQ(tmp.bonds()[1].type(), BD_OUT);
   EXPECT_EQ(tmp.bonds()[2].type(), BD_OUT);
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 9; j++)
-      for (cytnx_int64 k = 0; k < 30; k++) {
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 9; j++)
+      for (cytnx_uint64 k = 0; k < 30; k++) {
         if (UT_pB.at({i, j, k}).exists()) {
           EXPECT_DOUBLE_EQ(double(tmp.at({k, j, i}).real()), double(UT_pB.at({i, j, k}).real()));
         } else {
@@ -1060,9 +1140,9 @@ TEST_F(BlockUniTensorTest, Dagger) {
       }
 
   tmp = UT_diag_cplx.Dagger();
-  for (cytnx_int64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
+  for (cytnx_uint64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
-    for (cytnx_int64 j = 0; j < deg; j++) {
+    for (cytnx_uint64 j = 0; j < deg; j++) {
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).real()),
                        double(UT_diag_cplx.get_block_(i).at({j}).real()));
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).imag()),
@@ -1072,10 +1152,10 @@ TEST_F(BlockUniTensorTest, Dagger) {
 }
 
 TEST_F(BlockUniTensorTest, elem_exist) {
-  for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 11; j++)
-      for (cytnx_int64 k = 0; k < 3; k++)
-        for (cytnx_int64 l = 0; l < 5; l++)
+  for (cytnx_uint64 i = 0; i < 5; i++)
+    for (cytnx_uint64 j = 0; j < 11; j++)
+      for (cytnx_uint64 k = 0; k < 3; k++)
+        for (cytnx_uint64 l = 0; l < 5; l++)
           if (BUT4.elem_exists({i, j, k, l})) {
             cytnx_int64 _a;
             std::vector<cytnx_uint64> _b;
@@ -1086,10 +1166,10 @@ TEST_F(BlockUniTensorTest, elem_exist) {
                       0);
           }
 
-  cytnx_int64 offset = 0;
-  for (cytnx_int64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
+  cytnx_uint64 offset = 0;
+  for (cytnx_uint64 i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
-    for (cytnx_int64 j = 0; j < deg; j++) {
+    for (cytnx_uint64 j = 0; j < deg; j++) {
       EXPECT_TRUE(UT_diag_cplx.elem_exists({offset + j, offset + j}));
       EXPECT_DOUBLE_EQ(double(UT_diag_cplx.at({offset + j, offset + j}).real()), double(i + 1));
       EXPECT_DOUBLE_EQ(double(UT_diag_cplx.at({offset + j, offset + j}).imag()), double(i + 1));
@@ -1319,4 +1399,81 @@ TEST_F(BlockUniTensorTest, ContractIntegerDtype) {
   EXPECT_NO_THROW(out = Contract(L, R));
   EXPECT_EQ(int64_t(out.at({0, 0}).real()), 3);
   EXPECT_EQ(int64_t(out.at({2, 2}).real()), 8);
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the contract() path. contract()
+         used to permute_/reshape_ the operands' blocks in place and restore
+         them afterward. When the two operands alias each other's blocks
+         (relabel() is documented to share block storage), the in-place
+         mutation of the left operand corrupts the right operand mid-
+         contraction: the contraction throws (rank-mismatched permute_ on an
+         already-reshaped shared block) or produces wrong values. contract()
+         must treat both operands' blocks as read-only.
+====================*/
+TEST_F(BlockUniTensorTest, ContractAliasedSharedBlocksOperandsIntact) {
+  Bond ba = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2});
+  Bond bb = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  Bond bc = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 2});
+  UniTensor A = UniTensor({ba, bb, bc}, {"a", "b", "c"});
+  random::uniform_(A, -1.0, 1.0, 42);
+  // B shares A's blocks; contracting over "a" and "c" makes the two operands
+  // of contract() alias each other's blocks (including block-with-itself pairs).
+  UniTensor B = A.relabel({"c", "d", "a"});
+  ASSERT_TRUE(A.same_data(B));
+
+  UniTensor Asnap = A.clone();  // pristine copy of the shared data
+  // reference result from fully independent operands
+  UniTensor expected = Contract(Asnap.clone(), Asnap.clone().relabel({"c", "d", "a"}));
+
+  UniTensor got;
+  try {
+    got = Contract(A, B);
+  } catch (const std::exception& e) {
+    FAIL() << "Contract() on operands sharing blocks threw: " << e.what();
+  }
+
+  ASSERT_EQ(got.Nblocks(), expected.Nblocks());
+  for (cytnx_uint64 i = 0; i < got.Nblocks(); i++) {
+    EXPECT_TRUE(AreNearlyEqTensor(got.get_blocks_()[i], expected.get_blocks_()[i], 1e-12));
+  }
+
+  // both operands must be intact: values, shapes, and contiguity
+  ASSERT_EQ(A.Nblocks(), Asnap.Nblocks());
+  for (cytnx_uint64 i = 0; i < A.Nblocks(); i++) {
+    EXPECT_EQ(A.get_blocks_()[i].shape(), Asnap.get_blocks_()[i].shape());
+    EXPECT_TRUE(AreNearlyEqTensor(A.get_blocks_()[i], Asnap.get_blocks_()[i], 0.0));
+  }
+  EXPECT_TRUE(A.is_contiguous());
+  EXPECT_TRUE(B.is_contiguous());
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the contract() path. A third
+         UniTensor sharing blocks with an operand (via relabel()) must not
+         observe any change from the contraction. The pre-fix mutate-and-
+         restore left the shared blocks with replaced, permuted storage
+         (non-contiguous), even though the values were restored.
+====================*/
+TEST_F(BlockUniTensorTest, ContractLeavesSharedBlockObserverUntouched) {
+  Bond ba = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2});
+  Bond bb = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  Bond bc = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 2});
+  UniTensor A = UniTensor({ba, bb, bc}, {"a", "b", "c"});
+  random::uniform_(A, -1.0, 1.0, 7);
+  UniTensor observer = A.relabel({"x", "y", "z"});  // shares A's blocks; not an operand
+  ASSERT_TRUE(A.same_data(observer));
+  UniTensor snap = A.clone();
+
+  UniTensor R = A.clone().relabel({"c", "d", "a"});  // independent right operand
+  UniTensor got = Contract(A, R);
+  (void)got;
+
+  ASSERT_EQ(observer.Nblocks(), snap.Nblocks());
+  for (cytnx_uint64 i = 0; i < observer.Nblocks(); i++) {
+    EXPECT_EQ(observer.get_blocks_()[i].shape(), snap.get_blocks_()[i].shape());
+    EXPECT_TRUE(AreNearlyEqTensor(observer.get_blocks_()[i], snap.get_blocks_()[i], 0.0));
+  }
+  EXPECT_TRUE(observer.is_contiguous());
+  EXPECT_TRUE(R.is_contiguous());
 }

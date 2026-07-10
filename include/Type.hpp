@@ -13,6 +13,10 @@
 
 #include "cytnx_error.hpp"  // also brings in cuComplex.h
 
+#ifdef UNI_GPU
+  #include <cuda/std/complex>
+#endif
+
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
 
@@ -51,6 +55,11 @@ namespace cytnx {
   typedef std::complex<double> cytnx_complex128;
   typedef bool cytnx_bool;
 
+#ifdef UNI_GPU
+  using cytnx_cuda_complex64 = cuda::std::complex<float>;
+  using cytnx_cuda_complex128 = cuda::std::complex<double>;
+#endif
+
   namespace internal {
     template <class>
     struct is_complex_impl : std::false_type {};
@@ -58,19 +67,29 @@ namespace cytnx {
     template <class T>
     struct is_complex_impl<std::complex<T>> : std::true_type {};
 
+#ifdef UNI_GPU
+    template <class T>
+    struct is_complex_impl<cuda::std::complex<T>> : std::true_type {};
+#endif
+
     template <typename>
     struct is_complex_floating_point_impl : std::false_type {};
 
     template <typename T>
     struct is_complex_floating_point_impl<std::complex<T>> : std::is_floating_point<T> {};
 
-    template <std::size_t I, typename T, typename Tuple>
+#ifdef UNI_GPU
+    template <typename T>
+    struct is_complex_floating_point_impl<cuda::std::complex<T>> : std::is_floating_point<T> {};
+#endif
+
+    template <std::size_t Idx, typename T, typename Tuple>
     constexpr std::size_t index_in_tuple_helper() {
-      static_assert(I < std::tuple_size_v<Tuple>, "Type not found!");
-      if constexpr (std::is_same_v<T, std::tuple_element_t<I, Tuple>>) {
-        return I;
+      static_assert(Idx < std::tuple_size_v<Tuple>, "Type not found!");
+      if constexpr (std::is_same_v<T, std::tuple_element_t<Idx, Tuple>>) {
+        return Idx;
       } else {
-        return index_in_tuple_helper<I + 1, T, Tuple>();
+        return index_in_tuple_helper<Idx + 1, T, Tuple>();
       }
     }
 
@@ -101,19 +120,29 @@ namespace cytnx {
   template <typename T>
   constexpr bool is_complex_v = is_complex<T>::value;
 
-  // is_complex_floating_point_v<T> is a template constant that is true if T is of type complex<U>
-  // where U is a floating point type, and false otherwise.
+  // is_complex_floating_point_v<T> is a template constant that is true if T is of type
+  // std::complex<U> where U is a floating point type, and false otherwise.
   template <typename T>
   constexpr bool is_complex_floating_point_v = is_complex_floating_point<T>::value;
 
-  // variant_index<T, Variant> returns the index of type T in the Variant, or compile error if not
-  // found
+  template <typename>
+  inline constexpr bool always_false_v = false;
+
+  template <typename T, typename Variant>
+  inline constexpr bool variant_contains_v = false;
+
+  template <typename T, typename... Types>
+  inline constexpr bool variant_contains_v<T, std::variant<Types...>> = (std::is_same_v<T, Types> ||
+                                                                         ...);
+
+  // variant_index<T, Variant> returns the index of type T in the Variant.
   template <typename T, typename Variant>
   struct variant_index;
 
-  template <typename T, typename... Types>
-  struct variant_index<T, std::variant<Types...>> {
-    static constexpr std::size_t value = std::variant_size_v<std::variant<Types...>>;
+  template <typename T>
+  struct variant_index<T, std::variant<>> {
+    static_assert(always_false_v<T>, "variant_index<T, Variant>: T is not in Variant");
+    static constexpr std::size_t value = 0;
   };
 
   template <typename T, typename... Types>
@@ -147,11 +176,13 @@ namespace cytnx {
     std::variant<void, cytnx_complex128, cytnx_complex64, cytnx_double, cytnx_float, cytnx_int64,
                  cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
 
-  // For GPU storage, the types are slightly different because CUDA uses their own complex type
+  // For GPU kernels, use cuda::std::complex for complex arithmetic. Low-level CUDA library calls
+  // that require cuComplex ABI pointers should cast explicitly at those call boundaries.
 #ifdef UNI_GPU
   using Type_list_gpu =
-    std::variant<void, cuDoubleComplex, cuComplex, cytnx_double, cytnx_float, cytnx_int64,
-                 cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
+    std::variant<void, cytnx_cuda_complex128, cytnx_cuda_complex64, cytnx_double, cytnx_float,
+                 cytnx_int64, cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16,
+                 cytnx_bool>;
 #endif
 
   // The number of supported types
@@ -328,18 +359,44 @@ namespace cytnx {
       return cy_typeid_v<T>;
     }
 
+    // Real counterpart of a dtype: ComplexDouble -> Double, ComplexFloat -> Float,
+    // anything else unchanged. Replaces the "dtype <= 2 ? dtype + 2 : dtype" idiom
+    // (without depending on the enum layout).
+    static constexpr unsigned int to_real(unsigned int type_id) {
+      check_type(type_id);
+      if (type_id == ComplexDouble) return Double;
+      if (type_id == ComplexFloat) return Float;
+      return type_id;
+    }
+
+    // Complex counterpart of a dtype: Double -> ComplexDouble, Float -> ComplexFloat,
+    // complex types unchanged, Void unchanged, integral/bool -> ComplexDouble.
+    static constexpr unsigned int to_complex(unsigned int type_id) {
+      check_type(type_id);
+      if (is_complex(type_id)) return type_id;
+      if (type_id == Double) return ComplexDouble;
+      if (type_id == Float) return ComplexFloat;
+      if (type_id == Void) return Void;
+      return ComplexDouble;
+    }
+
     // Find a common type for typeL and typeR
     static constexpr unsigned int type_promote(unsigned int typeL, unsigned int typeR) {
+      if (typeL == Void || typeR == Void) return Void;
+      // Mixed complex/real: promote the real counterparts, then re-complexify.
+      // Fixes ComplexFloat + Double -> ComplexDouble (previously ComplexFloat,
+      // discarding precision, because the enum interleaves complexness and
+      // precision and promotion picked the lower index).
+      if (is_complex(typeL) != is_complex(typeR)) {
+        return to_complex(type_promote(to_real(typeL), to_real(typeR)));
+      }
       if (typeL < typeR) {
-        if (typeL == 0) return 0;
-
         if (!is_unsigned(typeR) && is_unsigned(typeL)) {
           return typeL - 1;
         } else {
           return typeL;
         }
       } else {
-        if (typeR == 0) return 0;
         if (!is_unsigned(typeL) && is_unsigned(typeR)) {
           return typeR - 1;
         } else {
@@ -427,7 +484,7 @@ namespace cytnx {
 
   extern int __blasINTsize__;
 
-  extern bool User_debug;
+  // User_debug is declared in cytnx_error.hpp (included above); no need to redeclare it here.
 
 }  // namespace cytnx
 

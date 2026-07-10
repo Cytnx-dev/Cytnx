@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   Tensor A({3, 4, 5});
 
@@ -10,8 +9,8 @@ int main() {
   Tensor C = A.clone();  // C is a copy of A
 
   // use is() to check if two variable shares same object
-  cout << is(B, A) << endl;
-  cout << is(C, A) << endl;
+  std::cout << is(B, A) << std::endl;
+  std::cout << is(C, A) << std::endl;
 
   return 0;
 }

@@ -1,6 +1,6 @@
 auto A = cytnx::Storage(4);
 A.set_zeros();
-cout << A << endl;
+std::cout << A << std::endl;
 
 A.append(500);
-cout << A << endl;
+std::cout << A << std::endl;

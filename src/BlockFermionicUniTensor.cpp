@@ -520,8 +520,7 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     } else {
-      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
-      tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (unsigned int b = 0; b < this->_blocks.size(); b++) {
         if (this->_blocks[b].is_contiguous()) {
@@ -530,8 +529,7 @@ namespace cytnx {
           tmp->_blocks[b] = this->_blocks[b].contiguous();
         }
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
   }
 
@@ -546,7 +544,7 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply() {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       if (tmp->_signflip[i]) {
         tmp->_blocks.push_back(-(this->_blocks[i]));
@@ -555,7 +553,7 @@ namespace cytnx {
         tmp->_blocks.push_back(this->_blocks[i].clone());
       }
     }
-    return boost::intrusive_ptr<UniTensor_base>(tmp);
+    return tmp;
   }
 
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
@@ -567,7 +565,7 @@ namespace cytnx {
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, _swapsigns_ is called to
     // update the sign struture
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
@@ -606,16 +604,15 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
 
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; calls permute(std::vector<cytnx_int64>)
     // which takes care of the fermionic sign struture; also, creates a BlockFermionicUniTensor
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -660,7 +657,10 @@ namespace cytnx {
       // inner_to_outer permute!
       for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
         this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
-        this->_blocks[b].permute_(mapper_u64);
+        // Build new block metadata via the non-mutating Tensor::permute() and rebind _blocks[b]
+        // to it, rather than mutating the (possibly shared) block Tensor in place with
+        // permute_(), so other UniTensors sharing the same block are not corrupted (#724).
+        this->_blocks[b] = this->_blocks[b].permute(mapper_u64);
       }
 
       if (rowrank >= 0) {
@@ -696,7 +696,7 @@ namespace cytnx {
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
     // this is usually not what you want!!!
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     // based on BlockUniTensor.permute but calls _swapsigns_
@@ -736,16 +736,15 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
 
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute_nosignflip(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
     // this is usually not what you want!!!
-    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -790,7 +789,10 @@ namespace cytnx {
       // inner_to_outer permute!
       for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
         this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
-        this->_blocks[b].permute_(mapper_u64);
+        // Build new block metadata via the non-mutating Tensor::permute() and rebind _blocks[b]
+        // to it, rather than mutating the (possibly shared) block Tensor in place with
+        // permute_(), so other UniTensors sharing the same block are not corrupted (#724).
+        this->_blocks[b] = this->_blocks[b].permute(mapper_u64);
       }
 
       if (rowrank >= 0) {
@@ -1148,61 +1150,55 @@ namespace cytnx {
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabel_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabels_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     const cytnx_int64 &inx, const std::string &new_label) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     const std::string &inx, const std::string &new_label) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::to_dense() {
@@ -1210,13 +1206,12 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     }
-    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks.resize(this->_blocks.size());
     for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
       tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
     tmp->_is_diag = false;
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
   void BlockFermionicUniTensor::to_dense_() {
     if (this->_is_diag) {
@@ -1489,26 +1484,23 @@ namespace cytnx {
 
         std::vector<cytnx_uint64> Lgbuffer;
         std::vector<cytnx_uint64> itoiR_idx;
-        std::vector<cytnx_uint64> oldshapeL;
-        std::vector<std::vector<cytnx_uint64>> oldshapeR(Rtn->_blocks.size(),
-                                                         std::vector<cytnx_uint64>());
+        // The operands' blocks may be shared with other UniTensors (#724), so they must not
+        // be permute_()/reshape_()'d in place. Matrix views are built with the non-mutating
+        // permute()/reshape() instead; right-block views are cached here since the same
+        // right block can pair with several left blocks.
+        std::vector<Tensor> Rmat(Rtn->_blocks.size());
+        std::vector<bool> Rmat_ready(Rtn->_blocks.size(), false);
         std::vector<std::vector<cytnx_uint64>> oldshapeC;
         std::vector<bool> reshaped(tmp->_blocks.size(), false);
         for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
           oldshapeC.push_back(tmp->_blocks[a].shape());
         }
-        std::vector<cytnx_uint64> mapperL, mapperL_reversed, inv_mapperL(this->rank());
-        std::vector<cytnx_uint64> mapperR, inv_mapperR(rhs->rank());
+        std::vector<cytnx_uint64> mapperL, mapperL_reversed;
+        std::vector<cytnx_uint64> mapperR;
         vec_concatenate_(mapperL, non_comm_idx1, comm_idx1);
         std::reverse(comm_idx1.begin(), comm_idx1.end());
         vec_concatenate_(mapperL_reversed, non_comm_idx1, comm_idx1);
         vec_concatenate_(mapperR, comm_idx2, non_comm_idx2);
-        for (int aa = 0; aa < mapperL.size(); aa++) {
-          inv_mapperL[mapperL[aa]] = aa;
-        }
-        for (int aa = 0; aa < mapperR.size(); aa++) {
-          inv_mapperR[mapperR[aa]] = aa;
-        }
 
         // fermion signs
         std::vector<bool> signfliplhs = this->_lhssigns_(mapperL_reversed, comm_idx1.size());
@@ -1540,9 +1532,6 @@ namespace cytnx {
             }
           }
         } else {
-          BlockFermionicUniTensor *tmp_Rtn = Rtn;
-          bool tmp_rtn_is_casted = false;
-
           // check if all sub-tensor are same dtype and device
           if (User_debug) {
             bool all_sub_tensor_same_dtype = true;
@@ -1586,14 +1575,14 @@ namespace cytnx {
               itoiR_idx = mp[itoiL_common[a]];
               for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++)
                 comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
-              this->_blocks[a].permute_(mapperL);
-              oldshapeL = this->_blocks[a].shape();
-              this->_blocks[a].reshape_({-1, comm_dim});
+              // matrix view of this->_blocks[a]; non-mutating (the block may be shared, #724)
+              const Tensor Lmat = this->_blocks[a].permute(mapperL).reshape({-1, comm_dim});
               for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
                 cytnx_uint64 b = itoiR_idx[binx];
-                Rtn->_blocks[b].permute_(mapperR);
-                oldshapeR[b] = Rtn->_blocks[b].shape();
-                Rtn->_blocks[b].reshape_({comm_dim, -1});
+                if (!Rmat_ready[b]) {
+                  Rmat[b] = Rtn->_blocks[b].permute(mapperR).reshape({comm_dim, -1});
+                  Rmat_ready[b] = true;
+                }
                 Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
                 for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++)
                   Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
@@ -1604,30 +1593,18 @@ namespace cytnx {
                 cytnx_int64 targ_b = mpC[Lgbuffer];
                 // fermionic sign: negate when parities differ
                 if (signfliplhs[a] != signfliprhs[b]) {
-                  tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
-                                            .reshape(tmp->_blocks[targ_b].shape());
+                  tmp->_blocks[targ_b] -=
+                    linalg::Matmul(Lmat, Rmat[b]).reshape(tmp->_blocks[targ_b].shape());
                 } else {
-                  tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
-                                            .reshape(tmp->_blocks[targ_b].shape());
+                  tmp->_blocks[targ_b] +=
+                    linalg::Matmul(Lmat, Rmat[b]).reshape(tmp->_blocks[targ_b].shape());
                 }
-                Rtn->_blocks[b].reshape_(oldshapeR[b]);
-                Rtn->_blocks[b].permute_(inv_mapperR);
               }
-              this->_blocks[a].reshape_(oldshapeL);
-              this->_blocks[a].permute_(inv_mapperL);
             }
           } else {
             // fp/complex: use Gemm_Batch
-            // If the dtype of this and Rtn are different, we need to cast to the common dtype
-            if (Rtn->dtype() != common_dtype) {
-              BlockFermionicUniTensor *tmpp = Rtn->clone_meta(true, true);
-              tmpp->_blocks.resize(Rtn->_blocks.size());
-              for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
-                tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(common_dtype);
-              }
-              tmp_Rtn = tmpp;
-              tmp_rtn_is_casted = true;
-            }
+            // (right blocks whose dtype differs from the common dtype are cast lazily when
+            // their matrix view is built below)
             // First select left block to do gemm
             for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
               cytnx_int64 comm_dim = 1;
@@ -1636,10 +1613,8 @@ namespace cytnx {
               for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
                 comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
               }
-              // permute&reshape this->_blocks[a]
-              this->_blocks[a].permute_(mapperL);
-              oldshapeL = this->_blocks[a].shape();
-              this->_blocks[a].reshape_({-1, comm_dim});
+              // matrix view of this->_blocks[a]; non-mutating (the block may be shared, #724)
+              const Tensor Lmat = this->_blocks[a].permute(mapperL).reshape({-1, comm_dim});
               // Collect block pairs for this left block then call Gemm_Batch once.
               // Fermionic sign flips are encoded in alpha (+1 or -1 per group).
               std::vector<Tensor> batch_a, batch_b, batch_c;
@@ -1650,10 +1625,11 @@ namespace cytnx {
               for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
                 // get the index of the right block
                 cytnx_uint64 b = itoiR_idx[binx];
-                // permute&reshape Rtn->_blocks[b]
-                tmp_Rtn->_blocks[b].permute_(mapperR);
-                oldshapeR[b] = tmp_Rtn->_blocks[b].shape();
-                tmp_Rtn->_blocks[b].reshape_({comm_dim, -1});
+                if (!Rmat_ready[b]) {
+                  Rmat[b] =
+                    Rtn->_blocks[b].astype(common_dtype).permute(mapperR).reshape({comm_dim, -1});
+                  Rmat_ready[b] = true;
+                }
                 // prepare to find the target block
                 Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
                 for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
@@ -1662,24 +1638,24 @@ namespace cytnx {
                 for (cytnx_uint64 cc = non_comm_idx1.size();
                      cc < non_comm_idx1.size() + non_comm_idx2.size(); cc++) {
                   Lgbuffer[cc] =
-                    tmp_Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
+                    Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
                 }
                 // target block index
                 cytnx_int64 targ_b = mpC[Lgbuffer];
                 double beta = 1.0;
                 if (!reshaped[targ_b]) {
-                  tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0],
-                                                 (cytnx_int64)tmp_Rtn->_blocks[b].shape()[1]});
+                  tmp->_blocks[targ_b].reshape_(
+                    {(cytnx_int64)Lmat.shape()[0], (cytnx_int64)Rmat[b].shape()[1]});
                   reshaped[targ_b] = true;
                   beta = 0.0;
                 }
                 // fermionic sign goes into alpha (+1 or -1 per group)
                 double alpha = (signfliplhs[a] != signfliprhs[b]) ? -1.0 : 1.0;
-                batch_a.push_back(this->_blocks[a]);
-                batch_b.push_back(tmp_Rtn->_blocks[b]);
+                batch_a.push_back(Lmat);
+                batch_b.push_back(Rmat[b]);
                 batch_c.push_back(tmp->_blocks[targ_b]);
-                batch_alpha.push_back(Scalar(alpha).astype(this->_blocks[a].dtype()));
-                batch_beta.push_back(Scalar(beta).astype(this->_blocks[a].dtype()));
+                batch_alpha.push_back(Scalar(alpha).astype(Lmat.dtype()));
+                batch_beta.push_back(Scalar(beta).astype(Lmat.dtype()));
                 batch_targ_b.push_back(targ_b);
               }
               if (!batch_a.empty()) {
@@ -1688,29 +1664,14 @@ namespace cytnx {
                 for (std::size_t i = 0; i < batch_c.size(); i++)
                   tmp->_blocks[batch_targ_b[i]] = batch_c[i];
               }
-              // restore the shape&permutation of this->_blocks[a]
-              for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
-                cytnx_uint64 b = itoiR_idx[binx];
-
-                tmp_Rtn->_blocks[b].reshape_(oldshapeR[b]);
-                tmp_Rtn->_blocks[b].permute_(inv_mapperR);
-              }
-
-              this->_blocks[a].reshape_(oldshapeL);
-              this->_blocks[a].permute_(inv_mapperL);
             }
-            // restore the shape of tmp->_blocks
+            // restore the shape of tmp->_blocks (tmp is freshly built above and not shared)
             for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
               tmp->_blocks[a].reshape_(oldshapeC[a]);
               if (!reshaped[a]) {
                 // if targ_block is not result of any block contraction, set to zeros
                 tmp->_blocks[a].storage().set_zeros();
               }
-            }
-
-            // if Rtn dtype is casted, delete the tmp_Rtn
-            if (tmp_rtn_is_casted) {
-              delete tmp_Rtn;
             }
           }  // end else (common_dtype <= 4)
         }
@@ -1723,18 +1684,16 @@ namespace cytnx {
             for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
               comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
             }
-            // permute&reshape this->_blocks[a]
-            this->_blocks[a].permute_(mapperL);
-            oldshapeL = this->_blocks[a].shape();
-            this->_blocks[a].reshape_({-1, comm_dim});
+            // matrix view of this->_blocks[a]; non-mutating (the block may be shared, #724)
+            const Tensor Lmat = this->_blocks[a].permute(mapperL).reshape({-1, comm_dim});
             // loop over all right blocks that can contract with this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
               // get the index of the right block
               cytnx_uint64 b = itoiR_idx[binx];
-              // permute&reshape Rtn->_blocks[b]
-              Rtn->_blocks[b].permute_(mapperR);
-              oldshapeR[b] = Rtn->_blocks[b].shape();
-              Rtn->_blocks[b].reshape_({comm_dim, -1});
+              if (!Rmat_ready[b]) {
+                Rmat[b] = Rtn->_blocks[b].permute(mapperR).reshape({comm_dim, -1});
+                Rmat_ready[b] = true;
+              }
               // prepare to find the target block
               Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
               for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
@@ -1749,23 +1708,13 @@ namespace cytnx {
               cytnx_int64 targ_b = mpC[Lgbuffer];
               // fermionic signs included here
               if (signfliplhs[a] != signfliprhs[b]) {
-                tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
-                                          .reshape(tmp->_blocks[targ_b].shape());
+                tmp->_blocks[targ_b] -=
+                  linalg::Matmul(Lmat, Rmat[b]).reshape(tmp->_blocks[targ_b].shape());
               } else {
-                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
-                                          .reshape(tmp->_blocks[targ_b].shape());
+                tmp->_blocks[targ_b] +=
+                  linalg::Matmul(Lmat, Rmat[b]).reshape(tmp->_blocks[targ_b].shape());
               }
             }
-            // restore the shape&permutation of this->_blocks[a]
-            for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
-              cytnx_uint64 b = itoiR_idx[binx];
-
-              Rtn->_blocks[b].reshape_(oldshapeR[b]);
-              Rtn->_blocks[b].permute_(inv_mapperR);
-            }
-
-            this->_blocks[a].reshape_(oldshapeL);
-            this->_blocks[a].permute_(inv_mapperL);
           }
           // // restore the shape of tmp->_blocks
           // for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
@@ -2694,7 +2643,9 @@ namespace cytnx {
           new_shape.push_back(this->_blocks[b].shape()[i]);
         }
       }
-      this->_blocks[b].reshape_(new_shape);
+      // Rebind to a freshly-reshaped block instead of mutating the (possibly shared) block
+      // Tensor in place, so other UniTensors sharing this block are not corrupted (#724).
+      this->_blocks[b] = this->_blocks[b].reshape(new_shape);
     }
 
     for (int b = 0; b < this->_blocks.size(); b++) {

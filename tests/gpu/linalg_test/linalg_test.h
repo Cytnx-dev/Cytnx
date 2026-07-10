@@ -9,7 +9,6 @@
 #include <vector>
 
 using namespace cytnx;
-using namespace std;
 
 class linalg_Test : public ::testing::Test {
  public:

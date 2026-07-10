@@ -220,13 +220,15 @@ namespace cytnx {
       std::function<void(cytnx_int32 * ido, char* bmat, cytnx_int32* n, char* which,
                          cytnx_int32* nev, T2* tol, T* resid, cytnx_int32* ncv, T* v,
                          cytnx_int32* ldv, cytnx_int32* iparam, cytnx_int32* ipntr, T* workd,
-                         T* workl, cytnx_int32* lworkl, T2* rwork, cytnx_int32* info)>
+                         T* workl, cytnx_int32* lworkl, T2* rwork, cytnx_int32* info,
+                         std::size_t bmat_len, std::size_t which_len)>
         func_xnaupd;
       std::function<void(cytnx_int32 * rvec, char* howmny, cytnx_int32* select, T* d, T* z,
                          cytnx_int32* ldz, T* sigma, T* workev, char* bmat, cytnx_int32* n,
                          char* which, cytnx_int32* nev, T2* tol, T* resid, cytnx_int32* ncv, T* v,
                          cytnx_int32* ldv, cytnx_int32* iparam, cytnx_int32* ipntr, T* workd,
-                         T* workl, cytnx_int32* lworkl, T2* rwork, cytnx_int32* info)>
+                         T* workl, cytnx_int32* lworkl, T2* rwork, cytnx_int32* info,
+                         std::size_t howmny_len, std::size_t bmat_len, std::size_t which_len)>
         func_xneupd;
       auto dtype = Hop->dtype();
       if constexpr (std::is_same_v<T, cytnx_complex128>) {
@@ -289,7 +291,7 @@ namespace cytnx {
       /// start iteration
       while (true) {
         func_xnaupd(&ido, &bmat, &dim, which, &nev, &tol, resid, &ncv, v, &ldv, iparam, ipntr,
-                    workd, workl, &lworkl, rwork, &info);
+                    workd, workl, &lworkl, rwork, &info, 1, 2);
         if (ido == -1 || ido == 1) {
           matvec(Hop, buffer_UT, &workd[ipntr[0] - 1], &workd[ipntr[1] - 1]);
         } else if (ido == 99) {
@@ -325,7 +327,8 @@ namespace cytnx {
         'A';  /// how many eigenvectors to calculate: 'A' => nev eigenvectors
               ///  when howmny == 'A', this is used as workspace to reorder the eigenvectors
       func_xneupd(&rvec, &howmny, select, d, z, &ldv, &sigma, workev, &bmat, &dim, which, &nev,
-                  &tol, resid, &ncv, v, &ldv, iparam, ipntr, workd, workl, &lworkl, rwork, &info);
+                  &tol, resid, &ncv, v, &ldv, iparam, ipntr, workd, workl, &lworkl, rwork, &info, 1,
+                  1, 2);
       if (info != 0) {
         clean_arpack_complex_buffer(resid, v, workd, workl, rwork, select, d, z, workev);
         cytnx_error_msg(true, "[ERROR][Arnoldi], Error: (zc)neupd_ INFO = %d\n", info);
@@ -397,13 +400,15 @@ namespace cytnx {
       std::function<void(cytnx_int32 * ido, char* bmat, cytnx_int32* n, char* which,
                          cytnx_int32* nev, T* tol, T* resid, cytnx_int32* ncv, T* v,
                          cytnx_int32* ldv, cytnx_int32* iparam, cytnx_int32* ipntr, T* workd,
-                         T* workl, cytnx_int32* lworkl, cytnx_int32* info)>
+                         T* workl, cytnx_int32* lworkl, cytnx_int32* info, std::size_t bmat_len,
+                         std::size_t which_len)>
         func_xnaupd;
       std::function<void(
         cytnx_int32 * rvec, char* howmny, cytnx_int32* select, T* dr, T* di, T* z, cytnx_int32* ldz,
         T* sigmar, T* sigmai, T* workev, char* bmat, cytnx_int32* n, char* which, cytnx_int32* nev,
         T* tol, T* resid, cytnx_int32* ncv, T* v, cytnx_int32* ldv, cytnx_int32* iparam,
-        cytnx_int32* ipntr, T* workd, T* workl, cytnx_int32* lworkl, cytnx_int32* info)>
+        cytnx_int32* ipntr, T* workd, T* workl, cytnx_int32* lworkl, cytnx_int32* info,
+        std::size_t howmny_len, std::size_t bmat_len, std::size_t which_len)>
         func_xneupd;
       auto dtype = Hop->dtype();
       if constexpr (std::is_same_v<T, cytnx_double>) {
@@ -465,7 +470,7 @@ namespace cytnx {
       /// start iteration
       while (true) {
         func_xnaupd(&ido, &bmat, &dim, which, &nev, &tol, resid, &ncv, v, &ldv, iparam, ipntr,
-                    workd, workl, &lworkl, &info);
+                    workd, workl, &lworkl, &info, 1, 2);
         if (ido == -1 || ido == 1) {
           matvec(Hop, buffer_UT, &workd[ipntr[0] - 1], &workd[ipntr[1] - 1]);
         } else if (ido == 99) {
@@ -502,7 +507,7 @@ namespace cytnx {
               ///  when howmny == 'A', this is used as workspace to reorder the eigenvectors
       func_xneupd(&rvec, &howmny, select, dr, di, z, &ldv, &sigmar, &sigmai, workev, &bmat, &dim,
                   which, &nev, &tol, resid, &ncv, v, &ldv, iparam, ipntr, workd, workl, &lworkl,
-                  &info);
+                  &info, 1, 1, 2);
       if (info != 0) {
         clean_arpack_real_buffer(resid, v, workd, workl, dr, di, select, z, workev);
         cytnx_error_msg(true, "[ERROR][Arnoldi], Error: (zc)neupd_ INFO = %d\n", info);

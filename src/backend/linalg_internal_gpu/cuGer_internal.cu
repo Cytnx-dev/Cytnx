@@ -10,7 +10,7 @@ namespace cytnx {
                            const boost::intrusive_ptr<Storage_base> &x,
                            const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex128 alpha = complex128(a);
 
@@ -28,7 +28,7 @@ namespace cytnx {
                            const boost::intrusive_ptr<Storage_base> &x,
                            const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex64 alpha = complex64(a);
 
@@ -46,7 +46,7 @@ namespace cytnx {
                           const boost::intrusive_ptr<Storage_base> &x,
                           const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_double alpha = cytnx_double(a);
 
@@ -64,7 +64,7 @@ namespace cytnx {
                           const boost::intrusive_ptr<Storage_base> &x,
                           const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = NULL;
+      cublasHandle_t cublasH = nullptr;
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_float alpha = cytnx_float(a);
 

@@ -47,7 +47,8 @@ namespace {
    private:
     UniTensor L_, R_, O_;
     Network net_;
-    std::vector<UniTensor> CreateLRO(const int D, const int d, const int dw) {
+    std::vector<UniTensor> CreateLRO(const cytnx_uint64 D, const cytnx_uint64 d,
+                                     const cytnx_uint64 dw) {
       double low = -1.0, high = 1.0;
       int seed = 0;
       UniTensor L =
@@ -64,7 +65,7 @@ namespace {
       return {L, R, O};
     }
 
-    UniTensor Create_UTinit(const int D, const int d) {
+    UniTensor Create_UTinit(const cytnx_uint64 D, const cytnx_uint64 d) {
       double low = -1.0, high = 1.0;
       int seed = 0;
       UniTensor psi =
@@ -223,11 +224,9 @@ namespace {
       // check eigenvalue by comparing with the full spectrum results.
       // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
       auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
-      // std::cout << "eigval err" << eigval_err << std::endl;
       if (eigval_err >= tolerance) return false;
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
-      // std::cout << "resi err" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
       // check phase
     }
@@ -342,7 +341,7 @@ TEST(Lanczos_Ut, err_crit_negative) {
 TEST(Lanczos_Ut, nx_not_match) {
   LinOp op = LinOp("mv", 30);
   double low = -1.0, high = 1.0;
-  int D = 5, d = 2;
+  cytnx_uint64 D = 5, d = 2;
   UniTensor psi = UniTensor::uniform({D, d, D}, low, high);
   try {
     unsigned long long maxiter = 1000;
@@ -374,17 +373,13 @@ TEST(Lanczos_Gnd, Lanczos_Gnd_test) {
   // cytnx_double evans = -0.6524758424985271;
   cytnx_double evans = -1628.9964650426593;
 
-  // Tensor testtmp = arange(16).reshape(4, 4);
-  // std::cout<<testtmp<<std::endl;
   MyOp H = MyOp();
   Tensor tv = arange(27);
   UniTensor v = UniTensor(tv);
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, v, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, false);
   cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
-  // std::cout << ev << ' ' << evans << std::endl;
   EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
-  // EXPECT_DOUBLE_EQ(ev, evans);
 }
 
 TEST(Lanczos_Gnd, Bk_Lanczos_Gnd_test) {
@@ -399,9 +394,6 @@ TEST(Lanczos_Gnd, Bk_Lanczos_Gnd_test) {
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
   lan_guess.relabel_({"b", "c"});
-  // lan_guess.print_diagram();
-  // std::cout << lan_guess.shape() << std::endl;
-  //  lan_guess.print_blocks();
 
   MyOp2 H = MyOp2(27);
 
@@ -413,11 +405,9 @@ TEST(Lanczos_Gnd, Bk_Lanczos_Gnd_test) {
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, lan_guess, "Gnd", 9.999999999999999988e-15, 10000, 1, true, true, 0, false);
   cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
-  // std::cout << ev << ' ' << E0 << std::endl;
   EXPECT_TRUE(std::abs(ev - E0) < 1e-12);
   auto err = (H.matvec(eigs[1]) - ev * eigs[1]).Norm().item();
   EXPECT_TRUE(err < 1e-6);
-  // EXPECT_DOUBLE_EQ(ev, evans);
 }
 
 TEST(Lanczos_Gnd, Bk_Lanczos_test) {
@@ -441,12 +431,10 @@ TEST(Lanczos_Gnd, Bk_Lanczos_test) {
   const cytnx_double cvg_crit = 0;
   std::vector<UniTensor> eigs = linalg::Lanczos(&H, lan_guess, "SA", maxiter, cvg_crit);
   cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
-  // std::cout << ev << ' ' << E0 << std::endl;
   auto err_val = ev - E0;
   EXPECT_TRUE(std::abs(ev - E0) < 1e-12);
   auto err = (H.matvec(eigs[1]) - ev * eigs[1]).Norm().item();
   EXPECT_TRUE(err < 1e-12);
-  // EXPECT_DOUBLE_EQ(ev, evans);
 }
 
 /*=====test info=====

@@ -3,7 +3,6 @@
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include <numeric>
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -47,17 +46,13 @@ namespace cytnx {
         }
       }
 
-      Tensor _t1 = T1.contiguous(), _t2 = T2.contiguous();
-      if (T1.dtype() != T2.dtype()) {
-        // do conversion:
-        if (T1.dtype() < T2.dtype()) {
-          _t2 = _t2.astype(T1.dtype());
-        } else {
-          _t1 = _t1.astype(T2.dtype());
-        }
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat + Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type; astype is a no-op when it already matches.
+      const unsigned int out_dtype = Type.type_promote(T1.dtype(), T2.dtype());
+      Tensor _t1 = T1.contiguous().astype(out_dtype);
+      Tensor _t2 = T2.contiguous().astype(out_dtype);
 
-      Tensor out(new_shape, _t1.dtype(), _t1.device());
+      Tensor out(new_shape, out_dtype, _t1.device());
 
       std::vector<Accessor> accs(out.rank());
       for (int i = 0; i < shared_axes.size(); i++) {

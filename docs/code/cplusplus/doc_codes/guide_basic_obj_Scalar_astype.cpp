@@ -1,5 +1,5 @@
 Scalar A(1.33);
-cout << A << endl;
+std::cout << A << std::endl;
 
 A = A.astype(Type.Float);
-cout << A << endl;
+std::cout << A << std::endl;

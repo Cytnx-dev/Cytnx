@@ -12,7 +12,7 @@ namespace cytnx {
   &return_order){
 
     if(return_order){
-        vector<cytnx_uint64> out(v1.size());
+        std::vector<cytnx_uint64> out(v1.size());
 
         std::itoa(out.begin(),out.end(),0);
 

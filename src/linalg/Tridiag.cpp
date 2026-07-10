@@ -23,7 +23,7 @@ namespace cytnx {
         Diag.device() != Sub_diag.device(),
         "[Tridiag] error, two input tensors must in the same device. Call to() or to_() first%s",
         "\n");
-      cytnx_error_msg(Diag.dtype() <= 2 || Sub_diag.dtype() <= 2,
+      cytnx_error_msg(Type.is_complex(Diag.dtype()) || Type.is_complex(Sub_diag.dtype()),
                       "[Tridiag] error, tri-diagonalize can only accept real vectors%s", "\n");
       // check prior type:
       unsigned int cType;
@@ -46,7 +46,7 @@ namespace cytnx {
         s_diag = Sub_diag;
 
       Tensor vT, S;
-      S.Init({Diag.shape()[0]}, cType <= 2 ? cType + 2 : cType,
+      S.Init({Diag.shape()[0]}, Type.to_real(cType),
              Device.cpu);  // if type is complex, S should be real
       if (is_V) {
         // cytnx_error_msg((k<1)||(k>Diag.shape()[0]),"[Tridiag] error, number of eigen vector k

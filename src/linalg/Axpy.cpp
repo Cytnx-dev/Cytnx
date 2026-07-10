@@ -12,12 +12,10 @@
 namespace cytnx {
 
   namespace linalg {
-    using namespace std;
     Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y) {
       bool no_y = false;
-      // checking the largest dtype!
-      int fin_dtype = x.dtype();
-      if (a.dtype() < fin_dtype) fin_dtype = a.dtype();
+      // find the promoted dtype:
+      unsigned int fin_dtype = Type.type_promote(a.dtype(), x.dtype());
 
       if (y.shape().size() == 0)
         no_y = true;
@@ -27,33 +25,24 @@ namespace cytnx {
                         "[ERROR][Axpy] x.shape() and y.shape() must be the same!%s", "\n");
         cytnx_error_msg(x.device() != y.device(), "[ERROR][Axpy] x and y must be on same device!%s",
                         "\n");
-        if (y.dtype() < fin_dtype) fin_dtype = y.dtype();
+        fin_dtype = Type.type_promote(fin_dtype, y.dtype());
       }
 
-      if (fin_dtype < Type.Float) fin_dtype = Type.Double;
+      // the axpy kernels only cover the four float types; floor integer/bool to Double
+      if (fin_dtype > Type.Float) fin_dtype = Type.Double;
 
-      // convert dtype:
-      Tensor px;
-      if (x.dtype() > fin_dtype)
-        px = x.astype(fin_dtype);
-      else
-        px = x;
+      // convert dtype (astype is a no-op when the dtype already matches):
+      Tensor px = x.astype(fin_dtype);
 
       Tensor out;
       if (no_y) {
         out = cytnx::zeros(x.shape(), fin_dtype, x.device());
       } else {
-        if (y.dtype() > fin_dtype)
-          out = y.astype(fin_dtype);
-        else
-          out = y.clone();
+        // astype aliases y when the dtype already matches; clone to keep y intact
+        out = (y.dtype() == fin_dtype) ? y.clone() : y.astype(fin_dtype);
       }
 
-      Scalar pa;
-      if (a.dtype() > fin_dtype)
-        pa = a.astype(fin_dtype);
-      else
-        pa = a;
+      Scalar pa = a.astype(fin_dtype);
 
       if (x.device() == Device.cpu) {
         linalg_internal::lii.axpy_ii[fin_dtype](px.storage()._impl, out.storage()._impl, pa);
@@ -72,27 +61,19 @@ namespace cytnx {
       cytnx_error_msg(x.device() != y.device(), "[ERROR][Axpy] x and y must be on same device!%s",
                       "\n");
 
-      // checking the largest dtype!
-      int fin_dtype = x.dtype();
-      if (y.dtype() < fin_dtype) fin_dtype = y.dtype();
-      if (a.dtype() < fin_dtype) fin_dtype = a.dtype();
+      // find the promoted dtype:
+      unsigned int fin_dtype = Type.type_promote(x.dtype(), y.dtype());
+      fin_dtype = Type.type_promote(fin_dtype, a.dtype());
 
-      if (fin_dtype < Type.Float) fin_dtype = Type.Double;
+      // the axpy kernels only cover the four float types; floor integer/bool to Double
+      if (fin_dtype > Type.Float) fin_dtype = Type.Double;
 
-      // convert dtype:
-      Tensor px;
-      if (x.dtype() > fin_dtype)
-        px = x.astype(fin_dtype);
-      else
-        px = x;
+      // convert dtype (astype is a no-op when the dtype already matches):
+      Tensor px = x.astype(fin_dtype);
 
-      if (y.dtype() > fin_dtype) y = y.astype(fin_dtype);
+      if (y.dtype() != fin_dtype) y = y.astype(fin_dtype);
 
-      Scalar pa;
-      if (a.dtype() > fin_dtype)
-        pa = a.astype(fin_dtype);
-      else
-        pa = a;
+      Scalar pa = a.astype(fin_dtype);
 
       if (x.device() == Device.cpu) {
         linalg_internal::lii.axpy_ii[fin_dtype](px.storage()._impl, y.storage()._impl, pa);

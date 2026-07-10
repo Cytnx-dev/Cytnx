@@ -17,7 +17,6 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    using namespace std;
 
     // <A|B>
     static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
@@ -55,7 +54,7 @@ namespace cytnx {
       bool cvg_fin = false;
 
       // declare variables, A,B should be real if LinOp is hermitian!
-      Tensor As = zeros({1}, Hop->dtype() < 3 ? Hop->dtype() + 2 : Hop->dtype(), Tin.device());
+      Tensor As = zeros({1}, Type.to_real(Hop->dtype()), Tin.device());
       Tensor Bs = As.clone();
       Scalar E;
 
