@@ -73,20 +73,21 @@ work; note the current branch/ref to return to at the end.
 For each revision, in order:
 
 1. `git checkout <rev>` (whole tree).
-2. **Case A only:** if `<rev>`'s own `benchmarks/CMakeLists.txt` doesn't
-   already list `<the_bm_file>.cpp`, this revision predates the file. Copy
-   just the `.cpp` from `<tip>`, then add **one line** for it to `<rev>`'s
-   own `CMakeLists.txt` (an edit alongside `benchmarks_main`'s other
-   sources) — do not overlay `<tip>`'s whole `CMakeLists.txt`: it may list
-   other benchmark sources added or changed after `<rev>` that don't exist
-   or don't compile against `<rev>`'s API, breaking the build over a
-   benchmark that isn't even the one under comparison:
+2. **Case A only:** unconditionally copy `<the_bm_file>.cpp` from `<tip>` —
+   Case A's whole premise is one *fixed* benchmark source across every
+   column, so `<rev>`'s own version of the file (if it has one) must never
+   be the one that runs; only the library underneath is meant to vary. The
+   `CMakeLists.txt` registration, unlike the source, only needs touching
+   when `<rev>` doesn't already list the file — do not overlay `<tip>`'s
+   whole `CMakeLists.txt`: it may list other benchmark sources added or
+   changed after `<rev>` that don't exist or don't compile against `<rev>`'s
+   API, breaking the build over a benchmark that isn't even the one under
+   comparison:
 
    ```sh
-   grep -q '<the_bm_file>.cpp' benchmarks/CMakeLists.txt || {
-     git checkout <tip> -- benchmarks/<the_bm_file>.cpp
-     # then add "  <the_bm_file>.cpp" to CMakeLists.txt's add_executable(benchmarks_main ...) list
-   }
+   git checkout <tip> -- benchmarks/<the_bm_file>.cpp
+   grep -q '<the_bm_file>.cpp' benchmarks/CMakeLists.txt || \
+     : # add "  <the_bm_file>.cpp" to CMakeLists.txt's add_executable(benchmarks_main ...) list
    ```
 
    **Case B:** skip this — build whatever benchmark file already exists at
@@ -99,30 +100,24 @@ For each revision, in order:
      --benchmark_filter='<pattern>' > /tmp/bm-<label>.txt
    ```
 
-4. **Case A only, and only if step 2 actually overlaid anything** (i.e.
-   `<rev>` predated `<the_bm_file>.cpp`): restore before moving to the next
-   revision — the working tree still holds the copied-in `.cpp` and the
-   manual `CMakeLists.txt` line, so `git checkout <rev>` in the next
-   iteration's step 1 would otherwise either refuse to switch or (if it can
-   3-way-merge) carry that content silently forward onto the wrong revision:
+4. **Case A only:** restore before moving to the next revision — the
+   working tree still holds `<tip>`'s content for `<the_bm_file>.cpp` (step
+   2 always overlays it), so `git checkout <rev>` in the next iteration's
+   step 1 would otherwise either refuse to switch or (if it can 3-way-merge)
+   carry that content silently forward onto the wrong revision:
 
    ```sh
    git restore --source=HEAD --staged --worktree -- benchmarks/<the_bm_file>.cpp
-   git checkout -- benchmarks/CMakeLists.txt
+   git checkout -- benchmarks/CMakeLists.txt   # only if step 2 also edited it
    ```
 
-   `git restore --source=HEAD` deletes `<the_bm_file>.cpp` to match `<rev>`'s
-   own absence of it (a plain `checkout HEAD -- <path>` errors instead: "did
-   not match any file(s) known to git" for a path HEAD doesn't have).
-   `CMakeLists.txt` itself is a plain modification (the added line), not a
-   new path, so `git checkout -- <path>` reverts it correctly on its own.
-
-   Use `git restore`, not `git checkout HEAD -- <path>`: when `<rev>`
-   predates the benchmark file existing at all, the overlay added a path
-   HEAD doesn't have, and `checkout HEAD -- <path>` errors with "did not
-   match any file(s) known to git" for a path absent from HEAD, whereas
-   `restore --source=HEAD` correctly deletes it to match HEAD's (its
-   absence).
+   Use `git restore`, not `git checkout HEAD -- <path>`, for the `.cpp`:
+   when `<rev>` predates the benchmark file existing at all, `checkout HEAD
+   -- <path>` errors with "did not match any file(s) known to git" for a
+   path HEAD doesn't have, whereas `restore --source=HEAD` correctly deletes
+   it to match HEAD's absence. `CMakeLists.txt` (when touched) is a plain
+   modification, not a new path, so `git checkout -- <path>` reverts it
+   directly.
 
 When every column is recorded, return to where you started: `git checkout
 <original-branch>` and `git stash pop` if step 0 created a stash.
