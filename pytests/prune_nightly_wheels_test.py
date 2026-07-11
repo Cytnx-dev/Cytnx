@@ -1,9 +1,14 @@
+import http.client
 import sys
+import urllib.error
 from pathlib import Path
+from unittest.mock import MagicMock, Mock, patch
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 
-from prune_nightly_wheels import select_versions_to_delete  # noqa: E402
+from prune_nightly_wheels import _urlopen_with_retry, select_versions_to_delete  # noqa: E402
 
 
 def test_fewer_than_keep_deletes_nothing():
@@ -51,3 +56,60 @@ def test_orders_across_base_version_bump():
         "0.9.9.dev202601020000",
     ]
     assert select_versions_to_delete(versions, keep=1) == ["0.9.9.dev202601020000"]
+
+
+def _fake_response(body: bytes) -> MagicMock:
+    response = MagicMock()
+    response.read.return_value = body
+    response.__enter__.return_value = response
+    return response
+
+
+def _response_failing_read(error: Exception) -> MagicMock:
+    response = MagicMock()
+    response.read.side_effect = error
+    response.__enter__.return_value = response
+    return response
+
+
+@patch("prune_nightly_wheels.time.sleep")
+@patch("prune_nightly_wheels.urllib.request.urlopen")
+def test_retry_succeeds_after_transient_timeouts(mock_urlopen, mock_sleep):
+    mock_urlopen.side_effect = [TimeoutError(), TimeoutError(), _fake_response(b"body")]
+    assert _urlopen_with_retry(Mock(), timeout=30) == b"body"
+    assert mock_urlopen.call_count == 3
+    assert mock_sleep.call_count == 2
+
+
+@patch("prune_nightly_wheels.time.sleep")
+@patch("prune_nightly_wheels.urllib.request.urlopen")
+def test_retry_succeeds_after_incomplete_read(mock_urlopen, mock_sleep):
+    mock_urlopen.side_effect = [
+        _response_failing_read(http.client.IncompleteRead(b"partial")),
+        _fake_response(b"body"),
+    ]
+    assert _urlopen_with_retry(Mock(), timeout=30) == b"body"
+    assert mock_urlopen.call_count == 2
+    assert mock_sleep.call_count == 1
+
+
+@patch("prune_nightly_wheels.time.sleep")
+@patch("prune_nightly_wheels.urllib.request.urlopen")
+def test_retry_raises_after_exhausting_attempts(mock_urlopen, mock_sleep):
+    mock_urlopen.side_effect = TimeoutError()
+    with pytest.raises(TimeoutError):
+        _urlopen_with_retry(Mock(), timeout=30)
+    assert mock_urlopen.call_count == 3
+    assert mock_sleep.call_count == 2
+
+
+@patch("prune_nightly_wheels.time.sleep")
+@patch("prune_nightly_wheels.urllib.request.urlopen")
+def test_http_error_is_not_retried(mock_urlopen, mock_sleep):
+    mock_urlopen.side_effect = urllib.error.HTTPError(
+        "url", 404, "not found", hdrs=None, fp=None
+    )
+    with pytest.raises(urllib.error.HTTPError):
+        _urlopen_with_retry(Mock(), timeout=30)
+    assert mock_urlopen.call_count == 1
+    mock_sleep.assert_not_called()
