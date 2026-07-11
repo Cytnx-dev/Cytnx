@@ -26,44 +26,39 @@ machines, including cloud agents; only *running* GPU tests needs real hardware).
 
 ## Test
 
-C++ tests need `RUN_TESTS=ON` — use a `debug-*` preset:
-
-```bash
-cmake --preset debug-openblas-cpu
-cmake --build --preset debug-openblas-cpu --target test_main
-ctest --preset cpu-only --output-on-failure
-# single suite: build/debug-openblas-cpu/tests/test_main --gtest_filter='Storage.*'
-```
-
-Debug presets build with AddressSanitizer (`USE_DEBUG=ON` → `-fsanitize=address`).
-If a debug test binary aborts inside ASAN on startup — common under CUDA — run it
-with `ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'`.
-
-GPU tests — target `gpu_test_main` (binary under `tests/gpu/`), NOT `test_main`:
-
-```bash
-cmake --preset debug-openblas-cuda                # add -DCMAKE_CUDA_ARCHITECTURES=<arch> if autodetect fails
-cmake --build --preset debug-openblas-cuda --target gpu_test_main test_main
-ctest --preset cpu-and-cuda --output-on-failure   # full GPU arith suite is slow (~10 min)
-```
-
-Python — CI installs editable and runs pytest (pyproject pins `--preset=openblas-cpu`):
-
-```bash
-pip install --editable '.[dev]' --config-settings=build-dir=build \
-  --config-settings=cmake.define.CMAKE_BUILD_TYPE=Debug \
-  --config-settings=cmake.define.RUN_TESTS=ON
-pytest pytests/ --doctest-modules
-```
-
-Two agent skills carry the day-to-day mechanics; invoke them instead of
+C++ tests need `RUN_TESTS=ON` (a `debug-*` preset sets this already). Two agent
+skills carry the full build/test/benchmark mechanics — invoke them instead of
 re-deriving commands:
 
-- **`build-test-workflow`** — incremental builds, running ctest/pytest without
-  rebuilding, per-suite `--gtest_filter` iteration, standalone harnesses
-  against `libcytnx.a`.
+- **`build-test-workflow`** — `tools/build_preset.sh` (the preferred way to
+  build a preset: per-preset venvs, generator-consistent pip/cmake, max-CPU
+  builds), incremental builds, running ctest/pytest without rebuilding,
+  per-suite `--gtest_filter` iteration, standalone harnesses against
+  `libcytnx.a`, and running the GPU suite when a GPU is present.
 - **`cross-revision-benchmark`** — fair before/after performance comparisons
   across git revisions.
+
+If a skill file is unavailable to you (some agents, e.g. Codex, may not have
+Claude Code's `.claude/skills/` auto-discovery — the files are plain markdown
+you can still open directly at `.claude/skills/<name>/SKILL.md`), the
+essential facts:
+
+- Single suite: `build/debug-openblas-cpu/tests/test_main --gtest_filter='Storage.*'`.
+- `ctest --preset cpu-only --output-on-failure` runs the full CPU suite.
+- Debug presets build with AddressSanitizer; this only bites the **debug +
+  CUDA** presets in practice — if `debug-openblas-cuda`/`debug-mkl-cuda`
+  aborts inside ASan on startup, prefix with
+  `ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'`.
+- GPU tests target `gpu_test_main` (under `tests/gpu/`), **not** `test_main`
+  — a separate binary, not a superset. Only run it if a GPU is actually
+  present (`nvidia-smi` succeeds); otherwise the CUDA preset compile check
+  alone is what CI expects.
+- Python — CI installs editable and runs pytest (pyproject pins
+  `--preset=openblas-cpu`): `pip install --editable '.[dev]'
+  --config-settings=build-dir=build
+  --config-settings=cmake.define.CMAKE_BUILD_TYPE=Debug
+  --config-settings=cmake.define.RUN_TESTS=ON`, then
+  `pytest pytests/ --doctest-modules`.
 
 ## Format — must match CI exactly
 
