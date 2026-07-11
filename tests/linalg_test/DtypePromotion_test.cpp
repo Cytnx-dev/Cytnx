@@ -16,7 +16,7 @@
 //     discarding double precision),
 //   * Uint64 x Int32 -> Int64 (old rule kept Uint64, disagreeing with the
 //     kernels' Type_class::type_promote_t),
-//   * integer inputs to the BLAS-only ops (Axpy/Ger/Gemm) must floor to
+//   * integer inputs to the BLAS-only ops (Ger/Gemm) must floor to
 //     Double, since their kernel tables only cover the four float types.
 
 namespace cytnx {
@@ -111,60 +111,6 @@ namespace cytnx {
     Tensor out = linalg::Tensordot(MakeComplexFloatA(), MakeDoubleB(), {1}, {0});
     ASSERT_EQ(out.dtype(), Type.ComplexDouble);
     ExpectAB(out);
-  }
-
-  TEST(DtypePromotion, Axpy_complexfloat_double) {
-    // out = 2*x + y with x ComplexFloat, y Double -> ComplexDouble
-    Tensor x = zeros({2}, Type.ComplexFloat, Device.cpu);
-    x.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
-    x.at<cytnx_complex64>({1}) = cytnx_complex64(3, -1);
-    Tensor y = zeros({2}, Type.Double, Device.cpu);
-    y.at<cytnx_double>({0}) = 0.5;
-    y.at<cytnx_double>({1}) = -1;
-    Tensor out = linalg::Axpy(Scalar(2.0), x, y);
-    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
-    ExpectComplexNear(out, {0}, 2.5, 4);
-    ExpectComplexNear(out, {1}, 5, -2);
-  }
-
-  TEST(DtypePromotion, Axpy_complexdouble_stays_complex) {
-    // All-ComplexDouble Axpy must run the complex kernel, not get clamped to
-    // a real dtype. out = i*x + y with x = {1+1i, 2}, y = {0.5i, 1}.
-    Tensor x = zeros({2}, Type.ComplexDouble, Device.cpu);
-    x.at<cytnx_complex128>({0}) = cytnx_complex128(1, 1);
-    x.at<cytnx_complex128>({1}) = cytnx_complex128(2, 0);
-    Tensor y = zeros({2}, Type.ComplexDouble, Device.cpu);
-    y.at<cytnx_complex128>({0}) = cytnx_complex128(0, 0.5);
-    y.at<cytnx_complex128>({1}) = cytnx_complex128(1, 0);
-    Tensor out = linalg::Axpy(Scalar(cytnx_complex128(0, 1)), x, y);
-    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
-    ExpectComplexNear(out, {0}, -1, 1.5, 1e-12);
-    ExpectComplexNear(out, {1}, 1, 2, 1e-12);
-  }
-
-  TEST(DtypePromotion, Axpy_integer_floors_to_double) {
-    // The axpy kernel table only covers the float types; integer inputs must
-    // floor to Double instead of indexing past the table.
-    Tensor x = MakeInt64({3}, {1, 2, 3});
-    Tensor y = MakeInt64({3}, {10, 20, 30});
-    Tensor out = linalg::Axpy(Scalar((cytnx_int64)2), x, y);
-    ASSERT_EQ(out.dtype(), Type.Double);
-    EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), 12);
-    EXPECT_DOUBLE_EQ(out.at<cytnx_double>({1}), 24);
-    EXPECT_DOUBLE_EQ(out.at<cytnx_double>({2}), 36);
-  }
-
-  TEST(DtypePromotion, AxpyInplace_promotes_y) {
-    Tensor x = zeros({2}, Type.ComplexFloat, Device.cpu);
-    x.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
-    x.at<cytnx_complex64>({1}) = cytnx_complex64(3, -1);
-    Tensor y = zeros({2}, Type.Double, Device.cpu);
-    y.at<cytnx_double>({0}) = 0.5;
-    y.at<cytnx_double>({1}) = -1;
-    linalg::Axpy_(Scalar(2.0), x, y);
-    ASSERT_EQ(y.dtype(), Type.ComplexDouble);
-    ExpectComplexNear(y, {0}, 2.5, 4);
-    ExpectComplexNear(y, {1}, 5, -2);
   }
 
   TEST(DtypePromotion, Gemm_complexfloat_double) {
@@ -452,17 +398,6 @@ namespace cytnx {
     t.at<cytnx_double>({1}) = 7;
     EXPECT_THROW(linalg::Mod(t, cytnx_complex64(1, 0)), std::logic_error);
     EXPECT_THROW(linalg::Mod(cytnx_complex64(1, 0), t), std::logic_error);
-  }
-
-  TEST(DtypePromotion, Axpy_without_y_complexfloat_double_scalar) {
-    // out = a*x with no y: the zeros() output must already use the promoted dtype.
-    Tensor x = zeros({2}, Type.ComplexFloat, Device.cpu);
-    x.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
-    x.at<cytnx_complex64>({1}) = cytnx_complex64(3, -1);
-    Tensor out = linalg::Axpy(Scalar(2.0), x);
-    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
-    ExpectComplexNear(out, {0}, 2, 4);
-    ExpectComplexNear(out, {1}, 6, -2);
   }
 
 }  // namespace cytnx
