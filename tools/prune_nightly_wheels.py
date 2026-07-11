@@ -21,10 +21,12 @@ needed in the release-tools group.
 """
 
 import argparse
+import http.client
 import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 
@@ -32,12 +34,51 @@ API_BASE = "https://api.anaconda.org"
 ORGANIZATION = "cytnx-nightly-wheels"
 PACKAGE = "cytnx"
 NIGHTLY_VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)\.dev(\d{12})$")
+MAX_ATTEMPTS = 3
+RETRY_BACKOFF_SECONDS = 2.0
+
+
+def _urlopen_with_retry(request: urllib.request.Request, *, timeout: int) -> bytes:
+    """Retry a full request/response cycle on transient network failures.
+
+    anaconda.org occasionally stalls a response -- whether while establishing
+    the connection or while streaming the body -- past the socket timeout
+    (surfaced as a bare ``TimeoutError``, since urllib only wraps
+    connection-establishment failures in ``URLError``), drops the connection
+    mid-request (``ConnectionError``), or closes it after sending only part
+    of the body (``http.client.IncompleteRead``, which subclasses
+    ``HTTPException`` rather than ``OSError`` and so isn't caught by
+    ``ConnectionError``/``URLError``). The body is read to completion inside
+    the same attempt so a stall during any of these phases is retried the
+    same way. ``HTTPError`` is a real response from the server (e.g.
+    404/401/403) and is never retried -- it propagates on the first attempt.
+    """
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return response.read()
+        except urllib.error.HTTPError:
+            raise
+        except (
+            TimeoutError,
+            ConnectionError,
+            http.client.IncompleteRead,
+            urllib.error.URLError,
+        ) as error:
+            if attempt == MAX_ATTEMPTS:
+                raise
+            print(
+                f"attempt {attempt}/{MAX_ATTEMPTS} failed ({error!r}), retrying",
+                file=sys.stderr,
+            )
+            time.sleep(RETRY_BACKOFF_SECONDS * attempt)
+    raise AssertionError("unreachable: the last attempt always returns or raises")
 
 
 def fetch_versions() -> list[str]:
     url = f"{API_BASE}/package/{ORGANIZATION}/{PACKAGE}"
-    with urllib.request.urlopen(url, timeout=30) as response:
-        return list(json.load(response)["versions"])
+    body = _urlopen_with_retry(urllib.request.Request(url), timeout=30)
+    return list(json.loads(body)["versions"])
 
 
 def sort_key(version: str) -> tuple[int, int, int, str]:
@@ -70,7 +111,7 @@ def delete_version(version: str, token: str) -> None:
         url, method="DELETE", headers={"Authorization": f"token {token}"}
     )
     try:
-        urllib.request.urlopen(request, timeout=30)
+        _urlopen_with_retry(request, timeout=30)
     except urllib.error.HTTPError as error:
         if error.code == 404:
             print(f"{version}: already gone, skipping")
