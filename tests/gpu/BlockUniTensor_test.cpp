@@ -15,8 +15,11 @@ TEST_F(BlockUniTensorTest, gpu_Trace) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
     for (int j = 0; j < deg; j++) ans += i + 1;
   }
-  EXPECT_DOUBLE_EQ(double(tmp.at({0}).real()), double(ans));
-  EXPECT_DOUBLE_EQ(double(tmp.at({0}).imag()), double(0));
+  // Trace(0, 1) contracts UT_diag's only two bonds, so the result is a rank-0
+  // scalar; read it with an empty locator (matches the CPU Trace test after
+  // the rank-0 UniTensor change in #1026).
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
 
   EXPECT_NO_THROW(BUT1.Trace(0, 3));
   EXPECT_THROW(BUT1.Trace(), std::logic_error);
