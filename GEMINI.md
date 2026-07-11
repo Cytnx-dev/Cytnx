@@ -59,6 +59,9 @@ Focus reviews on what actually bites this codebase:
   boundary (`Type.type_promote`) and mixed-dtype paths.
 - **GPU kernel correctness** — in-place `cuMul`/`cuDiv` non-contiguous gaps
   (#988), contiguity assumptions, and out-of-bounds writes on a narrow LHS.
+- **Tie-break / selection-order changes in heuristic planners** (e.g. the
+  contraction-order search) — observable behavior even when each choice is
+  individually valid; they deserve an explicit call-out, not silent acceptance.
 - Missing or weak tests; thread-safety and reentrancy; leaked resources.
 - Public-API / exported-target breakage (downstream `find_package(Cytnx)`).
 - Documentation drift.

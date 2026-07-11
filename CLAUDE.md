@@ -130,6 +130,12 @@ Green locally before opening a PR. CI enforces:
   codebase this size; prefer stacked, single-purpose PRs.
 - **Physics / numerical-correctness changes require human review.** An agent must
   not alter algorithmic or mathematical behavior unprompted — flag it explicitly.
+- **Heuristic tie-breaks are observable behavior.** Changing *which* of several
+  equal-cost candidates a greedy/heuristic planner picks (e.g. the contraction
+  order from `OptimalTreeSolver`) changes user-visible results even though every
+  choice is individually valid — treat it like the physics guardrail: flag it and
+  get sign-off. Verify a reviewer's counterexample by reproducing it on both
+  revisions before accepting or disputing it.
 - **Call out any mixed-dtype or type-promotion change** — it is easy to get subtly
   wrong (see gotchas below).
 
