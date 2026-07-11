@@ -19,16 +19,18 @@ Performance claims are settled by measurement (never plausibility), and a
 measurement is only meaningful when every column ran under identical
 conditions. This skill is the procedure for benchmarking the *same* code path
 at several git revisions on one machine, in one session, building and running
-through `build-test-workflow`'s script — copied to a stable path first, since
-step 1 below checks out the whole tree including `.claude/`, and any revision
-that predates this script's own existence (or lived at a different path)
-would otherwise make `"$S"` disappear out from under the loop:
+through `build-test-workflow`'s script:
 
 ```sh
-S="$(mktemp)"
-cp .claude/skills/build-test-workflow/scripts/build_preset.sh "$S"
-chmod +x "$S"
+S=.claude/skills/build-test-workflow/scripts/build_preset.sh
 ```
+
+Step 1 below checks out the whole tree including `.claude/`, so `"$S"` only
+survives every switch when every revision being compared already has the
+script at this path — true for any comparison entirely within this repo's
+history from this point forward. Comparing against a revision that predates
+this script (or had it at a different path) needs it copied to a stable
+location first (e.g. `cp "$S" /tmp/build_preset.sh`) before the loop starts.
 
 Only benchmark a **committed** Google Benchmark file (`benchmarks/*.cpp`,
 built as the `benchmarks_main` target). If no existing file covers the
@@ -36,10 +38,9 @@ function under comparison, add one first — do not write comparison code in a
 scratch harness; a fixed, versioned benchmark source is what makes a fair
 cross-revision comparison possible at all. Use a **release** preset
 (`openblas-cpu` or similar) for every column — a debug/ASan build's timings
-are not representative. Prefer a build dir this skill hasn't shared with a
-`--target test_main`/`pycytnx` build: `"$S" <preset> --target benchmarks_main`
-never forces `RUN_TESTS` on or off, so a dir already built with `RUN_TESTS=ON`
-stays coverage-instrumented for benchmarking too, which also skews timings.
+are not representative. `"$S"` strips `--coverage` instrumentation from
+every build it produces (see `build-test-workflow`), so a dir it already
+built for `test_main`/`pycytnx` is safe to reuse for `benchmarks_main` too.
 
 ## Which of two cases applies
 
@@ -72,13 +73,20 @@ work; note the current branch/ref to return to at the end.
 For each revision, in order:
 
 1. `git checkout <rev>` (whole tree).
-2. **Case A only:** overlay the tip's benchmark file **and its build
-   registration** on top — `benchmarks/CMakeLists.txt` lists every `.cpp` in
-   the target's sources, so overlaying only the `.cpp` silently leaves it
-   uncompiled if this revision predates the file existing at all:
+2. **Case A only:** if `<rev>`'s own `benchmarks/CMakeLists.txt` doesn't
+   already list `<the_bm_file>.cpp`, this revision predates the file. Copy
+   just the `.cpp` from `<tip>`, then add **one line** for it to `<rev>`'s
+   own `CMakeLists.txt` (an edit alongside `benchmarks_main`'s other
+   sources) — do not overlay `<tip>`'s whole `CMakeLists.txt`: it may list
+   other benchmark sources added or changed after `<rev>` that don't exist
+   or don't compile against `<rev>`'s API, breaking the build over a
+   benchmark that isn't even the one under comparison:
 
    ```sh
-   git checkout <tip> -- benchmarks/<the_bm_file>.cpp benchmarks/CMakeLists.txt
+   grep -q '<the_bm_file>.cpp' benchmarks/CMakeLists.txt || {
+     git checkout <tip> -- benchmarks/<the_bm_file>.cpp
+     # then add "  <the_bm_file>.cpp" to CMakeLists.txt's add_executable(benchmarks_main ...) list
+   }
    ```
 
    **Case B:** skip this — build whatever benchmark file already exists at
@@ -91,16 +99,23 @@ For each revision, in order:
      --benchmark_filter='<pattern>' > /tmp/bm-<label>.txt
    ```
 
-4. **Case A only:** restore the overlay before moving to the next revision —
-   the working tree still holds `<tip>`'s content for the overlaid files
-   after step 2, so `git checkout <rev>` in the next iteration's step 1
-   would otherwise either refuse to switch or (if it can 3-way-merge) carry
-   `<tip>`'s content silently forward onto the wrong revision:
+4. **Case A only, and only if step 2 actually overlaid anything** (i.e.
+   `<rev>` predated `<the_bm_file>.cpp`): restore before moving to the next
+   revision — the working tree still holds the copied-in `.cpp` and the
+   manual `CMakeLists.txt` line, so `git checkout <rev>` in the next
+   iteration's step 1 would otherwise either refuse to switch or (if it can
+   3-way-merge) carry that content silently forward onto the wrong revision:
 
    ```sh
-   git restore --source=HEAD --staged --worktree -- \
-     benchmarks/<the_bm_file>.cpp benchmarks/CMakeLists.txt
+   git restore --source=HEAD --staged --worktree -- benchmarks/<the_bm_file>.cpp
+   git checkout -- benchmarks/CMakeLists.txt
    ```
+
+   `git restore --source=HEAD` deletes `<the_bm_file>.cpp` to match `<rev>`'s
+   own absence of it (a plain `checkout HEAD -- <path>` errors instead: "did
+   not match any file(s) known to git" for a path HEAD doesn't have).
+   `CMakeLists.txt` itself is a plain modification (the added line), not a
+   new path, so `git checkout -- <path>` reverts it correctly on its own.
 
    Use `git restore`, not `git checkout HEAD -- <path>`: when `<rev>`
    predates the benchmark file existing at all, the overlay added a path
@@ -110,8 +125,7 @@ For each revision, in order:
    absence).
 
 When every column is recorded, return to where you started: `git checkout
-<original-branch>` and `git stash pop` if step 0 created a stash, then
-`rm "$S"` to clean up the stable copy.
+<original-branch>` and `git stash pop` if step 0 created a stash.
 
 ## Reporting rules
 
