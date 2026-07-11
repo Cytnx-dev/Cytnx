@@ -61,8 +61,11 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
     is used rather than `--preset`: `CMakePresets.json`'s `testPresets` are
     hardcoded to only `debug-openblas-cpu`/`debug-openblas-cuda` and don't
     generalize to every preset this script accepts. `debug-*-cuda` presets
-    get `ASAN_OPTIONS` exported automatically — no need to remember the
-    workaround string.
+    get `ASAN_OPTIONS` exported automatically, **before the build step
+    too** — `gtest_discover_tests` defaults to `POST_BUILD` discovery,
+    which runs the freshly built binary during `cmake --build` itself, so
+    the workaround has to be in place before that, not just before the
+    later `ctest` call.
 - **Max-parallelism** (`nproc`/`sysctl -n hw.ncpu`) for every build.
   `RUN_TESTS=ON` on every configure — verified to be a **zero-cost toggle**
   on an already-built dir (flipping it on a fully-built dir and re-running

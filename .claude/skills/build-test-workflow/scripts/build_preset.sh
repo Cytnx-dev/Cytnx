@@ -94,6 +94,18 @@ case "${target}" in
   *) needs_python=0 ;;
 esac
 
+# ASan only bites the debug+CUDA presets in practice; export the workaround
+# before any build happens, not just before running tests. gtest_discover_tests
+# defaults to POST_BUILD discovery, which runs the freshly built test binary
+# as part of `cmake --build` itself to enumerate its cases -- so a debug-*-cuda
+# binary that needs this workaround can already abort during the build step,
+# before the script ever reaches the test-running code below.
+case "${preset}" in
+  debug-*-cuda)
+    export ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'
+    ;;
+esac
+
 # Portable CPU count: nproc (Linux) or sysctl (macOS).
 if command -v nproc >/dev/null 2>&1; then
   jobs="$(nproc)"
@@ -205,13 +217,7 @@ else
   # testPresets are hardcoded to only two configurePresets
   # (debug-openblas-cpu, debug-openblas-cuda) and don't generalize to every
   # preset this script accepts.
-  # ASan only bites the debug+CUDA presets in practice; export the
-  # workaround automatically instead of expecting the caller to remember it.
-  case "${preset}" in
-    debug-*-cuda)
-      export ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'
-      ;;
-  esac
+  # ASAN_OPTIONS for debug-*-cuda is already exported above, before the build.
   ctest_args=(--test-dir "${build_dir}" --output-on-failure --parallel "${jobs}")
   if [[ ${#test_args[@]} -gt 0 ]]; then
     ctest_args+=(-R "${test_args[0]}")
