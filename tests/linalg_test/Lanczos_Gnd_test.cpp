@@ -378,7 +378,7 @@ TEST(Lanczos_Gnd, Lanczos_Gnd_test) {
   UniTensor v = UniTensor(tv);
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, v, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, false);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
+  cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
   EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
 }
 
@@ -404,7 +404,7 @@ TEST(Lanczos_Gnd, Bk_Lanczos_Gnd_test) {
   }
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, lan_guess, "Gnd", 9.999999999999999988e-15, 10000, 1, true, true, 0, false);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
+  cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
   EXPECT_TRUE(std::abs(ev - E0) < 1e-12);
   auto err = (H.matvec(eigs[1]) - ev * eigs[1]).Norm().item();
   EXPECT_TRUE(err < 1e-6);

@@ -10,6 +10,23 @@
 namespace cytnx {
 
   namespace linalg {
+    namespace {
+      void check_tensordot_axis_bounds(const char *function, const char *side,
+                                       const std::vector<cytnx_uint64> &indices,
+                                       const cytnx_uint64 rank) {
+        for (cytnx_uint64 i = 0; i < indices.size(); i++) {
+          cytnx_error_msg(indices[i] >= rank,
+                          "[ERROR][%s] axis %s=%llu is out of bounds for rank %llu.%s", function,
+                          side, static_cast<unsigned long long>(indices[i]),
+                          static_cast<unsigned long long>(rank), "\n");
+          for (cytnx_uint64 j = i + 1; j < indices.size(); j++) {
+            cytnx_error_msg(indices[i] == indices[j],
+                            "[ERROR][%s] duplicate contracted axis %s=%llu.%s", function, side,
+                            static_cast<unsigned long long>(indices[i]), "\n");
+          }
+        }
+      }
+    }  // namespace
 
     void _Tensordot_generic(Tensor &out, const Tensor &Tl, const Tensor &Tr,
                             const std::vector<cytnx_uint64> &idxl,
@@ -33,13 +50,15 @@ namespace cytnx {
 
       // calculate output shape:
       std::vector<cytnx_int64> new_shape(non_contract_l.size() + non_contract_r.size());
-      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
+      cytnx_int64 left_dim = 1;
+      cytnx_int64 right_dim = 1;
+      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++) {
         new_shape[i] = Tl.shape()[non_contract_l[i]];
-      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
+        left_dim *= new_shape[i];
+      }
+      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++) {
         new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
-
-      if (new_shape.size() == 0) {
-        new_shape.push_back(1);
+        right_dim *= new_shape[non_contract_l.size() + i];
       }
 
       Tensor tmpL = Tl;
@@ -56,10 +75,10 @@ namespace cytnx {
         }
         tmpL.permute_(mapperL);
         oldshapeL = tmpL.shape();
-        tmpL.reshape_({-1, comm_dim});
+        tmpL.reshape_({left_dim, comm_dim});
 
       } else {
-        tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
+        tmpL = Tl.permute(mapperL).reshape({left_dim, comm_dim});
       }
       if (cacheR) {
         // calculate reverse mapper:
@@ -69,10 +88,10 @@ namespace cytnx {
         }
         tmpR.permute_(mapperR);
         oldshapeR = tmpR.shape();
-        tmpR.reshape_({comm_dim, -1});
+        tmpR.reshape_({comm_dim, right_dim});
 
       } else {
-        tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
+        tmpR = Tr.permute(mapperR).reshape({comm_dim, right_dim});
       }
 
       // permute!
@@ -138,10 +157,6 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
         new_shape[non_contract_l.size() + i] = _tr.shape()[non_contract_r[i]];
 
-      if (new_shape.size() == 0) {
-        new_shape.push_back(1);
-      }
-
       out.Init(new_shape, out_dtype, _tr.device(), false);
 
       checkCudaErrors(cudaSetDevice(_tl.device()));
@@ -162,6 +177,8 @@ namespace cytnx {
         "\n");
       cytnx_error_msg(Tl.device() != Tr.device(),
                       "[ERROR] two tensor for Tensordot cannot on different devices.%s", "\n");
+      check_tensordot_axis_bounds("Tensordot", "L", idxl, Tl.rank());
+      check_tensordot_axis_bounds("Tensordot", "R", idxr, Tr.rank());
 
       // check if two tensor has same data, to prevent conflict!
       if (cacheL && cacheR) {
@@ -173,7 +190,7 @@ namespace cytnx {
 
       Tensor out;
 
-      if (Tl.device() == Device.cpu) {
+      if (Tl.device() == Device.cpu || Tl.is_empty() || Tr.is_empty()) {
         _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
 
       } else {

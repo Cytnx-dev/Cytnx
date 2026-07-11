@@ -13,3 +13,9 @@ TEST_F(UniTensor_baseTest, get_index) {
   std::cout << utzero345.get_index("ABCa") << std::endl;
   std::cout << utzero345.get_index("") << std::endl;
 }
+
+TEST_F(UniTensor_baseTest, rank_detects_label_bond_mismatch) {
+  ASSERT_EQ(utzero345.rank(), 3);
+  utzero345.bonds().pop_back();
+  EXPECT_THROW(utzero345.rank(), cytnx::error);
+}

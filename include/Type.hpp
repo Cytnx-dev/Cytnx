@@ -185,6 +185,31 @@ namespace cytnx {
                  cytnx_bool>;
 #endif
 
+  // CytnxType<T> is satisfied by the element types that have a cytnx dtype (the members of
+  // Type_list, excluding the Void placeholder). Storage_base::data/at/back are constrained to it
+  // so that requesting an unsupported T is a compile-time error at the call site. The GPU cuComplex
+  // / cuda::std::complex pointer views are non-cytnx-dtype types and are provided separately as
+  // explicit specializations.
+  template <typename T>
+  concept CytnxType = variant_contains_v<T, Type_list> && !std::is_void_v<T>;
+
+#ifdef UNI_GPU
+  // The GPU complex pointer-view types that Storage_base::data<T>() specializes for. They are not
+  // cytnx dtypes: cuDoubleComplex/cuFloatComplex are the cuComplex ABI types for CUDA library
+  // calls, and cuda::std::complex<...> is the representation GPU kernels use internally.
+  template <typename T>
+  concept GpuComplexView =
+    std::is_same_v<T, cuDoubleComplex> || std::is_same_v<T, cuFloatComplex> ||
+    std::is_same_v<T, cytnx_cuda_complex128> || std::is_same_v<T, cytnx_cuda_complex64>;
+
+  // The element types data<T>() accepts: cytnx dtypes plus the GPU complex pointer views.
+  template <typename T>
+  concept StorageDataType = CytnxType<T> || GpuComplexView<T>;
+#else
+  template <typename T>
+  concept StorageDataType = CytnxType<T>;
+#endif
+
   // The number of supported types
   constexpr int N_Type = std::variant_size_v<Type_list>;
   constexpr int N_fType = 5;

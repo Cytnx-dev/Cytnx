@@ -58,7 +58,10 @@ namespace cytnx {
         if (diagonal_length == 0 || output_size == 0) {
           output_storage.set_zeros();
           Tensor out = Tensor::from_storage(output_storage);
-          if (!output_is_scalar) out.reshape_(output_shape);
+          if (output_is_scalar)
+            out.reshape_({});
+          else
+            out.reshape_(output_shape);
           return out;
         }
 
@@ -69,7 +72,9 @@ namespace cytnx {
         if (output_is_scalar) {
           output_data[0] =
             PairwiseSum(std::span<const T>(input_data, diagonal_span) | stride(diagonal_stride));
-          return Tensor::from_storage(output_storage);
+          Tensor out = Tensor::from_storage(output_storage);
+          out.reshape_({});
+          return out;
         }
 
         // Walk the output elements in row-major order, carrying the diagonal's

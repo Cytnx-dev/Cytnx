@@ -214,6 +214,7 @@ namespace cytnx {
                         const std::vector<cytnx_uint64> &invmapper_R) {
       cytnx_error_msg(out->dtype() != Type.Bool,
                       "[cuCpr_dispatch] output dtype must be Bool, got=%d%s", out->dtype(), "\n");
+      if (len == 0) return;
 
       switch (Lin->dtype()) {
         case Type.ComplexDouble:

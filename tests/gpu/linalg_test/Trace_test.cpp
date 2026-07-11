@@ -7,7 +7,6 @@
 #include "Device.hpp"
 #include "Tensor.hpp"
 #include "Type.hpp"
-#include "backend/Storage.hpp"
 #include "linalg.hpp"
 #include "random.hpp"
 
@@ -24,7 +23,6 @@ namespace {
   using cytnx::cytnx_int64;
   using cytnx::cytnx_uint64;
   using cytnx::Device;
-  using cytnx::Storage;
   using cytnx::Tensor;
   using cytnx::Type;
 
@@ -34,14 +32,8 @@ namespace {
     return cytnx::linalg::Trace(gpu_t.to(Device.cpu).contiguous(), a, b);
   }
 
-  // Tensor's own constructor and Tensor::get() (slicing) both reject a 0 in any
-  // shape dimension, so a zero-extent Tensor can only be built by composing a
-  // zero-element Storage directly and reshaping it onto the target shape.
-  static Tensor ZeroExtentGpuTensor(const std::vector<cytnx_int64>& shape, unsigned int dtype) {
-    Storage s(0, dtype, Device.cuda);
-    Tensor t = Tensor::from_storage(s);
-    t.reshape_(shape);
-    return t;
+  static Tensor ZeroExtentGpuTensor(const std::vector<cytnx_uint64>& shape, unsigned int dtype) {
+    return Tensor(shape, dtype, Device.cuda);
   }
 
   static Tensor TraceOnGpuToCpu(const Tensor& gpu_t, cytnx_uint64 a, cytnx_uint64 b) {
@@ -96,13 +88,13 @@ namespace {
     ASSERT_FALSE(p.is_contiguous());
     auto out_p = TraceOnGpuToCpu(p, 0, 1);
     auto out_c = ContiguousCpuReferenceTrace(t, 0, 1);  // tr(A) == tr(A^T)
-    ASSERT_EQ(out_p.shape().size(), 1u);
-    ASSERT_EQ(out_p.shape()[0], 1u);
+    ASSERT_TRUE(out_p.is_scalar());
+    ASSERT_TRUE(out_c.is_scalar());
     EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(out_p, out_c, 1e-12));
   }
 
   TEST(LinalgGpuTraceTest, OutputRankIsInputMinusTwo) {
-    // tr(rank-N) -> rank-(N-2); tr(rank-2) -> a 1-element rank-1 tensor.
+    // tr(rank-N) -> rank-(N-2); tr(rank-2) -> a rank-0 scalar tensor.
     auto r4 = cytnx::random::random_tensor({2, 3, 2, 4}, -1.0, 1.0, Device.cpu, 0, Type.Double)
                 .to(Device.cuda);
     auto out4 = TraceOnGpuToCpu(r4, 0, 2);
@@ -119,8 +111,7 @@ namespace {
     auto r2 =
       cytnx::random::random_tensor({5, 5}, -1.0, 1.0, Device.cpu, 0, Type.Double).to(Device.cuda);
     auto out2 = TraceOnGpuToCpu(r2, 0, 1);
-    EXPECT_EQ(out2.shape().size(), 1u);
-    EXPECT_EQ(out2.shape()[0], 1u);
+    EXPECT_TRUE(out2.is_scalar());
   }
 
   TEST(LinalgGpuTraceTest, SwappedAxisOrderMatches) {
@@ -202,7 +193,8 @@ namespace {
     auto gpu = cytnx::linalg::Trace(t, 0, 1).to(Device.cpu);
     const double expected = value * static_cast<double>(n);
     const double slack = static_cast<double>(n) * 1e-15 * std::abs(value) + 1e-9;
-    EXPECT_NEAR(gpu.at<cytnx::cytnx_double>({0}), expected, slack);
+    ASSERT_TRUE(gpu.is_scalar());
+    EXPECT_NEAR(gpu.item<cytnx::cytnx_double>(), expected, slack);
   }
 
   TEST(LinalgGpuTraceTest, SingletonSurvivingAxesDoNotCountTowardTraceLayoutCap) {
@@ -246,9 +238,8 @@ namespace {
   TEST(LinalgGpuTraceTest, Rank2ZeroExtentReturnsZeroScalar) {
     auto t = ZeroExtentGpuTensor({0, 0}, Type.Double);
     auto out = cytnx::linalg::Trace(t, 0, 1).to(Device.cpu);
-    ASSERT_EQ(out.shape().size(), 1u);
-    EXPECT_EQ(out.shape()[0], 1u);
-    EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), 0.0);
+    ASSERT_TRUE(out.is_scalar());
+    EXPECT_DOUBLE_EQ(out.item<cytnx_double>(), 0.0);
   }
 
   TEST(LinalgGpuTraceTest, ZeroTracedAxisReturnsZeroFilledOutput) {
@@ -276,10 +267,8 @@ namespace {
     // ever consulted, even when the tensor also has more non-trivial
     // (extent > 1) surviving axes than kMaxTraceRank (50) -- output_size is 0
     // regardless of how many other axes exist, so the kernel launch (and
-    // thus TraceLayout's capacity) is never reached. Built via
-    // ZeroExtentGpuTensor since one axis is 0, so the tensor has 0 elements
-    // despite its rank.
-    std::vector<cytnx_int64> shape = {2, 2, 0};
+    // thus TraceLayout's capacity) is never reached.
+    std::vector<cytnx_uint64> shape = {2, 2, 0};
     shape.insert(shape.end(), 51, 2);
     auto t = ZeroExtentGpuTensor(shape, Type.Double);
     auto out = cytnx::linalg::Trace(t, 0, 1).to(Device.cpu);

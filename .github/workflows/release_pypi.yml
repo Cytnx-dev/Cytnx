@@ -184,10 +184,10 @@ jobs:
       with:
         path: |
           ~/.ccache
-        key: ccache-wheel-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+        key: ccache-wheel-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
-          ccache-wheel-${{ runner.os }}-${{ github.ref_name }}-
-          ccache-wheel-${{ runner.os }}-
+          ccache-wheel-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-
+          ccache-wheel-${{ runner.os }}-${{ runner.arch }}-
 
     - name: Set Ccache Directory
       run: |

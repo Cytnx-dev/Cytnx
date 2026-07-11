@@ -65,9 +65,8 @@ namespace cytnx {
     Tensor sum_result = linalg::Sum(tensor);
     checkCudaErrors(cudaDeviceSynchronize());
 
-    EXPECT_EQ(sum_result.shape().size(), 1);
-    EXPECT_EQ(sum_result.shape()[0], 1);
+    EXPECT_TRUE(sum_result.is_scalar());
 
-    EXPECT_NUMBER_EQ(sum_result.at<TypeParam>({0}), value * static_cast<TypeParam>(element_number));
+    EXPECT_NUMBER_EQ(sum_result.item<TypeParam>(), value * static_cast<TypeParam>(element_number));
   }
 }  // namespace cytnx

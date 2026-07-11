@@ -72,6 +72,7 @@ add_executable(
   linalg_test/stride_view_test.cpp
   linalg_test/sum_test.cpp
   linalg_test/Vectordot_test.cpp
+  linalg_test/Zero_extent_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp

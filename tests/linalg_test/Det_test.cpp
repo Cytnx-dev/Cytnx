@@ -18,13 +18,13 @@ namespace cytnx {
     // Regardless of whether the input tensor is on the CPU or CPU, the result tensor of Det is
     // always on the CPU, so we always initialize `determinant` on the CPU to avoid the error of
     // adding two tensors on different devices.
-    Tensor determinant = zeros(1, T.dtype(), Device.cpu);
+    Tensor determinant = zeros({}, T.dtype(), Device.cpu);
     size_t n = T.shape()[0];
     if (n == 1) {
-      determinant.at({0}) = T.at({0, 0});
+      determinant.item() = T.at({0, 0});
       return determinant;
     } else if (n == 2) {
-      determinant.at({0}) = T.at({0, 0}) * T.at({1, 1}) - T.at({0, 1}) * T.at({1, 0});
+      determinant.item() = T.at({0, 0}) * T.at({1, 1}) - T.at({0, 1}) * T.at({1, 0});
       return determinant;
     }
     for (cytnx_uint64 a = 0; a < n; a++) {
@@ -36,7 +36,8 @@ namespace cytnx {
           T2.at({i, j}) = T.at({ii, jj});
         }
       }
-      determinant({0}) += (a % 2 == 0 ? 1 : -1) * T.at({0, a}) * linalg::Det(T2);
+      determinant.item() =
+        determinant.item() + (a % 2 == 0 ? 1 : -1) * T.at({0, a}) * linalg::Det(T2).item();
     }
     return determinant;
   }
@@ -44,11 +45,11 @@ namespace cytnx {
   cytnx_complex128 ExpectedDeterminant(const Tensor& T) {
     return CalculateDeterminant(Type_class::is_float(T.dtype()) ? T : T.astype(Type.Double))
       .astype(Type.ComplexDouble)
-      .at<cytnx_complex128>({0});
+      .item<cytnx_complex128>();
   }
 
   cytnx_complex128 TestingDeterminant(const Tensor& T) {
-    return linalg::Det(T).astype(Type.ComplexDouble).at<cytnx_complex128>({0});
+    return linalg::Det(T).astype(Type.ComplexDouble).item<cytnx_complex128>();
   }
 
   cytnx_double Tolerance(cytnx_double testing_value) { return std::abs(testing_value) / 1.0e6; }

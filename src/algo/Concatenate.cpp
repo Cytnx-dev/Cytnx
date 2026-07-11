@@ -35,7 +35,7 @@ namespace cytnx {
       Tensor t1 = T1.astype(dtype);
       Tensor t2 = T2.astype(dtype);
 
-      out = zeros(t1.shape()[0] + t2.shape()[0], dtype, t1.device());
+      out = zeros({t1.shape()[0] + t2.shape()[0]}, dtype, t1.device());
 
       out(ac::range(0, t1.shape()[0])) = t1;
       out(ac::tilend(t1.shape()[0])) = t2;

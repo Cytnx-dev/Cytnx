@@ -18,6 +18,8 @@ namespace cytnx {
       else
         cytnx_error_msg(true, "[Cannot have void (Uninitialize) Tensor]%s", "\n");
 
+      if (Tin.is_empty()) return;
+
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Exp_ii[Tin.dtype()](Tin._impl->storage()._impl,
                                                         Tin._impl->storage()._impl,

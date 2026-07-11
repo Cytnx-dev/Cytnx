@@ -8,6 +8,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "block_truncation_helpers.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -435,10 +436,19 @@ namespace cytnx {
       cytnx_error_msg(return_err < 0, "[ERROR][Rsvd] return_err cannot be negative%s", "\n");
       //
       cytnx_error_msg(Tin.shape().size() != 2, "[Rsvd] can only operate on rank-2 Tensor.%s", "\n");
+      if (Tin.is_empty()) {
+        std::vector<Tensor> out = Gesvd(Tin, is_U, is_vT);
+        if (return_err == 1) {
+          out.push_back(zeros({}, out[0].dtype(), out[0].device()));
+        } else if (return_err) {
+          out.push_back(zeros({0}, out[0].dtype(), out[0].device()));
+        }
+        return out;
+      }
       cytnx_uint64 samplenum =
         (cytnx_uint64)((std::max(0., oversampling_factor) + 1.) * (double)keepdim) +
         oversampling_summand;
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      cytnx_uint64 n_singlu = std::min(Tin.shape()[0], Tin.shape()[1]);
       Tensor Q;
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> outT;
@@ -737,6 +747,7 @@ namespace cytnx {
           smidx++;
           Smin = Sall.storage()(smidx);
         }
+        smidx = CountDroppedSingularValues(Sall, smidx, Smin);
 
         // traversal each block and truncate!
         UniTensor &S = outCyT[0];
@@ -854,11 +865,8 @@ namespace cytnx {
         }
 
         // handle return_err!
-        if (return_err == 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-          outCyT.back().get_block_().storage().at(0) = Smin;
-        } else if (return_err) {
-          outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+        if (return_err) {
+          outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
         }
       }  // Rsvd_Block_UT_internal no minblockdim
 
@@ -927,9 +935,9 @@ namespace cytnx {
           }
         }
         if (!anySall) {
-          // no truncation; return_err is tensor with one element, set to 0
           if (return_err >= 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+            outCyT.push_back(
+              BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err, outCyT[0].device()));
           }
         } else {
           Scalar Smin;
@@ -959,21 +967,22 @@ namespace cytnx {
               smidx++;
               Smin = Sall.storage()(smidx);
             }
+            if (keep_dim == 0) {
+              smidx = Sshape;
+            } else {
+              smidx = CountDroppedSingularValues(Sall, smidx, Smin);
+            }
             // handle return_err!
-            if (return_err == 1) {
-              outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-              outCyT.back().get_block_().storage().at(0) = Smin;
-            } else if (return_err) {
-              outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+            if (return_err) {
+              outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
             }
           } else {
             // keep_dim < 1: per-block min_blockdim guarantees already cover the global cap, so
             // every value in Sall is dropped.
-            if (return_err == 1) {
-              // largest dropped singular value
-              outCyT.push_back(UniTensor(linalg::Max(Sall)));
-            } else if (return_err) {
-              outCyT.push_back(UniTensor(Sall));
+            if (return_err) {
+              Sall = algo::Sort(Sall);  // ascending; BuildBlockDiscardedSingularValues expects this
+              outCyT.push_back(
+                BuildBlockDiscardedSingularValues(Sall, Sall.shape()[0], return_err));
             }
           }
 

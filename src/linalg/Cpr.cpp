@@ -6,19 +6,33 @@
 #ifdef BACKEND_TORCH
 #else
 
+  #include "Arithmetic_shape.hpp"
   #include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
     Tensor Cpr(const Tensor &Lt, const Tensor &Rt) {
-      cytnx_error_msg(Lt.shape() != Rt.shape(),
-                      "[Cpr] error, the two tensor does not have the same shape.%s", "\n");
+      detail::check_binary_tensor_inputs(Lt, Rt, "Cpr");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Cpr] error, two tensor cannot on different devices.%s", "\n");
-      Tensor out(Lt.shape(), Type.Bool, Lt.device());
+      if ((Lt.is_scalar() || Rt.is_scalar()) && Lt.device() != Device.cpu) {
+        return Cpr(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
+      }
+      Tensor out;
+      bool icnst = false;
+      if (detail::init_broadcast_binary_output(out, Lt, Rt, Type.Bool)) {
+        icnst = true;
+      } else {
+        cytnx_error_msg(Lt.shape() != Rt.shape(),
+                        "[Cpr] error, the two tensor does not have the same shape.%s", "\n");
+        out.Init(Lt.shape(), Type.Bool, Lt.device());
+      }
+
+      const Tensor left = detail::host_singleton_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_singleton_for_gpu_broadcast(Rt, Lt.device());
 
       // if contiguous, then no need to calculate the mappers
-      if (Lt.is_contiguous() && Rt.is_contiguous()) {
+      if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section.
         if (Lt.device() == Device.cpu) {
           std::visit(
@@ -28,18 +42,18 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::CprInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, Lt._impl->storage()._impl->size(), {}, {}, {});
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
           cytnx::linalg_internal::cuCpr_dispatch(
-            out._impl->storage()._impl, Lt._impl->storage()._impl, Rt._impl->storage()._impl,
-            Rt._impl->storage()._impl->size(), {}, {}, {});
+            out._impl->storage()._impl, left._impl->storage()._impl, right._impl->storage()._impl,
+            out._impl->storage()._impl->size(), {}, {}, {});
   #else
           cytnx_error_msg(true, "[Cpr] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -55,13 +69,13 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::CprInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, Lt._impl->storage()._impl->size(), Lt._impl->shape(),
-                    Lt._impl->invmapper(), Rt._impl->invmapper());
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, left._impl->storage()._impl->size(),
+                    left._impl->shape(), left._impl->invmapper(), right._impl->invmapper());
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           cytnx_error_msg(true,

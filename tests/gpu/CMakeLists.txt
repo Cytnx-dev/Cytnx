@@ -36,6 +36,7 @@ add_executable(
   linalg_test/Trace_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/sum_test.cpp
+  linalg_test/Zero_extent_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Sort_test.cpp

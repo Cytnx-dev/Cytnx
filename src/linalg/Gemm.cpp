@@ -72,6 +72,15 @@ namespace cytnx {
       if (!py.is_contiguous()) py = py.contiguous();
       if (!c.is_contiguous()) c = c.contiguous();
 
+      if (c.is_empty()) return;
+      if (px.shape()[1] == 0) {
+        if (pb == Scalar(0.0))
+          c.storage().set_zeros();
+        else
+          c *= pb;
+        return;
+      }
+
       if (x.device() == Device.cpu) {
         linalg_internal::lii.Gemm_ii[fin_dtype](c._impl->storage()._impl, px._impl->storage()._impl,
                                                 py._impl->storage()._impl, px.shape()[0],
@@ -125,6 +134,7 @@ namespace cytnx {
       if (!py.is_contiguous()) py = py.contiguous();
 
       Tensor out = zeros({px.shape()[0], py.shape()[1]}, fin_dtype, x.device());
+      if (out.is_empty() || px.shape()[1] == 0) return out;
 
       Scalar pb(1, fin_dtype);
 

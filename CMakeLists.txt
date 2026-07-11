@@ -196,68 +196,53 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
 # #####################################################################
-# ## HOST COMPILER REQUIREMENT: C++20 std::format (Python bindings only)
+# ## HOST COMPILER REQUIREMENT: std::format availability
 # #####################################################################
-# std::format (the C++20 <format> library, P0645) is used ONLY by the Python
-# binding layer -- pybind/symmetry_py.cpp and pybind/unitensor_py.cpp -- which
-# is compiled only when BUILD_PYTHON is ON. The core C++ library (include/,
-# src/) does not use std::format, so a C++-only build (-DBUILD_PYTHON=OFF)
-# needs just a C++20 compiler, not this floor. Hence the requirement is gated
-# on BUILD_PYTHON. (If include/ or src/ ever adopt std::format, move this out
-# of the BUILD_PYTHON guard.)
+# Cytnx requires C++20 project-wide; for example, the core linalg code uses
+# std::span in PairwiseSum/stride-view helpers. std::format (the C++20 <format>
+# library, P0645) has a higher practical standard-library floor than many other
+# C++20 features, so probe the actual feature during configure instead of using a
+# compiler-version guard.
 #
-# std::format is absent from early C++20-era standard libraries, and its
-# minimum differs per implementation -- and is NOT implied by the Clang
-# front-end version, since Clang can use either libc++ or libstdc++:
+# std::format is absent from early C++20-era standard libraries, and its minimum
+# differs per implementation -- and is NOT implied by the Clang front-end
+# version, since Clang can use either libc++ or libstdc++:
 #   * libstdc++ (GCC):              since GCC 13
 #   * libc++    (Clang/AppleClang): since LLVM 17 (older needed
 #                                   -fexperimental-library)
-# So rather than gate on a compiler version (unreliable for Clang), probe the
-# actual feature. check_cxx_source_compiles honors CMAKE_CXX_STANDARD here
-# (cmake_minimum_required is >= 3.25, so policy CMP0067 is NEW), meaning the
-# probe is compiled at C++20, not the compiler's default (typically C++17,
-# where <format> is absent and the probe would false-negative).
-if(BUILD_PYTHON)
-  # Friendlier fast-path message for the most common miss (old GCC), before the
-  # generic probe.
-  if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13)
-    message(FATAL_ERROR
-      "GCC >= 13 is required for the Python bindings (BUILD_PYTHON=ON): Cytnx "
-      "uses std::format (C++20 <format>), which libstdc++ implements only from "
-      "GCC 13. Found GCC ${CMAKE_CXX_COMPILER_VERSION} at ${CMAKE_CXX_COMPILER}.\n"
-      "Install GCC 13+ and point CMake at it, e.g. -DCMAKE_CXX_COMPILER=g++-13 "
-      "(and -DCMAKE_C_COMPILER=gcc-13), set the CXX/CC environment variables, or "
-      "configure a C++-only build with -DBUILD_PYTHON=OFF.")
-  endif()
-
-  # Authoritative, compiler-agnostic check: does this toolchain (compiler +
-  # standard library + flags) actually provide std::format at C++20?
-  include(CheckCXXSourceCompiles)
-  # Match the compile definition the real pybind sources inherit from the cytnx
-  # target -- target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY),
-  # propagated to pycytnx via target_link_libraries(pycytnx PUBLIC cytnx). On
-  # macOS/libc++ that define turns off std::format's deployment-target
-  # availability guards, so the probe predicts the actual build instead of
-  # false-rejecting a low-deployment-target (e.g. cibuildwheel) macOS config
-  # that would in fact compile. It is a no-op on libstdc++/MSVC.
-  set(CMAKE_REQUIRED_DEFINITIONS -D_LIBCPP_DISABLE_AVAILABILITY)
-  check_cxx_source_compiles(
-    "#include <format>
+# See https://en.cppreference.com/cpp/compiler_support/20 for the C++20 library
+# support matrix.
+#
+# check_cxx_source_compiles honors CMAKE_CXX_STANDARD here (cmake_minimum_required
+# is >= 3.25, so policy CMP0067 is NEW), meaning the probe is compiled at C++20,
+# not the compiler's default (typically C++17, where <format> is absent and the
+# probe would false-negative).
+include(CheckCXXSourceCompiles)
+# Match the compile definition applied to the cytnx target below:
+# target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY). On
+# macOS/libc++ that define turns off std::format's deployment-target
+# availability guards, so the probe predicts the actual project build instead of
+# false-rejecting a low-deployment-target (e.g. cibuildwheel) macOS config
+# that would in fact compile. It is a no-op on libstdc++/MSVC.
+set(CMAKE_REQUIRED_DEFINITIONS -D_LIBCPP_DISABLE_AVAILABILITY)
+check_cxx_source_compiles(
+  "#include <format>
 int main() { return std::format(\"{}\", 42).size() == 2 ? 0 : 1; }"
-    CYTNX_HAS_STD_FORMAT)
-  unset(CMAKE_REQUIRED_DEFINITIONS)
-  if(NOT CYTNX_HAS_STD_FORMAT)
-    message(FATAL_ERROR
-      "The Python bindings (BUILD_PYTHON=ON) require std::format (C++20 "
-      "<format>), which this C++ toolchain does not provide. Compiler: "
-      "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} "
-      "(${CMAKE_CXX_COMPILER}).\n"
-      "Minimum standard libraries: GCC/libstdc++ >= 13, or Clang/libc++ >= 17 "
-      "(AppleClang: a recent Xcode with a matching macOS deployment target).\n"
-      "Select a newer compiler with -DCMAKE_CXX_COMPILER=... (and "
-      "-DCMAKE_C_COMPILER=...), use a newer standard library, or build C++-only "
-      "with -DBUILD_PYTHON=OFF.")
-  endif()
+  CYTNX_HAS_STD_FORMAT)
+unset(CMAKE_REQUIRED_DEFINITIONS)
+if(NOT CYTNX_HAS_STD_FORMAT)
+  message(FATAL_ERROR
+    "Cytnx requires C++20 standard-library support for std::format (<format>), "
+    "which this C++ toolchain does not provide. Compiler: "
+    "${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION} "
+    "(${CMAKE_CXX_COMPILER}).\n"
+    "Minimum standard-library versions for std::format include GCC/libstdc++ >= "
+    "13 and Clang/libc++ >= 17 (AppleClang: a recent Xcode with a matching "
+    "macOS deployment target). See the C++20 library support table: "
+    "https://en.cppreference.com/cpp/compiler_support/20.\n"
+    "Select a compiler and standard library that provide std::format. If CMake "
+    "picked the wrong system compiler, override it with CMAKE_CXX_COMPILER "
+    "and CMAKE_C_COMPILER (or set the CXX/CC environment variables).")
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -298,6 +283,12 @@ ENDIF ()
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)
+
+# The public headers require C++20 (std::format, std::source_location, and the
+# CytnxType concept in Type.hpp). Export that requirement through the installed/
+# exported target so find_package(cytnx) consumers compile the headers in C++20
+# mode -- the build-level CMAKE_CXX_STANDARD does not propagate to consumers.
+target_compile_features(cytnx PUBLIC cxx_std_20)
 
 target_include_directories(cytnx
   PRIVATE
@@ -369,8 +360,6 @@ else()
 endif() # Backend torch
 
 #ARPACK
-find_library(ARPACK_LIB arpack REQUIRED)
-message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
 target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
 
 
@@ -438,27 +427,14 @@ endif()
 # #######
 IF(BUILD_PYTHON)
   find_package (Python COMPONENTS Interpreter Development)
-  find_package(pybind11 3.0.0 QUIET)
-
-  if(NOT pybind11_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-      pybind11_sources
-      GIT_REPOSITORY https://github.com/pybind/pybind11.git
-      GIT_TAG v3.0.1
-    )
-
-    FetchContent_GetProperties(pybind11_sources)
-
-    if(NOT pybind11_sources_POPULATED)
-      FetchContent_Populate(pybind11_sources)
-
-      add_subdirectory(
-        ${pybind11_sources_SOURCE_DIR}
-        ${pybind11_sources_BINARY_DIR}
-      )
-    endif()
-  endif()
+  # Require a compatible pybind11 to be installed. The committed
+  # cytnx/cytnx/*.pyi stubs are regenerated only via the `pip` path, which
+  # provisions the pybind11 pinned in [build-system].requires (==3.0.4).
+  # TODO: bump this to `find_package(pybind11 3.0.4 REQUIRED)` to match the
+  # pyproject.toml pin once pybind11 3.0.4 is available on conda-forge. It
+  # currently ships 3.0.3, which a 3.0.4 requirement would reject and break the
+  # conda build.
+  find_package(pybind11 3.0.0 REQUIRED)
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
     pybind/generator_py.cpp
@@ -523,7 +499,7 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
   COMPONENT libraries
   ARCHIVE
   DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  COMPONENT libraries
+  COMPONENT Development
   PUBLIC_HEADER
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   COMPONENT Development
@@ -541,6 +517,7 @@ install(EXPORT cytnx_targets
   FILE CytnxTargets.cmake
   NAMESPACE Cytnx::
   DESTINATION ${INSTALL_CONFIGDIR}
+  COMPONENT Development
 )
 install(DIRECTORY include/
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -567,6 +544,7 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfigVersion.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
+  COMPONENT Development
 )
 
 # #############################################
@@ -643,9 +621,9 @@ message(STATUS "")
 message(STATUS "")
 message(STATUS "")
 
-install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
-install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
-install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
+install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
 
 if(BUILD_PACKAGES)
   include("Package.cmake")

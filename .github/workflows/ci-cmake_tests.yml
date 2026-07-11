@@ -129,7 +129,12 @@ jobs:
         # test_main has no install() rule, so without this we'd discover
         # the gap only via a missing-binary ctest failure.
         working-directory: ${{ env.BUILD_DIR }}
-        run: cmake --build . --target test_main -j "$(nproc)"
+        run: |
+          # `cmake --build` may trigger a CMake reconfigure, which re-evaluates
+          # find_package(pybind11); point it at the pybind11 the `dev` extra
+          # installed into this env via CMAKE_PREFIX_PATH.
+          export CMAKE_PREFIX_PATH="$(python -m pybind11 --cmakedir)${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
+          cmake --build . --target test_main -j "$(nproc)"
 
       - name: Run gtest via ctest
         working-directory: ${{ env.BUILD_DIR }}

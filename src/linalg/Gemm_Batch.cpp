@@ -45,6 +45,7 @@ namespace cytnx {
       if (total_matrices == 0) return;
 
       const int device = a_tensors[0].device();
+      bool has_zero_extent = false;
 
       // Per-group scalar validation
       for (cytnx_int64 g = 0; g < group_count; g++) {
@@ -105,6 +106,8 @@ namespace cytnx {
         cytnx_error_msg(b_tensors[i].shape()[1] != c_tensors[i].shape()[1],
                         "[Gemm_Batch] error, b_tensors[%d],c_tensors[%d] dimension not match.%s", i,
                         i, "\n");
+        has_zero_extent = has_zero_extent || a_tensors[i].is_empty() || b_tensors[i].is_empty() ||
+                          c_tensors[i].is_empty();
       }
 
       // Within-group dimension consistency (MKL needs one m/n/k per group)
@@ -165,6 +168,19 @@ namespace cytnx {
           alpha_promoted[g] = alpha_array[g].astype(promoted_dtype);
         if (beta_array[g].dtype() != promoted_dtype)
           beta_promoted[g] = beta_array[g].astype(promoted_dtype);
+      }
+
+      // Batched BLAS interfaces do not consistently accept zero m/n/k. Fall back to the
+      // single-matrix wrapper, which implements the empty-output and k=0 semantics explicitly.
+      if (has_zero_extent) {
+        std::size_t idx = 0;
+        for (std::size_t g = 0; g < static_cast<std::size_t>(group_count); ++g) {
+          for (cytnx_int64 j = 0; j < group_size[g]; ++j, ++idx) {
+            Gemm_(alpha_promoted[g], a_promoted[idx], b_promoted[idx], beta_promoted[g],
+                  c_tensors[idx]);
+          }
+        }
+        return;
       }
 
       // Raw data pointer arrays

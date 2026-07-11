@@ -50,8 +50,8 @@ namespace cytnx {
     }
     Tensor_impl() : _contiguous(true){};
 
-    void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              int device = -1, const bool &init_zero = true);
+    void Init(const std::vector<cytnx_uint64> &shape, unsigned int dtype = Type.Double,
+              int device = -1, bool init_zero = true);
     void Init(const Storage &in);
     // void Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
     // const unsigned int &dtype, int device);
@@ -71,6 +71,9 @@ namespace cytnx {
     Tensor_impl &operator=(const Tensor_impl &rhs);  // add const
 
     unsigned int dtype() const { return this->_storage.dtype(); }
+    bool is_void() const { return this->dtype() == Type.Void; }
+    cytnx_uint64 rank() const { return this->_shape.size(); }
+    bool is_scalar() const { return !this->is_void() && this->rank() == 0; }
     int device() const { return this->_storage.device(); }
 
     std::string dtype_str() const { return Type.getname(this->_storage.dtype()); }
@@ -112,6 +115,9 @@ namespace cytnx {
     T &at(const std::vector<cytnx_uint64> &locator) const {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
+      cytnx_error_msg(this->is_void(), "[ERROR] try to access element of an uninitialized Tensor%s",
+                      "\n");
+      if (this->_shape.empty()) return this->_storage.at<T>(0);
 
       cytnx_uint64 RealRank, mtplyr;
       // std::vector<cytnx_uint64> c_shape(this->_shape.size());
@@ -121,7 +127,7 @@ namespace cytnx {
       RealRank = 0;
       mtplyr = 1;
 
-      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+      for (cytnx_uint64 i = this->_shape.size(); i-- > 0;) {
         if (locator[i] >= this->_shape[i]) {
           cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
         }
@@ -138,6 +144,9 @@ namespace cytnx {
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
+      cytnx_error_msg(this->is_void(), "[ERROR] try to access element of an uninitialized Tensor%s",
+                      "\n");
+      if (this->_shape.empty()) return this->_storage.at(0);
 
       cytnx_uint64 RealRank, mtplyr;
       // std::vector<cytnx_uint64> c_shape(this->_shape.size());
@@ -147,7 +156,7 @@ namespace cytnx {
       RealRank = 0;
       mtplyr = 1;
 
-      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+      for (cytnx_uint64 i = this->_shape.size(); i-- > 0;) {
         if (locator[i] >= this->_shape[i]) {
           cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
         }
@@ -164,6 +173,9 @@ namespace cytnx {
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
+      cytnx_error_msg(this->is_void(), "[ERROR] try to access element of an uninitialized Tensor%s",
+                      "\n");
+      if (this->_shape.empty()) return this->_storage.at(0);
 
       cytnx_uint64 RealRank, mtplyr;
       // std::vector<cytnx_uint64> c_shape(this->_shape.size());
@@ -173,7 +185,7 @@ namespace cytnx {
       RealRank = 0;
       mtplyr = 1;
 
-      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+      for (cytnx_uint64 i = this->_shape.size(); i-- > 0;) {
         if (locator[i] >= this->_shape[i]) {
           cytnx_error_msg(true, "%s", "Attempting to access out-of-bound index in Tensor.");
         }
@@ -217,6 +229,14 @@ namespace cytnx {
         return out;
       } else {
         boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+        if (this->_storage.size() == 0) {
+          out->_storage = this->_storage;
+          out->_shape = this->_shape;
+          out->_mapper = vec_range(this->_shape.size());
+          out->_invmapper = out->_mapper;
+          out->_contiguous = true;
+          return out;
+        }
         std::vector<cytnx_uint64> oldshape(this->_shape.size());
         for (cytnx_uint64 i = 0; i < this->_shape.size(); i++) {
           oldshape[i] = this->_shape[this->_invmapper[i]];
@@ -238,6 +258,12 @@ namespace cytnx {
       // return new instance if act on non-contiguous tensor
       // return self if act on contiguous tensor
       if (!this->_contiguous) {
+        if (this->_storage.size() == 0) {
+          vec_range_(this->_mapper, this->_shape.size());
+          this->_invmapper = this->_mapper;
+          this->_contiguous = true;
+          return;
+        }
         std::vector<cytnx_uint64> oldshape(this->_shape.size());
         for (cytnx_uint64 i = 0; i < this->_shape.size(); i++) {
           oldshape[i] = this->_shape[this->_invmapper[i]];
@@ -277,8 +303,6 @@ namespace cytnx {
         cytnx_error_msg(
           new_N == 0, "%s",
           "[ERROR] reshape cannot infer the -1 dimension when another dimension is 0");
-        cytnx_error_msg(new_N > this->_storage.size(), "%s",
-                        "[ERROR] new shape exceed the total number of elements.");
         cytnx_error_msg(this->_storage.size() % new_N, "%s",
                         "[ERROR] unmatch size when reshape with undetermine dimension");
       } else {

@@ -24,6 +24,21 @@ using pybind_cytnx::dispatch_pyint;
 #ifdef BACKEND_TORCH
 #else
 
+namespace {
+  bool is_empty_tuple(py::handle object) {
+    return py::isinstance<py::tuple>(object) &&
+           py::reinterpret_borrow<py::tuple>(object).size() == 0;
+  }
+
+  void check_tuple_rank(py::tuple args, cytnx_uint64 rank, const char *type_name) {
+    const auto index_count = static_cast<cytnx_uint64>(args.size());
+    cytnx_error_msg(index_count > rank,
+                    "[ERROR] too many indices for %s: got %llu indices for rank-%llu object.%s",
+                    type_name, static_cast<unsigned long long>(index_count),
+                    static_cast<unsigned long long>(rank), "\n");
+  }
+}  // namespace
+
 class cHclass {
  public:
   Scalar::Sproxy proxy;
@@ -183,6 +198,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   if (self.is_diag()) {
     if (py::isinstance<py::tuple>(locators)) {
       py::tuple Args = locators.cast<py::tuple>();
+      check_tuple_rank(Args, self.rank(), "UniTensor");
       cytnx_error_msg(Args.size() > 2,
                       "[ERROR][slicing] A diagonal UniTensor can only be accessed with one- or "
                       "two dimensional slicing.%s",
@@ -211,6 +227,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   } else {
     if (py::isinstance<py::tuple>(locators)) {
       py::tuple Args = locators.cast<py::tuple>();
+      check_tuple_rank(Args, self.rank(), "UniTensor");
       cytnx_uint64 cnt = 0;
       // mixing of slice and ints
       for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
@@ -413,8 +430,12 @@ void unitensor_binding(py::module &m) {
     .def("rowrank", &UniTensor::rowrank)
     .def("Nblocks", &UniTensor::Nblocks)
     .def("rank", &UniTensor::rank)
+    .def("size", &UniTensor::size)
     .def("uten_type", &UniTensor::uten_type)
     .def("uten_type_str",&UniTensor::uten_type_str)
+    .def("is_void", &UniTensor::is_void)
+    .def("is_scalar", &UniTensor::is_scalar)
+    .def("is_empty", &UniTensor::is_empty)
     .def("syms", &UniTensor::syms)
     .def("dtype", &UniTensor::dtype)
     .def("dtype_str", &UniTensor::dtype_str)
@@ -491,31 +512,48 @@ void unitensor_binding(py::module &m) {
 
      .def("__getitem__",
          [](const UniTensor &self, py::object locators) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to getitem from a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to getitem from an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
              "[ERROR] Cannot get element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             return self.get(std::vector<Accessor>{});
+           }
 
            auto accessors = build_accessors(self, locators);
            return self.get(accessors);
          })
     .def("__setitem__",
          [](UniTensor &self, py::object locators, const cytnx::Tensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to setelem to a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to setelem to an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(self.uten_type() == UTenType.Sparse, "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<Accessor>{}, rhs);
+             return;
+           }
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs);
          })
     .def("__setitem__",
          [](UniTensor &self, py::object locators, const cytnx::UniTensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to setelem to a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to setelem to an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
              "[ERROR] cannot set element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<Accessor>{}, rhs.get_block());
+             return;
+           }
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs.get_block());
@@ -2059,10 +2097,10 @@ void unitensor_binding(py::module &m) {
          py::arg("label"), py::arg("dim"))
 
     //[Generator]
-    .def_static("identity", [](const cytnx_uint64 &dim, const std::vector<std::string> &in_labels,
-                  const cytnx_bool &is_diag,
-                  const unsigned int &dtype,
-                  const int &device,
+    .def_static("identity", [](cytnx_uint64 dim, const std::vector<std::string> &in_labels,
+                  cytnx_bool is_diag,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::identity(dim, in_labels, is_diag, dtype, device, name);
@@ -2071,10 +2109,10 @@ void unitensor_binding(py::module &m) {
                    py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("eye", [](const cytnx_uint64 &dim, const std::vector<std::string> &in_labels,
-                  const cytnx_bool &is_diag,
-                  const unsigned int &dtype,
-                  const int &device,
+     .def_static("eye", [](cytnx_uint64 dim, const std::vector<std::string> &in_labels,
+                  cytnx_bool is_diag,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::eye(dim, in_labels, is_diag, dtype, device, name);
@@ -2083,58 +2121,58 @@ void unitensor_binding(py::module &m) {
                    py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-    .def_static("ones", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+    .def_static("ones", [](cytnx_uint64 Nelem, const std::vector<std::string> &in_labels,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
-                  return UniTensor::ones(Nelem, in_labels,dtype,device,name);
+                  return UniTensor::ones({Nelem}, in_labels,dtype,device,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
     .def_static("ones", [](const std::vector<cytnx_uint64> &shape, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::ones(shape, in_labels,dtype,device,name);
                 }, py::arg("shape"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("zeros", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+     .def_static("zeros", [](cytnx_uint64 Nelem, const std::vector<std::string> &in_labels,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
-                  return UniTensor::zeros(Nelem, in_labels,dtype,device,name);
+                  return UniTensor::zeros({Nelem}, in_labels,dtype,device,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
      .def_static("zeros", [](const std::vector<cytnx_uint64> &shape, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::zeros(shape, in_labels,dtype,device,name);
                 }, py::arg("shape"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("arange", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
+     .def_static("arange", [](cytnx_uint64 Nelem, const std::vector<std::string> &in_labels,
                   const std::string &name)
                 {
                   return UniTensor::arange(Nelem, in_labels,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(),
                    py::arg("name") = std::string(""))
-     .def_static("arange", [](const cytnx_double &start,const cytnx_double &end
-     ,const cytnx_double &step, const std::vector<std::string> &in_labels,const unsigned int &dtype, const int &device,
+     .def_static("arange", [](cytnx_double start, cytnx_double end
+     ,cytnx_double step, const std::vector<std::string> &in_labels,unsigned int dtype, int device,
                   const std::string &name)
                 {
                   return UniTensor::arange(start,end,step, in_labels,dtype,device,name);
                 }, py::arg("start"),py::arg("end"),py::arg("step")=cytnx_double(1), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("linspace", [](const cytnx_double &start,const cytnx_double &end
-     ,const cytnx_uint64 &Nelem,const bool &endpoint,const std::vector<std::string> &in_labels,const unsigned int &dtype, const int &device,
+     .def_static("linspace", [](cytnx_double start, cytnx_double end
+     ,cytnx_uint64 Nelem,bool endpoint,const std::vector<std::string> &in_labels,unsigned int dtype, int device,
                   const std::string &name)
                 {
                   return UniTensor::linspace(start,end,Nelem, endpoint, in_labels,dtype,device,name);

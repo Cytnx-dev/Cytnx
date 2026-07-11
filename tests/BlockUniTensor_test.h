@@ -56,7 +56,7 @@ class BlockUniTensorTest : public ::testing::Test {
 
   Tensor tzero345 = zeros({3, 4, 5});
   ;
-  UniTensor utzero345 = UniTensor(zeros(3 * 4 * 5)).reshape({3, 4, 5});
+  UniTensor utzero345 = UniTensor(zeros({3, 4, 5}));
 
   Tensor t0;
   Tensor t1a;

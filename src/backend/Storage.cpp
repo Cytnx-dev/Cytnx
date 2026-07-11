@@ -141,6 +141,7 @@ namespace cytnx {
     write_number(this->device());
 
     // data:
+    if (this->size() == 0) return;
     if (this->device() == Device.cpu) {
       f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
     } else {
@@ -164,6 +165,7 @@ namespace cytnx {
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
 
     // data:
+    if (this->size() == 0) return;
     if (this->device() == Device.cpu) {
       f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
     } else {
@@ -274,6 +276,7 @@ namespace cytnx {
 
     this->_impl = __SII.USIInit[dt]();
     this->_impl->Init(sz, dv);
+    if (sz == 0) return;
 
     // data:
     if (dv == Device.cpu) {
@@ -303,8 +306,7 @@ namespace cytnx {
 
     this->_impl = __SII.USIInit[dtype]();
     this->_impl->Init(Nelem, Device.cpu);
-
-    f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
+    if (Nelem != 0) f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
   }
 
   Scalar::Sproxy Storage::operator()(const cytnx_uint64 &idx) {
@@ -320,6 +322,7 @@ namespace cytnx {
                     "\n");
 
     std::vector<T> out(this->size());
+    if (out.empty()) return out;
     Storage S;
     if (this->device() != Device.cpu) {
       S = this->to(Device.cpu);

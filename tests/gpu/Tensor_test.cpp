@@ -102,7 +102,10 @@ TEST_F(TensorTest, gpu_shape) {
   EXPECT_EQ(B.shape()[1], 1);
   EXPECT_EQ(B.shape()[2], 1);
 
-  EXPECT_THROW(Tensor({0}, Type.Double, Device.cuda, true), std::logic_error);
+  Tensor empty({2, 0, 3}, Type.Double, Device.cuda, true);
+  EXPECT_TRUE(empty.is_empty());
+  EXPECT_EQ(empty.size(), 0);
+  EXPECT_EQ(empty.to(Device.cpu).shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
 }
 
 TEST_F(TensorTest, gpu_permute) {
@@ -153,7 +156,24 @@ TEST_F(TensorTest, gpu_permute) {
   EXPECT_EQ(B.shape().size(), 1);
   EXPECT_EQ(B.shape()[0], 1);
 
-  EXPECT_THROW(Tensor({0}, Type.Double, Device.cuda, true), std::logic_error);
+  Tensor empty({0}, Type.Double, Device.cuda, true);
+  empty.permute_({0});
+  EXPECT_TRUE(empty.is_empty());
+}
+
+TEST_F(TensorTest, gpu_ZeroExtentArithmetic) {
+  Tensor empty({2, 0, 3}, Type.Float, Device.cuda);
+  Tensor other({2, 0, 3}, Type.Double, Device.cuda);
+  Tensor scalar({}, Type.Double, Device.cuda);
+
+  EXPECT_TRUE((empty + other).is_empty());
+  EXPECT_TRUE((empty - other).is_empty());
+  EXPECT_TRUE((empty * other).is_empty());
+  EXPECT_TRUE((empty / other).is_empty());
+  EXPECT_TRUE((empty + scalar).is_empty());
+  EXPECT_TRUE((empty - 2.0).is_empty());
+  EXPECT_TRUE((empty * 2.0).is_empty());
+  EXPECT_TRUE((2.0 / empty).is_empty());
 }
 
 TEST_F(TensorTest, gpu_get) {
@@ -184,8 +204,11 @@ TEST_F(TensorTest, gpu_get) {
   EXPECT_EQ(tmp.is_contiguous(), true);
 
   tmp = tzero3456(0, 1, 4, 4);
-  EXPECT_EQ(tmp.shape().size(), 1);
-  EXPECT_EQ(tmp.shape()[0], 1);
+  EXPECT_EQ(tmp.dtype(), Type.ComplexDouble);
+  EXPECT_EQ(tmp.device(), Device.cuda);
+  EXPECT_TRUE(tmp.is_scalar());
+  EXPECT_EQ(tmp.storage().size(), 1);
+  EXPECT_EQ(tmp.to(Device.cpu).item<cytnx_complex128>(), cytnx_complex128(0, 0));
   EXPECT_EQ(tmp.is_contiguous(), true);
 
   tmp = tarcomplex3456.get({Accessor::all(), Accessor::all(), Accessor::all(), Accessor::all()});
@@ -256,6 +279,192 @@ TEST_F(TensorTest, gpu_set) {
           }
 }
 
+TEST_F(TensorTest, gpu_RankZeroScalarAccessAndBroadcast) {
+  Tensor scalar({}, Type.Double, Device.cuda);
+  scalar.set(std::vector<Accessor>{}, 3.25);
+
+  Tensor selected = scalar.get(std::vector<Accessor>{});
+  EXPECT_EQ(selected.device(), Device.cuda);
+  EXPECT_TRUE(selected.is_scalar());
+  EXPECT_DOUBLE_EQ(selected.to(Device.cpu).item<double>(), 3.25);
+
+  Tensor replacement({}, Type.Double, Device.cuda);
+  replacement.set(std::vector<Accessor>{}, -2.0);
+  scalar.set(std::vector<Accessor>{}, replacement);
+  EXPECT_DOUBLE_EQ(scalar.to(Device.cpu).item<double>(), -2.0);
+
+  scalar.set(std::vector<Accessor>{}, 2.0);
+  Tensor vec = arange(0, 3, 1, Type.Double, Device.cuda);
+  Tensor out = scalar + vec;
+  Tensor host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 3.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 4.0);
+
+  out = vec + scalar;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 3.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 4.0);
+
+  out = scalar - vec;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 1.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 0.0);
+
+  out = vec - scalar;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), -2.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), -1.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 0.0);
+
+  Tensor scalar2({}, Type.Double, Device.cuda);
+  scalar2.set(std::vector<Accessor>{}, 5.0);
+  out = scalar * scalar2;
+  host = out.to(Device.cpu);
+  EXPECT_TRUE(host.is_scalar());
+  EXPECT_DOUBLE_EQ(host.item<double>(), 10.0);
+
+  out = scalar * vec;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 2.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 4.0);
+
+  out = vec * scalar;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 2.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 4.0);
+
+  Tensor denom = arange(1, 4, 1, Type.Double, Device.cuda);
+  out = scalar / denom;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 2.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 1.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 2.0 / 3.0);
+
+  out = denom / scalar;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 0.5);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 1.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 1.5);
+
+  Tensor mod_scalar({}, Type.Int64, Device.cuda);
+  mod_scalar.set(std::vector<Accessor>{}, cytnx_int64(5));
+  Tensor mod_vec = arange(2, 5, 1, Type.Int64, Device.cuda);
+
+  out = linalg::Mod(mod_scalar, mod_vec);
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_EQ(host.at<cytnx_int64>({0}), 1);
+  EXPECT_EQ(host.at<cytnx_int64>({1}), 2);
+  EXPECT_EQ(host.at<cytnx_int64>({2}), 1);
+
+  out = linalg::Mod(mod_vec, mod_scalar);
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_EQ(host.at<cytnx_int64>({0}), 2);
+  EXPECT_EQ(host.at<cytnx_int64>({1}), 3);
+  EXPECT_EQ(host.at<cytnx_int64>({2}), 4);
+
+  Tensor mod_rhs({}, Type.Int64, Device.cuda);
+  mod_rhs.set(std::vector<Accessor>{}, cytnx_int64(3));
+  out = linalg::Mod(mod_scalar, mod_rhs);
+  host = out.to(Device.cpu);
+  EXPECT_TRUE(host.is_scalar());
+  EXPECT_EQ(host.item<cytnx_int64>(), 2);
+
+  Tensor cmp = linalg::Cpr(scalar, vec);
+  Tensor cmp_host = cmp.to(Device.cpu);
+  EXPECT_EQ(cmp_host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_FALSE(cmp_host.at<cytnx_bool>({0}));
+  EXPECT_FALSE(cmp_host.at<cytnx_bool>({1}));
+  EXPECT_TRUE(cmp_host.at<cytnx_bool>({2}));
+
+  cmp = linalg::Cpr(scalar, scalar);
+  cmp_host = cmp.to(Device.cpu);
+  EXPECT_TRUE(cmp_host.is_scalar());
+  EXPECT_TRUE(cmp_host.item<cytnx_bool>());
+
+  cmp = linalg::Cpr(scalar, scalar2);
+  cmp_host = cmp.to(Device.cpu);
+  EXPECT_TRUE(cmp_host.is_scalar());
+  EXPECT_FALSE(cmp_host.item<cytnx_bool>());
+
+  Tensor dot = linalg::Vectordot(vec, vec, false);
+  Tensor dot_host = dot.to(Device.cpu);
+  EXPECT_TRUE(dot_host.is_scalar());
+  EXPECT_EQ(dot_host.shape().size(), 0);
+  EXPECT_DOUBLE_EQ(dot_host.item<double>(), 5.0);
+
+  host = (dot * vec).to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 0.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 10.0);
+
+  Tensor shape_one = zeros({1}, Type.Double, Device.cuda);
+  shape_one.set(std::vector<Accessor>{Accessor(0)}, 4.0);
+  out = scalar + shape_one;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_FALSE(host.is_scalar());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 6.0);
+
+  out = shape_one - scalar;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_FALSE(host.is_scalar());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 2.0);
+
+  Tensor complex_scalar({}, Type.ComplexDouble, Device.cuda);
+  complex_scalar.set(std::vector<Accessor>{}, cytnx_complex128(4.0, 0.0));
+  cmp = linalg::Cpr(complex_scalar, shape_one);
+  cmp_host = cmp.to(Device.cpu);
+  EXPECT_EQ(cmp_host.shape(), (std::vector<cytnx_uint64>{1}));
+  EXPECT_TRUE(cmp_host.at<cytnx_bool>({0}));
+
+  Tensor float_mod_scalar({}, Type.Float, Device.cuda);
+  float_mod_scalar.set(std::vector<Accessor>{}, cytnx_float(5.5));
+  Tensor float_mod_vec = arange(2, 5, 1, Type.Float, Device.cuda);
+  out = linalg::Mod(float_mod_scalar, float_mod_vec);
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), (std::vector<cytnx_uint64>{3}));
+  EXPECT_FLOAT_EQ(host.at<cytnx_float>({0}), 1.5f);
+  EXPECT_FLOAT_EQ(host.at<cytnx_float>({1}), 2.5f);
+  EXPECT_FLOAT_EQ(host.at<cytnx_float>({2}), 1.5f);
+
+  out = shape_one + vec;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), vec.shape());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 6.0);
+
+  out = vec + shape_one;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), vec.shape());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 6.0);
+
+  vec += shape_one;
+  host = vec.to(Device.cpu);
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 6.0);
+}
+
 // TEST_F(TensorTest, gpu_approx_eq) {
 //   cytnx::User_debug = true;
 //   EXPECT_TRUE(tar3456.approx_eq(tar3456));
@@ -275,7 +484,7 @@ TEST_F(TensorTest, gpu_set) {
 // keeping the shared storage, with the layout mappers irrelevant to a
 // broadcast scalar.
 TEST(Tensor, GpuScalarInplaceNoncontigMul) {
-  Tensor a = arange(6).reshape({2, 3}).to(Device.cuda);  // Double, contiguous
+  Tensor a = arange(0, 6, 1, Type.Double, Device.cuda).reshape({2, 3});  // Double, contiguous
   Tensor v = a.permute({1, 0});  // distinct impl, shared storage, non-contiguous
   ASSERT_FALSE(v.is_contiguous());
   ASSERT_TRUE(is(a.storage(), v.storage()));
@@ -288,7 +497,7 @@ TEST(Tensor, GpuScalarInplaceNoncontigMul) {
 
 // Regression (#988): scalar /= on a non-contiguous GPU tensor.
 TEST(Tensor, GpuScalarInplaceNoncontigDiv) {
-  Tensor a = arange(6).reshape({2, 3}).to(Device.cuda);
+  Tensor a = arange(0, 6, 1, Type.Double, Device.cuda).reshape({2, 3});
   Tensor v = a.permute({1, 0});
   ASSERT_FALSE(v.is_contiguous());
   ASSERT_TRUE(is(a.storage(), v.storage()));
@@ -303,13 +512,30 @@ TEST(Tensor, GpuScalarInplaceNoncontigDiv) {
 // also exercises the #988 efficiency path: the scalar wrapper stays on the
 // host and is read by the GPU kernel with a host-side dereference.
 TEST(Tensor, GpuScalarInplaceContiguousValues) {
-  Tensor a = arange(6).to(Device.cuda);
+  Tensor a = arange(0, 6, 1, Type.Double, Device.cuda);
   a *= 3.0;
   a += 1.0;
   EXPECT_EQ(a.device(), Device.cuda);
   Tensor a_cpu = a.to(Device.cpu);
   for (cytnx_uint64 i = 0; i < 6; i++)
     EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(i), 3.0 * i + 1.0);
+}
+
+TEST(Tensor, GpuRankZeroTensorRhsInplacePreserveDtype) {
+  Tensor rhs({}, Type.Double, Device.cuda);
+  rhs.set(std::vector<Accessor>{}, 2.0);
+
+  Tensor a = ones({2}, Type.Float, Device.cuda);
+  a += rhs;
+  a -= rhs;
+  a *= rhs;
+  a /= rhs;
+
+  EXPECT_EQ(a.dtype(), Type.Float);
+  EXPECT_EQ(a.device(), Device.cuda);
+  Tensor a_cpu = a.to(Device.cpu);
+  EXPECT_FLOAT_EQ(a_cpu.storage().at<cytnx_float>(0), 1.0f);
+  EXPECT_FLOAT_EQ(a_cpu.storage().at<cytnx_float>(1), 1.0f);
 }
 
 // Scalar in-place ops mutate the LHS storage in place (never detach), so a
@@ -358,8 +584,9 @@ TEST(Tensor, GpuScalarInplaceRealOpComplexThrows) {
 // of silently pairing mismatched elements. (The scalar broadcast case above is
 // still supported because it ignores the mappers.)
 TEST(Tensor, GpuNoncontigTensorTensorMulDivThrows) {
-  Tensor a = arange(6).reshape({2, 3}).to(Device.cuda);
-  Tensor b = arange(6).reshape({3, 2}).to(Device.cuda).permute({1, 0});  // {2,3}, non-contiguous
+  Tensor a = arange(0, 6, 1, Type.Double, Device.cuda).reshape({2, 3});
+  Tensor b = arange(0, 6, 1, Type.Double, Device.cuda).reshape({3, 2}).permute({1, 0});
+  // {2,3}, non-contiguous
   ASSERT_EQ(a.shape(), b.shape());
   ASSERT_FALSE(b.is_contiguous());
   EXPECT_THROW(a *= b, std::logic_error);
