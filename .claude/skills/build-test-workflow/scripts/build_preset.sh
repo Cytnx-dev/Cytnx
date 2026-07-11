@@ -106,8 +106,12 @@ done
 repo_root="$(git rev-parse --show-toplevel)"
 cd "${repo_root}"
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-coverage_launcher="${script_dir}/strip-coverage-launcher.sh"
+# Resolved from repo_root, not the script's own location: a copy of this
+# script (e.g. cross-revision-benchmark's edge-case note for a revision
+# predating this script) would otherwise point CMake at a
+# strip-coverage-launcher.sh that doesn't exist next to the copy -- the
+# real repo checkout always has it at this fixed path.
+coverage_launcher="${repo_root}/.claude/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
 
 build_dir="build/${preset}"
 venv_dir="build/${preset}-venv"
