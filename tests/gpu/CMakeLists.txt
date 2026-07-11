@@ -63,6 +63,17 @@ target_link_libraries(
 )
 target_link_libraries(gpu_test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
+
+# gpu_test_main's .cpp TUs are host-compiled (g++) but include cytnx public
+# headers (Type.hpp) that pull <cuda/std/complex>. cytnx adds the CUDA toolkit
+# and CCCL include dirs PRIVATEly, so they do not propagate here through
+# linking; add them explicitly, otherwise the host compile fails with
+# "fatal error: cuda/std/complex: No such file or directory".
+target_include_directories(gpu_test_main PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+if(CYTNX_CCCL_INCLUDE_DIR)
+  target_include_directories(gpu_test_main PRIVATE ${CYTNX_CCCL_INCLUDE_DIR})
+endif()
+
 include(GoogleTest)
 cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR ".." OUTPUT_VARIABLE test_dir)
 gtest_discover_tests(gpu_test_main
