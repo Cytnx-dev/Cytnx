@@ -42,8 +42,10 @@ set -euo pipefail
 # --test [args]   Run the target's tests after building.
 #                 - Python target: args pass through to `pytest` verbatim (a
 #                   path/`-k` filter fully replaces the default `pytests/`
-#                   collection, matching normal pytest semantics); with no
-#                   args, runs the full `pytests/` suite.
+#                   collection, matching normal pytest semantics, and does
+#                   NOT get --doctest-modules added automatically -- pass it
+#                   explicitly if needed); with no args, runs `pytest
+#                   pytests/ --doctest-modules`.
 #                 - `--target benchmarks_main`: args pass through to the
 #                   Google Benchmark binary verbatim (e.g.
 #                   `--benchmark_filter=<pattern>`); with no args, runs
@@ -240,7 +242,7 @@ if [[ ${needs_python} -eq 1 ]]; then
   if [[ ${#test_args[@]} -gt 0 ]]; then
     pytest "${test_args[@]}"
   else
-    pytest pytests/
+    pytest pytests/ --doctest-modules
   fi
 elif [[ "${target}" == "benchmarks_main" ]]; then
   # Google Benchmark's binary is not a ctest test (no add_test/

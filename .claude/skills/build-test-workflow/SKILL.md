@@ -51,7 +51,9 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
   - Python target: args pass through to `pytest` verbatim (a path/`-k`
     filter *replaces* the default `pytests/` collection, standard pytest
     semantics — passing both would just re-add everything the filter was
-    meant to narrow out); no args runs the full `pytests/` suite.
+    meant to narrow out, and the filtered run does *not* get
+    `--doctest-modules` added automatically); no args runs `pytest pytests/
+    --doctest-modules`.
   - `--target benchmarks_main`: args pass through to the Google Benchmark
     binary verbatim (e.g. `--benchmark_filter=<pattern>`); no args runs
     every registered benchmark. Never run this concurrently with another
