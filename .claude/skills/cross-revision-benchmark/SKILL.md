@@ -2,13 +2,15 @@
 name: cross-revision-benchmark
 description: >-
   Benchmark the same Cytnx function at two or more git revisions and produce a
-  fair comparison table. Use when a change is motivated by performance, a
-  reviewer questions a speedup/regression, or a PR needs before/after numbers
-  — e.g. comparing a branch tip against its merge base. Covers the
-  fixed-benchmark-source vs per-revision-benchmark-source cases, one shared
-  build dir switched sequentially between revisions, and reporting rules
-  (same machine/session, commit hash plus a rebase-proof readable label,
-  stated aggregation).
+  fair comparison table using the build-test-workflow script. Use when a
+  change is motivated by performance, a reviewer questions a speedup/
+  regression, or a PR needs before/after numbers — e.g. comparing a branch tip
+  against its merge base. Covers the fixed-benchmark-source vs
+  per-revision-benchmark-source cases, reusing one build dir switched
+  sequentially between revisions in place (never a fresh worktree or a
+  separate build dir per revision), and reporting rules (same machine/
+  session, commit hash plus a rebase-proof readable label, stated
+  aggregation).
 ---
 
 # Cross-revision benchmarking
@@ -16,13 +18,20 @@ description: >-
 Performance claims are settled by measurement (never plausibility), and a
 measurement is only meaningful when every column ran under identical
 conditions. This skill is the procedure for benchmarking the *same* code path
-at several git revisions on one machine, in one session.
+at several git revisions on one machine, in one session, building and running
+through `build-test-workflow`'s script:
+
+```sh
+S=.claude/skills/build-test-workflow/scripts/build_preset.sh
+```
 
 Only benchmark a **committed** Google Benchmark file (`benchmarks/*.cpp`,
 built as the `benchmarks_main` target). If no existing file covers the
 function under comparison, add one first — do not write comparison code in a
 scratch harness; a fixed, versioned benchmark source is what makes a fair
-cross-revision comparison possible at all.
+cross-revision comparison possible at all. Use a **release** preset
+(`openblas-cpu` or similar) for every column — a debug/ASan build's timings
+are not representative.
 
 ## Which of two cases applies
 
@@ -37,25 +46,20 @@ cross-revision comparison possible at all.
 
 ## Procedure
 
-Use **one dedicated worktree with one shared build dir**, switched
-sequentially between revisions — never separate worktrees/build dirs per
-revision, and never build or run more than one revision at a time. A `git
-checkout <rev>` between two real commits (verified on the #853/#1027
-history, a 5-file/460-line diff including one newly-added file) left only 7
-build steps pending in an already-built dir: git only rewrites files whose
-blob content actually differs, so a shared build dir stays incremental
-across every switch — the same benefit a from-scratch build per revision
-would throw away for no reason. Sequential, not parallel: the run itself
-must never share the machine with another benchmark or another build (CPU
-contention skews results), so parallelizing the builds doesn't save real
-wall-clock time.
+Switch revisions **in place, in the main working tree** — do not create a
+worktree. A fresh worktree starts with an empty build dir, so its first build
+would be a full rebuild no matter how small the diff between revisions is;
+checking out in place instead reuses whatever `build/<preset>` the script has
+already produced from ordinary development. A whole-tree `git checkout <rev>`
+only rewrites files whose blob content actually changed, so the reused dir
+stays incremental across every switch — verified: switching between two
+commits with a several-hundred-line diff, including one newly-added file,
+left only a handful of build steps pending in an already-built dir. Stay
+strictly sequential: never build or run more than one revision at a time, and
+never run a benchmark alongside another build — CPU contention skews results.
 
-```sh
-git worktree add /tmp/cxb <initial-rev>
-cd /tmp/cxb
-cmake --preset openblas-cpu -G Ninja -DBUILD_PYTHON=OFF \
-  -DRUN_TESTS=ON -DRUN_BENCHMARKS=ON
-```
+Before starting: `git status`, and stash (`git stash -u`) any uncommitted
+work; note the current branch/ref to return to at the end.
 
 For each revision, in order:
 
@@ -63,10 +67,7 @@ For each revision, in order:
 2. **Case A only:** overlay the tip's benchmark file **and its build
    registration** on top — `benchmarks/CMakeLists.txt` lists every `.cpp` in
    the target's sources, so overlaying only the `.cpp` silently leaves it
-   uncompiled if this revision predates the file existing at all (verified:
-   building the #853/#1027 merge-base commit, which predates
-   `search_tree_bm.cpp`, with only the `.cpp` overlaid produced a binary
-   with the file simply missing):
+   uncompiled if this revision predates the file existing at all:
 
    ```sh
    git checkout <tip> -- benchmarks/<the_bm_file>.cpp benchmarks/CMakeLists.txt
@@ -74,16 +75,18 @@ For each revision, in order:
 
    **Case B:** skip this — build whatever benchmark file already exists at
    this revision.
-3. `cmake --build build/openblas-cpu --target benchmarks_main --parallel "$(nproc)"`.
-4. Run, before moving to the next revision:
+3. Build and run, before moving to the next revision:
 
    ```sh
-   ./build/openblas-cpu/benchmarks/benchmarks_main \
+   "$S" openblas-cpu --target benchmarks_main --test \
      --benchmark_repetitions=5 --benchmark_report_aggregates_only=true \
      --benchmark_filter='<pattern>' > /tmp/bm-<label>.txt
    ```
 
-Remove the worktree once every column is recorded: `git worktree remove /tmp/cxb`.
+When every column is recorded, return to where you started: `git checkout
+<original-branch>` (a Case A overlay's files already match `<tip>`'s
+committed content, so this switches cleanly with no leftover diff) and `git
+stash pop` if step 0 created a stash.
 
 ## Reporting rules
 
