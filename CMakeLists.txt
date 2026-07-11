@@ -442,27 +442,14 @@ endif()
 # #######
 IF(BUILD_PYTHON)
   find_package (Python COMPONENTS Interpreter Development)
-  find_package(pybind11 3.0.0 QUIET)
-
-  if(NOT pybind11_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-      pybind11_sources
-      GIT_REPOSITORY https://github.com/pybind/pybind11.git
-      GIT_TAG v3.0.1
-    )
-
-    FetchContent_GetProperties(pybind11_sources)
-
-    if(NOT pybind11_sources_POPULATED)
-      FetchContent_Populate(pybind11_sources)
-
-      add_subdirectory(
-        ${pybind11_sources_SOURCE_DIR}
-        ${pybind11_sources_BINARY_DIR}
-      )
-    endif()
-  endif()
+  # Require a compatible pybind11 to be installed. The committed
+  # cytnx/cytnx/*.pyi stubs are regenerated only via the `pip` path, which
+  # provisions the pybind11 pinned in [build-system].requires (==3.0.4).
+  # TODO: bump this to `find_package(pybind11 3.0.4 REQUIRED)` to match the
+  # pyproject.toml pin once pybind11 3.0.4 is available on conda-forge. It
+  # currently ships 3.0.3, which a 3.0.4 requirement would reject and break the
+  # conda build.
+  find_package(pybind11 3.0.0 REQUIRED)
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
     pybind/generator_py.cpp

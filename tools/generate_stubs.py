@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.machinery
+import importlib.util
 import re
 import shutil
 import sys
@@ -85,21 +86,86 @@ def sanitize(text: str) -> str:
     return text
 
 
-def find_extension() -> Path:
-    """Locate a built cytnx extension matching the running interpreter's ABI."""
+def find_installed_extension() -> Path | None:
+    """Return the extension of *this checkout's* editable install of ``cytnx.cytnx``.
+
+    An editable install (``pip install --editable .``) places the freshly built
+    extension on the import path, so this matches exactly what the developer
+    just compiled without pointing at a build directory. Only trust it when the
+    installed ``cytnx`` package actually resolves to this checkout's
+    ``cytnx/`` source directory, so an unrelated ``cytnx`` install elsewhere on
+    the path (e.g. a released wheel) does not shadow a real local build.
+    """
+    origin = None
+    try:
+        spec = importlib.util.find_spec(MODULE)
+        parent = sys.modules.get("cytnx")
+        if (
+            spec is not None
+            and spec.origin
+            and spec.origin != "built-in"
+            and parent is not None
+            and str(PACKAGE_DIR) in list(getattr(parent, "__path__", ()))
+        ):
+            candidate = Path(spec.origin)
+            if candidate.is_file():
+                origin = candidate
+    except (ImportError, ValueError):
+        pass
+
+    if origin is None:
+        # Resolving "cytnx.cytnx" imports the parent `cytnx` package as a side
+        # effect. When that ran cytnx/__init__.py to completion against a real
+        # (but ultimately rejected here, e.g. unrelated) extension, its
+        # `from .Storage_conti import *`-style imports ran too, and their
+        # `@add_method` decorators patched that extension's `Storage`/
+        # `Tensor`/... classes; those submodules then stay cached in
+        # sys.modules. If main() later imports a distinct copy of the correct
+        # extension, it would reuse the cached submodules without rerunning
+        # the decorators, silently dropping the patched methods from the
+        # regenerated stubs. Drop every "cytnx"/"cytnx.*" entry so nothing
+        # from this rejected probe survives. (Skipped when accepted above:
+        # the accepted extension is exactly what a later import should reuse,
+        # so its already-correct state must be left alone.) This only resets
+        # the import system, not pybind11's per-process type registrations;
+        # if the rejected extension registered pybind11 types under the same
+        # qualified names, a later staged import of a different .so can still
+        # raise "generic_type: type ... is already registered!" instead of
+        # silently producing wrong stubs.
+        for name in [n for n in sys.modules if n == "cytnx" or n.startswith("cytnx.")]:
+            del sys.modules[name]
+
+    return origin
+
+
+def find_build_extension() -> Path | None:
+    """Return a built cytnx extension under ``build/`` for this interpreter's ABI."""
     # EXT_SUFFIX is e.g. ".cpython-311-x86_64-linux-gnu.so"; the extension file
     # is named cytnx<EXT_SUFFIX> because the submodule is itself named `cytnx`.
     ext_suffix = sysconfig.get_config_var("EXT_SUFFIX") or importlib.machinery.EXTENSION_SUFFIXES[0]
     candidates = sorted((REPO_ROOT / "build").rglob(f"cytnx{ext_suffix}"))
     if not candidates:
-        raise SystemExit(
-            f"No built extension 'cytnx{ext_suffix}' found under {REPO_ROOT / 'build'}.\n"
-            "Build it first (e.g. `cmake --build build/python --target pycytnx`) "
-            "with the same interpreter you are running this script with, or pass "
-            "--extension explicitly."
-        )
+        return None
     # Prefer the most recently modified build if several presets are present.
     return max(candidates, key=lambda p: p.stat().st_mtime)
+
+
+def find_extension() -> Path:
+    """Locate a built cytnx extension matching the running interpreter's ABI.
+
+    Prefer the installed ``cytnx.cytnx`` (an editable install exposes the
+    just-built extension), then fall back to scanning ``build/``.
+    """
+    extension = find_installed_extension() or find_build_extension()
+    if extension is None:
+        raise SystemExit(
+            "No cytnx extension found. Install cytnx so `cytnx.cytnx` is "
+            "importable (e.g. `pip install --editable .`), or build it under "
+            f"{REPO_ROOT / 'build'} (e.g. `cmake --build build/python --target "
+            "pycytnx`) with the interpreter you are running this script with, "
+            "or pass --extension explicitly."
+        )
+    return extension
 
 
 def main() -> int:
