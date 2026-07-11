@@ -109,7 +109,17 @@ gtest_discover_tests(test_main
                      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                      # The test binary takes longer to enumerate than the
                      # default 5s under MKL + ASAN on slower runners.
-                     DISCOVERY_TIMEOUT 120)
+                     DISCOVERY_TIMEOUT 120
+                     # PRE_TEST (rather than the default POST_BUILD) defers
+                     # running the binary to enumerate tests until ctest is
+                     # invoked, instead of doing it as part of the build
+                     # itself. Needed when this target links a CUDA-enabled
+                     # cytnx (USE_CUDA=ON) on a machine with no GPU driver:
+                     # POST_BUILD would abort the whole build the moment it
+                     # tries to list tests, even though the binary compiled
+                     # and linked correctly. No effect on non-CUDA builds
+                     # beyond moving discovery from build time to ctest time.
+                     DISCOVERY_MODE PRE_TEST)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

@@ -60,7 +60,11 @@ target_link_libraries(gpu_test_main cytnx)
 include(GoogleTest)
 cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR ".." OUTPUT_VARIABLE test_dir)
 gtest_discover_tests(gpu_test_main
-                     WORKING_DIRECTORY ${test_dir})
+                     WORKING_DIRECTORY ${test_dir}
+                     # See tests/CMakeLists.txt's DISCOVERY_MODE comment:
+                     # avoids requiring a GPU driver merely to compile/link
+                     # this target.
+                     DISCOVERY_MODE PRE_TEST)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
