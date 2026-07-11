@@ -41,14 +41,28 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
   preset was asked for — verified empirically). Every later call for that
   preset, Python target or not, is a direct `cmake --build` reusing the same
   build dir incrementally — no repeat pip overhead once the venv exists.
-- **`--test [args]`** runs the target's tests after building. Python target:
-  args pass through to `pytest` verbatim (a path/`-k` filter *replaces* the
-  default `pytests/` collection, standard pytest semantics — passing both
-  would just re-add everything the filter was meant to narrow out); no args
-  runs the full suite. Non-Python target: a single optional arg becomes
-  `--gtest_filter=<value>` against `tests/test_main`; no arg runs the full
-  suite. `debug-*-cuda` presets get `ASAN_OPTIONS` exported automatically —
-  no need to remember the workaround string.
+- **`--test [args]`** runs the target's tests after building.
+  - Python target: args pass through to `pytest` verbatim (a path/`-k`
+    filter *replaces* the default `pytests/` collection, standard pytest
+    semantics — passing both would just re-add everything the filter was
+    meant to narrow out); no args runs the full suite.
+  - `--target benchmarks_main`: args pass through to the Google Benchmark
+    binary verbatim (e.g. `--benchmark_filter=<pattern>`); no args runs
+    every registered benchmark. Never run this concurrently with another
+    build or benchmark — see `cross-revision-benchmark`.
+  - Any other target (`test_main`, `gpu_test_main`, or both together —
+    `--target "test_main gpu_test_main"`): runs through `ctest --test-dir
+    <build_dir> --output-on-failure`, the same mechanism CI uses, instead of
+    invoking the gtest binary directly — `test_main`/`gpu_test_main`
+    register each gtest case as its own ctest test via
+    `gtest_discover_tests`, so ctest gives per-test pass/fail output. A
+    single optional arg becomes `-R <value>` — a ctest *regex* against
+    `ClassName.TestName`, not a gtest glob/`:`-joined filter. `--test-dir`
+    is used rather than `--preset`: `CMakePresets.json`'s `testPresets` are
+    hardcoded to only `debug-openblas-cpu`/`debug-openblas-cuda` and don't
+    generalize to every preset this script accepts. `debug-*-cuda` presets
+    get `ASAN_OPTIONS` exported automatically — no need to remember the
+    workaround string.
 - **Max-parallelism** (`nproc`/`sysctl -n hw.ncpu`) for every build.
   `RUN_TESTS=ON`/`RUN_BENCHMARKS=ON` on every configure — both are a
   **zero-cost toggle** on an already-built dir (verified: flipping either on
@@ -64,16 +78,20 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
 
 ## Running tests without rebuilding
 
-`ctest`/`pytest`/a direct gtest binary invocation don't compile anything —
-prefer these over the script when you only need to *run*, not build:
+`"$S" <preset> --test [args]` (no `--target`, defaulting to `all`, or with an
+explicit `--target` matching what's already built) reruns tests without
+recompiling anything when the build dir is already current.
 
-- One suite, fastest iteration signal:
+- One suite, fastest iteration signal — a direct gtest binary invocation
+  skips ctest's per-test process-spawn overhead, useful when a suite has
+  many cases:
   `build/debug-openblas-cpu/tests/test_main --gtest_filter='SearchTreeTest.*'`
-  (or `"$S" <preset> --target test_main --test '<filter>'` to build first).
-- Full C++ suite: `ctest --preset cpu-only --output-on-failure`.
-- Python: activate the preset's venv first (`source
-  build/<preset>-venv/bin/activate`), then `pytest pytests/` or a
-  path/`-k` filter.
+  (glob/`:`-joined syntax, not a ctest regex — different from `--test`'s
+  `-R` filter above).
+- Full C++ suite via the script: `"$S" debug-openblas-cpu --target test_main --test`.
+- Python: `"$S" <preset> --target pycytnx --test` (or activate the venv
+  directly — `source build/<preset>-venv/bin/activate` — for a bare `pytest`
+  invocation).
 
 ## How much to run, when
 
@@ -82,18 +100,18 @@ prefer these over the script when you only need to *run*, not build:
   presets, `pytest pytests/` when Python-facing code changed, the CUDA
   preset compile check when GPU code changed, and (**if a GPU is actually
   present**, `nvidia-smi` succeeds) the real GPU suite too, not just the
-  compile check:
+  compile check — through the script, which builds both binaries and then
+  runs every test ctest discovers for them in one `--test-dir` pass (slow,
+  ~10 min):
 
   ```sh
-  cmake --preset debug-openblas-cuda
-  cmake --build --preset debug-openblas-cuda --target gpu_test_main test_main
-  ctest --preset cpu-and-cuda --output-on-failure   # slow (~10 min)
+  "$S" debug-openblas-cuda --target "test_main gpu_test_main" --test
   ```
 
   `gpu_test_main` (under `tests/gpu/`) is a separate binary from
   `test_main`, not a superset — without a visible GPU it will fail for lack
   of hardware, not because of the change under test, so the compile check
-  alone is what CI expects there.
+  alone (`"$S" debug-openblas-cuda`, no `--test`) is what CI expects there.
 - A regression test for a bug fix must be shown to **fail on the pre-fix
   code** at least once — a guard that passes on the bug guards nothing.
 

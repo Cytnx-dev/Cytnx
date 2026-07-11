@@ -14,19 +14,32 @@ set -euo pipefail
 #                 openblas-cpu, mkl-cpu, debug-openblas-cpu.
 # --target <t>    CMake target to build. Defaults to `all`. `pycytnx` and
 #                 `all` need Python bindings (BUILD_PYTHON=ON, pybind11
-#                 discoverable); anything else (`test_main`, `cytnx`,
-#                 `benchmarks_main`, ...) does not and skips the Python
-#                 setup entirely.
-# --test [args]   Run the target's tests after building. For a Python
-#                 target, args are passed through to `pytest` verbatim (a
-#                 path/`-k` filter fully replaces the default `pytests/`
-#                 collection, matching normal pytest semantics); with no
-#                 args, runs the full `pytests/` suite. For a non-Python
-#                 target, a single optional arg is used as
-#                 `--gtest_filter=<value>` against `tests/test_main`; with
-#                 no arg, runs the full suite. `debug-*-cuda` presets get
-#                 ASAN_OPTIONS set automatically (see below) -- no need to
-#                 remember it.
+#                 discoverable); anything else (`test_main`, `gpu_test_main`,
+#                 `cytnx`, `benchmarks_main`, ...) does not and skips the
+#                 Python setup entirely. May be a space-separated list, e.g.
+#                 `--target "test_main gpu_test_main"` to build the CUDA
+#                 suite's two binaries in one call.
+# --test [args]   Run the target's tests after building.
+#                 - Python target: args pass through to `pytest` verbatim (a
+#                   path/`-k` filter fully replaces the default `pytests/`
+#                   collection, matching normal pytest semantics); with no
+#                   args, runs the full `pytests/` suite.
+#                 - `--target benchmarks_main`: args pass through to the
+#                   Google Benchmark binary verbatim (e.g.
+#                   `--benchmark_filter=<pattern>`); with no args, runs
+#                   every registered benchmark. Never invoke this
+#                   concurrently with another build or benchmark run -- CPU
+#                   contention skews timings.
+#                 - Any other target (`test_main`, `gpu_test_main`, or a
+#                   space-separated combination of the two): runs through
+#                   `ctest --test-dir <build_dir> --output-on-failure`,
+#                   matching what CI runs rather than invoking the gtest
+#                   binary directly. A single optional arg is used as
+#                   `-R <value>` (a ctest *regex* against
+#                   `ClassName.TestName`, not a gtest glob/`:`-joined
+#                   filter); with no arg, runs every test discovered in the
+#                   build dir. `debug-*-cuda` presets get ASAN_OPTIONS set
+#                   automatically (see below) -- no need to remember it.
 #
 # A Python target's first build for a preset (no venv yet at
 # build/<preset>-venv) goes through `pip install --editable`, which is what
@@ -141,7 +154,12 @@ else
   if [[ "${is_fresh_configure}" -eq 1 ]]; then
     cmake --preset "${preset}" "${generator_args[@]}" "${configure_args[@]}"
   fi
-  cmake --build "${build_dir}" --target "${target}" --parallel "${jobs}"
+  # ${target} may be several space-separated names (e.g. "test_main
+  # gpu_test_main" for the CUDA suite) -- word-split intentionally so each
+  # becomes its own --target argument.
+  # shellcheck disable=SC2206
+  target_words=(${target})
+  cmake --build "${build_dir}" --target "${target_words[@]}" --parallel "${jobs}"
 fi
 
 if [[ ${do_test} -eq 0 ]]; then
@@ -156,12 +174,24 @@ if [[ ${needs_python} -eq 1 ]]; then
   else
     pytest pytests/
   fi
-else
-  binary="${build_dir}/tests/test_main"
+elif [[ "${target}" == "benchmarks_main" ]]; then
+  # Google Benchmark's binary is not a ctest test (no add_test/
+  # gtest_discover_tests registration) -- run it directly, args passed
+  # straight through as its own CLI flags.
+  binary="${build_dir}/benchmarks/benchmarks_main"
   if [[ ! -x "${binary}" ]]; then
-    echo "No test binary at ${binary} -- build --target test_main first." >&2
+    echo "No benchmark binary at ${binary} -- build --target benchmarks_main first." >&2
     exit 1
   fi
+  "${binary}" "${test_args[@]}"
+else
+  # test_main/gpu_test_main register each gtest case as its own ctest test
+  # via gtest_discover_tests, so ctest gives per-test output-on-failure and
+  # matches what CI runs -- prefer it over invoking the gtest binary
+  # directly. `--test-dir` (not `--preset`) because CMakePresets.json's
+  # testPresets are hardcoded to only two configurePresets
+  # (debug-openblas-cpu, debug-openblas-cuda) and don't generalize to every
+  # preset this script accepts.
   # ASan only bites the debug+CUDA presets in practice; export the
   # workaround automatically instead of expecting the caller to remember it.
   case "${preset}" in
@@ -169,9 +199,9 @@ else
       export ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'
       ;;
   esac
+  ctest_args=(--test-dir "${build_dir}" --output-on-failure --parallel "${jobs}")
   if [[ ${#test_args[@]} -gt 0 ]]; then
-    "${binary}" "--gtest_filter=${test_args[0]}"
-  else
-    "${binary}"
+    ctest_args+=(-R "${test_args[0]}")
   fi
+  ctest "${ctest_args[@]}"
 fi
