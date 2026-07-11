@@ -31,6 +31,12 @@ the things actually worth flagging.
   `cytnx_uint64`, `Scalar`, and even `complex<double>`, by-value is never slower
   in Cytnx and is often faster (values ride in registers). Do not suggest
   converting scalar parameters to `const&`.
+- For new or touched code, avoid propagating legacy `cytnx_XXXX` typedefs as
+  ordinary loop counters, sizes, flags, or local arithmetic types. Prefer standard
+  C++ types unless the value is specifically a dtype-backed tensor/storage scalar.
+- Do not recommend vector-plus-`memcpy`, `&vec[0]`, or raw `void*` idioms for
+  typed operations. Those patterns are only appropriate for intentional
+  representation-level storage or serialization code.
 - **A trailing underscore on a method name (`Add_`, `contiguous_`, `Inv_`) marks
   an in-place mutator that returns `*this`.** This is Cytnx's convention and is
   *not* Google's "member variable" meaning — do not flag it or suggest renaming.
@@ -62,6 +68,16 @@ Focus reviews on what actually bites this codebase:
 - **Tie-break / selection-order changes in heuristic planners** (e.g. the
   contraction-order search) — observable behavior even when each choice is
   individually valid; they deserve an explicit call-out, not silent acceptance.
+- **Rank/scalar/void correctness** — missing rank checks before `shape()[n]` or
+  `bonds()[n]`, treating shape `{1}` as a rank-0 scalar, or using direct storage
+  access where `item()`, `is_scalar()`, or `is_void()` is the intended API.
+- **Symmetric `UniTensor` semantics** — raw `ut.at(...)` coefficient access should
+  not be treated as producing a tensor-network scalar, and single-element
+  symmetric tensors should not be used as generic scalar broadcasts.
+- **Tests with independent expectations** — flag tests that compare one Cytnx
+  implementation path against another path with the same suspected bug. Prefer
+  tests that check independent expected values, and check both dtype and numeric
+  value for arithmetic changes.
 - Missing or weak tests; thread-safety and reentrancy; leaked resources.
 - Public-API / exported-target breakage (downstream `find_package(Cytnx)`).
 - Documentation drift.
