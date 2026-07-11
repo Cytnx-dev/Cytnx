@@ -118,7 +118,7 @@ void generator_binding(py::module &m) {
 
     Tensor m;
     m.Init(shape, dtype);
-    memcpy(m.storage()._impl->data(), info.ptr, total_bytes);
+    if (total_bytes != 0) memcpy(m.storage()._impl->data(), info.ptr, total_bytes);
     return m;
   });
 }

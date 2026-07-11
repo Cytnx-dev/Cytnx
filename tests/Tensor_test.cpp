@@ -42,6 +42,14 @@ TEST_F(TensorTest, Constructor) {
   EXPECT_TRUE(S.is_scalar());
   EXPECT_EQ(S.storage().size(), 1);
   EXPECT_EQ(S.is_contiguous(), true);
+
+  Tensor E({2, 0, 3}, Type.Float);
+  EXPECT_EQ(E.shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
+  EXPECT_EQ(E.rank(), 3);
+  EXPECT_EQ(E.size(), 0);
+  EXPECT_TRUE(E.is_empty());
+  EXPECT_FALSE(E.is_void());
+  EXPECT_FALSE(E.is_scalar());
 #ifdef UNI_GPU
   Tensor D({3, 4, 5}, Type.Double, Device.cuda);
   EXPECT_EQ(D.dtype(), Type.Double);
@@ -91,6 +99,13 @@ TEST_F(TensorTest, ShapeGeneratorsDistinguishScalarAndRankOne) {
   EXPECT_EQ(one_vector.shape(), (std::vector<cytnx_uint64>{5}));
   EXPECT_FALSE(one_vector.is_scalar());
   EXPECT_EQ(one_vector.at<cytnx_int64>({0}), 1);
+
+  Tensor empty_vector = ones({0}, Type.Double);
+  EXPECT_EQ(empty_vector.shape(), (std::vector<cytnx_uint64>{0}));
+  EXPECT_EQ(empty_vector.size(), 0);
+  EXPECT_TRUE(empty_vector.is_empty());
+  EXPECT_THROW(empty_vector.item<double>(), std::logic_error);
+  EXPECT_THROW(empty_vector.at<double>({0}), std::logic_error);
 }
 
 TEST_F(TensorTest, VoidTensorAtEmptyLocatorThrows) {
@@ -207,7 +222,63 @@ TEST_F(TensorTest, shape) {
   EXPECT_EQ(B.shape()[0], 1);
   EXPECT_FALSE(B.is_scalar());
 
-  EXPECT_THROW(Tensor({0}, Type.Double, Device.cpu, true), std::logic_error);
+  Tensor empty({0}, Type.Double, Device.cpu, true);
+  EXPECT_TRUE(empty.is_empty());
+  EXPECT_EQ(empty.reshape({2, 0, 3}).shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
+  EXPECT_EQ(empty.reshape({-1}).shape(), (std::vector<cytnx_uint64>{0}));
+  EXPECT_THROW(empty.reshape({0, -1}), std::logic_error);
+}
+
+TEST_F(TensorTest, ZeroExtentArithmeticAndSlicing) {
+  Tensor empty = zeros({2, 0, 3}, Type.Float);
+  Tensor other = ones({2, 0, 3}, Type.Double);
+  Tensor scalar = ones({}, Type.Double);
+
+  Tensor sum = empty + other;
+  EXPECT_EQ(sum.shape(), empty.shape());
+  EXPECT_EQ(sum.dtype(), Type.Double);
+  EXPECT_TRUE(sum.is_empty());
+
+  Tensor broadcast = empty + scalar;
+  EXPECT_EQ(broadcast.shape(), empty.shape());
+  EXPECT_EQ(broadcast.dtype(), Type.Double);
+  EXPECT_TRUE(broadcast.is_empty());
+
+  EXPECT_TRUE((empty - other).is_empty());
+  EXPECT_TRUE((empty * other).is_empty());
+  EXPECT_TRUE((empty / other).is_empty());
+  EXPECT_TRUE((empty + 2.0).is_empty());
+  EXPECT_TRUE((empty - 2.0).is_empty());
+  EXPECT_TRUE((empty * 2.0).is_empty());
+  EXPECT_TRUE((empty / 2.0).is_empty());
+  EXPECT_TRUE((2.0 + empty).is_empty());
+  EXPECT_TRUE((2.0 - empty).is_empty());
+  EXPECT_TRUE((2.0 * empty).is_empty());
+  EXPECT_TRUE((2.0 / empty).is_empty());
+
+  empty += scalar;
+  EXPECT_EQ(empty.shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
+  EXPECT_EQ(empty.dtype(), Type.Float);
+  EXPECT_TRUE(empty.is_empty());
+
+  Tensor slice = empty.get({Accessor::all(), Accessor::all(), Accessor::all()});
+  EXPECT_EQ(slice.shape(), empty.shape());
+  EXPECT_TRUE(slice.is_empty());
+
+  EXPECT_NO_THROW(empty.set({Accessor::all(), Accessor::all(), Accessor::all()}, other));
+  EXPECT_THROW(
+    empty.set({Accessor::all(), Accessor::all(), Accessor::all()}, Tensor({0, 2}, Type.Double)),
+    std::logic_error);
+}
+
+TEST_F(TensorTest, VoidInplaceArithmeticThrows) {
+  Tensor scalar = ones({}, Type.Double);
+  Tensor uninitialized;
+
+  EXPECT_THROW(linalg::iAdd(scalar, uninitialized), std::logic_error);
+  EXPECT_THROW(linalg::iSub(scalar, uninitialized), std::logic_error);
+  EXPECT_THROW(linalg::iMul(scalar, uninitialized), std::logic_error);
+  EXPECT_THROW(linalg::iDiv(scalar, uninitialized), std::logic_error);
 }
 
 TEST_F(TensorTest, permute) {
@@ -258,7 +329,9 @@ TEST_F(TensorTest, permute) {
   EXPECT_EQ(B.shape().size(), 1);
   EXPECT_EQ(B.shape()[0], 1);
 
-  EXPECT_THROW(Tensor({0}, Type.Double, Device.cpu, true), std::logic_error);
+  Tensor empty({0}, Type.Double, Device.cpu, true);
+  empty.permute_({0});
+  EXPECT_TRUE(empty.is_empty());
 }
 
 TEST_F(TensorTest, get) {
@@ -374,9 +447,16 @@ TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
   Tensor vector = zeros({3}, Type.Double);
   Tensor shape_one({1}, Type.Double);
   shape_one.at<double>({0}) = 9.0;
-  EXPECT_THROW(scalar.set(std::vector<Accessor>{}, shape_one), std::logic_error);
-  EXPECT_THROW(vector.set(std::vector<Accessor>{}, shape_one), std::logic_error);
-  EXPECT_THROW(vector.set(std::vector<Accessor>{Accessor(0)}, shape_one), std::logic_error);
+  scalar.set(std::vector<Accessor>{}, shape_one);
+  EXPECT_DOUBLE_EQ(scalar.item<double>(), 9.0);
+
+  vector.set(std::vector<Accessor>{}, shape_one);
+  for (int i = 0; i < 3; ++i) EXPECT_DOUBLE_EQ(vector.at<double>({i}), 9.0);
+
+  Tensor shape_one_one({1, 1}, Type.Double);
+  shape_one_one.at<double>({0, 0}) = 6.0;
+  vector.set(std::vector<Accessor>{Accessor(0)}, shape_one_one);
+  EXPECT_DOUBLE_EQ(vector.at<double>({0}), 6.0);
 
   Tensor scalar_rhs({}, Type.Double);
   scalar_rhs.item<double>() = 8.0;
@@ -390,7 +470,7 @@ TEST_F(TensorTest, RankZeroScalarAccessAndSet) {
 
   Tensor scalar_plus_scalar = scalar + scalar_rhs;
   EXPECT_TRUE(scalar_plus_scalar.is_scalar());
-  EXPECT_DOUBLE_EQ(scalar_plus_scalar.item<double>(), 15.0);
+  EXPECT_DOUBLE_EQ(scalar_plus_scalar.item<double>(), 17.0);
 }
 
 TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
@@ -485,9 +565,34 @@ TEST_F(TensorTest, RankZeroBroadcastArithmetic) {
   legacy_shape_one_one.at<double>({0, 0}) = 3.0;
   EXPECT_FALSE(legacy_shape_one_one.is_scalar());
   EXPECT_DOUBLE_EQ(legacy_shape_one_one.item<double>(), 3.0);
-  EXPECT_THROW((void)(legacy_shape_one + vec), std::logic_error);
-  EXPECT_THROW((void)(vec + legacy_shape_one), std::logic_error);
-  EXPECT_THROW(vec += legacy_shape_one, std::logic_error);
+
+  out = legacy_shape_one + vec;
+  EXPECT_EQ(out.shape(), vec.shape());
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 6.0);
+
+  out = vec + legacy_shape_one_one;
+  EXPECT_EQ(out.shape(), vec.shape());
+  EXPECT_DOUBLE_EQ(out.at<double>({0}), 5.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({1}), 6.0);
+  EXPECT_DOUBLE_EQ(out.at<double>({2}), 7.0);
+
+  out = legacy_shape_one + legacy_shape_one_one;
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{1, 1}));
+  EXPECT_DOUBLE_EQ(out.at<double>({0, 0}), 5.0);
+
+  vec += legacy_shape_one;
+  EXPECT_DOUBLE_EQ(vec.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({2}), 6.0);
+
+  vec -= legacy_shape_one_one;
+  vec *= legacy_shape_one;
+  vec /= legacy_shape_one;
+  EXPECT_DOUBLE_EQ(vec.at<double>({0}), 1.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({1}), 2.0);
+  EXPECT_DOUBLE_EQ(vec.at<double>({2}), 3.0);
 }
 
 TEST_F(TensorTest, RankZeroVectordotIsScalar) {
@@ -548,6 +653,32 @@ TEST_F(TensorTest, VoidTensorArithmeticThrowsControlledError) {
   EXPECT_THROW((void)(uninitialized + scalar), std::logic_error);
   EXPECT_THROW((void)(scalar + uninitialized), std::logic_error);
   EXPECT_THROW((void)(uninitialized + vec), std::logic_error);
+
+  const auto expect_scalar_error = [](auto operation, const std::string &op_name) {
+    try {
+      operation();
+      FAIL() << "expected " << op_name << " with an uninitialized Tensor to throw";
+    } catch (const std::logic_error &error) {
+      const std::string message = error.what();
+      EXPECT_NE(message.find(op_name), std::string::npos);
+      EXPECT_NE(message.find("uninitialized Tensor"), std::string::npos);
+    }
+  };
+
+  expect_scalar_error([&] { (void)(2.0 + uninitialized); }, "Add");
+  expect_scalar_error([&] { (void)(uninitialized + 2.0); }, "Add");
+  expect_scalar_error([&] { (void)(2.0 - uninitialized); }, "Sub");
+  expect_scalar_error([&] { (void)(uninitialized - 2.0); }, "Sub");
+  expect_scalar_error([&] { (void)(2.0 * uninitialized); }, "Mul");
+  expect_scalar_error([&] { (void)(uninitialized * 2.0); }, "Mul");
+  expect_scalar_error([&] { (void)(2.0 / uninitialized); }, "Div");
+  expect_scalar_error([&] { (void)(uninitialized / 2.0); }, "Div");
+  expect_scalar_error([&] { (void)(2.0 % uninitialized); }, "Mod");
+  expect_scalar_error([&] { (void)(uninitialized % 2.0); }, "Mod");
+
+  const Scalar scalar_value(2.0);
+  expect_scalar_error([&] { (void)(scalar_value - uninitialized); }, "Sub");
+  expect_scalar_error([&] { (void)(uninitialized - scalar_value); }, "Sub");
 }
 
 TEST_F(TensorTest, RankZeroAppendAsScalarElement) {

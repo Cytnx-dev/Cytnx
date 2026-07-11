@@ -18,8 +18,7 @@ namespace cytnx {
 
       template <typename TL>
       Tensor AddScalarTensorImpl(const TL &lc, const Tensor &Rt) {
-        cytnx_error_msg(Rt.is_void(), "[Add] cannot add a scalar to an uninitialized Tensor.%s",
-                        "\n");
+        check_tensor_initialized(Rt, "Add");
         const unsigned int lhs_dtype = Type.cy_typeid_v<TL>;
         Storage Cnst(1, lhs_dtype);
         Cnst.at<TL>(0) = lc;
@@ -29,6 +28,7 @@ namespace cytnx {
         out._impl->storage() =
           Storage(Rt._impl->storage().size(),
                   SelectAddOutputType(lhs_dtype, Rt.dtype(), Rt.device()), Rt.device());
+        if (out.storage().size() == 0) return out;
 
         if (Rt.device() == Device.cpu) {
           std::visit(
@@ -60,10 +60,6 @@ namespace cytnx {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Add] The two tensors cannot be on different devices.%s", "\n");
 
-      if (detail::needs_gpu_size_one_dispatch_fallback(Lt, Rt)) {
-        return Add(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
-      }
-
       const unsigned int out_dtype =
         detail::SelectAddOutputType(Lt.dtype(), Rt.dtype(), Lt.device());
 
@@ -80,8 +76,10 @@ namespace cytnx {
         out.Init(Lt.shape(), out_dtype, Lt.device());
       }
 
-      const Tensor left = detail::host_scalar_for_gpu_broadcast(Lt, Lt.device());
-      const Tensor right = detail::host_scalar_for_gpu_broadcast(Rt, Lt.device());
+      if (out.storage().size() == 0) return out;
+
+      const Tensor left = detail::host_singleton_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_singleton_for_gpu_broadcast(Rt, Lt.device());
 
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
@@ -154,8 +152,7 @@ namespace cytnx {
 
     template <>
     Tensor Add<Scalar>(const Scalar &lc, const Tensor &Rt) {
-      cytnx_error_msg(Rt.is_void(), "[Add] cannot add a scalar to an uninitialized Tensor.%s",
-                      "\n");
+      detail::check_tensor_initialized(Rt, "Add");
       Storage Cnst(1, lc.dtype());
       Cnst.set_item(0, lc);
 

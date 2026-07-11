@@ -28,8 +28,8 @@ namespace cytnx {
         out.Init(Lt.shape(), Type.Bool, Lt.device());
       }
 
-      const Tensor left = detail::host_scalar_for_gpu_broadcast(Lt, Lt.device());
-      const Tensor right = detail::host_scalar_for_gpu_broadcast(Rt, Lt.device());
+      const Tensor left = detail::host_singleton_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_singleton_for_gpu_broadcast(Rt, Lt.device());
 
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {

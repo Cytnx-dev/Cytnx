@@ -106,9 +106,6 @@ namespace cytnx {
         bonds[i]._impl->_degs.size() == 0,
         "[ERROR][BlockUniTensor] All bonds must be in new format for BlockUniTensor!.%s", "\n");
 
-      // check rank-0 bond:
-      cytnx_error_msg(bonds[i].dim() == 0,
-                      "[ERROR][BlockUniTensor] All bonds must have dimension >=1%s", "\n");
       // check symmetry and type:
       cytnx_error_msg(bonds[i].Nsym() != N_symmetry,
                       "[ERROR][BlockUniTensor] inconsistant # of symmetry at bond: %d. # of "

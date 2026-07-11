@@ -29,6 +29,41 @@ def test_python_generators_distinguish_integer_size_and_empty_shape():
     assert ones_scalar.item() == 1.0
 
 
+def test_zero_extent_tensor_is_empty_but_not_void_or_scalar():
+    empty = cytnx.zeros([2, 0, 3], dtype=Type.Float)
+
+    assert empty.rank() == 3
+    assert empty.size() == 0
+    assert empty.is_empty()
+    assert not empty.is_void()
+    assert not empty.is_scalar()
+    assert len(empty) == 2
+    assert empty.numpy().shape == (2, 0, 3)
+
+    sliced = empty[:, :, :]
+    assert list(sliced.shape()) == [2, 0, 3]
+    assert sliced.is_empty()
+
+    roundtrip = cytnx.from_numpy(np.empty((2, 0, 3), dtype=np.float32))
+    assert roundtrip.dtype() == Type.Float
+    assert list(roundtrip.shape()) == [2, 0, 3]
+    assert roundtrip.is_empty()
+
+    with pytest.raises(cytnx.CytnxError):
+        empty.item()
+
+
+def test_zero_extent_dense_unitensor_preserves_logical_size():
+    empty = cytnx.UniTensor(cytnx.zeros([0], dtype=Type.Double))
+
+    assert empty.rank() == 1
+    assert empty.size() == 0
+    assert empty.is_empty()
+    assert not empty.is_void()
+    assert not empty.is_scalar()
+    assert list(empty.shape()) == [0]
+
+
 def test_from_numpy_accepts_zero_dimensional_buffer():
     scalar = cytnx.zeros([], dtype=Type.Double)
     scalar[()] = 3.25
@@ -146,7 +181,7 @@ def test_tensor_tuple_slice_rejects_too_many_indices_before_shape_lookup():
         tensor[:, :] = 1.0
 
 
-def test_rank_zero_tensor_is_scalar_operand_not_just_size_one():
+def test_singleton_tensor_broadcast_preserves_is_scalar_semantics():
     scalar = cytnx.zeros([], dtype=Type.Double)
     scalar[()] = 2.0
     vec = cytnx.arange(3).astype(Type.Double)
@@ -161,8 +196,45 @@ def test_rank_zero_tensor_is_scalar_operand_not_just_size_one():
     legacy_shape_one[0] = 2.0
     assert not legacy_shape_one.is_scalar()
     assert legacy_shape_one.item() == 2.0
-    with pytest.raises(cytnx.CytnxError):
-        _ = legacy_shape_one + vec
+
+    out = legacy_shape_one + vec
+    assert list(out.shape()) == [3]
+    assert [out[i].item() for i in range(3)] == [2.0, 3.0, 4.0]
+
+    shape_one_one = cytnx.zeros([1, 1], dtype=Type.Double)
+    shape_one_one[0, 0] = 3.0
+    assert not shape_one_one.is_scalar()
+    out = vec + shape_one_one
+    assert list(out.shape()) == [3]
+    assert [out[i].item() for i in range(3)] == [3.0, 4.0, 5.0]
+
+
+def test_singleton_tensor_assignment_broadcast():
+    vector = cytnx.arange(6).astype(Type.Double)
+    shape_one = cytnx.ones([1], dtype=Type.Double)
+    shape_one_one = cytnx.ones([1, 1], dtype=Type.Double) * 2.0
+
+    vector[2:4] = shape_one
+    assert [vector[i].item() for i in range(6)] == [0.0, 1.0, 1.0, 1.0, 4.0, 5.0]
+
+    vector[0] = shape_one
+    assert vector[0].item() == 1.0
+
+    matrix = cytnx.zeros([2, 2], dtype=Type.Double)
+    matrix[:, :] = shape_one
+    assert [[matrix[i, j].item() for j in range(2)] for i in range(2)] == [
+        [1.0, 1.0],
+        [1.0, 1.0],
+    ]
+
+    vector[0] = shape_one_one
+    assert vector[0].item() == 2.0
+
+    matrix[:, :] = shape_one_one
+    assert [[matrix[i, j].item() for j in range(2)] for i in range(2)] == [
+        [2.0, 2.0],
+        [2.0, 2.0],
+    ]
 
 
 def test_vectordot_returns_rank_zero_tensor():

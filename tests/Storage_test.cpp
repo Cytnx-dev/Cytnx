@@ -287,6 +287,9 @@ TEST_F(StorageTest, FromfileCountZeroReturnsEmptyStorage) {
   Storage loaded = Storage::Fromfile(path, Type.Double, 0);
   EXPECT_EQ(loaded.dtype(), Type.Double);
   EXPECT_EQ(loaded.size(), 0);
+  EXPECT_EQ(loaded.clone().size(), 0);
+  EXPECT_EQ(loaded.astype(Type.Float).dtype(), Type.Float);
+  EXPECT_TRUE(loaded.vector<cytnx_double>().empty());
 }
 
 TEST_F(StorageTest, InitByPtrRejectsZeroLength) {

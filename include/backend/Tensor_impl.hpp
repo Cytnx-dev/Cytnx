@@ -229,6 +229,14 @@ namespace cytnx {
         return out;
       } else {
         boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+        if (this->_storage.size() == 0) {
+          out->_storage = this->_storage;
+          out->_shape = this->_shape;
+          out->_mapper = vec_range(this->_shape.size());
+          out->_invmapper = out->_mapper;
+          out->_contiguous = true;
+          return out;
+        }
         std::vector<cytnx_uint64> oldshape(this->_shape.size());
         for (cytnx_uint64 i = 0; i < this->_shape.size(); i++) {
           oldshape[i] = this->_shape[this->_invmapper[i]];
@@ -250,6 +258,12 @@ namespace cytnx {
       // return new instance if act on non-contiguous tensor
       // return self if act on contiguous tensor
       if (!this->_contiguous) {
+        if (this->_storage.size() == 0) {
+          vec_range_(this->_mapper, this->_shape.size());
+          this->_invmapper = this->_mapper;
+          this->_contiguous = true;
+          return;
+        }
         std::vector<cytnx_uint64> oldshape(this->_shape.size());
         for (cytnx_uint64 i = 0; i < this->_shape.size(); i++) {
           oldshape[i] = this->_shape[this->_invmapper[i]];
@@ -289,8 +303,6 @@ namespace cytnx {
         cytnx_error_msg(
           new_N == 0, "%s",
           "[ERROR] reshape cannot infer the -1 dimension when another dimension is 0");
-        cytnx_error_msg(new_N > this->_storage.size(), "%s",
-                        "[ERROR] new shape exceed the total number of elements.");
         cytnx_error_msg(this->_storage.size() % new_N, "%s",
                         "[ERROR] unmatch size when reshape with undetermine dimension");
       } else {

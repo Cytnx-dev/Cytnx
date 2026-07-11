@@ -626,6 +626,12 @@ namespace cytnx {
     cytnx_uint64 rank() const { return this->_impl->rank(); }
 
     /**
+    @brief Return the total number of logical elements in the Tensor.
+    @return [cytnx_uint64] 1 for a rank-0 scalar and 0 for a Tensor with any zero extent.
+    */
+    cytnx_uint64 size() const { return this->_impl->storage().size(); }
+
+    /**
     @brief whether the Tensor is uninitialized.
     @return [bool] true if the Tensor has Type.Void dtype.
     */
@@ -636,6 +642,12 @@ namespace cytnx {
     @return [bool] true if the Tensor has rank 0 and a non-void dtype
     */
     bool is_scalar() const { return this->_impl->is_scalar(); }
+
+    /**
+    @brief whether the Tensor is initialized and has no elements
+    @return [bool] true if the Tensor has a non-void dtype and size() == 0
+    */
+    bool is_empty() const { return !this->is_void() && this->size() == 0; }
 
     /**
     @brief return a clone of the current Tensor.

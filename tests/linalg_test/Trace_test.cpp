@@ -4,7 +4,6 @@
 
 #include "Tensor.hpp"
 #include "Type.hpp"
-#include "backend/Storage.hpp"
 #include "linalg.hpp"
 #include "random.hpp"
 #include "test_tools.h"
@@ -16,18 +15,11 @@ namespace {
   using cytnx::cytnx_int64;
   using cytnx::cytnx_uint64;
   using cytnx::Device;
-  using cytnx::Storage;
   using cytnx::Tensor;
   using cytnx::Type;
 
-  // Tensor's own constructor and Tensor::get() (slicing) both reject a 0 in any
-  // shape dimension, so a zero-extent Tensor can only be built by composing a
-  // zero-element Storage directly and reshaping it onto the target shape.
-  static Tensor ZeroExtentTensor(const std::vector<cytnx_int64>& shape, unsigned int dtype) {
-    Storage s(0, dtype, Device.cpu);
-    Tensor t = Tensor::from_storage(s);
-    t.reshape_(shape);
-    return t;
+  static Tensor ZeroExtentTensor(const std::vector<cytnx_uint64>& shape, unsigned int dtype) {
+    return Tensor(shape, dtype, Device.cpu);
   }
 
   // The strided in-place trace must agree with the trace of a fully materialized

@@ -8,8 +8,6 @@
 
 namespace cytnx {
   void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type) {
-    cytnx_error_msg(dim == 0, "%s", "[ERROR] Bond_impl cannot have 0 or negative dimension.");
-
     this->_type = bd_type;
     this->_dim = dim;
   }
@@ -25,7 +23,6 @@ namespace cytnx {
     /// calc total dim:
     this->_dim = 0;
     for (auto i : degs) {
-      cytnx_error_msg(i == 0, "[ERROR] [degs] degs of Bond cannot contain zero%s", "\n");
       this->_dim += i;
     }
 

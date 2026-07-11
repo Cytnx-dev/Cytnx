@@ -194,8 +194,7 @@ namespace cytnx {
      *       * `return_err == 1` &rarr; a single element equal to `full_sv[keep]`,
      *       * `return_err >= 2` &rarr; `full_sv[keep .. full_size]`,
      *       * if nothing was truncated, `return_err == 1` is a scalar zero and
-     *         `return_err >= 2` is a 1-element zero vector because Cytnx Tensor currently forbids
-     *         zero-length dimensions.
+     *         `return_err >= 2` is an empty rank-1 vector.
      *
      * `U` and `vT` are not validated (they depend on the basis chosen by the SVD backend,
      * especially in the presence of degenerate singular values).

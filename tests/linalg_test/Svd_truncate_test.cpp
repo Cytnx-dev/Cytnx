@@ -310,7 +310,7 @@ namespace SvdTruncateTest {
 
   /*=====test info=====
   describe:When keepdim >= #singular values and err=0, nothing is truncated; return_err=1 returns
-  a scalar zero while return_err>1 returns a 1-element zero vector.
+  a scalar zero while return_err>1 returns an empty vector.
   ====================*/
   TEST(Svd_truncate, no_truncation_returns_zero_error) {
     Tensor T = Tensor({6, 5}, Type.Double);

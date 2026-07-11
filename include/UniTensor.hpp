@@ -3140,6 +3140,24 @@ namespace cytnx {
     bool is_scalar() const { return !this->is_void() && this->rank() == 0; }
 
     /**
+    @brief Return the total number of logical elements in the UniTensor.
+    @details For block UniTensors this is the dense size implied by the bond dimensions, not the
+    number of physically stored block coefficients.
+    @return [cytnx_uint64] 1 for a rank-0 scalar, 0 for a void UniTensor or any zero extent.
+    */
+    cytnx_uint64 size() const {
+      if (this->is_void()) return 0;
+      cytnx_uint64 result = 1;
+      for (const cytnx_uint64 extent : this->shape()) result *= extent;
+      return result;
+    }
+
+    /**
+    @brief whether the UniTensor is initialized and has no logical elements
+    */
+    bool is_empty() const { return !this->is_void() && this->size() == 0; }
+
+    /**
     @brief Return the device of the UniTensor.
         @details The function return the device of the UniTensor.
     @return int

@@ -14,10 +14,6 @@ namespace cytnx {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mul] The two tensors cannot be on different devices.%s", "\n");
 
-      if (detail::needs_gpu_size_one_dispatch_fallback(Lt, Rt)) {
-        return Mul(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
-      }
-
       Tensor out;
       bool icnst = false;
       if (detail::init_broadcast_binary_output(out, Lt, Rt,
@@ -29,8 +25,10 @@ namespace cytnx {
         out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
       }
 
-      const Tensor left = detail::host_scalar_for_gpu_broadcast(Lt, Lt.device());
-      const Tensor right = detail::host_scalar_for_gpu_broadcast(Rt, Lt.device());
+      if (out.storage().size() == 0) return out;
+
+      const Tensor left = detail::host_singleton_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_singleton_for_gpu_broadcast(Rt, Lt.device());
 
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section
@@ -94,6 +92,7 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.ComplexDouble, Rt.device());
       Cnst.at<cytnx_complex128>(0) = lc;
       Tensor out;
@@ -127,6 +126,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_complex64>(const cytnx_complex64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.ComplexFloat, Rt.device());
       Cnst.at<cytnx_complex64>(0) = lc;
       Tensor out;
@@ -162,6 +162,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_double>(const cytnx_double &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Double, Rt.device());
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
@@ -196,6 +197,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_float>(const cytnx_float &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Float, Rt.device());
       Cnst.at<cytnx_float>(0) = lc;
       Tensor out;
@@ -230,6 +232,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_int64>(const cytnx_int64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Int64, Rt.device());
       Cnst.at<cytnx_int64>(0) = lc;
       Tensor out;
@@ -264,6 +267,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_uint64>(const cytnx_uint64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Uint64, Rt.device());
       Cnst.at<cytnx_uint64>(0) = lc;
       Tensor out;
@@ -298,6 +302,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_int32>(const cytnx_int32 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Int32, Rt.device());
       Cnst.at<cytnx_int32>(0) = lc;
       Tensor out;
@@ -332,6 +337,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Uint32, Rt.device());
       Cnst.at<cytnx_uint32>(0) = lc;
       Tensor out;
@@ -366,6 +372,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Int16, Rt.device());
       Cnst.at<cytnx_int16>(0) = lc;
       Tensor out;
@@ -400,6 +407,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Uint16, Rt.device());
       Cnst.at<cytnx_uint16>(0) = lc;
       Tensor out;
@@ -434,6 +442,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, Type.Bool, Rt.device());
       Cnst.at<cytnx_bool>(0) = lc;
       Tensor out;
@@ -468,6 +477,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<Scalar>(const Scalar &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mul");
       Storage Cnst(1, lc.dtype());
       Cnst.set_item(0, lc);
 

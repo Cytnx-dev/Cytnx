@@ -22,6 +22,32 @@ TEST_F(BlockFermionicUniTensorTest, VectorContract) {
   EXPECT_THROW(BFUT1.item(), cytnx::error);
 }
 
+TEST_F(BlockFermionicUniTensorTest, ZeroExtentBondProducesEmptyTensor) {
+  const Bond empty = Bond(BD_IN, {{0}}, {0}, {Symmetry::FermionParity()});
+  const Bond unit = Bond(BD_OUT, {{0}}, {1}, {Symmetry::FermionParity()});
+  UniTensor tensor({empty, unit}, {"empty", "unit"}, 1, Type.Double, Device.cpu);
+
+  EXPECT_EQ(tensor.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(tensor.shape(), (std::vector<cytnx_uint64>{0, 1}));
+  EXPECT_EQ(tensor.size(), 0);
+  EXPECT_TRUE(tensor.is_empty());
+  EXPECT_FALSE(tensor.is_void());
+  EXPECT_FALSE(tensor.is_scalar());
+  EXPECT_EQ(tensor.dtype(), Type.Double);
+  EXPECT_EQ(tensor.device(), Device.cpu);
+  ASSERT_EQ(tensor.Nblocks(), 1);
+  EXPECT_TRUE(tensor.get_block_(0).is_empty());
+
+  tensor.Save(temp_file_path);
+  const UniTensor loaded = UniTensor::Load(temp_file_path);
+  EXPECT_EQ(loaded.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(loaded.shape(), tensor.shape());
+  EXPECT_EQ(loaded.syms(), tensor.syms());
+  EXPECT_TRUE(loaded.is_empty());
+  ASSERT_EQ(loaded.Nblocks(), 1);
+  EXPECT_TRUE(loaded.get_block_(0).is_empty());
+}
+
 /*=====test info=====
 describe:contraction
 ====================*/
@@ -187,7 +213,7 @@ TEST_F(BlockFermionicUniTensorTest, DiagonalPermutePreservesBlocks) {
   diag.get_block_(0).fill(2.0);
   diag.get_block_(1).fill(3.0);
 
-  UniTensor permuted = diag.permute({"b", "a"});
+  UniTensor permuted = diag.permute(std::vector<std::string>{"b", "a"});
   EXPECT_TRUE(permuted.is_diag());
   EXPECT_FALSE(permuted.get_block_(0).is_void());
   EXPECT_FALSE(permuted.get_block_(1).is_void());

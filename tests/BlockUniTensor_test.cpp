@@ -52,6 +52,32 @@ TEST_F(BlockUniTensorTest, Init) {
   EXPECT_ANY_THROW(BkUt.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
 }
 
+TEST_F(BlockUniTensorTest, ZeroExtentBondProducesEmptyTensor) {
+  const Bond empty = Bond(BD_IN, {{0}}, {0}, {Symmetry::U1()});
+  const Bond unit = Bond(BD_OUT, {{0}}, {1}, {Symmetry::U1()});
+  UniTensor tensor({empty, unit}, {"empty", "unit"}, 1, Type.Float, Device.cpu);
+
+  EXPECT_EQ(tensor.uten_type(), UTenType.Block);
+  EXPECT_EQ(tensor.shape(), (std::vector<cytnx_uint64>{0, 1}));
+  EXPECT_EQ(tensor.size(), 0);
+  EXPECT_TRUE(tensor.is_empty());
+  EXPECT_FALSE(tensor.is_void());
+  EXPECT_FALSE(tensor.is_scalar());
+  EXPECT_EQ(tensor.dtype(), Type.Float);
+  EXPECT_EQ(tensor.device(), Device.cpu);
+  ASSERT_EQ(tensor.Nblocks(), 1);
+  EXPECT_TRUE(tensor.get_block_(0).is_empty());
+
+  tensor.Save(temp_file_path);
+  const UniTensor loaded = UniTensor::Load(temp_file_path);
+  EXPECT_EQ(loaded.uten_type(), UTenType.Block);
+  EXPECT_EQ(loaded.shape(), tensor.shape());
+  EXPECT_EQ(loaded.syms(), tensor.syms());
+  EXPECT_TRUE(loaded.is_empty());
+  ASSERT_EQ(loaded.Nblocks(), 1);
+  EXPECT_TRUE(loaded.get_block_(0).is_empty());
+}
+
 TEST_F(BlockUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
   EXPECT_ANY_THROW(Spf.set_rowrank(-2));  // set_rowrank cannot be negative!
@@ -347,8 +373,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder)
   ASSERT_EQ(orig_shape, std::vector<cytnx_uint64>({10, 10}));
   std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
   std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       orig_exists[j][k] = uT.at({j, k}).exists();
       if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
     }
@@ -357,8 +383,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder)
   uT2.permute_(a, -1);
 
   // uT2 changed as expected (matches the pre-existing permute_2 reference answer).
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(uT2.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (uT2.at({j, k}).exists())
         EXPECT_EQ(double(uT2.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
@@ -369,8 +395,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder)
   // permuted shared block Tensor can manifest as an out-of-bound access), so guard each read.
   ASSERT_EQ(uT.shape(), orig_shape);
   EXPECT_EQ(uT.labels(), orig_labels);
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       try {
         EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
         if (orig_exists[j][k] && uT.at({j, k}).exists())
@@ -398,8 +424,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) 
   const auto orig_shape = uT.shape();
   std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
   std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       orig_exists[j][k] = uT.at({j, k}).exists();
       if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
     }
@@ -408,8 +434,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) 
   uT_indep.permute_(a, -1);
 
   // uT_indep must match the known permute_2 reference answer (proves the permute really ran).
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(uT_indep.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (uT_indep.at({j, k}).exists())
         EXPECT_EQ(double(uT_indep.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
@@ -417,8 +443,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) 
 
   // uT (the clone source, independent storage) must be completely unaffected.
   EXPECT_EQ(uT.shape(), orig_shape);
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
       if (orig_exists[j][k] && uT.at({j, k}).exists())
         EXPECT_EQ(double(uT.at({j, k}).real()), orig_vals[j][k]);
@@ -730,7 +756,7 @@ TEST_F(BlockUniTensorTest, diagonal_permute_preserves_blocks) {
   diag.get_block_(0).fill(2.0);
   diag.get_block_(1).fill(3.0);
 
-  UniTensor permuted = diag.permute({"b", "a"});
+  UniTensor permuted = diag.permute(std::vector<std::string>{"b", "a"});
   EXPECT_TRUE(permuted.is_diag());
   EXPECT_FALSE(permuted.get_block_(0).is_void());
   EXPECT_FALSE(permuted.get_block_(1).is_void());

@@ -157,8 +157,8 @@ describe:When keepdim >= total singular values (smidx == 0), nothing is dropped.
 must still return a zero error tensor rather than crashing or returning garbage.
 ====================*/
 TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_no_truncation) {
-  // keepdim=999 keeps everything; return_err=1 is a scalar zero, while return_err=2 is a
-  // 1-element zero vector because Cytnx Tensor currently forbids zero-length dimensions.
+  // keepdim=999 keeps everything; return_err=1 is a scalar zero, while return_err=2 is an empty
+  // vector.
   for (unsigned int re : {1u, 2u}) {
     std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 999, 0, true, re);
     ASSERT_EQ(res.size(), 4u) << "return_err=" << re;
@@ -166,8 +166,8 @@ TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_no_truncation) {
       ASSERT_TRUE(res[3].shape().empty()) << "return_err=" << re;
       EXPECT_EQ(res[3].at({}), Scalar(0.0)) << "return_err=" << re;
     } else {
-      ASSERT_EQ(res[3].shape(), std::vector<cytnx_uint64>{1}) << "return_err=" << re;
-      EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+      ASSERT_EQ(res[3].shape(), std::vector<cytnx_uint64>{0}) << "return_err=" << re;
+      EXPECT_TRUE(res[3].is_empty()) << "return_err=" << re;
     }
   }
 }
@@ -180,8 +180,8 @@ TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_no_truncation) {
       ASSERT_TRUE(res[3].shape().empty()) << "return_err=" << re;
       EXPECT_EQ(res[3].at({}), Scalar(0.0)) << "return_err=" << re;
     } else {
-      ASSERT_EQ(res[3].shape()[0], 1u) << "return_err=" << re;
-      EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+      ASSERT_EQ(res[3].shape(), std::vector<cytnx_uint64>{0}) << "return_err=" << re;
+      EXPECT_TRUE(res[3].is_empty()) << "return_err=" << re;
     }
   }
 }

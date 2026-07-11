@@ -7,7 +7,6 @@
 #include "Device.hpp"
 #include "Tensor.hpp"
 #include "Type.hpp"
-#include "backend/Storage.hpp"
 #include "linalg.hpp"
 #include "random.hpp"
 
@@ -24,7 +23,6 @@ namespace {
   using cytnx::cytnx_int64;
   using cytnx::cytnx_uint64;
   using cytnx::Device;
-  using cytnx::Storage;
   using cytnx::Tensor;
   using cytnx::Type;
 
@@ -34,14 +32,8 @@ namespace {
     return cytnx::linalg::Trace(gpu_t.to(Device.cpu).contiguous(), a, b);
   }
 
-  // Tensor's own constructor and Tensor::get() (slicing) both reject a 0 in any
-  // shape dimension, so a zero-extent Tensor can only be built by composing a
-  // zero-element Storage directly and reshaping it onto the target shape.
-  static Tensor ZeroExtentGpuTensor(const std::vector<cytnx_int64>& shape, unsigned int dtype) {
-    Storage s(0, dtype, Device.cuda);
-    Tensor t = Tensor::from_storage(s);
-    t.reshape_(shape);
-    return t;
+  static Tensor ZeroExtentGpuTensor(const std::vector<cytnx_uint64>& shape, unsigned int dtype) {
+    return Tensor(shape, dtype, Device.cuda);
   }
 
   static Tensor TraceOnGpuToCpu(const Tensor& gpu_t, cytnx_uint64 a, cytnx_uint64 b) {
@@ -275,10 +267,8 @@ namespace {
     // ever consulted, even when the tensor also has more non-trivial
     // (extent > 1) surviving axes than kMaxTraceRank (50) -- output_size is 0
     // regardless of how many other axes exist, so the kernel launch (and
-    // thus TraceLayout's capacity) is never reached. Built via
-    // ZeroExtentGpuTensor since one axis is 0, so the tensor has 0 elements
-    // despite its rank.
-    std::vector<cytnx_int64> shape = {2, 2, 0};
+    // thus TraceLayout's capacity) is never reached.
+    std::vector<cytnx_uint64> shape = {2, 2, 0};
     shape.insert(shape.end(), 51, 2);
     auto t = ZeroExtentGpuTensor(shape, Type.Double);
     auto out = cytnx::linalg::Trace(t, 0, 1).to(Device.cpu);

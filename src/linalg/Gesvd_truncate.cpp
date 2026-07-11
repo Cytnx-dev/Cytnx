@@ -61,7 +61,7 @@ namespace cytnx {
         if (return_err == 1) {
           terr = zeros({}, S.dtype(), in.device());
         } else if (return_err) {
-          terr = zeros({1}, S.dtype(), in.device());
+          terr = zeros({0}, S.dtype(), in.device());
         }
 
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
@@ -79,7 +79,7 @@ namespace cytnx {
           if (return_err == 1) {
             terr = zeros({}, S.dtype(), in.device());
           } else if (return_err) {
-            terr = zeros({1}, S.dtype(), in.device());
+            terr = zeros({0}, S.dtype(), in.device());
           }
           cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
                                                                     0., return_err, U, S, vT, terr);
@@ -478,7 +478,8 @@ namespace cytnx {
       }
       if (!anySall) {
         if (return_err >= 1) {
-          outCyT.push_back(BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err));
+          outCyT.push_back(
+            BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err, outCyT[0].device()));
         }
       } else {
         Scalar Smin;

@@ -12,10 +12,11 @@ namespace cytnx {
   namespace linalg {
 
     void iDiv(Tensor &Lt, const Tensor &Rt) {
-      // A rank-0 RHS that stays on the host is treated as a broadcast scalar: the GPU kernels read
-      // it with a host-side dereference and pass it into the kernel by value, so it needs
+      detail::check_binary_tensor_inputs(Lt, Rt, "iDiv");
+      // A singleton RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
+      // read it with a host-side dereference and pass it into the kernel by value, so it needs
       // neither a device match nor a per-call H2D copy of the scalar. See #988.
-      const bool rhs_is_scalar = Rt.is_scalar();
+      const bool rhs_is_scalar = detail::is_singleton_tensor(Rt);
       const bool rhs_is_host_scalar = (Rt.device() == Device.cpu && rhs_is_scalar);
       cytnx_error_msg(Lt.device() != Rt.device() && !rhs_is_host_scalar,
                       "[iDiv] The two tensors cannot be on different devices.%s", "\n");
@@ -34,6 +35,7 @@ namespace cytnx {
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
+      if (Lt.storage().size() == 0) return;
 
       Tensor R;
       if (Lt._impl->storage()._impl == Rt._impl->storage()._impl) {
@@ -41,7 +43,7 @@ namespace cytnx {
       } else {
         R = Rt;
       }
-      R = detail::host_scalar_for_gpu_broadcast(R, Lt.device());
+      R = detail::host_singleton_for_gpu_broadcast(R, Lt.device());
 
       // GPU broadcast scalar with a LHS *narrower* than the promoted dtype (e.g. a Float tensor
       // over a Double scalar, or an integer tensor over a fractional scalar): the in-place GPU

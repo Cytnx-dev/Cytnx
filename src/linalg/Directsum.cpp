@@ -30,6 +30,7 @@ namespace cytnx {
                       "[ERROR] shared_axes cannot contain duplicate elements!%s", "\n");
 
       std::vector<cytnx_uint64> new_shape(T1.rank());
+      std::vector<bool> is_shared_axis(T1.rank(), false);
       // checking dimension in shared_axes:
       for (int i = 0; i < shared_axes.size(); i++) {
         cytnx_error_msg(shared_axes[i] >= T1.shape().size(),
@@ -40,11 +41,12 @@ namespace cytnx {
           "[ERROR] T1 and T2 at axis %d which specified to share does not have same dimension!\n",
           shared_axes[i]);
         new_shape[shared_axes[i]] = T1.shape()[shared_axes[i]];
+        is_shared_axis[shared_axes[i]] = true;
       }
 
       std::vector<cytnx_uint64> non_shared_axes;
       for (int i = 0; i < new_shape.size(); i++) {
-        if (new_shape[i] == 0) {
+        if (!is_shared_axis[i]) {
           new_shape[i] = T1.shape()[i] + T2.shape()[i];
           non_shared_axes.push_back(i);
         }

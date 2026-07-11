@@ -336,7 +336,7 @@ namespace GesvdTruncateTest {
 
   /*=====test info=====
   describe:When keepdim >= #singular values and err=0, nothing is truncated; return_err=1 returns
-  a scalar zero while return_err>1 returns a 1-element zero vector.
+  a scalar zero while return_err>1 returns an empty vector.
   ====================*/
   TEST(Gesvd_truncate, no_truncation_returns_zero_error) {
     Tensor T = Tensor({6, 5}, Type.Double);
@@ -352,8 +352,8 @@ namespace GesvdTruncateTest {
         EXPECT_TRUE(terr.is_scalar());
         EXPECT_DOUBLE_EQ(terr.storage().at<double>(0), 0.0) << "return_err=" << return_err;
       } else {
-        EXPECT_EQ(terr.shape(), std::vector<cytnx_uint64>({1}));
-        EXPECT_DOUBLE_EQ(terr.storage().at<double>(0), 0.0) << "return_err=" << return_err;
+        EXPECT_EQ(terr.shape(), std::vector<cytnx_uint64>({0}));
+        EXPECT_TRUE(terr.is_empty()) << "return_err=" << return_err;
       }
     }
   }

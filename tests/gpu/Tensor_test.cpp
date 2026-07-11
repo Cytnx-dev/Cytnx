@@ -102,7 +102,10 @@ TEST_F(TensorTest, gpu_shape) {
   EXPECT_EQ(B.shape()[1], 1);
   EXPECT_EQ(B.shape()[2], 1);
 
-  EXPECT_THROW(Tensor({0}, Type.Double, Device.cuda, true), std::logic_error);
+  Tensor empty({2, 0, 3}, Type.Double, Device.cuda, true);
+  EXPECT_TRUE(empty.is_empty());
+  EXPECT_EQ(empty.size(), 0);
+  EXPECT_EQ(empty.to(Device.cpu).shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
 }
 
 TEST_F(TensorTest, gpu_permute) {
@@ -153,7 +156,24 @@ TEST_F(TensorTest, gpu_permute) {
   EXPECT_EQ(B.shape().size(), 1);
   EXPECT_EQ(B.shape()[0], 1);
 
-  EXPECT_THROW(Tensor({0}, Type.Double, Device.cuda, true), std::logic_error);
+  Tensor empty({0}, Type.Double, Device.cuda, true);
+  empty.permute_({0});
+  EXPECT_TRUE(empty.is_empty());
+}
+
+TEST_F(TensorTest, gpu_ZeroExtentArithmetic) {
+  Tensor empty({2, 0, 3}, Type.Float, Device.cuda);
+  Tensor other({2, 0, 3}, Type.Double, Device.cuda);
+  Tensor scalar({}, Type.Double, Device.cuda);
+
+  EXPECT_TRUE((empty + other).is_empty());
+  EXPECT_TRUE((empty - other).is_empty());
+  EXPECT_TRUE((empty * other).is_empty());
+  EXPECT_TRUE((empty / other).is_empty());
+  EXPECT_TRUE((empty + scalar).is_empty());
+  EXPECT_TRUE((empty - 2.0).is_empty());
+  EXPECT_TRUE((empty * 2.0).is_empty());
+  EXPECT_TRUE((2.0 / empty).is_empty());
 }
 
 TEST_F(TensorTest, gpu_get) {
@@ -424,9 +444,25 @@ TEST_F(TensorTest, gpu_RankZeroScalarAccessAndBroadcast) {
   EXPECT_FLOAT_EQ(host.at<cytnx_float>({1}), 2.5f);
   EXPECT_FLOAT_EQ(host.at<cytnx_float>({2}), 1.5f);
 
-  EXPECT_THROW((void)(shape_one + vec), std::logic_error);
-  EXPECT_THROW((void)(vec + shape_one), std::logic_error);
-  EXPECT_THROW(vec += shape_one, std::logic_error);
+  out = shape_one + vec;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), vec.shape());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 6.0);
+
+  out = vec + shape_one;
+  host = out.to(Device.cpu);
+  EXPECT_EQ(host.shape(), vec.shape());
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 6.0);
+
+  vec += shape_one;
+  host = vec.to(Device.cpu);
+  EXPECT_DOUBLE_EQ(host.at<double>({0}), 4.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({1}), 5.0);
+  EXPECT_DOUBLE_EQ(host.at<double>({2}), 6.0);
 }
 
 // TEST_F(TensorTest, gpu_approx_eq) {

@@ -131,8 +131,8 @@ namespace GpuTruncateTest {
         EXPECT_TRUE(terr.is_scalar());
         EXPECT_DOUBLE_EQ(terr.storage().at<double>(0), 0.0) << "return_err=" << re;
       } else {
-        EXPECT_EQ(terr.shape(), std::vector<cytnx_uint64>({1}));
-        EXPECT_DOUBLE_EQ(terr.storage().at<double>(0), 0.0) << "return_err=" << re;
+        EXPECT_EQ(terr.shape(), std::vector<cytnx_uint64>({0}));
+        EXPECT_TRUE(terr.is_empty()) << "return_err=" << re;
       }
     }
   }

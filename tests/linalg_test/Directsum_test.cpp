@@ -165,6 +165,16 @@ namespace DirectsumTest {
     ExcuteDirectsumTest(T1, T2, shared_axes);
   }
 
+  TEST(Directsum, shared_zero_extent_axis) {
+    Tensor T1({0, 2}, Type.Float);
+    Tensor T2({0, 3}, Type.Double);
+
+    Tensor out = linalg::Directsum(T1, T2, {0});
+    EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{0, 5}));
+    EXPECT_EQ(out.dtype(), Type.Double);
+    EXPECT_TRUE(out.is_empty());
+  }
+
   /*=====test info=====
   describe:Test for not contiguous tensor.
   input:

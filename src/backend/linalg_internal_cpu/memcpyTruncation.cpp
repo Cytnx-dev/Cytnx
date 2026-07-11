@@ -16,6 +16,15 @@ namespace cytnx {
       const cytnx_uint64 nums = tens[0].storage().size();
       cytnx_uint64 trunc_dim = (nums < keepdim) ? nums : keepdim;
 
+      if (nums == 0) {
+        if (return_err == 1) {
+          tens.push_back(zeros({}, tens[0].dtype(), tens[0].device()));
+        } else if (return_err) {
+          tens.push_back(zeros({0}, tens[0].dtype(), tens[0].device()));
+        }
+        return;
+      }
+
       // error tensor; filled below only when return_err != 0 (see header for its exact contents).
       Tensor terr;
 
@@ -41,7 +50,7 @@ namespace cytnx {
               if (return_err == 1) {
                 terr = zeros({}, tens[0].dtype(), tens[0].device());
               } else if (return_err) {
-                terr = zeros({1}, tens[0].dtype(), tens[0].device());
+                terr = zeros({0}, tens[0].dtype(), tens[0].device());
               }
               return;  // escapes lambda
             }

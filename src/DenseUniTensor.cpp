@@ -50,7 +50,6 @@ namespace cytnx {
                         "[ERROR][DenseUniTensor] Cannot mix tagged bond with un-tagged bond!%s",
                         "\n");
       }
-      cytnx_error_msg(bonds[i].dim() == 0, "%s", "[ERROR] All bonds must have dimension >=1");
     }
 
     // check rowrank

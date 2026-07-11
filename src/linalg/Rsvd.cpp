@@ -927,7 +927,8 @@ namespace cytnx {
         }
         if (!anySall) {
           if (return_err >= 1) {
-            outCyT.push_back(BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err));
+            outCyT.push_back(
+              BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err, outCyT[0].device()));
           }
         } else {
           Scalar Smin;

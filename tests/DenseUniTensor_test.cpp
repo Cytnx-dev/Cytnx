@@ -113,6 +113,19 @@ TEST_F(DenseUniTensorTest, RankZeroDenseBlock) {
   EXPECT_DOUBLE_EQ(from_scalar.get_block_().item<double>(), 4.0);
 }
 
+TEST_F(DenseUniTensorTest, ZeroExtentDenseBlock) {
+  Tensor empty_tensor({2, 0, 3}, Type.Double);
+  UniTensor empty(empty_tensor, false, 1);
+
+  EXPECT_EQ(empty.rank(), 3);
+  EXPECT_EQ(empty.shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
+  EXPECT_EQ(empty.size(), 0);
+  EXPECT_TRUE(empty.is_empty());
+  EXPECT_FALSE(empty.is_void());
+  EXPECT_FALSE(empty.is_scalar());
+  EXPECT_TRUE(empty.get_block_().is_empty());
+}
+
 TEST_F(DenseUniTensorTest, RankZeroDenseContractActsAsScalar) {
   Tensor left_block({}, Type.Double);
   left_block.item<double>() = 2.0;

@@ -116,9 +116,6 @@ namespace cytnx {
                       "BlockFermionicUniTensor!.%s",
                       "\n");
 
-      // check rank-0 bond:
-      cytnx_error_msg(bonds[i].dim() == 0,
-                      "[ERROR][BlockFermionicUniTensor] All bonds must have dimension >=1%s", "\n");
       // check symmetry and type:
       cytnx_error_msg(
         bonds[i].Nsym() != N_symmetry,
