@@ -27,8 +27,8 @@ namespace cytnx {
 
       ExpectEmpty(linalg::Abs(Tensor(shape, Type.ComplexFloat)), shape, Type.Float);
       ExpectEmpty(linalg::Conj(Tensor(shape, Type.ComplexFloat)), shape, Type.ComplexFloat);
-      ExpectEmpty(linalg::Exp(Tensor(shape, Type.Float)), shape, Type.Double);
-      ExpectEmpty(linalg::Expf(Tensor(shape, Type.Double)), shape, Type.Float);
+      ExpectEmpty(linalg::Exp(Tensor(shape, Type.Double)), shape, Type.Double);
+      ExpectEmpty(linalg::Expf(Tensor(shape, Type.Float)), shape, Type.Float);
       ExpectEmpty(linalg::Inv(Tensor(shape, Type.Int64)), shape, Type.Double);
       ExpectEmpty(linalg::Pow(Tensor(shape, Type.Int64), 2.0), shape, Type.Double);
 
@@ -40,11 +40,11 @@ namespace cytnx {
       linalg::Conj_(value);
       ExpectEmpty(value, shape, Type.Float);
 
-      value = Tensor(shape, Type.Float);
+      value = Tensor(shape, Type.Double);
       linalg::Exp_(value);
       ExpectEmpty(value, shape, Type.Double);
 
-      value = Tensor(shape, Type.Double);
+      value = Tensor(shape, Type.Float);
       linalg::Expf_(value);
       ExpectEmpty(value, shape, Type.Float);
 

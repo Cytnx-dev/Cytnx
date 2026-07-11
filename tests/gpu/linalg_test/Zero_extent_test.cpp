@@ -32,7 +32,7 @@ namespace cytnx {
       ExpectGpuEmpty(linalg::Abs(Tensor(shape, Type.ComplexFloat, Device.cuda)), shape, Type.Float);
       ExpectGpuEmpty(linalg::Conj(Tensor(shape, Type.ComplexFloat, Device.cuda)), shape,
                      Type.ComplexFloat);
-      ExpectGpuEmpty(linalg::Exp(lhs), shape, Type.Double);
+      ExpectGpuEmpty(linalg::Exp(rhs), shape, Type.Double);
       ExpectGpuEmpty(linalg::Inv(Tensor(shape, Type.Int64, Device.cuda)), shape, Type.Double);
       ExpectGpuEmpty(linalg::Pow(Tensor(shape, Type.Int64, Device.cuda), 2.0), shape, Type.Double);
       ExpectGpuEmpty(linalg::Mod(lhs, rhs), shape, Type.Double);
