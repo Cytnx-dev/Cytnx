@@ -1,7 +1,7 @@
 var searchData=
 [
   ['tag_0',['tag',['../classcytnx_1_1UniTensor.html#a26a40f3cfae8d14b33fcf883ee300abf',1,'cytnx::UniTensor']]],
-  ['tensor_1',['tensor',['../classcytnx_1_1Tensor.html',1,'cytnx::Tensor'],['../classcytnx_1_1Tensor.html#a1b1568fca101fb372411927b5c5ba9d4',1,'cytnx::Tensor::Tensor()']]],
+  ['tensor_1',['tensor',['../classcytnx_1_1Tensor.html',1,'cytnx::Tensor'],['../classcytnx_1_1Tensor.html#a5e7775febb6bbd828e2a4c134f8943f5',1,'cytnx::Tensor::Tensor(const std::vector&lt; cytnx_uint64 &gt; &amp;shape, unsigned int dtype=Type.Double, int device=-1, bool init_zero=true)'],['../classcytnx_1_1Tensor.html#ab7d9bb0be7a16e3ba2ec67fb66508072',1,'cytnx::Tensor::Tensor(std::initializer_list&lt; cytnx_uint64 &gt; shape, unsigned int dtype=Type.Double, int device=-1, bool init_zero=true)']]],
   ['tensor_2ehpp_2',['Tensor.hpp',['../Tensor_8hpp.html',1,'']]],
   ['tensordot_3',['Tensordot',['../namespacecytnx_1_1linalg.html#a242f1b9c1ee7938ba050121773ab4b55',1,'cytnx::linalg']]],
   ['tensordot_5fdg_4',['Tensordot_dg',['../namespacecytnx_1_1linalg.html#ac77faf8e0c0153e1890610a6e21f36af',1,'cytnx::linalg']]],

@@ -126,7 +126,7 @@ Implementation
 
         // let's overload this with custom operation:
         Tensor matvec(const Tensor &v) override{
-            auto out = zeros(v.shape()[0],v.dtype(),v.device());
+            auto out = zeros({v.shape()[0]},v.dtype(),v.device());
             cytnx_uint32 oid;
             double amp;
 

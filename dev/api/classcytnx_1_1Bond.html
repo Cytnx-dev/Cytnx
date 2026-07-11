@@ -346,7 +346,7 @@ Static Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">bd_type</td><td>the type (see <a class="el" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480ef">bondType</a>) of the bond </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">in_qnums</td><td>input the quantum numbers of the bond (for symmetry case) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">degs</td><td>the degrees of freedom of the bond. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">degs</td><td>the degrees of freedom of the bond. A zero degeneracy represents an empty sector while retaining its quantum number and the <a class="el" href="classcytnx_1_1Bond.html" title="the object contains auxiliary properties for each Tensor rank (bond)">Bond</a>'s symmetry metadata. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">in_syms</td><td>input the symmetries of the bond (for symmetry case) </td></tr>
   </table>
   </dd>
@@ -620,7 +620,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasscytnx_1_1Bond_html"><div class="ttname"><a href="classcytnx_1_1Bond.html">cytnx::Bond</a></div><div class="ttdoc">the object contains auxiliary properties for each Tensor rank (bond)</div><div class="ttdef"><b>Definition</b> Bond.hpp:178</div></div>
-<div class="ttc" id="aclasscytnx_1_1Bond_html_a8c4d6443ffe7c3f3ecd8c474fd9a18eb"><div class="ttname"><a href="classcytnx_1_1Bond.html#a8c4d6443ffe7c3f3ecd8c474fd9a18eb">cytnx::Bond::clone</a></div><div class="ttdeci">Bond clone() const</div><div class="ttdoc">return a copy of the instance Bond</div><div class="ttdef"><b>Definition</b> Bond.hpp:490</div></div>
+<div class="ttc" id="aclasscytnx_1_1Bond_html_a8c4d6443ffe7c3f3ecd8c474fd9a18eb"><div class="ttname"><a href="classcytnx_1_1Bond.html#a8c4d6443ffe7c3f3ecd8c474fd9a18eb">cytnx::Bond::clone</a></div><div class="ttdeci">Bond clone() const</div><div class="ttdoc">return a copy of the instance Bond</div><div class="ttdef"><b>Definition</b> Bond.hpp:491</div></div>
 <div class="ttc" id="acytnx_8hpp_html"><div class="ttname"><a href="cytnx_8hpp.html">cytnx.hpp</a></div></div>
 <div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition</b> Accessor.hpp:12</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
@@ -744,7 +744,7 @@ True
 <div class="line">  std::cout &lt;&lt; bd_e &lt;&lt; std::endl;</div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Bond_html_a4714d9891e02b2aebf6756ec68c25e5c"><div class="ttname"><a href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">cytnx::Bond::combineBond</a></div><div class="ttdeci">Bond combineBond(const Bond &amp;bd_in, const bool &amp;is_grp=true) const</div><div class="ttdoc">combine the input bond with self, and return a new combined Bond instance.</div><div class="ttdef"><b>Definition</b> Bond.hpp:553</div></div>
+<div class="ttc" id="aclasscytnx_1_1Bond_html_a4714d9891e02b2aebf6756ec68c25e5c"><div class="ttname"><a href="classcytnx_1_1Bond.html#a4714d9891e02b2aebf6756ec68c25e5c">cytnx::Bond::combineBond</a></div><div class="ttdeci">Bond combineBond(const Bond &amp;bd_in, const bool &amp;is_grp=true) const</div><div class="ttdoc">combine the input bond with self, and return a new combined Bond instance.</div><div class="ttdef"><b>Definition</b> Bond.hpp:554</div></div>
 <div class="ttc" id="aclasscytnx_1_1Qs_html"><div class="ttname"><a href="classcytnx_1_1Qs.html">cytnx::Qs</a></div><div class="ttdef"><b>Definition</b> Symmetry.hpp:41</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a066083aa705f8fc749b3bbb606f89359"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a066083aa705f8fc749b3bbb606f89359">cytnx::Symmetry::Zn</a></div><div class="ttdeci">static Symmetry Zn(const int &amp;n)</div><div class="ttdoc">create a Zn discrete symmetry object with</div><div class="ttdef"><b>Definition</b> Symmetry.hpp:257</div></div>
 <div class="ttc" id="aclasscytnx_1_1Symmetry_html_a9218fd66fc9cca64cd3d792e0019592a"><div class="ttname"><a href="classcytnx_1_1Symmetry.html#a9218fd66fc9cca64cd3d792e0019592a">cytnx::Symmetry::U1</a></div><div class="ttdeci">static Symmetry U1()</div><div class="ttdoc">create a U1 symmetry object</div><div class="ttdef"><b>Definition</b> Symmetry.hpp:226</div></div>
@@ -1079,7 +1079,7 @@ Deg&gt;&gt;    1   1   1   1
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Bond_html_ab8645d03cf115b59e946f329f3bba122"><div class="ttname"><a href="classcytnx_1_1Bond.html#ab8645d03cf115b59e946f329f3bba122">cytnx::Bond::combineBond_</a></div><div class="ttdeci">void combineBond_(const Bond &amp;bd_in, const bool &amp;is_grp=true)</div><div class="ttdoc">Combine the input bond with self, inplacely.</div><div class="ttdef"><b>Definition</b> Bond.hpp:522</div></div>
+<div class="ttc" id="aclasscytnx_1_1Bond_html_ab8645d03cf115b59e946f329f3bba122"><div class="ttname"><a href="classcytnx_1_1Bond.html#ab8645d03cf115b59e946f329f3bba122">cytnx::Bond::combineBond_</a></div><div class="ttdeci">void combineBond_(const Bond &amp;bd_in, const bool &amp;is_grp=true)</div><div class="ttdoc">Combine the input bond with self, inplacely.</div><div class="ttdef"><b>Definition</b> Bond.hpp:523</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 10 |type: REGULAR
 
@@ -1313,7 +1313,7 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Bond_html_a5282d90bef238154945707bffca76875"><div class="ttname"><a href="classcytnx_1_1Bond.html#a5282d90bef238154945707bffca76875">cytnx::Bond::combineBonds</a></div><div class="ttdeci">Bond combineBonds(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true)</div><div class="ttdoc">combine multiple input bonds with self, and return a new combined Bond instance.</div><div class="ttdef"><b>Definition</b> Bond.hpp:650</div></div>
+<div class="ttc" id="aclasscytnx_1_1Bond_html_a5282d90bef238154945707bffca76875"><div class="ttname"><a href="classcytnx_1_1Bond.html#a5282d90bef238154945707bffca76875">cytnx::Bond::combineBonds</a></div><div class="ttdeci">Bond combineBonds(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true)</div><div class="ttdoc">combine multiple input bonds with self, and return a new combined Bond instance.</div><div class="ttdef"><b>Definition</b> Bond.hpp:651</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 10 |type: KET&gt;
 
@@ -1527,7 +1527,7 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasscytnx_1_1Bond_html_a38a40e58d24fb4d75597df25b7bf8918"><div class="ttname"><a href="classcytnx_1_1Bond.html#a38a40e58d24fb4d75597df25b7bf8918">cytnx::Bond::combineBonds_</a></div><div class="ttdeci">void combineBonds_(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true)</div><div class="ttdoc">combine multiple input bonds with self, inplacely</div><div class="ttdef"><b>Definition</b> Bond.hpp:691</div></div>
+<div class="ttc" id="aclasscytnx_1_1Bond_html_a38a40e58d24fb4d75597df25b7bf8918"><div class="ttname"><a href="classcytnx_1_1Bond.html#a38a40e58d24fb4d75597df25b7bf8918">cytnx::Bond::combineBonds_</a></div><div class="ttdeci">void combineBonds_(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true)</div><div class="ttdoc">combine multiple input bonds with self, inplacely</div><div class="ttdef"><b>Definition</b> Bond.hpp:692</div></div>
 </div><!-- fragment --> <h4>output&gt;</h4>
 <pre class="fragment">Dim = 10 |type: KET&gt;
 
@@ -2209,7 +2209,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
 </dl>
 <p>details:</p><ol type="1">
 <li>each bond can be tagged with BD_BRA or BD_KET that represent the bond is defined in Bra space or Ket space. <pre class="fragment">@pre
-    1. \p dim cannot be 0.
+    1. \p dim may be 0 for an empty vector space.
 </pre></li>
 </ol>
 <p>The bond can be tagged with <a class="el" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170">bondType.BD_BRA</a> or <a class="el" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc">bondType.BD_KET</a>, or <a class="el" href="namespacecytnx.html#ac1ea381505268a3cf3bc68d7b8a480efabd7a05c57c46feedff6d9a4bfc136329">bondType.BD_REG</a> depending on the usage.</p>

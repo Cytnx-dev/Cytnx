@@ -171,7 +171,7 @@ Deg&gt;&gt;    1   1   2   2   3   2   2   2   2   1   1   1
 <para><verbatim>(Q + Q)%n
 </verbatim> <heading level="3">description:</heading>
 </para>
-<para>create a new Zn discrete symmetry object with integer <formula id="41">$ n $</formula> that serves as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</para>
+<para>create a new Zn discrete symmetry object with integer <formula id="40">$ n $</formula> that serves as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</para>
 <para><heading level="2">Example:</heading>
 </para>
 <para><heading level="3">c++ API:</heading>

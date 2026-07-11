@@ -145,8 +145,10 @@
     <member refid="classcytnx_1_1Tensor_1a55d945916b1e3771f100523a5e1de319" kind="function"><name>Tofile</name></member>
     <member refid="classcytnx_1_1Tensor_1a65f8d6a498df94116ed294c10033ac8c" kind="function"><name>Tofile</name></member>
     <member refid="classcytnx_1_1Tensor_1ad6ca11678a82d78dfa5bd4d62760f75c" kind="function"><name>Tofile</name></member>
-    <member refid="classcytnx_1_1Tensor_1aee8c0febe1794bd79edc52f2caac9cc3" kind="function"><name>Init</name></member>
-    <member refid="classcytnx_1_1Tensor_1a1b1568fca101fb372411927b5c5ba9d4" kind="function"><name>Tensor</name></member>
+    <member refid="classcytnx_1_1Tensor_1a9b4644ac4257508defe563bb41221a7b" kind="function"><name>Init</name></member>
+    <member refid="classcytnx_1_1Tensor_1acf0773457c7202603d2c15a191c782d6" kind="function"><name>Init</name></member>
+    <member refid="classcytnx_1_1Tensor_1a5e7775febb6bbd828e2a4c134f8943f5" kind="function"><name>Tensor</name></member>
+    <member refid="classcytnx_1_1Tensor_1ab7d9bb0be7a16e3ba2ec67fb66508072" kind="function"><name>Tensor</name></member>
     <member refid="classcytnx_1_1Tensor_1a7eea4022389527d198177cb9c1b914c9" kind="function"><name>ptr</name></member>
     <member refid="classcytnx_1_1Tensor_1abc93d724ebbd66306585c9ab558736d8" kind="function"><name>ptr_as</name></member>
     <member refid="classcytnx_1_1Tensor_1a4472af6f8e825a13440e832bf82fb627" kind="function"><name>dtype</name></member>
@@ -156,6 +158,10 @@
     <member refid="classcytnx_1_1Tensor_1af36ef858677f13dcda8512fd9b5ae475" kind="function"><name>shape</name></member>
     <member refid="classcytnx_1_1Tensor_1a292b58b739db2324f443c0817f99d654" kind="function"><name>strides</name></member>
     <member refid="classcytnx_1_1Tensor_1aa3ee5ed793cacd43d3fadbd92d7920a4" kind="function"><name>rank</name></member>
+    <member refid="classcytnx_1_1Tensor_1a83c9d6256da2f4b286e15485bc79dcf0" kind="function"><name>size</name></member>
+    <member refid="classcytnx_1_1Tensor_1a03a7559b5904da8f2402d1101a50bd08" kind="function"><name>is_void</name></member>
+    <member refid="classcytnx_1_1Tensor_1a15a44044ca516c53b9e3bb4c3146d745" kind="function"><name>is_scalar</name></member>
+    <member refid="classcytnx_1_1Tensor_1a8e922395bf6f618770b49ab51e68e649" kind="function"><name>is_empty</name></member>
     <member refid="classcytnx_1_1Tensor_1a5e2248e9babdb786167ed349df9084ae" kind="function"><name>clone</name></member>
     <member refid="classcytnx_1_1Tensor_1acf7f697a9434f9bc98a7d00a555ee982" kind="function"><name>to</name></member>
     <member refid="classcytnx_1_1Tensor_1a114a31fbb8bf4a90f150b6a67e42183a" kind="function"><name>to_</name></member>
@@ -249,6 +255,10 @@
     <member refid="classcytnx_1_1UniTensor_1a373efd1b4ee3f0588f30f4795f2c5c16" kind="function"><name>rowrank</name></member>
     <member refid="classcytnx_1_1UniTensor_1aa3a370844d981cb86c3d784ecbb573c1" kind="function"><name>dtype</name></member>
     <member refid="classcytnx_1_1UniTensor_1afe930fe1d99b1149ccb65e1003c6030b" kind="function"><name>uten_type</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a233c731821bcf0064d6e536cdfe7cb22" kind="function"><name>is_void</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a27ea3c7fdbc1ba070cc5d3c2fd69920a" kind="function"><name>is_scalar</name></member>
+    <member refid="classcytnx_1_1UniTensor_1ac77482bbf9203def6092d531705bb517" kind="function"><name>size</name></member>
+    <member refid="classcytnx_1_1UniTensor_1ad0d1924d04628a9a4951d3bb294ba4ef" kind="function"><name>is_empty</name></member>
     <member refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kind="function"><name>device</name></member>
     <member refid="classcytnx_1_1UniTensor_1a55941f8078598076309486cc1de3d73f" kind="function"><name>name</name></member>
     <member refid="classcytnx_1_1UniTensor_1a91173048a7985caa45786a7c08f68c40" kind="function"><name>dtype_str</name></member>
@@ -437,15 +447,15 @@
     <member refid="classcytnx_1_1UniTensor_1a6a9ad3afce8d654957443d8f105b7cb8" kind="function"><name>uniform_</name></member>
     <member refid="classcytnx_1_1UniTensor_1ac093ae2d2c907e8e28367a09b4eab218" kind="function"><name>Load</name></member>
     <member refid="classcytnx_1_1UniTensor_1a66f3a49fe730aa91410e6098457d4aee" kind="function"><name>Load</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a84915f6a0aed270b91758acbef9c6d74" kind="function"><name>zeros</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a2d9ada5a5b30bc0bc893104170de4efc" kind="function"><name>zeros</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a81e0b5796d282efe493cf30c72c3ffe3" kind="function"><name>ones</name></member>
-    <member refid="classcytnx_1_1UniTensor_1ac61660b0c3e5a98b09250e984b7a6f1c" kind="function"><name>identity</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a02a5bb943c1fcaa5f2defc0b1814264c" kind="function"><name>eye</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a6349a5473301e9caccdcd5e6c1119c59" kind="function"><name>ones</name></member>
-    <member refid="classcytnx_1_1UniTensor_1aac1496f732b5d4d52389ad413a3da315" kind="function"><name>arange</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a64b0230c0d3cb5b2a76362661744810c" kind="function"><name>arange</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a4a54d47bb9daf00f898ea68aa13a7cf3" kind="function"><name>linspace</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a57743b39bcff7040134f3d895f6f18b2" kind="function"><name>zeros</name></member>
+    <member refid="classcytnx_1_1UniTensor_1af7f8e2a705a160de5d29a173eeaad652" kind="function"><name>zeros</name></member>
+    <member refid="classcytnx_1_1UniTensor_1abff3b7086d6c286c538e2dc5a80b8743" kind="function"><name>identity</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a0c2789953f1923f8554c0736d74b6a74" kind="function"><name>eye</name></member>
+    <member refid="classcytnx_1_1UniTensor_1aeb3c9d506a404fb0f90c14fc4ebc897d" kind="function"><name>ones</name></member>
+    <member refid="classcytnx_1_1UniTensor_1aa85b3647dc8cb6d44e73104aa34c203e" kind="function"><name>ones</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a677e6323c48c7231bc088862f736edf4" kind="function"><name>arange</name></member>
+    <member refid="classcytnx_1_1UniTensor_1af0b2983447824ab9ce8960e247085a5b" kind="function"><name>arange</name></member>
+    <member refid="classcytnx_1_1UniTensor_1a86864e3fb3d21e93d8e6d082ae161382" kind="function"><name>linspace</name></member>
     <member refid="classcytnx_1_1UniTensor_1acd9620ae410650194e3cf2c314209d3e" kind="function"><name>normal</name></member>
     <member refid="classcytnx_1_1UniTensor_1a4c23490cb01b9cc9d387dde9384d0167" kind="function"><name>normal</name></member>
     <member refid="classcytnx_1_1UniTensor_1add23fcd2b00660de4685bc222c4a5f76" kind="function"><name>uniform</name></member>
@@ -471,15 +481,15 @@
     <member refid="namespacecytnx_1a27aa2c9f9401b20248afcfb1ab761b06" kind="variable"><name>User_debug</name></member>
     <member refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kind="variable"><name>Device</name></member>
     <member refid="namespacecytnx_1a224ad816267928be693a2396f5483e06" kind="variable"><name>UTenType</name></member>
-    <member refid="namespacecytnx_1ab8a79a03fb0465f3eb2641017f3f1755" kind="function"><name>zeros</name></member>
-    <member refid="namespacecytnx_1ad53947bd87534866b11080f9898d2a53" kind="function"><name>zeros</name></member>
-    <member refid="namespacecytnx_1af8aa7e619c030f80c54e4d26b576484b" kind="function"><name>identity</name></member>
-    <member refid="namespacecytnx_1affbd9073156ce86d5e5c03742603c631" kind="function"><name>eye</name></member>
-    <member refid="namespacecytnx_1a83fb7bbe73368751a0d0f535d4a10a33" kind="function"><name>ones</name></member>
-    <member refid="namespacecytnx_1a8e80968b20c01c839ea854c398c88ac1" kind="function"><name>ones</name></member>
-    <member refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kind="function"><name>arange</name></member>
-    <member refid="namespacecytnx_1add9038b2dc354c3123dc56d5912430e0" kind="function"><name>arange</name></member>
-    <member refid="namespacecytnx_1a1d2699133d66fb4140459de8553696df" kind="function"><name>linspace</name></member>
+    <member refid="namespacecytnx_1a66788f44e1b1d50ebc7cce3bfb326f3b" kind="function"><name>zeros</name></member>
+    <member refid="namespacecytnx_1a4915e210610123158d897eb3d2f1cdb7" kind="function"><name>zeros</name></member>
+    <member refid="namespacecytnx_1acf9cf080bb224422e598b614f8520085" kind="function"><name>identity</name></member>
+    <member refid="namespacecytnx_1a3e4b9a6d555d6b828db9d77ac7404e8a" kind="function"><name>eye</name></member>
+    <member refid="namespacecytnx_1a8ba6fb2ad03f3c2754e992118b5bd038" kind="function"><name>ones</name></member>
+    <member refid="namespacecytnx_1adda4e2217a1b4ed544cb5559cba50c3b" kind="function"><name>ones</name></member>
+    <member refid="namespacecytnx_1acabf9410a3eb1e205321580186930003" kind="function"><name>arange</name></member>
+    <member refid="namespacecytnx_1a6fcf3a2f5887fd6996f3e9fe9456ca3e" kind="function"><name>arange</name></member>
+    <member refid="namespacecytnx_1a799980e687c848a43d9e1145ffe464bd" kind="function"><name>linspace</name></member>
     <member refid="namespacecytnx_1ad1f97cdff6a9825441592b906d8ae330" kind="function"><name>operator+</name></member>
     <member refid="namespacecytnx_1ac4937c837a6b35b28b4307dfeb2b4e3c" kind="function"><name>operator+</name></member>
     <member refid="namespacecytnx_1ab78b9a88285af588f13175832211e783" kind="function"><name>operator+</name></member>
@@ -648,7 +658,7 @@
     <member refid="namespacecytnx_1_1linalg_1a242f1b9c1ee7938ba050121773ab4b55" kind="function"><name>Tensordot</name></member>
     <member refid="namespacecytnx_1_1linalg_1ac77faf8e0c0153e1890610a6e21f36af" kind="function"><name>Tensordot_dg</name></member>
     <member refid="namespacecytnx_1_1linalg_1a3e8edc89fdabb9c0f9b342198a31798b" kind="function"><name>Outer</name></member>
-    <member refid="namespacecytnx_1_1linalg_1abc22428de7f69d2afc9a27fca76bfe15" kind="function"><name>Kron</name></member>
+    <member refid="namespacecytnx_1_1linalg_1af10e9e9d441e0a111a2382f636ccfa30" kind="function"><name>Kron</name></member>
     <member refid="namespacecytnx_1_1linalg_1ac908296e4737c2b080669faf26b89253" kind="function"><name>Directsum</name></member>
     <member refid="namespacecytnx_1_1linalg_1aa69a91a5651fce55380cf800c6030d73" kind="function"><name>Vectordot</name></member>
     <member refid="namespacecytnx_1_1linalg_1a215dbfd2aa7ef898450de7afff726bca" kind="function"><name>Dot</name></member>

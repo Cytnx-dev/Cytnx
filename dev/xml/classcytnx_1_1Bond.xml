@@ -97,7 +97,7 @@
 <parametername direction="in">degs</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the degrees of freedom of the bond. </para>
+<para>the degrees of freedom of the bond. A zero degeneracy represents an empty sector while retaining its quantum number and the <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>&apos;s symmetry metadata. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -120,7 +120,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="227" column="5" bodyfile="include/Bond.hpp" bodystart="227" bodyend="231"/>
+        <location file="include/Bond.hpp" line="228" column="5" bodyfile="include/Bond.hpp" bodystart="228" bodyend="232"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1afb6df33abf8e641b8774695410c20df5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -157,7 +157,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="240" column="5" bodyfile="include/Bond.hpp" bodystart="240" bodyend="244"/>
+        <location file="include/Bond.hpp" line="241" column="5" bodyfile="include/Bond.hpp" bodystart="241" bodyend="245"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a67dc45b1aee78ed58c04b7fa886f06c1" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -194,7 +194,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="254" column="5" bodyfile="include/Bond.hpp" bodystart="254" bodyend="259"/>
+        <location file="include/Bond.hpp" line="255" column="5" bodyfile="include/Bond.hpp" bodystart="255" bodyend="260"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ac77af41f1ce762a13c83c2cdee57c3a4" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -227,7 +227,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="268" column="5" bodyfile="include/Bond.hpp" bodystart="268" bodyend="273"/>
+        <location file="include/Bond.hpp" line="269" column="5" bodyfile="include/Bond.hpp" bodystart="269" bodyend="274"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a60bda58b57be2f709abb6aa0b9a04c68" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -267,7 +267,7 @@
 </parameterlist>
 details:<orderedlist>
 <listitem><para>each bond can be tagged with BD_BRA or BD_KET that represent the bond is defined in Bra space or Ket space. <verbatim>@pre
-    1. \p dim cannot be 0.
+    1. \p dim may be 0 for an empty vector space.
 </verbatim></para>
 </listitem></orderedlist>
 </para>
@@ -371,7 +371,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="302" column="10" bodyfile="include/Bond.hpp" bodystart="302" bodyend="304"/>
+        <location file="include/Bond.hpp" line="303" column="10" bodyfile="include/Bond.hpp" bodystart="303" bodyend="305"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ae7a70f6506d6035ec022ab03099a915d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -463,7 +463,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="341" column="10" bodyfile="include/Bond.hpp" bodystart="341" bodyend="344"/>
+        <location file="include/Bond.hpp" line="342" column="10" bodyfile="include/Bond.hpp" bodystart="342" bodyend="345"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a3034fd7472ae82db9b45742c43dd66d3" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -493,7 +493,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="351" column="10" bodyfile="include/Bond.hpp" bodystart="351" bodyend="361"/>
+        <location file="include/Bond.hpp" line="352" column="10" bodyfile="include/Bond.hpp" bodystart="352" bodyend="362"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a8517743cec9589ed551114ea7e55fbb1" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" kindref="member">bondType</ref></type>
@@ -511,7 +511,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="367" column="14" bodyfile="include/Bond.hpp" bodystart="367" bodyend="367"/>
+        <location file="include/Bond.hpp" line="368" column="14" bodyfile="include/Bond.hpp" bodystart="368" bodyend="368"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ab4f05193a012bd9a077374b5f305e898" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;</type>
@@ -531,7 +531,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="375" column="23" bodyfile="include/Bond.hpp" bodystart="375" bodyend="375"/>
+        <location file="include/Bond.hpp" line="376" column="23" bodyfile="include/Bond.hpp" bodystart="376" bodyend="376"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a01299b8751c7d71c1bc2a6afe900da2c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;</type>
@@ -548,7 +548,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="379" column="17" bodyfile="include/Bond.hpp" bodystart="379" bodyend="379"/>
+        <location file="include/Bond.hpp" line="380" column="17" bodyfile="include/Bond.hpp" bodystart="380" bodyend="380"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a491a89aa4434d4056dd3e5de7e70e1e7" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;</type>
@@ -568,7 +568,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="387" column="17" bodyfile="include/Bond.hpp" bodystart="387" bodyend="389"/>
+        <location file="include/Bond.hpp" line="388" column="17" bodyfile="include/Bond.hpp" bodystart="388" bodyend="390"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1aa072647e03a4c797479445bd41b9eacf" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>cytnx_uint64</type>
@@ -586,7 +586,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="395" column="18" bodyfile="include/Bond.hpp" bodystart="395" bodyend="395"/>
+        <location file="include/Bond.hpp" line="396" column="18" bodyfile="include/Bond.hpp" bodystart="396" bodyend="396"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1acd46a218add6a88c1cc9035b06adb7b6" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>cytnx_uint32</type>
@@ -604,7 +604,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="401" column="18" bodyfile="include/Bond.hpp" bodystart="401" bodyend="401"/>
+        <location file="include/Bond.hpp" line="402" column="18" bodyfile="include/Bond.hpp" bodystart="402" bodyend="402"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a408221e843ca57b779f5a5717188a8a8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>const std::vector&lt; <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> &gt; &amp;</type>
@@ -624,7 +624,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="409" column="23" bodyfile="include/Bond.hpp" bodystart="409" bodyend="409"/>
+        <location file="include/Bond.hpp" line="410" column="23" bodyfile="include/Bond.hpp" bodystart="410" bodyend="410"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1abc64fadea2b867f4649df8e775803a39" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> &gt; &amp;</type>
@@ -641,7 +641,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="413" column="17" bodyfile="include/Bond.hpp" bodystart="413" bodyend="413"/>
+        <location file="include/Bond.hpp" line="414" column="17" bodyfile="include/Bond.hpp" bodystart="414" bodyend="414"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a95a33764b6adf5644e91578c908504ca" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> &gt;</type>
@@ -661,7 +661,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="421" column="17" bodyfile="include/Bond.hpp" bodystart="421" bodyend="421"/>
+        <location file="include/Bond.hpp" line="422" column="17" bodyfile="include/Bond.hpp" bodystart="422" bodyend="422"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a01be559109c1c7ecaccd0916a2954239" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
@@ -692,7 +692,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="430" column="10" bodyfile="include/Bond.hpp" bodystart="430" bodyend="433"/>
+        <location file="include/Bond.hpp" line="431" column="10" bodyfile="include/Bond.hpp" bodystart="431" bodyend="434"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a31c8ff7b0817c37e67a80a225f5bd758" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -727,7 +727,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="444" column="10" bodyfile="include/Bond.hpp" bodystart="444" bodyend="448"/>
+        <location file="include/Bond.hpp" line="445" column="10" bodyfile="include/Bond.hpp" bodystart="445" bodyend="449"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a6f47360919864f12affe9fda49b03994" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -742,7 +742,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="454" column="10" bodyfile="include/Bond.hpp" bodystart="454" bodyend="458"/>
+        <location file="include/Bond.hpp" line="455" column="10" bodyfile="include/Bond.hpp" bodystart="455" bodyend="459"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1aa023d872df52de5594b963e109ab7723" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
@@ -757,7 +757,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="464" column="10" bodyfile="include/Bond.hpp" bodystart="464" bodyend="467"/>
+        <location file="include/Bond.hpp" line="465" column="10" bodyfile="include/Bond.hpp" bodystart="465" bodyend="468"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a6272e30153df85944fc98bf5419dc1c8" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -775,7 +775,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="474" column="10" bodyfile="include/Bond.hpp" bodystart="474" bodyend="474"/>
+        <location file="include/Bond.hpp" line="475" column="10" bodyfile="include/Bond.hpp" bodystart="475" bodyend="475"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a8c4d6443ffe7c3f3ecd8c474fd9a18eb" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -856,7 +856,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="490" column="10" bodyfile="include/Bond.hpp" bodystart="490" bodyend="494"/>
+        <location file="include/Bond.hpp" line="491" column="10" bodyfile="include/Bond.hpp" bodystart="491" bodyend="495"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ab8645d03cf115b59e946f329f3bba122" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -1029,7 +1029,7 @@ Deg&gt;&gt;    1   1   1   1   1   1   1   2   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="522" column="10" bodyfile="include/Bond.hpp" bodystart="522" bodyend="524"/>
+        <location file="include/Bond.hpp" line="523" column="10" bodyfile="include/Bond.hpp" bodystart="523" bodyend="525"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -1198,7 +1198,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="553" column="10" bodyfile="include/Bond.hpp" bodystart="553" bodyend="557"/>
+        <location file="include/Bond.hpp" line="554" column="10" bodyfile="include/Bond.hpp" bodystart="554" bodyend="558"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a2af5fa7d5db3fbbb7da51219f4abb4e9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -1367,7 +1367,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="586" column="10" bodyfile="include/Bond.hpp" bodystart="586" bodyend="592"/>
+        <location file="include/Bond.hpp" line="587" column="10" bodyfile="include/Bond.hpp" bodystart="587" bodyend="593"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a75617853c21fa807d4d019f68cc6ef97" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -1421,7 +1421,7 @@ Deg&gt;&gt;    1   1   1   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="610" column="10" bodyfile="include/Bond.hpp" bodystart="610" bodyend="614"/>
+        <location file="include/Bond.hpp" line="611" column="10" bodyfile="include/Bond.hpp" bodystart="611" bodyend="615"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a5282d90bef238154945707bffca76875" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -1644,7 +1644,7 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="650" column="7" bodyfile="include/Bond.hpp" bodystart="650" bodyend="656"/>
+        <location file="include/Bond.hpp" line="651" column="7" bodyfile="include/Bond.hpp" bodystart="651" bodyend="657"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a38a40e58d24fb4d75597df25b7bf8918" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -1861,7 +1861,7 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="691" column="7" bodyfile="include/Bond.hpp" bodystart="691" bodyend="695"/>
+        <location file="include/Bond.hpp" line="692" column="7" bodyfile="include/Bond.hpp" bodystart="692" bodyend="696"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1acf017e64c9629e0a03ee996a4375b06c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;</type>
@@ -1896,7 +1896,7 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="704" column="17" bodyfile="include/Bond.hpp" bodystart="704" bodyend="706"/>
+        <location file="include/Bond.hpp" line="705" column="17" bodyfile="include/Bond.hpp" bodystart="705" bodyend="707"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1aa5985c9247209576081c8dc8a97b7c6a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;</type>
@@ -1918,7 +1918,7 @@ Deg&gt;&gt;    1   2   2   1   3   3   2   2   2   2   4   5   3   2   4   5   1
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="714" column="17" bodyfile="include/Bond.hpp" bodystart="714" bodyend="717"/>
+        <location file="include/Bond.hpp" line="715" column="17" bodyfile="include/Bond.hpp" bodystart="715" bodyend="718"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a121d5fb24f782cf66889771146af5da8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>cytnx_uint64</type>
@@ -1957,7 +1957,7 @@ if the degeneracy queried does not exist, return 0, and the indicies is empty
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="732" column="18" bodyfile="include/Bond.hpp" bodystart="732" bodyend="735"/>
+        <location file="include/Bond.hpp" line="733" column="18" bodyfile="include/Bond.hpp" bodystart="733" bodyend="736"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a8d714304116d09bd23e6f05d05aaf7dd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>cytnx_uint64</type>
@@ -2007,7 +2007,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="750" column="18" bodyfile="include/Bond.hpp" bodystart="750" bodyend="754"/>
+        <location file="include/Bond.hpp" line="751" column="18" bodyfile="include/Bond.hpp" bodystart="751" bodyend="755"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a7de5eb6ed487a48bd9a1f0ef168531b9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; cytnx_uint64 &gt; &amp;</type>
@@ -2028,7 +2028,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="764" column="17" bodyfile="include/Bond.hpp" bodystart="764" bodyend="764"/>
+        <location file="include/Bond.hpp" line="765" column="17" bodyfile="include/Bond.hpp" bodystart="765" bodyend="765"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a7275210ee5fa1e3e4ba86928b694f687" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>const std::vector&lt; cytnx_uint64 &gt; &amp;</type>
@@ -2045,7 +2045,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="769" column="23" bodyfile="include/Bond.hpp" bodystart="769" bodyend="771"/>
+        <location file="include/Bond.hpp" line="770" column="23" bodyfile="include/Bond.hpp" bodystart="770" bodyend="772"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a7fc63832242c16c91cde39194598fdc6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="namespacecytnx_1af664ec40b8661447cc01a0e0d227795c" kindref="member">fermionParity</ref></type>
@@ -2076,7 +2076,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="778" column="19" bodyfile="include/Bond.hpp" bodystart="778" bodyend="780"/>
+        <location file="include/Bond.hpp" line="779" column="19" bodyfile="include/Bond.hpp" bodystart="779" bodyend="781"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a17c1a184dc318c03baddc829171bf01e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; cytnx_uint64 &gt;</type>
@@ -2107,7 +2107,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="798" column="17" bodyfile="include/Bond.hpp" bodystart="798" bodyend="798"/>
+        <location file="include/Bond.hpp" line="799" column="17" bodyfile="include/Bond.hpp" bodystart="799" bodyend="799"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a5c7a08632dd9e9ac4d6eca53c90ab8bd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -2152,7 +2152,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="820" column="10" bodyfile="include/Bond.hpp" bodystart="820" bodyend="824"/>
+        <location file="include/Bond.hpp" line="821" column="10" bodyfile="include/Bond.hpp" bodystart="821" bodyend="825"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1acd82fa191fc9a25f12ae37899a3aea1e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>bool</type>
@@ -2174,7 +2174,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="836" column="10" bodyfile="include/Bond.hpp" bodystart="836" bodyend="836"/>
+        <location file="include/Bond.hpp" line="837" column="10" bodyfile="include/Bond.hpp" bodystart="837" bodyend="837"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ad18be3898c20c341162a6536fe2e3275" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt;</type>
@@ -2196,7 +2196,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="846" column="17" bodyfile="include/Bond.hpp" bodystart="846" bodyend="848"/>
+        <location file="include/Bond.hpp" line="847" column="17" bodyfile="include/Bond.hpp" bodystart="847" bodyend="849"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1af1b9953c2262fb7eb41e92f65c741f20" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2227,7 +2227,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="857" column="10"/>
+        <location file="include/Bond.hpp" line="858" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ac8bf81d181d2847dded0a51ec451fb5c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2248,7 +2248,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="862" column="10"/>
+        <location file="include/Bond.hpp" line="863" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1afdf23503375937b9fc5fb892685fe056" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -2270,7 +2270,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="890" column="10"/>
+        <location file="include/Bond.hpp" line="891" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ae2e27cb3fd963f0bb9d599097fa1feb7" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -2292,7 +2292,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="898" column="10"/>
+        <location file="include/Bond.hpp" line="899" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a58e9304701945d156b88fafa8c64971d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
@@ -2318,7 +2318,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="917" column="10" bodyfile="include/Bond.hpp" bodystart="917" bodyend="917"/>
+        <location file="include/Bond.hpp" line="918" column="10" bodyfile="include/Bond.hpp" bodystart="918" bodyend="918"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a3eb1aba2986bf720dafd48fff2180b49" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
@@ -2344,7 +2344,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="936" column="10" bodyfile="include/Bond.hpp" bodystart="936" bodyend="939"/>
+        <location file="include/Bond.hpp" line="937" column="10" bodyfile="include/Bond.hpp" bodystart="937" bodyend="940"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -2377,7 +2377,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="870" column="24"/>
+        <location file="include/Bond.hpp" line="871" column="24"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1af2846c2e1d412ea61a5a1561bc410a15" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Bond" kindref="compound">cytnx::Bond</ref></type>
@@ -2398,7 +2398,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Bond.hpp" line="875" column="24"/>
+        <location file="include/Bond.hpp" line="876" column="24"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -2411,7 +2411,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
 </listitem></orderedlist>
 </para>
     </detaileddescription>
-    <location file="include/Bond.hpp" line="178" column="3" bodyfile="include/Bond.hpp" bodystart="178" bodyend="940"/>
+    <location file="include/Bond.hpp" line="178" column="3" bodyfile="include/Bond.hpp" bodystart="178" bodyend="941"/>
     <listofallmembers>
       <member refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" prot="public" virt="non-virtual"><scope>cytnx::Bond</scope><name>Bond</name></member>
       <member refid="classcytnx_1_1Bond_1ad7ed392eb1b39599c02bbfbe54c37bd1" prot="public" virt="non-virtual"><scope>cytnx::Bond</scope><name>Bond</name></member>

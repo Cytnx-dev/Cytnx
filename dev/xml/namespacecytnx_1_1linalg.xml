@@ -1046,14 +1046,14 @@ const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &
 <parametername direction="in">return_err</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>whether the error shall be returned. If <computeroutput>return_err</computeroutput> is <emphasis>true</emphasis>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix <formula id="38">$ S $</formula>.) If <computeroutput>return_err</computeroutput> is a <emphasis>positive</emphasis> int, then the full list of truncated singular values will be returned. </para>
+<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is a diagonal <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="39">$ U $</formula> and <formula id="40">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -1065,7 +1065,7 @@ const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &
 <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a0525c8197d0d441586467676bf814e90" kindref="member">Svd_truncate(const Tensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const double &amp;err, const
 bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64&amp; mindim)</ref> </para>
 </simplesect>
-<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="41">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="42">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
+<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="40">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="41">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -1248,8 +1248,8 @@ cytnx::UniTensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</ref> </
 <para>Perform a randomized truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform a randomized truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It uses the ?gesvd method for the SVD. It will perform the randomized SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be: <formula id="44">\[ M = U S V^\dagger, \]</formula> where <formula id="45">$ S
-$</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="38">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
+<para>This function will perform a randomized truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It uses the ?gesvd method for the SVD. It will perform the randomized SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be: <formula id="43">\[ M = U S V^\dagger, \]</formula> where <formula id="44">$ S
+$</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="45">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
 <para>The truncation order is as following (later constraints might be violated by previous ones):<linebreak/>
  1) Keep at most <computeroutput>keepdim</computeroutput> singular values; there might be an exception in case of exact degeneracies, see note below<linebreak/>
  2) Keep at least <computeroutput>mindim</computeroutput> singular values;<linebreak/>
@@ -1291,7 +1291,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
 <parametername direction="in">return_err</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>whether the error shall be returned. If <computeroutput>return_err</computeroutput> is <emphasis>true</emphasis>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix <formula id="38">$ S $</formula>.) If <computeroutput>return_err</computeroutput> is &gt; 1, then the full list of truncated singular values will be returned. </para>
+<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1338,7 +1338,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="39">$ U $</formula> and <formula id="40">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -3329,10 +3329,10 @@ T_o[i] = \left\{\begin{array}{ll}
 <para>Perform Singular-Value decomposition on a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be:  <formula id="72">\[
+<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="72">\[
 M = U S V^\dagger,
-\]</formula> where <formula id="39">$ U $</formula> is a left uniform matrix, <formula id="38">$ S $</formula> is a diagonal matrix with singular values, and <formula id="40">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix <formula id="73">$ V
-$</formula>. Furthermore, <formula id="39">$ U $</formula> and <formula id="74">$ V $</formula> are unitary matrices, and <formula id="38">$ S $</formula> is a non-negative diagonal matrix.</para>
+\]</formula> where <formula id="38">$ U $</formula> is a left uniform matrix, <formula id="45">$ S $</formula> is a diagonal matrix with singular values, and <formula id="39">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix <formula id="73">$ V
+$</formula>. Furthermore, <formula id="38">$ U $</formula> and <formula id="74">$ V $</formula> are unitary matrices, and <formula id="45">$ S $</formula> is a non-negative diagonal matrix.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -3394,10 +3394,10 @@ bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64&amp; mi
 <para>Perform Singular-Value decomposition on a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be:  <formula id="72">\[
+<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="72">\[
 M = U S V^\dagger,
-\]</formula> where <formula id="39">$ U $</formula> is a left uniform matrix, <formula id="38">$ S $</formula> is a diagonal matrix with singular values, and <formula id="40">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix <formula id="73">$ V
-$</formula>. Furthermore, <formula id="39">$ U $</formula> and <formula id="74">$ V $</formula> are unitary matrices, and <formula id="38">$ S $</formula> is a non-negative diagonal matrix.</para>
+\]</formula> where <formula id="38">$ U $</formula> is a left uniform matrix, <formula id="45">$ S $</formula> is a diagonal matrix with singular values, and <formula id="39">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix <formula id="73">$ V
+$</formula>. Furthermore, <formula id="38">$ U $</formula> and <formula id="74">$ V $</formula> are unitary matrices, and <formula id="45">$ S $</formula> is a non-negative diagonal matrix.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -3426,7 +3426,7 @@ $</formula>. Furthermore, <formula id="39">$ U $</formula> and <formula id="74">
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor contaning the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_U</computeroutput> is true, then the tensor <formula id="39">$ U $</formula> will be pushed back to the vector, and if <computeroutput>is_vT</computeroutput> is true, <formula id="40">$ V^\dagger $</formula> will be pushed back to the vector. </para>
+</listitem><listitem><para>If <computeroutput>is_U</computeroutput> is true, then the tensor <formula id="38">$ U $</formula> will be pushed back to the vector, and if <computeroutput>is_vT</computeroutput> is true, <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
 </parblock></para>
@@ -3481,9 +3481,9 @@ const bool &amp;is_U, const bool &amp;is_vT, const unsigned int &amp;return_err,
 <para>Perform a truncated Singular-Value decomposition of a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be:  <formula id="72">\[
+<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="72">\[
 M = U S V^\dagger,
-\]</formula> where <formula id="38">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="38">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
+\]</formula> where <formula id="45">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="45">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
 <para>The truncation order is as following (later constraints might be violated by previous ones):<linebreak/>
  1) Keep at most <computeroutput>keepdim</computeroutput> singular values; there might be an exception in case of exact degeneracies, see note below<linebreak/>
  2) Keep at least <computeroutput>mindim</computeroutput> singular values;<linebreak/>
@@ -3525,14 +3525,14 @@ M = U S V^\dagger,
 <parametername direction="in">return_err</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>whether the error shall be returned. If <computeroutput>return_err</computeroutput> is <emphasis>true</emphasis>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix <formula id="38">$ S $</formula>.) If <computeroutput>return_err</computeroutput> &gt; 1, then the full list of truncated singular values will be returned. </para>
+<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="39">$ U $</formula> and <formula id="40">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -3543,7 +3543,7 @@ M = U S V^\dagger,
 </simplesect>
 <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a330151ef7e84a8169d6871cc08fa14d4" kindref="member">Svd(const Tensor &amp;Tin, const bool &amp;is_UvT)</ref> </para>
 </simplesect>
-<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="41">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="42">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
+<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="40">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="41">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -3614,7 +3614,7 @@ M = U S V^\dagger,
 <para>Perform a truncated Singular-Value decomposition of a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It uses the ?gesvd method for the SVD. It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be: <formula id="44">\[ M = U S V^\dagger, \]</formula> where <formula id="38">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="38">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
+<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It uses the ?gesvd method for the SVD. It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be: <formula id="43">\[ M = U S V^\dagger, \]</formula> where <formula id="45">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="45">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
 <para>The truncation order is as following (later constraints might be violated by previous ones):<linebreak/>
  1) Keep at most <computeroutput>keepdim</computeroutput> singular values; there might be an exception in case of exact degeneracies, see note below<linebreak/>
  2) Keep at least <computeroutput>mindim</computeroutput> singular values;<linebreak/>
@@ -3656,7 +3656,7 @@ M = U S V^\dagger,
 <parametername direction="in">return_err</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>whether the error shall be returned. If <computeroutput>return_err</computeroutput> is <emphasis>true</emphasis>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix <formula id="38">$ S $</formula>.) If <computeroutput>return_err</computeroutput> is a <emphasis>positive</emphasis> int, then the full list of truncated singular values will be returned. </para>
+<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -3703,7 +3703,7 @@ M = U S V^\dagger,
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="39">$ U $</formula> and <formula id="40">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -3802,14 +3802,14 @@ M = U S V^\dagger,
 <parametername direction="in">return_err</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>whether the error shall be returned. If <computeroutput>return_err</computeroutput> is <emphasis>true</emphasis>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix <formula id="38">$ S $</formula>.) If <computeroutput>return_err</computeroutput> is a <emphasis>positive</emphasis> int, then the full list of truncated singular values will be returned. </para>
+<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="39">$ U $</formula> and <formula id="40">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -3820,7 +3820,7 @@ M = U S V^\dagger,
 </simplesect>
 <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a8ae32a5c874c9f5c1cf8cbbd59ef50bb" kindref="member">Gesvd(const Tensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</ref> </para>
 </simplesect>
-<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="41">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="42">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
+<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="40">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="41">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -3884,7 +3884,7 @@ M = U S V^\dagger,
 <para>Perform QR decomposition on a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform QR decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be:  <formula id="76">\[
+<para>This function will perform QR decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="76">\[
 M = Q R,
 \]</formula> where <formula id="77">$ Q $</formula> is a orthogonal matrix, and <formula id="78">$ R $</formula> is a right-upper triangular matrix.</para>
 <para><parameterlist kind="param"><parameteritem>
@@ -4005,7 +4005,7 @@ M = Q R,
 <para>eigen-value decomposition for Hermitian matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform eigen-value decomposition for Hermitian matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be:  <formula id="81">\[
+<para>This function will perform eigen-value decomposition for Hermitian matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="81">\[
 M = V D V^\dagger,
 \]</formula> where <formula id="74">$ V $</formula> is a unitary matrix contains the eigen vectors, and <formula id="80">$ D $</formula> is a diagonal matrix contains the eigen values.</para>
 <para><parameterlist kind="param"><parameteritem>
@@ -4097,7 +4097,7 @@ M = V D V^\dagger,
 <para>eigen-value decomposition for generic square matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform eigen-value decomposition for generic square matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="43">$ M $</formula>, then the result will be:  <formula id="82">\[
+<para>This function will perform eigen-value decomposition for generic square matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="82">\[
 M = V D V^{-1},
 \]</formula> where <formula id="74">$ V $</formula> is a invertible matrix contains the eigen vectors, and <formula id="80">$ D $</formula> is a diagonal matrix contains the eigen values.</para>
 <para><parameterlist kind="param"><parameteritem>
@@ -5206,28 +5206,28 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </inbodydescription>
         <location file="include/linalg.hpp" line="2427" column="12" declfile="include/linalg.hpp" declline="2427" declcolumn="12"/>
       </memberdef>
-      <memberdef kind="function" id="namespacecytnx_1_1linalg_1abc22428de7f69d2afc9a27fca76bfe15" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="namespacecytnx_1_1linalg_1af10e9e9d441e0a111a2382f636ccfa30" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
         <definition>Tensor cytnx::linalg::Kron</definition>
-        <argsstring>(const Tensor &amp;Tl, const Tensor &amp;Tr, const bool &amp;Tl_pad_left=false, const bool &amp;Tr_pad_left=false)</argsstring>
+        <argsstring>(const Tensor &amp;lhs, const Tensor &amp;rhs, bool lhs_pad_left=false, bool rhs_pad_left=false)</argsstring>
         <name>Kron</name>
         <qualifiedname>cytnx::linalg::Kron</qualifiedname>
         <param>
           <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
-          <declname>Tl</declname>
+          <declname>lhs</declname>
         </param>
         <param>
           <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
-          <declname>Tr</declname>
+          <declname>rhs</declname>
         </param>
         <param>
-          <type>const bool &amp;</type>
-          <declname>Tl_pad_left</declname>
+          <type>bool</type>
+          <declname>lhs_pad_left</declname>
           <defval>false</defval>
         </param>
         <param>
-          <type>const bool &amp;</type>
-          <declname>Tr_pad_left</declname>
+          <type>bool</type>
+          <declname>rhs_pad_left</declname>
           <defval>false</defval>
         </param>
         <briefdescription>

@@ -62,7 +62,7 @@ See also <ref refid="classcytnx_1_1Tensor_1aa54246c4e3769043d084d6fcbc20beef" ki
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default]</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1acabf9410a3eb1e205321580186930003" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1ad55b5e50d414b35cbe77091a82389f8b" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
@@ -243,7 +243,7 @@ Shape : (3,2)
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default]</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1acabf9410a3eb1e205321580186930003" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1ad55b5e50d414b35cbe77091a82389f8b" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>
@@ -402,7 +402,7 @@ Shape : (3,2)
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>dtype<sp/>=Type.Double<sp/>[default],</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/><sp/><sp/><sp/><sp/>device=Device.cpu<sp/>[default]</highlight></codeline>
 <codeline><highlight class="comment"><sp/><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1a685cf4e94754373ae4f12622b168fb98" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref><sp/>A<sp/>=<sp/><ref refid="namespacecytnx_1acabf9410a3eb1e205321580186930003" kindref="member">cytnx::arange</ref>(24);</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>A.<ref refid="classcytnx_1_1Tensor_1ad55b5e50d414b35cbe77091a82389f8b" kindref="member">reshape_</ref>({2,<sp/>3,<sp/>4});</highlight></codeline>
 <codeline><highlight class="normal"><sp/><sp/>std::cout<sp/>&lt;&lt;<sp/>A<sp/>&lt;&lt;<sp/>std::endl;</highlight></codeline>
 <codeline><highlight class="normal"></highlight></codeline>

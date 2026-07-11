@@ -536,8 +536,15 @@ Shape : (3,4)
 </section>
 <section id="tensor-tensor-arithmetic">
 <h2><span class="section-number">3.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Link to this heading">¶</a></h2>
-<p>Arithmetic operations between two Tensors of the same shape are possible.
-For example:</p>
+<p>Arithmetic operations between two Tensors of the same shape are possible. A
+Tensor containing exactly one element is also broadcast as a scalar, regardless
+of whether its shape is <code class="docutils literal notranslate"><span class="pre">[]</span></code>, <code class="docutils literal notranslate"><span class="pre">[1]</span></code>, <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1]</span></code>, or another singleton
+shape. This applies to both arithmetic and Tensor slice assignment.</p>
+<p>This singleton rule is a property of <strong>Tensor</strong>. It does not make a singleton
+<strong>UniTensor</strong> a scalar: UniTensor bonds and symmetry sectors remain meaningful
+even when every bond has dimension one. Only a rank-zero UniTensor satisfies
+<strong>UniTensor.is_scalar()</strong>.</p>
+<p>For example:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>

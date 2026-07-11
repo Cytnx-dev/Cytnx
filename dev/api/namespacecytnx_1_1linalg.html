@@ -422,9 +422,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a3e8edc89fdabb9c0f9b342198a31798b" id="r_a3e8edc89fdabb9c0f9b342198a31798b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a3e8edc89fdabb9c0f9b342198a31798b">Outer</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr)</td></tr>
 <tr class="memdesc:a3e8edc89fdabb9c0f9b342198a31798b"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform outer produces of two rank-1 <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
 <tr class="separator:a3e8edc89fdabb9c0f9b342198a31798b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc22428de7f69d2afc9a27fca76bfe15" id="r_abc22428de7f69d2afc9a27fca76bfe15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#abc22428de7f69d2afc9a27fca76bfe15">Kron</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tl, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tr, const bool &amp;Tl_pad_left=false, const bool &amp;Tr_pad_left=false)</td></tr>
-<tr class="memdesc:abc22428de7f69d2afc9a27fca76bfe15"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform kronecker produces of two <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
-<tr class="separator:abc22428de7f69d2afc9a27fca76bfe15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af10e9e9d441e0a111a2382f636ccfa30" id="r_af10e9e9d441e0a111a2382f636ccfa30"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#af10e9e9d441e0a111a2382f636ccfa30">Kron</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;lhs, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;rhs, bool lhs_pad_left=false, bool rhs_pad_left=false)</td></tr>
+<tr class="memdesc:af10e9e9d441e0a111a2382f636ccfa30"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform kronecker produces of two <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
+<tr class="separator:af10e9e9d441e0a111a2382f636ccfa30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac908296e4737c2b080669faf26b89253" id="r_ac908296e4737c2b080669faf26b89253"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#ac908296e4737c2b080669faf26b89253">Directsum</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;T1, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;T2, const std::vector&lt; cytnx_uint64 &gt; &amp;shared_axes)</td></tr>
 <tr class="memdesc:ac908296e4737c2b080669faf26b89253"><td class="mdescLeft">&#160;</td><td class="mdescRight">perform directsum of two <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
 <tr class="separator:ac908296e4737c2b080669faf26b89253"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2868,7 +2868,7 @@ cytnx::UniTensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</a> </dd
     <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number (at most) of singular values to keep. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary matrices (isometries) are returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is a <em>positive</em> int, then the full list of truncated singular values will be returned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </td></tr>
   </table>
   </dd>
 </dl>
@@ -3466,8 +3466,8 @@ T_L[i] = T_L[i] - T_R[i],
 
 </div>
 </div>
-<a id="abc22428de7f69d2afc9a27fca76bfe15" name="abc22428de7f69d2afc9a27fca76bfe15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc22428de7f69d2afc9a27fca76bfe15">&#9670;&#160;</a></span>Kron()</h2>
+<a id="af10e9e9d441e0a111a2382f636ccfa30" name="af10e9e9d441e0a111a2382f636ccfa30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af10e9e9d441e0a111a2382f636ccfa30">&#9670;&#160;</a></span>Kron()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3476,25 +3476,25 @@ T_L[i] = T_L[i] - T_R[i],
           <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Kron </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>Tl</em>, </td>
+          <td class="paramname"><em>lhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>Tr</em>, </td>
+          <td class="paramname"><em>rhs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
-          <td class="paramname"><em>Tl_pad_left</em> = <code>false</code>, </td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>lhs_pad_left</em> = <code>false</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;&#160;</td>
-          <td class="paramname"><em>Tr_pad_left</em> = <code>false</code>&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>rhs_pad_left</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -5680,7 +5680,7 @@ M = Q R,
     <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number (at most) of singular values to keep. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary matrices (isometries) are returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is &gt; 1, then the full list of truncated singular values will be returned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">mindim</td><td>at least this many singular values are kept in total. For a per-block lower bound (which also acts as the per-block sampling floor of the randomized SVD), use the overload that takes a <code>min_blockdim</code> vector. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_summand</td><td>the randomized SVD computes [(1 + oversampling_factor) * keepdim*d/D + oversampling_summand] singular values in each block before further truncating, where d is the block dimension and D the full tensor dimension (each being the minimum of row and column dimension of the block or tensor respectively). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_factor</td><td>see oversampling_summand </td></tr>
@@ -5797,7 +5797,7 @@ M = Q R,
     <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number (at most) of singular values to keep. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary matrices (isometries) are returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is a <em>positive</em> int, then the full list of truncated singular values will be returned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">mindim</td><td>at least this many singular values are kept in total. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_summand</td><td>the randomized SVD computes [(1 + oversampling_factor) * keepdim*d/D + oversampling_summand] singular values in each block before further truncating, where d is the block dimension and D the full tensor dimension (each being the minimum of row and column dimension of the block or tensor respectively). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">oversampling_factor</td><td>see oversampling_summand </td></tr>
@@ -6339,7 +6339,7 @@ const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &
     <tr><td class="paramdir">[in]</td><td class="paramname">min_blockdim</td><td>a vector containing the minimum dimension of each block; alternatively, a vector with only one element can be given to have the same min_blockdim for each block </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary UniTensors (isometries) are returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> is a <em>positive</em> int, then the full list of truncated singular values will be returned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </td></tr>
   </table>
   </dd>
 </dl>
@@ -6424,7 +6424,7 @@ M = U S V^\dagger,
     <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number (at most) of singular values to keep. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff error (the singular values smaller than <code>err</code> will be truncated.) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">is_UvT</td><td>if <em>true</em>, the left- and right- unitary matrices (isometries) are returned. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>whether the error shall be returned. If <code>return_err</code> is <em>true</em>, then the largest error will be pushed back to the vector (The smallest singular value in the return singular values matrix \( S \).) If <code>return_err</code> &gt; 1, then the full list of truncated singular values will be returned. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded singular values in descending order, empty if none were discarded. </td></tr>
   </table>
   </dd>
 </dl>

@@ -596,6 +596,13 @@ on device   : cytnx device: CPU
 </pre></div>
 </div>
 <p>We see that a UniTensor with the same shape as <em>T</em> was created. The bond labels are set to the default values “0”, “1” and “2”.</p>
+<p>A rank-zero Tensor similarly produces a rank-zero UniTensor. Rank-zero
+UniTensors are scalar tensor-network objects: they have no bonds or labels,
+<code class="docutils literal notranslate"><span class="pre">rank()</span> <span class="pre">==</span> <span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">size()</span> <span class="pre">==</span> <span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">is_scalar()</span> <span class="pre">==</span> <span class="pre">True</span></code>. Full
+contractions and full traces can also produce such objects.</p>
+<p>Do not infer scalar behavior from the number of stored coefficients. A
+UniTensor with one or more dimension-one bonds still carries those bonds and
+their symmetry metadata, so it is not a scalar even when <code class="docutils literal notranslate"><span class="pre">size()</span> <span class="pre">==</span> <span class="pre">1</span></code>.</p>
 </section>
 <section id="from-scratch">
 <h2><span class="section-number">7.2.3. </span>From scratch<a class="headerlink" href="#from-scratch" title="Link to this heading">¶</a></h2>

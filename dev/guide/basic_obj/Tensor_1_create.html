@@ -516,8 +516,33 @@
 </dd>
 </dl>
 </section>
+<section id="rank-zero-and-empty-tensors">
+<h2><span class="section-number">3.1.2. </span>Rank-zero and empty Tensors<a class="headerlink" href="#rank-zero-and-empty-tensors" title="Link to this heading">¶</a></h2>
+<p>A Tensor with an empty shape is a rank-zero scalar Tensor. It has one element:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scalar</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([])</span>
+<span class="k">assert</span> <span class="n">scalar</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span> <span class="o">==</span> <span class="p">[]</span>
+<span class="k">assert</span> <span class="n">scalar</span><span class="o">.</span><span class="n">rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">assert</span> <span class="n">scalar</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">scalar</span><span class="o">.</span><span class="n">is_scalar</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">scalar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({});</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">scalar</span><span class="p">.</span><span class="n">shape</span><span class="p">().</span><span class="n">empty</span><span class="p">());</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">scalar</span><span class="p">.</span><span class="n">rank</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">scalar</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">scalar</span><span class="p">.</span><span class="n">is_scalar</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>A zero extent instead creates an empty Tensor. For example, a Tensor with shape
+<code class="docutils literal notranslate"><span class="pre">[2,</span> <span class="pre">0,</span> <span class="pre">3]</span></code> has rank 3 and size 0. Use <strong>is_empty()</strong> to test for this case.
+An empty Tensor is distinct from a default-constructed, uninitialized Tensor,
+which has <code class="docutils literal notranslate"><span class="pre">Type.Void</span></code> dtype and for which <strong>is_void()</strong> returns true.</p>
+<p>The <strong>is_scalar()</strong> predicate is intentionally strict: it is true only for an
+initialized rank-zero Tensor. A Tensor with shape <code class="docutils literal notranslate"><span class="pre">[1]</span></code> or <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1]</span></code> also
+contains one element, but retains its tensor axes and is not rank zero.</p>
+</section>
 <section id="random-tensor">
-<h2><span class="section-number">3.1.2. </span>Random Tensor<a class="headerlink" href="#random-tensor" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.3. </span>Random Tensor<a class="headerlink" href="#random-tensor" title="Link to this heading">¶</a></h2>
 <p>Often, Tensors shall be initialized with random values. This can be achieved with <strong>random.normal</strong> (normal or Gaussian distribution) and <strong>random.uniform</strong> (uniform distribution):</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
@@ -544,7 +569,7 @@
 </div>
 </section>
 <section id="tensor-with-different-dtype-and-device">
-<h2><span class="section-number">3.1.3. </span>Tensor with different dtype and device<a class="headerlink" href="#tensor-with-different-dtype-and-device" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.4. </span>Tensor with different dtype and device<a class="headerlink" href="#tensor-with-different-dtype-and-device" title="Link to this heading">¶</a></h2>
 <p>By default, a Tensor will be created with elements of type <em>double</em> (or <em>float</em> in Python) on the CPU if there are no additional arguments provided upon creating the Tensor.</p>
 <p>You can create a Tensor with a different data type, and/or on different devices simply by specifying the <strong>dtype</strong> and the <strong>device</strong> arguments upon initialization. For example, the following code creates a Tensor with 64bit integer elements on a cuda-enabled GPU:</p>
 <ul class="simple">
@@ -660,7 +685,7 @@
 </div>
 </section>
 <section id="type-conversion">
-<h2><span class="section-number">3.1.4. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.5. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Link to this heading">¶</a></h2>
 <p>It is possible to convert a Tensor to a different data type. To convert the data type, simply use <strong>Tensor.astype()</strong>.</p>
 <p>For example, consider a Tensor <em>A</em> with <strong>dtype=Type.Int64</strong>, which shall be converted to <strong>Type.Double</strong>:</p>
 <ul class="simple">
@@ -695,7 +720,7 @@ Double (Float64)
 </div>
 </section>
 <section id="transfer-between-devices">
-<h2><span class="section-number">3.1.5. </span>Transfer between devices<a class="headerlink" href="#transfer-between-devices" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.6. </span>Transfer between devices<a class="headerlink" href="#transfer-between-devices" title="Link to this heading">¶</a></h2>
 <p>Moving a Tensor between different devices is very easy. We can use <strong>Tensor.to()</strong> to move the Tensor to a different device.</p>
 <p>For example, let’s create a Tensor in the memory accessible by the CPU and transfer it to the GPU with gpu-id=0.</p>
 <ul class="simple">
@@ -763,7 +788,7 @@ Shape : (2,2)
 </div>
 </section>
 <section id="tensor-from-storage-v0-6-6">
-<h2><span class="section-number">3.1.6. </span>Tensor from Storage [v0.6.6+]<a class="headerlink" href="#tensor-from-storage-v0-6-6" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">3.1.7. </span>Tensor from Storage [v0.6.6+]<a class="headerlink" href="#tensor-from-storage-v0-6-6" title="Link to this heading">¶</a></h2>
 <blockquote>
 <div><p>The Storage of a tensor contains the actual tensor elements. They are stored in the form of a vector. Further details about Storage objects are explained in <a class="reference internal" href="Storage.html#storage"><span class="std std-ref">Storage</span></a>.</p>
 <p>We can create a Tensor directly from a Storage object by using <strong>Tensor.from_storage()</strong>:</p>
@@ -856,11 +881,12 @@ Shape : (2,2)
             <ul>
 <li><a class="reference internal" href="#">3.1. Creating a Tensor</a><ul>
 <li><a class="reference internal" href="#initialized-tensor">3.1.1. Initialized Tensor</a></li>
-<li><a class="reference internal" href="#random-tensor">3.1.2. Random Tensor</a></li>
-<li><a class="reference internal" href="#tensor-with-different-dtype-and-device">3.1.3. Tensor with different dtype and device</a></li>
-<li><a class="reference internal" href="#type-conversion">3.1.4. Type conversion</a></li>
-<li><a class="reference internal" href="#transfer-between-devices">3.1.5. Transfer between devices</a></li>
-<li><a class="reference internal" href="#tensor-from-storage-v0-6-6">3.1.6. Tensor from Storage [v0.6.6+]</a></li>
+<li><a class="reference internal" href="#rank-zero-and-empty-tensors">3.1.2. Rank-zero and empty Tensors</a></li>
+<li><a class="reference internal" href="#random-tensor">3.1.3. Random Tensor</a></li>
+<li><a class="reference internal" href="#tensor-with-different-dtype-and-device">3.1.4. Tensor with different dtype and device</a></li>
+<li><a class="reference internal" href="#type-conversion">3.1.5. Type conversion</a></li>
+<li><a class="reference internal" href="#transfer-between-devices">3.1.6. Transfer between devices</a></li>
+<li><a class="reference internal" href="#tensor-from-storage-v0-6-6">3.1.7. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
 </ul>

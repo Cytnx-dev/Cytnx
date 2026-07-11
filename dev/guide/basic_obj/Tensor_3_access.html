@@ -522,7 +522,9 @@ Shape : (2,4)
 <li><p>The return value will always be a Tensor object, even it only contains one element.</p></li>
 </ol>
 </div>
-<p>In the case where you have only one element in a Tensor, you can use <strong>item()</strong> to get the element as a standard Python/C++ type.</p>
+<p>When a Tensor has exactly one element, you can use <strong>item()</strong> to get the element
+as a standard Python/C++ type. This includes a rank-zero scalar Tensor as well
+as singleton shapes such as <code class="docutils literal notranslate"><span class="pre">[1]</span></code> and <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1]</span></code>.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
