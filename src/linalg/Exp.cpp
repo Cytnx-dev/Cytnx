@@ -19,6 +19,8 @@ namespace cytnx {
       else
         cytnx_error_msg(true, "[Cannot have void (Uninitialize) Tensor]%s", "\n");
 
+      if (out.is_empty()) return out;
+
       // `out` already holds Tin cast to the dispatch dtype, so feed it as the kernel input too:
       // dispatching Exp_ii[out.dtype()] with Tin's original storage would reinterpret e.g. a
       // float buffer as double*. The kernels support in == out (see Exp_.cpp).

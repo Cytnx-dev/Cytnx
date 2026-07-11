@@ -47,6 +47,10 @@ namespace cytnx {
                                 const std::vector<cytnx_uint64> &invmapper_L,
                                 const std::vector<cytnx_uint64> &invmapper_R) {
       using TOut = cytnx::Type_class::type_promote_t<TLin, TRin>;
+      if constexpr (cytnx::is_complex_v<TOut>) {
+        cytnx_error_msg(true, "[Mod] Cannot mod complex numbers%s", "\n");
+      }
+
       TOut *_out = reinterpret_cast<TOut *>(out->data());
       const TLin *_Lin = reinterpret_cast<const TLin *>(Lin->data());
       const TRin *_Rin = reinterpret_cast<const TRin *>(Rin->data());

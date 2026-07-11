@@ -15,6 +15,7 @@ namespace cytnx {
                       "[InvM] error, the size of last two rank should be the same.%s", "\n");
 
       if (Tin.dtype() > 4) Tin = Tin.contiguous().astype(Type.Double);
+      if (Tin.is_empty()) return;
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.InvM_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,

@@ -50,10 +50,16 @@ namespace cytnx {
 
       // calculate output shape:
       std::vector<cytnx_int64> new_shape(non_contract_l.size() + non_contract_r.size());
-      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
+      cytnx_int64 left_dim = 1;
+      cytnx_int64 right_dim = 1;
+      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++) {
         new_shape[i] = Tl.shape()[non_contract_l[i]];
-      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
+        left_dim *= new_shape[i];
+      }
+      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++) {
         new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
+        right_dim *= new_shape[non_contract_l.size() + i];
+      }
 
       Tensor tmpL = Tl;
       Tensor tmpR = Tr;
@@ -69,10 +75,10 @@ namespace cytnx {
         }
         tmpL.permute_(mapperL);
         oldshapeL = tmpL.shape();
-        tmpL.reshape_({-1, comm_dim});
+        tmpL.reshape_({left_dim, comm_dim});
 
       } else {
-        tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
+        tmpL = Tl.permute(mapperL).reshape({left_dim, comm_dim});
       }
       if (cacheR) {
         // calculate reverse mapper:
@@ -82,10 +88,10 @@ namespace cytnx {
         }
         tmpR.permute_(mapperR);
         oldshapeR = tmpR.shape();
-        tmpR.reshape_({comm_dim, -1});
+        tmpR.reshape_({comm_dim, right_dim});
 
       } else {
-        tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
+        tmpR = Tr.permute(mapperR).reshape({comm_dim, right_dim});
       }
 
       // permute!
@@ -184,7 +190,7 @@ namespace cytnx {
 
       Tensor out;
 
-      if (Tl.device() == Device.cpu) {
+      if (Tl.device() == Device.cpu || Tl.is_empty() || Tr.is_empty()) {
         _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
 
       } else {

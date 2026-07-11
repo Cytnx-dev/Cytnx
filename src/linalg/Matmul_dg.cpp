@@ -44,16 +44,17 @@ namespace cytnx {
       // from both inputs (e.g. ComplexFloat x Double -> ComplexDouble), so
       // cast both operands; astype is a no-op when the dtype already matches.
       const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
-      Tensor _tl = Tl.contiguous().astype(out_dtype);
-      Tensor _tr = Tr.contiguous().astype(out_dtype);
       Tensor out;
       out.Init({Tl.shape()[0], Tr.shape().back()}, out_dtype, Tl.device());
-      // out.storage().set_zeros();
+      if (out.is_empty()) return out;
+
+      Tensor tl = Tl.contiguous().astype(out_dtype);
+      Tensor tr = Tr.contiguous().astype(out_dtype);
 
       if (Tl.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Matmul_dg_ii[out.dtype()](
-          out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
-          _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
+          out._impl->storage()._impl, tl._impl->storage()._impl, tr._impl->storage()._impl,
+          tl.shape()[0], tl.shape().back(), tr.shape().back(), diag_L);
 
         // cytnx_error_msg(true,"[Developing][Matmul_dg][CPU]%s","\n");
 
@@ -63,8 +64,8 @@ namespace cytnx {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuMatmul_dg_ii[out.dtype()](
-          out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
-          _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
+          out._impl->storage()._impl, tl._impl->storage()._impl, tr._impl->storage()._impl,
+          tl.shape()[0], tl.shape().back(), tr.shape().back(), diag_L);
         return out;
   #else
         cytnx_error_msg(true, "[Matmul] fatal error,%s",

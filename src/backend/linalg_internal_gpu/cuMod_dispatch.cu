@@ -224,6 +224,7 @@ namespace cytnx {
       cytnx_error_msg(out->dtype() != expected_dtype,
                       "[cuMod_dispatch] output dtype mismatch. got=%d expected=%d%s", out->dtype(),
                       expected_dtype, "\n");
+      if (len == 0) return;
 
       switch (Lin->dtype()) {
         case Type.Double:

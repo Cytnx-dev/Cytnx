@@ -436,10 +436,19 @@ namespace cytnx {
       cytnx_error_msg(return_err < 0, "[ERROR][Rsvd] return_err cannot be negative%s", "\n");
       //
       cytnx_error_msg(Tin.shape().size() != 2, "[Rsvd] can only operate on rank-2 Tensor.%s", "\n");
+      if (Tin.is_empty()) {
+        std::vector<Tensor> out = Gesvd(Tin, is_U, is_vT);
+        if (return_err == 1) {
+          out.push_back(zeros({}, out[0].dtype(), out[0].device()));
+        } else if (return_err) {
+          out.push_back(zeros({0}, out[0].dtype(), out[0].device()));
+        }
+        return out;
+      }
       cytnx_uint64 samplenum =
         (cytnx_uint64)((std::max(0., oversampling_factor) + 1.) * (double)keepdim) +
         oversampling_summand;
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      cytnx_uint64 n_singlu = std::min(Tin.shape()[0], Tin.shape()[1]);
       Tensor Q;
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> outT;

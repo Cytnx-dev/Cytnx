@@ -39,6 +39,7 @@ namespace cytnx {
       Tensor _Tr = Tr.astype(out_dtype);
 
       Tensor out(new_shape, out_dtype, Tl.device());
+      if (out.is_empty()) return out;
       cytnx_uint64 j1, j2;
       j1 = Tl.shape()[0];
       j2 = Tr.shape()[0];

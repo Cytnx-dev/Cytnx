@@ -67,6 +67,7 @@ namespace cytnx {
 
       Tensor out(new_shape, Type.type_promote(lhs_contiguous.dtype(), rhs_contiguous.dtype()),
                  lhs_contiguous.device());
+      if (out.is_empty()) return out;
 
       if (lhs_contiguous.device() == Device.cpu) {
         // Dispatch to the kernel based on the types of lhs and rhs.

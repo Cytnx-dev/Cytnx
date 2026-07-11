@@ -10,6 +10,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Norm(const Tensor& Tl) {
+      cytnx_error_msg(Tl.is_void(), "[Norm] cannot operate on an uninitialized Tensor.%s", "\n");
       // cytnx_error_msg(Tl.shape().size() != 1,"[Norm] error, tensor Tl ,Norm can only operate on
       // rank-1 Tensor.%s","\n"); cytnx_error_msg(!Tl.is_contiguous(), "[Norm] error tensor Tl must
       // be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -33,6 +34,8 @@ namespace cytnx {
       } else {
         out.Init({}, _tl.dtype(), _tl.device());
       }
+
+      if (Tl.is_empty()) return out;
 
       if (Tl.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Norm_ii[_tl.dtype()](out._impl->storage()._impl->data(),
