@@ -64,10 +64,15 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
     get `ASAN_OPTIONS` exported automatically — no need to remember the
     workaround string.
 - **Max-parallelism** (`nproc`/`sysctl -n hw.ncpu`) for every build.
-  `RUN_TESTS=ON`/`RUN_BENCHMARKS=ON` on every configure — both are a
-  **zero-cost toggle** on an already-built dir (verified: flipping either on
-  a fully-built dir and re-running `ninja -n` showed zero pending steps in
-  either direction), so there's no reason to default them off.
+  `RUN_TESTS=ON` on every configure — verified to be a **zero-cost toggle**
+  on an already-built dir (flipping it on a fully-built dir and re-running
+  `ninja -n` showed zero pending steps), so there's no reason to default it
+  off. `RUN_BENCHMARKS` stays off except for `--target benchmarks_main`:
+  `CMakeLists.txt` runs `find_package(benchmark REQUIRED)` whenever it's on
+  regardless of target, which would break `test_main`/`pycytnx` builds on a
+  machine without Google Benchmark installed (CI's own dependency list
+  doesn't include it). Same zero-cost-toggle property applies when it does
+  turn on, even on an already-configured dir.
 - **Generator consistency.** A build dir's generator is decided once, by
   whichever call configures it first; the script never passes a conflicting
   `-G` against an existing dir (defaulting only a *fresh* dir to Ninja, since

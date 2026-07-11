@@ -2,10 +2,14 @@
 set -euo pipefail
 
 # Build and optionally test a CMakePresets.json preset through one entry
-# point. Builds use all available CPUs, keep RUN_BENCHMARKS and RUN_TESTS on
-# (both checked to be a no-cost toggle -- see CLAUDE.md/build-test-workflow),
-# and reuse whatever generator a build dir already has instead of
-# reconfiguring on a mismatch.
+# point. Builds use all available CPUs, keep RUN_TESTS on (checked to be a
+# no-cost toggle -- see CLAUDE.md/build-test-workflow), and reuse whatever
+# generator a build dir already has instead of reconfiguring on a mismatch.
+# RUN_BENCHMARKS is only turned on for --target benchmarks_main: the
+# top-level CMakeLists.txt runs find_package(benchmark REQUIRED) whenever
+# it's on, regardless of which target is actually being built, which would
+# break the test_main/pycytnx workflow on a machine that never installed
+# Google Benchmark (CI's own native-dependency list does not).
 #
 # Usage:
 #   build_preset.sh <preset> [--target <target>] [--test [args...]]
@@ -138,11 +142,15 @@ if [[ ${needs_python} -eq 1 && ! -f "${venv_dir}/bin/activate" ]]; then
     --config-settings=build-dir="${build_dir}" \
     "${cmake_args[@]}" \
     --config-settings=cmake.define.RUN_TESTS=ON \
-    --config-settings=cmake.define.RUN_BENCHMARKS=ON \
     --config-settings=build.targets="${target}" \
     --config-settings=build.tool-args="-j${jobs}"
 else
-  configure_args=(-DRUN_TESTS=ON -DRUN_BENCHMARKS=ON)
+  configure_args=(-DRUN_TESTS=ON)
+  # See the header comment: only the benchmark target needs (and pays the
+  # find_package(benchmark REQUIRED) cost of) RUN_BENCHMARKS.
+  if [[ "${target}" == "benchmarks_main" ]]; then
+    configure_args+=(-DRUN_BENCHMARKS=ON)
+  fi
   # BUILD_PYTHON=ON (the default) makes configure unconditionally require
   # pybind11, which is not installed outside a venv. Only a fresh,
   # non-Python configure needs the override -- an existing dir (e.g. one a
@@ -153,6 +161,11 @@ else
   fi
   if [[ "${is_fresh_configure}" -eq 1 ]]; then
     cmake --preset "${preset}" "${generator_args[@]}" "${configure_args[@]}"
+  elif [[ "${target}" == "benchmarks_main" ]]; then
+    # RUN_BENCHMARKS is a no-cost toggle on an already-configured dir (same
+    # as RUN_TESTS -- see the header comment), so flip it on in place rather
+    # than requiring benchmarks_main to be the first target ever built here.
+    cmake "${build_dir}" -DRUN_BENCHMARKS=ON
   fi
   # ${target} may be several space-separated names (e.g. "test_main
   # gpu_test_main" for the CUDA suite) -- word-split intentionally so each
