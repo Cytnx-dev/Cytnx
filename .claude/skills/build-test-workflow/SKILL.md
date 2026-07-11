@@ -27,12 +27,18 @@ its test result.
 
   ```sh
   cmake --build build/debug-openblas-cpu --target test_main   # C++ tests
-  cmake --build build/openblas-cpu                            # release lib
+  cmake --build build/openblas-cpu --target cytnx              # release lib
   ```
 
-  Running the generator directly in the build dir is equivalent
-  (`cd build/openblas-cpu && ninja libcytnx.a`) and convenient for a single
-  library target.
+  This is generator-agnostic and always works. No preset sets a `generator`,
+  so a plain `cmake --preset <name>` configure picks the platform default —
+  typically Unix Makefiles, not Ninja, even where Ninja is installed. Only run
+  the generator directly (`cd build/openblas-cpu && ninja libcytnx.a`) if you
+  know that specific build dir was configured with `-G Ninja` (check
+  `CMAKE_GENERATOR:INTERNAL` in its `CMakeCache.txt`); the library target's
+  actual name is `cytnx`, not `libcytnx.a`, so the Make and Ninja spellings
+  differ too, and the `cmake --build --target cytnx` form is the one safe to
+  assume everywhere.
 - Re-run `cmake --preset <name>` only when CMakeLists/preset files changed.
   If a build dir errors about a generator or cache mismatch (usually from
   mixing configure methods), delete only that one preset dir and reconfigure —
@@ -105,10 +111,21 @@ Notes:
   then the external libraries, **dependents before the libraries they call
   into** — `arpack` and `lapacke` call BLAS/LAPACK symbols that `openblas`
   provides, so they must precede `-lopenblas` on the command line.
-- `-I build/<preset>` covers generated headers; `-w` silences warnings from
-  public headers that the harness cannot fix.
+- `-I build/<preset>` is harmless today (the only `configure_file` in the
+  build is the Doxyfile, so no build dir currently has a generated header to
+  find) — kept in case that changes; `-w` silences warnings from public
+  headers that the harness cannot fix.
 - For a Google-Benchmark harness, append
   `/usr/lib/x86_64-linux-gnu/libbenchmark_main.a -lbenchmark -lpthread`
-  (the `_main` archive provides `main()`).
-- After `ninja libcytnx.a` at a different revision, just re-run the same `g++`
-  line — the harness picks up the new library.
+  (the `_main` archive provides `main()`). Building the `benchmarks_main`
+  CMake target instead needs a one-time reconfigure with
+  `-DRUN_BENCHMARKS=ON` (`OFF` by default in every preset) and requires
+  Google Benchmark installed (`find_package(benchmark REQUIRED)`) — the
+  standalone harness has no such precondition, which is why it is the
+  default path here.
+- After rebuilding the library at a different revision (`cmake --build
+  build/openblas-cpu --target cytnx`), just re-run the same `g++` line — the
+  harness picks up the new library.
+- Linux-specific as written (`g++`, `-lgomp`,
+  `/usr/lib/x86_64-linux-gnu/libbenchmark_main.a`); on macOS expect Homebrew
+  library paths and `-lomp` in place of `-lgomp`.

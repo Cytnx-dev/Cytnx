@@ -20,9 +20,14 @@ at several git revisions on one machine, in one session.
 ## Preconditions
 
 - The benchmark source calls a **library entry point that exists unchanged at
-  every revision being compared** (e.g. `benchmarks/search_tree_bm.cpp` calls
-  `cytnx::OptimalTreeSolver::solve` directly). Use the *tip's* benchmark source
-  for every column — only the library underneath changes.
+  every revision being compared** (e.g. `benchmarks/Tensor_bm.cpp` calls
+  `Tensor` operations directly, with no dependency on the revision-specific
+  internals being compared). Use the *tip's* benchmark source for every
+  column — only the library underneath changes. If no existing benchmark file
+  covers the function under comparison, add one first (see the `benchmarks/`
+  layout) — do not write comparison code inline in a scratch harness, or the
+  "one fixed source, only the library changes" guarantee this skill relies on
+  is lost.
 - If the function's public interface changed between revisions so the one
   benchmark source cannot compile against all of them, this procedure does not
   apply; build the benchmark per revision in separate worktrees instead.
@@ -57,12 +62,16 @@ alternative implementations only when explicitly requested.
 
    ```sh
    git checkout <rev> -- <modified files>       # header changes too, if any
-   cmake --build build/openblas-cpu --target cytnx   # or: ninja libcytnx.a in the dir
+   cmake --build build/openblas-cpu --target cytnx
    ```
 
-   Then run the benchmark against the rebuilt library — either the
-   `benchmarks_main` target, or a standalone harness link (see the
-   `build-test-workflow` skill) rebuilt after each `ninja`:
+   Then run the benchmark against the rebuilt library. The standalone harness
+   (see `build-test-workflow`'s "Standalone harness against libcytnx.a") is
+   the default path — it has no extra preconditions. The `benchmarks_main`
+   CMake target is an alternative only if that build dir was already
+   reconfigured with `-DRUN_BENCHMARKS=ON` (`OFF` by default in every preset)
+   and has Google Benchmark installed; re-link the harness (or rebuild
+   `benchmarks_main`) after each library rebuild:
 
    ```sh
    ./harness --benchmark_repetitions=5 --benchmark_report_aggregates_only=true \
