@@ -95,14 +95,16 @@ reject.
 g++ -std=gnu++20 -O2 -w -I include -I build/openblas-cpu \
   harness.cpp \
   build/openblas-cpu/libcytnx.a build/openblas-cpu/hptt/libhptt.a \
-  -lopenblas -llapacke -lgomp -larpack \
+  -larpack -llapacke -lopenblas -lgomp \
   -o harness
 ```
 
 Notes:
 
 - Order matters: the harness source first, then `libcytnx.a`, then `libhptt.a`,
-  then the external libraries.
+  then the external libraries, **dependents before the libraries they call
+  into** — `arpack` and `lapacke` call BLAS/LAPACK symbols that `openblas`
+  provides, so they must precede `-lopenblas` on the command line.
 - `-I build/<preset>` covers generated headers; `-w` silences warnings from
   public headers that the harness cannot fix.
 - For a Google-Benchmark harness, append

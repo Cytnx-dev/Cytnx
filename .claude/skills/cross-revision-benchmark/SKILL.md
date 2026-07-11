@@ -37,16 +37,26 @@ alternative implementations only when explicitly requested.
 
 ## Procedure
 
-1. Identify the source files that differ between the revisions:
+1. Identify the source files that differ between the revisions, with status:
 
    ```sh
-   git diff --name-only <base> <tip> -- src include
+   git diff --name-status <base> <tip> -- src include
    ```
 
-2. For **each** revision, from a clean tree:
+   Split the result: files marked `M` (modified) exist at every revision and
+   can be checked out directly. A file marked `A` (added by `<tip>`) does
+   **not** exist at `<base>` — `git checkout <base> -- <that file>` fails with
+   a pathspec error, and checking out the containing *directory* instead
+   avoids the error but does not delete the file, silently leaving `<tip>`'s
+   version of it in `<base>`'s build. If the diff contains any `A`/`D`
+   entries, this checkout-in-place recipe does not apply to those files — fall
+   back to per-revision worktrees (see Preconditions) instead of trying to
+   patch around it.
+
+2. For **each** revision, from a clean tree with only `M` files in scope:
 
    ```sh
-   git checkout <rev> -- <those files>          # header changes too, if any
+   git checkout <rev> -- <modified files>       # header changes too, if any
    cmake --build build/openblas-cpu --target cytnx   # or: ninja libcytnx.a in the dir
    ```
 
@@ -55,8 +65,8 @@ alternative implementations only when explicitly requested.
    `build-test-workflow` skill) rebuilt after each `ninja`:
 
    ```sh
-   ./bench --benchmark_repetitions=5 --benchmark_report_aggregates_only=true \
-           --benchmark_filter='<pattern>' > bm_<rev>.txt
+   ./harness --benchmark_repetitions=5 --benchmark_report_aggregates_only=true \
+             --benchmark_filter='<pattern>' > bm_<rev>.txt
    ```
 
    Checking out a changed *header* re-triggers compilation of every dependent
@@ -65,7 +75,7 @@ alternative implementations only when explicitly requested.
 3. **Restore the working tree** and rebuild back to the current revision:
 
    ```sh
-   git checkout HEAD -- <those files>
+   git checkout HEAD -- <modified files>
    cmake --build build/openblas-cpu --target cytnx
    git status --short        # must be clean
    ```
