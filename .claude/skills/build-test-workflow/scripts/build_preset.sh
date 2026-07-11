@@ -2,9 +2,19 @@
 set -euo pipefail
 
 # Build and optionally test a CMakePresets.json preset through one entry
-# point. Builds use all available CPUs, keep RUN_TESTS on (checked to be a
-# no-cost toggle -- see CLAUDE.md/build-test-workflow), and reuse whatever
-# generator a build dir already has instead of reconfiguring on a mismatch.
+# point. Builds use all available CPUs and reuse whatever generator a build
+# dir already has instead of reconfiguring on a mismatch. An existing,
+# non-fresh build dir is still reconfigured in place (a verified zero-cost
+# toggle when nothing needs to change) so RUN_TESTS/RUN_BENCHMARKS actually
+# match the requested target rather than whatever an earlier build in that
+# dir left them at.
+#
+# RUN_TESTS is forced ON for every target except benchmarks_main. For
+# --target benchmarks_main, RUN_TESTS is left untouched instead: it adds
+# --coverage instrumentation to the cytnx library (see CMakeLists.txt),
+# which benchmarks_main also links against, and that overhead would skew
+# timings -- use a build dir that has never had RUN_TESTS turned on for
+# uninstrumented benchmark numbers (see cross-revision-benchmark).
 # RUN_BENCHMARKS is only turned on for --target benchmarks_main: the
 # top-level CMakeLists.txt runs find_package(benchmark REQUIRED) whenever
 # it's on, regardless of which target is actually being built, which would
@@ -163,11 +173,18 @@ if [[ ${needs_python} -eq 1 && ! -f "${venv_dir}/bin/activate" ]]; then
     --config-settings=build.targets="${target}" \
     --config-settings=build.tool-args="-j${jobs}"
 else
-  configure_args=(-DRUN_TESTS=ON)
-  # See the header comment: only the benchmark target needs (and pays the
-  # find_package(benchmark REQUIRED) cost of) RUN_BENCHMARKS.
+  configure_args=()
   if [[ "${target}" == "benchmarks_main" ]]; then
+    # Never force RUN_TESTS here: it adds --coverage instrumentation to the
+    # cytnx library (see CMakeLists.txt), which benchmarks_main also links
+    # against, and that overhead would skew benchmark timings. Leave
+    # whatever RUN_TESTS state the dir already has untouched -- use a build
+    # dir that's never had RUN_TESTS turned on for uninstrumented numbers
+    # (see cross-revision-benchmark). RUN_BENCHMARKS is the only flag this
+    # target needs (and pays the find_package(benchmark REQUIRED) cost of).
     configure_args+=(-DRUN_BENCHMARKS=ON)
+  else
+    configure_args+=(-DRUN_TESTS=ON)
   fi
   # BUILD_PYTHON=ON (the default) makes configure unconditionally require
   # pybind11, which is not installed outside a venv. Only a fresh,
@@ -179,11 +196,15 @@ else
   fi
   if [[ "${is_fresh_configure}" -eq 1 ]]; then
     cmake --preset "${preset}" "${generator_args[@]}" "${configure_args[@]}"
-  elif [[ "${target}" == "benchmarks_main" ]]; then
-    # RUN_BENCHMARKS is a no-cost toggle on an already-configured dir (same
-    # as RUN_TESTS -- see the header comment), so flip it on in place rather
-    # than requiring benchmarks_main to be the first target ever built here.
-    cmake "${build_dir}" -DRUN_BENCHMARKS=ON
+  else
+    # Reconfigure in place so RUN_TESTS/RUN_BENCHMARKS actually reflect this
+    # call's target, not just whatever an earlier build in this dir left
+    # them at -- both are verified zero-cost toggles when nothing needs to
+    # change, and required (not optional) when something does: an existing
+    # dir that was never configured with RUN_TESTS=ON has no tests/
+    # subdirectory at all, so `--target test_main` would otherwise fail with
+    # an unknown-target error instead of building anything.
+    cmake "${build_dir}" "${configure_args[@]}"
   fi
   # ${target} may be several space-separated names (e.g. "test_main
   # gpu_test_main" for the CUDA suite) -- word-split intentionally so each
