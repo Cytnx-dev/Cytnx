@@ -95,6 +95,28 @@ The rules agents most often get wrong:
 - **C++20 / CUDA 20 are the standard** — use them; never add C++17-compat
   workarounds.
 
+### Robust C++ in touched code
+
+Treat surrounding Cytnx code as historical context, not as an automatic style
+guide. When writing or modifying code:
+
+- Pass cheap scalar values by value, not by `const&`. This includes `bool`,
+  integral types, enum-like dtype/device values, floating-point values, `Scalar`,
+  and complex scalar types.
+- Avoid `cytnx_XXXX` typedefs for ordinary local programming types. Use standard
+  C++ types for counters, sizes, flags, loop indices, tolerances, and local
+  arithmetic unless the value is specifically a dtype-backed tensor/storage
+  scalar.
+- Do not add magic dtype integers. Use named dtype constants, type traits, or
+  established dispatch helpers.
+- Do not copy raw-memory idioms such as `&vec[0]`, vector-plus-`memcpy`, manual
+  container copies, or untyped `void*` handling unless the code is genuinely
+  doing representation-level storage or serialization work.
+- Prefer `std::vector::data()`, iterator construction, `std::copy`, range
+  algorithms, and typed loops when the operation is logically typed.
+- Keep this as a touched-code cleanup policy. Do not mechanically churn unrelated
+  files.
+
 ## Before you push — the CI gates
 
 Green locally before opening a PR. CI enforces:
@@ -123,6 +145,15 @@ Green locally before opening a PR. CI enforces:
   not alter algorithmic or mathematical behavior unprompted — flag it explicitly.
 - **Call out any mixed-dtype or type-promotion change** — it is easy to get subtly
   wrong (see gotchas below).
+- **Tests must check independent expected values.** Do not compare one Cytnx
+  implementation path against another path with the same possible bug. For
+  arithmetic and dtype changes, check both the result dtype and the numeric value.
+  Include values that expose common failures: fractional values, negative values,
+  mixed signed/unsigned cases, complex cases, rank-0 cases, and nontrivial shapes.
+- **Fix the relevant object families, or state the scope.** If a semantic fix
+  applies to `Tensor`, `DenseUniTensor`, `BlockUniTensor`, and
+  `BlockFermionicUniTensor`, either fix all relevant paths or state explicitly why
+  the PR scope is narrower.
 
 ## Domain gotchas (these bite agents)
 
@@ -132,6 +163,21 @@ Green locally before opening a PR. CI enforces:
 - **Type promotion goes through `Type.type_promote(a, b)`**, which promotes across
   the real/complex boundary by precision (#858, #982). Never hand-roll a
   "min enum index" rule — always fold with `type_promote`.
+- **Rank, scalar, and void states are semantic states.** Use `is_void()`,
+  `is_scalar()`, and `rank()` instead of inferring state from `shape()[0]`,
+  `shape().size()`, or direct storage access. Check rank before indexing
+  `shape()[n]` or `bonds()[n]`.
+- **Rank-0 scalar is not the same as shape `{1}`.** A rank-0 tensor has shape
+  `{}` and one element. For plain dense `Tensor`, a single-element tensor may be
+  convertible to a scalar as a convenience. For `UniTensor`, scalar semantics
+  should mean rank 0; do not treat storage size 1 or all extents equal to 1 as
+  scalar because bonds, labels, quantum numbers, directions, and symmetry
+  conventions are part of the object.
+- **Symmetric `UniTensor` element access is coefficient access.** `ut.at(...)`
+  exposes a raw stored coefficient in a chosen basis/sector. It is not generally
+  a physical scalar observable. User-facing code should prefer tensor-network
+  operations such as contraction, factorization, permutation, conjugation, and
+  scalar extraction only after a mathematically scalar result has been produced.
 - **GPU in-place arithmetic has kernel gaps.** `cuMul`/`cuDiv` lack the
   non-contiguous tensor⊗tensor kernels that `cuAdd`/`cuSub` have — contiguous-ize
   first or results are silently wrong; a narrow LHS can OOB-write; a length-1
