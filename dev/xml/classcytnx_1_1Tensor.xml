@@ -3276,7 +3276,7 @@ Shape : (3,4,5)
 <para>The negation function. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function is the negation function. Namely, if the current tensor is <formula id="129">$A$</formula>, then the output tensor is <formula id="130">$-A$</formula>. <simplesect kind="return"><para>The negation of the current tensor. </para>
+<para>This function is the negation function. Namely, if the current tensor is <formula id="122">$A$</formula>, then the output tensor is <formula id="123">$-A$</formula>. <simplesect kind="return"><para>The negation of the current tensor. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -3334,12 +3334,12 @@ Shape : (3,4,5)
 <para>the append function. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function is the append function. It will append the <computeroutput>rhs</computeroutput> tensor to the current tensor. The <computeroutput>rhs</computeroutput> tensor must have the same shape as the current tensor, except the first dimension. For example, if the current tensor is <formula id="131">$A(i,j,k)$</formula> and the <computeroutput>rhs</computeroutput> tensor is <formula id="132">$B(j,k)$</formula>, then the output tensor is <formula id="133">$C(i,j,k)$</formula> where  <formula id="134">\[
+<para>This function is the append function. It will append the <computeroutput>rhs</computeroutput> tensor to the current tensor. The <computeroutput>rhs</computeroutput> tensor must have the same shape as the current tensor, except the first dimension. For example, if the current tensor is <formula id="124">$A(i,j,k)$</formula> and the <computeroutput>rhs</computeroutput> tensor is <formula id="125">$B(j,k)$</formula>, then the output tensor is <formula id="126">$C(i,j,k)$</formula> where  <formula id="127">\[
 C(i,j,k) = \begin{cases}
 A(i,j,k) &amp; \text{if } i \neq N \\
 B(j,k) &amp; \text{if } i = N
 \end{cases}
-\]</formula> where <formula id="135">$N$</formula> is the number of the first dimension of the current tensor. Here indices <formula id="136">$i$</formula>, <formula id="137">$j$</formula> and <formula id="138">$k$</formula> start from 0. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="128">$N$</formula> is the number of the first dimension of the current tensor. Here indices <formula id="129">$i$</formula>, <formula id="130">$j$</formula> and <formula id="131">$k$</formula> start from 0. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">rhs</parametername>
 </parameternamelist>
@@ -3380,13 +3380,13 @@ B(j,k) &amp; \text{if } i = N
 <para>the append function of the Storage. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function is the append function of the Storage. It will append the <computeroutput>srhs</computeroutput> Storage to the current tensor. The current tensor must be rank-2 and the <computeroutput>srhs</computeroutput> Storage must have the same size as the second dimension of the current tensor. For example, if the current tensor is <formula id="129">$A$</formula> with size <formula id="139">$M \times N$</formula> and the <computeroutput>srhs</computeroutput> Storage is <formula id="140">$B$</formula> with size <formula id="135">$N$</formula>, then the output tensor is <formula id="141">$C$</formula> with size <formula id="142">$M \times
-(N+1)$</formula> where  <formula id="143">\[
+<para>This function is the append function of the Storage. It will append the <computeroutput>srhs</computeroutput> Storage to the current tensor. The current tensor must be rank-2 and the <computeroutput>srhs</computeroutput> Storage must have the same size as the second dimension of the current tensor. For example, if the current tensor is <formula id="122">$A$</formula> with size <formula id="132">$M \times N$</formula> and the <computeroutput>srhs</computeroutput> Storage is <formula id="133">$B$</formula> with size <formula id="128">$N$</formula>, then the output tensor is <formula id="134">$C$</formula> with size <formula id="135">$M \times
+(N+1)$</formula> where  <formula id="136">\[
 C(i,j) = \begin{cases}
 A(i,j) &amp; \text{if } j \neq N \\
 B(i) &amp; \text{if } j = N
 \end{cases}
-\]</formula> Here indices <formula id="136">$i$</formula> and <formula id="137">$j$</formula> start from 0. <parameterlist kind="param"><parameteritem>
+\]</formula> Here indices <formula id="129">$i$</formula> and <formula id="130">$j$</formula> start from 0. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">srhs</parametername>
 </parameternamelist>

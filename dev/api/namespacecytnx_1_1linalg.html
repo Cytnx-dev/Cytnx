@@ -484,12 +484,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a59fdd5725d0fe8c422dfe602629d34d7" id="r_a59fdd5725d0fe8c422dfe602629d34d7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a59fdd5725d0fe8c422dfe602629d34d7">Lstsq</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;A, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;b, const float &amp;rcond=-1)</td></tr>
 <tr class="memdesc:a59fdd5725d0fe8c422dfe602629d34d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the least-squares solution to a linear matrix equation.  <br /></td></tr>
 <tr class="separator:a59fdd5725d0fe8c422dfe602629d34d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa65387e1199b5b0feb6ecaca3a7ab976" id="r_aa65387e1199b5b0feb6ecaca3a7ab976"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aa65387e1199b5b0feb6ecaca3a7ab976">Axpy</a> (const Scalar &amp;a, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;x, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;y=<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>())</td></tr>
-<tr class="memdesc:aa65387e1199b5b0feb6ecaca3a7ab976"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blas Axpy, performing \( a\textbf{x} + \textbf{y} \), inplacely.  <br /></td></tr>
-<tr class="separator:aa65387e1199b5b0feb6ecaca3a7ab976"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a414b247231f107dc34e52d221b615a99" id="r_a414b247231f107dc34e52d221b615a99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a414b247231f107dc34e52d221b615a99">Axpy_</a> (const Scalar &amp;a, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;x, <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;y)</td></tr>
-<tr class="memdesc:a414b247231f107dc34e52d221b615a99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blas Axpy, performing \( \textbf{y} = a\textbf{x} + \textbf{y} \), inplacely.  <br /></td></tr>
-<tr class="separator:a414b247231f107dc34e52d221b615a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad5bd110b48c053428e72ecceb2aa04d" id="r_aad5bd110b48c053428e72ecceb2aa04d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aad5bd110b48c053428e72ecceb2aa04d">Ger</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;x, const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;y, const Scalar &amp;a=Scalar())</td></tr>
 <tr class="memdesc:aad5bd110b48c053428e72ecceb2aa04d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blas Ger, performing return = a*vec(x)*vec(y)^T.  <br /></td></tr>
 <tr class="separator:aad5bd110b48c053428e72ecceb2aa04d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1066,108 +1060,6 @@ template&lt;class T &gt; </div>
 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>For the <code>which</code> equal to <code>SI</code> or <code>LI</code>, and the data type of <a class="el" href="classcytnx_1_1LinOp.html">LinOp</a> is real rather than complex, the output of eigenvectors are same as <code>ARPACK</code>. For example, if the full spectrum is \([1.0+0i,
 0.7+0.1i, 0.7-0.1i, 0.2+0.2i, 0.2-0.2i]\), and you choose <code>which="LI"</code>, <code>k=2</code>, then the output eigenvalues are \([0.2+0.2i, 0.2-0.2i]\) rather than \([0.2+0.2i, 0.7+0.1i]\) (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </dd></dl>
-
-</div>
-</div>
-<a id="aa65387e1199b5b0feb6ecaca3a7ab976" name="aa65387e1199b5b0feb6ecaca3a7ab976"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa65387e1199b5b0feb6ecaca3a7ab976">&#9670;&#160;</a></span>Axpy()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> cytnx::linalg::Axpy </td>
-          <td>(</td>
-          <td class="paramtype">const Scalar &amp;&#160;</td>
-          <td class="paramname"><em>a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>y</em> = <code><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>()</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Blas Axpy, performing \( a\textbf{x} + \textbf{y} \), inplacely. </p>
-<p>This function performs  </p><p class="formulaDsp">
-\[
-a\textbf{x} + \textbf{y},
-\]
-</p>
-<p> where \( \textbf{x},\textbf{y} \) are <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> and \( a \) is a Scalar. The dtype of return <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> will be the strongest among <code>x</code>, <code>y</code> and <code>a</code>. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">a</td><td>Scalar. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>, can be any rank </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>, can be any rank </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>] If \( \textbf{y} \) is not specify, then it performs \( a\textbf{x} \) -&gt; return </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This will return a new tensor. </dd></dl>
-
-</div>
-</div>
-<a id="a414b247231f107dc34e52d221b615a99" name="a414b247231f107dc34e52d221b615a99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a414b247231f107dc34e52d221b615a99">&#9670;&#160;</a></span>Axpy_()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cytnx::linalg::Axpy_ </td>
-          <td>(</td>
-          <td class="paramtype">const Scalar &amp;&#160;</td>
-          <td class="paramname"><em>a</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;&#160;</td>
-          <td class="paramname"><em>y</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Blas Axpy, performing \( \textbf{y} = a\textbf{x} + \textbf{y} \), inplacely. </p>
-<p>This function performs  </p><p class="formulaDsp">
-\[
-\textbf{y} = a\textbf{x} + \textbf{y},
-\]
-</p>
-<p> where \( \textbf{x},\textbf{y} \) are <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> and a is a Scalar. The dtype of return <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> will be the strongest among <code>x</code>, <code>y</code> and <code>a</code>. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">a</td><td>Scalar. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>, can be any rank </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td><a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>, can be any rank </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>[<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>] If \( \textbf{y} \) is not specify, then it performs \( a\textbf{x} \) -&gt; return </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>Compared to Axpy(const Scalar &amp;a, const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;x, const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;y = Tensor()), this function will perform inplacely. </dd></dl>
 
 </div>
 </div>

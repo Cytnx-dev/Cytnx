@@ -104,7 +104,7 @@
 </para>
 <para><heading level="1">linear algebra functions:</heading>
 </para>
-<para>See <ref refid="namespacecytnx_1_1linalg" kindref="compound">cytnx::linalg </ref> for further details <table rows="49" cols="7"><row>
+<para>See <ref refid="namespacecytnx_1_1linalg" kindref="compound">cytnx::linalg </ref> for further details <table rows="48" cols="7"><row>
 <entry thead="yes"><para>func   </para>
 </entry><entry thead="yes"><para>inplace   </para>
 </entry><entry thead="yes"><para>CPU   </para>
@@ -507,15 +507,6 @@
 </entry><entry thead="no"><para>x   </para>
 </entry><entry thead="no"><para>x   </para>
 </entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a59fdd5725d0fe8c422dfe602629d34d7" kindref="member">Lstsq</ref>   </para>
-</entry><entry thead="no"><para>x    </para>
-</entry></row>
-<row>
-<entry thead="no"><para>Axpy   </para>
-</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1a414b247231f107dc34e52d221b615a99" kindref="member">Axpy_ </ref>   </para>
-</entry><entry thead="no"><para>✓   </para>
-</entry><entry thead="no"><para>x   </para>
-</entry><entry thead="no"><para>x   </para>
-</entry><entry thead="no"><para><ref refid="namespacecytnx_1_1linalg_1aa65387e1199b5b0feb6ecaca3a7ab976" kindref="member">Axpy </ref>   </para>
 </entry><entry thead="no"><para>x    </para>
 </entry></row>
 <row>

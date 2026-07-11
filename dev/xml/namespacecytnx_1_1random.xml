@@ -67,7 +67,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="117">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -209,7 +209,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="117">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -351,7 +351,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="117">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -503,7 +503,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="124">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="117">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>

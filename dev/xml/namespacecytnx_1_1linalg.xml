@@ -7173,125 +7173,6 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </inbodydescription>
         <location file="include/linalg.hpp" line="3031" column="17" declfile="include/linalg.hpp" declline="3031" declcolumn="17"/>
       </memberdef>
-      <memberdef kind="function" id="namespacecytnx_1_1linalg_1aa65387e1199b5b0feb6ecaca3a7ab976" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
-        <definition>Tensor cytnx::linalg::Axpy</definition>
-        <argsstring>(const Scalar &amp;a, const Tensor &amp;x, const Tensor &amp;y=Tensor())</argsstring>
-        <name>Axpy</name>
-        <qualifiedname>cytnx::linalg::Axpy</qualifiedname>
-        <param>
-          <type>const Scalar &amp;</type>
-          <declname>a</declname>
-        </param>
-        <param>
-          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
-          <declname>x</declname>
-        </param>
-        <param>
-          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
-          <declname>y</declname>
-          <defval><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>()</defval>
-        </param>
-        <briefdescription>
-<para>Blas Axpy, performing <formula id="110">$ a\textbf{x} + \textbf{y} $</formula>, inplacely. </para>
-        </briefdescription>
-        <detaileddescription>
-<para>This function performs  <formula id="111">\[
-a\textbf{x} + \textbf{y},
-\]</formula> where <formula id="112">$ \textbf{x},\textbf{y} $</formula> are <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and <formula id="113">$ a $</formula> is a Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
-<parameternamelist>
-<parametername direction="in">a</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>Scalar. </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
-<parameternamelist>
-<parametername direction="in">x</parametername>
-</parameternamelist>
-<parameterdescription>
-<para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, can be any rank </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
-<parameternamelist>
-<parametername direction="in">y</parametername>
-</parameternamelist>
-<parameterdescription>
-<para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, can be any rank </para>
-</parameterdescription>
-</parameteritem>
-</parameterlist>
-<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] If <formula id="114">$ \textbf{y} $</formula> is not specify, then it performs <formula id="115">$ a\textbf{x} $</formula> -&gt; return </para>
-</simplesect>
-<simplesect kind="note"><para>This will return a new tensor. </para>
-</simplesect>
-</para>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/linalg.hpp" line="3050" column="12" declfile="include/linalg.hpp" declline="3050" declcolumn="12"/>
-      </memberdef>
-      <memberdef kind="function" id="namespacecytnx_1_1linalg_1a414b247231f107dc34e52d221b615a99" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>void</type>
-        <definition>void cytnx::linalg::Axpy_</definition>
-        <argsstring>(const Scalar &amp;a, const Tensor &amp;x, Tensor &amp;y)</argsstring>
-        <name>Axpy_</name>
-        <qualifiedname>cytnx::linalg::Axpy_</qualifiedname>
-        <param>
-          <type>const Scalar &amp;</type>
-          <declname>a</declname>
-        </param>
-        <param>
-          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
-          <declname>x</declname>
-        </param>
-        <param>
-          <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
-          <declname>y</declname>
-        </param>
-        <briefdescription>
-<para>Blas Axpy, performing <formula id="116">$ \textbf{y} = a\textbf{x} + \textbf{y} $</formula>, inplacely. </para>
-        </briefdescription>
-        <detaileddescription>
-<para>This function performs  <formula id="117">\[
-\textbf{y} = a\textbf{x} + \textbf{y},
-\]</formula> where <formula id="112">$ \textbf{x},\textbf{y} $</formula> are <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a is a Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
-<parameternamelist>
-<parametername direction="in">a</parametername>
-</parameternamelist>
-<parameterdescription>
-<para>Scalar. </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
-<parameternamelist>
-<parametername direction="in">x</parametername>
-</parameternamelist>
-<parameterdescription>
-<para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, can be any rank </para>
-</parameterdescription>
-</parameteritem>
-<parameteritem>
-<parameternamelist>
-<parametername direction="in">y</parametername>
-</parameternamelist>
-<parameterdescription>
-<para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, can be any rank </para>
-</parameterdescription>
-</parameteritem>
-</parameterlist>
-<simplesect kind="return"><para>[<ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>] If <formula id="114">$ \textbf{y} $</formula> is not specify, then it performs <formula id="115">$ a\textbf{x} $</formula> -&gt; return </para>
-</simplesect>
-<simplesect kind="note"><para>Compared to Axpy(const Scalar &amp;a, const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;x, const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;y = Tensor()), this function will perform inplacely. </para>
-</simplesect>
-</para>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/linalg.hpp" line="3070" column="10" declfile="include/linalg.hpp" declline="3070" declcolumn="10"/>
-      </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aad5bd110b48c053428e72ecceb2aa04d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
         <definition>Tensor cytnx::linalg::Ger</definition>
@@ -7348,7 +7229,7 @@ a\textbf{x} + \textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3086" column="12" declfile="include/linalg.hpp" declline="3086" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="3047" column="12" declfile="include/linalg.hpp" declline="3047" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2a4fdc352527d77235ff53d3694bf92c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -7377,12 +7258,12 @@ a\textbf{x} + \textbf{y},
           <declname>c</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm, performing <formula id="118">$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} $</formula>, inplacely. </para>
+<para>Blas Gemm, performing <formula id="110">$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} $</formula>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs  <formula id="119">\[
+<para>This function performs  <formula id="111">\[
 \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c},
-\]</formula> where <formula id="120">$ \textbf{x},\textbf{y},\textbf{c} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a, b are Scalars. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput> <computeroutput>b</computeroutput> <computeroutput>c</computeroutput>. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="112">$ \textbf{x},\textbf{y},\textbf{c} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a, b are Scalars. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput> <computeroutput>b</computeroutput> <computeroutput>c</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">a</parametername>
 </parameternamelist>
@@ -7427,7 +7308,7 @@ a\textbf{x} + \textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3105" column="10" declfile="include/linalg.hpp" declline="3105" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3066" column="10" declfile="include/linalg.hpp" declline="3066" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ab781bbb25cc0f04ad700596d14da4596" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -7448,12 +7329,12 @@ a\textbf{x} + \textbf{y},
           <declname>y</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm, performing <formula id="121">$ a\textbf{x}\textbf{y} -&gt; $</formula> return. </para>
+<para>Blas Gemm, performing <formula id="113">$ a\textbf{x}\textbf{y} -&gt; $</formula> return. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs  <formula id="122">\[
+<para>This function performs  <formula id="114">\[
 return = a\textbf{x}\textbf{y},
-\]</formula> where <formula id="112">$ \textbf{x},\textbf{y} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a is Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="115">$ \textbf{x},\textbf{y} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a is Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">a</parametername>
 </parameternamelist>
@@ -7484,7 +7365,7 @@ return = a\textbf{x}\textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3122" column="12" declfile="include/linalg.hpp" declline="3122" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="3083" column="12" declfile="include/linalg.hpp" declline="3083" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6a5391acd57dd66914790575407dceaa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -7517,7 +7398,7 @@ return = a\textbf{x}\textbf{y},
           <declname>group_size</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm_Batch, performing many(batch) <formula id="123">$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
+<para>Blas Gemm_Batch, performing many(batch) <formula id="116">$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
 \beta\textbf{c} $</formula>, inplacely. You do not need to consider the row-major or column-major, just provide the correct shape. </para>
         </briefdescription>
         <detaileddescription>
@@ -7576,7 +7457,7 @@ return = a\textbf{x}\textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3149" column="10" declfile="include/linalg.hpp" declline="3149" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3110" column="10" declfile="include/linalg.hpp" declline="3110" declcolumn="10"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

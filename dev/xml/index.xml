@@ -668,8 +668,6 @@
     <member refid="namespacecytnx_1_1linalg_1ac1834487d31858f1ae3c248abb4b412f" kind="function"><name>Lanczos_Gnd_Ut</name></member>
     <member refid="namespacecytnx_1_1linalg_1a74e4c9a9cfe97d7ca523012078a3f5e1" kind="function"><name>Lanczos_Exp</name></member>
     <member refid="namespacecytnx_1_1linalg_1a59fdd5725d0fe8c422dfe602629d34d7" kind="function"><name>Lstsq</name></member>
-    <member refid="namespacecytnx_1_1linalg_1aa65387e1199b5b0feb6ecaca3a7ab976" kind="function"><name>Axpy</name></member>
-    <member refid="namespacecytnx_1_1linalg_1a414b247231f107dc34e52d221b615a99" kind="function"><name>Axpy_</name></member>
     <member refid="namespacecytnx_1_1linalg_1aad5bd110b48c053428e72ecceb2aa04d" kind="function"><name>Ger</name></member>
     <member refid="namespacecytnx_1_1linalg_1a2a4fdc352527d77235ff53d3694bf92c" kind="function"><name>Gemm_</name></member>
     <member refid="namespacecytnx_1_1linalg_1ab781bbb25cc0f04ad700596d14da4596" kind="function"><name>Gemm</name></member>
