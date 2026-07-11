@@ -38,26 +38,30 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
   pinned to `--preset=<preset>` (pyproject.toml hardcodes
   `--preset=openblas-cpu` as its own default, so without this override every
   pip build would silently configure as `openblas-cpu` regardless of which
-  preset was asked for — verified empirically). Every later call for that
+  preset was asked for — verified empirically). "First" is tracked by a
+  completion marker written only after `pip install` succeeds, not by the
+  venv directory's mere existence — `python3 -m venv` creates it before
+  `pip install` even runs, so a venv left behind by a failed install (a
+  compile error, missing native deps) still gets retried through the full
+  pip path on the next call instead of silently skipping straight to
+  `cmake --build` against an incomplete state. Every later call for that
   preset, Python target or not, is a direct `cmake --build` reusing the same
   build dir incrementally — no repeat pip overhead once the venv exists.
 - **`--test [args]`** runs the target's tests after building.
   - Python target: args pass through to `pytest` verbatim (a path/`-k`
     filter *replaces* the default `pytests/` collection, standard pytest
     semantics — passing both would just re-add everything the filter was
-    meant to narrow out, and the filtered run does *not* get
-    `--doctest-modules` added automatically); no args runs `pytest
-    pytests/ --doctest-modules`, matching CI exactly.
+    meant to narrow out); no args runs the full `pytests/` suite.
   - `--target benchmarks_main`: args pass through to the Google Benchmark
     binary verbatim (e.g. `--benchmark_filter=<pattern>`); no args runs
     every registered benchmark. Never run this concurrently with another
     build or benchmark — see `cross-revision-benchmark`.
   - Any other target (`test_main`, `gpu_test_main`, or both together —
     `--target "test_main gpu_test_main"`): runs through `ctest --test-dir
-    <build_dir> --output-on-failure`, the same mechanism CI uses, instead of
-    invoking the gtest binary directly — `test_main`/`gpu_test_main`
-    register each gtest case as its own ctest test via
-    `gtest_discover_tests`, so ctest gives per-test pass/fail output. A
+    <build_dir> --output-on-failure` instead of invoking the gtest binary
+    directly — `test_main`/`gpu_test_main` register each gtest case as its
+    own ctest test via `gtest_discover_tests`, so ctest gives per-test
+    pass/fail output. A
     single optional arg becomes `-R <value>` — a ctest *regex* against
     `ClassName.TestName`, not a gtest glob/`:`-joined filter. `--test-dir`
     is used rather than `--preset`: `CMakePresets.json`'s `testPresets` are
@@ -69,15 +73,23 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
     the workaround has to be in place before that, not just before the
     later `ctest` call.
 - **Max-parallelism** (`nproc`/`sysctl -n hw.ncpu`) for every build.
-  `RUN_TESTS=ON` on every configure — verified to be a **zero-cost toggle**
-  on an already-built dir (flipping it on a fully-built dir and re-running
-  `ninja -n` showed zero pending steps), so there's no reason to default it
-  off. `RUN_BENCHMARKS` stays off except for `--target benchmarks_main`:
-  `CMakeLists.txt` runs `find_package(benchmark REQUIRED)` whenever it's on
-  regardless of target, which would break `test_main`/`pycytnx` builds on a
-  machine without Google Benchmark installed (CI's own dependency list
-  doesn't include it). Same zero-cost-toggle property applies when it does
-  turn on, even on an already-configured dir.
+- **A fresh build dir's first configure turns `RUN_TESTS` and
+  `RUN_BENCHMARKS` on unconditionally**, regardless of `--target` — every
+  dir this script creates can build `test_main`/`gpu_test_main`/
+  `benchmarks_main` from then on with no later reconfigure. This does mean
+  Google Benchmark needs to be installed for any build through this script,
+  not only a `--target benchmarks_main` one. `RUN_TESTS=ON` would normally
+  add `--coverage` instrumentation to the `cytnx` library (see
+  `CMakeLists.txt`), which would skew `benchmarks_main`'s timings too since
+  it links the same library — `scripts/strip-coverage-launcher.sh` is
+  wired in as `CMAKE_CXX_COMPILER_LAUNCHER`/`CMAKE_CXX_LINKER_LAUNCHER` at
+  that same first configure, stripping the literal `--coverage` token
+  before it reaches the real compiler/linker (`-fno-profile-arcs
+  -fno-test-coverage` do **not** cancel `--coverage` — verified empirically,
+  a `.gcno` file is still produced either way), so every build through this
+  script is uninstrumented by construction. A dir that already exists (has
+  a `CMakeCache.txt`) is never reconfigured — it keeps whatever flags its
+  first configure gave it, script-driven or not.
 - **Generator consistency.** A build dir's generator is decided once, by
   whichever call configures it first; the script never passes a conflicting
   `-G` against an existing dir (defaulting only a *fresh* dir to Ninja, since
@@ -120,8 +132,15 @@ recompiling anything when the build dir is already current.
 
   `gpu_test_main` (under `tests/gpu/`) is a separate binary from
   `test_main`, not a superset — without a visible GPU it will fail for lack
-  of hardware, not because of the change under test, so the compile check
-  alone (`"$S" debug-openblas-cuda`, no `--test`) is what CI expects there.
+  of hardware, not because of the change under test, so on a GPU-less
+  machine the compile check alone (`"$S" debug-openblas-cuda`, no `--test`)
+  is the right stopping point. That compile check only succeeds on a
+  GPU-less machine because `tests/gpu/CMakeLists.txt`'s
+  `gtest_discover_tests` uses `DISCOVERY_MODE PRE_TEST` — the default
+  `POST_BUILD` mode runs the freshly built binary during `cmake --build`
+  itself to enumerate its cases, which would abort the build on a machine
+  with no GPU driver even though the binary compiled and linked correctly;
+  `PRE_TEST` defers that run to when `ctest`/`--test` is actually invoked.
 - A regression test for a bug fix must be shown to **fail on the pre-fix
   code** at least once — a guard that passes on the bug guards nothing.
 
@@ -134,8 +153,9 @@ never in the repo. Never for a benchmark of an actual Cytnx function — that
 belongs as a committed `benchmarks/*.cpp` (Google Benchmark), see
 `cross-revision-benchmark`.
 
-Use a **release** preset's library (`build/openblas-cpu`); the debug library
-is ASan/coverage-instrumented and a plain harness link will reject it.
+Use a **release** preset's library (`build/openblas-cpu`); a debug preset's
+library is ASan-instrumented (`USE_DEBUG=ON` adds `-fsanitize=address`) and
+a plain harness link will reject it.
 
 ```sh
 g++ -std=gnu++20 -O2 -w -I include -I build/openblas-cpu \

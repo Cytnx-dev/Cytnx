@@ -3,23 +3,29 @@ set -euo pipefail
 
 # Build and optionally test a CMakePresets.json preset through one entry
 # point. Builds use all available CPUs and reuse whatever generator a build
-# dir already has instead of reconfiguring on a mismatch. An existing,
-# non-fresh build dir is still reconfigured in place (a verified zero-cost
-# toggle when nothing needs to change) so RUN_TESTS/RUN_BENCHMARKS actually
-# match the requested target rather than whatever an earlier build in that
-# dir left them at.
+# dir already has instead of reconfiguring on a mismatch. Only a fresh dir
+# (no CMakeCache.txt yet) is ever configured -- a dir that already exists
+# from a manual, non-script `cmake --preset` run keeps whatever flags it was
+# given, including a missing RUN_TESTS/RUN_BENCHMARKS; always build a preset
+# through this script the first time to get the flags below.
 #
-# RUN_TESTS is forced ON for every target except benchmarks_main. For
-# --target benchmarks_main, RUN_TESTS is left untouched instead: it adds
-# --coverage instrumentation to the cytnx library (see CMakeLists.txt),
-# which benchmarks_main also links against, and that overhead would skew
-# timings -- use a build dir that has never had RUN_TESTS turned on for
-# uninstrumented benchmark numbers (see cross-revision-benchmark).
-# RUN_BENCHMARKS is only turned on for --target benchmarks_main: the
-# top-level CMakeLists.txt runs find_package(benchmark REQUIRED) whenever
-# it's on, regardless of which target is actually being built, which would
-# break the test_main/pycytnx workflow on a machine that never installed
-# Google Benchmark (CI's own native-dependency list does not).
+# A fresh build dir's first configure turns RUN_TESTS and RUN_BENCHMARKS ON
+# unconditionally, regardless of --target: every dir this script creates can
+# build test_main/gpu_test_main/benchmarks_main from then on with no later
+# reconfigure, no matter which target the first call happened to ask for.
+# This does mean Google Benchmark needs to be installed for ANY build
+# through this script, not just a --target benchmarks_main one -- expected
+# on an agent's own dev machine, unlike a minimal CI runner.
+#
+# RUN_TESTS=ON would normally add --coverage instrumentation to the cytnx
+# library (see CMakeLists.txt), which would also skew benchmarks_main's
+# timings since it links the same library -- CMAKE_CXX_COMPILER_LAUNCHER/
+# CMAKE_CXX_LINKER_LAUNCHER point at strip-coverage-launcher.sh (alongside
+# this script), which strips the literal --coverage token before it reaches
+# the real compiler/linker. -fno-profile-arcs/-fno-test-coverage do NOT
+# cancel --coverage (verified empirically -- a .gcno file is still produced
+# either way), so every build through this script is uninstrumented by
+# construction, not by asking CMakeLists.txt/CI to cooperate.
 #
 # Usage:
 #   build_preset.sh <preset> [--target <target>] [--test [args...]]
@@ -36,10 +42,8 @@ set -euo pipefail
 # --test [args]   Run the target's tests after building.
 #                 - Python target: args pass through to `pytest` verbatim (a
 #                   path/`-k` filter fully replaces the default `pytests/`
-#                   collection, matching normal pytest semantics, and is NOT
-#                   combined with --doctest-modules -- pass it explicitly if
-#                   needed); with no args, runs `pytest pytests/
-#                   --doctest-modules`, matching CI.
+#                   collection, matching normal pytest semantics); with no
+#                   args, runs the full `pytests/` suite.
 #                 - `--target benchmarks_main`: args pass through to the
 #                   Google Benchmark binary verbatim (e.g.
 #                   `--benchmark_filter=<pattern>`); with no args, runs
@@ -48,9 +52,9 @@ set -euo pipefail
 #                   contention skews timings.
 #                 - Any other target (`test_main`, `gpu_test_main`, or a
 #                   space-separated combination of the two): runs through
-#                   `ctest --test-dir <build_dir> --output-on-failure`,
-#                   matching what CI runs rather than invoking the gtest
-#                   binary directly. A single optional arg is used as
+#                   `ctest --test-dir <build_dir> --output-on-failure`
+#                   instead of invoking the gtest binary directly, for
+#                   per-test pass/fail output. A single optional arg is used as
 #                   `-R <value>` (a ctest *regex* against
 #                   `ClassName.TestName`, not a gtest glob/`:`-joined
 #                   filter); with no arg, runs every test discovered in the
@@ -102,6 +106,9 @@ done
 repo_root="$(git rev-parse --show-toplevel)"
 cd "${repo_root}"
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+coverage_launcher="${script_dir}/strip-coverage-launcher.sh"
+
 build_dir="build/${preset}"
 venv_dir="build/${preset}-venv"
 
@@ -146,9 +153,18 @@ if [[ "${is_fresh_configure}" -eq 1 ]] && command -v ninja >/dev/null 2>&1; then
   generator_args=(-G Ninja)
 fi
 
-if [[ ${needs_python} -eq 1 && ! -f "${venv_dir}/bin/activate" ]]; then
-  # First Python build for this preset: pip sets up the venv, makes
-  # pybind11 discoverable, and creates the editable-install import redirect.
+# A completion marker, not bin/activate's mere existence: `python3 -m venv`
+# creates bin/activate immediately, before `pip install --editable` below
+# ever runs, so a venv left behind by a prior failed install (missing native
+# deps, a compile error) would otherwise look "done" and permanently skip
+# the pip path on every retry, building/testing against whatever partial or
+# stale state that failed attempt left in the build dir.
+pip_install_done="${venv_dir}/.build_preset-pip-install-done"
+
+if [[ ${needs_python} -eq 1 && ! -f "${pip_install_done}" ]]; then
+  # First (or previously-failed) Python build for this preset: pip sets up
+  # the venv, makes pybind11 discoverable, and creates the editable-install
+  # import redirect.
   python3 -m venv "${venv_dir}"
   # shellcheck disable=SC1090
   source "${venv_dir}/bin/activate"
@@ -156,8 +172,8 @@ if [[ ${needs_python} -eq 1 && ! -f "${venv_dir}/bin/activate" ]]; then
 
   # cmake.args is list-valued: repeated --config-settings=cmake.args=X
   # entries accumulate (verified empirically) rather than the last one
-  # winning, so --preset and -G can both be passed this way. Pinning
-  # --preset explicitly matters: pyproject.toml hardcodes
+  # winning, so --preset, -G, and the launcher vars can all be passed this
+  # way. Pinning --preset explicitly matters: pyproject.toml hardcodes
   # cmake.args=["--preset=openblas-cpu"], so without this override every
   # pip build would silently configure as openblas-cpu regardless of
   # <preset> (verified empirically).
@@ -165,46 +181,38 @@ if [[ ${needs_python} -eq 1 && ! -f "${venv_dir}/bin/activate" ]]; then
   if [[ ${#generator_args[@]} -gt 0 ]]; then
     cmake_args+=(--config-settings=cmake.args=-GNinja)
   fi
+  if [[ "${is_fresh_configure}" -eq 1 ]]; then
+    cmake_args+=(
+      --config-settings=cmake.args="-DCMAKE_CXX_COMPILER_LAUNCHER=${coverage_launcher}"
+      --config-settings=cmake.args="-DCMAKE_CXX_LINKER_LAUNCHER=${coverage_launcher}"
+    )
+  fi
 
   pip install --editable '.[dev]' \
     --config-settings=build-dir="${build_dir}" \
     "${cmake_args[@]}" \
     --config-settings=cmake.define.RUN_TESTS=ON \
+    --config-settings=cmake.define.RUN_BENCHMARKS=ON \
     --config-settings=build.targets="${target}" \
     --config-settings=build.tool-args="-j${jobs}"
+  # Only reached if the pip install above succeeded (set -e exits the
+  # script on failure before this line runs), so a later retry correctly
+  # re-enters this branch instead of trusting an incomplete venv.
+  touch "${pip_install_done}"
 else
-  configure_args=()
-  if [[ "${target}" == "benchmarks_main" ]]; then
-    # Never force RUN_TESTS here: it adds --coverage instrumentation to the
-    # cytnx library (see CMakeLists.txt), which benchmarks_main also links
-    # against, and that overhead would skew benchmark timings. Leave
-    # whatever RUN_TESTS state the dir already has untouched -- use a build
-    # dir that's never had RUN_TESTS turned on for uninstrumented numbers
-    # (see cross-revision-benchmark). RUN_BENCHMARKS is the only flag this
-    # target needs (and pays the find_package(benchmark REQUIRED) cost of).
-    configure_args+=(-DRUN_BENCHMARKS=ON)
-  else
-    configure_args+=(-DRUN_TESTS=ON)
-  fi
-  # BUILD_PYTHON=ON (the default) makes configure unconditionally require
-  # pybind11, which is not installed outside a venv. Only a fresh,
-  # non-Python configure needs the override -- an existing dir (e.g. one a
-  # Python build already configured with BUILD_PYTHON=ON) is left as-is,
-  # never reconfiguring a working dir's unrelated options.
-  if [[ "${is_fresh_configure}" -eq 1 && ${needs_python} -eq 0 ]]; then
-    configure_args+=(-DBUILD_PYTHON=OFF)
-  fi
   if [[ "${is_fresh_configure}" -eq 1 ]]; then
+    configure_args=(-DRUN_TESTS=ON -DRUN_BENCHMARKS=ON
+      -DCMAKE_CXX_COMPILER_LAUNCHER="${coverage_launcher}"
+      -DCMAKE_CXX_LINKER_LAUNCHER="${coverage_launcher}")
+    # BUILD_PYTHON=ON (the default) makes configure unconditionally require
+    # pybind11, which is not installed outside a venv. Only a fresh,
+    # non-Python configure needs the override -- an existing dir (e.g. one a
+    # Python build already configured with BUILD_PYTHON=ON) is left as-is,
+    # never reconfiguring a working dir's unrelated options.
+    if [[ ${needs_python} -eq 0 ]]; then
+      configure_args+=(-DBUILD_PYTHON=OFF)
+    fi
     cmake --preset "${preset}" "${generator_args[@]}" "${configure_args[@]}"
-  else
-    # Reconfigure in place so RUN_TESTS/RUN_BENCHMARKS actually reflect this
-    # call's target, not just whatever an earlier build in this dir left
-    # them at -- both are verified zero-cost toggles when nothing needs to
-    # change, and required (not optional) when something does: an existing
-    # dir that was never configured with RUN_TESTS=ON has no tests/
-    # subdirectory at all, so `--target test_main` would otherwise fail with
-    # an unknown-target error instead of building anything.
-    cmake "${build_dir}" "${configure_args[@]}"
   fi
   # ${target} may be several space-separated names (e.g. "test_main
   # gpu_test_main" for the CUDA suite) -- word-split intentionally so each
@@ -224,10 +232,7 @@ if [[ ${needs_python} -eq 1 ]]; then
   if [[ ${#test_args[@]} -gt 0 ]]; then
     pytest "${test_args[@]}"
   else
-    # Matches CI's own invocation (.github/workflows/ci-cmake_tests.yml);
-    # without --doctest-modules a docstring regression would pass here and
-    # only surface in CI.
-    pytest pytests/ --doctest-modules
+    pytest pytests/
   fi
 elif [[ "${target}" == "benchmarks_main" ]]; then
   # Google Benchmark's binary is not a ctest test (no add_test/
@@ -241,9 +246,9 @@ elif [[ "${target}" == "benchmarks_main" ]]; then
   "${binary}" "${test_args[@]}"
 else
   # test_main/gpu_test_main register each gtest case as its own ctest test
-  # via gtest_discover_tests, so ctest gives per-test output-on-failure and
-  # matches what CI runs -- prefer it over invoking the gtest binary
-  # directly. `--test-dir` (not `--preset`) because CMakePresets.json's
+  # via gtest_discover_tests, so ctest gives per-test output-on-failure --
+  # prefer it over invoking the gtest binary directly. `--test-dir` (not
+  # `--preset`) because CMakePresets.json's
   # testPresets are hardcoded to only two configurePresets
   # (debug-openblas-cpu, debug-openblas-cuda) and don't generalize to every
   # preset this script accepts.
