@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <limits>
 #include <vector>
 
 namespace cytnx {
@@ -90,6 +91,7 @@ namespace cytnx {
       Tensor complex({0}, Type.ComplexFloat);
 
       EXPECT_DOUBLE_EQ(linalg::Sum(real).at<double>({}), 0.0);
+      EXPECT_THROW(linalg::Sum(Tensor({0}, Type.Bool)), std::logic_error);
       EXPECT_FLOAT_EQ(linalg::Norm(complex).at<float>({}), 0.0f);
       EXPECT_DOUBLE_EQ(
         linalg::Vectordot(Tensor({0}, Type.Float), Tensor({0}, Type.Double)).at<double>({}), 0.0);
@@ -161,6 +163,11 @@ namespace cytnx {
       linalg::Gemm_(Scalar(3.0), Tensor({2, 0}, Type.Double), Tensor({0, 3}, Type.Double),
                     Scalar(2.0), c);
       ExpectAllEqual(c, 2.0);
+
+      c.fill(std::numeric_limits<double>::quiet_NaN());
+      linalg::Gemm_(Scalar(3.0), Tensor({2, 0}, Type.Double), Tensor({0, 3}, Type.Double),
+                    Scalar(0.0), c);
+      ExpectAllEqual(c, 0.0);
     }
 
     TEST(ZeroExtentLinalgTest, BatchedGemmFallsBackForZeroExtents) {

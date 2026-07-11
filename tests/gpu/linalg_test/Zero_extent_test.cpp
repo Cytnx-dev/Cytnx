@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <limits>
 #include <vector>
 
 namespace cytnx {
@@ -27,6 +28,7 @@ namespace cytnx {
       Tensor lhs(shape, Type.Float, Device.cuda);
       Tensor rhs(shape, Type.Double, Device.cuda);
 
+      ExpectGpuEmpty(lhs.astype(Type.Double), shape, Type.Double);
       ExpectGpuEmpty(linalg::Abs(Tensor(shape, Type.ComplexFloat, Device.cuda)), shape, Type.Float);
       ExpectGpuEmpty(linalg::Conj(Tensor(shape, Type.ComplexFloat, Device.cuda)), shape,
                      Type.ComplexFloat);
@@ -41,6 +43,7 @@ namespace cytnx {
                    std::logic_error);
 
       EXPECT_DOUBLE_EQ(linalg::Sum(rhs).to(Device.cpu).at<double>({}), 0.0);
+      EXPECT_THROW(linalg::Sum(Tensor(shape, Type.Bool, Device.cuda)), std::logic_error);
       EXPECT_DOUBLE_EQ(linalg::Norm(rhs).to(Device.cpu).at<double>({}), 0.0);
       EXPECT_THROW(linalg::Min(rhs), std::logic_error);
       EXPECT_THROW(linalg::Max(rhs), std::logic_error);
@@ -62,6 +65,11 @@ namespace cytnx {
       linalg::Gemm_(Scalar(3.0), Tensor({2, 0}, Type.Double, Device.cuda),
                     Tensor({0, 3}, Type.Double, Device.cuda), Scalar(2.0), c);
       ExpectGpuAllEqual(c, 2.0);
+
+      c.fill(std::numeric_limits<double>::quiet_NaN());
+      linalg::Gemm_(Scalar(3.0), Tensor({2, 0}, Type.Double, Device.cuda),
+                    Tensor({0, 3}, Type.Double, Device.cuda), Scalar(0.0), c);
+      ExpectGpuAllEqual(c, 0.0);
 
       EXPECT_DOUBLE_EQ(linalg::Det(Tensor({0, 0}, Type.Double, Device.cuda)).at<double>({}), 1.0);
     }

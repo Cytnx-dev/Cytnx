@@ -9,6 +9,9 @@ namespace cytnx {
     Tensor Sum(const Tensor &Tin) {
       cytnx_error_msg(Tin.dtype() == Type.Void,
                       "[Cannot have void (uninitialized) Tensor as input]%s", "\n");
+      cytnx_error_msg(Tin.dtype() == Type.Bool,
+                      "[Sum] Bool tensors are not supported; cast to a numeric dtype first.%s",
+                      "\n");
       Tensor out({}, Tin.dtype(), Tin.device());
       if (Tin.is_empty()) return out;
 

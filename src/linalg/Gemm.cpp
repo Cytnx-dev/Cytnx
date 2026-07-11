@@ -74,7 +74,10 @@ namespace cytnx {
 
       if (c.is_empty()) return;
       if (px.shape()[1] == 0) {
-        c *= pb;
+        if (pb == Scalar(0.0))
+          c.storage().set_zeros();
+        else
+          c *= pb;
         return;
       }
 
