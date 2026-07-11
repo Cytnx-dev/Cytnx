@@ -75,7 +75,7 @@ For each revision, in order:
 
    **Case B:** skip this — build whatever benchmark file already exists at
    this revision.
-3. Build and run, before moving to the next revision:
+3. Build and run:
 
    ```sh
    "$S" openblas-cpu --target benchmarks_main --test \
@@ -83,10 +83,26 @@ For each revision, in order:
      --benchmark_filter='<pattern>' > /tmp/bm-<label>.txt
    ```
 
+4. **Case A only:** restore the overlay before moving to the next revision —
+   the working tree still holds `<tip>`'s content for the overlaid files
+   after step 2, so `git checkout <rev>` in the next iteration's step 1
+   would otherwise either refuse to switch or (if it can 3-way-merge) carry
+   `<tip>`'s content silently forward onto the wrong revision:
+
+   ```sh
+   git restore --source=HEAD --staged --worktree -- \
+     benchmarks/<the_bm_file>.cpp benchmarks/CMakeLists.txt
+   ```
+
+   Use `git restore`, not `git checkout HEAD -- <path>`: when `<rev>`
+   predates the benchmark file existing at all, the overlay added a path
+   HEAD doesn't have, and `checkout HEAD -- <path>` errors with "did not
+   match any file(s) known to git" for a path absent from HEAD, whereas
+   `restore --source=HEAD` correctly deletes it to match HEAD's (its
+   absence).
+
 When every column is recorded, return to where you started: `git checkout
-<original-branch>` (a Case A overlay's files already match `<tip>`'s
-committed content, so this switches cleanly with no leftover diff) and `git
-stash pop` if step 0 created a stash.
+<original-branch>` and `git stash pop` if step 0 created a stash.
 
 ## Reporting rules
 
