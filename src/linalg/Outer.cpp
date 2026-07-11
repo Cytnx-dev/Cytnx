@@ -13,8 +13,8 @@ namespace cytnx {
   namespace linalg {
     Tensor Outer(const Tensor &Tl, const Tensor &Tr) {
       // checking:
-      cytnx_error_msg(Tl.shape().size() == 0, "[ERROR] pass empty tensor in param #1%s", "\n");
-      cytnx_error_msg(Tr.shape().size() == 0, "[ERROR] pass empty tensor in param #2%s", "\n");
+      cytnx_error_msg(Tl.is_void(), "[ERROR] pass empty tensor in param #1%s", "\n");
+      cytnx_error_msg(Tr.is_void(), "[ERROR] pass empty tensor in param #2%s", "\n");
       cytnx_error_msg(Tl.device() != Tr.device(),
                       "[ERROR] two tensor cannot on different devices.%s", "\n");
       // cytnx_error_msg(!Tl.is_contiguous(),"[ERROR] tensor #1 should be contiguous. suggestion:

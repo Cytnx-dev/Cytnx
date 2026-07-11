@@ -127,6 +127,16 @@ namespace cytnx {
 
     pos.clear();
 
+    if (dim == 0) {
+      const bool is_slice = this->_type == Accessor::All || this->_type == Accessor::Range ||
+                            this->_type == Accessor::Tilend || this->_type == Accessor::Step;
+      const bool is_empty_list = this->_type == Accessor::list && this->idx_list.empty();
+      cytnx_error_msg(!is_slice && !is_empty_list, "%s",
+                      "[ERROR] cannot select an element from a zero-length dimension.");
+      len = 0;
+      return;
+    }
+
     if (this->_type == Accessor::All) {
       len = dim;
     } else if (this->_type == Accessor::Range) {

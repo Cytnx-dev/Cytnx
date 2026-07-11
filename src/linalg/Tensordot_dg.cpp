@@ -9,6 +9,24 @@
 namespace cytnx {
 
   namespace linalg {
+    namespace {
+      void check_tensordot_dg_axis_bounds(const char *side,
+                                          const std::vector<cytnx_uint64> &indices,
+                                          const cytnx_uint64 rank) {
+        for (cytnx_uint64 i = 0; i < indices.size(); i++) {
+          cytnx_error_msg(indices[i] >= rank,
+                          "[ERROR][Tensordot_dg] axis %s=%llu is out of bounds for rank %llu.%s",
+                          side, static_cast<unsigned long long>(indices[i]),
+                          static_cast<unsigned long long>(rank), "\n");
+          for (cytnx_uint64 j = i + 1; j < indices.size(); j++) {
+            cytnx_error_msg(indices[i] == indices[j],
+                            "[ERROR][Tensordot_dg] duplicate contracted axis %s=%llu.%s", side,
+                            static_cast<unsigned long long>(indices[i]), "\n");
+          }
+        }
+      }
+    }  // namespace
+
     Tensor Tensordot_dg(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
                         const std::vector<cytnx_uint64> &idxr, const bool &diag_L) {
       // checking:
@@ -33,6 +51,8 @@ namespace cytnx {
       if (diag_L) {
         cytnx_error_msg(Tl.shape().size() != 1,
                         "[ERROR] diag_L=true requires Tl to be rank-1 tensor.%s", "\n");
+        check_tensordot_dg_axis_bounds("L", idxl, 2);
+        check_tensordot_dg_axis_bounds("R", idxr, Tr.rank());
         if (idxl.size() != 1) {
           // this is weighted trace, juse expand diag into full dense and then call Tensordot.
           return Tensordot(Diag(Tl), Tr, {0, 1}, idxr);
@@ -46,6 +66,8 @@ namespace cytnx {
       } else {
         cytnx_error_msg(Tr.shape().size() != 1,
                         "[ERROR] diag_L=false requires Tr to be rank-1 tensor.%s", "\n");
+        check_tensordot_dg_axis_bounds("L", idxl, Tl.rank());
+        check_tensordot_dg_axis_bounds("R", idxr, 2);
         if (idxr.size() != 1) {
           // this is weighted trace, juse expand diag into full dense and then call Tensordot.
           return Tensordot(Tl, Diag(Tr), idxl, {0, 1});
@@ -76,10 +98,6 @@ namespace cytnx {
         new_shape[i] = Tlshape[non_contract_l[i]];
       for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
         new_shape[non_contract_l.size() + i] = Trshape[non_contract_r[i]];
-
-      if (new_shape.size() == 0) {
-        new_shape.push_back(1);
-      }
 
       // permute!
       Tensor tmpL, tmpR, out, tmpout;

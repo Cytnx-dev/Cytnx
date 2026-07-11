@@ -645,7 +645,12 @@ namespace cytnx {
     #### output>
     \verbinclude example/Storage/astype.py.out
     */
-    Storage astype(const unsigned int &new_type) const { return this->_impl->astype(new_type); }
+    Storage astype(const unsigned int &new_type) const {
+      if (this->size() == 0 && new_type != this->dtype()) {
+        return Storage(0, new_type, this->device());
+      }
+      return this->_impl->astype(new_type);
+    }
 
     /**
     @brief the dtype-id of current Storage, see cytnx::Type for more details.
@@ -974,7 +979,12 @@ namespace cytnx {
     #### output>
     \verbinclude example/Storage/real.py.out
     */
-    Storage real() const { return Storage(this->_impl->real()); };
+    Storage real() const {
+      cytnx_error_msg(!Type.is_complex(this->dtype()),
+                      "[ERROR] Storage.real() can only be called from complex type.%s", "\n");
+      if (this->size() == 0) return Storage(0, Type.to_real(this->dtype()), this->device());
+      return Storage(this->_impl->real());
+    };
 
     /**
     @brief Get the imaginary part form a Complex type Storage
@@ -990,7 +1000,12 @@ namespace cytnx {
     #### output>
     \verbinclude example/Storage/imag.py.out
     */
-    Storage imag() const { return Storage(this->_impl->imag()); };
+    Storage imag() const {
+      cytnx_error_msg(!Type.is_complex(this->dtype()),
+                      "[ERROR] Storage.imag() can only be called from complex type.%s", "\n");
+      if (this->size() == 0) return Storage(0, Type.to_real(this->dtype()), this->device());
+      return Storage(this->_impl->imag());
+    };
 
     /**
      * @brief Get the element at the given index.

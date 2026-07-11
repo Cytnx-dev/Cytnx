@@ -119,8 +119,8 @@ namespace cytnx {
 
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
+    unsigned int version = 0;
     if (tmpIDDs == kVersionedUniTensorMagic) {
-      unsigned int version;
       f.read((char *)&version, sizeof(unsigned int));
       cytnx_error_msg(version != kCurrentUniTensorFileVersion,
                       "[ERROR][UniTensor::_Load] Unsupported UniTensor file format version '%u'.%s",
@@ -166,7 +166,7 @@ namespace cytnx {
     }
 
     // second, let dispatch to do remaining loading.
-    this->_impl->_load_dispatch(f);
+    this->_impl->_load_dispatch(f, version);
   }
 
   void UniTensor::Save(const std::string &fname) const {

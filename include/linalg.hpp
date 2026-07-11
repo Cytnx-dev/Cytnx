@@ -776,10 +776,10 @@ namespace cytnx {
      * @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
      * @param[in] is_UvT if \em true, the left- and right- unitary UniTensors (isometries) are
      * returned.
-     * @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-     * the largest error will be pushed back to the vector (The smallest singular value in the
-     * return singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-     * full list of truncated singular values will be returned.
+     * @param[in] return_err selects the truncation information appended to the result: 0 appends
+     * nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero
+     * if none were discarded; >1 appends a rank-1 tensor containing all discarded singular values
+     * in descending order, empty if none were discarded.
      * @return
      * @parblock
      * [std::vector<Tensors>]
@@ -861,10 +861,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is > 1, then the full list of truncated
-    singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @param[in] mindim at least this many singular values are kept in total. For a per-block lower
     bound (which also acts as the per-block sampling floor of the randomized SVD), use the
     overload that takes a \p min_blockdim vector.
@@ -1851,10 +1851,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err > 1, then the full list of truncated
-    singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1899,10 +1899,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @param[in] mindim at least this many singular values are kept in total.
     @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
     keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
@@ -1939,10 +1939,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -2444,8 +2444,8 @@ namespace cytnx {
     @pre two tensor should on same device.
 
     */
-    Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left = false,
-                const bool &Tr_pad_left = false);
+    Tensor Kron(const Tensor &lhs, const Tensor &rhs, bool lhs_pad_left = false,
+                bool rhs_pad_left = false);
 
     // Directsum:
     //==================================================

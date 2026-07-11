@@ -17,6 +17,38 @@ namespace {
   }
 }  // namespace
 
+TEST(linalgKronTest, PadsLowerRankLhsOnLeft) {
+  Tensor lhs = zeros({2}, Type.Double);
+  lhs.at<double>({0}) = 10.0;
+  lhs.at<double>({1}) = 20.0;
+  Tensor rhs = arange(1, 13, 1, Type.Double).reshape(3, 4);
+
+  Tensor out = linalg::Kron(lhs, rhs, true, false);
+
+  EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{3, 8}));
+  for (cytnx_uint64 i = 0; i < out.shape()[0]; i++) {
+    for (cytnx_uint64 j = 0; j < out.shape()[1]; j++) {
+      const double expected =
+        lhs.at<double>({j / rhs.shape()[1]}) * rhs.at<double>({i, j % rhs.shape()[1]});
+      EXPECT_DOUBLE_EQ(out.at<double>({i, j}), expected);
+    }
+  }
+}
+
+TEST(linalgTensordotTest, RejectsRankZeroAxis) {
+  Tensor scalar({}, Type.Double);
+
+  EXPECT_THROW({ linalg::Tensordot(scalar, scalar, {0}, {0}); }, std::logic_error);
+}
+
+TEST(linalgTensordotTest, RejectsDiagRankZeroAxis) {
+  Tensor diag = zeros({2}, Type.Double);
+  Tensor scalar({}, Type.Double);
+
+  EXPECT_THROW({ linalg::Tensordot_dg(diag, scalar, {0}, {0}, true); }, std::logic_error);
+  EXPECT_THROW({ linalg::Tensordot_dg(scalar, diag, {0}, {0}, false); }, std::logic_error);
+}
+
 TEST_F(linalg_Test, BkUt_Svd_truncate1) {
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
   std::vector<double> vnm_S;
@@ -95,13 +127,13 @@ TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_one_returns_first_discarded_val
 
   ASSERT_EQ(full.size(), 3);
   ASSERT_EQ(trunc.size(), 4);
-  ASSERT_EQ(trunc[3].shape()[0], 1);
+  ASSERT_TRUE(trunc[3].shape().empty());
   // the kept dimension adapts to exact degeneracies at the cut (>= keepdim); the returned
   // error is the largest singular value that was actually discarded.
   cytnx_uint64 kept = trunc[0].shape()[0];
   ASSERT_GE(kept, 5);
   ASSERT_LT(kept, all_svals.shape()[0]);
-  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - kept - 1}), trunc[3].at({0}));
+  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - kept - 1}), trunc[3].at({}));
 }
 
 TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_one_returns_first_discarded_value) {
@@ -111,26 +143,32 @@ TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_one_returns_first_discarded_v
 
   ASSERT_EQ(full.size(), 3);
   ASSERT_EQ(trunc.size(), 4);
-  ASSERT_EQ(trunc[3].shape()[0], 1);
+  ASSERT_TRUE(trunc[3].shape().empty());
   // the kept dimension adapts to exact degeneracies at the cut (>= keepdim); the returned
   // error is the largest singular value that was actually discarded.
   cytnx_uint64 kept = trunc[0].shape()[0];
   ASSERT_GE(kept, 5);
   ASSERT_LT(kept, all_svals.shape()[0]);
-  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - kept - 1}), trunc[3].at({0}));
+  EXPECT_EQ(all_svals.at({all_svals.shape()[0] - kept - 1}), trunc[3].at({}));
 }
 
 /*=====test info=====
 describe:When keepdim >= total singular values (smidx == 0), nothing is dropped. return_err
-must still return a one-element zero tensor rather than crashing or returning garbage.
+must still return a zero error tensor rather than crashing or returning garbage.
 ====================*/
 TEST_F(linalg_Test, BkUt_Svd_truncate_return_err_no_truncation) {
-  // keepdim=999 keeps everything; both return_err=1 and return_err=2 must produce {1} x {0.0}
+  // keepdim=999 keeps everything; return_err=1 is a scalar zero, while return_err=2 is an empty
+  // vector.
   for (unsigned int re : {1u, 2u}) {
     std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 999, 0, true, re);
     ASSERT_EQ(res.size(), 4u) << "return_err=" << re;
-    ASSERT_EQ(res[3].shape()[0], 1u) << "return_err=" << re;
-    EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+    if (re == 1) {
+      ASSERT_TRUE(res[3].shape().empty()) << "return_err=" << re;
+      EXPECT_EQ(res[3].at({}), Scalar(0.0)) << "return_err=" << re;
+    } else {
+      ASSERT_EQ(res[3].shape(), std::vector<cytnx_uint64>{0}) << "return_err=" << re;
+      EXPECT_TRUE(res[3].is_empty()) << "return_err=" << re;
+    }
   }
 }
 
@@ -138,8 +176,13 @@ TEST_F(linalg_Test, BkUt_Gesvd_truncate_return_err_no_truncation) {
   for (unsigned int re : {1u, 2u}) {
     std::vector<UniTensor> res = linalg::Gesvd_truncate(svd_T, 999, 0, true, true, re);
     ASSERT_EQ(res.size(), 4u) << "return_err=" << re;
-    ASSERT_EQ(res[3].shape()[0], 1u) << "return_err=" << re;
-    EXPECT_EQ(res[3].at({0}), Scalar(0.0)) << "return_err=" << re;
+    if (re == 1) {
+      ASSERT_TRUE(res[3].shape().empty()) << "return_err=" << re;
+      EXPECT_EQ(res[3].at({}), Scalar(0.0)) << "return_err=" << re;
+    } else {
+      ASSERT_EQ(res[3].shape(), std::vector<cytnx_uint64>{0}) << "return_err=" << re;
+      EXPECT_TRUE(res[3].is_empty()) << "return_err=" << re;
+    }
   }
 }
 
@@ -163,10 +206,10 @@ TEST_F(linalg_Test, BkFermionicUt_Svd_truncate_return_err_returns_discarded_valu
     EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
   }
 
-  // return_err=1: single element equal to largest discarded
+  // return_err=1: scalar equal to largest discarded
   std::vector<UniTensor> trunc1 = linalg::Svd_truncate(fermi_T, 1, 0, true, 1);
-  ASSERT_EQ(trunc1.back().shape()[0], 1u);
-  EXPECT_EQ(trunc1.back().at({0}), trunc[3].at({0}));
+  ASSERT_TRUE(trunc1.back().shape().empty());
+  EXPECT_EQ(trunc1.back().at({}), trunc[3].at({0}));
 }
 
 TEST_F(linalg_Test, BkFermionicUt_Gesvd_truncate_return_err_returns_discarded_values) {
@@ -184,10 +227,10 @@ TEST_F(linalg_Test, BkFermionicUt_Gesvd_truncate_return_err_returns_discarded_va
     EXPECT_EQ(all_svals.at({trunc[3].shape()[0] - 1 - i}), trunc[3].at({i}));
   }
 
-  // return_err=1: single element equal to largest discarded
+  // return_err=1: scalar equal to largest discarded
   std::vector<UniTensor> trunc1 = linalg::Gesvd_truncate(fermi_T, 1, 0, true, true, 1);
-  ASSERT_EQ(trunc1.back().shape()[0], 1u);
-  EXPECT_EQ(trunc1.back().at({0}), trunc[3].at({0}));
+  ASSERT_TRUE(trunc1.back().shape().empty());
+  EXPECT_EQ(trunc1.back().at({}), trunc[3].at({0}));
 }
 
 // TEST_F(linalg_Test, BkUt_Svd_truncate3) {

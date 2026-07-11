@@ -215,7 +215,8 @@ namespace cytnx {
      *
      * @param[in] bd_type the type (see \ref bondType) of the bond
      * @param[in] in_qnums input the quantum numbers of the bond (for symmetry case)
-     * @param[in] degs the degrees of freedom of the bond.
+     * @param[in] degs the degrees of freedom of the bond. A zero degeneracy represents an empty
+     * sector while retaining its quantum number and the Bond's symmetry metadata.
      * @param[in] in_syms input the symmetries of the bond (for symmetry case)
      * @attention This function is can only use for symmetry case.
      * @see
@@ -284,7 +285,7 @@ namespace cytnx {
     space or Ket space.
 
         @pre
-            1. \p dim cannot be 0.
+            1. \p dim may be 0 for an empty vector space.
       2. The bond can be tagged with bondType.BD_BRA or
                   bondType.BD_KET, or bondType.BD_REG depending on the usage.
 

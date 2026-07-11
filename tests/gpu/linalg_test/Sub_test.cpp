@@ -146,7 +146,7 @@ namespace SubTest {
   TEST(SubMixedDtypeTest, gpu_scalar_sub_tensor_mixed_unsigned_signed_type_promote) {
     const cytnx::cytnx_uint32 scalar = 5;
     cytnx::Tensor rhs =
-      cytnx::arange(0, 6, 1, cytnx::Type.Int16).reshape({2, 3}).to(cytnx::Device.cuda);
+      cytnx::arange(0, 6, 1, cytnx::Type.Int16, cytnx::Device.cuda).reshape({2, 3});
 
     cytnx::Tensor gpu_result_l = cytnx::linalg::Sub(scalar, rhs);
     cytnx::Tensor gpu_result_r = cytnx::linalg::Sub(rhs, scalar);

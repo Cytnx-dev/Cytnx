@@ -213,7 +213,10 @@ namespace cytnx {
                                 const std::vector<cytnx_int64> &output_shape,
                                 bool output_is_scalar) {
         Tensor out = Tensor::from_storage(output_storage);
-        if (!output_is_scalar) out.reshape_(output_shape);
+        if (output_is_scalar)
+          out.reshape_({});
+        else
+          out.reshape_(output_shape);
         return out;
       }
 

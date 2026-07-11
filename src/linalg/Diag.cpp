@@ -10,13 +10,14 @@
 namespace cytnx {
   namespace linalg {
     Tensor Diag(const Tensor &Tin) {
-      cytnx_error_msg(Tin.shape().size() > 2,
+      const cytnx_uint64 rank = Tin.rank();
+      cytnx_error_msg(rank == 0 || rank > 2,
                       "[ERROR] the input tensor should be rank-1 or rank-2 Tensor.%s", "\n");
 
       Tensor out;
 
       if (Tin.device() == Device.cpu) {
-        if (Tin.shape().size() == 1) {
+        if (rank == 1) {
           out = zeros({Tin.shape()[0], Tin.shape()[0]}, Tin.dtype(), Tin.device());
           cytnx::linalg_internal::lii.Diag_ii[out.dtype()](
             out._impl->storage()._impl, Tin._impl->storage()._impl, Tin.shape()[0], 0);
@@ -31,7 +32,7 @@ namespace cytnx {
   #ifdef UNI_GPU
         // cytnx_error_msg(Tin.shape().size() != 1,
         //                 "[ERROR] the input tensor should be a rank-1 Tensor.%s", "\n");
-        if (Tin.shape().size() == 1) {
+        if (rank == 1) {
           out = zeros({Tin.shape()[0], Tin.shape()[0]}, Tin.dtype(), Tin.device());
           checkCudaErrors(cudaSetDevice(out.device()));
           cytnx::linalg_internal::lii.cuDiag_ii[out.dtype()](

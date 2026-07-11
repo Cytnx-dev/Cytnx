@@ -21,14 +21,37 @@ using pybind_cytnx::dispatch_pyint;
 #ifdef BACKEND_TORCH
 #else
 
+namespace {
+  bool is_empty_tuple(py::handle object) {
+    return py::isinstance<py::tuple>(object) &&
+           py::reinterpret_borrow<py::tuple>(object).size() == 0;
+  }
+
+  void check_tuple_rank(py::tuple args, cytnx::cytnx_uint64 rank, const char *type_name) {
+    const auto index_count = static_cast<cytnx::cytnx_uint64>(args.size());
+    cytnx_error_msg(index_count > rank,
+                    "[ERROR] too many indices for %s: got %llu indices for rank-%llu object.%s",
+                    type_name, static_cast<unsigned long long>(index_count),
+                    static_cast<unsigned long long>(rank), "\n");
+  }
+}  // namespace
+
 template <class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc) {
-  cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s", "\n");
+  cytnx_error_msg(self.dtype() == cytnx::Type.Void,
+                  "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+  if (self.rank() == 0) {
+    cytnx_error_msg(!is_empty_tuple(locators),
+                    "[ERROR] rank-0 Tensor can only be indexed with ().%s", "\n");
+    self.set(std::vector<cytnx::Accessor>{}, rc);
+    return;
+  }
 
   ssize_t start, stop, step, slicelength;
   std::vector<cytnx::Accessor> accessors;
   if (py::isinstance<py::tuple>(locators)) {
     py::tuple Args = locators.cast<py::tuple>();
+    check_tuple_rank(Args, self.rank(), "Tensor");
     cytnx::cytnx_uint64 cnt = 0;
     // mixing of slice and ints
     for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
@@ -99,7 +122,7 @@ void tensor_binding(py::module &m) {
         std::vector<ssize_t> stride(tmpIN.shape().size());
         std::vector<ssize_t> shape(tmpIN.shape().begin(), tmpIN.shape().end());
         ssize_t accu = 1;
-        for (int i = shape.size() - 1; i >= 0; i--) {
+        for (auto i = shape.size(); i-- > 0;) {
           stride[i] = accu * cytnx::Type.typeSize(tmpIN.dtype());
           accu *= shape[i];
         }
@@ -121,6 +144,10 @@ void tensor_binding(py::module &m) {
           chr_dtype = py::format_descriptor<cytnx::cytnx_uint32>::format();
         } else if (tmpIN.dtype() == cytnx::Type.Int32) {
           chr_dtype = py::format_descriptor<cytnx::cytnx_int32>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Uint16) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_uint16>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Int16) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_int16>::format();
         } else if (tmpIN.dtype() == cytnx::Type.Bool) {
           chr_dtype = py::format_descriptor<cytnx::cytnx_bool>::format();
         } else {
@@ -147,10 +174,15 @@ void tensor_binding(py::module &m) {
     .def(py::init<>())
     .def(py::init<const cytnx::Tensor &>())
     .def(
-      py::init<const std::vector<cytnx::cytnx_uint64> &, const unsigned int &, int, const bool &>(),
+      py::init<const std::vector<cytnx::cytnx_uint64> &, unsigned int, int, bool>(),
       py::arg("shape"), py::arg("dtype") = (cytnx::cytnx_uint64)cytnx::Type.Double,
       py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
-    .def("Init", &cytnx::Tensor::Init, py::arg("shape"),
+    .def("Init",
+         [](cytnx::Tensor &self, const std::vector<cytnx::cytnx_uint64> &shape,
+            unsigned int dtype, int device, bool init_zero) {
+           self.Init(shape, dtype, device, init_zero);
+         },
+         py::arg("shape"),
          py::arg("dtype") = (cytnx::cytnx_uint64)cytnx::Type.Double,
          py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("dtype", &cytnx::Tensor::dtype)
@@ -159,6 +191,10 @@ void tensor_binding(py::module &m) {
     .def("device_str", &cytnx::Tensor::device_str)
     .def("shape", &cytnx::Tensor::shape)
     .def("rank", &cytnx::Tensor::rank)
+    .def("size", &cytnx::Tensor::size)
+    .def("is_void", &cytnx::Tensor::is_void)
+    .def("is_scalar", &cytnx::Tensor::is_scalar)
+    .def("is_empty", &cytnx::Tensor::is_empty)
     .def("clone", &cytnx::Tensor::clone)
     .def("__copy__", &cytnx::Tensor::clone)
     .def("__deepcopy__", &cytnx::Tensor::clone)
@@ -315,20 +351,25 @@ void tensor_binding(py::module &m) {
          [](const cytnx::Tensor &self) {
            if (self.dtype() == cytnx::Type.Void) {
              cytnx_error_msg(true, "[ERROR] uninitialize Tensor does not have len!%s", "\n");
-
-           } else {
-             return self.shape()[0];
            }
+           cytnx_error_msg(self.rank() == 0, "[ERROR] rank-0 Tensor does not have len!%s", "\n");
+           return self.shape()[0];
          })
     .def("__getitem__",
          [](const cytnx::Tensor &self, py::object locators) {
-           cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to getitem from a empty Tensor%s",
-                           "\n");
+           cytnx_error_msg(self.dtype() == cytnx::Type.Void,
+                           "[ERROR] try to getitem from an uninitialized Tensor%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 Tensor can only be indexed with ().%s", "\n");
+             return self.get({});
+           }
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
+             check_tuple_rank(Args, self.rank(), "Tensor");
              cytnx::cytnx_uint64 cnt = 0;
              // mixing of slice and ints
              for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
@@ -353,7 +394,6 @@ void tensor_binding(py::module &m) {
              if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
                throw py::error_already_set();
              // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-             std::cout << start << " " << stop << " " << step << std::endl;
              accessors.push_back(cytnx::Accessor::range(start, stop, step));
              for (cytnx::cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
                accessors.push_back(cytnx::Accessor::all());
@@ -374,13 +414,20 @@ void tensor_binding(py::module &m) {
 
     .def("__setitem__",
          [](cytnx::Tensor &self, py::object locators, const cytnx::Tensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s",
-                           "\n");
+           cytnx_error_msg(self.dtype() == cytnx::Type.Void,
+                           "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 Tensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<cytnx::Accessor>{}, rhs);
+             return;
+           }
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
+             check_tuple_rank(Args, self.rank(), "Tensor");
              cytnx::cytnx_uint64 cnt = 0;
              // mixing of slice and ints
              for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {

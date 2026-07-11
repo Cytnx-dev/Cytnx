@@ -27,7 +27,7 @@ namespace cytnx {
       Tensor L = Tl.astype(out_dtype);
       Tensor R = Tr.astype(out_dtype);
       Tensor out;
-      out.Init({1}, out_dtype, Tl.device());
+      out.Init({}, out_dtype, Tl.device());
 
       if (out.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Vd_ii[out.dtype()](

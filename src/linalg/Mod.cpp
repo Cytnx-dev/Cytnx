@@ -5,29 +5,34 @@
 
 #ifdef BACKEND_TORCH
 #else
+  #include "Arithmetic_shape.hpp"
   #include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
     Tensor Mod(const Tensor &Lt, const Tensor &Rt) {
+      detail::check_binary_tensor_inputs(Lt, Rt, "Mod");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Mod] The two tensors cannot be on different devices.%s", "\n");
+      if ((Lt.is_scalar() || Rt.is_scalar()) && Lt.device() != Device.cpu) {
+        return Mod(Lt.to(Device.cpu), Rt.to(Device.cpu)).to(Lt.device());
+      }
 
       Tensor out;
       bool icnst = false;
       // The Mod kernels assign every output element (_out[i] = ...), so out is
       // fully overwritten -- pass false to skip the redundant zero-initialization.
-      if (Lt.shape().size() == 1 && Lt.shape()[0] == 1) {
-        out.Init(Rt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
-        icnst = true;
-      } else if (Rt.shape().size() == 1 && Rt.shape()[0] == 1) {
-        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
+      if (detail::init_broadcast_binary_output(out, Lt, Rt,
+                                               Type.type_promote(Lt.dtype(), Rt.dtype()), false)) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[Mod] The two tensors do not have the same shape.%s", "\n");
         out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device(), false);
       }
+
+      const Tensor left = detail::host_singleton_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_singleton_for_gpu_broadcast(Rt, Lt.device());
 
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section
@@ -39,17 +44,17 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::ModInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
           cytnx::linalg_internal::cuMod_dispatch(
-            out._impl->storage()._impl, Lt._impl->storage()._impl, Rt._impl->storage()._impl,
+            out._impl->storage()._impl, left._impl->storage()._impl, right._impl->storage()._impl,
             out._impl->storage()._impl->size(), {}, {}, {});
   #else
           cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -66,13 +71,13 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::ModInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, Lt._impl->storage()._impl->size(), Lt._impl->shape(),
-                    Lt._impl->invmapper(), Rt._impl->invmapper());
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, left._impl->storage()._impl->size(),
+                    left._impl->shape(), left._impl->invmapper(), right._impl->invmapper());
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           cytnx_error_msg(true,
@@ -91,6 +96,7 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Mod<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.ComplexDouble);
       Cnst.at<cytnx_complex128>(0) = lc;
 
@@ -124,6 +130,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_complex64>(const cytnx_complex64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.ComplexFloat);
       Cnst.at<cytnx_complex64>(0) = lc;
 
@@ -160,6 +167,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_double>(const cytnx_double &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Double);
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
@@ -193,6 +201,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_float>(const cytnx_float &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Float);
       Cnst.at<cytnx_float>(0) = lc;
       Tensor out;
@@ -227,6 +236,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_int64>(const cytnx_int64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Int64);
       Cnst.at<cytnx_int64>(0) = lc;
       Tensor out;
@@ -260,6 +270,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_uint64>(const cytnx_uint64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Uint64);
       Cnst.at<cytnx_uint64>(0) = lc;
       Tensor out;
@@ -294,6 +305,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_int32>(const cytnx_int32 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Int32);
       Cnst.at<cytnx_int32>(0) = lc;
       Tensor out;
@@ -328,6 +340,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Uint32);
       Cnst.at<cytnx_uint32>(0) = lc;
       Tensor out;
@@ -362,6 +375,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Int16);
       Cnst.at<cytnx_int16>(0) = lc;
       Tensor out;
@@ -396,6 +410,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Uint16);
       Cnst.at<cytnx_uint16>(0) = lc;
       Tensor out;
@@ -430,6 +445,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, Type.Bool);
       Cnst.at<cytnx_bool>(0) = lc;
       Tensor out;
@@ -464,6 +480,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<Scalar>(const Scalar &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Mod");
       Storage Cnst(1, lc.dtype());
       Cnst.set_item(0, lc);
 
@@ -505,6 +522,7 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Mod<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.ComplexDouble);
       Cnst.at<cytnx_complex128>(0) = rc;
       Tensor out;
@@ -537,6 +555,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_complex64>(const Tensor &Lt, const cytnx_complex64 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.ComplexFloat);
       Cnst.at<cytnx_complex64>(0) = rc;
       Tensor out;
@@ -571,6 +590,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_double>(const Tensor &Lt, const cytnx_double &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Double);
       Cnst.at<cytnx_double>(0) = rc;
 
@@ -605,6 +625,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_float>(const Tensor &Lt, const cytnx_float &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Float);
       Cnst.at<cytnx_float>(0) = rc;
       Tensor out;
@@ -638,6 +659,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_int64>(const Tensor &Lt, const cytnx_int64 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Int64);
       Cnst.at<cytnx_int64>(0) = rc;
       Tensor out;
@@ -671,6 +693,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_uint64>(const Tensor &Lt, const cytnx_uint64 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Uint64);
       Cnst.at<cytnx_uint64>(0) = rc;
       Tensor out;
@@ -704,6 +727,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_int32>(const Tensor &Lt, const cytnx_int32 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Int32);
       Cnst.at<cytnx_int32>(0) = rc;
       Tensor out;
@@ -737,6 +761,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_uint32>(const Tensor &Lt, const cytnx_uint32 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Uint32);
       Cnst.at<cytnx_uint32>(0) = rc;
       Tensor out;
@@ -771,6 +796,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<cytnx_int16>(const Tensor &Lt, const cytnx_int16 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Int16);
       Cnst.at<cytnx_int16>(0) = rc;
       Tensor out;
@@ -804,6 +830,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Uint16);
       Cnst.at<cytnx_uint16>(0) = rc;
       Tensor out;
@@ -837,6 +864,7 @@ namespace cytnx {
     }
     template <>
     Tensor Mod<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, Type.Bool);
       Cnst.at<cytnx_bool>(0) = rc;
       Tensor out;
@@ -871,6 +899,7 @@ namespace cytnx {
 
     template <>
     Tensor Mod<Scalar>(const Tensor &Lt, const Scalar &rc) {
+      detail::check_tensor_initialized(Lt, "Mod");
       Storage Cnst(1, rc.dtype());
       Cnst.set_item(0, rc);
 

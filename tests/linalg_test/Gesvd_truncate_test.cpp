@@ -335,8 +335,8 @@ namespace GesvdTruncateTest {
   }
 
   /*=====test info=====
-  describe:When keepdim >= #singular values and err=0, nothing is truncated; the returned error
-  tensor must be a 1-element zero.
+  describe:When keepdim >= #singular values and err=0, nothing is truncated; return_err=1 returns
+  a scalar zero while return_err>1 returns an empty vector.
   ====================*/
   TEST(Gesvd_truncate, no_truncation_returns_zero_error) {
     Tensor T = Tensor({6, 5}, Type.Double);
@@ -348,8 +348,13 @@ namespace GesvdTruncateTest {
       ASSERT_EQ(out.size(), 4u) << "[S, U, vT, terr], return_err=" << return_err;
       EXPECT_EQ(out[0].shape()[0], full);
       Tensor terr = out.back();
-      EXPECT_EQ(terr.shape(), std::vector<cytnx_uint64>({1}));
-      EXPECT_DOUBLE_EQ(terr.storage().at<double>(0), 0.0) << "return_err=" << return_err;
+      if (return_err == 1) {
+        EXPECT_TRUE(terr.is_scalar());
+        EXPECT_DOUBLE_EQ(terr.storage().at<double>(0), 0.0) << "return_err=" << return_err;
+      } else {
+        EXPECT_EQ(terr.shape(), std::vector<cytnx_uint64>({0}));
+        EXPECT_TRUE(terr.is_empty()) << "return_err=" << return_err;
+      }
     }
   }
 
@@ -381,11 +386,11 @@ namespace GesvdTruncateTest {
       max_abs = std::max(max_abs, std::abs(terr_all.storage().at<double>(i)));
     EXPECT_GT(max_abs, 0.0) << "terr values are all zero (previous bug)";
 
-    // return_err = 1: terr is a single element = largest dropped singular value
+    // return_err = 1: terr is a scalar = largest dropped singular value
     std::vector<UniTensor> gsvds_max =
       linalg::Gesvd_truncate(src_T, keepdim, min_blockdim, 0., true, true, 1, 1);
     Tensor terr_max = gsvds_max.back().get_block_();
-    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>({1}));
+    ASSERT_TRUE(terr_max.is_scalar());
     EXPECT_NEAR(std::abs(terr_max.storage().at<double>(0)), max_abs, 1e-10 * (1.0 + max_abs));
   }
 
