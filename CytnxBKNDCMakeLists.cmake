@@ -185,6 +185,12 @@ if(USE_CUDA)
       target_include_directories(cytnx PRIVATE "${_cytnx_cccl_dir}")
       message(STATUS "Detected CCCL headers at: ${_cytnx_cccl_dir}")
     endif()
+    # Expose the detected CCCL dir so host-compiled consumers that include a
+    # public cytnx header pulling <cuda/std/complex> (e.g. gpu_test_main, whose
+    # .cpp TUs include Type.hpp) can add the same include path. cytnx adds it
+    # PRIVATE above, so it does not propagate through target_link_libraries.
+    set(CYTNX_CCCL_INCLUDE_DIR "${_cytnx_cccl_dir}" CACHE INTERNAL
+        "CCCL (libcu++) include dir for host-compiled consumers of cytnx public headers")
 
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
     target_link_libraries(cytnx PUBLIC CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)

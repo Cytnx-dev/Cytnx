@@ -1,0 +1,85 @@
+name: GPU Tests
+
+# Builds Cytnx with CUDA (cuTENSOR + cuQuantum) and runs the gpu_test_main
+# gtest suite on the self-hosted GPU runner. This is a *native* build: the
+# runner already provides the CUDA toolkit, cuTENSOR, cuQuantum, OpenBLAS and
+# gtest system-wide, so unlike a GitHub-hosted runner there is no conda/PyPI
+# toolchain install step.
+#
+# Runs on manual dispatch and on same-repo pull requests. Fork pull requests
+# are NOT executed on the self-hosted runner: on a public repo that would let a
+# fork run arbitrary code on our hardware. The job-level `if` enforces this.
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+
+concurrency:
+  group: gpu-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    # Manual runs always; PRs only when the head branch is in this repo (not a
+    # fork). Never let fork PR code run on the self-hosted GPU runner.
+    if: >-
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+    # Matches the self-hosted runner's labels (see `gh api .../actions/runners`).
+    runs-on: [self-hosted, linux, x64, cuda, gpu]
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash -eo pipefail {0}
+    env:
+      # cuTENSOR / cuQuantum install roots on the runner. Kept as repository
+      # Actions variables so this file carries no machine-specific paths; the
+      # FindCUTENSOR / FindCUQUANTUM modules require both to be set.
+      CUTENSOR_ROOT: ${{ vars.CUTENSOR_ROOT }}
+      CUQUANTUM_ROOT: ${{ vars.CUQUANTUM_ROOT }}
+      # The runner's GPU is an RTX 4070 Ti SUPER (Ada, sm_89). CUDA 13 dropped
+      # sm_70, so the repo-default fatbin can't be used as-is; pin per runner.
+      GPU_CUDA_ARCH: ${{ vars.GPU_CUDA_ARCH || '89' }}
+      BUILD_DIR: ${{ github.workspace }}/build_gpu
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      # When re-running a PR job, GitHub Actions reuses the merge commit from the
+      # original run. Re-merge the current base so we always test against its tip.
+      - name: Merge with latest target branch (pull_request only)
+        if: github.event_name == 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+          git submodule update --init --recursive
+
+      - name: Put CUDA toolkit on PATH
+        run: echo "/usr/local/cuda/bin" >> "$GITHUB_PATH"
+
+      - name: GPU and toolkit info
+        run: |
+          nvidia-smi
+          nvcc --version
+
+      - name: Configure (CUDA Release, C++ tests, no Python)
+        run: >-
+          cmake -S . -B "$BUILD_DIR"
+          -DCMAKE_BUILD_TYPE=Release
+          -DUSE_CUDA=ON -DUSE_CUTENSOR=ON -DUSE_CUQUANTUM=ON
+          -DRUN_TESTS=ON -DBUILD_PYTHON=OFF
+          -DCMAKE_CUDA_ARCHITECTURES="$GPU_CUDA_ARCH"
+
+      - name: Build gpu_test_main
+        run: cmake --build "$BUILD_DIR" -j "$(nproc)" --target gpu_test_main
+
+      # `-L gpu` selects only the tests tagged with the `gpu` label added in
+      # tests/gpu/CMakeLists.txt (the CPU suite is already covered by
+      # ci-cmake_tests.yml, so there is no need to re-run it here).
+      - name: Run GPU test suite
+        run: GTEST_COLOR=1 ctest --test-dir "$BUILD_DIR" -L gpu --output-on-failure
