@@ -56,6 +56,15 @@ pip install --editable '.[dev]' --config-settings=build-dir=build \
 pytest pytests/ --doctest-modules
 ```
 
+Two agent skills carry the day-to-day mechanics; invoke them instead of
+re-deriving commands:
+
+- **`build-test-workflow`** — incremental builds, running ctest/pytest without
+  rebuilding, per-suite `--gtest_filter` iteration, standalone harnesses
+  against `libcytnx.a`.
+- **`cross-revision-benchmark`** — fair before/after performance comparisons
+  across git revisions.
+
 ## Format — must match CI exactly
 
 - clang-format is **pinned to v14** (`.clang-format`: Google base, column 100,
