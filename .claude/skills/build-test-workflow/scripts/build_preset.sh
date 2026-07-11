@@ -85,7 +85,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+# git, not a BASH_SOURCE-relative path count: makes this resolve correctly
+# even when the script has been copied elsewhere (e.g. cross-revision-benchmark
+# copies it out before checking out revisions that predate its own existence
+# in the tree), as long as the caller's cwd is inside the target repo.
+repo_root="$(git rev-parse --show-toplevel)"
 cd "${repo_root}"
 
 build_dir="build/${preset}"
