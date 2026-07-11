@@ -17,7 +17,13 @@ namespace cytnx {
     Tensor Rand_isometry(const Tensor &Tin, const cytnx_uint64 &keepdim,
                          const cytnx_uint64 &power_iteration, const unsigned int &seed) {
       std::vector<cytnx_uint64> shape = Tin.shape();
+      cytnx_error_msg(shape.size() != 2, "[Rand_isometry] can only operate on a rank-2 Tensor.%s",
+                      "\n");
       cytnx_int64 truncdim = std::min({keepdim, shape[0], shape[1]});
+      if (Tin.is_empty()) {
+        const unsigned int dtype = Tin.dtype() > Type.Float ? Type.Double : Tin.dtype();
+        return zeros({shape[0], static_cast<cytnx_uint64>(truncdim)}, dtype, Tin.device());
+      }
       shape[0] = shape[1];
       shape[1] = truncdim;
       Tensor randmat = random::normal(shape[0] * shape[1], 0., 1., Tin.device(), seed, Tin.dtype());

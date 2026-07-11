@@ -18,6 +18,8 @@ namespace cytnx {
         out = Tin.clone();
       }
 
+      if (out.is_empty()) return out;
+
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Inv_inplace_ii[out.dtype()](
           out._impl->storage()._impl, out._impl->storage()._impl->size(), clip);

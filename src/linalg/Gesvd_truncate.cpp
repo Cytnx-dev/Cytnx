@@ -35,6 +35,16 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Gesvd_truncate] can only operate on rank-2 Tensor.%s", "\n");
 
+      if (Tin.is_empty()) {
+        std::vector<Tensor> out = Gesvd(Tin, is_U, is_vT);
+        if (return_err == 1) {
+          out.push_back(zeros({}, out[0].dtype(), out[0].device()));
+        } else if (return_err) {
+          out.push_back(zeros({0}, out[0].dtype(), out[0].device()));
+        }
+        return out;
+      }
+
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> outT = Gesvd(Tin, is_U, is_vT);
 

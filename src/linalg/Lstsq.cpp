@@ -15,6 +15,10 @@ namespace cytnx {
 
       cytnx_error_msg(A.device() != b.device(),
                       "[Lsq] error, A and b should be on the same device!%s", "\n");
+      cytnx_error_msg(A.shape()[0] != b.shape()[0],
+                      "[Lsq] error, A and b must have the same number of rows.%s", "\n");
+      cytnx_error_msg(A.is_empty() || b.is_empty(),
+                      "[Lsq] error, Lstsq does not support zero-extent inputs.%s", "\n");
 
       cytnx_uint64 m = A.shape()[0];
       cytnx_uint64 n = A.shape()[1];

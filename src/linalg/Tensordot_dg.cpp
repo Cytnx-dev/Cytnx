@@ -94,10 +94,16 @@ namespace cytnx {
 
       // calculate output shape:
       std::vector<cytnx_int64> new_shape(non_contract_l.size() + non_contract_r.size());
-      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
+      cytnx_int64 left_dim = 1;
+      cytnx_int64 right_dim = 1;
+      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++) {
         new_shape[i] = Tlshape[non_contract_l[i]];
-      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
+        left_dim *= new_shape[i];
+      }
+      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++) {
         new_shape[non_contract_l.size() + i] = Trshape[non_contract_r[i]];
+        right_dim *= new_shape[non_contract_l.size() + i];
+      }
 
       // permute!
       Tensor tmpL, tmpR, out, tmpout;
@@ -106,26 +112,27 @@ namespace cytnx {
         // Both bonds of Diag will be contracted.
         if (idxl.size() == 2) {
           tmpL = Tl;
-          tmpR = Tr.permute(mapperR).reshape({static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
+          const cytnx_int64 diag_dim = Tlshape[idxl[1]];
+          tmpR = Tr.permute(mapperR).reshape({diag_dim, diag_dim * right_dim});
           tmpout = Matmul_dg(tmpL, tmpR);
           tmpout.reshape_({static_cast<cytnx_int64>(Tlshape[idxl[0]]),
-                           static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
+                           static_cast<cytnx_int64>(Tlshape[idxl[1]]), right_dim});
           out = Trace(tmpout, 0, 1);
         } else {
           tmpL = Tl;
-          tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
+          tmpR = Tr.permute(mapperR).reshape({comm_dim, right_dim});
           out = Matmul_dg(tmpL, tmpR);
         }
       } else {
         if (idxr.size() == 2) {
-          tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
+          tmpL = Tl.permute(mapperL).reshape({left_dim, comm_dim});
           tmpR = Tr;
           tmpout = Matmul_dg(tmpL, tmpR);
-          tmpout.reshape_({-1, static_cast<cytnx_int64>(Tlshape[idxl[1]]),
+          tmpout.reshape_({left_dim, static_cast<cytnx_int64>(Tlshape[idxl[1]]),
                            static_cast<cytnx_int64>(Tlshape[idxl[0]])});
           out = Trace(tmpout, 1, 2);
         } else {
-          tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
+          tmpL = Tl.permute(mapperL).reshape({left_dim, comm_dim});
           tmpR = Tr;
           out = Matmul_dg(tmpL, tmpR);
         }

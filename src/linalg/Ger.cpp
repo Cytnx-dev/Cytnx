@@ -33,6 +33,7 @@ namespace cytnx {
       Tensor py = y.astype(fin_dtype);
 
       Tensor out = zeros({x.shape()[0], y.shape()[0]}, fin_dtype, x.device());
+      if (out.is_empty()) return out;
 
       if (x.device() == Device.cpu) {
         linalg_internal::lii.ger_ii[fin_dtype](out.storage()._impl, px.storage()._impl,

@@ -1,6 +1,7 @@
 #include "linalg.hpp"
 
 #include <iostream>
+#include "Generator.hpp"
 #include "Tensor.hpp"
 
 #ifdef BACKEND_TORCH
@@ -25,6 +26,10 @@ namespace cytnx {
         out.Init({}, Type.Double, Device.cpu);  // scalar, so on cpu always!
       } else {
         out.Init({}, _tl.dtype(), Device.cpu);  // scalar, so on cpu always!
+      }
+
+      if (Tl.is_empty()) {
+        return ones({}, out.dtype(), Device.cpu);
       }
 
       if (Tl.device() == Device.cpu) {

@@ -8,6 +8,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Abs(const Tensor &Tin) {
+      cytnx_error_msg(Tin.is_void(), "[Abs] cannot operate on an uninitialized Tensor.%s", "\n");
       Tensor out;
 
       // if the type is unsigned, clone and return.
@@ -23,6 +24,8 @@ namespace cytnx {
         out.storage() = Storage(Tin.storage().size(), Type.Float, Tin.device());
       else
         out.storage() = Storage(Tin.storage().size(), Tin.dtype(), Tin.device());
+
+      if (out.is_empty()) return out;
 
       if (Tin.device() == Device.cpu) {
         std::visit(
