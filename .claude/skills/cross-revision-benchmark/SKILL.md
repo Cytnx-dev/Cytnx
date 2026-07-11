@@ -19,10 +19,15 @@ Performance claims are settled by measurement (never plausibility), and a
 measurement is only meaningful when every column ran under identical
 conditions. This skill is the procedure for benchmarking the *same* code path
 at several git revisions on one machine, in one session, building and running
-through `build-test-workflow`'s script:
+through `build-test-workflow`'s script — copied to a stable path first, since
+step 1 below checks out the whole tree including `.claude/`, and any revision
+that predates this script's own existence (or lived at a different path)
+would otherwise make `"$S"` disappear out from under the loop:
 
 ```sh
-S=.claude/skills/build-test-workflow/scripts/build_preset.sh
+S="$(mktemp)"
+cp .claude/skills/build-test-workflow/scripts/build_preset.sh "$S"
+chmod +x "$S"
 ```
 
 Only benchmark a **committed** Google Benchmark file (`benchmarks/*.cpp`,
@@ -31,7 +36,10 @@ function under comparison, add one first — do not write comparison code in a
 scratch harness; a fixed, versioned benchmark source is what makes a fair
 cross-revision comparison possible at all. Use a **release** preset
 (`openblas-cpu` or similar) for every column — a debug/ASan build's timings
-are not representative.
+are not representative. Prefer a build dir this skill hasn't shared with a
+`--target test_main`/`pycytnx` build: `"$S" <preset> --target benchmarks_main`
+never forces `RUN_TESTS` on or off, so a dir already built with `RUN_TESTS=ON`
+stays coverage-instrumented for benchmarking too, which also skews timings.
 
 ## Which of two cases applies
 
@@ -102,7 +110,8 @@ For each revision, in order:
    absence).
 
 When every column is recorded, return to where you started: `git checkout
-<original-branch>` and `git stash pop` if step 0 created a stash.
+<original-branch>` and `git stash pop` if step 0 created a stash, then
+`rm "$S"` to clean up the stable copy.
 
 ## Reporting rules
 
