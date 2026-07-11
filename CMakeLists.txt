@@ -299,6 +299,12 @@ add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 
+# The public headers require C++20 (std::format, std::source_location, and the
+# CytnxType concept in Type.hpp). Export that requirement through the installed/
+# exported target so find_package(cytnx) consumers compile the headers in C++20
+# mode -- the build-level CMAKE_CXX_STANDARD does not propagate to consumers.
+target_compile_features(cytnx PUBLIC cxx_std_20)
+
 target_include_directories(cytnx
   PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src

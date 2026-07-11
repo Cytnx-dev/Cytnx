@@ -46,13 +46,23 @@ namespace cytnx {
     }
     virtual ~Storage_base();
 
-    template <class T>
+    // at/back/data are supported only for element types that have a cytnx dtype (CytnxType).
+    // The unconstrained primary is deleted, so requesting an unsupported T is a compile-time
+    // error at the call site rather than a link error or runtime surprise. The GPU cuComplex /
+    // cuda::std::complex pointer views are provided as explicit specializations in the .cpp.
+    template <typename T>
+    T &at(const cytnx_uint64 &idx) const = delete;
+    template <CytnxType T>
     T &at(const cytnx_uint64 &idx) const;
 
-    template <class T>
+    template <typename T>
+    T &back() const = delete;
+    template <CytnxType T>
     T &back() const;
 
-    template <class T>
+    template <typename T>
+    T *data() const = delete;
+    template <CytnxType T>
     T *data() const;
 
     // `Storage_base` can be instanitiated directly. It's deconstructor calls `data()`, so we cannot
@@ -433,7 +443,22 @@ namespace cytnx {
     }
   };
   extern Storage_init_interface __SII;
-  ///@endcond;
+    ///@endcond;
+
+  #ifdef UNI_GPU
+  // Explicit specialization declarations for the GPU complex pointer views, so they are visible
+  // (and reachable via Storage::data<T>()) from any TU, not only Storage_base.cpp where they are
+  // defined. They specialize the deleted primary -- the cu* types are not cytnx dtypes: the
+  // cuComplex ABI types for CUDA library calls, and cuda::std::complex<...> for kernel code.
+  template <>
+  cuDoubleComplex *Storage_base::data<cuDoubleComplex>() const;
+  template <>
+  cuFloatComplex *Storage_base::data<cuFloatComplex>() const;
+  template <>
+  cytnx_cuda_complex128 *Storage_base::data<cytnx_cuda_complex128>() const;
+  template <>
+  cytnx_cuda_complex64 *Storage_base::data<cytnx_cuda_complex64>() const;
+  #endif
 
   ///@brief an memeory storage with multi-type/multi-device support
   class Storage {
@@ -662,7 +687,7 @@ namespace cytnx {
     }
 
     ///@cond
-    template <class T>  // this is c++ only
+    template <CytnxType T>  // this is c++ only
     T &at(const cytnx_uint64 &idx) const {
       return this->_impl->at<T>(idx);
     }
@@ -676,7 +701,7 @@ namespace cytnx {
       return out;
     }
 
-    template <class T>  // this is c++ only
+    template <CytnxType T>  // this is c++ only
     T &back() const {
       return this->_impl->back<T>();
     }
@@ -690,7 +715,9 @@ namespace cytnx {
       return out;
     }
 
-    template <class T>  // this is c++ only
+    // Constrained to StorageDataType: the cytnx dtypes plus the GPU cuComplex / cuda::std::complex
+    // pointer views (whose Storage_base specializations are declared above, so they resolve here).
+    template <StorageDataType T>  // this is c++ only
     T *data() const {
       return this->_impl->data<T>();
     }
