@@ -66,7 +66,7 @@ Focus reviews on what actually bites this codebase:
 - **GPU kernel correctness** — in-place `cuMul`/`cuDiv` non-contiguous gaps
   (#988), contiguity assumptions, and out-of-bounds writes on a narrow LHS.
 - **Rank/scalar/void correctness** — missing rank checks before `shape()[n]` or
-  `bonds()[n]`, treating shape `{1}` as rank-0 scalar, or using direct storage
+  `bonds()[n]`, treating shape `{1}` as a rank-0 scalar, or using direct storage
   access where `item()`, `is_scalar()`, or `is_void()` is the intended API.
 - **Symmetric `UniTensor` semantics** — raw `ut.at(...)` coefficient access should
   not be treated as producing a tensor-network scalar, and single-element
