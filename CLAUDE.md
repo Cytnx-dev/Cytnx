@@ -171,7 +171,7 @@ Green locally before opening a PR. CI enforces:
   `{}` and one element. For plain dense `Tensor`, a single-element tensor may be
   convertible to a scalar as a convenience. For `UniTensor`, scalar semantics
   should mean rank 0; do not treat storage size 1 or all extents equal to 1 as
-  scalar because bonds, labels, quantum numbers, directions, and symmetry
+  a scalar because bonds, labels, quantum numbers, directions, and symmetry
   conventions are part of the object.
 - **Symmetric `UniTensor` element access is coefficient access.** `ut.at(...)`
   exposes a raw stored coefficient in a chosen basis/sector. It is not generally
