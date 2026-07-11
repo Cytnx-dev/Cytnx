@@ -8,6 +8,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "block_truncation_helpers.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -737,6 +738,7 @@ namespace cytnx {
           smidx++;
           Smin = Sall.storage()(smidx);
         }
+        smidx = CountDroppedSingularValues(Sall, smidx, Smin);
 
         // traversal each block and truncate!
         UniTensor &S = outCyT[0];
@@ -854,11 +856,8 @@ namespace cytnx {
         }
 
         // handle return_err!
-        if (return_err == 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-          outCyT.back().get_block_().storage().at(0) = Smin;
-        } else if (return_err) {
-          outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+        if (return_err) {
+          outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
         }
       }  // Rsvd_Block_UT_internal no minblockdim
 
@@ -927,9 +926,8 @@ namespace cytnx {
           }
         }
         if (!anySall) {
-          // no truncation; return_err is tensor with one element, set to 0
           if (return_err >= 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+            outCyT.push_back(BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err));
           }
         } else {
           Scalar Smin;
@@ -959,21 +957,22 @@ namespace cytnx {
               smidx++;
               Smin = Sall.storage()(smidx);
             }
+            if (keep_dim == 0) {
+              smidx = Sshape;
+            } else {
+              smidx = CountDroppedSingularValues(Sall, smidx, Smin);
+            }
             // handle return_err!
-            if (return_err == 1) {
-              outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-              outCyT.back().get_block_().storage().at(0) = Smin;
-            } else if (return_err) {
-              outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+            if (return_err) {
+              outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
             }
           } else {
             // keep_dim < 1: per-block min_blockdim guarantees already cover the global cap, so
             // every value in Sall is dropped.
-            if (return_err == 1) {
-              // largest dropped singular value
-              outCyT.push_back(UniTensor(linalg::Max(Sall)));
-            } else if (return_err) {
-              outCyT.push_back(UniTensor(Sall));
+            if (return_err) {
+              Sall = algo::Sort(Sall);  // ascending; BuildBlockDiscardedSingularValues expects this
+              outCyT.push_back(
+                BuildBlockDiscardedSingularValues(Sall, Sall.shape()[0], return_err));
             }
           }
 

@@ -578,16 +578,18 @@ namespace cytnx {
       const Tensor terr_d = out.back().astype(Type.Double).contiguous();
 
       if (!truncated) {
-        // no truncation -> return_err=1 is a scalar zero; return_err>1 preserves the legacy
-        // one-element zero tensor.
+        // No truncation -> return_err=1 is a scalar zero; return_err>1 would ideally be an empty
+        // vector, but Cytnx Tensor currently forbids zero-length dimensions.
         if (return_err == 1) {
           ASSERT_TRUE(out.back().is_scalar()) << prefix << "terr shape (no truncation)";
+          EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
+            << prefix << "terr value (no truncation)";
         } else {
           ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>{1})
             << prefix << "terr shape (no truncation)";
+          EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
+            << prefix << "terr value (no truncation)";
         }
-        EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
-          << prefix << "terr value (no truncation)";
         return;
       }
 

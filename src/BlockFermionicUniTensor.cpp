@@ -35,6 +35,28 @@ namespace cytnx {
       for (auto &sym : syms) sym._Load(f);
       return syms;
     }
+
+    void check_arithmetic_syms(const BlockFermionicUniTensor &lhs,
+                               const BlockFermionicUniTensor &rhs, const char *op_name) {
+      cytnx_error_msg(lhs.syms() != rhs.syms(),
+                      "[ERROR] Cannot %s two BlockFermionicUniTensor with different symmetries.%s",
+                      op_name, "\n");
+    }
+
+    boost::intrusive_ptr<BlockFermionicUniTensor> checked_block_fermionic_rhs(
+      const boost::intrusive_ptr<UniTensor_base> &rhs, const char *op_name) {
+      auto rtn = boost::dynamic_pointer_cast<BlockFermionicUniTensor>(rhs);
+      cytnx_error_msg(rtn == nullptr,
+                      "[ERROR] Cannot %s two UniTensor with different type/format.%s", op_name,
+                      "\n");
+      return rtn;
+    }
+
+    // TODO: Factor BlockFermionicUniTensor Add_/Sub_/Mul_/Div_ through one checked block lookup
+    // helper. The repeated loops below rotate through rhs blocks with modulo arithmetic and
+    // silently skip a lhs block if no matching _inner_to_outer_idx is found. Build a map from
+    // _inner_to_outer_idx to rhs block index instead, throw on missing matches, then apply the
+    // requested operation with the Fermionic sign-flip rule made explicit at the call site.
   }  // namespace
 
   typedef Accessor ac;
@@ -2369,21 +2391,12 @@ namespace cytnx {
   void BlockFermionicUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
     cytnx_int64 blockrhs;
-    // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockFermionicUniTensor> Rtn = checked_block_fermionic_rhs(rhs, "add");
 
-    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "add");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot add two BlockFermionicUniTensor with different bonds.%s", "\n");
 
     cytnx_error_msg(
       this->is_diag() != Rtn->is_diag(),
@@ -2406,22 +2419,15 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
-    // checking Type:
     cytnx_int64 blockrhs;
-    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockFermionicUniTensor> Rtn =
+      checked_block_fermionic_rhs(rhs, "multiply");
 
-    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "multiply");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot multiply two BlockFermionicUniTensor with different bonds.%s",
+                    "\n");
 
     cytnx_error_msg(
       this->is_diag() != Rtn->is_diag(),
@@ -2450,22 +2456,14 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     //[26 Sep 2025] This is a copy from Mul_ with *= replaced by /=
-    // checking Type:
     cytnx_int64 blockrhs;
-    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockFermionicUniTensor> Rtn = checked_block_fermionic_rhs(rhs, "divide");
 
-    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "divide");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot divide two BlockFermionicUniTensor with different bonds.%s",
+                    "\n");
 
     cytnx_error_msg(
       this->is_diag() != Rtn->is_diag(),
@@ -2496,21 +2494,14 @@ namespace cytnx {
   void BlockFermionicUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
     cytnx_int64 blockrhs;
-    // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockFermionicUniTensor> Rtn =
+      checked_block_fermionic_rhs(rhs, "subtract");
 
-    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "subtract");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot subtract two BlockFermionicUniTensor with different bonds.%s",
+                    "\n");
 
     cytnx_error_msg(
       this->is_diag() != Rtn->is_diag(),

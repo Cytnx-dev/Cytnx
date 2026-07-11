@@ -1111,6 +1111,44 @@ TEST_F(BlockUniTensorTest, Trace) {
   EXPECT_EQ(loaded_scalar.syms(), UT_diag.syms());
   EXPECT_DOUBLE_EQ(double(loaded_scalar.at({}).real()), double(ans));
 
+  UniTensor same_sym_sum = tmp.clone();
+  EXPECT_NO_THROW(same_sym_sum += loaded_scalar);
+  EXPECT_DOUBLE_EQ(double(same_sym_sum.at({}).real()), double(ans + ans));
+
+  Bond zn2_bond = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::Zn(2)});
+  UniTensor zn2_diag =
+    UniTensor({zn2_bond, zn2_bond.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  zn2_diag.get_block_(0).fill(1.0);
+  zn2_diag.get_block_(1).fill(2.0);
+  UniTensor zn2_scalar = zn2_diag.Trace("a", "b");
+  EXPECT_EQ(zn2_scalar.uten_type(), UTenType.Block);
+  EXPECT_EQ(zn2_scalar.rank(), 0);
+  EXPECT_NE(zn2_scalar.syms(), tmp.syms());
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp + zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp - zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp * zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp / zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+
   UniTensor scalar_contract;
   EXPECT_NO_THROW(scalar_contract = tmp.contract(loaded_scalar));
   EXPECT_EQ(scalar_contract.uten_type(), UTenType.Block);

@@ -86,6 +86,44 @@ TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata
   EXPECT_EQ(loaded_scalar.signflip(), std::vector<bool>({false}));
   EXPECT_DOUBLE_EQ(double(loaded_scalar.at({}).real()), -1.0);
 
+  UniTensor same_sym_sum = traced.clone();
+  EXPECT_NO_THROW(same_sym_sum += loaded_scalar);
+  EXPECT_DOUBLE_EQ(double(same_sym_sum.at({}).real()), -2.0);
+
+  Bond fnum_bond = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionNumber()});
+  UniTensor fnum =
+    UniTensor({fnum_bond, fnum_bond.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu);
+  fnum.at({0, 0}) = 2.0;
+  fnum.at({1, 1}) = 3.0;
+  UniTensor fnum_scalar = fnum.Trace("a", "b");
+  EXPECT_EQ(fnum_scalar.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(fnum_scalar.rank(), 0);
+  EXPECT_NE(fnum_scalar.syms(), traced.syms());
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced + fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced - fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced * fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced / fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+
   UniTensor scalar_contract;
   EXPECT_NO_THROW(scalar_contract = traced.contract(loaded_scalar));
   EXPECT_EQ(scalar_contract.uten_type(), UTenType.BlockFermionic);

@@ -27,21 +27,28 @@ namespace cytnx {
     // smidx     : number of dropped values (== 0 when nothing was dropped).
     // return_err: 1 → return largest dropped value; >1 → return all dropped values descending.
     //
+    inline UniTensor BuildNoDiscardedSingularValues(const unsigned int dtype,
+                                                    const unsigned int return_err) {
+      Tensor terr = return_err == 1 ? Tensor({}, dtype) : Tensor({1}, dtype);
+      terr.storage().at(0) = 0;
+      return UniTensor(terr);
+    }
+
     // When smidx == 0 (no truncation), return_err == 1 returns a scalar zero, while
-    // return_err > 1 preserves the legacy one-element zero tensor.
+    // return_err > 1 returns a one-element zero vector because Cytnx Tensor currently forbids
+    // zero-length dimensions.
     inline UniTensor BuildBlockDiscardedSingularValues(const Tensor &Sall, const cytnx_uint64 smidx,
                                                        const unsigned int return_err) {
-      Tensor terr = return_err == 1 ? Tensor({}, Sall.dtype()) : Tensor({1}, Sall.dtype());
-      terr.storage().at(0) = 0;
       if (smidx == 0) {
-        return UniTensor(terr);
+        return BuildNoDiscardedSingularValues(Sall.dtype(), return_err);
       }
       if (return_err == 1) {
+        Tensor terr({}, Sall.dtype());
         terr.storage().at(0) = Sall.storage()(smidx - 1);
         return UniTensor(terr);
       }
 
-      terr = Tensor({smidx}, Sall.dtype());
+      Tensor terr({smidx}, Sall.dtype());
       for (cytnx_uint64 i = 0; i < smidx; i++) {
         terr.storage().at(i) = Sall.storage()(smidx - 1 - i);
       }

@@ -61,6 +61,29 @@ namespace RsvdTest {
     CheckLowRankRectangularDenseUniTensorCase(src_T, src_Tt);
   }
 
+  /*=====test info=====
+  describe:When keepdim >= #singular values and err=0, nothing is truncated; return_err=1 returns
+  a scalar zero while return_err>1 returns a 1-element zero vector.
+  ====================*/
+  TEST(Rsvd, tensor_no_truncation_returns_zero_error) {
+    Tensor T = Tensor({6, 5}, Type.Double);
+    InitTensorUniform(T, 31);
+    const cytnx_uint64 full = 5;  // min(6, 5) singular values
+    const cytnx_uint64 summand = 0;
+    const double factor = 0.;
+    const cytnx_uint64 power_it = 2;
+    const unsigned int seed = 0;
+    std::vector<Tensor> full_ref = linalg::Gesvd(T, true, true);
+    for (int return_err : {1, 2}) {
+      std::vector<Tensor> out =
+        linalg::Rsvd(T, full, 0., true, true, return_err, 1, summand, factor, power_it, seed);
+      const std::string label = "return_err=" + std::to_string(return_err);
+      CheckTruncatedSvdResult(out, full_ref[0], full, true, true, return_err, 1e-8, label);
+      EXPECT_EQ(out[1].shape(), std::vector<cytnx_uint64>({6, full})) << label;
+      EXPECT_EQ(out[2].shape(), std::vector<cytnx_uint64>({full, 5})) << label;
+    }
+  }
+
   // /*=====test info=====
   // describe:Test Dense UniTensor.
   // input:

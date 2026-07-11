@@ -8,6 +8,7 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 #include "block_truncation_helpers.hpp"
+#include "Generator.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -58,9 +59,9 @@ namespace cytnx {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         if (return_err == 1) {
-          terr.Init({}, in.dtype(), in.device());
-        } else {
-          terr.Init({1}, in.dtype(), in.device());
+          terr = zeros({}, S.dtype(), in.device());
+        } else if (return_err) {
+          terr = zeros({1}, S.dtype(), in.device());
         }
 
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
@@ -76,9 +77,9 @@ namespace cytnx {
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
           if (return_err == 1) {
-            terr.Init({}, in.dtype(), in.device());
-          } else {
-            terr.Init({1}, in.dtype(), in.device());
+            terr = zeros({}, S.dtype(), in.device());
+          } else if (return_err) {
+            terr = zeros({1}, S.dtype(), in.device());
           }
           cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
                                                                     0., return_err, U, S, vT, terr);
@@ -476,9 +477,8 @@ namespace cytnx {
         }
       }
       if (!anySall) {
-        // no truncation; return_err is tensor with one element, set to 0
         if (return_err >= 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, outCyT[0].dtype())));
+          outCyT.push_back(BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err));
         }
       } else {
         Scalar Smin;
