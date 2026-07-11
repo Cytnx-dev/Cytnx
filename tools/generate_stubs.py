@@ -126,7 +126,12 @@ def find_installed_extension() -> Path | None:
         # regenerated stubs. Drop every "cytnx"/"cytnx.*" entry so nothing
         # from this rejected probe survives. (Skipped when accepted above:
         # the accepted extension is exactly what a later import should reuse,
-        # so its already-correct state must be left alone.)
+        # so its already-correct state must be left alone.) This only resets
+        # the import system, not pybind11's per-process type registrations;
+        # if the rejected extension registered pybind11 types under the same
+        # qualified names, a later staged import of a different .so can still
+        # raise "generic_type: type ... is already registered!" instead of
+        # silently producing wrong stubs.
         for name in [n for n in sys.modules if n == "cytnx" or n.startswith("cytnx.")]:
             del sys.modules[name]
 
