@@ -556,8 +556,8 @@ TEST_F(linalg_Test, Tensor_Norm) {
   EXPECT_EQ(linalg::Norm(arange3x3cd).item(), ans);
 }
 
-// norm() (#676): returns a plain double, equal to the deprecated Norm().item(),
-// both as a Tensor member and as linalg::norm().
+// norm() (#676): returns a Scalar carrying the tensor's precision, equal in value to the
+// deprecated Norm().item(), both as a Tensor member and as linalg::norm().
 TEST_F(linalg_Test, Tensor_norm) {
   cytnx_double ans = 0;
   for (cytnx_uint64 i = 0; i < 9; i++) {
@@ -601,7 +601,8 @@ TEST_F(linalg_Test, DenseUt_Norm) {
   EXPECT_EQ(linalg::Norm(arange3x3cd_ut).item(), ans);
 }
 
-// norm() (#676): UniTensor::norm() / linalg::norm(UniTensor) return a plain double.
+// norm() (#676): UniTensor::norm() / linalg::norm(UniTensor) return a Scalar carrying the
+// UniTensor's precision.
 TEST_F(linalg_Test, DenseUt_norm) {
   cytnx_double ans = 0;
   for (cytnx_uint64 i = 0; i < 9; i++) {

@@ -1234,7 +1234,7 @@ namespace cytnx {
   void BlockUniTensor::normalize_() {
     Scalar out(0, this->dtype());
     for (auto &block : this->_blocks) {
-      double bn = linalg::norm(block);
+      double bn = double(linalg::norm(block));
       out += Scalar(bn * bn);
     }
     out = sqrt(out);
@@ -1335,10 +1335,10 @@ namespace cytnx {
   Tensor BlockUniTensor::Norm() const {
     Scalar t;
     if (this->_blocks.size()) {
-      double n0 = linalg::norm(this->_blocks[0]);
+      double n0 = double(linalg::norm(this->_blocks[0]));
       t = Scalar(n0 * n0);
       for (int blk = 1; blk < this->_blocks.size(); blk++) {
-        double nblk = linalg::norm(this->_blocks[blk]);
+        double nblk = double(linalg::norm(this->_blocks[blk]));
         t += Scalar(nblk * nblk);
       }
 

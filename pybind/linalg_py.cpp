@@ -847,10 +847,12 @@ void linalg_binding(py::module &m) {
   #if defined(__GNUC__) || defined(__clang__)
     #pragma GCC diagnostic pop
   #endif
+  // norm() returns a Scalar in C++ (dtype-preserving); hand Python a native float so
+  // cytnx.Scalar is not exposed on the Python surface.
   m_linalg.def(
-    "norm", [](cytnx::UniTensor &T1) { return T1.norm(); }, py::arg("T1"));
+    "norm", [](cytnx::UniTensor &T1) { return double(T1.norm()); }, py::arg("T1"));
   m_linalg.def(
-    "norm", [](cytnx::Tensor &T1) { return T1.norm(); }, py::arg("T1"));
+    "norm", [](cytnx::Tensor &T1) { return double(T1.norm()); }, py::arg("T1"));
 
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"));
   m_linalg.def(

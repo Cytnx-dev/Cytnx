@@ -210,6 +210,50 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   return accessors;
 };
 
+namespace {
+  // Deprecated combineBonds()/Norm() binding helpers. Calling the [[deprecated]]
+  // UniTensor::combineBonds / UniTensor::Norm warns; the suppression lives here at file scope
+  // because a #pragma GCC diagnostic cannot legally sit inside the .def() chain expression under
+  // GCC (only clang tolerated that). These bindings intentionally keep exposing the deprecated
+  // calls for one release: use combineBond_()/combineBond() and norm() instead.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+  py::object unitensor_combineBonds_int_deprecated(py::object self,
+                                                   const std::vector<cytnx_int64> &indicators,
+                                                   const bool &force, const bool &by_label) {
+    PyErr_WarnEx(PyExc_DeprecationWarning,
+                 "combineBonds() is deprecated, use combineBond_()/combineBond() instead.", 1);
+    auto &self_ref = self.cast<UniTensor &>();
+    if (by_label) {
+      cytnx_warning_msg(true,
+                        "[Deprecated notice] by_label option is going to be deprecated. using "
+                        "string will automatically recognized as labels.%s",
+                        "\n");
+      self_ref.combineBonds(indicators, force, by_label);
+    } else {
+      self_ref.combineBonds(indicators, force);
+    }
+    return self;
+  }
+  py::object unitensor_combineBonds_str_deprecated(py::object self,
+                                                   const std::vector<std::string> &indicators,
+                                                   const bool &force) {
+    PyErr_WarnEx(PyExc_DeprecationWarning,
+                 "combineBonds() is deprecated, use combineBond_()/combineBond() instead.", 1);
+    self.cast<UniTensor &>().combineBonds(indicators, force);
+    return self;
+  }
+  Tensor unitensor_Norm_deprecated(UniTensor &self) {
+    PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+    return self.Norm();
+  }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+}  // namespace
+
 void unitensor_binding(py::module &m) {
   py::class_<cHclass>(m, "Helpclass")
     .def("exists", &cHclass::exists)
@@ -1005,44 +1049,13 @@ void unitensor_binding(py::module &m) {
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("to_dense", &UniTensor::to_dense)
     .def("to_dense_", &UniTensor::to_dense_)
-  // combineBonds() is deprecated (#421/#422): use combineBond_() (in-place) or
-  // combineBond() (out-of-place) instead. The -Wdeprecated-declarations warning that
-  // calling UniTensor::combineBonds would otherwise trigger here is suppressed locally
-  // since this binding's whole purpose is to keep exposing the deprecated call for one
-  // release.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
-    .def("combineBonds",
-         [](py::object self, const std::vector<cytnx_int64> &indicators, const bool &force,
-            const bool &by_label)
-         {
-            PyErr_WarnEx(PyExc_DeprecationWarning,
-              "combineBonds() is deprecated, use combineBond_()/combineBond() instead.", 1);
-            auto &self_ref = self.cast<UniTensor &>();
-            if(by_label){
-                cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                self_ref.combineBonds(indicators,force,by_label);
-            }else{
-                self_ref.combineBonds(indicators,force);
-            }
-            return self;
-         },
-         py::arg("indicators"), py::arg("force") = false, py::arg("by_label") = false)
-
-    .def("combineBonds",
-         [](py::object self, const std::vector<std::string> &indicators, const bool &force)
-         {
-            PyErr_WarnEx(PyExc_DeprecationWarning,
-              "combineBonds() is deprecated, use combineBond_()/combineBond() instead.", 1);
-            self.cast<UniTensor &>().combineBonds(indicators,force);
-            return self;
-         },
-         py::arg("indicators"), py::arg("force") = false)
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
+    // combineBonds() is deprecated (#421/#422): use combineBond_() (in-place) or combineBond()
+    // (out-of-place) instead. Deprecation-warning suppression lives in the file-scope helpers
+    // (a #pragma GCC diagnostic cannot legally sit inside this .def() chain expression under GCC).
+    .def("combineBonds", &unitensor_combineBonds_int_deprecated, py::arg("indicators"),
+         py::arg("force") = false, py::arg("by_label") = false)
+    .def("combineBonds", &unitensor_combineBonds_str_deprecated, py::arg("indicators"),
+         py::arg("force") = false)
 
     .def("combineBond_",
          [](py::object self, const std::vector<std::string> &indicators, const bool &force)
@@ -1983,23 +1996,13 @@ void unitensor_binding(py::module &m) {
                  },
                  py::arg("a"), py::arg("b"))
 
-  // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
-  // The -Wdeprecated-declarations warning that calling UniTensor::Norm would otherwise
-  // trigger here is suppressed locally since this binding's whole purpose is to keep
-  // exposing the deprecated call for one release.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
-    .def("Norm",
-         [](UniTensor &self) {
-           PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
-           return self.Norm();
-         })
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
-    .def("norm", &UniTensor::norm)
+    // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
+    // Deprecation-warning suppression lives in unitensor_Norm_deprecated() at file scope (a
+    // #pragma GCC diagnostic cannot legally sit inside this .def() chain expression under GCC).
+    .def("Norm", &unitensor_Norm_deprecated)
+    // norm() returns a Scalar in C++ (dtype-preserving); hand Python a native float so
+    // cytnx.Scalar is not exposed on the Python surface.
+    .def("norm", [](UniTensor &self) { return double(self.norm()); })
     .def("Transpose_",
          [](py::object self) {
            self.cast<UniTensor &>().Transpose_();

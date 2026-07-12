@@ -79,11 +79,15 @@ namespace cytnx {
 
     Tensor Norm(const Tensor& Tl) { return norm_impl(Tl); }
 
-    double norm(const Tensor& Tl) { return double(norm_impl(Tl).item().real()); }
+    // norm() returns the 2-norm as a Scalar carrying the tensor's own precision (Float for
+    // Float/ComplexFloat input, Double otherwise) rather than a fixed double. This lets
+    // x /= x.norm() stay dtype-preserving via linalg::Div's Tensor/Scalar path instead of
+    // silently promoting a Float tensor to Double (#1000 review, ianmccul).
+    Scalar norm(const Tensor& Tl) { return norm_impl(Tl).item(); }
 
     Tensor Norm(const UniTensor& uTl) { return norm_impl(uTl); }
 
-    double norm(const UniTensor& uTl) { return double(norm_impl(uTl).item().real()); }
+    Scalar norm(const UniTensor& uTl) { return norm_impl(uTl).item(); }
 
   }  // namespace linalg
 }  // namespace cytnx

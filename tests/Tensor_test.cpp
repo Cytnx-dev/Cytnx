@@ -353,15 +353,23 @@ TEST_F(TensorTest, eye) {
   EXPECT_DOUBLE_EQ(tn.at<double>({2, 2}), 1);
 }
 
-// norm() (#676): returns a plain double, equal to the deprecated Norm().item(),
-// on a known 3-4-5 vector.
+// norm() (#676): returns a Scalar carrying the tensor's own precision, equal in value to
+// the deprecated Norm().item(), on a known 3-4-5 vector.
 TEST_F(TensorTest, norm) {
   Tensor v({2}, Type.Double);
   v(0) = 3.0;
   v(1) = 4.0;
-  double n = v.norm();
+  double n = double(v.norm());
   EXPECT_DOUBLE_EQ(n, 5.0);
   EXPECT_DOUBLE_EQ(n, double(v.Norm().item().real()));
+
+  // norm() returns a Scalar carrying the tensor's precision (#1000 review, ianmccul):
+  // Float stays Float, so x /= x.norm() no longer silently promotes Float to Double.
+  EXPECT_EQ(v.norm().dtype(), Type.Double);
+  Tensor vf = v.astype(Type.Float);
+  EXPECT_EQ(vf.norm().dtype(), Type.Float);
+  vf /= vf.norm();
+  EXPECT_EQ(vf.dtype(), Type.Float);
 }
 // TEST_F(TensorTest, approx_eq) {
 //   cytnx::User_debug = true;

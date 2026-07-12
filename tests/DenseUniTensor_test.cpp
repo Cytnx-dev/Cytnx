@@ -53,13 +53,19 @@ TEST_F(DenseUniTensorTest, Init_tagged) {
 }
 
 /*=====test info=====
-describe:Test norm() (#676): returns a plain double, equal to the deprecated
-Norm().item(), on a known all-ones DenseUniTensor (norm = sqrt(N)).
+describe:Test norm() (#676): returns a Scalar carrying the UniTensor's precision, equal in
+value to the deprecated Norm().item(), on a known all-ones DenseUniTensor (norm = sqrt(N)).
 ====================*/
 TEST_F(DenseUniTensorTest, norm) {
-  double n = utone345.norm();
+  double n = double(utone345.norm());
   EXPECT_DOUBLE_EQ(n, std::sqrt(3.0 * 4.0 * 5.0));
   EXPECT_DOUBLE_EQ(n, double(utone345.Norm().item().real()));
+
+  // norm() returns a Scalar carrying the UniTensor's precision (#1000 review, ianmccul):
+  // a ComplexDouble UniTensor yields a Double-precision norm; a Float one yields Float.
+  EXPECT_EQ(utone345.norm().dtype(), Type.Double);
+  UniTensor utf = UniTensor(ones(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.Float);
+  EXPECT_EQ(utf.norm().dtype(), Type.Float);
 }
 
 /*=====test info=====

@@ -62,6 +62,25 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
   self.set(accessors, rc);
 }
 
+namespace {
+  // Deprecated Norm() binding helper (#676): use norm() (returns a python float) instead.
+  // The -Wdeprecated-declarations warning from calling the [[deprecated]] Tensor::Norm() is
+  // suppressed here at file scope because a #pragma GCC diagnostic cannot legally sit inside
+  // the .def() chain expression under GCC (only clang tolerated that). Exposing the deprecated
+  // call for one release is intentional.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+  cytnx::Tensor tensor_Norm_deprecated(cytnx::Tensor &self) {
+    PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+    return self.Norm();
+  }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+}  // namespace
+
 void tensor_binding(py::module &m) {
   py::class_<cytnx::Tensor>(m, "Tensor")
     .def(
@@ -1722,23 +1741,13 @@ void tensor_binding(py::module &m) {
          })
     .def("Max", &cytnx::Tensor::Max)
     .def("Min", &cytnx::Tensor::Min)
-  // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
-  // The -Wdeprecated-declarations warning that calling cytnx::Tensor::Norm would otherwise
-  // trigger here is suppressed locally since this binding's whole purpose is to keep
-  // exposing the deprecated call for one release.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
-    .def("Norm",
-         [](cytnx::Tensor &self) {
-           PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
-           return self.Norm();
-         })
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
-    .def("norm", &cytnx::Tensor::norm)
+    // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
+    // Deprecation-warning suppression lives in tensor_Norm_deprecated() at file scope (a
+    // #pragma GCC diagnostic cannot legally sit inside this .def() chain expression under GCC).
+    .def("Norm", &tensor_Norm_deprecated)
+    // norm() returns a Scalar in C++ (dtype-preserving); hand Python a native float so
+    // cytnx.Scalar is not exposed on the Python surface.
+    .def("norm", [](cytnx::Tensor &self) { return double(self.norm()); })
     .def("Trace", &cytnx::Tensor::Trace)
 
     ;  // end of object line

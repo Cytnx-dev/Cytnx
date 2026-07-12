@@ -5174,21 +5174,23 @@ namespace cytnx {
         ||UT||_2
         \f]
         @return Tensor
-        @deprecated Use norm() instead, which returns a double directly.
+        @deprecated Use norm() instead, which returns a Scalar directly.
         */
-    [[deprecated("use norm() (returns double) instead")]] Tensor Norm() const {
+    [[deprecated("use norm() (returns Scalar) instead")]] Tensor Norm() const {
       return this->_impl->Norm();
     };
 
     /**
     @brief Return the norm of the UniTensor.
-        @details norm() return the 2-norm of the UniTensor \f$UT\f$ as a plain double.
+        @details norm() return the 2-norm of the UniTensor \f$UT\f$ as a Scalar carrying the
+        UniTensor's own precision (Float for Float/ComplexFloat input, Double otherwise), so
+        `x /= x.norm()` stays dtype-preserving rather than promoting a Float UniTensor to Double.
         \f[
         ||UT||_2
         \f]
-        @return double
+        @return Scalar
         */
-    double norm() const { return double(this->_impl->Norm().item().real()); };
+    Scalar norm() const { return this->_impl->Norm().item(); };
 
     /**
     @brief The addition assignment operator of the UniTensor.
