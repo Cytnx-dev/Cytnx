@@ -30,48 +30,11 @@ C++ tests need `RUN_TESTS=ON` (a `debug-*` preset sets this already). Two agent
 skills carry the full build/test/benchmark mechanics — invoke them instead of
 re-deriving commands:
 
-- **`build-test-workflow`** — `.claude/skills/build-test-workflow/scripts/build_preset.sh`
-  (the one entry point for building and running tests: per-preset venvs,
-  generator-consistent pip/cmake, max-CPU builds), incremental builds,
-  running ctest/pytest/benchmarks without rebuilding, per-suite filtering,
-  standalone harnesses against `libcytnx.a`, and running the GPU suite when a
-  GPU is present.
+- **`build-test-workflow`** — building any preset and running C++/Python
+  tests through `scripts/build_preset.sh`, GPU rules, standalone harnesses
+  against `libcytnx.a`.
 - **`cross-revision-benchmark`** — fair before/after performance comparisons
   across git revisions.
-
-If a skill file is unavailable to you (some agents, e.g. Codex, may not have
-Claude Code's `.claude/skills/` auto-discovery — the files are plain markdown
-you can still open directly at `.claude/skills/<name>/SKILL.md`), the
-essential facts:
-
-- Single suite, fastest iteration signal:
-  `build/debug-openblas-cpu/tests/test_main --gtest_filter='Storage.*'`.
-- Full C++ suite: `ctest --test-dir build/<preset> --output-on-failure` (not
-  `ctest --preset cpu-only` — `CMakePresets.json`'s `testPresets` are
-  hardcoded to only `debug-openblas-cpu`/`debug-openblas-cuda` and don't
-  generalize to every preset).
-- Debug presets build with AddressSanitizer; this only bites the **debug +
-  CUDA** presets in practice — if `debug-openblas-cuda`/`debug-mkl-cuda`
-  aborts inside ASan on startup, prefix with
-  `ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'`.
-- GPU tests target `gpu_test_main` (under `tests/gpu/`), **not** `test_main`
-  — a separate binary, not a superset. Only run it if a GPU is actually
-  present (`nvidia-smi` succeeds); otherwise the CUDA preset compile check
-  alone is what CI expects.
-- Python — install editable into a preset-specific venv, explicitly pinning
-  both the preset and its build dir (`pyproject.toml`'s own default silently
-  configures `openblas-cpu` regardless of which preset was intended;
-  `CMAKE_BUILD_TYPE` needs no override — every preset already sets it):
-
-  ```sh
-  python3 -m venv build/<preset>-venv && source build/<preset>-venv/bin/activate
-  pip install --editable '.[dev]' \
-    --config-settings=build-dir=build/<preset> \
-    --config-settings=cmake.args=--preset=<preset> \
-    --config-settings=cmake.define.RUN_TESTS=ON
-  ```
-
-  then, with that venv still active, `pytest pytests/ --doctest-modules`.
 
 ## Format — must match CI exactly
 
