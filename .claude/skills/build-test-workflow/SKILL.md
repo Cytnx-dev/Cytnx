@@ -1,11 +1,13 @@
 ---
 name: build-test-workflow
 description: >-
-  Build and test Cytnx through scripts/build_preset.sh — the one entry point
-  for building any CMake preset and running C++ (gtest/ctest) or Python
-  (pytest) tests. Use when building a preset, compiling after an edit,
-  running tests, running GPU tests when a GPU is present, or wiring a
-  standalone harness against libcytnx.a.
+  Use whenever Cytnx must be built or tested: configuring or building any
+  CMake preset, compiling after an edit, running C++ (gtest/ctest) or
+  Python (pytest) tests, deciding how much of the suite to run, anything
+  GPU/CUDA-related on a machine with or without a GPU, or verifying a
+  change with a quick standalone program against libcytnx.a. Do not compose
+  pip/cmake/ctest commands by hand — this skill's script is the one entry
+  point.
 ---
 
 # Build & test workflow

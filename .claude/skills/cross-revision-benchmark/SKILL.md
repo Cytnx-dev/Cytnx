@@ -1,10 +1,11 @@
 ---
 name: cross-revision-benchmark
 description: >-
-  Benchmark the same Cytnx function at the branch tip and its base revision
-  and produce a fair comparison. Use when a change is motivated by
-  performance, a reviewer questions a speedup/regression, or a PR needs
-  before/after numbers.
+  Use whenever a performance claim must be made or checked: a change is
+  motivated by speed, a reviewer questions a speedup or regression, a PR
+  needs before/after numbers, or two implementations/revisions must be
+  timed against each other. Never assert performance from reasoning or a
+  scratch timing loop — run this skill's benchmark procedure instead.
 ---
 
 # Cross-revision benchmarking

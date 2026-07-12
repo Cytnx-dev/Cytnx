@@ -30,11 +30,10 @@ C++ tests need `RUN_TESTS=ON` (a `debug-*` preset sets this already). Two agent
 skills carry the full build/test/benchmark mechanics — invoke them instead of
 re-deriving commands:
 
-- **`build-test-workflow`** — building any preset and running C++/Python
-  tests through `scripts/build_preset.sh`, GPU rules, standalone harnesses
-  against `libcytnx.a`.
-- **`cross-revision-benchmark`** — fair before/after performance comparisons
-  across git revisions.
+- **`build-test-workflow`** — invoke before any build or test run (any
+  preset, C++ or Python, with or without a GPU).
+- **`cross-revision-benchmark`** — invoke before making or checking any
+  performance claim.
 
 ## Format — must match CI exactly
 
