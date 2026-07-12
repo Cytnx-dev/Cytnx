@@ -64,11 +64,7 @@ gtest_discover_tests(gpu_test_main
                      # See tests/CMakeLists.txt's DISCOVERY_MODE comment:
                      # avoids requiring a GPU driver merely to compile/link
                      # this target.
-                     DISCOVERY_MODE PRE_TEST
-                     # Lets `ctest -L gpu`/`-LE gpu` scope a run to just this
-                     # binary's tests when a CUDA preset's shared build dir
-                     # also has test_main's tests registered.
-                     PROPERTIES LABELS gpu)
+                     DISCOVERY_MODE PRE_TEST)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

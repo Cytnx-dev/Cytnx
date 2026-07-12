@@ -56,11 +56,11 @@ set -euo pipefail
 #                   space-separated combination of the two): runs through
 #                   `ctest --test-dir <build_dir> --output-on-failure`
 #                   instead of invoking the gtest binary directly, for
-#                   per-test pass/fail output. Scoped to just the requested
-#                   binary's tests (`-LE gpu`/`-L gpu`) when a CUDA preset's
-#                   shared build dir has both test_main's and
-#                   gpu_test_main's tests registered but only one was
-#                   actually built by this call. A single optional arg is used as
+#                   per-test pass/fail output. On a CUDA preset this runs
+#                   every test registered in the shared build dir
+#                   regardless of which target was actually built --
+#                   build `--target "test_main gpu_test_main"` together
+#                   for a clean run. A single optional arg is used as
 #                   `-R <value>` (a ctest *regex* against
 #                   `ClassName.TestName`, not a gtest glob/`:`-joined
 #                   filter); with no arg, runs every test discovered in the
@@ -263,26 +263,13 @@ else
   # (debug-openblas-cpu, debug-openblas-cuda) and don't generalize to every
   # preset this script accepts.
   # ASAN_OPTIONS for debug-*-cuda is already exported above, before the build.
+  # On a CUDA preset, a shared build dir registers both test_main's and
+  # gpu_test_main's tests once RUN_TESTS=ON; --test-dir runs everything it
+  # finds regardless of which target this call actually built, so build
+  # both targets together (--target "test_main gpu_test_main") for a clean
+  # run -- building only one and calling --test reports the other as
+  # NOT_BUILT.
   ctest_args=(--test-dir "${build_dir}" --output-on-failure --parallel "${jobs}")
-  # A CUDA preset's shared build dir registers both test_main's and
-  # gpu_test_main's tests once RUN_TESTS=ON, regardless of which one this
-  # call actually built -- --test-dir alone doesn't scope to just the
-  # requested target, so an unbuilt sibling binary's tests would otherwise
-  # report as NOT_BUILT (or, if it happens to be already built, run too).
-  # ${target_words[@]} is already set by the build step above.
-  has_test_main=0
-  has_gpu_test_main=0
-  for word in "${target_words[@]}"; do
-    case "${word}" in
-      test_main) has_test_main=1 ;;
-      gpu_test_main) has_gpu_test_main=1 ;;
-    esac
-  done
-  if [[ ${has_test_main} -eq 1 && ${has_gpu_test_main} -eq 0 ]]; then
-    ctest_args+=(-LE gpu)
-  elif [[ ${has_gpu_test_main} -eq 1 && ${has_test_main} -eq 0 ]]; then
-    ctest_args+=(-L gpu)
-  fi
   if [[ ${#test_args[@]} -gt 0 ]]; then
     ctest_args+=(-R "${test_args[0]}")
   fi
