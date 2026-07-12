@@ -5,12 +5,11 @@ description: >-
   fair comparison table using the build-test-workflow script. Use when a
   change is motivated by performance, a reviewer questions a speedup/
   regression, or a PR needs before/after numbers — e.g. comparing a branch tip
-  against its merge base. Covers the fixed-benchmark-source vs
-  per-revision-benchmark-source cases, reusing one build dir switched
-  sequentially between revisions in place (never a fresh worktree or a
-  separate build dir per revision), and reporting rules (same machine/
-  session, commit hash plus a rebase-proof readable label, stated
-  aggregation).
+  against its merge base. Covers picking comparison points that already have
+  the benchmark committed, reusing one build dir switched sequentially
+  between revisions in place (never a fresh worktree or a separate build dir
+  per revision), and reporting rules (same machine/session, commit hash plus
+  a rebase-proof readable label, stated aggregation).
 ---
 
 # Cross-revision benchmarking
@@ -25,33 +24,23 @@ through `build-test-workflow`'s script:
 S=.claude/skills/build-test-workflow/scripts/build_preset.sh
 ```
 
-Step 1 below checks out the whole tree including `.claude/`, so `"$S"` only
-survives every switch when every revision being compared already has the
-script at this path — true for any comparison entirely within this repo's
-history from this point forward. Comparing against a revision that predates
-this script (or had it at a different path) needs it copied to a stable
-location first (e.g. `cp "$S" /tmp/build_preset.sh`) before the loop starts.
-
 Only benchmark a **committed** Google Benchmark file (`benchmarks/*.cpp`,
-built as the `benchmarks_main` target). If no existing file covers the
-function under comparison, add one first — do not write comparison code in a
-scratch harness; a fixed, versioned benchmark source is what makes a fair
-cross-revision comparison possible at all. Use a **release** preset
-(`openblas-cpu` or similar) for every column — a debug/ASan build's timings
-are not representative. `"$S"` strips `--coverage` instrumentation from
-every build it produces (see `build-test-workflow`), so a dir it already
-built for `test_main`/`pycytnx` is safe to reuse for `benchmarks_main` too.
+built as the `benchmarks_main` target), and every revision being compared
+must already have it registered in `benchmarks/CMakeLists.txt`. This follows
+automatically from committing the benchmark before the change it measures:
+pick the earliest comparison point as the commit where the benchmark itself
+landed, not further back — or, if the benchmark is already on the base
+branch, the base branch tip directly. If no existing file covers the
+function under comparison, add it (and commit it) first, before the change
+being measured — do not write comparison code in a scratch harness; a fixed,
+versioned benchmark source is what makes a fair cross-revision comparison
+possible at all.
 
-## Which of two cases applies
-
-- **Case A — the benchmark's call signature is unchanged across every
-  revision.** Keep **one fixed benchmark source** (the tip's) and vary only
-  the library underneath.
-- **Case B — the function's public interface changed** between revisions, so
-  one benchmark source cannot compile against all of them (or a revision
-  being compared predates the benchmark file existing at all). Use **each
-  revision's own benchmark source** instead of forcing one file across all
-  columns.
+Use a **release** preset (`openblas-cpu` or similar) for every column — a
+debug/ASan build's timings are not representative. `"$S"` strips `--coverage`
+instrumentation from every build it produces (see `build-test-workflow`), so
+a dir it already built for `test_main`/`pycytnx` is safe to reuse for
+`benchmarks_main` too.
 
 ## Procedure
 
@@ -72,52 +61,15 @@ work; note the current branch/ref to return to at the end.
 
 For each revision, in order:
 
-1. `git checkout <rev>` (whole tree).
-2. **Case A only:** unconditionally copy `<the_bm_file>.cpp` from `<tip>` —
-   Case A's whole premise is one *fixed* benchmark source across every
-   column, so `<rev>`'s own version of the file (if it has one) must never
-   be the one that runs; only the library underneath is meant to vary. The
-   `CMakeLists.txt` registration, unlike the source, only needs touching
-   when `<rev>` doesn't already list the file — do not overlay `<tip>`'s
-   whole `CMakeLists.txt`: it may list other benchmark sources added or
-   changed after `<rev>` that don't exist or don't compile against `<rev>`'s
-   API, breaking the build over a benchmark that isn't even the one under
-   comparison:
-
-   ```sh
-   git checkout <tip> -- benchmarks/<the_bm_file>.cpp
-   grep -q '<the_bm_file>.cpp' benchmarks/CMakeLists.txt || \
-     : # add "  <the_bm_file>.cpp" to CMakeLists.txt's add_executable(benchmarks_main ...) list
-   ```
-
-   **Case B:** skip this — build whatever benchmark file already exists at
-   this revision.
-3. Build and run:
+1. `git checkout <rev>` (whole tree) — the benchmark file is already present
+   and registered, so nothing else to prepare.
+2. Build and run:
 
    ```sh
    "$S" openblas-cpu --target benchmarks_main --test \
      --benchmark_repetitions=5 --benchmark_report_aggregates_only=true \
      --benchmark_filter='<pattern>' > /tmp/bm-<label>.txt
    ```
-
-4. **Case A only:** restore before moving to the next revision — the
-   working tree still holds `<tip>`'s content for `<the_bm_file>.cpp` (step
-   2 always overlays it), so `git checkout <rev>` in the next iteration's
-   step 1 would otherwise either refuse to switch or (if it can 3-way-merge)
-   carry that content silently forward onto the wrong revision:
-
-   ```sh
-   git restore --source=HEAD --staged --worktree -- benchmarks/<the_bm_file>.cpp
-   git checkout -- benchmarks/CMakeLists.txt   # only if step 2 also edited it
-   ```
-
-   Use `git restore`, not `git checkout HEAD -- <path>`, for the `.cpp`:
-   when `<rev>` predates the benchmark file existing at all, `checkout HEAD
-   -- <path>` errors with "did not match any file(s) known to git" for a
-   path HEAD doesn't have, whereas `restore --source=HEAD` correctly deletes
-   it to match HEAD's absence. `CMakeLists.txt` (when touched) is a plain
-   modification, not a new path, so `git checkout -- <path>` reverts it
-   directly.
 
 When every column is recorded, return to where you started: `git checkout
 <original-branch>` and `git stash pop` if step 0 created a stash.
