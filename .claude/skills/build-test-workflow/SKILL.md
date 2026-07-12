@@ -63,13 +63,19 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
     <build_dir> --output-on-failure` instead of invoking the gtest binary
     directly — `test_main`/`gpu_test_main` register each gtest case as its
     own ctest test via `gtest_discover_tests`, so ctest gives per-test
-    pass/fail output. A single optional arg becomes `-R <value>` — a ctest *regex* against
-    `ClassName.TestName`, not a gtest glob/`:`-joined filter. `--test-dir`
-    is used rather than `--preset`: `CMakePresets.json`'s `testPresets` are
-    hardcoded to only `debug-openblas-cpu`/`debug-openblas-cuda` and don't
-    generalize to every preset this script accepts. `debug-*-cuda` presets
-    get `ASAN_OPTIONS` exported automatically, right after argument
-    parsing — no need to remember the workaround string.
+    pass/fail output. Scoped to just the requested binary's tests (`-L
+    '^cpu$'`/`-L '^gpu$'`) when a CUDA preset's shared build dir has both
+    test_main's and gpu_test_main's tests registered but only one was
+    actually built by this call — each target works standalone, no need to
+    build the other one too. `--no-tests=error` turns "0 tests selected"
+    into a real failure instead of a silent pass. A single optional arg
+    becomes `-R <value>` — a ctest *regex* against `ClassName.TestName`, not
+    a gtest glob/`:`-joined filter. `--test-dir` is used rather than
+    `--preset`: `CMakePresets.json`'s `testPresets` are hardcoded to only
+    `debug-openblas-cpu`/`debug-openblas-cuda` and don't generalize to every
+    preset this script accepts. `debug-*-cuda` presets get `ASAN_OPTIONS`
+    exported automatically, right after argument parsing — no need to
+    remember the workaround string.
 - **Max-parallelism** (`nproc`/`sysctl -n hw.ncpu`) for every build.
 - **A fresh build dir's first configure turns `RUN_TESTS` and
   `RUN_BENCHMARKS` on unconditionally**, regardless of `--target` — every

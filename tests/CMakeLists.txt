@@ -119,7 +119,11 @@ gtest_discover_tests(test_main
                      # tries to list tests, even though the binary compiled
                      # and linked correctly. No effect on non-CUDA builds
                      # beyond moving discovery from build time to ctest time.
-                     DISCOVERY_MODE PRE_TEST)
+                     DISCOVERY_MODE PRE_TEST
+                     # Lets `ctest -L '^cpu$'` scope a run to just this
+                     # binary's tests when a CUDA preset's shared build dir
+                     # also has gpu_test_main's tests registered.
+                     PROPERTIES LABELS cpu)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
