@@ -63,17 +63,13 @@ correctly and gets it wrong exactly once if reimplemented ad hoc.
     <build_dir> --output-on-failure` instead of invoking the gtest binary
     directly — `test_main`/`gpu_test_main` register each gtest case as its
     own ctest test via `gtest_discover_tests`, so ctest gives per-test
-    pass/fail output. A
-    single optional arg becomes `-R <value>` — a ctest *regex* against
+    pass/fail output. A single optional arg becomes `-R <value>` — a ctest *regex* against
     `ClassName.TestName`, not a gtest glob/`:`-joined filter. `--test-dir`
     is used rather than `--preset`: `CMakePresets.json`'s `testPresets` are
     hardcoded to only `debug-openblas-cpu`/`debug-openblas-cuda` and don't
     generalize to every preset this script accepts. `debug-*-cuda` presets
-    get `ASAN_OPTIONS` exported automatically, **before the build step
-    too** — `gtest_discover_tests` defaults to `POST_BUILD` discovery,
-    which runs the freshly built binary during `cmake --build` itself, so
-    the workaround has to be in place before that, not just before the
-    later `ctest` call.
+    get `ASAN_OPTIONS` exported automatically, right after argument
+    parsing — no need to remember the workaround string.
 - **Max-parallelism** (`nproc`/`sysctl -n hw.ncpu`) for every build.
 - **A fresh build dir's first configure turns `RUN_TESTS` and
   `RUN_BENCHMARKS` on unconditionally**, regardless of `--target` — every
@@ -136,13 +132,10 @@ recompiling anything when the build dir is already current.
   `test_main`, not a superset — without a visible GPU it will fail for lack
   of hardware, not because of the change under test, so on a GPU-less
   machine the compile check alone (`"$S" debug-openblas-cuda`, no `--test`)
-  is the right stopping point. That compile check only succeeds on a
-  GPU-less machine because `tests/gpu/CMakeLists.txt`'s
-  `gtest_discover_tests` uses `DISCOVERY_MODE PRE_TEST` — the default
-  `POST_BUILD` mode runs the freshly built binary during `cmake --build`
-  itself to enumerate its cases, which would abort the build on a machine
-  with no GPU driver even though the binary compiled and linked correctly;
-  `PRE_TEST` defers that run to when `ctest`/`--test` is actually invoked.
+  is the right stopping point. Building `gpu_test_main` never requires a
+  GPU: `tests/gpu/CMakeLists.txt`'s `gtest_discover_tests` uses
+  `DISCOVERY_MODE PRE_TEST`, which defers running the binary to enumerate
+  tests until `ctest`/`--test` is actually invoked.
 - A regression test for a bug fix must be shown to **fail on the pre-fix
   code** at least once — a guard that passes on the bug guards nothing.
 

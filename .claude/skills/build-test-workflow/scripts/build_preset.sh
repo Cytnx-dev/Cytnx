@@ -128,11 +128,7 @@ case "${target}" in
 esac
 
 # ASan only bites the debug+CUDA presets in practice; export the workaround
-# before any build happens, not just before running tests. gtest_discover_tests
-# defaults to POST_BUILD discovery, which runs the freshly built test binary
-# as part of `cmake --build` itself to enumerate its cases -- so a debug-*-cuda
-# binary that needs this workaround can already abort during the build step,
-# before the script ever reaches the test-running code below.
+# right after argument parsing, before any build or test step.
 case "${preset}" in
   debug-*-cuda)
     export ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'
