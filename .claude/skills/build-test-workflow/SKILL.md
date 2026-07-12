@@ -1,21 +1,14 @@
 ---
 name: build-test-workflow
 description: >-
-  Iterate on Cytnx builds and tests without paying for full rebuilds. Use when
-  building or testing a preset, compiling after an edit, running C++
-  (gtest/ctest) or Python (pytest) tests, wiring a standalone harness against
-  libcytnx.a, running GPU tests when a GPU is present, or deciding how much of
-  the test suite to run at each stage. Covers scripts/build_preset.sh (the one
-  entry point for building and running tests), incremental builds, and
-  per-suite filtering.
+  Build and test Cytnx through scripts/build_preset.sh — the one entry point
+  for building any CMake preset and running C++ (gtest/ctest) or Python
+  (pytest) tests. Use when building a preset, compiling after an edit,
+  running tests, running GPU tests when a GPU is present, or wiring a
+  standalone harness against libcytnx.a.
 ---
 
-# Build & test workflow (fast iteration)
-
-The expensive operations are configuring CMake and full rebuilds. Almost every
-edit-compile-test cycle can avoid both. `CLAUDE.md` describes the presets and
-the CI gates; this skill is about spending the minimum time between an edit and
-its test result.
+# Build & test workflow
 
 ## `scripts/build_preset.sh` — the one entry point
 
@@ -24,139 +17,62 @@ S=.claude/skills/build-test-workflow/scripts/build_preset.sh
 "$S" <preset> [--target <target>] [--test [args...]]
 ```
 
-`<preset>` is any `configurePreset` name (`openblas-cpu`, `mkl-cpu`,
-`debug-openblas-cpu`, …). Always build and run tests through this script
-instead of composing `pip`/`cmake` by hand — it handles every detail below
-correctly and gets it wrong exactly once if reimplemented ad hoc.
+Always build and test through this script instead of composing `pip`/`cmake`
+by hand.
 
-- **`--target <t>`** (default `all`). `pycytnx`/`all` need Python bindings
-  (`BUILD_PYTHON=ON`, pybind11 discoverable); anything else (`test_main`,
-  `cytnx`, `benchmarks_main`) does not and skips Python setup. A Python
-  target's **first** build for a preset goes through `pip install
-  --editable` (sets up a venv at `build/<preset>-venv`, makes pybind11
-  discoverable, creates the import redirect pytest needs) — explicitly
-  pinned to `--preset=<preset>` (pyproject.toml hardcodes
-  `--preset=openblas-cpu` as its own default, so without this override every
-  pip build would silently configure as `openblas-cpu` regardless of which
-  preset was asked for — verified empirically). "First" is tracked by a
-  completion marker written only after `pip install` succeeds, not by the
-  venv directory's mere existence — `python3 -m venv` creates it before
-  `pip install` even runs, so a venv left behind by a failed install (a
-  compile error, missing native deps) still gets retried through the full
-  pip path on the next call instead of silently skipping straight to
-  `cmake --build` against an incomplete state. Every later call for that
-  preset, Python target or not, is a direct `cmake --build` reusing the same
-  build dir incrementally — no repeat pip overhead once the venv exists.
-- **`--test [args]`** runs the target's tests after building.
-  - Python target: args pass through to `pytest` verbatim (a path/`-k`
-    filter *replaces* the default `pytests/` collection, standard pytest
-    semantics — passing both would just re-add everything the filter was
-    meant to narrow out, and the filtered run does *not* get
-    `--doctest-modules` added automatically); no args runs `pytest pytests/
-    --doctest-modules`.
-  - `--target benchmarks_main`: args pass through to the Google Benchmark
-    binary verbatim (e.g. `--benchmark_filter=<pattern>`); no args runs
-    every registered benchmark. Never run this concurrently with another
-    build or benchmark — see `cross-revision-benchmark`.
-  - Any other target (`test_main`, `gpu_test_main`, or both together —
-    `--target "test_main gpu_test_main"`): runs through `ctest --test-dir
-    <build_dir> --output-on-failure` instead of invoking the gtest binary
-    directly — `test_main`/`gpu_test_main` register each gtest case as its
-    own ctest test via `gtest_discover_tests`, so ctest gives per-test
-    pass/fail output. Scoped to just the requested binary's tests (`-L
-    '^cpu$'`/`-L '^gpu$'`) when a CUDA preset's shared build dir has both
-    test_main's and gpu_test_main's tests registered but only one was
-    actually built by this call — each target works standalone, no need to
-    build the other one too. `--no-tests=error` turns "0 tests selected"
-    into a real failure instead of a silent pass. A single optional arg
-    becomes `-R <value>` — a ctest *regex* against `ClassName.TestName`, not
-    a gtest glob/`:`-joined filter. `--test-dir` is used rather than
-    `--preset`: `CMakePresets.json`'s `testPresets` are hardcoded to only
-    `debug-openblas-cpu`/`debug-openblas-cuda` and don't generalize to every
-    preset this script accepts. `debug-*-cuda` presets get `ASAN_OPTIONS`
-    exported automatically, right after argument parsing — no need to
-    remember the workaround string.
-- **Max-parallelism** (`nproc`/`sysctl -n hw.ncpu`) for every build.
-- **A fresh build dir's first configure turns `RUN_TESTS` and
-  `RUN_BENCHMARKS` on unconditionally**, regardless of `--target` — every
-  dir this script creates can build `test_main`/`gpu_test_main`/
-  `benchmarks_main` from then on with no later reconfigure. This does mean
-  Google Benchmark needs to be installed for any build through this script,
-  not only a `--target benchmarks_main` one. `RUN_TESTS=ON` would normally
-  add `--coverage` instrumentation to the `cytnx` library (see
-  `CMakeLists.txt`), which would skew `benchmarks_main`'s timings too since
-  it links the same library — `scripts/strip-coverage-launcher.sh` is
-  wired in as `CMAKE_CXX_COMPILER_LAUNCHER`/`CMAKE_CXX_LINKER_LAUNCHER` at
-  that same first configure, stripping the literal `--coverage` token
-  before it reaches the real compiler/linker (`-fno-profile-arcs
-  -fno-test-coverage` do **not** cancel `--coverage` — verified empirically,
-  a `.gcno` file is still produced either way), so every build through this
-  script is uninstrumented by construction. A dir that already exists (has
-  a `CMakeCache.txt`) is never reconfigured — it keeps whatever flags its
-  first configure gave it, script-driven or not.
-- **Generator consistency.** A build dir's generator is decided once, by
-  whichever call configures it first; the script never passes a conflicting
-  `-G` against an existing dir (defaulting only a *fresh* dir to Ninja, since
-  that's pip/scikit-build-core's own default preference). **If a generator
-  or cache mismatch does happen, never delete and reconfigure the build dir**
-  — that erases the accumulated cache and forces a full rebuild. Reconfigure
-  with no `-G` flag instead, so CMake keeps the dir's existing generator.
+- **`<preset>`** — any `configurePreset` in `CMakePresets.json`:
+  `openblas-cpu`, `mkl-cpu`, `openblas-cuda`, `mkl-cuda`, `openblas-apple`,
+  or their `debug-*` variants (Debug + ASan + `RUN_TESTS=ON`). Iterate on a
+  `debug-*-cpu` preset; benchmarks need a release preset.
+- **`--target <t>`** (default `all`) — `all`/`pycytnx` (Python bindings),
+  `test_main`, `gpu_test_main`, `benchmarks_main`, `cytnx`, or a
+  space-separated list (`"test_main gpu_test_main"`).
 
-## Running tests without rebuilding
+**Build logic.** A Python target's (`all`/`pycytnx`) first build for a
+preset runs `pip install --editable` into `build/<preset>-venv` — this is
+what installs pybind11 and the other build requirements and creates the
+import redirect pytest needs. Every later call, Python target or not, is a
+plain incremental `cmake --build` of the same `build/<preset>` dir — no
+repeat pip overhead.
 
-`"$S" <preset> --test [args]` (no `--target`, defaulting to `all`, or with an
-explicit `--target` matching what's already built) reruns tests without
-recompiling anything when the build dir is already current.
+**`--test [args]`** runs the built target's tests; args depend on the
+target:
 
-- One suite, fastest iteration signal — a direct gtest binary invocation
-  skips ctest's per-test process-spawn overhead, useful when a suite has
-  many cases:
-  `build/debug-openblas-cpu/tests/test_main --gtest_filter='SearchTreeTest.*'`
-  (glob/`:`-joined syntax, not a ctest regex — different from `--test`'s
-  `-R` filter above).
-- Full C++ suite via the script: `"$S" debug-openblas-cpu --target test_main --test`.
-- Python: `"$S" <preset> --target pycytnx --test` (or activate the venv
-  directly — `source build/<preset>-venv/bin/activate` — for a bare `pytest`
-  invocation).
+- Python target: args pass to `pytest` verbatim and replace the default
+  collection; no args runs `pytest pytests/ --doctest-modules`.
+- `benchmarks_main`: args pass to the Google Benchmark binary verbatim
+  (`--benchmark_filter=<pattern>`, …).
+- `test_main`/`gpu_test_main`: runs ctest scoped to the requested binary's
+  tests; a single optional arg becomes `-R <value>` — a ctest *regex*
+  against `ClassName.TestName`, not a gtest glob. For the fastest
+  single-suite signal skip ctest's per-test overhead and invoke the binary
+  directly:
+  `build/debug-openblas-cpu/tests/test_main --gtest_filter='Storage.*'`
+  (gtest glob/`:` syntax).
 
-## How much to run, when
+## GPU rules
 
-- **While iterating:** only the affected gtest suite / pytest file.
-- **Before push / PR:** the full gates in `CLAUDE.md` — `ctest` for the CPU
-  presets, `pytest pytests/` when Python-facing code changed, the CUDA
-  preset compile check when GPU code changed, and (**if a GPU is actually
-  present**, `nvidia-smi` succeeds) the real GPU suite too, not just the
-  compile check — through the script, which builds both binaries and then
-  runs every test ctest discovers for them in one `--test-dir` pass (slow,
-  ~10 min):
+- **No GPU** (`nvidia-smi` fails): compile check only — `"$S"
+  debug-openblas-cuda` with no `--test`. Building `gpu_test_main` never
+  needs a GPU.
+- **GPU present**: also run the real suite:
+  `"$S" debug-openblas-cuda --target "test_main gpu_test_main" --test`.
+- `debug-*-cuda` presets need an `ASAN_OPTIONS` workaround to run at all;
+  the script exports it automatically.
 
-  ```sh
-  "$S" debug-openblas-cuda --target "test_main gpu_test_main" --test
-  ```
+## Regression discipline
 
-  `gpu_test_main` (under `tests/gpu/`) is a separate binary from
-  `test_main`, not a superset — without a visible GPU it will fail for lack
-  of hardware, not because of the change under test, so on a GPU-less
-  machine the compile check alone (`"$S" debug-openblas-cuda`, no `--test`)
-  is the right stopping point. Building `gpu_test_main` never requires a
-  GPU: `tests/gpu/CMakeLists.txt`'s `gtest_discover_tests` uses
-  `DISCOVERY_MODE PRE_TEST`, which defers running the binary to enumerate
-  tests until `ctest`/`--test` is actually invoked.
-- A regression test for a bug fix must be shown to **fail on the pre-fix
-  code** at least once — a guard that passes on the bug guards nothing.
+A regression test for a bug fix must be shown to fail on the pre-fix code
+at least once — a guard that passes on the bug guards nothing.
 
 ## Standalone harness against libcytnx.a
 
-For throwaway verification programs — differential checkers, fuzzers,
-probes — compile a single `.cpp` directly against the built static library
-instead of adding it to the build system. Keep the source in scratch/tmp,
-never in the repo. Never for a benchmark of an actual Cytnx function — that
-belongs as a committed `benchmarks/*.cpp` (Google Benchmark), see
-`cross-revision-benchmark`.
-
-Use a **release** preset's library (`build/openblas-cpu`); a debug preset's
-library is ASan-instrumented (`USE_DEBUG=ON` adds `-fsanitize=address`) and
-a plain harness link will reject it.
+For throwaway verification programs (differential checkers, probes):
+compile one `.cpp` directly against the built static library; keep the
+source in scratch/tmp, never in the repo. Never for a benchmark of a Cytnx
+function — that belongs in `benchmarks/` (see `cross-revision-benchmark`).
+Use a release preset's library — a debug preset's is ASan-instrumented and
+won't link plainly.
 
 ```sh
 g++ -std=gnu++20 -O2 -w -I include -I build/openblas-cpu \
@@ -166,10 +82,4 @@ g++ -std=gnu++20 -O2 -w -I include -I build/openblas-cpu \
   -o harness
 ```
 
-- Order matters: harness source, then `libcytnx.a`, then `libhptt.a`, then
-  the external libraries — **dependents before what they call into**
-  (`arpack`/`lapacke` call BLAS/LAPACK symbols `openblas` provides).
-- After rebuilding the library at a different revision, just re-run the
-  same `g++` line — the harness picks up the new library.
-- Linux-specific as written (`g++`, `-lgomp`); on macOS expect Homebrew
-  library paths and `-lomp` in place of `-lgomp`.
+Link order matters: dependents before what they call into.

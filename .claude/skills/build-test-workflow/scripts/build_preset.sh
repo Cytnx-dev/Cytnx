@@ -17,15 +17,11 @@ set -euo pipefail
 # through this script, not just a --target benchmarks_main one -- expected
 # on an agent's own dev machine, unlike a minimal CI runner.
 #
-# RUN_TESTS=ON would normally add --coverage instrumentation to the cytnx
-# library (see CMakeLists.txt), which would also skew benchmarks_main's
-# timings since it links the same library -- CMAKE_CXX_COMPILER_LAUNCHER/
-# CMAKE_CXX_LINKER_LAUNCHER point at strip-coverage-launcher.sh (alongside
-# this script), which strips the literal --coverage token before it reaches
-# the real compiler/linker. -fno-profile-arcs/-fno-test-coverage do NOT
-# cancel --coverage (verified empirically -- a .gcno file is still produced
-# either way), so every build through this script is uninstrumented by
-# construction, not by asking CMakeLists.txt/CI to cooperate.
+# Every build through this script is uninstrumented: the first configure
+# wires in strip-coverage-launcher.sh as CMAKE_CXX_COMPILER_LAUNCHER/
+# CMAKE_CXX_LINKER_LAUNCHER to drop the --coverage flag that RUN_TESTS=ON
+# would otherwise add (see that script for why stripping the token is the
+# only approach that works).
 #
 # Usage:
 #   build_preset.sh <preset> [--target <target>] [--test [args...]]
