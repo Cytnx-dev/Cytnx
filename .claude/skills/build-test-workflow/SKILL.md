@@ -35,6 +35,10 @@ import redirect pytest needs. Every later call, Python target or not, is a
 plain incremental `cmake --build` of the same `build/<preset>` dir — no
 repeat pip overhead.
 
+**Never delete a build dir over a generator or cache mismatch** — that
+erases the accumulated cache and forces a full rebuild. Reconfigure with no
+`-G` flag instead, so CMake keeps the dir's existing generator.
+
 **`--test [args]`** runs the built target's tests; args depend on the
 target:
 
@@ -57,8 +61,17 @@ target:
   needs a GPU.
 - **GPU present**: also run the real suite:
   `"$S" debug-openblas-cuda --target "test_main gpu_test_main" --test`.
-- `debug-*-cuda` presets need an `ASAN_OPTIONS` workaround to run at all;
-  the script exports it automatically.
+- `debug-*-cuda` presets need
+  `ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'` to
+  run at all; the script exports it automatically.
+
+## How much to run, when
+
+- **While iterating:** only the affected gtest suite / pytest file.
+- **Before push / PR:** the full gates in `CLAUDE.md` — ctest for both CPU
+  debug presets, `pytest pytests/` when Python-facing code changed, the
+  CUDA compile check when GPU code changed, and the GPU suite when a GPU is
+  present.
 
 ## Regression discipline
 
@@ -82,4 +95,6 @@ g++ -std=gnu++20 -O2 -w -I include -I build/openblas-cpu \
   -o harness
 ```
 
-Link order matters: dependents before what they call into.
+Link order matters: dependents before what they call into. Linux-specific
+as written; on macOS expect Homebrew library paths and `-lomp` in place of
+`-lgomp`.

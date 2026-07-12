@@ -52,5 +52,9 @@ build or benchmark run — CPU contention skews results.
 - Every column: a readable label **and** its commit SHA — e.g. "min-heap
   fix (`5d4ca56`)". All columns from the same machine and session; state
   the aggregation ("mean of 5 repetitions") and the unit.
+- Compare against a **correct** baseline: if an old revision is buggy in a
+  way that changes how much work it does (e.g. out-of-bounds reads causing
+  skipped work), its numbers are not a fair baseline — say so explicitly
+  rather than letting the table imply a fair race.
 - Append the deciding numbers to the PR description so the performance
   choice is auditable.
