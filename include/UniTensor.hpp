@@ -1867,14 +1867,6 @@ namespace cytnx {
     std::vector<Tensor> _blocks;
     Tensor NullRefTensor;  // this returns when accessed block does not exists!
 
-   private:
-    // additional information for fermions (#841): if true, the sign of the corresponding
-    // block needs to be flipped. Must stay in lockstep with _blocks (one entry per block);
-    // outside the class it can only be modified through reset_signflip_()/erase_signflip_()
-    // below, each of which preserves that invariant.
-    std::vector<cytnx_bool> _signflip;
-
-   public:
     // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums
     // calculated from Symm object! this assume 1. symmetry are the same for each bond!
     //             2. total_qns are feeded with size len(symmetry)
@@ -2702,6 +2694,13 @@ namespace cytnx {
     void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
                             const std::vector<cytnx_uint64> &qn_indices,
                             const std::vector<Bond> &bonds, const Tensor &block) const;
+
+   private:
+    // additional information for fermions (#841): if true, the sign of the corresponding
+    // block needs to be flipped. Must stay in lockstep with _blocks (one entry per block);
+    // outside the class it can only be modified through reset_signflip_()/erase_signflip_()
+    // above, each of which preserves that invariant.
+    std::vector<cytnx_bool> _signflip;
   };
   /// @endcond
 
