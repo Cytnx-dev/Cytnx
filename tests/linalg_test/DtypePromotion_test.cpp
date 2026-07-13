@@ -1,3 +1,4 @@
+#include <cmath>
 #include <vector>
 
 #include "gtest/gtest.h"
@@ -276,21 +277,52 @@ namespace cytnx {
     ExpectComplexNear(out, {1, 1}, 1, 0);  // 2 * 0.5
   }
 
-  TEST(DtypePromotion, Exp_complexfloat_promotes_to_complexdouble) {
-    Tensor a = zeros({1}, Type.ComplexFloat, Device.cpu);  // exp(0) = 1
+  // Exp() is dtype-preserving: a ComplexFloat input keeps ComplexFloat (it no longer promotes to
+  // ComplexDouble). exp(1+i) = e*(cos 1 + i sin 1).
+  TEST(DtypePromotion, Exp_complexfloat_preserves_complexfloat) {
+    Tensor a = zeros({1}, Type.ComplexFloat, Device.cpu);
+    a.storage().at<cytnx_complex64>(0) = cytnx_complex64(1.0f, 1.0f);
     Tensor out = linalg::Exp(a);
-    ASSERT_EQ(out.dtype(), Type.ComplexDouble);
-    ExpectComplexNear(out, {0}, 1, 0);
+    ASSERT_EQ(out.dtype(), Type.ComplexFloat);
+    auto v = out.at<cytnx_complex64>({0});
+    EXPECT_NEAR(v.real(), std::exp(1.0f) * std::cos(1.0f), 1e-5);
+    EXPECT_NEAR(v.imag(), std::exp(1.0f) * std::sin(1.0f), 1e-5);
   }
 
-  TEST(DtypePromotion, Exp_float_reads_correct_buffer_width) {
-    // Old dispatch fed the float storage to the Double kernel, reinterpreting
-    // float bits as double. Nonzero input makes the corruption visible.
+  // Exp() is dtype-preserving: a Float input keeps Float and reads its own buffer width. A
+  // fractional, negative value exercises both the value and the (formerly mis-sized) read.
+  TEST(DtypePromotion, Exp_float_preserves_float) {
     Tensor a = zeros({1}, Type.Float, Device.cpu);
-    a.storage().at<cytnx_float>(0) = 1.0f;
+    a.storage().at<cytnx_float>(0) = -0.5f;
     Tensor out = linalg::Exp(a);
-    ASSERT_EQ(out.dtype(), Type.Double);
-    EXPECT_NEAR(out.at<cytnx_double>({0}), 2.718281828459045, 1e-6);
+    ASSERT_EQ(out.dtype(), Type.Float);
+    EXPECT_NEAR(out.at<cytnx_float>({0}), std::exp(-0.5f), 1e-6f);
+  }
+
+  // Double stays Double; integer promotes to Double (no floating exp kernel for ints).
+  TEST(DtypePromotion, Exp_double_and_int_dtypes) {
+    Tensor d = zeros({2}, Type.Double, Device.cpu);
+    d.at<cytnx_double>({0}) = 1.5;
+    d.at<cytnx_double>({1}) = -2.0;
+    Tensor od = linalg::Exp(d);
+    ASSERT_EQ(od.dtype(), Type.Double);
+    EXPECT_NEAR(od.at<cytnx_double>({0}), std::exp(1.5), 1e-12);
+    EXPECT_NEAR(od.at<cytnx_double>({1}), std::exp(-2.0), 1e-12);
+
+    Tensor i = zeros({1}, Type.Int64, Device.cpu);
+    i.at<cytnx_int64>({0}) = 2;
+    Tensor oi = linalg::Exp(i);
+    ASSERT_EQ(oi.dtype(), Type.Double);
+    EXPECT_NEAR(oi.at<cytnx_double>({0}), std::exp(2.0), 1e-12);
+  }
+
+  // Exp_() (in-place) preserves the input dtype as well.
+  TEST(DtypePromotion, Exp_inplace_preserves_dtype) {
+    Tensor f = zeros({1}, Type.Float, Device.cpu);
+    f.storage().at<cytnx_float>(0) = 0.25f;
+    linalg::Exp_(f);
+    ASSERT_EQ(f.dtype(), Type.Float);
+    EXPECT_NEAR(f.at<cytnx_float>({0}), std::exp(0.25f), 1e-6f);
   }
 
   TEST(DtypePromotion, Concatenate_complexfloat_double) {
