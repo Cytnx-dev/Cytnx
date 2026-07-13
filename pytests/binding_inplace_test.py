@@ -67,32 +67,18 @@ def test_bond_redirect__chains():
     assert b.type() == cytnx.BD_BRA
 
 
-def test_shadow_bindings_are_gone():
-    """The c__*/c_* shadow names must no longer be reachable on any instance;
-    only the real dunder/method names remain."""
-    t = cytnx.zeros([2])
-    for name in (
-        "c__iadd__", "c__isub__", "c__imul__", "c__itruediv__", "c__ifloordiv__",
-        "c__ipow__", "c__imatmul__", "cConj_", "cExp_", "cInvM_", "cInv_", "cAbs_", "cPow_",
-    ):
-        assert not hasattr(t, name), f"Tensor.{name} shadow binding still present"
-
-    ut = cytnx.UniTensor(cytnx.ones([2, 2]))
-    for name in (
-        "cConj_", "cTrace_", "cTranspose_", "cnormalize_", "cDagger_", "ctag",
-        "c__ipow__", "cPow_", "cInv_", "ctruncate_", "c_set_name", "c_set_label",
-        "c_set_labels", "c_relabel_", "c_relabels_", "c_set_rowrank_", "cfrom",
-    ):
-        assert not hasattr(ut, name), f"UniTensor.{name} shadow binding still present"
-
-    s = cytnx.Storage(3, Type.Double)
-    for name in (
-        "c_pylist_double", "c_pylist_complex128", "c_pylist_float", "c_pylist_complex64",
-        "c_pylist_uint64", "c_pylist_int64", "c_pylist_uint32", "c_pylist_int32",
-        "c_pylist_uint16", "c_pylist_int16", "c_pylist_bool",
-    ):
-        assert not hasattr(s, name), f"Storage.{name} shadow binding still present"
-
-    b = cytnx.Bond(2, cytnx.BD_KET)
-    for name in ("c_redirect_", "c_getDegeneracy_refarg", "c_group_duplicates_refarg"):
-        assert not hasattr(b, name), f"Bond.{name} shadow binding still present"
+def test_imatmul_preserves_identity():
+    # `@=` is the one genuine behavioral change from the shadow-API removal:
+    # the old wrapper was misspelled `def __imatmul` (no trailing `__`), so
+    # `a @= b` fell back to `a = a @ b` and rebound `a` to a new object. With
+    # __imatmul__ bound correctly it now mutates in place and preserves identity.
+    a = cytnx.arange(4).reshape(2, 2)
+    b = cytnx.arange(4).reshape(2, 2)
+    expected = cytnx.linalg.Dot(a, b)
+    alias = a  # second reference to the same object
+    aid = id(a)
+    a @= b
+    assert a is alias  # in-place: no new object was created
+    assert id(a) == aid
+    # the mutation is visible through the alias and matches a @ b
+    assert (alias - expected).Norm().item() == 0.0

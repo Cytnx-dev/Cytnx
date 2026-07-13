@@ -17,7 +17,7 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Qdr] error, Qdr can only operate on rank-2 Tensor.%s", "\n");
 
-      cytnx_uint64 n_tau = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      const cytnx_uint64 n_tau = std::min(Tin.shape()[0], Tin.shape()[1]);
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
@@ -30,6 +30,13 @@ namespace cytnx {
       R.Init({n_tau, Tin.shape()[1]}, in.dtype(), in.device());
       R.storage().set_zeros();
       D = tau.clone();
+
+      if (in.is_empty()) {
+        Q.Init({Tin.shape()[0], n_tau}, in.dtype(), in.device());
+        std::vector<Tensor> out{Q, D, R};
+        if (is_tau) out.push_back(tau);
+        return out;
+      }
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.QR_ii[in.dtype()](

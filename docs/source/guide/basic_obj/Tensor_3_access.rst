@@ -32,7 +32,9 @@ Output >>
     2. The return value will always be a Tensor object, even it only contains one element.
 
 
-In the case where you have only one element in a Tensor, you can use **item()** to get the element as a standard Python/C++ type.
+When a Tensor has exactly one element, you can use **item()** to get the element
+as a standard Python/C++ type. This includes a rank-zero scalar Tensor as well
+as singleton shapes such as ``[1]`` and ``[1, 1]``.
 
 * In Python:
 

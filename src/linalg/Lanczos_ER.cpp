@@ -554,8 +554,7 @@ namespace cytnx {
       else
         out.resize(1);
 
-      out[0] =
-        zeros({k}, Type.is_complex(Hop->dtype()) ? Hop->dtype() + 2 : Hop->dtype(), Hop->device());
+      out[0] = zeros({k}, Type.to_real(Hop->dtype()), Hop->device());
 
       double _cvgcrit = CvgCrit;
       if (Hop->dtype() == Type.Float || Hop->dtype() == Type.ComplexFloat) {

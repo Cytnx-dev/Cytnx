@@ -5,32 +5,30 @@
 
 #ifdef BACKEND_TORCH
 #else
+  #include "Arithmetic_shape.hpp"
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
     Tensor Sub(const Tensor &Lt, const Tensor &Rt) {
+      detail::check_binary_tensor_inputs(Lt, Rt, "Sub");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Sub] The two tensors cannot be on different devices.%s", "\n");
 
       Tensor out;
       bool icnst = false;
-      if (Lt.shape().size() == 1 && Lt.shape()[0] == 1) {
-        out._impl = Rt._impl->_clone_meta_only();
-        out._impl->storage() =
-          Storage(Rt.storage().size(), Type.type_promote(Lt.dtype(), Rt.dtype()), Rt.device());
-        // out.Init(Rt.shape(),Type.type_promote(Lt.dtype(), Rt.dtype()),Lt.device());
-        icnst = true;
-      } else if (Rt.shape().size() == 1 && Rt.shape()[0] == 1) {
-        out._impl = Lt._impl->_clone_meta_only();
-        out._impl->storage() =
-          Storage(Lt.storage().size(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
-        // out.Init(Lt.shape(),Type.type_promote(Lt.dtype(), Rt.dtype()),Lt.device());
+      if (detail::init_broadcast_binary_output(out, Lt, Rt,
+                                               Type.type_promote(Lt.dtype(), Rt.dtype()))) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[Sub] The two tensors do not have the same shape.%s", "\n");
         out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
       }
+
+      if (out.storage().size() == 0) return out;
+
+      const Tensor left = detail::host_singleton_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_singleton_for_gpu_broadcast(Rt, Lt.device());
 
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section
@@ -42,17 +40,17 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::SubInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          linalg_internal::cuSub_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
-                                          Rt._impl->storage()._impl,
+          linalg_internal::cuSub_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
+                                          right._impl->storage()._impl,
                                           out._impl->storage()._impl->size(), {}, {}, {});
   #else
           cytnx_error_msg(true, "[Sub] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -69,20 +67,20 @@ namespace cytnx {
                 [&](auto *rptr) {
                   using TR = std::remove_pointer_t<decltype(rptr)>;
                   cytnx::linalg_internal::SubInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, Rt._impl->storage()._impl->size(), Lt._impl->shape(),
-                    Lt._impl->invmapper(), Rt._impl->invmapper());
+                    out._impl->storage()._impl, left._impl->storage()._impl,
+                    right._impl->storage()._impl, right._impl->storage()._impl->size(),
+                    left._impl->shape(), left._impl->invmapper(), right._impl->invmapper());
                 },
-                Rt.ptr());
+                right.ptr());
             },
-            Lt.ptr());
+            left.ptr());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          linalg_internal::cuSub_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
-                                          Rt._impl->storage()._impl,
-                                          out._impl->storage()._impl->size(), Lt._impl->shape(),
-                                          Lt._impl->invmapper(), Rt._impl->invmapper());
+          linalg_internal::cuSub_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
+                                          right._impl->storage()._impl,
+                                          out._impl->storage()._impl->size(), left._impl->shape(),
+                                          left._impl->invmapper(), right._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Sub] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -95,6 +93,7 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Sub<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.ComplexDouble);
       Cnst.at<cytnx_complex128>(0) = lc;
       Tensor out;
@@ -128,6 +127,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_complex64>(const cytnx_complex64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.ComplexFloat);
       Cnst.at<cytnx_complex64>(0) = lc;
       Tensor out;
@@ -163,6 +163,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_double>(const cytnx_double &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Double);
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
@@ -197,6 +198,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_float>(const cytnx_float &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Float);
       Cnst.at<cytnx_float>(0) = lc;
       Tensor out;
@@ -231,6 +233,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_int64>(const cytnx_int64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Int64);
       Cnst.at<cytnx_int64>(0) = lc;
       Tensor out;
@@ -265,6 +268,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_uint64>(const cytnx_uint64 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Uint64);
       Cnst.at<cytnx_uint64>(0) = lc;
       Tensor out;
@@ -299,6 +303,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_int32>(const cytnx_int32 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Int32);
       Cnst.at<cytnx_int32>(0) = lc;
       Tensor out;
@@ -333,6 +338,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Uint32);
       Cnst.at<cytnx_uint32>(0) = lc;
       Tensor out;
@@ -367,6 +373,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Int16);
       Cnst.at<cytnx_int16>(0) = lc;
       Tensor out;
@@ -401,6 +408,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Uint16);
       Cnst.at<cytnx_uint16>(0) = lc;
       Tensor out;
@@ -435,6 +443,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, Type.Bool);
       Cnst.at<cytnx_bool>(0) = lc;
       Tensor out;
@@ -469,6 +478,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<Scalar>(const Scalar &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Sub");
       Storage Cnst(1, lc.dtype());
       Cnst.set_item(0, lc);
 
@@ -509,6 +519,7 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Sub<cytnx_complex128>(const Tensor &Lt, const cytnx_complex128 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.ComplexDouble);
       Cnst.at<cytnx_complex128>(0) = rc;
       Tensor out;
@@ -541,6 +552,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_complex64>(const Tensor &Lt, const cytnx_complex64 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.ComplexFloat);
       Cnst.at<cytnx_complex64>(0) = rc;
       Tensor out;
@@ -575,6 +587,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_double>(const Tensor &Lt, const cytnx_double &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Double);
       Cnst.at<cytnx_double>(0) = rc;
       Tensor out;
@@ -608,6 +621,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_float>(const Tensor &Lt, const cytnx_float &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Float);
       Cnst.at<cytnx_float>(0) = rc;
       Tensor out;
@@ -641,6 +655,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_int64>(const Tensor &Lt, const cytnx_int64 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Int64);
       Cnst.at<cytnx_int64>(0) = rc;
       Tensor out;
@@ -674,6 +689,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_uint64>(const Tensor &Lt, const cytnx_uint64 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Uint64);
       Cnst.at<cytnx_uint64>(0) = rc;
       Tensor out;
@@ -707,6 +723,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_int32>(const Tensor &Lt, const cytnx_int32 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Int32);
       Cnst.at<cytnx_int32>(0) = rc;
       Tensor out;
@@ -740,6 +757,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_uint32>(const Tensor &Lt, const cytnx_uint32 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Uint32);
       Cnst.at<cytnx_uint32>(0) = rc;
       Tensor out;
@@ -773,6 +791,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_int16>(const Tensor &Lt, const cytnx_int16 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Int16);
       Cnst.at<cytnx_int16>(0) = rc;
       Tensor out;
@@ -806,6 +825,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_uint16>(const Tensor &Lt, const cytnx_uint16 &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Uint16);
       Cnst.at<cytnx_uint16>(0) = rc;
       Tensor out;
@@ -839,6 +859,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<cytnx_bool>(const Tensor &Lt, const cytnx_bool &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, Type.Bool);
       Cnst.at<cytnx_bool>(0) = rc;
       Tensor out;
@@ -872,6 +893,7 @@ namespace cytnx {
 
     template <>
     Tensor Sub<Scalar>(const Tensor &Lt, const Scalar &rc) {
+      detail::check_tensor_initialized(Lt, "Sub");
       Storage Cnst(1, rc.dtype());
       Cnst.set_item(0, rc);
 
@@ -1029,10 +1051,11 @@ namespace cytnx {
     // cytnx: cytnx::UniTensor
     //===============
     cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) {
+      // promote across the real/complex boundary (e.g. ComplexFloat - Double -> ComplexDouble)
+      // rather than adopting the lower-enum operand dtype.
       UniTensor out = Lt.clone();
-      if (Lt.dtype() > Rt.dtype()) {
-        out = out.astype(Rt.dtype());
-      }
+      const unsigned int out_dtype = Type.type_promote(Lt.dtype(), Rt.dtype());
+      if (out.dtype() != out_dtype) out = out.astype(out_dtype);
       out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name_("");
 
@@ -1046,14 +1069,10 @@ namespace cytnx {
       // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
-      UniTensor out;
-      if (Scalar(lc).dtype() < Rt.dtype()) {
-        out = Rt.astype(Scalar(lc).dtype());
-        out._impl->lSub_(lc);
-      } else {
-        out = Rt.clone();
-        out._impl->lSub_(lc);
-      }
+      UniTensor out = Rt.clone();
+      const unsigned int out_dtype = Type.type_promote(Scalar(lc).dtype(), Rt.dtype());
+      if (out.dtype() != out_dtype) out = out.astype(out_dtype);
+      out._impl->lSub_(lc);
       out.set_name_("");
 
       return out;
@@ -1079,14 +1098,10 @@ namespace cytnx {
       // cytnx_error_msg(Lt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
-      UniTensor out;
-      if (Lt.dtype() > Scalar(rc).dtype()) {
-        out = Lt.astype(Scalar(rc).dtype());
-        out.Sub_(rc);
-      } else {
-        out = Lt.clone();
-        out.Sub_(rc);
-      }
+      UniTensor out = Lt.clone();
+      const unsigned int out_dtype = Type.type_promote(Lt.dtype(), Scalar(rc).dtype());
+      if (out.dtype() != out_dtype) out = out.astype(out_dtype);
+      out.Sub_(rc);
       // out.relabel_(vec_range<cytnx_int64>(Lt.rank()));
       out.set_name_("");
 

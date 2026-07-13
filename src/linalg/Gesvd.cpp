@@ -20,13 +20,13 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Gesvd] error, Gesvd can only operate on rank-2 Tensor.%s", "\n");
 
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      const cytnx_uint64 n_singlu = std::min(Tin.shape()[0], Tin.shape()[1]);
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
       Tensor U, S, vT;
-      S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+      S.Init({n_singlu}, Type.to_real(in.dtype()),
              in.device());  // if type is complex, S should be real
       // S.storage().set_zeros();
       if (is_U) {
@@ -36,6 +36,13 @@ namespace cytnx {
       if (is_vT) {
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         // vT.storage().set_zeros();
+      }
+
+      if (in.is_empty()) {
+        std::vector<Tensor> out{S};
+        if (is_U) out.push_back(U);
+        if (is_vT) out.push_back(vT);
+        return out;
       }
 
       if (Tin.device() == Device.cpu) {

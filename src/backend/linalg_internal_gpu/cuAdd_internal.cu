@@ -7,38 +7,9 @@ namespace cytnx {
 
     namespace {
 
-      template <typename T>
-      __device__ inline cuDoubleComplex CuToComplexDouble(const T &v) {
-        return make_cuDoubleComplex(static_cast<cytnx_double>(v), 0.0);
-      }
-
-      __device__ inline cuDoubleComplex CuToComplexDouble(const cuDoubleComplex &v) { return v; }
-
-      __device__ inline cuDoubleComplex CuToComplexDouble(const cuComplex &v) {
-        return cuComplexFloatToDouble(v);
-      }
-
-      template <typename T>
-      __device__ inline cuComplex CuToComplexFloat(const T &v) {
-        return make_cuFloatComplex(static_cast<cytnx_float>(v), 0.0f);
-      }
-
-      __device__ inline cuComplex CuToComplexFloat(const cuComplex &v) { return v; }
-
-      __device__ inline cuComplex CuToComplexFloat(const cuDoubleComplex &v) {
-        return make_cuFloatComplex(static_cast<cytnx_float>(cuCreal(v)),
-                                   static_cast<cytnx_float>(cuCimag(v)));
-      }
-
       template <typename TO, typename TL, typename TR>
       __device__ inline TO CuAddDispatchOp(const TL &lhs, const TR &rhs) {
-        if constexpr (std::is_same_v<TO, cuDoubleComplex>) {
-          return cuCadd(CuToComplexDouble(lhs), CuToComplexDouble(rhs));
-        } else if constexpr (std::is_same_v<TO, cuComplex>) {
-          return cuCaddf(CuToComplexFloat(lhs), CuToComplexFloat(rhs));
-        } else {
-          return static_cast<TO>(lhs) + static_cast<TO>(rhs);
-        }
+        return TO(lhs) + TO(rhs);
       }
 
       template <typename TO, typename TL, typename TR>
@@ -178,12 +149,12 @@ namespace cytnx {
                               const std::vector<cytnx_uint64> &invmapper_R) {
         switch (Rin->dtype()) {
           case Type.ComplexDouble:
-            cuAdd_dispatch_typed<TL, cuDoubleComplex>(out, Lin, Rin, len, shape, invmapper_L,
-                                                      invmapper_R);
+            cuAdd_dispatch_typed<TL, cytnx_cuda_complex128>(out, Lin, Rin, len, shape, invmapper_L,
+                                                            invmapper_R);
             break;
           case Type.ComplexFloat:
-            cuAdd_dispatch_typed<TL, cuComplex>(out, Lin, Rin, len, shape, invmapper_L,
-                                                invmapper_R);
+            cuAdd_dispatch_typed<TL, cytnx_cuda_complex64>(out, Lin, Rin, len, shape, invmapper_L,
+                                                           invmapper_R);
             break;
           case Type.Double:
             cuAdd_dispatch_typed<TL, cytnx_double>(out, Lin, Rin, len, shape, invmapper_L,
@@ -239,13 +210,16 @@ namespace cytnx {
       cytnx_error_msg(out->dtype() != expected_dtype,
                       "[cuAdd_dispatch] output dtype mismatch. got=%d expected=%d%s", out->dtype(),
                       expected_dtype, "\n");
+      if (len == 0) return;
 
       switch (Lin->dtype()) {
         case Type.ComplexDouble:
-          cuAdd_dispatch_rhs<cuDoubleComplex>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
+          cuAdd_dispatch_rhs<cytnx_cuda_complex128>(out, Lin, Rin, len, shape, invmapper_L,
+                                                    invmapper_R);
           break;
         case Type.ComplexFloat:
-          cuAdd_dispatch_rhs<cuComplex>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
+          cuAdd_dispatch_rhs<cytnx_cuda_complex64>(out, Lin, Rin, len, shape, invmapper_L,
+                                                   invmapper_R);
           break;
         case Type.Double:
           cuAdd_dispatch_rhs<cytnx_double>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);

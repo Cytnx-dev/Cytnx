@@ -12,7 +12,6 @@
 #include <pybind11/functional.h>
 
 #include "cytnx.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;

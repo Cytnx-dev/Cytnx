@@ -8,6 +8,7 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 #include "block_truncation_helpers.hpp"
+#include "Generator.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -34,6 +35,16 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Gesvd_truncate] can only operate on rank-2 Tensor.%s", "\n");
 
+      if (Tin.is_empty()) {
+        std::vector<Tensor> out = Gesvd(Tin, is_U, is_vT);
+        if (return_err == 1) {
+          out.push_back(zeros({}, out[0].dtype(), out[0].device()));
+        } else if (return_err) {
+          out.push_back(zeros({0}, out[0].dtype(), out[0].device()));
+        }
+        return out;
+      }
+
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> outT = Gesvd(Tin, is_U, is_vT);
 
@@ -53,11 +64,15 @@ namespace cytnx {
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
         // prepare U, S, vT
         Tensor U, S, vT, terr;
-        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+        S.Init({n_singlu}, Type.to_real(in.dtype()),
                in.device());  // if type is complex, S should be real
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-        terr.Init({1}, in.dtype(), in.device());
+        if (return_err == 1) {
+          terr = zeros({}, S.dtype(), in.device());
+        } else if (return_err) {
+          terr = zeros({0}, S.dtype(), in.device());
+        }
 
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
                                                                   S, vT, terr);
@@ -68,10 +83,14 @@ namespace cytnx {
           // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
           // output tensor descriptors from the passed buffer shapes, so the buffers must be
           // re-initialized to the full size before restarting.
-          S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(), in.device());
+          S.Init({n_singlu}, Type.to_real(in.dtype()), in.device());
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-          terr.Init({1}, in.dtype(), in.device());
+          if (return_err == 1) {
+            terr = zeros({}, S.dtype(), in.device());
+          } else if (return_err) {
+            terr = zeros({0}, S.dtype(), in.device());
+          }
           cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
                                                                     0., return_err, U, S, vT, terr);
         }
@@ -242,6 +261,9 @@ namespace cytnx {
         smidx++;
         Smin = Sall.storage()(smidx);
       }
+      // the per-block scans below keep every value >= Smin, so an exact degeneracy at the
+      // cut is kept entirely; only values strictly below Smin are dropped.
+      smidx = CountDroppedSingularValues(Sall, smidx, Smin);
 
       // traversal each block and truncate!
       UniTensor &S = outCyT[0];
@@ -465,9 +487,9 @@ namespace cytnx {
         }
       }
       if (!anySall) {
-        // no truncation; return_err is tensor with one element, set to 0
         if (return_err >= 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, outCyT[0].dtype())));
+          outCyT.push_back(
+            BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err, outCyT[0].device()));
         }
       } else {
         Scalar Smin;
@@ -496,6 +518,14 @@ namespace cytnx {
             if (keep_dim == 0) break;  // this is needed, keep_dim can be 0
             smidx++;
             Smin = Sall.storage()(smidx);
+          }
+          if (keep_dim == 0) {
+            // the err threshold dropped every value in Sall; nothing above the cut is kept
+            smidx = Sshape;
+          } else {
+            // the per-block scans below keep every value >= Smin, so an exact degeneracy at
+            // the cut is kept entirely; only values strictly below Smin are dropped.
+            smidx = CountDroppedSingularValues(Sall, smidx, Smin);
           }
           // handle return_err!
           if (return_err) {

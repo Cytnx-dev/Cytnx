@@ -1,4 +1,11 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <random>
+#include <string>
+#include <utility>
+#include <vector>
 #define rep(i, a, n) for (int i = a; i < n; i++)
 #define per(i, a, n) for (int i = n - 1; i >= a; i--)
 #define pb push_back

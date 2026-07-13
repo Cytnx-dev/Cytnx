@@ -27,7 +27,7 @@ namespace {
     InitVec();
   }
   void MatOp::InitVec() {
-    T_init = zeros(nx(), this->dtype(), this->device());
+    T_init = zeros({nx()}, this->dtype(), this->device());
     if (Type.is_float(this->dtype())) {
       random::normal_(T_init, 0.0, 1.0, 0);
     }

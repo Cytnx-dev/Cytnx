@@ -23,9 +23,9 @@ class DenseUniTensorTest : public ::testing::Test {
   Bond phy = Bond(2, BD_IN);
   Bond aux = Bond(1, BD_IN);
   DenseUniTensor dut;
-  Tensor tzero345 = zeros({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+  Tensor tzero345 = zeros({3, 4, 5}, Type.ComplexDouble, cytnx::Device.cuda);
   Tensor tar345 =
-    arange({3 * 4 * 5}).reshape({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+    arange(0, 3 * 4 * 5, 1, Type.ComplexDouble, cytnx::Device.cuda).reshape({3, 4, 5});
 
   UniTensor Spf =
     UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Float, Device.cuda, false)
@@ -45,39 +45,22 @@ class DenseUniTensorTest : public ::testing::Test {
 
  protected:
   void SetUp() override {
-    utzero345 = UniTensor(zeros(3 * 4 * 5))
-                  .reshape({3, 4, 5})
-                  .astype(Type.ComplexDouble)
-                  .to(cytnx::Device.cuda);
-    utone345 = UniTensor(ones(3 * 4 * 5))
-                 .reshape({3, 4, 5})
-                 .astype(Type.ComplexDouble)
-                 .to(cytnx::Device.cuda);
-    utar345 = UniTensor(arange(3 * 4 * 5))
-                .reshape({3, 4, 5})
-                .astype(Type.ComplexDouble)
-                .to(cytnx::Device.cuda);
-    utzero3456 = UniTensor(zeros(3 * 4 * 5 * 6))
-                   .reshape({3, 4, 5, 6})
-                   .astype(Type.ComplexDouble)
-                   .to(cytnx::Device.cuda);
-    utone3456 = UniTensor(ones(3 * 4 * 5 * 6))
-                  .reshape({3, 4, 5, 6})
-                  .astype(Type.ComplexDouble)
-                  .to(cytnx::Device.cuda);
-    utar3456 = UniTensor(arange(3 * 4 * 5 * 6))
-                 .reshape({3, 4, 5, 6})
-                 .astype(Type.ComplexDouble)
-                 .to(cytnx::Device.cuda);
-    utarcomplex345 = UniTensor(arange(3 * 4 * 5)).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    for (size_t i = 0; i < 3 * 4 * 5; i++) utarcomplex345.at({i}) = cytnx_complex128(i, i);
+    using namespace std::complex_literals;
+
+    utzero345 = UniTensor(zeros({3, 4, 5}, Type.ComplexDouble, cytnx::Device.cuda));
+    utone345 = UniTensor(ones({3, 4, 5}, Type.ComplexDouble, cytnx::Device.cuda));
+    utar345 =
+      UniTensor(arange(0, 3 * 4 * 5, 1, Type.ComplexDouble, cytnx::Device.cuda)).reshape({3, 4, 5});
+    utzero3456 = UniTensor(zeros({3, 4, 5, 6}, Type.ComplexDouble, cytnx::Device.cuda));
+    utone3456 = UniTensor(ones({3, 4, 5, 6}, Type.ComplexDouble, cytnx::Device.cuda));
+    utar3456 = UniTensor(arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble, cytnx::Device.cuda))
+                 .reshape({3, 4, 5, 6});
     utarcomplex345 =
-      utarcomplex345.reshape({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+      UniTensor((1.0 + 1.0i) * arange(0, 3 * 4 * 5, 1, Type.ComplexDouble, cytnx::Device.cuda))
+        .reshape({3, 4, 5});
     utarcomplex3456 =
-      UniTensor(arange(3 * 4 * 5 * 6)).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) utarcomplex3456.at({i}) = cytnx_complex128(i, i);
-    utarcomplex3456 =
-      utarcomplex3456.reshape({3, 4, 5, 6}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+      UniTensor((1.0 + 1.0i) * arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble, cytnx::Device.cuda))
+        .reshape({3, 4, 5, 6});
 
     ut1 =
       ut1.Load(data_dir + "denseutensor1.cytnx").astype(Type.ComplexDouble).to(cytnx::Device.cuda);

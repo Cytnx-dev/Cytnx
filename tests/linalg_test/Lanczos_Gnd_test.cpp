@@ -47,7 +47,8 @@ namespace {
    private:
     UniTensor L_, R_, O_;
     Network net_;
-    std::vector<UniTensor> CreateLRO(const int D, const int d, const int dw) {
+    std::vector<UniTensor> CreateLRO(const cytnx_uint64 D, const cytnx_uint64 d,
+                                     const cytnx_uint64 dw) {
       double low = -1.0, high = 1.0;
       int seed = 0;
       UniTensor L =
@@ -64,7 +65,7 @@ namespace {
       return {L, R, O};
     }
 
-    UniTensor Create_UTinit(const int D, const int d) {
+    UniTensor Create_UTinit(const cytnx_uint64 D, const cytnx_uint64 d) {
       double low = -1.0, high = 1.0;
       int seed = 0;
       UniTensor psi =
@@ -340,7 +341,7 @@ TEST(Lanczos_Ut, err_crit_negative) {
 TEST(Lanczos_Ut, nx_not_match) {
   LinOp op = LinOp("mv", 30);
   double low = -1.0, high = 1.0;
-  int D = 5, d = 2;
+  cytnx_uint64 D = 5, d = 2;
   UniTensor psi = UniTensor::uniform({D, d, D}, low, high);
   try {
     unsigned long long maxiter = 1000;
@@ -377,7 +378,7 @@ TEST(Lanczos_Gnd, Lanczos_Gnd_test) {
   UniTensor v = UniTensor(tv);
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, v, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, false);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
+  cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
   EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
 }
 
@@ -403,7 +404,7 @@ TEST(Lanczos_Gnd, Bk_Lanczos_Gnd_test) {
   }
   std::vector<UniTensor> eigs =
     linalg::Lanczos(&H, lan_guess, "Gnd", 9.999999999999999988e-15, 10000, 1, true, true, 0, false);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
+  cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
   EXPECT_TRUE(std::abs(ev - E0) < 1e-12);
   auto err = (H.matvec(eigs[1]) - ev * eigs[1]).Norm().item();
   EXPECT_TRUE(err < 1e-6);

@@ -8,7 +8,44 @@ describe:scalar product between two vectors
 ====================*/
 TEST_F(BlockFermionicUniTensorTest, VectorContract) {
   // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32
-  EXPECT_TRUE(abs(BFUT1.contract(BFUT2).item() - 32) < 1e-12);
+  UniTensor out = BFUT1.contract(BFUT2);
+  EXPECT_EQ(out.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(out.rank(), 0);
+  EXPECT_EQ(out.rowrank(), 0);
+  EXPECT_TRUE(out.bonds().empty());
+  EXPECT_TRUE(out.shape().empty());
+  EXPECT_EQ(out.syms(), BFUT1.syms());
+  EXPECT_EQ(out.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(out.get_block_().is_scalar());
+  EXPECT_TRUE(std::abs(double(out.item().real()) - 32.0) < 1e-12);
+  EXPECT_DOUBLE_EQ(out.item<cytnx_double>(), 32.0);
+  EXPECT_THROW(BFUT1.item(), cytnx::error);
+}
+
+TEST_F(BlockFermionicUniTensorTest, ZeroExtentBondProducesEmptyTensor) {
+  const Bond empty = Bond(BD_IN, {{0}}, {0}, {Symmetry::FermionParity()});
+  const Bond unit = Bond(BD_OUT, {{0}}, {1}, {Symmetry::FermionParity()});
+  UniTensor tensor({empty, unit}, {"empty", "unit"}, 1, Type.Double, Device.cpu);
+
+  EXPECT_EQ(tensor.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(tensor.shape(), (std::vector<cytnx_uint64>{0, 1}));
+  EXPECT_EQ(tensor.size(), 0);
+  EXPECT_TRUE(tensor.is_empty());
+  EXPECT_FALSE(tensor.is_void());
+  EXPECT_FALSE(tensor.is_scalar());
+  EXPECT_EQ(tensor.dtype(), Type.Double);
+  EXPECT_EQ(tensor.device(), Device.cpu);
+  ASSERT_EQ(tensor.Nblocks(), 1);
+  EXPECT_TRUE(tensor.get_block_(0).is_empty());
+
+  tensor.Save(temp_file_path);
+  const UniTensor loaded = UniTensor::Load(temp_file_path);
+  EXPECT_EQ(loaded.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(loaded.shape(), tensor.shape());
+  EXPECT_EQ(loaded.syms(), tensor.syms());
+  EXPECT_TRUE(loaded.is_empty());
+  ASSERT_EQ(loaded.Nblocks(), 1);
+  EXPECT_TRUE(loaded.get_block_(0).is_empty());
 }
 
 /*=====test info=====
@@ -28,7 +65,167 @@ TEST_F(BlockFermionicUniTensorTest, ContractMixedDtype) {
   UniTensor L = BFUT1.astype(Type.Double);
   UniTensor R = BFUT2.astype(Type.Float);
   // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32 (same as VectorContract; verifies sign flip preserved)
-  EXPECT_TRUE(abs(L.contract(R).item() - 32.0) < 1e-5);
+  UniTensor out = L.contract(R);
+  EXPECT_EQ(out.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(out.dtype(), Type.Double);
+  EXPECT_EQ(out.rank(), 0);
+  EXPECT_EQ(out.syms(), L.syms());
+  EXPECT_EQ(out.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(std::abs(double(out.item().real()) - 32.0) < 1e-5);
+}
+
+TEST_F(BlockFermionicUniTensorTest, NormReturnsScalarTensor) {
+  Tensor norm = BFUT1.Norm();
+  EXPECT_TRUE(norm.is_scalar());
+  EXPECT_GT(double(norm.item().real()), 0.0);
+}
+
+TEST_F(BlockFermionicUniTensorTest, TraceRankZeroScalarPreservesSymmetryMetadata) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+  UniTensor bkf = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu);
+  bkf.at({0, 0}) = 2.0;
+  bkf.at({1, 1}) = 3.0;
+
+  UniTensor traced = bkf.Trace("a", "b");
+  EXPECT_EQ(traced.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced.rank(), 0);
+  EXPECT_EQ(traced.rowrank(), 0);
+  EXPECT_TRUE(traced.bonds().empty());
+  EXPECT_TRUE(traced.shape().empty());
+  EXPECT_EQ(traced.syms(), bkf.syms());
+  EXPECT_FALSE(traced.is_diag());
+  EXPECT_EQ(traced.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(traced.get_block_().is_scalar());
+  EXPECT_TRUE(traced.get_block_({}).is_scalar());
+  EXPECT_DOUBLE_EQ(double(traced.at({}).real()), -1.0);
+  EXPECT_NO_THROW(traced.to_dense());
+  testing::internal::CaptureStdout();
+  EXPECT_NO_THROW(traced.print_block(0, false));
+  EXPECT_NE(testing::internal::GetCapturedStdout().find("rank-0 scalar block"), std::string::npos);
+
+  UniTensor loaded_scalar;
+  traced.Save(temp_file_path);
+  EXPECT_NO_THROW(loaded_scalar = UniTensor::Load(temp_file_path));
+  EXPECT_EQ(loaded_scalar.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(loaded_scalar.rank(), 0);
+  EXPECT_EQ(loaded_scalar.syms(), bkf.syms());
+  EXPECT_EQ(loaded_scalar.signflip(), std::vector<bool>({false}));
+  EXPECT_DOUBLE_EQ(double(loaded_scalar.at({}).real()), -1.0);
+
+  UniTensor same_sym_sum = traced.clone();
+  EXPECT_NO_THROW(same_sym_sum += loaded_scalar);
+  EXPECT_DOUBLE_EQ(double(same_sym_sum.at({}).real()), -2.0);
+
+  Bond fnum_bond = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionNumber()});
+  UniTensor fnum =
+    UniTensor({fnum_bond, fnum_bond.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu);
+  fnum.at({0, 0}) = 2.0;
+  fnum.at({1, 1}) = 3.0;
+  UniTensor fnum_scalar = fnum.Trace("a", "b");
+  EXPECT_EQ(fnum_scalar.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(fnum_scalar.rank(), 0);
+  EXPECT_NE(fnum_scalar.syms(), traced.syms());
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced + fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced - fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced * fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = traced / fnum_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+
+  UniTensor scalar_contract;
+  EXPECT_NO_THROW(scalar_contract = traced.contract(loaded_scalar));
+  EXPECT_EQ(scalar_contract.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(scalar_contract.rank(), 0);
+  EXPECT_EQ(scalar_contract.syms(), bkf.syms());
+  EXPECT_EQ(scalar_contract.signflip(), std::vector<bool>({false}));
+  EXPECT_DOUBLE_EQ(double(scalar_contract.at({}).real()), 1.0);
+
+  UniTensor traced_inplace = bkf.clone();
+  traced_inplace.Trace_("a", "b");
+  EXPECT_EQ(traced_inplace.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced_inplace.rank(), 0);
+  EXPECT_EQ(traced_inplace.rowrank(), 0);
+  EXPECT_TRUE(traced_inplace.bonds().empty());
+  EXPECT_TRUE(traced_inplace.shape().empty());
+  EXPECT_EQ(traced_inplace.syms(), bkf.syms());
+  EXPECT_FALSE(traced_inplace.is_diag());
+  EXPECT_EQ(traced_inplace.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(traced_inplace.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(traced_inplace.at({}).real()), -1.0);
+  EXPECT_NO_THROW(traced_inplace.to_dense());
+
+  UniTensor transposed = traced_inplace.Transpose();
+  EXPECT_EQ(transposed.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(transposed.rank(), 0);
+  EXPECT_EQ(transposed.rowrank(), 0);
+  EXPECT_TRUE(transposed.bonds().empty());
+  EXPECT_TRUE(transposed.shape().empty());
+  EXPECT_EQ(transposed.syms(), bkf.syms());
+  EXPECT_FALSE(transposed.is_diag());
+  EXPECT_EQ(transposed.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(transposed.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(transposed.at({}).real()), -1.0);
+
+  traced_inplace.Transpose_();
+  EXPECT_EQ(traced_inplace.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced_inplace.rank(), 0);
+  EXPECT_EQ(traced_inplace.rowrank(), 0);
+  EXPECT_TRUE(traced_inplace.bonds().empty());
+  EXPECT_TRUE(traced_inplace.shape().empty());
+  EXPECT_EQ(traced_inplace.syms(), bkf.syms());
+  EXPECT_FALSE(traced_inplace.is_diag());
+  EXPECT_EQ(traced_inplace.signflip(), std::vector<bool>({false}));
+  EXPECT_TRUE(traced_inplace.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(traced_inplace.at({}).real()), -1.0);
+
+  UniTensor diag = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  diag.get_block_(0).fill(2.0);
+  diag.get_block_(1).fill(3.0);
+  UniTensor traced_diag = diag.Trace("a", "b");
+  EXPECT_EQ(traced_diag.uten_type(), UTenType.BlockFermionic);
+  EXPECT_EQ(traced_diag.rank(), 0);
+  EXPECT_FALSE(traced_diag.is_diag());
+  EXPECT_EQ(traced_diag.syms(), diag.syms());
+  EXPECT_NO_THROW(traced_diag.to_dense());
+}
+
+TEST_F(BlockFermionicUniTensorTest, DiagonalPermutePreservesBlocks) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+  UniTensor diag = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  diag.get_block_(0).fill(2.0);
+  diag.get_block_(1).fill(3.0);
+
+  UniTensor permuted = diag.permute(std::vector<std::string>{"b", "a"});
+  EXPECT_TRUE(permuted.is_diag());
+  EXPECT_FALSE(permuted.get_block_(0).is_void());
+  EXPECT_FALSE(permuted.get_block_(1).is_void());
+  EXPECT_DOUBLE_EQ(permuted.get_block_(0).item<cytnx_double>(), 2.0);
+  EXPECT_DOUBLE_EQ(permuted.get_block_(1).item<cytnx_double>(), 3.0);
+
+  UniTensor no_signflip = diag.permute_nosignflip({"b", "a"});
+  EXPECT_TRUE(no_signflip.is_diag());
+  EXPECT_FALSE(no_signflip.get_block_(0).is_void());
+  EXPECT_FALSE(no_signflip.get_block_(1).is_void());
+  EXPECT_DOUBLE_EQ(no_signflip.get_block_(0).item<cytnx_double>(), 2.0);
+  EXPECT_DOUBLE_EQ(no_signflip.get_block_(1).item<cytnx_double>(), 3.0);
 }
 
 /*=====test info=====
@@ -163,7 +360,7 @@ TEST_F(BlockFermionicUniTensorTest, SaveLoad) {
   UniTensor BFUT1_loaded = BFUT1_loaded.Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded));
   // for char*
-  const char *fname = temp_file_path.c_str();
+  const char* fname = temp_file_path.c_str();
   BFUT1.Save(fname);
   UniTensor BFUT1_loaded_char_save = BFUT1_loaded_char_save.Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_save));
@@ -217,6 +414,58 @@ TEST_F(BlockFermionicUniTensorTest, Transpose) {
   EXPECT_EQ(tmp2.bonds()[1].type(), BD_OUT);
   EXPECT_EQ(tmp2.bonds()[2].type(), BD_OUT);
   EXPECT_TRUE(AreEqUniTensor(tmp2, tmp));
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the BlockFermionicUniTensor path.
+         Two UniTensors sharing the same underlying block Tensors (via
+         relabel(), documented to share data with the original) must not
+         corrupt each other's metadata when one of them is permuted in
+         place with permute_(). BlockFermionicUniTensor::permute_ is a
+         distinct implementation from BlockUniTensor's (it additionally
+         updates the per-block sign-flip state), so it gets its own test.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder) {
+  UniTensor uT = BFUT3.clone().set_name("uT");
+  UniTensor uT2 = uT.relabel({"p", "q", "r", "s", "t"}).set_name("uT2");
+
+  // Precondition: the two UniTensors really do share the same block storage.
+  ASSERT_TRUE(uT.same_data(uT2));
+  ASSERT_EQ(uT.Nblocks(), uT2.Nblocks());
+
+  const auto orig_shape = uT.shape();
+  const auto orig_labels = uT.labels();
+  const auto orig_signflip = uT.signflip();
+  // The 8 non-zero entries of BFUT3 as initialized in the fixture.
+  const std::vector<std::vector<cytnx_uint64>> nz_locs = {
+    {0, 0, 0, 0, 0}, {0, 0, 1, 0, 0}, {0, 1, 2, 0, 0}, {0, 1, 3, 0, 0},
+    {1, 0, 2, 0, 0}, {1, 0, 3, 0, 0}, {1, 1, 0, 0, 0}, {1, 1, 1, 0, 0}};
+  const std::vector<double> nz_vals = {1., 2., 3., 4., 5., 6., 7., 8.};
+
+  std::vector<cytnx_int64> a = {3, 1, 4, 2, 0};
+  uT2.permute_(a);
+
+  // uT2 changed as expected: after resolving the pending sign flips it must match the
+  // BFUT3PERM reference (same permutation as the pre-existing LinAlgElementwise test).
+  EXPECT_TRUE(AreEqUniTensor(BFUT3PERM, uT2.contiguous().apply()));
+
+  // uT must be completely unaffected: shape, labels, sign-flip state, and data all preserved.
+  ASSERT_EQ(uT.shape(), orig_shape);
+  EXPECT_EQ(uT.labels(), orig_labels);
+  EXPECT_EQ(uT.signflip(), orig_signflip);
+  EXPECT_TRUE(AreEqUniTensor(uT, BFUT3));
+  // Reading uT after uT2's in-place permute must not even throw (stale block/qnum mapping vs. a
+  // physically permuted shared block Tensor can manifest as an out-of-bound access).
+  for (size_t n = 0; n < nz_locs.size(); n++) {
+    try {
+      ASSERT_TRUE(uT.at(nz_locs[n]).exists());
+      EXPECT_DOUBLE_EQ(double(uT.at(nz_locs[n]).real()), nz_vals[n]);
+    } catch (const std::exception& e) {
+      ADD_FAILURE() << "uT.at(nz_locs[" << n
+                    << "]) threw after uT2.permute_() (shared-block metadata corrupted): "
+                    << e.what();
+    }
+  }
 }
 
 // ============ convert_from / from_ ============
@@ -278,7 +527,7 @@ TEST_F(BlockFermionicUniTensorTest, convert_from_diagonal_dense_target_throws) {
   Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   UniTensor BKF = UniTensor({bi, bi.redirect()});
 
-  UniTensor Ddiag = UniTensor(zeros(2), true);  // diagonal Dense, shape (2,2)
+  UniTensor Ddiag = UniTensor(zeros({2}), true);  // diagonal Dense, shape (2,2)
   EXPECT_ANY_THROW(Ddiag.convert_from(BKF));
 }
 
@@ -354,4 +603,83 @@ TEST_F(BlockFermionicUniTensorTest, ContractIntegerDtype) {
   EXPECT_NO_THROW(out = Contract(L, R));
   EXPECT_EQ(int64_t(out.at({0, 0}).real()), 3);
   EXPECT_EQ(int64_t(out.at({2, 2}).real()), 8);
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the fermionic contract() path.
+         contract() used to permute_/reshape_ the operands' blocks in place
+         and restore them afterward. When the two operands alias each
+         other's blocks (relabel() shares block storage), the in-place
+         mutation of the left operand corrupts the right operand mid-
+         contraction: the contraction throws or produces wrong values.
+         contract() must treat both operands' blocks as read-only.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, ContractAliasedSharedBlocksOperandsIntact) {
+  Bond ba = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2}, {Symmetry::FermionParity()});
+  Bond bb = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3}, {Symmetry::FermionParity()});
+  Bond bc = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 2}, {Symmetry::FermionParity()});
+  UniTensor A = UniTensor({ba, bb, bc}, {"a", "b", "c"});
+  random::uniform_(A, -1.0, 1.0, 42);
+  // B shares A's blocks; contracting over "a" and "c" makes the two operands
+  // of contract() alias each other's blocks (including block-with-itself pairs).
+  UniTensor B = A.relabel({"c", "d", "a"});
+  ASSERT_TRUE(A.same_data(B));
+
+  UniTensor Asnap = A.clone();  // pristine copy of the shared data
+  // reference result from fully independent operands
+  UniTensor expected = Contract(Asnap.clone(), Asnap.clone().relabel({"c", "d", "a"}));
+
+  UniTensor got;
+  try {
+    got = Contract(A, B);
+  } catch (const std::exception& e) {
+    FAIL() << "Contract() on operands sharing blocks threw: " << e.what();
+  }
+
+  ASSERT_EQ(got.Nblocks(), expected.Nblocks());
+  EXPECT_EQ(got.signflip(), expected.signflip());
+  for (cytnx_uint64 i = 0; i < got.Nblocks(); i++) {
+    EXPECT_TRUE(AreNearlyEqTensor(got.get_blocks_()[i], expected.get_blocks_()[i], 1e-12));
+  }
+
+  // both operands must be intact: values, shapes, signflip, and contiguity
+  ASSERT_EQ(A.Nblocks(), Asnap.Nblocks());
+  EXPECT_EQ(A.signflip(), Asnap.signflip());
+  for (cytnx_uint64 i = 0; i < A.Nblocks(); i++) {
+    EXPECT_EQ(A.get_blocks_()[i].shape(), Asnap.get_blocks_()[i].shape());
+    EXPECT_TRUE(AreNearlyEqTensor(A.get_blocks_()[i], Asnap.get_blocks_()[i], 0.0));
+  }
+  EXPECT_TRUE(A.is_contiguous());
+  EXPECT_TRUE(B.is_contiguous());
+}
+
+/*=====test info=====
+describe:regression test for issue #724 on the fermionic contract() path. A
+         third UniTensor sharing blocks with an operand (via relabel()) must
+         not observe any change from the contraction. The pre-fix mutate-
+         and-restore left the shared blocks with replaced, permuted storage
+         (non-contiguous), even though the values were restored.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, ContractLeavesSharedBlockObserverUntouched) {
+  Bond ba = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2}, {Symmetry::FermionParity()});
+  Bond bb = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3}, {Symmetry::FermionParity()});
+  Bond bc = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 2}, {Symmetry::FermionParity()});
+  UniTensor A = UniTensor({ba, bb, bc}, {"a", "b", "c"});
+  random::uniform_(A, -1.0, 1.0, 7);
+  UniTensor observer = A.relabel({"x", "y", "z"});  // shares A's blocks; not an operand
+  ASSERT_TRUE(A.same_data(observer));
+  UniTensor snap = A.clone();
+
+  UniTensor R = A.clone().relabel({"c", "d", "a"});  // independent right operand
+  UniTensor got = Contract(A, R);
+  (void)got;
+
+  ASSERT_EQ(observer.Nblocks(), snap.Nblocks());
+  EXPECT_EQ(observer.signflip(), snap.signflip());
+  for (cytnx_uint64 i = 0; i < observer.Nblocks(); i++) {
+    EXPECT_EQ(observer.get_blocks_()[i].shape(), snap.get_blocks_()[i].shape());
+    EXPECT_TRUE(AreNearlyEqTensor(observer.get_blocks_()[i], snap.get_blocks_()[i], 0.0));
+  }
+  EXPECT_TRUE(observer.is_contiguous());
+  EXPECT_TRUE(R.is_contiguous());
 }

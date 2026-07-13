@@ -9,7 +9,9 @@
 namespace cytnx {
   namespace linalg {
     void Pow_(Tensor &Tin, const double &p) {
+      cytnx_error_msg(Tin.is_void(), "[Pow_] cannot operate on an uninitialized Tensor.%s", "\n");
       if (Tin.dtype() > 4) Tin = Tin.astype(Type.Double);
+      if (Tin.is_empty()) return;
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Pow_ii[Tin.dtype()](Tin._impl->storage()._impl,
@@ -30,7 +32,9 @@ namespace cytnx {
     }
 
     void Pow_(Tensor &Tin, const Scalar &p) {
+      cytnx_error_msg(Tin.is_void(), "[Pow_] cannot operate on an uninitialized Tensor.%s", "\n");
       if (Tin.dtype() > 4) Tin = Tin.astype(Type.Double);
+      if (Tin.is_empty()) return;
       double dp = double(p);
 
       if (Tin.device() == Device.cpu) {

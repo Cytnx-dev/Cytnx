@@ -123,6 +123,30 @@ def test_convert_from__returns_self():
     assert (B.get_block_(1) - B2.get_block_(1)).norm() < 1e-12
 
 
+def test_truncate_inplace_string_label_shrinks_bond():
+    """truncate_ with a string label mutates in place, like the bond-index overload.
+
+    Regression test: this overload used to call the non-mutating truncate()
+    and discard the result, making it a silent no-op.
+    """
+    T = cytnx.UniTensor(cytnx.arange(12).reshape(3, 4), labels=["a", "b"])
+    r = T.truncate_("b", 2)
+    assert r is T  # in-place method returns self for chaining
+    assert list(T.shape()) == [3, 2]  # the bond actually shrank
+    # kept data is the leading slice: element [2][1] of arange(12).reshape(3,4)
+    assert abs(T.at([2, 1]).value - 9.0) < 1e-12
+
+
+def test_truncate_inplace_string_and_index_overloads_agree():
+    """The string-label and bond-index truncate_ overloads produce the same result."""
+    A = cytnx.UniTensor(cytnx.arange(12).reshape(3, 4), labels=["a", "b"])
+    B = A.clone()
+    A.truncate_("b", 2)
+    B.truncate_(1, 2)
+    assert list(A.shape()) == list(B.shape())
+    assert (A.get_block_() - B.get_block_()).Norm().item() < 1e-12
+
+
 def test_convert_from_tol_default_rejects_forbidden_nonzero():
     """Default tol=0 rejects a dense->block conversion with a nonzero forbidden entry."""
     bi, B = _u1_block_pair()

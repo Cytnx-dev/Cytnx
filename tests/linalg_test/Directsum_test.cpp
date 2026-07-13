@@ -165,6 +165,16 @@ namespace DirectsumTest {
     ExcuteDirectsumTest(T1, T2, shared_axes);
   }
 
+  TEST(Directsum, shared_zero_extent_axis) {
+    Tensor T1({0, 2}, Type.Float);
+    Tensor T2({0, 3}, Type.Double);
+
+    Tensor out = linalg::Directsum(T1, T2, {0});
+    EXPECT_EQ(out.shape(), (std::vector<cytnx_uint64>{0, 5}));
+    EXPECT_EQ(out.dtype(), Type.Double);
+    EXPECT_TRUE(out.is_empty());
+  }
+
   /*=====test info=====
   describe:Test for not contiguous tensor.
   input:
@@ -202,6 +212,15 @@ namespace DirectsumTest {
   TEST(Directsum, err_void_tens) {
     Tensor T1 = Tensor();
     Tensor T2 = Tensor();
+    std::vector<cytnx_uint64> shared_axes = {};
+    ErrorTestExcute(T1, T2, shared_axes);
+  }
+
+  TEST(Directsum, err_rank_zero_scalar_tens) {
+    Tensor T1({}, Type.Double);
+    Tensor T2({}, Type.Double);
+    T1.item<double>() = 1.0;
+    T2.item<double>() = 2.0;
     std::vector<cytnx_uint64> shared_axes = {};
     ErrorTestExcute(T1, T2, shared_axes);
   }
@@ -431,7 +450,8 @@ namespace DirectsumTest {
   Tensor ConstructExpectTens(const Tensor& T1, const Tensor& T2,
                              const std::vector<cytnx_uint64> shared_axes) {
     auto rank = T1.rank();
-    auto expect_dtype = std::min(T1.dtype(), T2.dtype());  // to strongest type
+    // promote across the real/complex boundary (Type.type_promote), not the lower-enum operand.
+    auto expect_dtype = Type.type_promote(T1.dtype(), T2.dtype());
     auto device = T1.device();
     std::vector<cytnx_uint64> dst_axes(T1.rank());
     for (auto i = 0; i < T1.rank(); ++i) {
@@ -452,8 +472,8 @@ namespace DirectsumTest {
     Tensor expect_T;
     // if shared axes contain all axes, the output is equal to T2 but convert to strongest type.
     if (shared_axes.size() == T1.rank()) {
-      // convert T2 to strongest type
-      auto expect_dtype = std::min(T1.dtype(), T2.dtype());
+      // convert T2 to the promoted type
+      auto expect_dtype = Type.type_promote(T1.dtype(), T2.dtype());
       expect_T = T2.astype(expect_dtype);
     } else {
       expect_T = ConstructExpectTens(T1, T2, shared_axes);

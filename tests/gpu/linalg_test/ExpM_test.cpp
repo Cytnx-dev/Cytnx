@@ -11,7 +11,7 @@ TEST(ExpM, gpu_ExpM_test) {
                                       {{0, 0}, {1.00125, 0}, {5.00208e-2, 0}, {0, 0}},
                                       {{0, 0}, {5.00208e-02, 0}, {1.00125, 0}, {0, 0}},
                                       {{5.01042e-2, 0}, {0, 0}, {0, 0}, {9.06048e-1, 0}}};
-  Tensor t_i = zeros(16, Type.ComplexDouble).to(cytnx::Device.cuda);
+  Tensor t_i = zeros({16}, Type.ComplexDouble, cytnx::Device.cuda);
   t_i.reshape_(4, 4);
   for (int i = 0; i < 16; i++) {
     int x = i / 4, y = i % 4;

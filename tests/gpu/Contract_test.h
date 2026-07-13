@@ -12,11 +12,10 @@ using namespace TestTools;
 class ContractTest : public ::testing::Test {
  public:
   // std::pair<std::vector<cytnx::UniTensor>, std::vector<std::vector<cytnx::cytnx_int64>>> input;
-  UniTensor utdnA =
-    UniTensor(arange(0, 8, 1, Type.ComplexDouble)).reshape({2, 2, 2}).to(Device.cuda);
-  UniTensor utdnB = UniTensor(ones({2, 2}, Type.ComplexDouble)).to(Device.cuda);
-  UniTensor utdnC = UniTensor(eye(2, Type.ComplexDouble)).to(Device.cuda);
-  UniTensor utdnAns = UniTensor(zeros({2, 2, 2}, Type.ComplexDouble)).to(Device.cuda);
+  UniTensor utdnA = UniTensor(arange(0, 8, 1, Type.ComplexDouble, Device.cuda)).reshape({2, 2, 2});
+  UniTensor utdnB = UniTensor(ones({2, 2}, Type.ComplexDouble, Device.cuda));
+  UniTensor utdnC = UniTensor(eye(2, Type.ComplexDouble, Device.cuda));
+  UniTensor utdnAns = UniTensor(zeros({2, 2, 2}, Type.ComplexDouble, Device.cuda));
 
  protected:
   void SetUp() override {

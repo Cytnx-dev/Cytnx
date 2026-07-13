@@ -12,7 +12,6 @@
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -37,27 +36,57 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("power_iteration") = 2, py::arg("seed") = -1);
 
+  // ---------------------------------------------------------------------------
+  // GIL guard discipline (applies to every py::call_guard<py::gil_scoped_release>
+  // in the pybind/ layer; network_py.cpp and unitensor_py.cpp refer here):
+  //
+  //  (a) A guarded lambda body must NEVER touch py::* / CPython API. The guard
+  //      releases the GIL for the duration of the call only: arguments are
+  //      converted to C++ types BEFORE the guard is constructed, and the return
+  //      value is converted back to Python AFTER the guard is destroyed
+  //      (pybind11/attr.h: "T scope_guard; return foo(args...)"). Keep the body
+  //      pure C++.
+  //  (b) call_guard<A, B> constructs guards left to right. Appending
+  //      py::scoped_ostream_redirect (whose default constructor imports
+  //      sys.stdout and therefore needs the GIL) AFTER gil_scoped_release will
+  //      crash. If a binding ever needs both, put the redirect FIRST, or scope
+  //      a py::gil_scoped_release manually inside the lambda body around the
+  //      compute call. (Redirected writes themselves are safe without the GIL:
+  //      pythonbuf::_sync() in pybind11/iostream.h reacquires it.)
+  //  (c) Releasing around LinOp-taking solvers (Lanczos/Arnoldi/...) is safe
+  //      even though they call back into Python matvec() overrides: the
+  //      PYBIND11_OVERRIDE machinery opens with gil_scoped_acquire
+  //      (pybind11/pybind11.h:3532, PYBIND11_OVERRIDE_IMPL) before invoking the
+  //      Python method.
+  //
+  // Scope: all O(n^3)-class linalg entry points carry the guard, EXCEPT
+  // ExpH/ExpM which are being rewritten in PR #915 (guards added there would
+  // conflict). The elementwise operator sweep (Add/Mul/... in tensor_py.cpp)
+  // is deliberately deferred.
+  // ---------------------------------------------------------------------------
   m_linalg.def(
     "Svd",
     [](const cytnx::Tensor &Tin, const bool &is_UvT) { return cytnx::linalg::Svd(Tin, is_UvT); },
-    py::arg("Tin"), py::arg("is_UvT") = true);
+    py::arg("Tin"), py::arg("is_UvT") = true, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Svd",
     [](const cytnx::UniTensor &Tin, const bool &is_UvT) { return cytnx::linalg::Svd(Tin, is_UvT); },
-    py::arg("Tin"), py::arg("is_UvT") = true);
+    py::arg("Tin"), py::arg("is_UvT") = true, py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Gesvd",
     [](const cytnx::Tensor &Tin, const bool &is_U, const bool &is_vT) {
       return cytnx::linalg::Gesvd(Tin, is_U, is_vT);
     },
-    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
+    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Gesvd",
     [](const cytnx::UniTensor &Tin, const bool &is_U, const bool &is_vT) {
       return cytnx::linalg::Gesvd(Tin, is_U, is_vT);
     },
-    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
+    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true,
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Rsvd",  // for Tensor
@@ -74,7 +103,7 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
     py::arg("oversampling_summand") = 10, py::arg("oversampling_factor") = 1.,
-    py::arg("power_iteration") = 0, py::arg("seed") = -1);
+    py::arg("power_iteration") = 0, py::arg("seed") = -1, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Rsvd",  // for UniTensor, without min_blockdim
     [](const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
@@ -90,7 +119,7 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
     py::arg("oversampling_summand") = 10, py::arg("oversampling_factor") = 1.,
-    py::arg("power_iteration") = 0, py::arg("seed") = -1);
+    py::arg("power_iteration") = 0, py::arg("seed") = -1, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Rsvd",  // for UniTensor, with min_blockdim
     [](const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
@@ -107,7 +136,8 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("keepdim"), py::arg("min_blockdim"), py::arg("err") = double(0),
     py::arg("is_U") = true, py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0),
     py::arg("mindim") = 1, py::arg("oversampling_summand") = 10,
-    py::arg("oversampling_factor") = 1., py::arg("power_iteration") = 0, py::arg("seed") = -1);
+    py::arg("oversampling_factor") = 1., py::arg("power_iteration") = 0, py::arg("seed") = -1,
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Gesvd_truncate",
@@ -116,7 +146,8 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Gesvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
-    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1);
+    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Gesvd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U,
@@ -124,7 +155,8 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Gesvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0, py::arg("is_U") = true,
-    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1);
+    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Gesvd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim, std::vector<cytnx_uint64> min_blockdim,
@@ -135,7 +167,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("min_blockdim"), py::arg("err") = 0,
     py::arg("is_U") = true, py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0),
-    py::arg("mindim") = 1);
+    py::arg("mindim") = 1, py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Svd_truncate",
@@ -144,7 +176,8 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_UvT") = true,
-    py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1);
+    py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Svd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
@@ -152,7 +185,8 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0, py::arg("is_UvT") = true,
-    py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1);
+    py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Svd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim, std::vector<cytnx_uint64> min_blockdim,
@@ -162,7 +196,8 @@ void linalg_binding(py::module &m) {
                                          mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("min_blockdim"), py::arg("err") = 0,
-    py::arg("is_UvT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1);
+    py::arg("is_UvT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
+    py::call_guard<py::gil_scoped_release>());
 
   // m_linalg.def("Eigh", &cytnx::linalg::Eigh, py::arg("Tin"), py::arg("is_V") = true,
   //              py::arg("row_v") = false);
@@ -173,26 +208,30 @@ void linalg_binding(py::module &m) {
     [](const Tensor &Tin, const bool &is_V, const bool &row_v) {
       return cytnx::linalg::Eigh(Tin, is_V, row_v);
     },
-    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Eigh",
     [](const UniTensor &Tin, const bool &is_V, const bool &row_v) {
       return cytnx::linalg::Eigh(Tin, is_V, row_v);
     },
-    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false,
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Eig",
     [](const Tensor &Tin, const bool &is_V, const bool &row_v) {
       return cytnx::linalg::Eig(Tin, is_V, row_v);
     },
-    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Eig",
     [](const UniTensor &Tin, const bool &is_V, const bool &row_v) {
       return cytnx::linalg::Eig(Tin, is_V, row_v);
     },
-    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false,
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def("Exp", &cytnx::linalg::Exp, py::arg("Tin"));
   m_linalg.def("Exp_", &cytnx::linalg::Exp_, py::arg("Tio"));
@@ -749,32 +788,36 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Qr",
     [](const cytnx::UniTensor &Tin, const bool &is_tau) { return cytnx::linalg::Qr(Tin, is_tau); },
-    py::arg("Tio"), py::arg("is_tau") = false);
+    py::arg("Tio"), py::arg("is_tau") = false, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Qr",
     [](const cytnx::Tensor &Tin, const bool &is_tau) { return cytnx::linalg::Qr(Tin, is_tau); },
-    py::arg("Tio"), py::arg("is_tau") = false);
+    py::arg("Tio"), py::arg("is_tau") = false, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Qdr",
     [](const cytnx::UniTensor &Tin, const bool &is_tau) { return cytnx::linalg::Qdr(Tin, is_tau); },
-    py::arg("Tio"), py::arg("is_tau") = false);
+    py::arg("Tio"), py::arg("is_tau") = false, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Qdr",
     [](const cytnx::Tensor &Tin, const bool &is_tau) { return cytnx::linalg::Qdr(Tin, is_tau); },
-    py::arg("Tio"), py::arg("is_tau") = false);
+    py::arg("Tio"), py::arg("is_tau") = false, py::call_guard<py::gil_scoped_release>());
 
   // m_linalg.def("InvM", &cytnx::linalg::InvM, py::arg("Tin"));
 
   // m_linalg.def("InvM_", &cytnx::linalg::InvM_, py::arg("Tio"));
   m_linalg.def(
-    "InvM_", [](cytnx::UniTensor &Tio) { cytnx::linalg::InvM_(Tio); }, py::arg("Tio"));
+    "InvM_", [](cytnx::UniTensor &Tio) { cytnx::linalg::InvM_(Tio); }, py::arg("Tio"),
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
-    "InvM_", [](cytnx::Tensor &Tio) { cytnx::linalg::InvM_(Tio); }, py::arg("Tio"));
+    "InvM_", [](cytnx::Tensor &Tio) { cytnx::linalg::InvM_(Tio); }, py::arg("Tio"),
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
-    "InvM", [](cytnx::UniTensor &Tin) { return cytnx::linalg::InvM(Tin); }, py::arg("Tin"));
+    "InvM", [](cytnx::UniTensor &Tin) { return cytnx::linalg::InvM(Tin); }, py::arg("Tin"),
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
-    "InvM", [](cytnx::Tensor &Tin) { return cytnx::linalg::InvM(Tin); }, py::arg("Tin"));
+    "InvM", [](cytnx::Tensor &Tin) { return cytnx::linalg::InvM(Tin); }, py::arg("Tin"),
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Inv", [](const UniTensor &Tin, double clip) { return cytnx::linalg::Inv(Tin, clip); },
@@ -802,18 +845,23 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Conj_", [](cytnx::UniTensor &Tin) { cytnx::linalg::Conj_(Tin); }, py::arg("Tin"));
 
-  m_linalg.def("Matmul", &cytnx::linalg::Matmul, py::arg("T1"), py::arg("T2"));
-  m_linalg.def("Matmul_dg", &cytnx::linalg::Matmul_dg, py::arg("T1"), py::arg("T2"));
+  m_linalg.def("Matmul", &cytnx::linalg::Matmul, py::arg("T1"), py::arg("T2"),
+               py::call_guard<py::gil_scoped_release>());
+  m_linalg.def("Matmul_dg", &cytnx::linalg::Matmul_dg, py::arg("T1"), py::arg("T2"),
+               py::call_guard<py::gil_scoped_release>());
   m_linalg.def("Diag", &cytnx::linalg::Diag, py::arg("Tin"));
-  m_linalg.def("Det", &cytnx::linalg::Det, py::arg("Tin"));
+  m_linalg.def("Det", &cytnx::linalg::Det, py::arg("Tin"),
+               py::call_guard<py::gil_scoped_release>());
   m_linalg.def("Tensordot", &cytnx::linalg::Tensordot, py::arg("T1"), py::arg("T2"),
                py::arg("indices_1"), py::arg("indices_2"), py::arg("cacheL") = false,
-               py::arg("cacheR") = false);
+               py::arg("cacheR") = false, py::call_guard<py::gil_scoped_release>());
   m_linalg.def("Tensordot_dg", &cytnx::linalg::Tensordot_dg, py::arg("T1"), py::arg("T2"),
-               py::arg("indices_1"), py::arg("indices_2"), py::arg("diag_L"));
+               py::arg("indices_1"), py::arg("indices_2"), py::arg("diag_L"),
+               py::call_guard<py::gil_scoped_release>());
   m_linalg.def("Outer", &cytnx::linalg::Outer, py::arg("T1"), py::arg("T2"));
   m_linalg.def("Kron", &cytnx::linalg::Kron, py::arg("T1"), py::arg("T2"),
-               py::arg("Tl_pad_left") = false, py::arg("Tr_pad_left") = false);
+               py::arg("Tl_pad_left") = false, py::arg("Tr_pad_left") = false,
+               py::call_guard<py::gil_scoped_release>());
   m_linalg.def("Vectordot", &cytnx::linalg::Vectordot, py::arg("T1"), py::arg("T2"),
                py::arg("is_conj") = false);
   m_linalg.def("Tridiag", &cytnx::linalg::Tridiag, py::arg("A"), py::arg("B"),
@@ -858,29 +906,21 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "norm", [](cytnx::Tensor &T1) { return double(T1.norm()); }, py::arg("T1"));
 
-  m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"));
-  m_linalg.def(
-    "Axpy", [](const Scalar &a, const Tensor &x) { return cytnx::linalg::Axpy(a, x); },
-    py::arg("a"), py::arg("x"));
-  m_linalg.def(
-    "Axpy",
-    [](const Scalar &a, const Tensor &x, const Tensor &y) { return cytnx::linalg::Axpy(a, x, y); },
-    py::arg("a"), py::arg("x"), py::arg("y"));
+  m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"),
+               py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Ger",
     [](const Tensor &x, const Tensor &y, const Scalar &a) { return cytnx::linalg::Ger(x, y, a); },
     py::arg("x"), py::arg("y"), py::arg("a") = Scalar());
 
-  m_linalg.def("Axpy_", &cytnx::linalg::Axpy_, py::arg("a"), py::arg("x"), py::arg("y"));
-
   m_linalg.def("Gemm_", &cytnx::linalg::Gemm_, py::arg("a"), py::arg("x"), py::arg("y"),
-               py::arg("b"), py::arg("c"));
+               py::arg("b"), py::arg("c"), py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Gemm",
     [](const Scalar &a, const Tensor &x, const Tensor &y) { return cytnx::linalg::Gemm(a, x, y); },
-    py::arg("a"), py::arg("x"), py::arg("y"));
+    py::arg("a"), py::arg("x"), py::arg("y"), py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Trace",
@@ -928,7 +968,7 @@ void linalg_binding(py::module &m) {
     [](const Tensor &T1, const Tensor &T2, const std::vector<cytnx_uint64> &shared_axes) {
       return linalg::Directsum(T1, T2, shared_axes);
     },
-    py::arg("T1"), py::arg("T2"), py::arg("shared_axes"));
+    py::arg("T1"), py::arg("T2"), py::arg("shared_axes"), py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Hosvd",
@@ -937,7 +977,7 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Hosvd(Tin, mode, is_core, is_Ls, truncate_dim);
     },
     py::arg("Tn"), py::arg("mode"), py::arg("is_core") = true, py::arg("is_Ls") = false,
-    py::arg("truncate_dim") = std::vector<cytnx_int64>());
+    py::arg("truncate_dim") = std::vector<cytnx_int64>(), py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Hosvd",
     [](const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core,
@@ -945,7 +985,7 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Hosvd(Tin, mode, is_core, is_Ls, truncate_dim);
     },
     py::arg("Tn"), py::arg("mode"), py::arg("is_core") = true, py::arg("is_Ls") = false,
-    py::arg("truncate_dim") = std::vector<cytnx_int64>());
+    py::arg("truncate_dim") = std::vector<cytnx_int64>(), py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Arnoldi",
@@ -956,7 +996,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Hop"), py::arg("Tin"), py::arg("which") = "LM", py::arg("Maxiter") = 10000,
     py::arg("CvgCrit") = 0, py::arg("k") = 1, py::arg("is_V") = true, py::arg("ncv") = 0,
-    py::arg("verbose") = false);
+    py::arg("verbose") = false, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Arnoldi",
     [](LinOp *Hop, const UniTensor &Tin, const std::string which, const cytnx_uint64 &Maxiter,
@@ -966,7 +1006,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Hop"), py::arg("Tin"), py::arg("which") = "LM", py::arg("Maxiter") = 10000,
     py::arg("CvgCrit") = 0, py::arg("k") = 1, py::arg("is_V") = true, py::arg("ncv") = 0,
-    py::arg("verbose") = false);
+    py::arg("verbose") = false, py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Lanczos",
@@ -978,7 +1018,8 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Hop"), py::arg("Tin"), py::arg("method"), py::arg("CvgCrit") = 1.0e-14,
     py::arg("Maxiter") = 10000, py::arg("k") = 1, py::arg("is_V") = true, py::arg("is_row") = false,
-    py::arg("max_krydim") = 0, py::arg("verbose") = false);
+    py::arg("max_krydim") = 0, py::arg("verbose") = false,
+    py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Lanczos",
     [](LinOp *Hop, const UniTensor &Tin, const std::string method, const double &CvgCrit,
@@ -989,7 +1030,8 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Hop"), py::arg("Tin"), py::arg("method"), py::arg("CvgCrit") = 1.0e-14,
     py::arg("Maxiter") = 10000, py::arg("k") = 1, py::arg("is_V") = true, py::arg("is_row") = false,
-    py::arg("max_krydim") = 0, py::arg("verbose") = false);
+    py::arg("max_krydim") = 0, py::arg("verbose") = false,
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Lanczos",
@@ -1000,7 +1042,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Hop"), py::arg("Tin"), py::arg("which") = "SA", py::arg("Maxiter") = 10000,
     py::arg("CvgCrit") = 0, py::arg("k") = 1, py::arg("is_V") = true, py::arg("ncv") = 0,
-    py::arg("verbose") = false);
+    py::arg("verbose") = false, py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Lanczos",
     [](LinOp *Hop, const UniTensor &Tin, const std::string which, const cytnx_uint64 &Maxiter,
@@ -1010,7 +1052,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Hop"), py::arg("Tin"), py::arg("which") = "SA", py::arg("Maxiter") = 10000,
     py::arg("CvgCrit") = 0, py::arg("k") = 1, py::arg("is_V") = true, py::arg("ncv") = 0,
-    py::arg("verbose") = false);
+    py::arg("verbose") = false, py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Lanczos_Exp",
@@ -1019,14 +1061,16 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Lanczos_Exp(Hop, v, tau, CvgCrit, Maxiter, verbose);
     },
     py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-14,
-    py::arg("Maxiter") = 10000, py::arg("verbose") = false);
+    py::arg("Maxiter") = 10000, py::arg("verbose") = false,
+    py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Lstsq",
     [](const Tensor &A, const Tensor &b, const float &rcond) {
       return cytnx::linalg::Lstsq(A, b, rcond);
     },
-    py::arg("A"), py::arg("b"), py::arg("rcond") = float(-1));
+    py::arg("A"), py::arg("b"), py::arg("rcond") = float(-1),
+    py::call_guard<py::gil_scoped_release>());
 
   /*
   m_linalg.def("c_Lanczos_ER",
