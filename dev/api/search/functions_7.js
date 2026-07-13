@@ -16,13 +16,12 @@ var searchData=
   ['get_5findex_13',['get_index',['../classcytnx_1_1UniTensor.html#ad5ad4f4d395dd713ab70ca68d3f22ce8',1,'cytnx::UniTensor']]],
   ['get_5fitoi_14',['get_itoi',['../classcytnx_1_1UniTensor.html#ae7525954cafa6cf69b4fc69dcabae4c3',1,'cytnx::UniTensor::get_itoi() const'],['../classcytnx_1_1UniTensor.html#ae300c5f40fe1ec3ec841c91bdf9cb944',1,'cytnx::UniTensor::get_itoi()']]],
   ['get_5fqindices_15',['get_qindices',['../classcytnx_1_1UniTensor.html#ad323800d8b97faa8aad9b980eb6b9c7f',1,'cytnx::UniTensor::get_qindices(const cytnx_uint64 &amp;bidx) const'],['../classcytnx_1_1UniTensor.html#a118c7e66008dd037063e3e71604ebd74',1,'cytnx::UniTensor::get_qindices(const cytnx_uint64 &amp;bidx)']]],
-  ['getdegeneracies_16',['getdegeneracies',['../classcytnx_1_1Bond.html#a7275210ee5fa1e3e4ba86928b694f687',1,'cytnx::Bond::getDegeneracies() const'],['../classcytnx_1_1Bond.html#a7de5eb6ed487a48bd9a1f0ef168531b9',1,'cytnx::Bond::getDegeneracies()']]],
-  ['getdegeneracy_17',['getdegeneracy',['../classcytnx_1_1Bond.html#a8d714304116d09bd23e6f05d05aaf7dd',1,'cytnx::Bond::getDegeneracy(const std::vector&lt; cytnx_int64 &gt; &amp;qnum, std::vector&lt; cytnx_uint64 &gt; &amp;indices) const'],['../classcytnx_1_1Bond.html#a121d5fb24f782cf66889771146af5da8',1,'cytnx::Bond::getDegeneracy(const std::vector&lt; cytnx_int64 &gt; &amp;qnum) const']]],
+  ['getdegeneracies_16',['getDegeneracies',['../classcytnx_1_1Bond.html#a7275210ee5fa1e3e4ba86928b694f687',1,'cytnx::Bond']]],
+  ['getdegeneracy_17',['getdegeneracy',['../classcytnx_1_1Bond.html#a121d5fb24f782cf66889771146af5da8',1,'cytnx::Bond::getDegeneracy(const std::vector&lt; cytnx_int64 &gt; &amp;qnum) const'],['../classcytnx_1_1Bond.html#a8d714304116d09bd23e6f05d05aaf7dd',1,'cytnx::Bond::getDegeneracy(const std::vector&lt; cytnx_int64 &gt; &amp;qnum, std::vector&lt; cytnx_uint64 &gt; &amp;indices) const']]],
   ['getoptimalorder_18',['getOptimalOrder',['../classcytnx_1_1Network.html#a24e34b95b458be854a36b0fbcf008b41',1,'cytnx::Network']]],
   ['getorder_19',['getOrder',['../classcytnx_1_1Network.html#abb3df3d3952f5d1c90e0e5eec30b116c',1,'cytnx::Network']]],
   ['getuniqueqnums_20',['getuniqueqnums',['../classcytnx_1_1Bond.html#aa5985c9247209576081c8dc8a97b7c6a',1,'cytnx::Bond::getUniqueQnums()'],['../classcytnx_1_1Bond.html#acf017e64c9629e0a03ee996a4375b06c',1,'cytnx::Bond::getUniqueQnums(std::vector&lt; cytnx_uint64 &gt; &amp;counts)']]],
   ['group_5fbasis_21',['group_basis',['../classcytnx_1_1UniTensor.html#aaccbad43729ab4e2bc8ac56925a71d6c',1,'cytnx::UniTensor']]],
   ['group_5fbasis_5f_22',['group_basis_',['../classcytnx_1_1UniTensor.html#a89eebf30816d3f443c4c7c698de27a68',1,'cytnx::UniTensor']]],
-  ['group_5fduplicates_23',['group_duplicates',['../classcytnx_1_1Bond.html#a5c7a08632dd9e9ac4d6eca53c90ab8bd',1,'cytnx::Bond']]],
-  ['group_5fduplicates_5f_24',['group_duplicates_',['../classcytnx_1_1Bond.html#a17c1a184dc318c03baddc829171bf01e',1,'cytnx::Bond']]]
+  ['group_5fduplicates_23',['group_duplicates',['../classcytnx_1_1Bond.html#a5c7a08632dd9e9ac4d6eca53c90ab8bd',1,'cytnx::Bond']]]
 ];

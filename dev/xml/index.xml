@@ -23,33 +23,23 @@
     <member refid="classcytnx_1_1Bond_1a3034fd7472ae82db9b45742c43dd66d3" kind="function"><name>Init</name></member>
     <member refid="classcytnx_1_1Bond_1a8517743cec9589ed551114ea7e55fbb1" kind="function"><name>type</name></member>
     <member refid="classcytnx_1_1Bond_1ab4f05193a012bd9a077374b5f305e898" kind="function"><name>qnums</name></member>
-    <member refid="classcytnx_1_1Bond_1a01299b8751c7d71c1bc2a6afe900da2c" kind="function"><name>qnums</name></member>
     <member refid="classcytnx_1_1Bond_1a491a89aa4434d4056dd3e5de7e70e1e7" kind="function"><name>qnums_clone</name></member>
     <member refid="classcytnx_1_1Bond_1aa072647e03a4c797479445bd41b9eacf" kind="function"><name>dim</name></member>
     <member refid="classcytnx_1_1Bond_1acd46a218add6a88c1cc9035b06adb7b6" kind="function"><name>Nsym</name></member>
     <member refid="classcytnx_1_1Bond_1a408221e843ca57b779f5a5717188a8a8" kind="function"><name>syms</name></member>
-    <member refid="classcytnx_1_1Bond_1abc64fadea2b867f4649df8e775803a39" kind="function"><name>syms</name></member>
     <member refid="classcytnx_1_1Bond_1a95a33764b6adf5644e91578c908504ca" kind="function"><name>syms_clone</name></member>
-    <member refid="classcytnx_1_1Bond_1a01be559109c1c7ecaccd0916a2954239" kind="function"><name>set_type</name></member>
-    <member refid="classcytnx_1_1Bond_1a31c8ff7b0817c37e67a80a225f5bd758" kind="function"><name>retype</name></member>
+    <member refid="classcytnx_1_1Bond_1a6216d8b2269b1b7dc094127060271568" kind="function"><name>retype</name></member>
     <member refid="classcytnx_1_1Bond_1a6f47360919864f12affe9fda49b03994" kind="function"><name>redirect</name></member>
-    <member refid="classcytnx_1_1Bond_1aa023d872df52de5594b963e109ab7723" kind="function"><name>redirect_</name></member>
-    <member refid="classcytnx_1_1Bond_1a6272e30153df85944fc98bf5419dc1c8" kind="function"><name>clear_type</name></member>
     <member refid="classcytnx_1_1Bond_1a8c4d6443ffe7c3f3ecd8c474fd9a18eb" kind="function"><name>clone</name></member>
-    <member refid="classcytnx_1_1Bond_1ab8645d03cf115b59e946f329f3bba122" kind="function"><name>combineBond_</name></member>
     <member refid="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" kind="function"><name>combineBond</name></member>
-    <member refid="classcytnx_1_1Bond_1a2af5fa7d5db3fbbb7da51219f4abb4e9" kind="function"><name>combineBond</name></member>
-    <member refid="classcytnx_1_1Bond_1a75617853c21fa807d4d019f68cc6ef97" kind="function"><name>combineBond_</name></member>
-    <member refid="classcytnx_1_1Bond_1a5282d90bef238154945707bffca76875" kind="function"><name>combineBonds</name></member>
-    <member refid="classcytnx_1_1Bond_1a38a40e58d24fb4d75597df25b7bf8918" kind="function"><name>combineBonds_</name></member>
+    <member refid="classcytnx_1_1Bond_1ad07796ead68b7eb31d08b276d21526f3" kind="function"><name>combineBond</name></member>
+    <member refid="classcytnx_1_1Bond_1a2454a85dc8089c361a5b238b2936a38b" kind="function"><name>combineBonds</name></member>
     <member refid="classcytnx_1_1Bond_1acf017e64c9629e0a03ee996a4375b06c" kind="function"><name>getUniqueQnums</name></member>
     <member refid="classcytnx_1_1Bond_1aa5985c9247209576081c8dc8a97b7c6a" kind="function"><name>getUniqueQnums</name></member>
     <member refid="classcytnx_1_1Bond_1a121d5fb24f782cf66889771146af5da8" kind="function"><name>getDegeneracy</name></member>
     <member refid="classcytnx_1_1Bond_1a8d714304116d09bd23e6f05d05aaf7dd" kind="function"><name>getDegeneracy</name></member>
-    <member refid="classcytnx_1_1Bond_1a7de5eb6ed487a48bd9a1f0ef168531b9" kind="function"><name>getDegeneracies</name></member>
     <member refid="classcytnx_1_1Bond_1a7275210ee5fa1e3e4ba86928b694f687" kind="function"><name>getDegeneracies</name></member>
     <member refid="classcytnx_1_1Bond_1a7fc63832242c16c91cde39194598fdc6" kind="function"><name>get_fermion_parity</name></member>
-    <member refid="classcytnx_1_1Bond_1a17c1a184dc318c03baddc829171bf01e" kind="function"><name>group_duplicates_</name></member>
     <member refid="classcytnx_1_1Bond_1a5c7a08632dd9e9ac4d6eca53c90ab8bd" kind="function"><name>group_duplicates</name></member>
     <member refid="classcytnx_1_1Bond_1acd82fa191fc9a25f12ae37899a3aea1e" kind="function"><name>has_duplicate_qnums</name></member>
     <member refid="classcytnx_1_1Bond_1ad18be3898c20c341162a6536fe2e3275" kind="function"><name>calc_reverse_qnums</name></member>
@@ -58,7 +48,6 @@
     <member refid="classcytnx_1_1Bond_1afdf23503375937b9fc5fb892685fe056" kind="function"><name>operator==</name></member>
     <member refid="classcytnx_1_1Bond_1ae2e27cb3fd963f0bb9d599097fa1feb7" kind="function"><name>operator!=</name></member>
     <member refid="classcytnx_1_1Bond_1a58e9304701945d156b88fafa8c64971d" kind="function"><name>operator*</name></member>
-    <member refid="classcytnx_1_1Bond_1a3eb1aba2986bf720dafd48fff2180b49" kind="function"><name>operator*=</name></member>
     <member refid="classcytnx_1_1Bond_1a2cd69edc7ecb13fe2a5411d490649909" kind="function"><name>Load</name></member>
     <member refid="classcytnx_1_1Bond_1af2846c2e1d412ea61a5a1561bc410a15" kind="function"><name>Load</name></member>
   </compound>
@@ -272,7 +261,6 @@
     <member refid="classcytnx_1_1UniTensor_1ad46c621c998425501578d4e39d9eb3fc" kind="function"><name>labels</name></member>
     <member refid="classcytnx_1_1UniTensor_1ad5ad4f4d395dd713ab70ca68d3f22ce8" kind="function"><name>get_index</name></member>
     <member refid="classcytnx_1_1UniTensor_1adb09a9052e76013471b08f537d0015e9" kind="function"><name>bonds</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a6875687e10e8b1582644fb6985f36f98" kind="function"><name>bonds</name></member>
     <member refid="classcytnx_1_1UniTensor_1a2708f2ba38dc5ef773f74c04f3365e53" kind="function"><name>bond_</name></member>
     <member refid="classcytnx_1_1UniTensor_1ac66f66cb8f02a7821f72f8ef1526cf67" kind="function"><name>bond_</name></member>
     <member refid="classcytnx_1_1UniTensor_1ac447c4c8eefe41ec99a0c70390dd64ae" kind="function"><name>bond_</name></member>
@@ -281,7 +269,6 @@
     <member refid="classcytnx_1_1UniTensor_1a96624499b10b7c699f54dda08bc77117" kind="function"><name>bond</name></member>
     <member refid="classcytnx_1_1UniTensor_1a4a87af4bf568263dcd6db1376f35d97c" kind="function"><name>shape</name></member>
     <member refid="classcytnx_1_1UniTensor_1a12cea716bcce79e026bd7d147d8eda2e" kind="function"><name>signflip</name></member>
-    <member refid="classcytnx_1_1UniTensor_1a9744f8a90c899a6b811efbc4dd920643" kind="function"><name>signflip_</name></member>
     <member refid="classcytnx_1_1UniTensor_1aac44ae40cb93f11f673ac0c1930ae319" kind="function"><name>is_blockform</name></member>
     <member refid="classcytnx_1_1UniTensor_1ad85301a279a5b403fcfd28e261f696df" kind="function"><name>to_</name></member>
     <member refid="classcytnx_1_1UniTensor_1a025f4a2d775a9892b7f86aeff364fa49" kind="function"><name>to</name></member>
