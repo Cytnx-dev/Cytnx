@@ -123,7 +123,6 @@ namespace cytnx {
       return -1;
     }
     const std::vector<Bond> &bonds() const { return this->_bonds; }
-    std::vector<Bond> &bonds() { return this->_bonds; }
 
     Bond &bond_(const cytnx_uint64 &idx) {
       cytnx_error_msg(idx >= this->rank(), "[ERROR][bond] index %d out of bound, total %d\n", idx,
@@ -235,7 +234,6 @@ namespace cytnx {
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
     virtual std::vector<bool> signflip() const;
-    virtual std::vector<bool> &signflip_();
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -1058,10 +1056,10 @@ namespace cytnx {
     void tag() {
       if (!this->is_tag()) {
         for (int i = 0; i < this->_rowrank; i++) {
-          this->_bonds[i].set_type(BD_KET);
+          this->_bonds[i] = this->_bonds[i].retype(BD_KET);
         }
         for (int i = this->_rowrank; i < this->_bonds.size(); i++) {
-          this->_bonds[i].set_type(BD_BRA);
+          this->_bonds[i] = this->_bonds[i].retype(BD_BRA);
         }
         this->_is_tag = true;
         this->_is_braket_form = this->_update_braket();
@@ -1868,9 +1866,6 @@ namespace cytnx {
       _inner_to_outer_idx;  // stores the qindices for each block
     std::vector<Tensor> _blocks;
     Tensor NullRefTensor;  // this returns when accessed block does not exists!
-    // additional informaiton for fermions:
-    std::vector<cytnx_bool>
-      _signflip;  // if true, the sign of the corresponding block needs to be flipped
 
     // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums
     // calculated from Symm object! this assume 1. symmetry are the same for each bond!
@@ -1993,7 +1988,17 @@ namespace cytnx {
     };
 
     std::vector<bool> signflip() const override { return this->_signflip; };
-    std::vector<bool> &signflip_() override { return this->_signflip; };
+
+    /// Reset the sign-flip bookkeeping to all-false, sized to the current number of blocks.
+    /// The decomposition internals (Svd*/Gesvd*/Rsvd/Qr/Eig*/Exp*) call this right after
+    /// (re)building _blocks, so the _signflip/_blocks lockstep (#841) holds by construction.
+    void reset_signflip_() { this->_signflip.assign(this->_blocks.size(), false); }
+
+    /// Erase the sign-flip entries at [positions] during truncation, using the same index
+    /// list that erased the corresponding _blocks. Throws if _signflip and _blocks disagree
+    /// in size afterwards (i.e. the blocks were not erased first), so a desynchronizing
+    /// caller fails loudly instead of corrupting the #841 lockstep silently.
+    void erase_signflip_(const std::vector<cytnx_uint64> &positions);
 
     void to_(const int &device) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
@@ -2689,6 +2694,13 @@ namespace cytnx {
     void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
                             const std::vector<cytnx_uint64> &qn_indices,
                             const std::vector<Bond> &bonds, const Tensor &block) const;
+
+   private:
+    // additional information for fermions (#841): if true, the sign of the corresponding
+    // block needs to be flipped. Must stay in lockstep with _blocks (one entry per block);
+    // outside the class it can only be modified through reset_signflip_()/erase_signflip_()
+    // above, each of which preserves that invariant.
+    std::vector<cytnx_bool> _signflip;
   };
   /// @endcond
 
@@ -3245,11 +3257,6 @@ namespace cytnx {
     */
     const std::vector<Bond> &bonds() const { return this->_impl->bonds(); }
 
-    /**
-        @see bonds();
-    */
-    std::vector<Bond> &bonds() { return this->_impl->bonds(); }
-
     const Bond &bond_(const cytnx_uint64 &idx) const { return this->_impl->bond_(idx); }
     Bond &bond_(const cytnx_uint64 &idx) { return this->_impl->bond_(idx); }
 
@@ -3272,16 +3279,6 @@ namespace cytnx {
      * @return std::vector<bool>
      */
     std::vector<bool> signflip() const { return this->_impl->signflip(); }
-
-    /**
-     * @brief Get reference to the sign information of a fermionic UniTensor.
-     * @details Length is the number of blocks in the UniTensor. If the return is true, the sign of
-     * the elements of the corresponding block needs to be flipped.
-     * @warning This is an inline version which returns a reference. Changes to the reference affect
-     * the UniTensor!
-     * @return std::vector<bool> &
-     */
-    std::vector<bool> &signflip_() { return this->_impl->signflip_(); }
 
     /**
      * @brief Check whether the UniTensor is in block form.

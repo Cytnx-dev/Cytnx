@@ -60,6 +60,16 @@ namespace cytnx {
   }  // namespace
 
   typedef Accessor ac;
+
+  void BlockFermionicUniTensor::erase_signflip_(const std::vector<cytnx_uint64> &positions) {
+    vec_erase_(this->_signflip, positions);
+    cytnx_error_msg(this->_signflip.size() != this->_blocks.size(),
+                    "[ERROR][BlockFermionicUniTensor][erase_signflip_] after erasing, _signflip "
+                    "(len %d) is out of lockstep with _blocks (len %d); erase the blocks with the "
+                    "same index list before erasing the signflips.%s",
+                    (int)this->_signflip.size(), (int)this->_blocks.size(), "\n");
+  }
+
   void BlockFermionicUniTensor::Init(const std::vector<Bond> &bonds,
                                      const std::vector<std::string> &in_labels,
                                      const cytnx_int64 &rowrank, const unsigned int &dtype,
@@ -1818,7 +1828,8 @@ namespace cytnx {
     // signflips.
 
     const int rank = this->rank();
-    for (auto &bond : this->_bonds) bond.redirect_();
+    // Bond is immutable (#1001): redirect() returns a new Bond, assign it back.
+    for (auto &bond : this->_bonds) bond = bond.redirect();
     // Make reverse sequence [rank - 1, rank - 2, ..., 0].
     auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
     std::vector<cytnx_int64> idxorder(idxorder_view.begin(), idxorder_view.end());
@@ -2592,7 +2603,9 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
       if (this->_bonds[i].has_duplicate_qnums()) {
         has_dup.push_back(i);
-        idx_mappers.push_back(this->_bonds[i].group_duplicates_());
+        std::vector<cytnx_uint64> mapper;
+        this->_bonds[i] = this->_bonds[i].group_duplicates(mapper);
+        idx_mappers.push_back(mapper);
       }
     }
 
@@ -2663,14 +2676,14 @@ namespace cytnx {
     std::vector<cytnx_uint64> cb_stride(indicators.size());
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
-        Bond tmp = this->_bonds[i];
+        Bond tmp = this->_bonds[i].clone();
         cb_stride[0] = this->_bonds[i].qnums().size();
         for (int j = 1; j < indicators.size(); j++) {
           cb_stride[j] = this->_bonds[i + j].qnums().size();
           if (force)
             tmp._impl->force_combineBond_(this->_bonds[i + j]._impl, false);  // no grouping
           else
-            tmp.combineBond_(this->_bonds[i + j], false);  // no grouping
+            tmp = tmp.combineBond(this->_bonds[i + j], false);  // no grouping
         }
         new_bonds.push_back(tmp);
         i += indicators.size() - 1;
@@ -2803,7 +2816,7 @@ namespace cytnx {
     cytnx_uint64 total_elem = rhs->_block.storage().size();
 
     std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
-    ths->_signflip = std::vector<bool>(ths->_blocks.size(), false);
+    ths->reset_signflip_();
     for (int i = (rhs->rank() - 2); i >= 0; i--) {
       stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
     }

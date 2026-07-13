@@ -58,13 +58,27 @@ def test_bond_group_duplicates_tuple():
     assert mapper == [0, 0, 1]
 
 
-def test_bond_redirect__chains():
+def test_bond_redirect_returns_new_bond():
+    """Bond is immutable (#846): redirect() returns a new Bond and leaves the
+    original untouched. The old in-place redirect_() is gone -- see
+    test_bond_removed_mutators_raise_attribute_error below."""
     b = cytnx.Bond(2, cytnx.BD_KET)
     bid = id(b)
-    r = b.redirect_()
-    assert r is b
-    assert id(r) == bid
-    assert b.type() == cytnx.BD_BRA
+    r = b.redirect()
+    assert id(r) != bid
+    assert r.type() == cytnx.BD_BRA
+    assert b.type() == cytnx.BD_KET
+
+
+def test_bond_removed_mutators_raise_attribute_error():
+    """#846: Bond's in-place mutators (set_type, redirect_, combineBond_,
+    clear_type) are removed from the public interface; only the return-new
+    forms (retype, redirect, combineBond) remain. group_duplicates_ is also
+    gone: it was a misbinding of the out-of-place C++ group_duplicates under
+    an in-place-mutator name (the non-underscore group_duplicates stays)."""
+    b = cytnx.Bond(2, cytnx.BD_KET)
+    for name in ("set_type", "redirect_", "combineBond_", "clear_type", "group_duplicates_"):
+        assert not hasattr(b, name), f"Bond.{name} should have been removed"
 
 
 def test_imatmul_preserves_identity():

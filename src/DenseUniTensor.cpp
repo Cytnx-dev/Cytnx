@@ -828,12 +828,12 @@ namespace cytnx {
     std::vector<Bond> new_bonds;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
-        Bond tmp = this->_bonds[i];
+        Bond tmp = this->_bonds[i].clone();
         for (int j = 1; j < indicators.size(); j++) {
           if (force)
             tmp._impl->force_combineBond_(this->_bonds[i + j]._impl, false);
           else
-            tmp.combineBond_(this->_bonds[i + j]);
+            tmp = tmp.combineBond(this->_bonds[i + j]);
         }
         new_bonds.push_back(tmp);
         i += indicators.size() - 1;
@@ -1287,7 +1287,8 @@ namespace cytnx {
   void DenseUniTensor::Transpose_() {
     const int rank = this->rank();
     if (this->is_tag()) {
-      for (auto &bond : this->_bonds) bond.redirect_();
+      // Bond is immutable (#1001): redirect() returns a new Bond, assign it back.
+      for (auto &bond : this->_bonds) bond = bond.redirect();
     }
     // Make reverse sequence [rank - 1, rank - 2, ..., 0].
     auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
