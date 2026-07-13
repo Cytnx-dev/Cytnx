@@ -29,8 +29,8 @@ class DenseUniTensorTest : public ::testing::Test {
   Bond aux = Bond(1, BD_IN);
   Bond bond4 = Bond(4, BD_IN);
   DenseUniTensor dut;
-  Tensor tzero345 = zeros({3, 4, 5}).astype(Type.ComplexDouble);
-  Tensor tar345 = arange({3 * 4 * 5}).reshape({3, 4, 5}).astype(Type.ComplexDouble);
+  Tensor tzero345 = zeros({3, 4, 5}, Type.ComplexDouble);
+  Tensor tar345 = arange(0, 3 * 4 * 5, 1, Type.ComplexDouble).reshape({3, 4, 5});
 
   UniTensor Spf =
     UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Float, Device.cpu, false);
@@ -54,22 +54,22 @@ class DenseUniTensorTest : public ::testing::Test {
 
  protected:
   void SetUp() override {
-    utzero345 = UniTensor(zeros(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
-    utone345 = UniTensor(ones(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
-    utar345 = UniTensor(arange(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
+    using namespace std::complex_literals;
+
+    utzero345 = UniTensor(zeros({3, 4, 5}, Type.ComplexDouble));
+    utone345 = UniTensor(ones({3, 4, 5}, Type.ComplexDouble));
+    utar345 = UniTensor(arange(0, 3 * 4 * 5, 1, Type.ComplexDouble)).reshape({3, 4, 5});
     utar345.set_labels({"a", "b", "c"}).set_name("utar345").set_rowrank_(2);
-    utzero3456 = UniTensor(zeros(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
-    utone3456 = UniTensor(ones(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
-    utar3456 = UniTensor(arange(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
-    utarcomplex345 = UniTensor(arange(3 * 4 * 5)).astype(Type.ComplexDouble);
-    for (size_t i = 0; i < 3 * 4 * 5; i++) utarcomplex345.at({i}) = cytnx_complex128(i, i);
-    utarcomplex345 = utarcomplex345.reshape({3, 4, 5}).astype(Type.ComplexDouble);
-    utarcomplex3456 = UniTensor(arange(3 * 4 * 5 * 6)).astype(Type.ComplexDouble);
-    for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) utarcomplex3456.at({i}) = cytnx_complex128(i, i);
-    utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
+    utzero3456 = UniTensor(zeros({3, 4, 5, 6}, Type.ComplexDouble));
+    utone3456 = UniTensor(ones({3, 4, 5, 6}, Type.ComplexDouble));
+    utar3456 = UniTensor(arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble)).reshape({3, 4, 5, 6});
+    utarcomplex345 =
+      UniTensor((1.0 + 1.0i) * arange(0, 3 * 4 * 5, 1, Type.ComplexDouble)).reshape({3, 4, 5});
+    utarcomplex3456 = UniTensor((1.0 + 1.0i) * arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble))
+                        .reshape({3, 4, 5, 6});
     ut_complex_diag =
       UniTensor({bond4, bond4.redirect()}, {"row", "col"}, 1, Type.ComplexDouble, Device.cpu, true);
-    ut_complex_diag.put_block(arange(4).astype(Type.ComplexDouble));
+    ut_complex_diag.put_block(arange(0, 4, 1, Type.ComplexDouble));
     ut_complex_diag.set_name("ut_complex_diag");
 
     ut1 = ut1.Load(data_dir + "denseutensor1.cytnx").astype(Type.ComplexDouble);

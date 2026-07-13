@@ -309,8 +309,8 @@ namespace SvdTruncateTest {
   }
 
   /*=====test info=====
-  describe:When keepdim >= #singular values and err=0, nothing is truncated; the returned error
-  tensor must be a 1-element zero (the truncation error is zero).
+  describe:When keepdim >= #singular values and err=0, nothing is truncated; return_err=1 returns
+  a scalar zero while return_err>1 returns an empty vector.
   ====================*/
   TEST(Svd_truncate, no_truncation_returns_zero_error) {
     Tensor T = Tensor({6, 5}, Type.Double);
@@ -321,7 +321,6 @@ namespace SvdTruncateTest {
       std::vector<Tensor> out =
         linalg::Svd_truncate(T, /*keepdim=*/full, 0., /*is_UvT=*/true, return_err, 1);
       const std::string label = "return_err=" + std::to_string(return_err);
-      // is_UvT=true and keep == full means [S, U, vT, terr] with a 1-element zero terr
       CheckTruncatedSvdResult(out, full_ref[0], full, true, true, return_err, 1e-12, label);
       EXPECT_EQ(out[1].shape(), std::vector<cytnx_uint64>({6, full})) << label;
       EXPECT_EQ(out[2].shape(), std::vector<cytnx_uint64>({full, 5})) << label;
@@ -356,11 +355,11 @@ namespace SvdTruncateTest {
       max_abs = std::max(max_abs, std::abs(terr_all.storage().at<double>(i)));
     EXPECT_GT(max_abs, 0.0) << "terr values are all zero (previous bug)";
 
-    // return_err = 1: terr is a single element = largest dropped singular value
+    // return_err = 1: terr is a scalar = largest dropped singular value
     std::vector<UniTensor> svds_max =
       linalg::Svd_truncate(src_T, keepdim, min_blockdim, 0., true, 1, 1);
     Tensor terr_max = svds_max.back().get_block_();
-    ASSERT_EQ(terr_max.shape(), std::vector<cytnx_uint64>({1}));
+    ASSERT_TRUE(terr_max.is_scalar());
     EXPECT_NEAR(std::abs(terr_max.storage().at<double>(0)), max_abs, 1e-10 * (1.0 + max_abs));
   }
 

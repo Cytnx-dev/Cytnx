@@ -417,9 +417,9 @@ namespace cytnx {
         }
       }
       if (!anySall) {
-        // no truncation; return_err is tensor with one element, set to 0
         if (return_err >= 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, outCyT[0].dtype())));
+          outCyT.push_back(
+            BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err, outCyT[0].device()));
         }
       } else {
         Scalar Smin;

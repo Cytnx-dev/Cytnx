@@ -135,4 +135,4 @@ def test_lanczos_gnd_with_python_linop():
         Hop=op, method="Gnd", Maxiter=200, CvgCrit=1e-10, Tin=v0
     )
     # smallest eigenvalue of diag(1,2,3,4) is 1
-    assert abs(energy[0].item() - 1.0) < 1e-6
+    assert abs(energy.item() - 1.0) < 1e-6

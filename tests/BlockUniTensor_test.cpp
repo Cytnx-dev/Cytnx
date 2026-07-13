@@ -52,6 +52,32 @@ TEST_F(BlockUniTensorTest, Init) {
   EXPECT_ANY_THROW(BkUt.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
 }
 
+TEST_F(BlockUniTensorTest, ZeroExtentBondProducesEmptyTensor) {
+  const Bond empty = Bond(BD_IN, {{0}}, {0}, {Symmetry::U1()});
+  const Bond unit = Bond(BD_OUT, {{0}}, {1}, {Symmetry::U1()});
+  UniTensor tensor({empty, unit}, {"empty", "unit"}, 1, Type.Float, Device.cpu);
+
+  EXPECT_EQ(tensor.uten_type(), UTenType.Block);
+  EXPECT_EQ(tensor.shape(), (std::vector<cytnx_uint64>{0, 1}));
+  EXPECT_EQ(tensor.size(), 0);
+  EXPECT_TRUE(tensor.is_empty());
+  EXPECT_FALSE(tensor.is_void());
+  EXPECT_FALSE(tensor.is_scalar());
+  EXPECT_EQ(tensor.dtype(), Type.Float);
+  EXPECT_EQ(tensor.device(), Device.cpu);
+  ASSERT_EQ(tensor.Nblocks(), 1);
+  EXPECT_TRUE(tensor.get_block_(0).is_empty());
+
+  tensor.Save(temp_file_path);
+  const UniTensor loaded = UniTensor::Load(temp_file_path);
+  EXPECT_EQ(loaded.uten_type(), UTenType.Block);
+  EXPECT_EQ(loaded.shape(), tensor.shape());
+  EXPECT_EQ(loaded.syms(), tensor.syms());
+  EXPECT_TRUE(loaded.is_empty());
+  ASSERT_EQ(loaded.Nblocks(), 1);
+  EXPECT_TRUE(loaded.get_block_(0).is_empty());
+}
+
 TEST_F(BlockUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
   EXPECT_ANY_THROW(Spf.set_rowrank(-2));  // set_rowrank cannot be negative!
@@ -347,8 +373,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder)
   ASSERT_EQ(orig_shape, std::vector<cytnx_uint64>({10, 10}));
   std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
   std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       orig_exists[j][k] = uT.at({j, k}).exists();
       if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
     }
@@ -357,8 +383,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder)
   uT2.permute_(a, -1);
 
   // uT2 changed as expected (matches the pre-existing permute_2 reference answer).
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(uT2.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (uT2.at({j, k}).exists())
         EXPECT_EQ(double(uT2.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
@@ -369,8 +395,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnSharedBlockDoesNotCorruptOtherHolder)
   // permuted shared block Tensor can manifest as an out-of-bound access), so guard each read.
   ASSERT_EQ(uT.shape(), orig_shape);
   EXPECT_EQ(uT.labels(), orig_labels);
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       try {
         EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
         if (orig_exists[j][k] && uT.at({j, k}).exists())
@@ -398,8 +424,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) 
   const auto orig_shape = uT.shape();
   std::vector<std::vector<bool>> orig_exists(10, std::vector<bool>(10, false));
   std::vector<std::vector<double>> orig_vals(10, std::vector<double>(10, 0.0));
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       orig_exists[j][k] = uT.at({j, k}).exists();
       if (orig_exists[j][k]) orig_vals[j][k] = double(uT.at({j, k}).real());
     }
@@ -408,8 +434,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) 
   uT_indep.permute_(a, -1);
 
   // uT_indep must match the known permute_2 reference answer (proves the permute really ran).
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(uT_indep.at({j, k}).exists(), UT_permute_ans2.at({j, k}).exists());
       if (uT_indep.at({j, k}).exists())
         EXPECT_EQ(double(uT_indep.at({j, k}).real()), double(UT_permute_ans2.at({j, k}).real()));
@@ -417,8 +443,8 @@ TEST_F(BlockUniTensorTest, PermuteInPlaceOnNonSharedBlockLeavesCloneUnaffected) 
 
   // uT (the clone source, independent storage) must be completely unaffected.
   EXPECT_EQ(uT.shape(), orig_shape);
-  for (cytnx_int64 j = 0; j < 10; j++)
-    for (cytnx_int64 k = 0; k < 10; k++) {
+  for (cytnx_uint64 j = 0; j < 10; j++)
+    for (cytnx_uint64 k = 0; k < 10; k++) {
       EXPECT_EQ(uT.at({j, k}).exists(), orig_exists[j][k]);
       if (orig_exists[j][k] && uT.at({j, k}).exists())
         EXPECT_EQ(double(uT.at({j, k}).real()), orig_vals[j][k]);
@@ -702,6 +728,42 @@ TEST_F(BlockUniTensorTest, contract_mixed_dtype_order_independent) {
   EXPECT_TRUE(AreNearlyEqUniTensor(out_complex_real, ref_complex_real, 1e-10));
 }
 
+TEST_F(BlockUniTensorTest, full_contract_preserves_symmetry_metadata) {
+  UniTensor left = UT_diag.clone();
+  left.set_labels({"a", "b"});
+  UniTensor right = UT_diag.clone();
+  right.Transpose_();
+  right.set_labels({"b", "a"});
+
+  UniTensor out = left.contract(right);
+  EXPECT_EQ(out.uten_type(), UTenType.Block);
+  EXPECT_EQ(out.rank(), 0);
+  EXPECT_EQ(out.rowrank(), 0);
+  EXPECT_TRUE(out.bonds().empty());
+  EXPECT_TRUE(out.shape().empty());
+  EXPECT_EQ(out.syms(), left.syms());
+  EXPECT_TRUE(out.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(out.item().real()), 161.0);
+  EXPECT_DOUBLE_EQ(double(out.item().imag()), 0.0);
+  EXPECT_DOUBLE_EQ(std::real(out.item<cytnx_complex128>()), 161.0);
+  EXPECT_DOUBLE_EQ(std::imag(out.item<cytnx_complex128>()), 0.0);
+  EXPECT_THROW(left.item(), cytnx::error);
+}
+
+TEST_F(BlockUniTensorTest, diagonal_permute_preserves_blocks) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1});
+  UniTensor diag = UniTensor({bi, bi.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  diag.get_block_(0).fill(2.0);
+  diag.get_block_(1).fill(3.0);
+
+  UniTensor permuted = diag.permute(std::vector<std::string>{"b", "a"});
+  EXPECT_TRUE(permuted.is_diag());
+  EXPECT_FALSE(permuted.get_block_(0).is_void());
+  EXPECT_FALSE(permuted.get_block_(1).is_void());
+  EXPECT_DOUBLE_EQ(permuted.get_block_(0).item<cytnx_double>(), 2.0);
+  EXPECT_DOUBLE_EQ(permuted.get_block_(1).item<cytnx_double>(), 3.0);
+}
+
 TEST_F(BlockUniTensorTest, same_data) {
   UniTensor B = UT_pB_ans.permute({1, 0, 2});
   UniTensor C = B.contiguous();
@@ -896,10 +958,14 @@ TEST_F(BlockUniTensorTest, LinAlgElementwise) {
 }
 
 TEST_F(BlockUniTensorTest, Norm) {
-  // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
-  EXPECT_DOUBLE_EQ(double(BUT4.Norm().at({0}).real()), 10.36019459497064);
+  // EXPECT_TRUE(Scalar(BUT4.Norm().item()-10.02330912178208).abs()<1e-5);
+  Tensor but_norm = BUT4.Norm();
+  EXPECT_TRUE(but_norm.is_scalar());
+  EXPECT_DOUBLE_EQ(double(but_norm.item().real()), 10.36019459497064);
 
-  cytnx_double tmp = double(UT_diag.Norm().at({0}).real());
+  Tensor diag_norm = UT_diag.Norm();
+  EXPECT_TRUE(diag_norm.is_scalar());
+  cytnx_double tmp = double(diag_norm.item().real());
   cytnx_double ans = 0;
   for (cytnx_uint64 i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
@@ -1048,8 +1114,111 @@ TEST_F(BlockUniTensorTest, Trace) {
     cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
     for (int j = 0; j < deg; j++) ans += i + 1;
   }
-  EXPECT_DOUBLE_EQ(double(tmp.at({0}).real()), double(ans));
-  EXPECT_DOUBLE_EQ(double(tmp.at({0}).imag()), double(0));
+  EXPECT_EQ(tmp.rank(), 0);
+  EXPECT_EQ(tmp.rowrank(), 0);
+  EXPECT_TRUE(tmp.bonds().empty());
+  EXPECT_TRUE(tmp.shape().empty());
+  EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_FALSE(tmp.is_diag());
+  EXPECT_TRUE(tmp.get_block_().is_scalar());
+  EXPECT_TRUE(tmp.get_block_({}).is_scalar());
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
+  EXPECT_NO_THROW(tmp.to_dense());
+  testing::internal::CaptureStdout();
+  EXPECT_NO_THROW(tmp.print_block(0, false));
+  EXPECT_NE(testing::internal::GetCapturedStdout().find("rank-0 scalar block"), std::string::npos);
+
+  UniTensor loaded_scalar;
+  tmp.Save(temp_file_path);
+  EXPECT_NO_THROW(loaded_scalar = UniTensor::Load(temp_file_path));
+  EXPECT_EQ(loaded_scalar.uten_type(), UTenType.Block);
+  EXPECT_EQ(loaded_scalar.rank(), 0);
+  EXPECT_EQ(loaded_scalar.syms(), UT_diag.syms());
+  EXPECT_DOUBLE_EQ(double(loaded_scalar.at({}).real()), double(ans));
+
+  UniTensor same_sym_sum = tmp.clone();
+  EXPECT_NO_THROW(same_sym_sum += loaded_scalar);
+  EXPECT_DOUBLE_EQ(double(same_sym_sum.at({}).real()), double(ans + ans));
+
+  Bond zn2_bond = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::Zn(2)});
+  UniTensor zn2_diag =
+    UniTensor({zn2_bond, zn2_bond.redirect()}, {"a", "b"}, 1, Type.Double, Device.cpu, true);
+  zn2_diag.get_block_(0).fill(1.0);
+  zn2_diag.get_block_(1).fill(2.0);
+  UniTensor zn2_scalar = zn2_diag.Trace("a", "b");
+  EXPECT_EQ(zn2_scalar.uten_type(), UTenType.Block);
+  EXPECT_EQ(zn2_scalar.rank(), 0);
+  EXPECT_NE(zn2_scalar.syms(), tmp.syms());
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp + zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp - zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp * zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+  EXPECT_THROW(
+    {
+      UniTensor ignored = tmp / zn2_scalar;
+      (void)ignored;
+    },
+    std::logic_error);
+
+  UniTensor scalar_contract;
+  EXPECT_NO_THROW(scalar_contract = tmp.contract(loaded_scalar));
+  EXPECT_EQ(scalar_contract.uten_type(), UTenType.Block);
+  EXPECT_EQ(scalar_contract.rank(), 0);
+  EXPECT_EQ(scalar_contract.syms(), UT_diag.syms());
+  EXPECT_DOUBLE_EQ(double(scalar_contract.at({}).real()), double(ans * ans));
+
+  tmp = UT_diag.clone();
+  tmp.Trace_(0, 1);
+  EXPECT_EQ(tmp.uten_type(), UTenType.Block);
+  EXPECT_EQ(tmp.rank(), 0);
+  EXPECT_EQ(tmp.rowrank(), 0);
+  EXPECT_TRUE(tmp.bonds().empty());
+  EXPECT_TRUE(tmp.shape().empty());
+  EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_FALSE(tmp.is_diag());
+  EXPECT_TRUE(tmp.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
+  EXPECT_NO_THROW(tmp.to_dense());
+
+  UniTensor transposed = tmp.Transpose();
+  EXPECT_EQ(transposed.uten_type(), UTenType.Block);
+  EXPECT_EQ(transposed.rank(), 0);
+  EXPECT_EQ(transposed.rowrank(), 0);
+  EXPECT_TRUE(transposed.bonds().empty());
+  EXPECT_TRUE(transposed.shape().empty());
+  EXPECT_EQ(transposed.syms(), UT_diag.syms());
+  EXPECT_FALSE(transposed.is_diag());
+  EXPECT_TRUE(transposed.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(transposed.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(transposed.at({}).imag()), double(0));
+
+  tmp.Transpose_();
+  EXPECT_EQ(tmp.uten_type(), UTenType.Block);
+  EXPECT_EQ(tmp.rank(), 0);
+  EXPECT_EQ(tmp.rowrank(), 0);
+  EXPECT_TRUE(tmp.bonds().empty());
+  EXPECT_TRUE(tmp.shape().empty());
+  EXPECT_EQ(tmp.syms(), UT_diag.syms());
+  EXPECT_FALSE(tmp.is_diag());
+  EXPECT_TRUE(tmp.get_block_().is_scalar());
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).real()), double(ans));
+  EXPECT_DOUBLE_EQ(double(tmp.at({}).imag()), double(0));
 
   EXPECT_NO_THROW(BUT1.Trace(0, 3));
   EXPECT_THROW(BUT1.Trace(), std::logic_error);
@@ -1322,7 +1491,7 @@ TEST_F(BlockUniTensorTest, convert_from_diagonal_dense_target_throws) {
   B.at({0, 0}) = 1.0;
   B.at({1, 1}) = 2.0;
 
-  UniTensor Ddiag = UniTensor(zeros(2), true);  // diagonal Dense, shape (2,2)
+  UniTensor Ddiag = UniTensor(zeros({2}), true);  // diagonal Dense, shape (2,2)
   EXPECT_ANY_THROW(Ddiag.convert_from(B));
 }
 

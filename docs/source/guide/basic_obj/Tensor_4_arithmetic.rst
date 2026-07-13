@@ -49,7 +49,16 @@ Output >>
 
 Tensor-Tensor arithmetic
 ****************************
-Arithmetic operations between two Tensors of the same shape are possible.
+Arithmetic operations between two Tensors of the same shape are possible. A
+Tensor containing exactly one element is also broadcast as a scalar, regardless
+of whether its shape is ``[]``, ``[1]``, ``[1, 1]``, or another singleton
+shape. This applies to both arithmetic and Tensor slice assignment.
+
+This singleton rule is a property of **Tensor**. It does not make a singleton
+**UniTensor** a scalar: UniTensor bonds and symmetry sectors remain meaningful
+even when every bond has dimension one. Only a rank-zero UniTensor satisfies
+**UniTensor.is_scalar()**.
+
 For example:
 
 * In Python:

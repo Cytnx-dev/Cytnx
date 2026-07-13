@@ -12,11 +12,15 @@
 namespace cytnx {
   namespace algo {
     Tensor Sort(const Tensor &Tin) {
+      cytnx_error_msg(Tin.is_void(), "[ERROR][Sort] cannot sort a void Tensor.%s", "\n");
+
       Tensor out;
       if (Tin.is_contiguous())
         out = Tin.clone();
       else
         out = Tin.contiguous();
+
+      if (Tin.is_scalar()) return out;
 
       // Handle edge case: if last dimension is 0, there's nothing to sort
       // Note: This branch may never be reached as exception is thrown when creating tensor with 0

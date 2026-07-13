@@ -140,8 +140,10 @@ TEST(Bond, gpu_InitWithQnum_v2) {
   EXPECT_THROW(Bond(BD_REG, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}), std::logic_error);
   EXPECT_THROW(Bond(BD_KET, {{0, 2, 1}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3}), std::logic_error);
   EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6, 1}, {4, 1}}, {4, 7, 2, 3}), std::logic_error);
-  // deg should not have zero comp.
-  EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {0, 7, 2, 3}), std::logic_error);
+  Bond zero_extent = Bond(BD_KET, {{0, 2}}, {0}, {Symmetry::Zn(2), Symmetry::U1()});
+  EXPECT_EQ(zero_extent.dim(), 0);
+  EXPECT_EQ(zero_extent.getDegeneracy({0, 2}), 0);
+  EXPECT_EQ(zero_extent.syms(), std::vector<Symmetry>({Symmetry::Zn(2), Symmetry::U1()}));
   EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}}, {4, 7, 2, 3}), std::logic_error);
   EXPECT_THROW(Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {}), std::logic_error);
   EXPECT_THROW(Bond(BD_KET, {}, {4, 7, 2, 3}), std::logic_error);

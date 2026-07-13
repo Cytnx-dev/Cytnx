@@ -13,13 +13,13 @@ class NconTest : public ::testing::Test {
  public:
   // std::pair<std::vector<cytnx::UniTensor>, std::vector<std::vector<cytnx::cytnx_int64>>> input;
   UniTensor utdnA =
-    UniTensor(arange(0, 8, 1, Type.ComplexDouble)).reshape({2, 2, 2}).to(cytnx::Device.cuda);
+    UniTensor(arange(0, 8, 1, Type.ComplexDouble, cytnx::Device.cuda)).reshape({2, 2, 2});
   ;
-  UniTensor utdnB = UniTensor(ones({2, 2}, Type.ComplexDouble)).to(cytnx::Device.cuda);
+  UniTensor utdnB = UniTensor(ones({2, 2}, Type.ComplexDouble, cytnx::Device.cuda));
   ;
-  UniTensor utdnC = UniTensor(eye(2, Type.ComplexDouble)).to(cytnx::Device.cuda);
+  UniTensor utdnC = UniTensor(eye(2, Type.ComplexDouble, cytnx::Device.cuda));
   ;
-  UniTensor utdnAns = UniTensor(zeros({2, 2, 2}, Type.ComplexDouble)).to(cytnx::Device.cuda);
+  UniTensor utdnAns = UniTensor(zeros({2, 2, 2}, Type.ComplexDouble, cytnx::Device.cuda));
   ;
 
  protected:

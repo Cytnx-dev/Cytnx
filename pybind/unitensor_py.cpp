@@ -24,6 +24,21 @@ using pybind_cytnx::dispatch_pyint;
 #ifdef BACKEND_TORCH
 #else
 
+namespace {
+  bool is_empty_tuple(py::handle object) {
+    return py::isinstance<py::tuple>(object) &&
+           py::reinterpret_borrow<py::tuple>(object).size() == 0;
+  }
+
+  void check_tuple_rank(py::tuple args, cytnx_uint64 rank, const char *type_name) {
+    const auto index_count = static_cast<cytnx_uint64>(args.size());
+    cytnx_error_msg(index_count > rank,
+                    "[ERROR] too many indices for %s: got %llu indices for rank-%llu object.%s",
+                    type_name, static_cast<unsigned long long>(index_count),
+                    static_cast<unsigned long long>(rank), "\n");
+  }
+}  // namespace
+
 class cHclass {
  public:
   Scalar::Sproxy proxy;
@@ -95,6 +110,87 @@ inline bool parse_get_blocks_silent_arg(const py::args &args, const py::kwargs &
   return silent;
 }
 
+// Phase-2 Task 3 (issue #934, decision record 2026-07-06, amended): the four
+// elementwise UniTensor(+)UniTensor operator families split by whether the
+// operation is well defined:
+//
+//   * '+' '-' '+=' '-=' are KEPT but guarded. They require the two operands to
+//     describe the same tensor slot -- matching type, rank, labels (in order),
+//     rowrank, diagonal-ness, and bonds. With matching metadata the sum /
+//     difference is unambiguous and label-preserving; with mismatched metadata
+//     the labels would be silently discarded (the #934/#753/#675 complaint), so
+//     they raise TypeError instead (see unitensor_addsub_metadata_mismatch).
+//   * '*' '/' '*=' '/=' are REMOVED: the elementwise (Hadamard) product /
+//     quotient of two UniTensors is basis-dependent and has no tensor-network
+//     meaning. Their dunders raise TypeError via raise_unitensor_elementwise_removed.
+//
+// Scalar<->UniTensor arithmetic (both directions, out-of-place and in-place) is
+// unaffected. The C++ operator+/operator- are unchanged -- the Krylov solvers
+// rely on them as vector-space operations.
+inline constexpr const char *kUniTensorMulRemovedGuidance =
+  "Use Contract() for tensor contraction or Kron() for tensor (outer) products; for a "
+  "genuinely elementwise (Hadamard) product, operate on the raw blocks instead -- "
+  "Tensor-level elementwise arithmetic is fully supported via ut.get_block(). The Hadamard "
+  "product of two UniTensors is basis-dependent and not a tensor-network operation. Scalar "
+  "multiplication ('2.0 * ut', 'ut *= 2.0') is unaffected.";
+
+inline constexpr const char *kUniTensorDivRemovedGuidance =
+  "Use Contract() with an inverted operator, or scalar division ('ut / 2.0', 'ut /= 2.0') "
+  "if that is what you meant; for a genuinely elementwise division, operate on the raw "
+  "blocks instead -- Tensor-level elementwise arithmetic is fully supported via "
+  "ut.get_block(). Division of two UniTensors has no well-defined tensor-network meaning.";
+
+[[noreturn]] inline void raise_unitensor_elementwise_removed(const std::string &op_name,
+                                                             const std::string &alt) {
+  throw py::type_error(std::format(
+    "elementwise UniTensor{}UniTensor arithmetic was removed (issue #934): {}", op_name, alt));
+}
+
+// Render a label list for diagnostics, e.g. ['a', 'b'].
+inline std::string format_labels(const std::vector<std::string> &labels) {
+  std::string s = "[";
+  for (std::size_t i = 0; i < labels.size(); ++i) {
+    if (i) s += ", ";
+    s += "'" + labels[i] + "'";
+  }
+  s += "]";
+  return s;
+}
+
+// Returns "" when a and b have matching metadata for elementwise +/-, otherwise a
+// human-readable reason for the mismatch. +/- is only well-defined (and label-preserving)
+// when both operands describe the same tensor slot.
+inline std::string unitensor_addsub_metadata_mismatch(const UniTensor &a, const UniTensor &b) {
+  if (a.uten_type() != b.uten_type())
+    return std::format("different UniTensor types ({} vs {})", a.uten_type_str(),
+                       b.uten_type_str());
+  if (a.rank() != b.rank()) return std::format("different rank ({} vs {})", a.rank(), b.rank());
+  if (a.labels() != b.labels())
+    return std::format("different labels ({} vs {})", format_labels(a.labels()),
+                       format_labels(b.labels()));
+  if (a.rowrank() != b.rowrank())
+    return std::format("different rowrank ({} vs {})", a.rowrank(), b.rowrank());
+  if (a.is_diag() != b.is_diag())
+    return std::string("one is diagonal (is_diag=True) and the other is not");
+  const std::vector<Bond> &ba = a.bonds();
+  const std::vector<Bond> &bb = b.bonds();
+  for (std::size_t i = 0; i < ba.size(); ++i) {
+    if (ba[i] != bb[i])
+      return std::format("bond at leg {} (label '{}') does not match", i, a.labels()[i]);
+  }
+  return std::string();
+}
+
+[[noreturn]] inline void raise_unitensor_addsub_metadata_mismatch(const std::string &op_name,
+                                                                  const std::string &reason) {
+  throw py::type_error(std::format(
+    "UniTensor{}UniTensor requires the two operands to have matching metadata, but they have {}. "
+    "Elementwise +/- is only defined when both describe the same tensor slot (same labels, bonds, "
+    "rowrank, ...); align them first (e.g. permute()/relabel_()), or use Contract() / operate on "
+    "ut.get_block() for genuinely elementwise math. See issue #934.",
+    op_name, reason));
+}
+
 // Lambda used for _getitem__ and _setitem__
 auto build_accessors = [](const UniTensor &self, py::object locators) {
   ssize_t start, stop, step, slicelength;
@@ -102,6 +198,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   if (self.is_diag()) {
     if (py::isinstance<py::tuple>(locators)) {
       py::tuple Args = locators.cast<py::tuple>();
+      check_tuple_rank(Args, self.rank(), "UniTensor");
       cytnx_error_msg(Args.size() > 2,
                       "[ERROR][slicing] A diagonal UniTensor can only be accessed with one- or "
                       "two dimensional slicing.%s",
@@ -130,6 +227,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   } else {
     if (py::isinstance<py::tuple>(locators)) {
       py::tuple Args = locators.cast<py::tuple>();
+      check_tuple_rank(Args, self.rank(), "UniTensor");
       cytnx_uint64 cnt = 0;
       // mixing of slice and ints
       for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
@@ -332,8 +430,12 @@ void unitensor_binding(py::module &m) {
     .def("rowrank", &UniTensor::rowrank)
     .def("Nblocks", &UniTensor::Nblocks)
     .def("rank", &UniTensor::rank)
+    .def("size", &UniTensor::size)
     .def("uten_type", &UniTensor::uten_type)
     .def("uten_type_str",&UniTensor::uten_type_str)
+    .def("is_void", &UniTensor::is_void)
+    .def("is_scalar", &UniTensor::is_scalar)
+    .def("is_empty", &UniTensor::is_empty)
     .def("syms", &UniTensor::syms)
     .def("dtype", &UniTensor::dtype)
     .def("dtype_str", &UniTensor::dtype_str)
@@ -410,31 +512,48 @@ void unitensor_binding(py::module &m) {
 
      .def("__getitem__",
          [](const UniTensor &self, py::object locators) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to getitem from a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to getitem from an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
              "[ERROR] Cannot get element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             return self.get(std::vector<Accessor>{});
+           }
 
            auto accessors = build_accessors(self, locators);
            return self.get(accessors);
          })
     .def("__setitem__",
          [](UniTensor &self, py::object locators, const cytnx::Tensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to setelem to a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to setelem to an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(self.uten_type() == UTenType.Sparse, "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<Accessor>{}, rhs);
+             return;
+           }
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs);
          })
     .def("__setitem__",
          [](UniTensor &self, py::object locators, const cytnx::UniTensor &rhs) {
-           cytnx_error_msg(self.shape().size() == 0,
-                           "[ERROR] try to setelem to a empty UniTensor%s", "\n");
+           cytnx_error_msg(self.uten_type() == UTenType.Void,
+                           "[ERROR] try to setelem to an uninitialized UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
              "[ERROR] cannot set element using [] from Block/BlockFermionicUniTensor. Use at() instead.%s", "\n");
+           if (self.rank() == 0) {
+             cytnx_error_msg(!is_empty_tuple(locators),
+                             "[ERROR] rank-0 UniTensor can only be indexed with ().%s", "\n");
+             self.set(std::vector<Accessor>{}, rhs.get_block());
+             return;
+           }
 
            auto accessors = build_accessors(self, locators);
            self.set(accessors, rhs.get_block());
@@ -1011,7 +1130,19 @@ void unitensor_binding(py::module &m) {
     // NOTE: no __eq__/__ne__/__bool__ on UniTensor (intentional, Task 3 scope) -- Python falls
     // back to identity semantics; see Tensor's __ne__/__bool__ notes in tensor_py.cpp.
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__add__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Add(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor+UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
+    .def("__add__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" + ", reason);
+           // Add() dtype-promotes but resets labels to a plain range and clears the name;
+           // restore the shared metadata since the operands matched.
+           UniTensor out = self.Add(rhs);
+           out.relabel_(self.labels());
+           out.set_name(self.name());
+           return out;
+         })
     .def("__add__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Add(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1106,8 +1237,14 @@ void unitensor_binding(py::module &m) {
     .def("__radd__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Add(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor+=UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
     .def("__iadd__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Add_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" += ", reason);
+           return self.Add_(rhs);  // in-place; preserves self's labels and name
+         })
     .def("__iadd__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Add_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1155,7 +1292,19 @@ void unitensor_binding(py::module &m) {
     .def("__iadd__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Add_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__sub__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Sub(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor-UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
+    .def("__sub__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" - ", reason);
+           // Sub() dtype-promotes but resets labels to a plain range and clears the name;
+           // restore the shared metadata since the operands matched.
+           UniTensor out = self.Sub(rhs);
+           out.relabel_(self.labels());
+           out.set_name(self.name());
+           return out;
+         })
     .def("__sub__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Sub(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1250,8 +1399,14 @@ void unitensor_binding(py::module &m) {
     .def("__rsub__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Sub(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor-=UniTensor is kept but
+    // guarded on matching metadata; see unitensor_addsub_metadata_mismatch's doc comment above.
     .def("__isub__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Sub_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           const std::string reason = unitensor_addsub_metadata_mismatch(self, rhs);
+           if (!reason.empty()) raise_unitensor_addsub_metadata_mismatch(" -= ", reason);
+           return self.Sub_(rhs);  // in-place; preserves self's labels and name
+         })
     .def("__isub__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Sub_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1299,7 +1454,13 @@ void unitensor_binding(py::module &m) {
     .def("__isub__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Sub_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__mul__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Mul(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*UniTensor (Hadamard/elementwise
+    // product) removed from the python surface -- it is basis-dependent and not a
+    // tensor-network operation (#934); see raise_unitensor_elementwise_removed above.
+    .def("__mul__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" * ", kUniTensorMulRemovedGuidance);
+         })
     .def("__mul__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Mul(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1394,8 +1555,12 @@ void unitensor_binding(py::module &m) {
     .def("__rmul__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Mul(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*=UniTensor (Hadamard/elementwise
+    // product) removed from the python surface; see __mul__'s comment above.
     .def("__imul__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Mul_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" *= ", kUniTensorMulRemovedGuidance);
+         })
     .def("__imul__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Mul_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1443,7 +1608,14 @@ void unitensor_binding(py::module &m) {
     .def("__imul__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Mul_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__truediv__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Div(self, rhs); })
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/UniTensor (elementwise division)
+    // removed from the python surface -- per #934 it has no well-defined tensor-network
+    // meaning (basis-dependent, and typically produces inf/nan); see
+    // raise_unitensor_elementwise_removed's doc comment above.
+    .def("__truediv__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" / ", kUniTensorDivRemovedGuidance);
+         })
     .def("__truediv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Div(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1538,8 +1710,12 @@ void unitensor_binding(py::module &m) {
     .def("__rtruediv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/=UniTensor (elementwise
+    // division) removed from the python surface; see __truediv__'s comment above.
     .def("__itruediv__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Div_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" /= ", kUniTensorDivRemovedGuidance);
+         })
     .def("__itruediv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Div_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1587,7 +1763,14 @@ void unitensor_binding(py::module &m) {
     .def("__itruediv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__floordiv__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Div(self, rhs); })
+    // Python '//' maps to __floordiv__, a distinct dunder from '/'. It must mirror __truediv__:
+    // UniTensor//UniTensor is the same removed elementwise (Hadamard) division (#934), so it raises
+    // rather than silently routing to linalg::Div -- otherwise 'a // b' is a back-door for the
+    // quotient that 'a / b' rejects. Scalar floordiv ('ut // 2.0') stays, matching scalar '/'.
+    .def("__floordiv__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" // ", kUniTensorDivRemovedGuidance);
+         })
     .def("__floordiv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Div(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1682,8 +1865,12 @@ void unitensor_binding(py::module &m) {
     .def("__rfloordiv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // '//=' maps to __ifloordiv__; mirror __itruediv__ -- UniTensor//=UniTensor is the removed
+    // in-place elementwise division (#934), so it raises instead of routing to Div_.
     .def("__ifloordiv__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Div_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" //= ", kUniTensorDivRemovedGuidance);
+         })
     .def("__ifloordiv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Div_(static_cast<cytnx::cytnx_float>(rhs));
@@ -1920,10 +2107,10 @@ void unitensor_binding(py::module &m) {
          py::arg("label"), py::arg("dim"))
 
     //[Generator]
-    .def_static("identity", [](const cytnx_uint64 &dim, const std::vector<std::string> &in_labels,
-                  const cytnx_bool &is_diag,
-                  const unsigned int &dtype,
-                  const int &device,
+    .def_static("identity", [](cytnx_uint64 dim, const std::vector<std::string> &in_labels,
+                  cytnx_bool is_diag,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::identity(dim, in_labels, is_diag, dtype, device, name);
@@ -1932,10 +2119,10 @@ void unitensor_binding(py::module &m) {
                    py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("eye", [](const cytnx_uint64 &dim, const std::vector<std::string> &in_labels,
-                  const cytnx_bool &is_diag,
-                  const unsigned int &dtype,
-                  const int &device,
+     .def_static("eye", [](cytnx_uint64 dim, const std::vector<std::string> &in_labels,
+                  cytnx_bool is_diag,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::eye(dim, in_labels, is_diag, dtype, device, name);
@@ -1944,58 +2131,58 @@ void unitensor_binding(py::module &m) {
                    py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-    .def_static("ones", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+    .def_static("ones", [](cytnx_uint64 Nelem, const std::vector<std::string> &in_labels,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
-                  return UniTensor::ones(Nelem, in_labels,dtype,device,name);
+                  return UniTensor::ones({Nelem}, in_labels,dtype,device,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
     .def_static("ones", [](const std::vector<cytnx_uint64> &shape, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::ones(shape, in_labels,dtype,device,name);
                 }, py::arg("shape"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("zeros", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+     .def_static("zeros", [](cytnx_uint64 Nelem, const std::vector<std::string> &in_labels,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
-                  return UniTensor::zeros(Nelem, in_labels,dtype,device,name);
+                  return UniTensor::zeros({Nelem}, in_labels,dtype,device,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
      .def_static("zeros", [](const std::vector<cytnx_uint64> &shape, const std::vector<std::string> &in_labels,
-                  const unsigned int &dtype,
-                  const int &device,
+                  unsigned int dtype,
+                  int device,
                   const std::string &name)
                 {
                   return UniTensor::zeros(shape, in_labels,dtype,device,name);
                 }, py::arg("shape"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("arange", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
+     .def_static("arange", [](cytnx_uint64 Nelem, const std::vector<std::string> &in_labels,
                   const std::string &name)
                 {
                   return UniTensor::arange(Nelem, in_labels,name);
                 }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(),
                    py::arg("name") = std::string(""))
-     .def_static("arange", [](const cytnx_double &start,const cytnx_double &end
-     ,const cytnx_double &step, const std::vector<std::string> &in_labels,const unsigned int &dtype, const int &device,
+     .def_static("arange", [](cytnx_double start, cytnx_double end
+     ,cytnx_double step, const std::vector<std::string> &in_labels,unsigned int dtype, int device,
                   const std::string &name)
                 {
                   return UniTensor::arange(start,end,step, in_labels,dtype,device,name);
                 }, py::arg("start"),py::arg("end"),py::arg("step")=cytnx_double(1), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
                    py::arg("device") = int(Device.cpu),
                    py::arg("name") = std::string(""))
-     .def_static("linspace", [](const cytnx_double &start,const cytnx_double &end
-     ,const cytnx_uint64 &Nelem,const bool &endpoint,const std::vector<std::string> &in_labels,const unsigned int &dtype, const int &device,
+     .def_static("linspace", [](cytnx_double start, cytnx_double end
+     ,cytnx_uint64 Nelem,bool endpoint,const std::vector<std::string> &in_labels,unsigned int dtype, int device,
                   const std::string &name)
                 {
                   return UniTensor::linspace(start,end,Nelem, endpoint, in_labels,dtype,device,name);

@@ -11,12 +11,15 @@
 namespace cytnx {
   namespace linalg {
     void Conj_(Tensor &Tin) {
+      cytnx_error_msg(Tin.is_void(), "[Conj_] cannot operate on an uninitialized Tensor.%s", "\n");
       // cytnx_error_msg(Tin.shape().size() != 2,"[Inv] error, Inv can only operate on rank-2
       // Tensor.%s","\n"); cytnx_error_msg(!Tin.is_contiguous(), "[Inv] error tensor must be
       // contiguous. Call Contiguous_() or Contiguous() first%s","\n");
 
       // cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1], "[Inv] error, the size of last two rank
       // should be the same.%s","\n");
+
+      if (Tin.is_empty()) return;
 
       if (Tin.device() == Device.cpu) {
         if (Type.is_complex(Tin.dtype()))

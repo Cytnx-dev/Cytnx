@@ -1,6 +1,8 @@
 #include "UniTensor.hpp"
 
+#include <algorithm>
 #include <map>
+#include <ranges>
 #include <stack>
 #include <vector>
 
@@ -18,12 +20,71 @@
 #else
 
 namespace cytnx {
+  namespace {
+    void save_symmetry_cache(std::fstream &f, const std::vector<Symmetry> &syms) {
+      cytnx_uint64 nsyms = syms.size();
+      f.write(reinterpret_cast<const char *>(&nsyms), sizeof(cytnx_uint64));
+      for (const auto &sym : syms) sym._Save(f);
+    }
+
+    std::vector<Symmetry> load_symmetry_cache(std::fstream &f) {
+      cytnx_uint64 nsyms;
+      f.read(reinterpret_cast<char *>(&nsyms), sizeof(cytnx_uint64));
+      std::vector<Symmetry> syms(nsyms);
+      for (auto &sym : syms) sym._Load(f);
+      return syms;
+    }
+
+    void check_arithmetic_syms(const BlockUniTensor &lhs, const BlockUniTensor &rhs,
+                               const char *op_name) {
+      cytnx_error_msg(lhs.syms() != rhs.syms(),
+                      "[ERROR] Cannot %s two BlockUniTensor with different symmetries.%s", op_name,
+                      "\n");
+    }
+
+    boost::intrusive_ptr<BlockUniTensor> checked_block_rhs(
+      const boost::intrusive_ptr<UniTensor_base> &rhs, const char *op_name) {
+      auto rtn = boost::dynamic_pointer_cast<BlockUniTensor>(rhs);
+      cytnx_error_msg(rtn == nullptr,
+                      "[ERROR] Cannot %s two UniTensor with different type/format.%s", op_name,
+                      "\n");
+      return rtn;
+    }
+
+    // TODO: Factor BlockUniTensor Add_/Sub_/Mul_/Div_ through one checked block lookup helper.
+    // The repeated loops below rotate through rhs blocks with modulo arithmetic and silently skip a
+    // lhs block if no matching _inner_to_outer_idx is found. Build a map from _inner_to_outer_idx
+    // to rhs block index instead, throw on missing matches, then apply the requested operation.
+  }  // namespace
+
   typedef Accessor ac;
   void BlockUniTensor::Init(const std::vector<Bond> &bonds,
                             const std::vector<std::string> &in_labels, const cytnx_int64 &rowrank,
                             const unsigned int &dtype, const int &device, const bool &is_diag,
                             const bool &no_alloc, const std::string &name) {
     this->_name = name;
+    if (bonds.empty()) {
+      cytnx_error_msg(!in_labels.empty(),
+                      "[ERROR][BlockUniTensor] rank-0 tensor cannot have labels.%s", "\n");
+      cytnx_error_msg((rowrank != 0) && (rowrank != -1),
+                      "[ERROR][BlockUniTensor] rank-0 tensor must have rowrank 0.%s", "\n");
+      cytnx_error_msg(is_diag, "[ERROR][BlockUniTensor] rank-0 tensor cannot be diagonal.%s", "\n");
+      cytnx_error_msg(this->syms_cache.empty(),
+                      "[ERROR][BlockUniTensor] rank-0 tensor needs symmetry metadata.%s", "\n");
+      this->_rowrank = 0;
+      this->_labels.clear();
+      this->_bonds.clear();
+      this->_blocks.clear();
+      this->_inner_to_outer_idx = {{}};
+      this->_is_braket_form = false;
+      this->_is_diag = false;
+      if (!no_alloc) {
+        this->_blocks.push_back(zeros({}, dtype, device));
+      } else {
+        this->_blocks.push_back(Tensor({}, dtype, device, false));
+      }
+      return;
+    }
     // the entering is already check all the bonds have symmetry.
     //  need to check:
     //  1. the # of symmetry and their type across all bonds
@@ -32,6 +93,7 @@ namespace cytnx {
     // check Symmetry for all bonds
     cytnx_uint32 N_symmetry = bonds[0].Nsym();
     std::vector<Symmetry> tmpSyms = bonds[0].syms();
+    this->syms_cache = vec_clone(tmpSyms);
 
     cytnx_uint32 N_ket = 0;
     for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
@@ -44,9 +106,6 @@ namespace cytnx {
         bonds[i]._impl->_degs.size() == 0,
         "[ERROR][BlockUniTensor] All bonds must be in new format for BlockUniTensor!.%s", "\n");
 
-      // check rank-0 bond:
-      cytnx_error_msg(bonds[i].dim() == 0,
-                      "[ERROR][BlockUniTensor] All bonds must have dimension >=1%s", "\n");
       // check symmetry and type:
       cytnx_error_msg(bonds[i].Nsym() != N_symmetry,
                       "[ERROR][BlockUniTensor] inconsistant # of symmetry at bond: %d. # of "
@@ -125,7 +184,7 @@ namespace cytnx {
       for (int b = 0; b < this->_bonds[0].qnums().size(); b++) {
         this->_inner_to_outer_idx.push_back({(cytnx_uint64)b, (cytnx_uint64)b});
         if (!no_alloc) {
-          this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b], dtype, device));
+          this->_blocks.push_back(zeros({this->_bonds[0]._impl->_degs[b]}, dtype, device));
         } else {
           this->_blocks.push_back(Tensor({this->_bonds[0]._impl->_degs[b]}, dtype, device, false));
         }
@@ -197,6 +256,15 @@ namespace cytnx {
   void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
                           const std::vector<cytnx_uint64> &qn_indices,
                           const std::vector<Bond> &bonds, const Tensor &block) {
+    if (bonds.empty()) {
+      cytnx_error_msg(Nin != 0 || Nout != 0 || !qn_indices.empty(),
+                      "[ERROR][BlockUniTensor] invalid rank-0 block metadata.%s", "\n");
+      os << "   rank-0 scalar block\n";
+      os << "   shape:\t";
+      vec_print_simple(os, block.shape());
+      return;
+    }
+
     cytnx_uint64 Total_line = Nin < Nout ? Nout : Nin;
 
     std::vector<std::string> Lside(Total_line);
@@ -502,8 +570,7 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     } else {
-      BlockUniTensor *tmp = new BlockUniTensor();
-      tmp = this->clone_meta(true, true);
+      boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (unsigned int b = 0; b < this->_blocks.size(); b++) {
         if (this->_blocks[b].is_contiguous()) {
@@ -512,16 +579,18 @@ namespace cytnx {
           tmp->_blocks[b] = this->_blocks[b].contiguous();
         }
       }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
+      return tmp;
     }
   }
 
-  std::vector<Symmetry> BlockUniTensor::syms() const { return this->_bonds[0].syms(); }
+  std::vector<Symmetry> BlockUniTensor::syms() const {
+    if (!this->syms_cache.empty() || this->_bonds.empty()) return this->syms_cache;
+    return this->_bonds[0].syms();
+  }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
@@ -541,6 +610,7 @@ namespace cytnx {
       if (rowrank >= 0)
         cytnx_error_msg(rowrank != 1, "[ERROR][BlockUniTensor] is_diag=true must have rowrank=1.%s",
                         "\n");
+      out_raw->_blocks = this->_blocks;
       out_raw->_is_braket_form = out_raw->_update_braket();
 
     } else {
@@ -558,14 +628,13 @@ namespace cytnx {
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
     }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
 
-    return out;
+    return out_raw;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -643,56 +712,50 @@ namespace cytnx {
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
     const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabel_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
     const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabels_(old_labels, new_labels);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
                                                                const std::string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const std::string &inx,
                                                                const std::string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::to_dense() {
@@ -700,13 +763,12 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     }
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    boost::intrusive_ptr<BlockUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks.resize(this->_blocks.size());
     for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
       tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
     tmp->_is_diag = false;
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
+    return tmp;
   }
   void BlockUniTensor::to_dense_() {
     if (this->_is_diag) {
@@ -736,65 +798,63 @@ namespace cytnx {
     std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
 
-    if (comm_idx1.size() == 0) {
+    if (comm_idx1.empty()) {
       // output instance;
       BlockUniTensor *tmp = new BlockUniTensor();
-      BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
-      const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
+      auto *rtn = static_cast<BlockUniTensor *>(rhs.get());
       std::vector<std::string> out_labels;
       std::vector<Bond> out_bonds;
-      cytnx_int64 out_rowrank;
 
       // no-common label:
-      vec_concatenate_(out_labels, this->labels(), rhs->labels());
-      for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++)
-        out_bonds.push_back(this->_bonds[i].clone());
-      for (cytnx_uint64 i = 0; i < rhs->_bonds.size(); i++)
-        out_bonds.push_back(rhs->_bonds[i].clone());
+      out_bonds.reserve(this->_bonds.size() + rhs->_bonds.size());
+      for (const auto &bond : this->_bonds) out_bonds.push_back(bond.clone());
+      for (const auto &bond : rhs->_bonds) out_bonds.push_back(bond.clone());
 
-      out_rowrank = this->rowrank() + rhs->rowrank();
+      const cytnx_int64 out_rowrank = this->rowrank() + rhs->rowrank();
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
+      if (out_bonds.empty()) tmp->syms_cache = vec_clone(this->syms());
       tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false);
 
       // tmp->_name = this->_name + "+" + rhs->_name;
 
       // check each valid block:
-      std::vector<cytnx_uint64> Lidx(this->_bonds.size());  // buffer
-      std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  // buffer
+      const auto lhs_rank = this->_bonds.size();
+      const auto rhs_rank = rhs->_bonds.size();
+      std::vector<cytnx_uint64> lidx(lhs_rank);
+      std::vector<cytnx_uint64> ridx(rhs_rank);
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
-        memcpy(&Lidx[0], &tmp->_inner_to_outer_idx[b][0],
-               sizeof(cytnx_uint64) * this->_bonds.size());
-        memcpy(&Ridx[0], &tmp->_inner_to_outer_idx[b][this->_bonds.size()],
-               sizeof(cytnx_uint64) * rhs->_bonds.size());
+        const auto &outer_idx = tmp->_inner_to_outer_idx[b];
+        std::copy_n(outer_idx.begin(), lhs_rank, lidx.begin());
+        std::copy_n(outer_idx.begin() + lhs_rank, rhs_rank, ridx.begin());
 
-        auto IDL = vec_argwhere(this->_inner_to_outer_idx, Lidx);
-        auto IDR = vec_argwhere(Rtn->_inner_to_outer_idx, Ridx);
+        auto idl = vec_argwhere(this->_inner_to_outer_idx, lidx);
+        auto idr = vec_argwhere(rtn->_inner_to_outer_idx, ridx);
 
         if (User_debug) {
           cytnx_error_msg(
-            IDL.size() > 1,
+            idl.size() > 1,
             "[ERROR][BlockUniTensor][contract] IDL has more than two ambiguous locations!%s", "\n");
           cytnx_error_msg(
-            IDR.size() > 1,
+            idr.size() > 1,
             "[ERROR][BlockUniTensor][contract] IDR has more than two ambiguous locations!%s", "\n");
-          cytnx_error_msg(IDL.size() == 0, "[ERROR][BlockUniTensor][contract] IDL not found!%s",
-                          "\n");
-          cytnx_error_msg(IDR.size() == 0, "[ERROR][BlockUniTensor][contract] IDR not found!%s",
-                          "\n");
+          cytnx_error_msg(idl.empty(), "[ERROR][BlockUniTensor][contract] IDL not found!%s", "\n");
+          cytnx_error_msg(idr.empty(), "[ERROR][BlockUniTensor][contract] IDR not found!%s", "\n");
         }
-        if (IDL.size()) {
-          auto tmpR = Rtn->is_diag() ? linalg::Diag(Rtn->_blocks[IDR[0]]) : Rtn->_blocks[IDR[0]];
-          auto tmpL = this->is_diag() ? linalg::Diag(this->_blocks[IDL[0]]) : this->_blocks[IDL[0]];
-          std::vector<cytnx_uint64> shape_L =
-            vec_concatenate(tmpL.shape(), std::vector<cytnx_uint64>(tmpR.shape().size(), 1));
+        if (!idl.empty()) {
+          auto rhs_block =
+            rtn->is_diag() ? linalg::Diag(rtn->_blocks[idr[0]]) : rtn->_blocks[idr[0]];
+          auto lhs_block =
+            this->is_diag() ? linalg::Diag(this->_blocks[idl[0]]) : this->_blocks[idl[0]];
+          std::vector<cytnx_uint64> lhs_shape = vec_concatenate(
+            lhs_block.shape(), std::vector<cytnx_uint64>(rhs_block.shape().size(), 1));
 
-          tmpL = tmpL.reshape(shape_L);
-          auto Ott = linalg::Kron(tmpL, tmpR, false, true);
+          lhs_block = lhs_block.reshape(lhs_shape);
+          auto out_block = linalg::Kron(lhs_block, rhs_block, false, true);
           // checking:
-          cytnx_error_msg(Ott.shape() != tmp->_blocks[b].shape(),
+          cytnx_error_msg(out_block.shape() != tmp->_blocks[b].shape(),
                           "[ERROR][BlockUniTensor][contract] Mismatching shape!%s", "\n");
-          tmp->_blocks[b] = Ott;
+          tmp->_blocks[b] = out_block;
         }
       }
 
@@ -834,7 +894,11 @@ namespace cytnx {
         // All the legs are contracted, the return will be a scalar
 
         // output instance;
-        DenseUniTensor *tmp = new DenseUniTensor();
+        BlockUniTensor *tmp = new BlockUniTensor();
+        const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
+        tmp->syms_cache = vec_clone(this->syms());
+        tmp->Init(std::vector<Bond>{}, std::vector<std::string>{}, 0, common_dtype, this->device(),
+                  false);
 
         boost::intrusive_ptr<UniTensor_base> Lperm = this->permute(_shadow_comm_idx1);
         boost::intrusive_ptr<UniTensor_base> Rperm = rhs->permute(_shadow_comm_idx2);
@@ -847,18 +911,12 @@ namespace cytnx {
         for (unsigned int b = 0; b < Lperm_raw->_blocks.size(); b++) {
           for (unsigned int a = 0; a < Rperm_raw->_blocks.size(); a++) {
             if (Lperm_raw->_inner_to_outer_idx[b] == Rperm_raw->_inner_to_outer_idx[a]) {
-              if (tmp->_block.dtype() == Type.Void)
-                tmp->_block = linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                Rperm_raw->_blocks[a].flatten());
-              else
-                tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                 Rperm_raw->_blocks[a].flatten());
+              tmp->_blocks[0] +=
+                linalg::Vectordot(Lperm_raw->_blocks[b].flatten(), Rperm_raw->_blocks[a].flatten())
+                  .astype(common_dtype);
             }
           }
         }
-
-        tmp->_rowrank = 0;
-        tmp->_is_tag = false;
         /*
         if(mv_elem_self){
             // calculate reverse mapper:
@@ -1180,13 +1238,13 @@ namespace cytnx {
   };
 
   void BlockUniTensor::Transpose_() {
-    std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    cytnx_int64 idxnum = this->_bonds.size() - 1;
-    for (cytnx_int64 i = 0; i <= idxnum; i++) {
-      this->_bonds[i] = this->_bonds[i].redirect();
-      idxorder[i] = idxnum - i;
-    }
-    this->permute_(idxorder, idxnum + 1 - this->_rowrank);
+    const int rank = this->rank();
+    // Bond is immutable (#1001): redirect() returns a new Bond, assign it back.
+    for (auto &bond : this->_bonds) bond = bond.redirect();
+    // Make reverse sequence [rank - 1, rank - 2, ..., 0].
+    auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
+    std::vector<cytnx_int64> idxorder(idxorder_view.begin(), idxorder_view.end());
+    this->permute_(idxorder, rank - this->_rowrank);
   };
 
   void BlockUniTensor::normalize_() {
@@ -1253,9 +1311,8 @@ namespace cytnx {
     std::vector<Tensor> new_blocks;
     vec2d<cytnx_uint64> new_itoi;
     if (this->_labels.size() == 0) {
-      // if there is no leg left, leaving only one block, and let API to handle the
-      // BlockUniTensor->DenseUniTensor!
-      new_blocks.push_back(zeros(1, this->dtype(), this->device()));
+      new_blocks.push_back(zeros({}, this->dtype(), this->device()));
+      new_itoi.push_back({});
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
           if (this->is_diag())
@@ -1264,6 +1321,9 @@ namespace cytnx {
             new_blocks.back() += this->_blocks[i].Trace(ida, idb);
         }
       }
+      this->_rowrank = 0;
+      this->_is_braket_form = false;
+      this->_is_diag = false;
 
     } else {
       std::map<std::vector<cytnx_uint64>, cytnx_uint64> tmap;
@@ -1304,15 +1364,24 @@ namespace cytnx {
     }
 
     t = sqrt(t);
-    Tensor R({1}, t.dtype());
+    Tensor R({}, t.dtype());
 
-    R(0) = t;
+    R.item() = t;
     return R;
   }
 
   // helper function:
   void BlockUniTensor::_fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
                                        const std::vector<cytnx_uint64> &locator) const {
+    if (this->rank() == 0) {
+      cytnx_error_msg(!locator.empty(),
+                      "[ERROR][BlockUniTensor][elem_exists] rank-0 scalar expects no locator "
+                      "indices.%s",
+                      "\n");
+      bidx = this->_blocks.empty() ? -1 : 0;
+      loc_in_T.clear();
+      return;
+    }
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1545,20 +1614,30 @@ namespace cytnx {
   void BlockUniTensor::_save_dispatch(std::fstream &f) const {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
+    if (this->rank() == 0) save_symmetry_cache(f, this->syms_cache);
+
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
 
     // save inner_to_outer_idx:
     for (unsigned int b = 0; b < Nblocks; b++) {
-      f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
+      if (this->rank() != 0) {
+        f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->rank());
+      }
     }
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i]._Save(f);
     }
   }
 
-  void BlockUniTensor::_load_dispatch(std::fstream &f) {
+  void BlockUniTensor::_load_dispatch(std::fstream &f, unsigned int version) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
+    if (this->_bonds.empty() && version > 0) {
+      this->syms_cache = load_symmetry_cache(f);
+    } else {
+      this->syms_cache =
+        this->_bonds.empty() ? std::vector<Symmetry>{} : vec_clone(this->_bonds[0].syms());
+    }
 
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
@@ -1567,7 +1646,9 @@ namespace cytnx {
       Nblocks, std::vector<cytnx_uint64>(this->_bonds.size()));
     // read inner_to_outer_idx:
     for (unsigned int b = 0; b < Nblocks; b++) {
-      f.read((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
+      if (this->rank() != 0) {
+        f.read((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->rank());
+      }
     }
     this->_blocks.resize(Nblocks);
 
@@ -1632,21 +1713,12 @@ namespace cytnx {
   }
 
   void BlockUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockUniTensor> Rtn = checked_block_rhs(rhs, "add");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "add");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot add two BlockUniTensor with different bonds.%s", "\n");
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
                     "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
@@ -1665,21 +1737,12 @@ namespace cytnx {
   }
 
   void BlockUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockUniTensor> Rtn = checked_block_rhs(rhs, "multiply");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "multiply");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot multiply two BlockUniTensor with different bonds.%s", "\n");
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
                     "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
@@ -1699,21 +1762,12 @@ namespace cytnx {
 
   void BlockUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     //[26 Sep 2025] This is a copy from Mul_ with *= replaced by /=
-    // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockUniTensor> Rtn = checked_block_rhs(rhs, "divide");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "divide");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot divide two BlockUniTensor with different bonds.%s", "\n");
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
                     "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
@@ -1732,21 +1786,12 @@ namespace cytnx {
   }
 
   void BlockUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
+    boost::intrusive_ptr<BlockUniTensor> Rtn = checked_block_rhs(rhs, "subtract");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
-
-    // 1) check each bond.
-    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
-    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(
-        this->_bonds[i] != Rtn->_bonds[i],
-        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
-        i);
-    }
+    // 1) check bonds.
+    check_arithmetic_syms(*this, *Rtn, "subtract");
+    cytnx_error_msg(this->bonds() != Rtn->bonds(),
+                    "[ERROR] Cannot subtract two BlockUniTensor with different bonds.%s", "\n");
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
                     "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
@@ -2002,7 +2047,7 @@ namespace cytnx {
   }
 
   void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, bool force, cytnx_double tol) {
-    if (!force) {
+    if (!force && !rhs->bonds().empty()) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
         for (int i = 0; i < rhs->bonds().size(); i++) {

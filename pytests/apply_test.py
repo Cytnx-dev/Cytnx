@@ -13,32 +13,30 @@ import cytnx
 # ---------------------------------------------------------------------------
 
 def _are_nearly_eq(a, b, tol=1e-12):
-    """Return True if two block-sparse UniTensors have the same labels and
-    nearly equal values.
+    """Return True if two block UniTensors have nearly equal raw block data.
 
-    get_blocks_() storage order is not canonical (permute().contiguous() and
-    direct construction enumerate the same sectors in different orders), so
-    blocks are matched by quantum-number sector via get_qindices(), mirroring
-    AreEqUniTensor in tests/test_tools.cpp. Unlike the C++ helper, pending
-    signflips are compared rather than compensated: a tensor whose flips have
-    not been applied is NOT equal to its applied form, which is what the
-    apply()/apply_() tests below rely on.
+    Blocks are matched by their quantum-number indices, not by position:
+    e.g. permute().contiguous() keeps the source tensor's block enumeration
+    order, which differs from that of a freshly constructed tensor (see the
+    C++ AreNearlyEqUniTensor in tests/test_tools.cpp). Pending signflips must
+    agree so that raw block data can be compared directly -- this keeps the
+    comparison sensitive to whether apply() actually folded the signs in.
     """
     a = a.permute(b.labels())
     blocks_a = a.get_blocks_()
     blocks_b = b.get_blocks_()
     if len(blocks_a) != len(blocks_b):
         return False
-    signs_a = a.signflip()
-    signs_b = b.signflip()
-    sector_to_idx_b = {tuple(b.get_qindices(j)): j for j in range(len(blocks_b))}
-    for i in range(len(blocks_a)):
-        j = sector_to_idx_b.get(tuple(a.get_qindices(i)))
+    flips_a = a.signflip()
+    flips_b = b.signflip()
+    idx_b = {tuple(b.get_qindices(j)): j for j in range(len(blocks_b))}
+    for i, ba in enumerate(blocks_a):
+        j = idx_b.get(tuple(a.get_qindices(i)))
         if j is None:
             return False
-        if signs_a[i] != signs_b[j]:
+        if flips_a[i] != flips_b[j]:
             return False
-        if (blocks_a[i] - blocks_b[j]).Norm().item() > tol:
+        if (ba - blocks_b[j]).Norm().item() > tol:
             return False
     return True
 

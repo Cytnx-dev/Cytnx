@@ -5,17 +5,19 @@
 #ifdef BACKEND_TORCH
 #else
   #include "backend/linalg_internal_interface.hpp"
+  #include "Arithmetic_shape.hpp"
   #include "iArithmetic_visit.hpp"
 
 namespace cytnx {
   namespace linalg {
 
     void iSub(Tensor &Lt, const Tensor &Rt) {
-      // A length-1 RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
+      detail::check_binary_tensor_inputs(Lt, Rt, "iSub");
+      // A singleton RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
       // read it with a host-side dereference and pass it into the kernel by value, so it needs
       // neither a device match nor a per-call H2D copy of the scalar. See #988.
-      const bool rhs_is_host_scalar =
-        (Rt.device() == Device.cpu && Rt._impl->storage()._impl->size() == 1);
+      const bool rhs_is_scalar = detail::is_singleton_tensor(Rt);
+      const bool rhs_is_host_scalar = (Rt.device() == Device.cpu && rhs_is_scalar);
       cytnx_error_msg(Lt.device() != Rt.device() && !rhs_is_host_scalar,
                       "[iSub] error, the two tensors have to be on the same device.%s", "\n");
       // In-place ops write the result back into the LHS storage, so a complex result cannot be
@@ -27,12 +29,13 @@ namespace cytnx {
                       "stored in a real tensor.%s",
                       "\n");
 
-      if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {
+      if (!rhs_is_scalar) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[iSub] error, the two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
+      if (Lt.storage().size() == 0) return;
 
       Tensor R;
       if (Lt._impl->storage()._impl == Rt._impl->storage()._impl) {
@@ -40,6 +43,7 @@ namespace cytnx {
       } else {
         R = Rt;
       }
+      R = detail::host_singleton_for_gpu_broadcast(R, Lt.device());
 
       // GPU broadcast scalar with a LHS *narrower* than the promoted dtype (e.g. a Float tensor
       // minus a Double scalar, or an integer tensor minus a fractional scalar): the in-place GPU
@@ -48,7 +52,7 @@ namespace cytnx {
       // back to the LHS dtype -- this matches the CPU element-wise semantics (compute in the
       // promoted type, store into the LHS type). See #988. The CPU path already does this
       // in place, and real -= complex is rejected above.
-      if (rhs_is_host_scalar && Lt.device() != Device.cpu && Lt.dtype() > Rt.dtype()) {
+      if (rhs_is_scalar && Lt.device() != Device.cpu && Lt.dtype() > Rt.dtype()) {
         Tensor promoted = Lt.astype(Type.type_promote(Lt.dtype(), Rt.dtype()));
         iSub(promoted, R);
         Lt = promoted.astype(Lt.dtype());

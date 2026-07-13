@@ -36,6 +36,12 @@ namespace cytnx {
         V.Init(in.shape(), in.dtype(), in.device());
       }
 
+      if (in.is_empty()) {
+        std::vector<Tensor> out{S};
+        if (is_V) out.push_back(V);
+        return out;
+      }
+
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Eigh_ii[in.dtype()](in._impl->storage()._impl,
                                                         S._impl->storage()._impl,

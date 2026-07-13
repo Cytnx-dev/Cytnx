@@ -56,6 +56,13 @@ form (`permute([1, 2, 0])`). Additive, non-breaking. Implemented in PR #1000.
   UniTensors rebuild per-block `Tensor` metadata via the non-mutating calls
   (storage stays shared, metadata detaches) instead of mutating possibly
   shared blocks. Implemented in PRs #998 and #1005.
+- **Symmetry is a plain value type** (#842): the intrusive-ptr PIMPL is
+  replaced by a by-value `std::variant`; the public API and the Save/Load
+  byte format are preserved (pinned by binary fixtures). Two observable
+  reference→value changes: `is(Symmetry, Symmetry)` now means address
+  identity (copies are no longer `is` their source), and writing through the
+  legacy `int &n() const` accessor no longer propagates to copies (each
+  Symmetry owns its value). Implemented in PR #1010.
 - **New code uses snake_case function names** in both C++ and Python (#836);
   the existing API is not mass-renamed.
 

@@ -12,6 +12,17 @@ namespace cytnx {
 
   namespace linalg_internal {
 
+    /// cuMod: element-wise modulo on the GPU, computed in the promoted type via
+    /// cuda::std::complex-based kernels (mirrors cuMul_dispatch). Integral
+    /// operands use %, floating operands use fmod; complex operands are
+    /// rejected (modulo is undefined for complex).
+    void cuMod_dispatch(boost::intrusive_ptr<Storage_base> &out,
+                        boost::intrusive_ptr<Storage_base> &Lin,
+                        boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                        const std::vector<cytnx_uint64> &shape,
+                        const std::vector<cytnx_uint64> &invmapper_L,
+                        const std::vector<cytnx_uint64> &invmapper_R);
+
     /// cuMod
     void cuMod_internal_cdtcd(boost::intrusive_ptr<Storage_base> &out,
                               boost::intrusive_ptr<Storage_base> &Lin,

@@ -9,7 +9,6 @@
 #include "backend/Storage.hpp"
 #include "linalg_internal_cpu/Abs_internal.hpp"
 #include "linalg_internal_cpu/Add_internal.hpp"
-#include "linalg_internal_cpu/Axpy_internal.hpp"
 #include "linalg_internal_cpu/Conj_inplace_internal.hpp"
 #include "linalg_internal_cpu/Cpr_internal.hpp"
 #include "linalg_internal_cpu/Det_internal.hpp"
@@ -91,8 +90,6 @@ namespace cytnx {
       const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
       const std::vector<cytnx_uint64> &invmapper_R, const char &type);
 
-    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base> &,
-                             boost::intrusive_ptr<Storage_base> &, const Scalar &);
     typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &, const Scalar &);
@@ -226,7 +223,6 @@ namespace cytnx {
       std::vector<Lstsqfunc_oii> Lstsq_ii;
       std::vector<Tracefunc_oii> Trace_ii;
 
-      std::vector<axpy_oii> axpy_ii;
       std::vector<ger_oii> ger_ii;
 
 #ifdef UNI_GPU

@@ -876,20 +876,11 @@ void linalg_binding(py::module &m) {
 
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"),
                py::call_guard<py::gil_scoped_release>());
-  m_linalg.def(
-    "Axpy", [](const Scalar &a, const Tensor &x) { return cytnx::linalg::Axpy(a, x); },
-    py::arg("a"), py::arg("x"));
-  m_linalg.def(
-    "Axpy",
-    [](const Scalar &a, const Tensor &x, const Tensor &y) { return cytnx::linalg::Axpy(a, x, y); },
-    py::arg("a"), py::arg("x"), py::arg("y"));
 
   m_linalg.def(
     "Ger",
     [](const Tensor &x, const Tensor &y, const Scalar &a) { return cytnx::linalg::Ger(x, y, a); },
     py::arg("x"), py::arg("y"), py::arg("a") = Scalar());
-
-  m_linalg.def("Axpy_", &cytnx::linalg::Axpy_, py::arg("a"), py::arg("x"), py::arg("y"));
 
   m_linalg.def("Gemm_", &cytnx::linalg::Gemm_, py::arg("a"), py::arg("x"), py::arg("y"),
                py::arg("b"), py::arg("c"), py::call_guard<py::gil_scoped_release>());

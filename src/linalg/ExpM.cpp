@@ -24,8 +24,6 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[ExpM] error, ExpM can only operator on square Tensor (#row = #col%s", "\n");
 
-      std::vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
-      Tensor s, u, ut;
       // exp(a*M + b*I) with a == 0 is exp(b)*I: keep the bias b (matches ExpH).
       if (a == 0) {
         if (b == 0)
@@ -33,6 +31,9 @@ namespace cytnx {
         else
           return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device()) * exp(b);
       }
+
+      std::vector<Tensor> su = cytnx::linalg::Eig(Tin, true);
+      Tensor s, u, ut;
 
       if (b == 0)
         s = cytnx::linalg::Exp(a * su[0]);
@@ -241,17 +242,18 @@ namespace cytnx {
         return out;
       } else if (Tin.uten_type() == UTenType.Block) {
         // copy everything except _blocks and _inner_to_outer_idx
-        BlockUniTensor *raw_out = ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
+        boost::intrusive_ptr<BlockUniTensor> raw_out =
+          ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
         UniTensor out;
-        out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
+        out._impl = raw_out;
         ExpM_BlockUT_internal<BlockUniTensor>(out, Tin, a, b);
         return out;
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
         // copy everything except _blocks and _inner_to_outer_idx
-        BlockFermionicUniTensor *raw_out =
+        boost::intrusive_ptr<BlockFermionicUniTensor> raw_out =
           ((BlockFermionicUniTensor *)Tin._impl.get())->clone_meta(false, true);
         UniTensor out;
-        out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
+        out._impl = raw_out;
         ExpM_BlockUT_internal<BlockFermionicUniTensor>(out, Tin, a, b);
         return out;
       } else {
