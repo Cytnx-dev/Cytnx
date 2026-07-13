@@ -960,7 +960,7 @@ Shape : (4,4)
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000003"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000005"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a8241712bf34eee2ce6e2963833c1a156" kindref="member">relabel_(const std::vector&lt;std::string&gt; &amp;new_labels)</ref><linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -982,7 +982,7 @@ Shape : (4,4)
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000004"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000006"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a3fdf3353f8cf66739814b047e174edac" kindref="member">relabel_(const std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -1818,7 +1818,7 @@ Shape : (4,4)
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000005"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000007"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a8241712bf34eee2ce6e2963833c1a156" kindref="member">relabel_(const std::vector&lt;std::string&gt; &amp;new_labels)</ref><linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -1876,7 +1876,7 @@ Shape : (4,4)
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000006"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000008"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1a8368a52036f9ff25572bd455ecece2dd" kindref="member">relabel(const std::vector&lt;std::string&gt; &amp;new_labels) const</ref><linebreak/>
  instead.</para>
 </xrefdescription></xrefsect></para>
@@ -1920,7 +1920,7 @@ Shape : (4,4)
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000007"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000009"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1af19f7b1442c93f00f46d14b49bd4eec3" kindref="member">relabel(const std::initializer_list&lt;char *&gt; &amp;new_labels) const</ref><linebreak/>
  instead.</para>
 </xrefdescription></xrefsect></para>
@@ -1963,7 +1963,7 @@ Shape : (4,4)
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000008"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000010"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1a3fdf3353f8cf66739814b047e174edac" kindref="member">relabel_(const std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
  instead.</para>
 </xrefdescription></xrefsect></para>
@@ -2035,7 +2035,7 @@ Shape : (4,4)
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000009"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000011"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1a9bc53d5c8da90d3c9321b1e4128c786d" kindref="member">relabel(const std::vector&lt;std::string&gt; &amp;old_labels, const std::vector&lt;std::string&gt;
 &amp;new_labels) const</ref><linebreak/>
  instead. </para>
@@ -2115,7 +2115,7 @@ std::vector&lt;std::string&gt; &amp;new_labels) const </ref>, this function set 
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000010"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000012"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1abfc0b1faeef378712dab6124dc26930f" kindref="member">relabel_(const std::vector&lt;std::string&gt; &amp;old_labels, const std::vector&lt;std::string&gt;
 &amp;new_labels)</ref><linebreak/>
  instead.</para>
@@ -2168,7 +2168,7 @@ std::vector&lt;std::string&gt; &amp;new_labels) const </ref>, this function set 
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000011"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000013"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <ref refid="classcytnx_1_1UniTensor_1aeb569a5ea02641e9814bb50004a2c534" kindref="member">relabel(const std::initializer_list&lt;char *&gt; &amp;old_labels, const
 std::initializer_list&lt;char *&gt; &amp;new_labels) const </ref><linebreak/>
  instead.</para>
@@ -2221,7 +2221,7 @@ std::initializer_list&lt;char *&gt; &amp;new_labels) const </ref><linebreak/>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000012"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000014"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
 <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &amp;<ref refid="classcytnx_1_1UniTensor_1ad5a368eb5eaf1223de1e63c90f7d25b2" kindref="member">relabel_(const std::initializer_list&lt;char *&gt; &amp;old_labels, const
 std::initializer_list&lt;char *&gt; &amp;new_labels)</ref><linebreak/>
  instead.</para>
@@ -4109,7 +4109,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000013"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000015"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a9c894a11bd5e9a1d5c042c5bb61c8e48" kindref="member">put_block(const Tensor &amp;in, const cytnx_uint64 &amp;idx)</ref> <linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -4182,7 +4182,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000014"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000016"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a3858de1d359d85ecdaa54bb7d73a75a3" kindref="member">put_block(const Tensor &amp;in_tens, const std::vector&lt;cytnx_int64&gt; &amp;qidx)</ref> <linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -4246,7 +4246,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000015"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000017"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a5771a65dbc78c563fd1556af159d3adb" kindref="member">put_block(Tensor &amp;in, const std::vector&lt;std::string&gt; &amp;lbls, const std::vector&lt;cytnx_int64&gt;
 &amp;qidx)</ref> <linebreak/>
  instead. </para>
@@ -4338,7 +4338,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000016"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000018"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a085299bccf586326e0b82b434255e3c1" kindref="member">put_block_(Tensor &amp;in, const std::vector&lt;cytnx_int64&gt; &amp;qidx)</ref> <linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -4404,7 +4404,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000017"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000019"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a6c19f2c2119009097a4b9f26151cc4aa" kindref="member">put_block_(Tensor &amp;in, const std::vector&lt;std::string&gt; &amp;lbls, const std::vector&lt;cytnx_int64&gt;
 &amp;qidx)</ref> <linebreak/>
  instead. </para>
@@ -4738,7 +4738,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000018"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000020"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a8963181b34820940d2f33813c33a4f78" kindref="member">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</ref> <linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -4765,7 +4765,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000019"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000021"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a8963181b34820940d2f33813c33a4f78" kindref="member">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</ref> <linebreak/>
  instead.</para>
 </xrefdescription></xrefsect></para>
@@ -4792,7 +4792,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000020"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
+<para><xrefsect id="deprecated_1_deprecated000022"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated. Please use <linebreak/>
  <ref refid="classcytnx_1_1UniTensor_1a8963181b34820940d2f33813c33a4f78" kindref="member">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</ref> <linebreak/>
  instead. </para>
 </xrefdescription></xrefsect></para>
@@ -6478,7 +6478,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000021"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated, please use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> instread. </para>
+<para><xrefsect id="deprecated_1_deprecated000023"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated, please use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> instread. </para>
 </xrefdescription></xrefsect><simplesect kind="note"><para>C++: Deprecated soon, use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> </para>
 </simplesect>
 </para>
@@ -6509,7 +6509,7 @@ BondType::BD_REG) ) to tagged <ref refid="classcytnx_1_1UniTensor" kindref="comp
         <briefdescription>
         </briefdescription>
         <detaileddescription>
-<para><xrefsect id="deprecated_1_deprecated000022"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated, please use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> instread. </para>
+<para><xrefsect id="deprecated_1_deprecated000024"><xreftitle>Deprecated</xreftitle><xrefdescription><para>This function is deprecated, please use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> instread. </para>
 </xrefdescription></xrefsect><simplesect kind="note"><para>C++: Deprecated soon, use <ref refid="classcytnx_1_1UniTensor_1a6910e0251891d7289b5014b7987369ff" kindref="member">at()</ref> </para>
 </simplesect>
 </para>

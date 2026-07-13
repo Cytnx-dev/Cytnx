@@ -390,13 +390,13 @@ Functions</h2></td></tr>
 <tr class="memdesc:aac38382cbc0e8202411c96a0ff636471"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
 <tr class="separator:aac38382cbc0e8202411c96a0ff636471"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5831918722e5d18f4eaf37834b8fbf77" id="r_a5831918722e5d18f4eaf37834b8fbf77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77">Expf</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
-<tr class="memdesc:a5831918722e5d18f4eaf37834b8fbf77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
+<tr class="memdesc:a5831918722e5d18f4eaf37834b8fbf77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exponential all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (deprecated).  <br /></td></tr>
 <tr class="separator:a5831918722e5d18f4eaf37834b8fbf77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaab08439dde94ee87939d07933ede6e3" id="r_aaab08439dde94ee87939d07933ede6e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3">Exp_</a> (<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
 <tr class="memdesc:aaab08439dde94ee87939d07933ede6e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform Exponential on all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
 <tr class="separator:aaab08439dde94ee87939d07933ede6e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5de1faf71c76cdc6b7fa5ba3a3e21bbb" id="r_a5de1faf71c76cdc6b7fa5ba3a3e21bbb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb">Expf_</a> (<a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin)</td></tr>
-<tr class="memdesc:a5de1faf71c76cdc6b7fa5ba3a3e21bbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform Exponential on all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
+<tr class="memdesc:a5de1faf71c76cdc6b7fa5ba3a3e21bbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">inplace perform Exponential on all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (deprecated).  <br /></td></tr>
 <tr class="separator:a5de1faf71c76cdc6b7fa5ba3a3e21bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2919ef6c163a54360071c286df3fb92e" id="r_a2919ef6c163a54360071c286df3fb92e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classcytnx_1_1Tensor.html">Tensor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a2919ef6c163a54360071c286df3fb92e">Pow</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const double &amp;p)</td></tr>
 <tr class="memdesc:a2919ef6c163a54360071c286df3fb92e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take the power <code>p</code> of all elements in a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>.  <br /></td></tr>
@@ -1953,13 +1953,13 @@ M = V D V^\dagger,
     T_{o}[i] = e^{T_{i}[i]}
 \]
 </p>
-<p> Note that it will cast to Double type or ComplexDouble type. </p><dl class="params"><dt>Parameters</dt><dd>
+<p> The output preserves the input's floating precision (Float stays Float, Double stays Double, ComplexFloat/ComplexDouble preserved); integer/bool inputs promote to Double. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>[Double <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>] or [ComplexDouble <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>] </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> with the same floating dtype as <code>Tin</code> (Double for integer/bool input) </dd></dl>
 
 </div>
 </div>
@@ -1982,8 +1982,8 @@ M = V D V^\dagger,
 <p>inplace perform Exponential on all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>. </p>
 <p>This function will perform Exponential on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> <code>Tin</code>. Furthermore,</p><ol type="1">
 <li>on return, the elements in Tin will be modified to it's exponetial value.</li>
-<li>For Real, if the type is not Double, change the type of the input tensor to Double.</li>
-<li>For Complex, if input is ComplexFloat, promote to ComplexDouble. <dl class="params"><dt>Parameters</dt><dd>
+<li>the floating precision is preserved (Float stays Float, Double stays Double); only integer/bool inputs are promoted to Double.</li>
+<li>Complex inputs keep their precision (ComplexFloat stays ComplexFloat). <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">Tin,the</td><td>input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>. </td></tr>
   </table>
@@ -2010,19 +2010,15 @@ M = V D V^\dagger,
       </table>
 </div><div class="memdoc">
 
-<p>Exponential all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>. </p>
-<p>This function will perform Exponential on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> <code>Tin</code>. That is, the output will be:  </p><p class="formulaDsp">
-\[
-    T_{o}[i] = e^{T_{i}[i]}
-\]
-</p>
-<p> Note that it will cast to Float type or ComplexFloat type. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Exponential all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (deprecated). </p>
+<p>This function will perform Exponential on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> <code>Tin</code>, casting to Float type or ComplexFloat type. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>[Float <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>] or [ComplexFloat <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>] </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471" title="Exponential all the element in Tensor.">Exp()</a> instead, which is dtype-preserving (a Float input already yields a Float result); for the old float-precision-forcing behavior use Exp(Tin.astype(Type.Float)). </dd></dl>
 
 </div>
 </div>
@@ -2042,18 +2038,14 @@ M = V D V^\dagger,
       </table>
 </div><div class="memdoc">
 
-<p>inplace perform Exponential on all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>. </p>
-<p>This function will perform Exponential on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> <code>Tin</code>. Furthermore,</p><ol type="1">
-<li>on return, the elements in Tin will be modified to it's exponetial value.</li>
-<li>For Real, if the type is not Float, change the type of the input tensor to Float.</li>
-<li>For Complex, if input is ComplexDouble, promote to ComplexFloat. <dl class="params"><dt>Parameters</dt><dd>
+<p>inplace perform Exponential on all the element in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> (deprecated). </p>
+<p>This function will perform Exponential on all the elements in <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> <code>Tin</code>, casting the input to Float / ComplexFloat in place. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">Tin,the</td><td>input <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a>. </td></tr>
   </table>
   </dd>
 </dl>
-</li>
-</ol>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor.">Exp_()</a> instead, which is dtype-preserving; for the old float-precision-forcing behavior cast first (Tin.astype_(Type.Float)) then call <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor.">Exp_()</a>. </dd></dl>
 
 </div>
 </div>
