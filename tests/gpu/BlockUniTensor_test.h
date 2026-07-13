@@ -55,8 +55,8 @@ class BlockUniTensorTest : public ::testing::Test {
 
   BlockUniTensor BkUt;
 
-  Tensor tzero345 = zeros({3, 4, 5}).to(cytnx::Device.cuda);
-  UniTensor utzero345 = UniTensor(zeros(3 * 4 * 5)).reshape({3, 4, 5}).to(cytnx::Device.cuda);
+  Tensor tzero345 = zeros({3, 4, 5}, Type.Double, cytnx::Device.cuda);
+  UniTensor utzero345 = UniTensor(zeros({3, 4, 5}, Type.Double, cytnx::Device.cuda));
 
   Tensor t0;
   Tensor t1a;

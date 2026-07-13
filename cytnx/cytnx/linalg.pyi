@@ -6,7 +6,7 @@ import collections.abc
 import cytnx.cytnx
 import numpy
 import typing
-__all__: list[str] = ['Abs', 'Abs_', 'Arnoldi', 'Axpy', 'Axpy_', 'Conj', 'Conj_', 'Det', 'Diag', 'Directsum', 'Dot', 'Eig', 'Eigh', 'Exp', 'ExpH', 'ExpM', 'Exp_', 'Expf', 'Expf_', 'Gemm', 'Gemm_', 'Ger', 'Gesvd', 'Gesvd_truncate', 'Hosvd', 'Inv', 'InvM', 'InvM_', 'Inv_', 'Kron', 'Lanczos', 'Lanczos_Exp', 'Lstsq', 'Matmul', 'Matmul_dg', 'Max', 'Min', 'Norm', 'Outer', 'Pow', 'Pow_', 'Qdr', 'Qr', 'Rand_isometry', 'Rsvd', 'Sum', 'Svd', 'Svd_truncate', 'Tensordot', 'Tensordot_dg', 'Trace', 'Tridiag', 'Vectordot']
+__all__: list[str] = ['Abs', 'Abs_', 'Arnoldi', 'Conj', 'Conj_', 'Det', 'Diag', 'Directsum', 'Dot', 'Eig', 'Eigh', 'Exp', 'ExpH', 'ExpM', 'Exp_', 'Expf', 'Expf_', 'Gemm', 'Gemm_', 'Ger', 'Gesvd', 'Gesvd_truncate', 'Hosvd', 'Inv', 'InvM', 'InvM_', 'Inv_', 'Kron', 'Lanczos', 'Lanczos_Exp', 'Lstsq', 'Matmul', 'Matmul_dg', 'Max', 'Min', 'Norm', 'Outer', 'Pow', 'Pow_', 'Qdr', 'Qr', 'Rand_isometry', 'Rsvd', 'Sum', 'Svd', 'Svd_truncate', 'Tensordot', 'Tensordot_dg', 'Trace', 'Tridiag', 'Vectordot']
 def Abs(Tn: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
     ...
 def Abs_(Tn: cytnx.cytnx.Tensor) -> None:
@@ -16,14 +16,6 @@ def Arnoldi(Hop: cytnx.cytnx.LinOp, Tin: cytnx.cytnx.Tensor, which: str = 'LM', 
     ...
 @typing.overload
 def Arnoldi(Hop: cytnx.cytnx.LinOp, Tin: cytnx.cytnx.UniTensor, which: str = 'LM', Maxiter: typing.SupportsInt | typing.SupportsIndex = 10000, CvgCrit: typing.SupportsFloat | typing.SupportsIndex = 0, k: typing.SupportsInt | typing.SupportsIndex = 1, is_V: bool = True, ncv: typing.SupportsInt | typing.SupportsIndex = 0, verbose: bool = False) -> list[cytnx.cytnx.UniTensor]:
-    ...
-@typing.overload
-def Axpy(a: cytnx.cytnx.Scalar, x: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
-    ...
-@typing.overload
-def Axpy(a: cytnx.cytnx.Scalar, x: cytnx.cytnx.Tensor, y: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
-    ...
-def Axpy_(a: cytnx.cytnx.Scalar, x: cytnx.cytnx.Tensor, y: cytnx.cytnx.Tensor) -> None:
     ...
 @typing.overload
 def Conj(Tin: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:

@@ -218,7 +218,7 @@ namespace DivTest {
   TEST(DivMixedDtypeTest, gpu_scalar_div_tensor_mixed_unsigned_signed_type_promote) {
     const cytnx::cytnx_uint32 scalar = 12;
     cytnx::Tensor rhs =
-      cytnx::arange(1, 7, 1, cytnx::Type.Int16).reshape({2, 3}).to(cytnx::Device.cuda);
+      cytnx::arange(1, 7, 1, cytnx::Type.Int16, cytnx::Device.cuda).reshape({2, 3});
 
     cytnx::Tensor gpu_result_l = cytnx::linalg::Div(scalar, rhs);
     cytnx::Tensor gpu_result_r = cytnx::linalg::Div(rhs, scalar);

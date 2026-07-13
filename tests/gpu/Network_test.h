@@ -20,15 +20,15 @@ class NetworkTest : public ::testing::Test {
   UniTensor bkut1 = UniTensor({B1p, B4p}).to(cytnx::Device.cuda);
   UniTensor bkut2 = UniTensor({B1p.redirect(), B2p, B3p, B4p}).to(cytnx::Device.cuda);
   UniTensor bkut3 = UniTensor({B1p, B2p, B3p, B4p.redirect()}).to(cytnx::Device.cuda);
-  UniTensor ut1 = UniTensor(ones({5, 5})).to(cytnx::Device.cuda);
-  UniTensor ut2 = UniTensor(ones({5, 11, 3, 5})).to(cytnx::Device.cuda);
-  UniTensor ut3 = UniTensor(ones({5, 11, 3, 5})).to(cytnx::Device.cuda);
+  UniTensor ut1 = UniTensor(ones({5, 5}, Type.Double, cytnx::Device.cuda));
+  UniTensor ut2 = UniTensor(ones({5, 11, 3, 5}, Type.Double, cytnx::Device.cuda));
+  UniTensor ut3 = UniTensor(ones({5, 11, 3, 5}, Type.Double, cytnx::Device.cuda));
 
   UniTensor utdnA =
-    UniTensor(arange(0, 8, 1, Type.ComplexDouble)).reshape({2, 2, 2}).to(cytnx::Device.cuda);
-  UniTensor utdnB = UniTensor(ones({2, 2}, Type.ComplexDouble)).to(cytnx::Device.cuda);
-  UniTensor utdnC = UniTensor(eye(2, Type.ComplexDouble)).to(cytnx::Device.cuda);
-  UniTensor utdnAns = UniTensor(zeros({2, 2, 2}, Type.ComplexDouble).to(cytnx::Device.cuda));
+    UniTensor(arange(0, 8, 1, Type.ComplexDouble, cytnx::Device.cuda)).reshape({2, 2, 2});
+  UniTensor utdnB = UniTensor(ones({2, 2}, Type.ComplexDouble, cytnx::Device.cuda));
+  UniTensor utdnC = UniTensor(eye(2, Type.ComplexDouble, cytnx::Device.cuda));
+  UniTensor utdnAns = UniTensor(zeros({2, 2, 2}, Type.ComplexDouble, cytnx::Device.cuda));
 
  protected:
   void SetUp() override {

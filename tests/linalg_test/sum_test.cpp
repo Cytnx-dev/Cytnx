@@ -59,10 +59,9 @@ namespace cytnx {
     tensor.fill(value);
     Tensor sum_result = linalg::Sum(tensor);
 
-    EXPECT_EQ(sum_result.shape().size(), 1);
-    EXPECT_EQ(sum_result.shape()[0], 1);
+    EXPECT_TRUE(sum_result.is_scalar());
 
-    EXPECT_NUMBER_EQ(sum_result.at<TypeParam>({0}), value * static_cast<TypeParam>(element_number));
+    EXPECT_NUMBER_EQ(sum_result.item<TypeParam>(), value * static_cast<TypeParam>(element_number));
   }
 
   /**
@@ -88,9 +87,8 @@ namespace cytnx {
                     /* init_zero */ false);
       tensor.fill(value);
       Tensor sum_result = linalg::Sum(tensor);
-      EXPECT_EQ(sum_result.shape().size(), 1);
-      EXPECT_EQ(sum_result.shape()[0], 1);
-      EXPECT_DOUBLE_EQ(sum_result.at<cytnx_double>({0}), value * static_cast<cytnx_double>(n))
+      EXPECT_TRUE(sum_result.is_scalar());
+      EXPECT_DOUBLE_EQ(sum_result.item<cytnx_double>(), value * static_cast<cytnx_double>(n))
         << "n=" << n;
     }
   }
@@ -122,7 +120,7 @@ namespace cytnx {
     tensor.at<cytnx_double>({0}) = 1e16;
     tensor.at<cytnx_double>({N - 1}) = -1e16;
     Tensor sum_result = linalg::Sum(tensor);
-    const cytnx_double result = sum_result.at<cytnx_double>({0});
+    const cytnx_double result = sum_result.item<cytnx_double>();
     EXPECT_GT(result, static_cast<cytnx_double>(N / 2));
     EXPECT_LE(result, static_cast<cytnx_double>(N));
   }
@@ -137,7 +135,7 @@ namespace cytnx {
     tensor.at<cytnx_float>({0}) = 1e8f;
     tensor.at<cytnx_float>({N - 1}) = -1e8f;
     Tensor sum_result = linalg::Sum(tensor);
-    const cytnx_float result = sum_result.at<cytnx_float>({0});
+    const cytnx_float result = sum_result.item<cytnx_float>();
     EXPECT_GT(result, static_cast<cytnx_float>(N / 2));
     EXPECT_LE(result, static_cast<cytnx_float>(N));
   }

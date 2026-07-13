@@ -93,6 +93,15 @@ Output >>
 
 We see that a UniTensor with the same shape as *T* was created. The bond labels are set to the default values "0", "1" and "2".
 
+A rank-zero Tensor similarly produces a rank-zero UniTensor. Rank-zero
+UniTensors are scalar tensor-network objects: they have no bonds or labels,
+``rank() == 0``, ``size() == 1``, and ``is_scalar() == True``. Full
+contractions and full traces can also produce such objects.
+
+Do not infer scalar behavior from the number of stored coefficients. A
+UniTensor with one or more dimension-one bonds still carries those bonds and
+their symmetry metadata, so it is not a scalar even when ``size() == 1``.
+
 From scratch
 **************
 

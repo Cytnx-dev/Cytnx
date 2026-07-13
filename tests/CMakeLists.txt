@@ -31,6 +31,7 @@ add_executable(
   test_main
   test_tools.cpp
   common_data_generator.cpp
+  Symmetry_test.cpp
   Bond_test.cpp
   Network_test.cpp
   UniTensor_base_test.cpp
@@ -72,6 +73,7 @@ add_executable(
   linalg_test/stride_view_test.cpp
   linalg_test/sum_test.cpp
   linalg_test/Vectordot_test.cpp
+  linalg_test/Zero_extent_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp

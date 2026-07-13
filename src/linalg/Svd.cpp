@@ -18,7 +18,7 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Svd] error, Svd can only operate on rank-2 Tensor.%s", "\n");
 
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      const cytnx_uint64 n_singlu = std::min(Tin.shape()[0], Tin.shape()[1]);
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
@@ -34,6 +34,15 @@ namespace cytnx {
       if (is_UvT) {
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         // vT.storage().set_zeros();
+      }
+
+      if (in.is_empty()) {
+        std::vector<Tensor> out{S};
+        if (is_UvT) {
+          out.push_back(U);
+          out.push_back(vT);
+        }
+        return out;
       }
 
       if (Tin.device() == Device.cpu) {

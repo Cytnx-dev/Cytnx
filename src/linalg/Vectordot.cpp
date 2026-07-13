@@ -10,6 +10,8 @@ namespace cytnx {
   namespace linalg {
     Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj) {
       // checking:
+      cytnx_error_msg(Tl.is_void() || Tr.is_void(),
+                      "[Vectordot] cannot operate on an uninitialized Tensor.%s", "\n");
       cytnx_error_msg(Tl.device() != Tr.device(),
                       "[ERROR] Two tensors for Vectordot cannot be on different devices.%s", "\n");
       cytnx_error_msg(Tl.shape().size() != 1,
@@ -27,7 +29,8 @@ namespace cytnx {
       Tensor L = Tl.astype(out_dtype);
       Tensor R = Tr.astype(out_dtype);
       Tensor out;
-      out.Init({1}, out_dtype, Tl.device());
+      out.Init({}, out_dtype, Tl.device());
+      if (Tl.is_empty()) return out;
 
       if (out.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Vd_ii[out.dtype()](

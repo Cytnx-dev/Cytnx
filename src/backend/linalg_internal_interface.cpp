@@ -333,13 +333,6 @@ namespace cytnx {
       Lstsq_ii[Type.Float] = Lstsq_internal_f;
 
       //===============
-      axpy_ii = std::vector<axpy_oii>(5);
-      axpy_ii[Type.ComplexDouble] = Axpy_internal_cd;
-      axpy_ii[Type.ComplexFloat] = Axpy_internal_cf;
-      axpy_ii[Type.Double] = Axpy_internal_d;
-      axpy_ii[Type.Float] = Axpy_internal_f;
-
-      //===============
       ger_ii = std::vector<ger_oii>(5);
       ger_ii[Type.ComplexDouble] = Ger_internal_cd;
       ger_ii[Type.ComplexFloat] = Ger_internal_cf;

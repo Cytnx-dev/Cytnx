@@ -63,9 +63,9 @@ jobs:
       with:
         path: |
           ~/.ccache
-        key: ccache-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+        key: ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
-          ccache-${{ runner.os }}-${{ github.ref_name }}-
+          ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-
 
     - name: Cache Ccache Directory (pull_request)
       if: ${{ github.event_name == 'pull_request' }}
@@ -73,10 +73,10 @@ jobs:
       with:
         path: |
           ~/.ccache
-        key: ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
+        key: ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
         restore-keys: |
-          ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
-          ccache-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
+          ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.event.pull_request.head.ref }}-
+          ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.event.pull_request.base.ref }}-
 
     - name: start building
       # TODO: Consider to replace conda-build with rattler-build to speed up

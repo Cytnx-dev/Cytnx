@@ -1,6 +1,7 @@
 #include "backend/Storage.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
@@ -65,9 +66,23 @@ namespace cytnx {
                                           const bool &init_zero) {
     this->size_ = len_in;
 
-    // check:
-    // cytnx_error_msg(len_in < 1, "%s", "[ERROR] Cannot init a Storage with zero element");
+    // Storage::Fromfile(..., count=0) intentionally constructs empty owned storage. Rank-0
+    // tensors still allocate one element; do not use size 0 for scalar tensors.
     dtype_ = Type.cy_typeid(DType());
+
+    if (this->size_ == 0) {
+      if (device != Device.cpu) {
+#ifdef UNI_GPU
+        cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
+#else
+        cytnx_error_msg(true, "%s", "[ERROR] Cannot init a Storage on gpu without CUDA support.");
+#endif
+      }
+      this->capacity_ = 0;
+      this->start_ = nullptr;
+      this->device_ = device;
+      return;
+    }
 
     if (this->size_ % STORAGE_DEFT_SZ) {
       this->capacity_ =
@@ -101,22 +116,18 @@ namespace cytnx {
     //[note], this is an internal function, the device should match the device_id that allocate the
     // pointer if the pointer is on GPU device.
 
-    this->start_ = rawptr;
-    this->size_ = len_in;
-    if (iscap) {
-      this->capacity_ = cap_in;
-    } else {
-      this->capacity_ = len_in;
-    }
+    cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot wrap zero elements.");
 
-    cytnx_error_msg(this->capacity_ % STORAGE_DEFT_SZ != 0,
+    const std::size_t capacity = iscap ? cap_in : len_in;
+
+    cytnx_error_msg(capacity % STORAGE_DEFT_SZ != 0,
                     "[ERROR] _Init_by_ptr cannot have not %dx cap_in.", STORAGE_DEFT_SZ);
 
-#ifdef UNI_DEBUG
-    cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
-    cytnx_error_msg(this->capacity_ < this->size_, "%s",
-                    "[ERROR] _Init_by_ptr cannot have capacity < size.");
-#endif
+    cytnx_error_msg(capacity < len_in, "%s", "[ERROR] _Init_by_ptr cannot have capacity < size.");
+
+    this->start_ = rawptr;
+    this->size_ = len_in;
+    this->capacity_ = capacity;
     this->dtype_ = Type.cy_typeid(DType());
     this->device_ = device;
   }
@@ -131,6 +142,7 @@ namespace cytnx {
   boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::clone() {
     boost::intrusive_ptr<Storage_base> out(new StorageImplementation<DType>());
     out->Init(this->size_, this->device_);
+    if (this->size_ == 0) return out;
     if (this->device_ == Device.cpu) {
       memcpy(out->data(), this->start_, sizeof(DType) * this->size_);
     } else {
@@ -182,6 +194,18 @@ namespace cytnx {
 
   template <typename DType>
   void StorageImplementation<DType>::to_(const int &device) {
+    if (this->size_ == 0) {
+      if (device != Device.cpu) {
+#ifdef UNI_GPU
+        cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
+#else
+        cytnx_error_msg(true, "%s",
+                        "[ERROR] try to move from cpu(Host) to gpu without CUDA support.");
+#endif
+      }
+      this->device_ = device;
+      return;
+    }
     if (this->device_ != device) {
       if (this->device_ == Device.cpu) {
 // here, cpu->gpu with gid=device
@@ -235,6 +259,11 @@ namespace cytnx {
     if (this->device_ == device) {
       return this;
     } else {
+      if (this->size_ == 0) {
+        boost::intrusive_ptr<Storage_base> out(new StorageImplementation<DType>());
+        out->Init(0, device);
+        return out;
+      }
       if (this->device_ == Device.cpu) {
 // here, cpu->gpu with gid=device
 #ifdef UNI_GPU
@@ -299,9 +328,15 @@ namespace cytnx {
     }
 
     if (size_ == 0) {
-      os << "[ ";
-      os << "\nThe Storage has not been allocated or linked.\n";
-      os << "]\n";
+      os << std::endl << "Total elem: 0\n";
+      os << "type  : " << Type.getname(this->dtype_) << std::endl;
+      os << Device.getname(this->device_) << std::endl;
+      os << "Shape : (";
+      for (std::size_t i = 0; i < shape.size(); ++i) {
+        if (i != 0) os << ",";
+        os << shape[i];
+      }
+      os << ")\n[]\n";
     } else {
       os << std::endl << "Total elem: " << this->size_ << "\n";
 
@@ -312,11 +347,15 @@ namespace cytnx {
 
       sprintf(buffer, "%s", "Shape :");
       os << std::string(buffer);
-      sprintf(buffer, " (%llu", shape[0]);
-      os << std::string(buffer);
-      for (cytnx_int32 i = 1; i < shape.size(); i++) {
-        sprintf(buffer, ",%llu", shape[i]);
+      if (shape.empty()) {
+        os << " (";
+      } else {
+        sprintf(buffer, " (%llu", shape[0]);
         os << std::string(buffer);
+        for (cytnx_int32 i = 1; i < shape.size(); i++) {
+          sprintf(buffer, ",%llu", shape[i]);
+          os << std::string(buffer);
+        }
       }
       os << ")" << std::endl;
 
@@ -329,6 +368,15 @@ namespace cytnx {
 
       cytnx_uint64 s;
       DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
+      if (shape.empty()) {
+        PrintValueAndSpace(os, elem_ptr_[0]);
+        os << std::endl << std::endl;
+        if (atDevice != Device.cpu) {
+          this->to_(atDevice);
+        }
+        free(buffer);
+        return;
+      }
 
       if (mapper.empty()) {
         cytnx_uint64 cnt = 0;
@@ -384,7 +432,7 @@ namespace cytnx {
         for (cytnx_uint32 i = 0; i < shape.size(); i++) {
           c_shape[i] = shape[mapper[i]];
         }
-        for (cytnx_int64 i = c_shape.size() - 1; i >= 0; i--) {
+        for (cytnx_uint64 i = c_shape.size(); i-- > 0;) {
           c_offj[i] = accu;
           accu *= c_shape[i];
         }
@@ -502,6 +550,7 @@ namespace cytnx {
 
   template <typename DType>
   void StorageImplementation<DType>::set_zeros() {
+    if (this->size_ == 0) return;
     if (this->device_ == Device.cpu) {
       utils_internal::SetZeros(this->start_, sizeof(DType) * this->size_);
     } else {
@@ -527,7 +576,7 @@ namespace cytnx {
       }
       if (this->device_ == Device.cpu) {
         void *htmp = calloc(this->capacity_, sizeof(DType));
-        memcpy(htmp, this->start_, sizeof(DType) * this->size_);
+        if (this->size_ != 0) memcpy(htmp, this->start_, sizeof(DType) * this->size_);
         free(this->start_);
         this->start_ = htmp;
       } else {
@@ -535,8 +584,10 @@ namespace cytnx {
         cytnx_error_msg(device_ >= Device.Ngpus, "%s", "[ERROR] invalid device.");
         cudaSetDevice(device_);
         void *dtmp = utils_internal::cuCalloc_gpu(this->capacity_, sizeof(DType));
-        checkCudaErrors(
-          cudaMemcpyPeer(dtmp, device_, this->start_, this->device_, sizeof(DType) * this->size_));
+        if (this->size_ != 0) {
+          checkCudaErrors(cudaMemcpyPeer(dtmp, device_, this->start_, this->device_,
+                                         sizeof(DType) * this->size_));
+        }
         cudaFree(this->start_);
         this->start_ = dtmp;
 #else
@@ -744,6 +795,7 @@ namespace cytnx {
                       Type.getname(Type.cy_typeid(DType())).c_str());
       return;
     } else {
+      if (this->size_ == 0) return;
       if (this->device_ == Device.cpu) {
         std::fill_n(reinterpret_cast<DType *>(this->start_), this->size_,
                     static_cast<DType>(value));

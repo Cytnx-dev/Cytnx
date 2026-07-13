@@ -22,18 +22,17 @@ class TensorTest : public ::testing::Test {
 
  protected:
   void SetUp() override {
-    tzero345 = zeros(3 * 4 * 5).reshape({3, 4, 5}).astype(Type.ComplexDouble);
-    tone345 = ones(3 * 4 * 5).reshape({3, 4, 5}).astype(Type.ComplexDouble);
-    tar345 = arange(3 * 4 * 5).reshape({3, 4, 5}).astype(Type.ComplexDouble);
-    tzero3456 = zeros(3 * 4 * 5 * 6).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
-    tone3456 = ones(3 * 4 * 5 * 6).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
-    tar3456 = arange(3 * 4 * 5 * 6).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
-    tarcomplex345 = arange(3 * 4 * 5).astype(Type.ComplexDouble);
-    for (size_t i = 0; i < 3 * 4 * 5; i++) tarcomplex345.at({i}) = cytnx_complex128(i, i);
-    tarcomplex345 = tarcomplex345.reshape({3, 4, 5}).astype(Type.ComplexDouble);
-    tarcomplex3456 = arange(3 * 4 * 5 * 6).astype(Type.ComplexDouble);
-    for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) tarcomplex3456.at({i}) = cytnx_complex128(i, i);
-    tarcomplex3456 = tarcomplex3456.reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
+    using namespace std::complex_literals;
+
+    tzero345 = zeros({3, 4, 5}, Type.ComplexDouble);
+    tone345 = ones({3, 4, 5}, Type.ComplexDouble);
+    tar345 = arange(0, 3 * 4 * 5, 1, Type.ComplexDouble).reshape({3, 4, 5});
+    tzero3456 = zeros({3, 4, 5, 6}, Type.ComplexDouble);
+    tone3456 = ones({3, 4, 5, 6}, Type.ComplexDouble);
+    tar3456 = arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble).reshape({3, 4, 5, 6});
+    tarcomplex345 = ((1.0 + 1.0i) * arange(0, 3 * 4 * 5, 1, Type.ComplexDouble)).reshape({3, 4, 5});
+    tarcomplex3456 =
+      ((1.0 + 1.0i) * arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble)).reshape({3, 4, 5, 6});
 
     tslice1 = Tensor::Load(data_dir + "tensorslice1.cytn");
   }

@@ -68,8 +68,8 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
 
 ..     auto la = UniTensor({Bond(chi),Bond(chi)},{"b","c"},-1,Type.Double,Device.cpu,true);
 ..     auto lb = UniTensor({Bond(chi),Bond(chi)},{"d","e"},-1,Type.Double,Device.cpu,true);
-..     la.put_block(ones(chi));
-..     lb.put_block(ones(chi));
+..     la.put_block(ones({chi}));
+..     lb.put_block(ones({chi}));
 
 ..     la.print_diagram();
 ..     lb.print_diagram();

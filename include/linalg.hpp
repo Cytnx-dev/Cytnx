@@ -27,6 +27,20 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934
+   * (decision record 2026-07-06). This note is the canonical rationale for every
+   * UniTensor-vs-UniTensor elementwise arithmetic entry point: the free operators in
+   * this header ('+', '-', '*', '/') and the UniTensor::Add/Sub/Mul/Div member
+   * functions (in-place and out-of-place). The python UniTensor dunders raise
+   * TypeError for the UniTensor-vs-UniTensor case (see pybind/unitensor_py.cpp,
+   * raise_unitensor_elementwise_removed) while the C++ layer remains. operator+ and
+   * operator- are load-bearing: src/linalg/Lanczos_Gnd_Ut.cpp and
+   * src/linalg/Lanczos_Exp.cpp use them as genuine Krylov-subspace vector-space
+   * arithmetic (axpy) inside the solvers backing linalg::Lanczos(method="Gnd") and
+   * linalg::Lanczos_Exp(). operator* (elementwise/Hadamard product) and operator/
+   * (elementwise division) are basis-dependent, have no tensor-network meaning, and
+   * no in-tree C++ caller as of the audit; they are kept un-deprecated only because
+   * the removal task's scope was the python surface.
    */
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -63,6 +77,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -99,6 +116,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -135,6 +155,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -753,10 +776,10 @@ namespace cytnx {
      * @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
      * @param[in] is_UvT if \em true, the left- and right- unitary UniTensors (isometries) are
      * returned.
-     * @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-     * the largest error will be pushed back to the vector (The smallest singular value in the
-     * return singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-     * full list of truncated singular values will be returned.
+     * @param[in] return_err selects the truncation information appended to the result: 0 appends
+     * nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero
+     * if none were discarded; >1 appends a rank-1 tensor containing all discarded singular values
+     * in descending order, empty if none were discarded.
      * @return
      * @parblock
      * [std::vector<Tensors>]
@@ -838,10 +861,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is > 1, then the full list of truncated
-    singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @param[in] mindim at least this many singular values are kept in total. For a per-block lower
     bound (which also acts as the per-block sampling floor of the randomized SVD), use the
     overload that takes a \p min_blockdim vector.
@@ -1828,10 +1851,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err > 1, then the full list of truncated
-    singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1876,10 +1899,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @param[in] mindim at least this many singular values are kept in total.
     @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
     keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
@@ -1916,10 +1939,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -2421,8 +2444,8 @@ namespace cytnx {
     @pre two tensor should on same device.
 
     */
-    Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left = false,
-                const bool &Tr_pad_left = false);
+    Tensor Kron(const Tensor &lhs, const Tensor &rhs, bool lhs_pad_left = false,
+                bool rhs_pad_left = false);
 
     // Directsum:
     //==================================================
@@ -3006,45 +3029,6 @@ namespace cytnx {
     @author Ke
     */
     std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond = -1);
-
-    /**
-    @brief Blas Axpy, performing \f$ a\textbf{x} + \textbf{y} \f$, inplacely.
-    @details
-    This function performs
-    \f[
-    a\textbf{x} + \textbf{y},
-    \f]
-    where \f$ \textbf{x},\textbf{y} \f$ are Tensor and \f$ a \f$ is a Scalar. The dtype of return
-    Tensor will be the strongest among \p x, \p y and \p a.
-    @param[in] a Scalar.
-    @param[in] x Tensor, can be any rank
-    @param[in] y Tensor, can be any rank
-    @return
-    [Tensor]
-    If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
-    @note This will return a new tensor.
-    */
-    Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor());
-
-    /**
-     * @brief Blas Axpy, performing \f$ \textbf{y} = a\textbf{x} + \textbf{y} \f$, inplacely.
-     * @details
-     * This function performs
-     * \f[
-     * \textbf{y} = a\textbf{x} + \textbf{y},
-     * \f]
-     * where \f$ \textbf{x},\textbf{y} \f$ are Tensor and a is a Scalar. The dtype of return
-     * Tensor will be the strongest among \p x, \p y and \p a.
-     * @param[in ] a Scalar.
-     * @param[in ] x Tensor, can be any rank
-     * @param[in ] y Tensor, can be any rank
-     * @return
-     * [Tensor]
-     * If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
-     * @note Compared to Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor()), this
-     * function will perform inplacely.
-     */
-    void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
 
     /**
     @brief Blas Ger, performing return = a*vec(x)*vec(y)^T

@@ -22,6 +22,7 @@ namespace cytnx {
         out = Tin.clone();
 
       if (Tin.dtype() > 4) out = out.astype(Type.Double);
+      if (out.is_empty()) return out;
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.InvM_inplace_ii[out.dtype()](out._impl->storage()._impl,

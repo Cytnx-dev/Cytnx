@@ -1,4 +1,5 @@
 #include "linalg.hpp"
+#include <cmath>
 #include <iostream>
 #include "Tensor.hpp"
 #include "cytnx.hpp"
@@ -9,6 +10,7 @@
 namespace cytnx {
   namespace linalg {
     Tensor Norm(const Tensor& Tl) {
+      cytnx_error_msg(Tl.is_void(), "[Norm] cannot operate on an uninitialized Tensor.%s", "\n");
       // cytnx_error_msg(Tl.shape().size() != 1,"[Norm] error, tensor Tl ,Norm can only operate on
       // rank-1 Tensor.%s","\n"); cytnx_error_msg(!Tl.is_contiguous(), "[Norm] error tensor Tl must
       // be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -28,7 +30,9 @@ namespace cytnx {
         _tl = Tl.astype(Type.Double);
       }
 
-      out.Init({1}, Type_class::norm_result_dtype(Tl.dtype()), _tl.device());
+      out.Init({}, Type_class::norm_result_dtype(Tl.dtype()), _tl.device());
+
+      if (Tl.is_empty()) return out;
 
       if (Tl.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Norm_ii[_tl.dtype()](out._impl->storage()._impl->data(),
@@ -51,24 +55,7 @@ namespace cytnx {
       }
     }
 
-    Tensor Norm(const UniTensor& uTl) {
-      if (uTl.uten_type() == UTenType.Dense) {
-        return Norm(uTl.get_block_());
-      } else if ((uTl.uten_type() == UTenType.Block) ||
-                 (uTl.uten_type() == UTenType.BlockFermionic)) {
-        std::vector<Tensor> bks = uTl.get_blocks_();
-        Tensor res = zeros(1);
-        for (int i = 0; i < bks.size(); i++) {
-          Tensor tmp = Norm(bks[i]);
-          res.at({0}) = res.at({0}) + tmp.at({0}) * tmp.at({0});
-        }
-        res.at({0}) = sqrt(res.at({0}));
-        return res;
-      } else {
-        cytnx_error_msg(true, "[ERROR][Norm] UniTensor type '%s' not supported\n",
-                        uTl.uten_type_str().c_str());
-      }
-    }
+    Tensor Norm(const UniTensor& uTl) { return uTl.Norm(); }
 
   }  // namespace linalg
 }  // namespace cytnx
