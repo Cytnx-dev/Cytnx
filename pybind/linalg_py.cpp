@@ -833,14 +833,18 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Norm",
     [](cytnx::UniTensor &T1) {
-      PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+      if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) <
+          0)
+        throw py::error_already_set();
       return cytnx::linalg::Norm(T1);
     },
     py::arg("T1"));
   m_linalg.def(
     "Norm",
     [](cytnx::Tensor &T1) {
-      PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+      if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) <
+          0)
+        throw py::error_already_set();
       return cytnx::linalg::Norm(T1);
     },
     py::arg("T1"));

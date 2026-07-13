@@ -223,8 +223,10 @@ namespace {
   py::object unitensor_combineBonds_int_deprecated(py::object self,
                                                    const std::vector<cytnx_int64> &indicators,
                                                    const bool &force, const bool &by_label) {
-    PyErr_WarnEx(PyExc_DeprecationWarning,
-                 "combineBonds() is deprecated, use combineBond_()/combineBond() instead.", 1);
+    if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                     "combineBonds() is deprecated, use combineBond_()/combineBond() instead.",
+                     1) < 0)
+      throw py::error_already_set();
     auto &self_ref = self.cast<UniTensor &>();
     if (by_label) {
       cytnx_warning_msg(true,
@@ -240,13 +242,16 @@ namespace {
   py::object unitensor_combineBonds_str_deprecated(py::object self,
                                                    const std::vector<std::string> &indicators,
                                                    const bool &force) {
-    PyErr_WarnEx(PyExc_DeprecationWarning,
-                 "combineBonds() is deprecated, use combineBond_()/combineBond() instead.", 1);
+    if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                     "combineBonds() is deprecated, use combineBond_()/combineBond() instead.",
+                     1) < 0)
+      throw py::error_already_set();
     self.cast<UniTensor &>().combineBonds(indicators, force);
     return self;
   }
   Tensor unitensor_Norm_deprecated(UniTensor &self) {
-    PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+    if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) < 0)
+      throw py::error_already_set();
     return self.Norm();
   }
   #if defined(__GNUC__) || defined(__clang__)
@@ -318,8 +323,8 @@ void unitensor_binding(py::module &m) {
          })
     .def("set_name",
          [](py::object self, const std::string &name) {
-           PyErr_WarnEx(PyExc_DeprecationWarning,
-             "set_name() is deprecated, use set_name_() instead.", 1);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_name() is deprecated, use set_name_() instead.", 1) < 0) throw py::error_already_set();
            self.cast<UniTensor &>().set_name_(name);
            return self;
          })
@@ -339,16 +344,16 @@ void unitensor_binding(py::module &m) {
 
     .def("set_label",
          [](py::object self, const cytnx_int64 &idx, const std::string &new_label) {
-           PyErr_WarnEx(PyExc_DeprecationWarning,
-             "set_label() is deprecated, use set_label_() instead.", 1);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_label() is deprecated, use set_label_() instead.", 1) < 0) throw py::error_already_set();
            self.cast<UniTensor &>().set_label_(idx, new_label);
            return self;
          }, py::arg("idx"), py::arg("new_label"))
 
     .def("set_label",
          [](py::object self, const std::string &old_label, const std::string &new_label) {
-           PyErr_WarnEx(PyExc_DeprecationWarning,
-             "set_label() is deprecated, use set_label_() instead.", 1);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_label() is deprecated, use set_label_() instead.", 1) < 0) throw py::error_already_set();
            self.cast<UniTensor &>().set_label_(old_label, new_label);
            return self;
          }, py::arg("old_label"), py::arg("new_label"))
@@ -356,8 +361,8 @@ void unitensor_binding(py::module &m) {
 
     .def("set_labels",
          [](py::object self, const std::vector<std::string> &new_labels) {
-           PyErr_WarnEx(PyExc_DeprecationWarning,
-             "set_labels() is deprecated, use relabel_() instead.", 1);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_labels() is deprecated, use relabel_() instead.", 1) < 0) throw py::error_already_set();
            self.cast<UniTensor &>().relabel_(new_labels);
            return self;
          }, py::arg("new_labels"))
@@ -374,8 +379,8 @@ void unitensor_binding(py::module &m) {
                         return self.relabel(new_labels);
                     }, py::arg("new_labels"))
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels() is deprecated, use relabel() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1) < 0) throw py::error_already_set();
                         return self.relabel(new_labels);
                     }, py::arg("new_labels"))
 
@@ -384,8 +389,8 @@ void unitensor_binding(py::module &m) {
                         return self;
                     }, py::arg("new_labels"))
      .def("relabels_",[](py::object self, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels_() is deprecated, use relabel_() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels_() is deprecated, use relabel_() instead.", 1) < 0) throw py::error_already_set();
                         self.cast<UniTensor &>().relabel_(new_labels);
                         return self;
                     }, py::arg("new_labels"))
@@ -419,14 +424,14 @@ void unitensor_binding(py::module &m) {
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels() is deprecated, use relabel() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1) < 0) throw py::error_already_set();
                         return self.relabel(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels_",[](py::object self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels_() is deprecated, use relabel_() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels_() is deprecated, use relabel_() instead.", 1) < 0) throw py::error_already_set();
                         self.cast<UniTensor &>().relabel_(old_labels,new_labels);
                         return self;
                     } ,py::arg("old_labels"), py::arg("new_labels"))
@@ -2029,7 +2034,7 @@ void unitensor_binding(py::module &m) {
          })
     .def("tag",
          [](py::object self) {
-           PyErr_WarnEx(PyExc_DeprecationWarning, "tag() is deprecated, use tag_() instead.", 1);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning, "tag() is deprecated, use tag_() instead.", 1) < 0) throw py::error_already_set();
            self.cast<UniTensor &>().tag_();
            return self;
          })
@@ -2237,8 +2242,8 @@ void unitensor_binding(py::module &m) {
 
 	.def("convert_from",
                     [](py::object self, const UniTensor &in, bool force, cytnx_double tol) {
-                      PyErr_WarnEx(PyExc_DeprecationWarning,
-                        "convert_from() is deprecated, use convert_from_() instead.", 1);
+                      if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                        "convert_from() is deprecated, use convert_from_() instead.", 1) < 0) throw py::error_already_set();
                       self.cast<UniTensor &>().convert_from_(in, force, tol);
                       return self;
                     },

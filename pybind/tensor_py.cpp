@@ -73,7 +73,8 @@ namespace {
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   #endif
   cytnx::Tensor tensor_Norm_deprecated(cytnx::Tensor &self) {
-    PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1);
+    if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) < 0)
+      throw py::error_already_set();
     return self.Norm();
   }
   #if defined(__GNUC__) || defined(__clang__)
