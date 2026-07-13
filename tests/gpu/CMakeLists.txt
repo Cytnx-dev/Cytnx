@@ -33,8 +33,10 @@ add_executable(
   linalg_test/GeSvd_test.cpp
   linalg_test/Rsvd_test.cpp
   linalg_test/truncate_test.cpp
+  linalg_test/Trace_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/sum_test.cpp
+  linalg_test/Zero_extent_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Sort_test.cpp
@@ -50,9 +52,9 @@ target_include_directories(
 )
 target_link_libraries(
   gpu_test_main
-  gtest_main
-  gmock
-  gtest
+  GTest::gtest_main
+  GTest::gmock
+  GTest::gtest
 )
 target_link_libraries(gpu_test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")

@@ -29,19 +29,13 @@ namespace cytnx {
       cytnx_error_msg(T1.device() != T2.device(), "[ERROR] T1 and T2 should on same device.%s",
                       "\n");
 
-      Tensor t1, t2;
-      cytnx_int64 dtype;
-      if (T1.dtype() < T2.dtype()) {
-        t1 = T1;
-        t2 = T2.astype(T1.dtype());
-        dtype = t1.dtype();
-      } else {
-        t1 = T1.astype(T2.dtype());
-        t2 = T2;
-        dtype = t2.dtype();
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat + Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type.
+      cytnx_int64 dtype = Type.type_promote(T1.dtype(), T2.dtype());
+      Tensor t1 = T1.astype(dtype);
+      Tensor t2 = T2.astype(dtype);
 
-      out = zeros(t1.shape()[0] + t2.shape()[0], dtype, t1.device());
+      out = zeros({t1.shape()[0] + t2.shape()[0]}, dtype, t1.device());
 
       out(ac::range(0, t1.shape()[0])) = t1;
       out(ac::tilend(t1.shape()[0])) = t2;

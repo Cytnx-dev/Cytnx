@@ -10,6 +10,8 @@
 namespace cytnx {
   namespace linalg {
     Tensor Dot(const Tensor &Tl, const Tensor &Tr) {
+      cytnx_error_msg(Tl.is_void() || Tr.is_void(),
+                      "[Dot] cannot operate on an uninitialized Tensor.%s", "\n");
       // checking contiguous
       // cytnx_error_msg(!Tl.is_contiguous(), "[Dot] error tensor Tl must be contiguous. Call
       // Contiguous_() or Contiguous() first%s","\n"); cytnx_error_msg(!Tr.is_contiguous(), "[Dot]
@@ -39,41 +41,37 @@ namespace cytnx {
           Tl.shape().back() != Tr.shape()[0],
           "[Dot] error. The last dimension of Tl must be the same as dimension of Tr.%s", "\n");
 
-        // check type:
-        Tensor _tl = Tl.contiguous();
-        Tensor _tr = Tr.contiguous();
+        // check type: promote to a common dtype. The promoted dtype can differ
+        // from both inputs (e.g. ComplexFloat x Double -> ComplexDouble), so
+        // cast both operands; astype is a no-op when the dtype already matches.
+        const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
         Tensor out;
         std::vector<cytnx_uint64> newshape = Tl.shape();
         newshape.pop_back();
-        cytnx_int32 lin_dim = 1;
+        std::size_t lin_dim = 1;
         for (int i = 0; i < newshape.size(); i++) lin_dim *= newshape[i];
 
-        if (Tl.dtype() != Tr.dtype()) {
-          // do conversion:
-          if (Tl.dtype() < Tr.dtype()) {
-            _tr = _tr.astype(Tl.dtype());
-            out.Init(newshape, Tl.dtype(), Tl.device());
-          } else {
-            _tl = _tl.astype(Tr.dtype());
-            out.Init(newshape, Tr.dtype(), Tr.device());
-          }
-        } else {
-          out.Init(newshape, Tr.dtype(), Tr.device());
-        }
+        const bool zero_inner_dimension = Tr.shape()[0] == 0;
+        // A zero inner dimension gives a zero result. Other kernels fully overwrite out.
+        out.Init(newshape, out_dtype, Tl.device(), zero_inner_dimension);
+        if (zero_inner_dimension || out.is_empty()) return out;
+
+        Tensor tl = Tl.contiguous().astype(out_dtype);
+        Tensor tr = Tr.contiguous().astype(out_dtype);
 
         if (Tl.device() == Device.cpu) {
-          cytnx::linalg_internal::lii.Matvec_ii[_tl.dtype()](
-            out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
-            lin_dim, _tr.shape()[0]);
+          cytnx::linalg_internal::lii.Matvec_ii[out.dtype()](
+            out._impl->storage()._impl, tl._impl->storage()._impl, tr._impl->storage()._impl,
+            lin_dim, tr.shape()[0]);
 
           return out;
 
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Tl.device()));
-          cytnx::linalg_internal::lii.cuMatvec_ii[_tl.dtype()](
-            out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
-            lin_dim, _tr.shape()[0]);
+          cytnx::linalg_internal::lii.cuMatvec_ii[out.dtype()](
+            out._impl->storage()._impl, tl._impl->storage()._impl, tr._impl->storage()._impl,
+            lin_dim, tr.shape()[0]);
 
           return out;
   #else

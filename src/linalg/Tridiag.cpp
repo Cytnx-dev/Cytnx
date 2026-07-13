@@ -23,8 +23,12 @@ namespace cytnx {
         Diag.device() != Sub_diag.device(),
         "[Tridiag] error, two input tensors must in the same device. Call to() or to_() first%s",
         "\n");
-      cytnx_error_msg(Diag.dtype() <= 2 || Sub_diag.dtype() <= 2,
+      cytnx_error_msg(Type.is_complex(Diag.dtype()) || Type.is_complex(Sub_diag.dtype()),
                       "[Tridiag] error, tri-diagonalize can only accept real vectors%s", "\n");
+      const cytnx_uint64 expected_subdiag_size = Diag.shape()[0] == 0 ? 0 : Diag.shape()[0] - 1;
+      cytnx_error_msg(Sub_diag.shape()[0] != expected_subdiag_size,
+                      "[Tridiag] error, Sub_diag must have max(Diag.size()-1, 0) elements.%s",
+                      "\n");
       // check prior type:
       unsigned int cType;
       if (Diag.dtype() < Sub_diag.dtype()) {
@@ -46,12 +50,22 @@ namespace cytnx {
         s_diag = Sub_diag;
 
       Tensor vT, S;
-      S.Init({Diag.shape()[0]}, cType <= 2 ? cType + 2 : cType,
+      S.Init({Diag.shape()[0]}, Type.to_real(cType),
              Device.cpu);  // if type is complex, S should be real
       if (is_V) {
         // cytnx_error_msg((k<1)||(k>Diag.shape()[0]),"[Tridiag] error, number of eigen vector k
         // should be >1 and <=L%s","\n");
         vT.Init({Diag.shape()[0], Diag.shape()[0]}, cType, Device.cpu);
+      }
+
+      if (Diag.is_empty()) {
+        if (Diag.device() != Device.cpu) {
+          S.to_(Diag.device());
+          if (is_V) vT.to_(Diag.device());
+        }
+        std::vector<Tensor> out{S};
+        if (is_V) out.push_back(vT);
+        return out;
       }
 
       if (Diag.device() == Device.cpu) {
@@ -79,7 +93,7 @@ namespace cytnx {
 
         // move result to GPU:
         S.to_(in_diag.device());
-        vT.to_(in_diag.device());
+        if (is_V) vT.to_(in_diag.device());
 
         std::vector<Tensor> out;
         out.push_back(S);

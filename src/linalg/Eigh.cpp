@@ -27,13 +27,19 @@ namespace cytnx {
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
       Tensor S, V;
-      S.Init({in.shape()[0]}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+      S.Init({in.shape()[0]}, Type.to_real(in.dtype()),
              in.device());  // if type is complex, S should be real
       // V is only allocated when eigenvectors are requested. When is_V == false, V stays an empty
       // (Void) tensor; it is still passed to the backend below, which detects the Void storage and
       // calls LAPACK with jobs='N' (eigenvectors not computed), so the empty V is never written to.
       if (is_V) {
         V.Init(in.shape(), in.dtype(), in.device());
+      }
+
+      if (in.is_empty()) {
+        std::vector<Tensor> out{S};
+        if (is_V) out.push_back(V);
+        return out;
       }
 
       if (Tin.device() == Device.cpu) {

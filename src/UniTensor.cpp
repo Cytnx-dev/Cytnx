@@ -11,6 +11,38 @@
 #else
 
 namespace cytnx {
+  namespace {
+    constexpr unsigned int kLegacyUniTensorMagic = 555;
+    constexpr unsigned int kVersionedUniTensorMagic = 556;
+    constexpr unsigned int kCurrentUniTensorFileVersion = 1;
+
+    boost::intrusive_ptr<UniTensor_base> make_unitensor_impl_from_type(const int utentype) {
+      if (utentype == UTenType.Dense) {
+        return boost::intrusive_ptr<UniTensor_base>(new DenseUniTensor());
+      }
+      if (utentype == UTenType.Block) {
+        return boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
+      }
+      if (utentype == UTenType.BlockFermionic) {
+        return boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
+      }
+
+      cytnx_error_msg(utentype == UTenType.Void,
+                      "[ERROR][UniTensor::_Load] The file contains an uninitialized UniTensor of "
+                      "type Void. The file seems corrupt.%s",
+                      "\n");
+      cytnx_error_msg(utentype == UTenType.Sparse,
+                      "[ERROR][UniTensor::_Load] The file contains a SparseUniTensor, which is "
+                      "deprecated (saved with an old Cytnx version, or the file is corrupt). Use "
+                      "BlockUniTensor or LinOp instead.%s",
+                      "\n");
+      cytnx_error_msg(true,
+                      "[ERROR][UniTensor::_Load] Unknown UniTensor type id '%d' (corrupt or "
+                      "incompatible file?)\n",
+                      utentype);
+      return boost::intrusive_ptr<UniTensor_base>();
+    }
+  }  // namespace
 
   UniTensor UniTensor::Pow(const double &p) const { return cytnx::linalg::Pow(*this, p); }
   UniTensor &UniTensor::Pow_(const double &p) {
@@ -44,8 +76,11 @@ namespace cytnx {
                     "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s",
                     "\n");
 
-    unsigned int IDDs = 555;
+    unsigned int IDDs = kVersionedUniTensorMagic;
     f.write((char *)&IDDs, sizeof(unsigned int));
+    unsigned int version = kCurrentUniTensorFileVersion;
+    f.write((char *)&version, sizeof(unsigned int));
+
     // first, save common meta data:
     f.write((char *)&this->_impl->uten_type_id,
             sizeof(int));  // uten type, this is used to determine Block/Dense upon load
@@ -84,32 +119,21 @@ namespace cytnx {
 
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
-    cytnx_error_msg(tmpIDDs != 555, "[ERROR] the object is not a cytnx UniTensor!%s", "\n");
+    unsigned int version = 0;
+    if (tmpIDDs == kVersionedUniTensorMagic) {
+      f.read((char *)&version, sizeof(unsigned int));
+      cytnx_error_msg(version != kCurrentUniTensorFileVersion,
+                      "[ERROR][UniTensor::_Load] Unsupported UniTensor file format version '%u'.%s",
+                      version, "\n");
+    } else {
+      cytnx_error_msg(tmpIDDs != kLegacyUniTensorMagic,
+                      "[ERROR] the object is not a cytnx UniTensor!%s", "\n");
+    }
 
     int utentype;
     f.read((char *)&utentype,
            sizeof(int));  // uten type, this is used to determine Block/Dense upon load
-    if (utentype == UTenType.Dense) {
-      this->_impl = boost::intrusive_ptr<UniTensor_base>(new DenseUniTensor());
-    } else if (utentype == UTenType.Block) {
-      this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
-    } else if (utentype == UTenType.BlockFermionic) {
-      this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
-    } else {
-      cytnx_error_msg(utentype == UTenType.Void,
-                      "[ERROR][UniTensor::_Load] The file contains an uninitialized UniTensor of "
-                      "type Void. The file seems corrupt.%s",
-                      "\n");
-      cytnx_error_msg(utentype == UTenType.Sparse,
-                      "[ERROR][UniTensor::_Load] The file contains a SparseUniTensor, which is "
-                      "deprecated (saved with an old Cytnx version, or the file is corrupt). Use "
-                      "BlockUniTensor or LinOp instead.%s",
-                      "\n");
-      cytnx_error_msg(true,
-                      "[ERROR][UniTensor::_Load] Unknown UniTensor type id '%d' (corrupt or "
-                      "incompatible file?)\n",
-                      utentype);
-    }
+    this->_impl = make_unitensor_impl_from_type(utentype);
 
     f.read((char *)&this->_impl->_is_braket_form, sizeof(bool));
     f.read((char *)&this->_impl->_is_tag, sizeof(bool));
@@ -119,10 +143,8 @@ namespace cytnx {
     cytnx_uint32 len_name;
     f.read((char *)&len_name, sizeof(cytnx_uint32));
     if (len_name != 0) {
-      char *cname = (char *)malloc(sizeof(char) * len_name);
-      f.read(cname, sizeof(char) * len_name);
-      this->_impl->_name = std::string(cname);
-      free(cname);
+      this->_impl->_name.resize(len_name);
+      f.read(this->_impl->_name.data(), sizeof(char) * len_name);
     }
 
     cytnx_uint64 rank;
@@ -144,7 +166,7 @@ namespace cytnx {
     }
 
     // second, let dispatch to do remaining loading.
-    this->_impl->_load_dispatch(f);
+    this->_impl->_load_dispatch(f, version);
   }
 
   void UniTensor::Save(const std::string &fname) const {

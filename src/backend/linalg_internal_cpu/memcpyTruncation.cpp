@@ -16,6 +16,15 @@ namespace cytnx {
       const cytnx_uint64 nums = tens[0].storage().size();
       cytnx_uint64 trunc_dim = (nums < keepdim) ? nums : keepdim;
 
+      if (nums == 0) {
+        if (return_err == 1) {
+          tens.push_back(zeros({}, tens[0].dtype(), tens[0].device()));
+        } else if (return_err) {
+          tens.push_back(zeros({0}, tens[0].dtype(), tens[0].device()));
+        }
+        return;
+      }
+
       // error tensor; filled below only when return_err != 0 (see header for its exact contents).
       Tensor terr;
 
@@ -38,7 +47,11 @@ namespace cytnx {
             if (trunc_dim == nums) {
               // nothing to truncate; there are no discarded values, so the truncation error is
               // zero.
-              if (return_err) terr = zeros(1, tens[0].dtype(), tens[0].device());
+              if (return_err == 1) {
+                terr = zeros({}, tens[0].dtype(), tens[0].device());
+              } else if (return_err) {
+                terr = zeros({0}, tens[0].dtype(), tens[0].device());
+              }
               return;  // escapes lambda
             }
             // truncated singular values
@@ -46,7 +59,7 @@ namespace cytnx {
             std::memcpy(newS.ptr_as<T>(), sptr, trunc_dim * sizeof(T));
 
             if (return_err == 1) {
-              terr = Tensor({1}, S.dtype(), S.device());
+              terr = Tensor({}, S.dtype(), S.device());
               terr.ptr_as<T>()[0] = sptr[trunc_dim];
             } else if (return_err) {
               const cytnx_uint64 discarded_dim = nums - trunc_dim;

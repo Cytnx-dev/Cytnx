@@ -38,7 +38,6 @@ target_sources(cytnx
     Det_internal.hpp
     Lstsq_internal.hpp
 
-    Axpy_internal.hpp
     Ger_internal.hpp
 
     memcpyTruncation.hpp
@@ -72,7 +71,6 @@ target_sources(cytnx
     Det_internal.cpp
     Lstsq_internal.cpp
 
-    Axpy_internal.cpp
     Ger_internal.cpp
 
     memcpyTruncation.cpp

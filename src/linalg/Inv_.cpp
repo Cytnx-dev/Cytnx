@@ -16,6 +16,8 @@ namespace cytnx {
         Tin = Tin.astype(Type.Double);
       }
 
+      if (Tin.is_empty()) return;
+
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Inv_inplace_ii[Tin.dtype()](
           Tin._impl->storage()._impl, Tin._impl->storage()._impl->size(), clip);

@@ -433,7 +433,8 @@ namespace DirectsumTest {
   Tensor ConstructExpectTens(const Tensor& T1, const Tensor& T2,
                              const std::vector<cytnx_uint64> shared_axes) {
     auto rank = T1.rank();
-    auto expect_dtype = std::min(T1.dtype(), T2.dtype());  // to strongest type
+    // promote across the real/complex boundary (Type.type_promote), not the lower-enum operand.
+    auto expect_dtype = Type.type_promote(T1.dtype(), T2.dtype());
     auto device = T1.device();
     std::vector<cytnx_uint64> dst_axes(T1.rank());
     for (auto i = 0; i < T1.rank(); ++i) {
@@ -454,8 +455,8 @@ namespace DirectsumTest {
     Tensor expect_T;
     // if shared axes contain all axes, the output is equal to T2 but convert to strongest type.
     if (shared_axes.size() == T1.rank()) {
-      // convert T2 to strongest type
-      auto expect_dtype = std::min(T1.dtype(), T2.dtype());
+      // convert T2 to the promoted type
+      auto expect_dtype = Type.type_promote(T1.dtype(), T2.dtype());
       expect_T = T2.astype(expect_dtype);
     } else {
       expect_T = ConstructExpectTens(T1, T2, shared_axes);

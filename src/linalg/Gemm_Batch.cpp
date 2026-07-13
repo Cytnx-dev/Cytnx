@@ -45,6 +45,7 @@ namespace cytnx {
       if (total_matrices == 0) return;
 
       const int device = a_tensors[0].device();
+      bool has_zero_extent = false;
 
       // Per-group scalar validation
       for (cytnx_int64 g = 0; g < group_count; g++) {
@@ -105,6 +106,8 @@ namespace cytnx {
         cytnx_error_msg(b_tensors[i].shape()[1] != c_tensors[i].shape()[1],
                         "[Gemm_Batch] error, b_tensors[%d],c_tensors[%d] dimension not match.%s", i,
                         i, "\n");
+        has_zero_extent = has_zero_extent || a_tensors[i].is_empty() || b_tensors[i].is_empty() ||
+                          c_tensors[i].is_empty();
       }
 
       // Within-group dimension consistency (MKL needs one m/n/k per group)
@@ -135,15 +138,15 @@ namespace cytnx {
       // Promoted dtype: the highest-precision type among all tensors and scalars.
       // Scalars with higher precision than the tensors promote the tensors upward so that BLAS
       // operates uniformly at the promoted precision without losing scalar bits.
-      int promoted_dtype = a_tensors[0].dtype();
+      unsigned int promoted_dtype = a_tensors[0].dtype();
       for (cytnx_uint64 i = 0; i < total_matrices; i++) {
-        if (a_tensors[i].dtype() < promoted_dtype) promoted_dtype = a_tensors[i].dtype();
-        if (b_tensors[i].dtype() < promoted_dtype) promoted_dtype = b_tensors[i].dtype();
-        if (c_tensors[i].dtype() < promoted_dtype) promoted_dtype = c_tensors[i].dtype();
+        promoted_dtype = Type.type_promote(promoted_dtype, a_tensors[i].dtype());
+        promoted_dtype = Type.type_promote(promoted_dtype, b_tensors[i].dtype());
+        promoted_dtype = Type.type_promote(promoted_dtype, c_tensors[i].dtype());
       }
       for (cytnx_int64 g = 0; g < group_count; g++) {
-        if (alpha_array[g].dtype() < promoted_dtype) promoted_dtype = alpha_array[g].dtype();
-        if (beta_array[g].dtype() < promoted_dtype) promoted_dtype = beta_array[g].dtype();
+        promoted_dtype = Type.type_promote(promoted_dtype, alpha_array[g].dtype());
+        promoted_dtype = Type.type_promote(promoted_dtype, beta_array[g].dtype());
       }
 
       // Promote and make contiguous
@@ -165,6 +168,19 @@ namespace cytnx {
           alpha_promoted[g] = alpha_array[g].astype(promoted_dtype);
         if (beta_array[g].dtype() != promoted_dtype)
           beta_promoted[g] = beta_array[g].astype(promoted_dtype);
+      }
+
+      // Batched BLAS interfaces do not consistently accept zero m/n/k. Fall back to the
+      // single-matrix wrapper, which implements the empty-output and k=0 semantics explicitly.
+      if (has_zero_extent) {
+        std::size_t idx = 0;
+        for (std::size_t g = 0; g < static_cast<std::size_t>(group_count); ++g) {
+          for (cytnx_int64 j = 0; j < group_size[g]; ++j, ++idx) {
+            Gemm_(alpha_promoted[g], a_promoted[idx], b_promoted[idx], beta_promoted[g],
+                  c_tensors[idx]);
+          }
+        }
+        return;
       }
 
       // Raw data pointer arrays

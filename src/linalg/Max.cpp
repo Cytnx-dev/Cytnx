@@ -9,7 +9,8 @@ namespace cytnx {
   namespace linalg {
     Tensor Max(const Tensor &Tin) {
       cytnx_error_msg(Tin.dtype() == Type.Void, "[Cannot have void (Uninitialize) Tensor]%s", "\n");
-      Tensor out({1}, Tin.dtype(), Tin.device());
+      cytnx_error_msg(Tin.is_empty(), "[Max] cannot reduce an empty Tensor.%s", "\n");
+      Tensor out({}, Tin.dtype(), Tin.device());
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.MM_ii[out.dtype()](out._impl->storage()._impl,

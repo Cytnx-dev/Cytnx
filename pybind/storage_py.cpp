@@ -13,7 +13,6 @@
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -247,17 +246,36 @@ void storage_binding(py::module &m) {
     .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"),
                 py::arg("device") = (int)cytnx::Device.cpu)
 
-    .def("c_pylist_complex128", &cytnx::Storage::vector<cytnx_complex128>)
-    .def("c_pylist_complex64", &cytnx::Storage::vector<cytnx_complex64>)
-    .def("c_pylist_double", &cytnx::Storage::vector<cytnx_double>)
-    .def("c_pylist_float", &cytnx::Storage::vector<cytnx_float>)
-    .def("c_pylist_uint64", &cytnx::Storage::vector<cytnx_uint64>)
-    .def("c_pylist_int64", &cytnx::Storage::vector<cytnx_int64>)
-    .def("c_pylist_uint32", &cytnx::Storage::vector<cytnx_uint32>)
-    .def("c_pylist_int32", &cytnx::Storage::vector<cytnx_int32>)
-    .def("c_pylist_uint16", &cytnx::Storage::vector<cytnx_uint16>)
-    .def("c_pylist_int16", &cytnx::Storage::vector<cytnx_int16>)
-    .def("c_pylist_bool", &cytnx::Storage::vector<cytnx_bool>)
+    .def("pylist",
+         [](cytnx::Storage &self) -> py::object {
+           switch (self.dtype()) {
+             case (unsigned int)Type.ComplexDouble:
+               return py::cast(self.vector<cytnx_complex128>());
+             case (unsigned int)Type.ComplexFloat:
+               return py::cast(self.vector<cytnx_complex64>());
+             case (unsigned int)Type.Double:
+               return py::cast(self.vector<cytnx_double>());
+             case (unsigned int)Type.Float:
+               return py::cast(self.vector<cytnx_float>());
+             case (unsigned int)Type.Uint64:
+               return py::cast(self.vector<cytnx_uint64>());
+             case (unsigned int)Type.Int64:
+               return py::cast(self.vector<cytnx_int64>());
+             case (unsigned int)Type.Uint32:
+               return py::cast(self.vector<cytnx_uint32>());
+             case (unsigned int)Type.Int32:
+               return py::cast(self.vector<cytnx_int32>());
+             case (unsigned int)Type.Uint16:
+               return py::cast(self.vector<cytnx_uint16>());
+             case (unsigned int)Type.Int16:
+               return py::cast(self.vector<cytnx_int16>());
+             case (unsigned int)Type.Bool:
+               return py::cast(self.vector<cytnx_bool>());
+             default:
+               cytnx_error_msg(true, "%s", "[ERROR] Storage.pylist: invalid Storage dtype!");
+               return py::none();
+           }
+         })
 
     .def(
       "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },

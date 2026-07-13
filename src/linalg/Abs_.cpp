@@ -8,6 +8,7 @@
 namespace cytnx {
   namespace linalg {
     void Abs_(Tensor &Tin) {
+      cytnx_error_msg(Tin.is_void(), "[Abs_] cannot operate on an uninitialized Tensor.%s", "\n");
       // Tensor out;
 
       // if the type is unsigned, clone and return.
@@ -22,6 +23,11 @@ namespace cytnx {
 
         } else {
           out = Tin;
+        }
+
+        if (out.is_empty()) {
+          if (Tin.dtype() == Type.ComplexDouble || Tin.dtype() == Type.ComplexFloat) Tin = out;
+          return;
         }
 
         if (Tin.device() == Device.cpu) {

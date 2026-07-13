@@ -39,7 +39,7 @@ std::pair<std::vector<UniTensor>, std::vector<std::vector<cytnx_int64>>> getNcon
     std::transform(all(bond), std::back_inserter(ubond),
                    [](cytnx_int64 x) { return (cytnx_uint64)x; });
     bonds.pb(bond);
-    Tensor T = zeros(ubond).to(cytnx::Device.cuda);
+    Tensor T = zeros(ubond, Type.Double, cytnx::Device.cuda);
     int tot_dim = 1;
     rep(j, 0, SZ(bond)) tot_dim *= bond[j];
     T.reshape_(tot_dim);

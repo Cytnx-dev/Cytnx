@@ -177,9 +177,11 @@ namespace VstackTest {
     for (size_t i = 0; i < input_tens.size(); ++i) {
       input_types.push_back(input_tens[i].dtype());
     }
-    // since complex double < complex float < double < ... < bool, we need to
-    //   find the min value type as the final converted type.
-    auto expect_dtype = *std::min_element(input_types.begin(), input_types.end());
+    // the result promotes across the real/complex boundary via Type.type_promote
+    //   (e.g. ComplexFloat + Double -> ComplexDouble), not the lower-enum operand.
+    unsigned int expect_dtype = input_types[0];
+    for (size_t i = 1; i < input_types.size(); ++i)
+      expect_dtype = Type.type_promote(expect_dtype, input_types[i]);
     EXPECT_EQ(expect_dtype, vstack_tens.dtype());
 
     // 2. check tensor shape
