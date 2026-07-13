@@ -65,6 +65,9 @@ Focus reviews on what actually bites this codebase:
   boundary (`Type.type_promote`) and mixed-dtype paths.
 - **GPU kernel correctness** — in-place `cuMul`/`cuDiv` non-contiguous gaps
   (#988), contiguity assumptions, and out-of-bounds writes on a narrow LHS.
+- **Tie-break / selection-order changes in heuristic planners** (e.g. the
+  contraction-order search) — observable behavior even when each choice is
+  individually valid; they deserve an explicit call-out, not silent acceptance.
 - **Rank/scalar/void correctness** — missing rank checks before `shape()[n]` or
   `bonds()[n]`, treating shape `{1}` as a rank-0 scalar, or using direct storage
   access where `item()`, `is_scalar()`, or `is_void()` is the intended API.
