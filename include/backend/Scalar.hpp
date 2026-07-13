@@ -18,18 +18,12 @@ namespace cytnx {
   void intrusive_ptr_release(Storage_base *);
   ///@endcond
 
-  // The 11 concrete value types a Scalar can hold -- exactly Type_list minus
-  // Void. Duplicated one-liner from #979 per the review thread (merges
-  // trivially with #979 in either order); constrains the templated Scalar
-  // API surface so non-cytnx types get one crisp "constraint not satisfied"
-  // instead of an 11-way overload ambiguity.
-  template <typename T>
-  concept CytnxType = std::is_same_v<T, cytnx_complex128> || std::is_same_v<T, cytnx_complex64> ||
-    std::is_same_v<T, cytnx_double> || std::is_same_v<T, cytnx_float> ||
-    std::is_same_v<T, cytnx_int64> || std::is_same_v<T, cytnx_uint64> ||
-    std::is_same_v<T, cytnx_int32> || std::is_same_v<T, cytnx_uint32> ||
-    std::is_same_v<T, cytnx_int16> || std::is_same_v<T, cytnx_uint16> ||
-    std::is_same_v<T, cytnx_bool>;
+  // CytnxType<T> -- the 11 concrete value types a Scalar can hold (Type_list
+  // minus Void) -- is defined in Type.hpp (included above). #979 landed it
+  // there, so the copy this PR originally carried here is dropped to avoid a
+  // redefinition. It constrains the templated Scalar API surface so non-cytnx
+  // types get one crisp "constraint not satisfied" instead of an 11-way
+  // overload ambiguity.
 
   /**
    * @brief A class to represent a scalar.
