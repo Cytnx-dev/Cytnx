@@ -8,13 +8,13 @@ namespace cytnx {
   namespace linalg {
     Tensor Exp(const Tensor &Tin) {
       Tensor out;
-      if ((Tin.dtype() == Type.ComplexDouble) || (Tin.dtype() == Type.Double))
+      // dtype-preserving: a floating/complex input keeps its own precision (Float stays Float,
+      // ComplexFloat stays ComplexFloat), so Exp subsumes the former Expf(); only integer/bool
+      // inputs, which have no floating exp kernel, promote to Double.
+      if ((Tin.dtype() == Type.ComplexDouble) || (Tin.dtype() == Type.Double) ||
+          (Tin.dtype() == Type.ComplexFloat) || (Tin.dtype() == Type.Float))
         out = Tin.clone();
-      else if (Tin.dtype() == Type.ComplexFloat)
-        out = Tin.astype(Type.ComplexDouble);
       else if (Tin.dtype() > 4)
-        out = Tin.astype(Type.Double);
-      else if (Tin.dtype() == Type.Float)
         out = Tin.astype(Type.Double);
       else
         cytnx_error_msg(true, "[Cannot have void (Uninitialize) Tensor]%s", "\n");
