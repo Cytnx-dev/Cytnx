@@ -5,7 +5,7 @@ def Print_Property() -> None:
     ...
 def getname(arg0: typing.SupportsInt | typing.SupportsIndex) -> str:
     ...
-Ncpus: int = 48
+Ncpus: int = 4
 Ngpus: int = 0
 cpu: int = -1
 cuda: int = 0

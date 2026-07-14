@@ -6,7 +6,7 @@ import collections.abc
 import cytnx.cytnx
 import numpy
 import typing
-__all__: list[str] = ['Abs', 'Abs_', 'Arnoldi', 'Conj', 'Conj_', 'Det', 'Diag', 'Directsum', 'Dot', 'Eig', 'Eigh', 'Exp', 'ExpH', 'ExpM', 'Exp_', 'Expf', 'Expf_', 'Gemm', 'Gemm_', 'Ger', 'Gesvd', 'Gesvd_truncate', 'Hosvd', 'Inv', 'InvM', 'InvM_', 'Inv_', 'Kron', 'Lanczos', 'Lanczos_Exp', 'Lstsq', 'Matmul', 'Matmul_dg', 'Max', 'Min', 'Norm', 'Outer', 'Pow', 'Pow_', 'Qdr', 'Qr', 'Rand_isometry', 'Rsvd', 'Sum', 'Svd', 'Svd_truncate', 'Tensordot', 'Tensordot_dg', 'Trace', 'Tridiag', 'Vectordot']
+__all__: list[str] = ['Abs', 'Abs_', 'Arnoldi', 'Conj', 'Conj_', 'Det', 'Diag', 'Directsum', 'Dot', 'Eig', 'Eigh', 'Exp', 'ExpH', 'ExpM', 'Exp_', 'Expf', 'Expf_', 'Gemm', 'Gemm_', 'Ger', 'Gesvd', 'Gesvd_truncate', 'Hosvd', 'Inv', 'InvM', 'InvM_', 'Inv_', 'Kron', 'Lanczos', 'Lanczos_Exp', 'Lstsq', 'Matmul', 'Matmul_dg', 'Max', 'Min', 'Norm', 'Outer', 'Pow', 'Pow_', 'Qdr', 'Qr', 'Rand_isometry', 'Rsvd', 'Sum', 'Svd', 'Svd_truncate', 'Tensordot', 'Tensordot_dg', 'Trace', 'Tridiag', 'Vectordot', 'norm']
 def Abs(Tn: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
     ...
 def Abs_(Tn: cytnx.cytnx.Tensor) -> None:
@@ -354,4 +354,10 @@ def Trace(Tn: cytnx.cytnx.Tensor, axisA: typing.SupportsInt | typing.SupportsInd
 def Tridiag(A: cytnx.cytnx.Tensor, B: cytnx.cytnx.Tensor, is_V: bool = True, is_row: bool = False, throw_excp: bool = False) -> list[cytnx.cytnx.Tensor]:
     ...
 def Vectordot(T1: cytnx.cytnx.Tensor, T2: cytnx.cytnx.Tensor, is_conj: bool = False) -> cytnx.cytnx.Tensor:
+    ...
+@typing.overload
+def norm(T1: cytnx.cytnx.UniTensor) -> float:
+    ...
+@typing.overload
+def norm(T1: cytnx.cytnx.Tensor) -> float:
     ...
