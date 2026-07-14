@@ -318,6 +318,37 @@ namespace {
   #if defined(__GNUC__) || defined(__clang__)
     #pragma GCC diagnostic pop
   #endif
+// Converts a list of Python ints to a single homogeneous vector<cytnx_int64>
+// or vector<cytnx_uint64> (int64 unless any element needs uint64's range),
+// then calls fn with it. Vector counterpart of dispatch_pyint
+// (pyint_dispatch.hpp): get_block/get_block_'s qnum parameter previously had
+// separate vector<int64>/vector<uint64> overloads, which rendered as the
+// identical stub annotation regardless of registration order, so one was
+// always flagged overload-cannot-match even though both were reachable by
+// list content.
+template <class Fn>
+auto dispatch_pyint_vector(const std::vector<py::int_> &vals, Fn &&fn) {
+  bool needs_uint64 = false;
+  for (const py::int_ &v : vals) {
+    int overflow = 0;
+    PyLong_AsLongLongAndOverflow(v.ptr(), &overflow);
+    if (overflow != 0) {
+      needs_uint64 = true;
+      break;
+    }
+  }
+  if (needs_uint64) {
+    std::vector<cytnx_uint64> converted;
+    converted.reserve(vals.size());
+    for (const py::int_ &v : vals) converted.push_back(v.cast<cytnx_uint64>());
+    return fn(converted);
+  }
+  std::vector<cytnx_int64> converted;
+  converted.reserve(vals.size());
+  for (const py::int_ &v : vals) converted.push_back(v.cast<cytnx_int64>());
+  return fn(converted);
+}
+
 }  // namespace
 
 void unitensor_binding(py::module &m) {
@@ -336,17 +367,49 @@ void unitensor_binding(py::module &m) {
     .def("get_elem_u16", &cHclass::get_elem_u16)
     .def("get_elem_b", &cHclass::get_elem_b)
 
-    .def("set_elem", &cHclass::set_elem<double>)
-    .def("set_elem", &cHclass::set_elem<float>)
-    .def("set_elem", &cHclass::set_elem<cytnx_complex128>)
-    .def("set_elem", &cHclass::set_elem<cytnx_complex64>)
-    .def("set_elem", &cHclass::set_elem<cytnx_uint64>)
-    .def("set_elem", &cHclass::set_elem<cytnx_int64>)
-    .def("set_elem", &cHclass::set_elem<cytnx_uint32>)
-    .def("set_elem", &cHclass::set_elem<cytnx_int32>)
-    .def("set_elem", &cHclass::set_elem<cytnx_uint16>)
-    .def("set_elem", &cHclass::set_elem<cytnx_int16>)
-    .def("set_elem", &cHclass::set_elem<cytnx_bool>);
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<float> &rhs) {
+           self.set_elem(static_cast<cytnx_float>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<std::complex<float>> &rhs) {
+           self.set_elem(static_cast<cytnx_complex64>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<int64_t> &rhs) {
+           self.set_elem(static_cast<cytnx_int64>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<uint64_t> &rhs) {
+           self.set_elem(static_cast<cytnx_uint64>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<int32_t> &rhs) {
+           self.set_elem(static_cast<cytnx_int32>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<uint32_t> &rhs) {
+           self.set_elem(static_cast<cytnx_uint32>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<int16_t> &rhs) {
+           self.set_elem(static_cast<cytnx_int16>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<uint16_t> &rhs) {
+           self.set_elem(static_cast<cytnx_uint16>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::numpy_scalar<bool> &rhs) {
+           self.set_elem(static_cast<cytnx_bool>(rhs));
+         })
+    .def("set_elem",
+         [](cHclass &self, const py::int_ &rhs) {
+           dispatch_pyint(rhs, [&](auto v) { self.set_elem(v); });
+         })
+    .def("set_elem", [](cHclass &self, const cytnx_double &rhs) { self.set_elem(rhs); })
+    .def("set_elem", [](cHclass &self, const cytnx_complex128 &rhs) { self.set_elem(rhs); });
 
   // entry.UniTensor
   py::class_<UniTensor>(m, "UniTensor")
@@ -999,45 +1062,30 @@ void unitensor_binding(py::module &m) {
       py::arg("idx") = (cytnx_uint64)(0))
 
     .def("get_block",
-      [](const UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block(qnum, force);
-      },
-      py::arg("qnum"), py::arg("force") = false)
-    .def("get_block",
-      [](const UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
-        return self.get_block(qnum, force);
+      [](const UniTensor &self, const std::vector<py::int_> &qnum, const bool &force) {
+        return dispatch_pyint_vector(qnum, [&](const auto &v) { return self.get_block(v, force); });
       },
       py::arg("qnum"), py::arg("force") = false)
 
     .def("get_block",
-      [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block(label, qnum, force);
-      },
-      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def("get_block",
-      [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_uint64> &qnum, const bool &force) {
-        return self.get_block(label,qnum, force);
+      [](const UniTensor &self, const std::vector<std::string> &label,
+         const std::vector<py::int_> &qnum, const bool &force) {
+        return dispatch_pyint_vector(
+          qnum, [&](const auto &v) { return self.get_block(label, v, force); });
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
     .def("get_block_",
-      [](UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block_(qnum, force);
-      },
-      py::arg("qnum"), py::arg("force") = false)
-    .def("get_block_",
-      [](UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
-        return self.get_block_(qnum, force);
+      [](UniTensor &self, const std::vector<py::int_> &qnum, const bool &force) {
+        return dispatch_pyint_vector(qnum,
+                                      [&](const auto &v) { return self.get_block_(v, force); });
       },
       py::arg("qnum"), py::arg("force") = false)
 
     .def("get_block_",
-      [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block_(labels, qnum, force);
-      },
-      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def("get_block_",
-      [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &qnum, const bool &force) {
-        return self.get_block_(labels,qnum, force);
+      [](UniTensor &self, const std::vector<std::string> &labels,
+         const std::vector<py::int_> &qnum, const bool &force) {
+        return dispatch_pyint_vector(
+          qnum, [&](const auto &v) { return self.get_block_(labels, v, force); });
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
 
@@ -1046,17 +1094,11 @@ void unitensor_binding(py::module &m) {
       py::arg("idx") = (cytnx_uint64)(0))
     .def("get_blocks", [](const UniTensor &self) { return self.get_blocks(); })
     .def("get_blocks_",
-      [](const UniTensor& self, py::args args, py::kwargs kwargs) {
+      [](UniTensor &self, py::args args, py::kwargs kwargs) {
         return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
       }
       // ,py::arg("silent") = false // Uncomment this line after removing the deprecated argument.
     )
-    .def("get_blocks_",
-      [](UniTensor &self, py::args args, py::kwargs kwargs) {
-        return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
-    }
-    // ,py::arg("silent") = false // Uncomment this line after removing the deprecated argument.
-)
     .def("put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64 &idx) {
         self.put_block(in, idx);
