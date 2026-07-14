@@ -15,25 +15,22 @@ namespace cytnx {
       // rank-1 Tensor.%s","\n"); cytnx_error_msg(!Tl.is_contiguous(), "[Norm] error tensor Tl must
       // be contiguous. Call Contiguous_() or Contiguous() first%s","\n");
 
-      // check type:
+      // check type: floating/complex inputs keep their precision; anything
+      // else (integer/bool) is computed in double precision. The output
+      // dtype policy lives in Type_class::norm_result_dtype, shared with
+      // callers that pre-size norm accumulators (e.g. UniTensor's
+      // normalize_()) so the two cannot drift apart.
       Tensor _tl;
       Tensor out;
 
-      if (Tl.dtype() > 4) {
+      if (Type.is_float(Tl.dtype())) {
+        _tl = Tl;
+      } else {
         // do conversion:
         _tl = Tl.astype(Type.Double);
-
-      } else {
-        _tl = Tl;
       }
 
-      if (Tl.dtype() == Type.ComplexDouble) {
-        out.Init({}, Type.Double, _tl.device());
-      } else if (Tl.dtype() == Type.ComplexFloat) {
-        out.Init({}, Type.Float, _tl.device());
-      } else {
-        out.Init({}, _tl.dtype(), _tl.device());
-      }
+      out.Init({}, Type_class::norm_result_dtype(Tl.dtype()), _tl.device());
 
       if (Tl.is_empty()) return out;
 

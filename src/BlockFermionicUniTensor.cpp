@@ -1838,7 +1838,10 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::normalize_() {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
-    Scalar out(0, this->dtype());
+    // See BlockUniTensor::normalize_() for why the accumulator is seeded with
+    // the dtype linalg::Norm() produces rather than this->dtype(): it keeps
+    // the whole accumulation in the real floating-point norm dtype.
+    Scalar out(0, Type_class::norm_result_dtype(this->dtype()));
     for (auto &block : this->_blocks) {
       out += Scalar(linalg::Pow(linalg::Norm(block), 2).item());
     }
