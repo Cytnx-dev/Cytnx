@@ -82,7 +82,7 @@ def ExpH(Tin: cytnx.cytnx.UniTensor, a: int, b: int = 0) -> cytnx.cytnx.UniTenso
 def ExpH(Tin: cytnx.cytnx.UniTensor, a: typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsFloat | typing.SupportsIndex = 0.0) -> cytnx.cytnx.UniTensor:
     ...
 @typing.overload
-def ExpH(Tin: cytnx.cytnx.UniTensor, a: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.UniTensor:
+def ExpH(Tin: cytnx.cytnx.UniTensor, a: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.UniTensor:
     ...
 @typing.overload
 def ExpH(Tin: cytnx.cytnx.UniTensor) -> cytnx.cytnx.UniTensor:
@@ -118,7 +118,7 @@ def ExpH(Tin: cytnx.cytnx.Tensor, a: int, b: int = 0) -> cytnx.cytnx.Tensor:
 def ExpH(Tin: cytnx.cytnx.Tensor, a: typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsFloat | typing.SupportsIndex = 0.0) -> cytnx.cytnx.Tensor:
     ...
 @typing.overload
-def ExpH(Tin: cytnx.cytnx.Tensor, a: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.Tensor:
+def ExpH(Tin: cytnx.cytnx.Tensor, a: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.Tensor:
     ...
 @typing.overload
 def ExpH(Tin: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
@@ -154,7 +154,7 @@ def ExpM(Tin: cytnx.cytnx.UniTensor, a: int, b: int = 0) -> cytnx.cytnx.UniTenso
 def ExpM(Tin: cytnx.cytnx.UniTensor, a: typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsFloat | typing.SupportsIndex = 0.0) -> cytnx.cytnx.UniTensor:
     ...
 @typing.overload
-def ExpM(Tin: cytnx.cytnx.UniTensor, a: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.UniTensor:
+def ExpM(Tin: cytnx.cytnx.UniTensor, a: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.UniTensor:
     ...
 @typing.overload
 def ExpM(Tin: cytnx.cytnx.UniTensor) -> cytnx.cytnx.UniTensor:
@@ -190,7 +190,7 @@ def ExpM(Tin: cytnx.cytnx.Tensor, a: int, b: int = 0) -> cytnx.cytnx.Tensor:
 def ExpM(Tin: cytnx.cytnx.Tensor, a: typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsFloat | typing.SupportsIndex = 0.0) -> cytnx.cytnx.Tensor:
     ...
 @typing.overload
-def ExpM(Tin: cytnx.cytnx.Tensor, a: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.Tensor:
+def ExpM(Tin: cytnx.cytnx.Tensor, a: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, b: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex = ...) -> cytnx.cytnx.Tensor:
     ...
 @typing.overload
 def ExpM(Tin: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:

@@ -135,10 +135,10 @@ class Helpclass:
     def set_elem(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def set_elem(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def set_elem(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def set_elem(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def set_elem(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def set_elem(self, arg0: typing.SupportsInt | typing.SupportsIndex) -> None:
@@ -183,10 +183,10 @@ class LinOp:
     def set_dtype(self, arg0: typing.SupportsInt | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def set_elem(self, i: typing.SupportsInt | typing.SupportsIndex, j: typing.SupportsInt | typing.SupportsIndex, elem: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, check_exists: bool = True) -> None:
+    def set_elem(self, i: typing.SupportsInt | typing.SupportsIndex, j: typing.SupportsInt | typing.SupportsIndex, elem: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, check_exists: bool = True) -> None:
         ...
     @typing.overload
-    def set_elem(self, i: typing.SupportsInt | typing.SupportsIndex, j: typing.SupportsInt | typing.SupportsIndex, elem: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, check_exists: bool = True) -> None:
+    def set_elem(self, i: typing.SupportsInt | typing.SupportsIndex, j: typing.SupportsInt | typing.SupportsIndex, elem: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex, check_exists: bool = True) -> None:
         ...
     @typing.overload
     def set_elem(self, i: typing.SupportsInt | typing.SupportsIndex, j: typing.SupportsInt | typing.SupportsIndex, elem: typing.SupportsFloat | typing.SupportsIndex, check_exists: bool = True) -> None:
@@ -484,10 +484,10 @@ class Scalar:
     def __init__(self) -> None:
         ...
     @typing.overload
-    def __init__(self, a: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def __init__(self, a: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def __init__(self, a: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def __init__(self, a: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def __init__(self, a: typing.SupportsFloat | typing.SupportsIndex) -> None:
@@ -901,11 +901,11 @@ class Storage:
         ...
     @staticmethod
     @typing.overload
-    def from_pylist(pylist: collections.abc.Sequence[typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex], device: typing.SupportsInt | typing.SupportsIndex = -1) -> Storage:
+    def from_pylist(pylist: collections.abc.Sequence[complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex], device: typing.SupportsInt | typing.SupportsIndex = -1) -> Storage:
         ...
     @staticmethod
     @typing.overload
-    def from_pylist(pylist: collections.abc.Sequence[typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex], device: typing.SupportsInt | typing.SupportsIndex = -1) -> Storage:
+    def from_pylist(pylist: collections.abc.Sequence[complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex], device: typing.SupportsInt | typing.SupportsIndex = -1) -> Storage:
         ...
     @staticmethod
     @typing.overload
@@ -982,10 +982,10 @@ class Storage:
     def __setitem__(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: typing.Any) -> None:
         ...
     @typing.overload
-    def append(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def append(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def append(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def append(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def append(self, val: typing.SupportsFloat | typing.SupportsIndex) -> None:
@@ -1031,10 +1031,10 @@ class Storage:
     def dtype_str(self) -> str:
         ...
     @typing.overload
-    def fill(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def fill(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def fill(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def fill(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def fill(self, val: typing.SupportsFloat | typing.SupportsIndex) -> None:
@@ -1271,7 +1271,7 @@ class Tensor:
     def __add__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __add__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __add__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __add__(self, arg0: Scalar) -> Tensor:
@@ -1319,7 +1319,7 @@ class Tensor:
     def __eq__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __eq__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __eq__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __eq__(self, arg0: Scalar) -> Tensor:
@@ -1361,7 +1361,7 @@ class Tensor:
     def __floordiv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __floordiv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __floordiv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __floordiv__(self, arg0: Scalar) -> Tensor:
@@ -1405,7 +1405,7 @@ class Tensor:
     def __iadd__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
-    def __iadd__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
+    def __iadd__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
     def __iadd__(self, arg0: Scalar) -> typing.Any:
@@ -1447,7 +1447,7 @@ class Tensor:
     def __ifloordiv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
-    def __ifloordiv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
+    def __ifloordiv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
     def __ifloordiv__(self, arg0: Scalar) -> typing.Any:
@@ -1491,7 +1491,7 @@ class Tensor:
     def __imul__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
-    def __imul__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
+    def __imul__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
     def __imul__(self, arg0: Scalar) -> typing.Any:
@@ -1551,7 +1551,7 @@ class Tensor:
     def __isub__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
-    def __isub__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
+    def __isub__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
     def __isub__(self, arg0: Scalar) -> typing.Any:
@@ -1595,7 +1595,7 @@ class Tensor:
     def __itruediv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
-    def __itruediv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
+    def __itruediv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> typing.Any:
         ...
     @typing.overload
     def __itruediv__(self, arg0: Scalar) -> typing.Any:
@@ -1641,7 +1641,7 @@ class Tensor:
     def __mod__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __mod__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __mod__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __mod__(self, arg0: Scalar) -> Tensor:
@@ -1683,7 +1683,7 @@ class Tensor:
     def __mul__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __mul__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __mul__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __mul__(self, arg0: Scalar) -> Tensor:
@@ -1725,7 +1725,7 @@ class Tensor:
     def __ne__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __ne__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __ne__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __ne__(self, arg0: Scalar) -> Tensor:
@@ -1777,7 +1777,7 @@ class Tensor:
     def __radd__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __radd__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __radd__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __radd__(self, arg0: Scalar) -> Tensor:
@@ -1818,7 +1818,7 @@ class Tensor:
     def __rfloordiv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __rfloordiv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __rfloordiv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __rfloordiv__(self, arg0: Scalar) -> Tensor:
@@ -1857,7 +1857,7 @@ class Tensor:
     def __rmod__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __rmod__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __rmod__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __rmod__(self, arg0: Scalar) -> Tensor:
@@ -1896,7 +1896,7 @@ class Tensor:
     def __rmul__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __rmul__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __rmul__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __rmul__(self, arg0: Scalar) -> Tensor:
@@ -1935,7 +1935,7 @@ class Tensor:
     def __rsub__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __rsub__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __rsub__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __rsub__(self, arg0: Scalar) -> Tensor:
@@ -1974,7 +1974,7 @@ class Tensor:
     def __rtruediv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __rtruediv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __rtruediv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __rtruediv__(self, arg0: Scalar) -> Tensor:
@@ -2016,7 +2016,7 @@ class Tensor:
     def __setitem__(self, arg0: typing.Any, arg1: typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def __setitem__(self, arg0: typing.Any, arg1: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def __setitem__(self, arg0: typing.Any, arg1: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def __setitem__(self, arg0: typing.Any, arg1: Scalar) -> None:
@@ -2058,7 +2058,7 @@ class Tensor:
     def __sub__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __sub__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __sub__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __sub__(self, arg0: Scalar) -> Tensor:
@@ -2100,16 +2100,16 @@ class Tensor:
     def __truediv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
-    def __truediv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
+    def __truediv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> Tensor:
         ...
     @typing.overload
     def __truediv__(self, arg0: Scalar) -> Tensor:
         ...
     @typing.overload
-    def append(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def append(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def append(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def append(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def append(self, val: typing.SupportsFloat | typing.SupportsIndex) -> None:
@@ -2163,10 +2163,10 @@ class Tensor:
     def dtype_str(self) -> str:
         ...
     @typing.overload
-    def fill(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def fill(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def fill(self, val: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def fill(self, val: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def fill(self, val: typing.SupportsFloat | typing.SupportsIndex) -> None:
@@ -2445,7 +2445,7 @@ class UniTensor:
     def __add__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __add__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __add__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __add__(self, arg0: Scalar) -> UniTensor:
@@ -2491,7 +2491,7 @@ class UniTensor:
     def __floordiv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __floordiv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __floordiv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __floordiv__(self, arg0: Scalar) -> UniTensor:
@@ -2535,7 +2535,7 @@ class UniTensor:
     def __iadd__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __iadd__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __iadd__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __iadd__(self, arg0: Scalar) -> UniTensor:
@@ -2577,7 +2577,7 @@ class UniTensor:
     def __ifloordiv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __ifloordiv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __ifloordiv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __ifloordiv__(self, arg0: Scalar) -> UniTensor:
@@ -2619,7 +2619,7 @@ class UniTensor:
     def __imul__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __imul__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __imul__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __imul__(self, arg0: Scalar) -> UniTensor:
@@ -2679,7 +2679,7 @@ class UniTensor:
     def __isub__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __isub__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __isub__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __isub__(self, arg0: Scalar) -> UniTensor:
@@ -2721,7 +2721,7 @@ class UniTensor:
     def __itruediv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __itruediv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __itruediv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __itruediv__(self, arg0: Scalar) -> UniTensor:
@@ -2763,7 +2763,7 @@ class UniTensor:
     def __mul__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __mul__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __mul__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __mul__(self, arg0: Scalar) -> UniTensor:
@@ -2815,7 +2815,7 @@ class UniTensor:
     def __radd__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __radd__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __radd__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __radd__(self, arg0: Scalar) -> UniTensor:
@@ -2856,7 +2856,7 @@ class UniTensor:
     def __rfloordiv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __rfloordiv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __rfloordiv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __rfloordiv__(self, arg0: Scalar) -> UniTensor:
@@ -2895,7 +2895,7 @@ class UniTensor:
     def __rmul__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __rmul__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __rmul__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __rmul__(self, arg0: Scalar) -> UniTensor:
@@ -2934,7 +2934,7 @@ class UniTensor:
     def __rsub__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __rsub__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __rsub__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __rsub__(self, arg0: Scalar) -> UniTensor:
@@ -2973,7 +2973,7 @@ class UniTensor:
     def __rtruediv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __rtruediv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __rtruediv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __rtruediv__(self, arg0: Scalar) -> UniTensor:
@@ -3018,7 +3018,7 @@ class UniTensor:
     def __setitem__(self, arg0: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], arg1: typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def __setitem__(self, arg0: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], arg1: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def __setitem__(self, arg0: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], arg1: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def __setitem__(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: numpy.float32) -> None:
@@ -3054,7 +3054,7 @@ class UniTensor:
     def __setitem__(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def __setitem__(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def __setitem__(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def __sub__(self, arg0: UniTensor) -> UniTensor:
@@ -3093,7 +3093,7 @@ class UniTensor:
     def __sub__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __sub__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __sub__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __sub__(self, arg0: Scalar) -> UniTensor:
@@ -3135,7 +3135,7 @@ class UniTensor:
     def __truediv__(self, arg0: typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
-    def __truediv__(self, arg0: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
+    def __truediv__(self, arg0: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> UniTensor:
         ...
     @typing.overload
     def __truediv__(self, arg0: Scalar) -> UniTensor:
@@ -3446,7 +3446,7 @@ class UniTensor:
     def set_elem(self, arg0: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], arg1: typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def set_elem(self, arg0: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], arg1: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def set_elem(self, arg0: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], arg1: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def set_elem(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: numpy.float32) -> None:
@@ -3482,7 +3482,7 @@ class UniTensor:
     def set_elem(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
-    def set_elem(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
+    def set_elem(self, arg0: typing.SupportsInt | typing.SupportsIndex, arg1: complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex) -> None:
         ...
     @typing.overload
     def set_label(self, idx: typing.SupportsInt | typing.SupportsIndex, new_label: str) -> typing.Any:
