@@ -625,6 +625,19 @@ TEST_F(linalg_Test, Tensor_Norm) {
   EXPECT_EQ(linalg::Norm(arange3x3cd).item(), ans);
 }
 
+// norm() (#676): returns a Scalar carrying the tensor's precision, equal in value to the
+// deprecated Norm().item(), both as a Tensor member and as linalg::norm().
+TEST_F(linalg_Test, Tensor_norm) {
+  cytnx_double ans = 0;
+  for (cytnx_uint64 i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans = sqrt(ans);
+  EXPECT_EQ(linalg::norm(arange3x3cd), ans);
+  EXPECT_EQ(arange3x3cd.norm(), ans);
+  EXPECT_EQ(arange3x3cd.norm(), cytnx_double(linalg::Norm(arange3x3cd).item().real()));
+}
+
 TEST_F(linalg_Test, Tensor_Add_mixed_dtype_type_promote_cpu) {
   Tensor lhs = arange(0, 4, 1, Type.Uint32).reshape(2, 2);
   Tensor rhs = arange(0, 4, 1, Type.Int16).reshape(2, 2);
@@ -657,6 +670,18 @@ TEST_F(linalg_Test, DenseUt_Norm) {
   EXPECT_EQ(linalg::Norm(arange3x3cd_ut).item(), ans);
 }
 
+// norm() (#676): UniTensor::norm() / linalg::norm(UniTensor) return a Scalar carrying the
+// UniTensor's precision.
+TEST_F(linalg_Test, DenseUt_norm) {
+  cytnx_double ans = 0;
+  for (cytnx_uint64 i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans = sqrt(ans);
+  EXPECT_EQ(linalg::norm(arange3x3cd_ut), ans);
+  EXPECT_EQ(arange3x3cd_ut.norm(), ans);
+}
+
 TEST_F(linalg_Test, BkUt_Norm) {
   cytnx_double ans = 0;
   for (cytnx_uint64 i = 0; i < 9; i++) {
@@ -673,6 +698,26 @@ TEST_F(linalg_Test, BkUt_Norm) {
   // EXPECT_EQ(cytnx_double(linalg::Norm(in).item().real()), ans);
   EXPECT_TRUE(abs(cytnx_double(linalg::Norm(cd_in).item().real()) - ans) <
               1e-13);  // not sure why some precision lost.
+}
+
+// norm() (#676): same block-fermionic-free BkUt case, checked against linalg::norm()/
+// UniTensor::norm() instead of the deprecated Norm().
+TEST_F(linalg_Test, BkUt_norm) {
+  cytnx_double ans = 0;
+  for (cytnx_uint64 i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans += 9;
+  ans = sqrt(ans);
+  Bond I = Bond(BD_IN, {Qs(-1), Qs(1)}, {3, 3});
+  Bond J = Bond(BD_OUT, {Qs(-1), Qs(1)}, {3, 3});
+  UniTensor in = UniTensor({I, J});
+  auto cd_in = in.astype(Type.ComplexDouble);
+  cd_in.put_block_(arange3x3cd, 0);
+  cd_in.put_block_(ones3x3cd, 1);
+  EXPECT_TRUE(abs(linalg::norm(cd_in) - ans) < 1e-13);
+  EXPECT_TRUE(abs(cd_in.norm() - ans) < 1e-13);
+  EXPECT_EQ(linalg::norm(cd_in), cd_in.norm());
 }
 
 TEST_F(linalg_Test, Tensor_Eig) {

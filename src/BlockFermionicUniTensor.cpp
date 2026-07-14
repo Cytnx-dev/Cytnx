@@ -1275,7 +1275,7 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
-    tmp->set_label(inx, new_label);
+    tmp->set_label_(inx, new_label);
     return tmp;
   }
 
@@ -1284,7 +1284,7 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     boost::intrusive_ptr<BlockFermionicUniTensor> tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
-    tmp->set_label(inx, new_label);
+    tmp->set_label_(inx, new_label);
     return tmp;
   }
 
@@ -1843,7 +1843,8 @@ namespace cytnx {
     // the whole accumulation in the real floating-point norm dtype.
     Scalar out(0, Type_class::norm_result_dtype(this->dtype()));
     for (auto &block : this->_blocks) {
-      out += Scalar(linalg::Pow(linalg::Norm(block), 2).item());
+      double bn = double(linalg::norm(block));
+      out += Scalar(bn * bn);
     }
     out = sqrt(out);
     for (auto &block : this->_blocks) {
@@ -1984,11 +1985,11 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     Scalar t;
     if (this->_blocks.size()) {
-      t = linalg::Norm(this->_blocks[0]).item();
-      t *= t;
+      double n0 = double(linalg::norm(this->_blocks[0]));
+      t = Scalar(n0 * n0);
       for (int blk = 1; blk < this->_blocks.size(); blk++) {
-        Scalar tmp = linalg::Norm(this->_blocks[blk]).item();
-        t += tmp * tmp;
+        double nblk = double(linalg::norm(this->_blocks[blk]));
+        t += Scalar(nblk * nblk);
       }
 
     } else {

@@ -9,7 +9,10 @@
 
 namespace cytnx {
   namespace linalg {
-    Tensor Norm(const Tensor& Tl) {
+    // NOTE: Norm() below is [[deprecated]]. To avoid deprecation warnings from
+    // internal callers, the actual computation lives in norm_impl(); both
+    // Norm() and norm() delegate to it.
+    static Tensor norm_impl(const Tensor& Tl) {
       cytnx_error_msg(Tl.is_void(), "[Norm] cannot operate on an uninitialized Tensor.%s", "\n");
       // cytnx_error_msg(Tl.shape().size() != 1,"[Norm] error, tensor Tl ,Norm can only operate on
       // rank-1 Tensor.%s","\n"); cytnx_error_msg(!Tl.is_contiguous(), "[Norm] error tensor Tl must
@@ -30,6 +33,8 @@ namespace cytnx {
         _tl = Tl.astype(Type.Double);
       }
 
+      // the norm is a scalar: rank-0 output, carrying the tensor's own precision (Float for
+      // Float/ComplexFloat input, Double otherwise) via the shared norm_result_dtype policy.
       out.Init({}, Type_class::norm_result_dtype(Tl.dtype()), _tl.device());
 
       if (Tl.is_empty()) return out;
@@ -55,7 +60,28 @@ namespace cytnx {
       }
     }
 
+    Tensor Norm(const Tensor& Tl) { return norm_impl(Tl); }
+
+    // norm() returns the 2-norm as a Scalar carrying the tensor's own precision (Float for
+    // Float/ComplexFloat input, Double otherwise) rather than a fixed double. This lets
+    // x /= x.norm() stay dtype-preserving via linalg::Div's Tensor/Scalar path instead of
+    // silently promoting a Float tensor to Double (#1000 review, ianmccul).
+    Scalar norm(const Tensor& Tl) { return norm_impl(Tl).item(); }
+
+    // The UniTensor overloads delegate to the per-subclass UniTensor::Norm()/norm(), which
+    // aggregate the block norms. norm() uses the non-deprecated member; the deprecated Norm()
+    // free function forwards to the deprecated member (suppressed locally, since both are being
+    // removed together for one release).
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
     Tensor Norm(const UniTensor& uTl) { return uTl.Norm(); }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+
+    Scalar norm(const UniTensor& uTl) { return uTl.norm(); }
 
   }  // namespace linalg
 }  // namespace cytnx

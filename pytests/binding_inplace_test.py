@@ -39,7 +39,7 @@ def test_inplace_named_methods_chain():
 
 def test_unitensor_inplace_chain():
     ut = cytnx.UniTensor(cytnx.ones([2, 2]))
-    r = ut.set_name("x").relabel_(["a", "b"])
+    r = ut.set_name_("x").relabel_(["a", "b"])
     assert r is ut
     assert ut.name() == "x"
     assert ut.labels() == ["a", "b"]
@@ -95,4 +95,4 @@ def test_imatmul_preserves_identity():
     assert a is alias  # in-place: no new object was created
     assert id(a) == aid
     # the mutation is visible through the alias and matches a @ b
-    assert (alias - expected).Norm().item() == 0.0
+    assert (alias - expected).norm() == 0.0

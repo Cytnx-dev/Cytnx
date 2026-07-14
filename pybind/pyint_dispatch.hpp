@@ -2,6 +2,10 @@
 #define PYBIND_PYINT_DISPATCH_HPP_
 
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
+#include <string>
+#include <vector>
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -80,6 +84,52 @@ namespace pybind_cytnx {
                       "\n");
     }
     return fn(static_cast<cytnx::cytnx_uint64>(ua));
+  }
+
+  // =========================================================================
+  // permute()/reshape() call-form unification (#293, ruling 4)
+  // =========================================================================
+  //
+  // Both the variadic form (`t.permute(1, 2, 0)`) and the list form
+  // (`t.permute([1, 2, 0])`) must be accepted on both Tensor and UniTensor.
+  // A single `py::args args` binding sees a variadic call as an N-tuple of
+  // scalars and a list call as a 1-tuple whose sole element is itself a
+  // Python list -- so the two forms are disambiguated by inspecting args:
+  // if len(args) == 1 and that element is a list/tuple, unwrap it; otherwise
+  // treat every element of args as one entry of the mapper.
+  //
+  // parse_index_args<T> extracts a std::vector<T> (T = cytnx_int64 or
+  // std::string) from a py::args tuple under either call form. It does not
+  // itself decide between the int-mapper and string-mapper overloads of
+  // permute()/reshape() -- callers that must support both label kinds (e.g.
+  // UniTensor::permute) inspect the args once with is_string_args() first.
+  template <class T>
+  std::vector<T> parse_index_args(const pybind11::args &args) {
+    if (args.size() == 1) {
+      pybind11::object sole = args[0];
+      if (pybind11::isinstance<pybind11::list>(sole) ||
+          pybind11::isinstance<pybind11::tuple>(sole)) {
+        return sole.cast<std::vector<T>>();
+      }
+    }
+    return args.cast<std::vector<T>>();
+  }
+
+  // Returns true if the mapper (in either call form) is made of Python str
+  // elements rather than integers, so the caller can pick the
+  // std::vector<std::string> overload instead of std::vector<cytnx_int64>.
+  // An empty mapper is treated as the int form (matches the pre-existing
+  // list-only bindings' behavior of defaulting to the int overload).
+  inline bool is_string_args(const pybind11::args &args) {
+    if (args.size() == 0) return false;
+    pybind11::object first = args[0];
+    if (args.size() == 1 && (pybind11::isinstance<pybind11::list>(first) ||
+                             pybind11::isinstance<pybind11::tuple>(first))) {
+      pybind11::sequence seq = first;
+      if (seq.size() == 0) return false;
+      return pybind11::isinstance<pybind11::str>(seq[0]);
+    }
+    return pybind11::isinstance<pybind11::str>(first);
   }
 
 }  // namespace pybind_cytnx

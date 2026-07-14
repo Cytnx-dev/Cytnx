@@ -33,7 +33,7 @@ namespace cytnx {
           //     kry_mat = cytnx::zeros({krydim,krydim},Tin.dtype(),Tin.device());
 
           // normalized q1:
-          buffer[0] = buffer[0] / buffer[0].Norm().item();  // normalized q1
+          buffer[0] = buffer[0] / double(buffer[0].norm());  // normalized q1
 
           for (cytnx_uint32 ip = 1; ip < krydim + 1; ip++) {
             buffer[ip] = Hop->matvec(buffer[ip - 1]).astype(Hop->dtype());  // Hqi
@@ -44,12 +44,12 @@ namespace cytnx {
             // explicitly re-orthogonization
             for (cytnx_uint32 ig = 0; ig < ip; ig++) {
               buffer[ip] -= Vectordot(buffer[ig], buffer[ip], true) * buffer[ig];
-              buffer[ip] /= buffer[ip].Norm().item();
+              buffer[ip] /= double(buffer[ip].norm());
             }
             // exp. reorth with previous converged ev.
             for (cytnx_uint32 ig = 0; ig < converged_ev.size(); ig++) {
               buffer[ip] -= Vectordot(converged_ev[ig], buffer[ip], true) * converged_ev[ig];
-              buffer[ip] /= buffer[ip].Norm().item();
+              buffer[ip] /= double(buffer[ip].norm());
             }
 
           }  // ip
@@ -82,16 +82,16 @@ namespace cytnx {
           while (1) {
             bool is_orth = true;
             cytnx::random::normal_(buffer[0], 0., 1.0);
-            buffer[0] /= buffer[0].Norm().item();
+            buffer[0] /= double(buffer[0].norm());
             for (cytnx_uint32 ig = 0; ig < converged_ev.size(); ig++) {
               Tensor Res = Vectordot(converged_ev[ig], buffer[0], true);  // reuse variable here.
-              if ((1. - Res.Norm().item()) <
+              if ((1. - double(Res.norm())) <
                   0.005) {  // check is this vector is properly orthogonal to previous converged ev.
                 is_orth = false;
                 break;
               }
               buffer[0] -= Res.item() * converged_ev[ig];
-              buffer[0] /= buffer[0].Norm().item();
+              buffer[0] /= double(buffer[0].norm());
             }
             if (is_orth) break;
           }

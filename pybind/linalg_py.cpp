@@ -897,10 +897,42 @@ void linalg_binding(py::module &m) {
 
   // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::Tensor());
   // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::UniTensor());
+  // NOTE: Norm() is deprecated (use norm(), which returns a python float) but kept bound
+  // for one release; it emits a python DeprecationWarning on every call. The
+  // -Wdeprecated-declarations warning that calling cytnx::linalg::Norm would otherwise
+  // trigger here is suppressed locally since this binding's whole purpose is to keep
+  // exposing the deprecated call for one release.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
   m_linalg.def(
-    "Norm", [](cytnx::UniTensor &T1) { return cytnx::linalg::Norm(T1); }, py::arg("T1"));
+    "Norm",
+    [](cytnx::UniTensor &T1) {
+      if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) <
+          0)
+        throw py::error_already_set();
+      return cytnx::linalg::Norm(T1);
+    },
+    py::arg("T1"));
   m_linalg.def(
-    "Norm", [](cytnx::Tensor &T1) { return cytnx::linalg::Norm(T1); }, py::arg("T1"));
+    "Norm",
+    [](cytnx::Tensor &T1) {
+      if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) <
+          0)
+        throw py::error_already_set();
+      return cytnx::linalg::Norm(T1);
+    },
+    py::arg("T1"));
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+  // norm() returns a Scalar in C++ (dtype-preserving); hand Python a native float so
+  // cytnx.Scalar is not exposed on the Python surface.
+  m_linalg.def(
+    "norm", [](cytnx::UniTensor &T1) { return double(T1.norm()); }, py::arg("T1"));
+  m_linalg.def(
+    "norm", [](cytnx::Tensor &T1) { return double(T1.norm()); }, py::arg("T1"));
 
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"),
                py::call_guard<py::gil_scoped_release>());

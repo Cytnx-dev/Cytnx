@@ -1705,8 +1705,22 @@ namespace cytnx {
     and then calculate the frobenius norm.
     @param[in] Tl input Tensor
     @return Tensor
+    @deprecated Use norm(const Tensor&) instead, which returns a Scalar directly.
     */
-    Tensor Norm(const Tensor &Tl);
+    [[deprecated("use norm() (returns Scalar) instead")]] Tensor Norm(const Tensor &Tl);
+
+    // norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of a tensor.
+    @details Same as Norm(const Tensor&), but returns a Scalar instead of a
+    rank-0 (shape {1}) Tensor. The Scalar carries the tensor's own precision (Float for
+    Float/ComplexFloat input, Double otherwise), so `x /= x.norm()` stays dtype-preserving
+    rather than promoting a Float tensor to Double.
+    @param[in] Tl input Tensor
+    @return Scalar
+    */
+    Scalar norm(const Tensor &Tl);
 
     // Norm:
     //=================================================
@@ -1718,8 +1732,22 @@ namespace cytnx {
     then calculate the frobenius norm.
     @param[in] uTl input UniTensor
     @return Tensor
+    @deprecated Use norm(const UniTensor&) instead, which returns a Scalar directly.
     */
-    Tensor Norm(const cytnx::UniTensor &uTl);
+    [[deprecated("use norm() (returns Scalar) instead")]] Tensor Norm(const cytnx::UniTensor &uTl);
+
+    // norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of an UniTensor.
+    @details Same as Norm(const UniTensor&), but returns a Scalar instead of a
+    rank-0 (shape {1}) Tensor. The Scalar carries the UniTensor's own precision (Float for
+    Float/ComplexFloat input, Double otherwise), so `x /= x.norm()` stays dtype-preserving
+    rather than promoting a Float UniTensor to Double.
+    @param[in] uTl input UniTensor
+    @return Scalar
+    */
+    Scalar norm(const cytnx::UniTensor &uTl);
 
     // Det:
     //=================================================

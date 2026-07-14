@@ -1042,7 +1042,7 @@ namespace cytnx {
       const unsigned int out_dtype = Type.type_promote(Lt.dtype(), Rt.dtype());
       if (out.dtype() != out_dtype) out = out.astype(out_dtype);
       out.relabel_(vec_range<std::string>(Lt.rank()));
-      out.set_name("");
+      out.set_name_("");
 
       out.Div_(Rt);
 
@@ -1058,7 +1058,7 @@ namespace cytnx {
       const unsigned int out_dtype = Type.type_promote(Scalar(lc).dtype(), Rt.dtype());
       if (out.dtype() != out_dtype) out = out.astype(out_dtype);
       out._impl->lDiv_(lc);
-      out.set_name("");
+      out.set_name_("");
 
       return out;
     }
@@ -1088,7 +1088,7 @@ namespace cytnx {
       if (out.dtype() != out_dtype) out = out.astype(out_dtype);
       out.Div_(rc);
       // out.relabel_(vec_range<cytnx_int64>(Lt.rank()));
-      out.set_name("");
+      out.set_name_("");
 
       return out;
     }

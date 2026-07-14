@@ -254,7 +254,7 @@ namespace cytnx {
                                                                const std::string &new_label) {
     boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label);
+    out_raw->set_label_(inx, new_label);
     return out_raw;
   }
 
@@ -262,7 +262,7 @@ namespace cytnx {
                                                                const std::string &new_label) {
     boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label);
+    out_raw->set_label_(inx, new_label);
     return out_raw;
   }
 
@@ -1170,7 +1170,19 @@ namespace cytnx {
     return out;
   }
 
+  // DenseUniTensor::Norm() (non-deprecated internal virtual) intentionally keeps
+  // delegating to the deprecated linalg::Norm free function for one release so the
+  // returned rank-0 Tensor's dtype stays bit-identical to the old behavior; the
+  // local pragma silences -Wdeprecated-declarations the same way the pybind Norm
+  // shims do.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
   Tensor DenseUniTensor::Norm() const { return linalg::Norm(this->_block); }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
   void DenseUniTensor::Trace_(const std::string &a, const std::string &b) {
     // 1) from label to indx.
     cytnx_uint64 ida, idb;
@@ -1296,7 +1308,17 @@ namespace cytnx {
     this->permute_(idxorder, rank - this->_rowrank);
   };
 
-  void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
+  void DenseUniTensor::normalize_() {
+    // Divide by the norm carried as an on-device rank-1 {1} Tensor via the non-deprecated
+    // internal Norm() (whose dtype is Float for Float/ComplexFloat blocks and Double
+    // otherwise). Routing through Tensor /= keeps linalg::iDiv's in-place, dtype-preserving
+    // path -- an Int32 block stays Int32; dividing by a bare double or Scalar would take the
+    // promoting Div + storage-swap path and silently retype integer blocks to Double
+    // (regression caught by DenseUniTensorTest.normalize_int_type). Keeping the divisor a
+    // device Tensor also avoids the device->host->device scalar roundtrip that norm() (which
+    // returns a host double) forces on GPU.
+    this->_block /= this->Norm();
+  }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
   void DenseUniTensor::_load_dispatch(std::fstream &f, unsigned int version) {

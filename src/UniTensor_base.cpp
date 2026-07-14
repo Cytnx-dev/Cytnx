@@ -561,7 +561,7 @@ namespace cytnx {
     return nullptr;
   }
 
-  void UniTensor_base::tag() {
+  void UniTensor_base::tag_() {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }

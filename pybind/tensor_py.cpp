@@ -84,6 +84,26 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
   self.set(accessors, rc);
 }
 
+namespace {
+  // Deprecated Norm() binding helper (#676): use norm() (returns a python float) instead.
+  // The -Wdeprecated-declarations warning from calling the [[deprecated]] Tensor::Norm() is
+  // suppressed here at file scope because a #pragma GCC diagnostic cannot legally sit inside
+  // the .def() chain expression under GCC (only clang tolerated that). Exposing the deprecated
+  // call for one release is intentional.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+  cytnx::Tensor tensor_Norm_deprecated(cytnx::Tensor &self) {
+    if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) < 0)
+      throw py::error_already_set();
+    return self.Norm();
+  }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+}  // namespace
+
 void tensor_binding(py::module &m) {
   py::class_<cytnx::Tensor>(m, "Tensor")
     .def(
@@ -213,14 +233,19 @@ void tensor_binding(py::module &m) {
 
     .def("to_", &cytnx::Tensor::to_, py::arg("device"))
     .def("is_contiguous", &cytnx::Tensor::is_contiguous)
+    // permute_()/permute() accept both the variadic form (t.permute_(1, 2, 0)) and
+    // the list form (t.permute_([1, 2, 0])); see pybind_cytnx::parse_index_args in
+    // pyint_dispatch.hpp (#293, ruling 4).
     .def("permute_",
          [](cytnx::Tensor &self, py::args args) {
-           std::vector<cytnx::cytnx_uint64> c_args = args.cast<std::vector<cytnx::cytnx_uint64>>();
+           std::vector<cytnx::cytnx_uint64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_uint64>(args);
            return &self.permute_(c_args);
          })
     .def("permute",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {
-           std::vector<cytnx::cytnx_uint64> c_args = args.cast<std::vector<cytnx::cytnx_uint64>>();
+           std::vector<cytnx::cytnx_uint64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_uint64>(args);
            return self.permute(c_args);
          })
     .def("same_data", &cytnx::Tensor::same_data)
@@ -228,14 +253,19 @@ void tensor_binding(py::module &m) {
     .def("flatten_", &cytnx::Tensor::flatten_)
     .def("make_contiguous", &cytnx::Tensor::contiguous)  // this will be rename by python side conti
     .def("contiguous_", &cytnx::Tensor::contiguous_)
+    // reshape_()/reshape() accept both the variadic form (t.reshape_(2, 3)) and
+    // the list form (t.reshape_([2, 3])); see pybind_cytnx::parse_index_args in
+    // pyint_dispatch.hpp (#293, ruling 4).
     .def("reshape_",
          [](cytnx::Tensor &self, py::args args) {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            return &self.reshape_(c_args);
          })
     .def("reshape",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            return self.reshape(c_args);
          })
     //.def("astype", &cytnx::Tensor::astype,py::arg("new_type"))
@@ -1758,7 +1788,13 @@ void tensor_binding(py::module &m) {
          })
     .def("Max", &cytnx::Tensor::Max)
     .def("Min", &cytnx::Tensor::Min)
-    .def("Norm", &cytnx::Tensor::Norm)
+    // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
+    // Deprecation-warning suppression lives in tensor_Norm_deprecated() at file scope (a
+    // #pragma GCC diagnostic cannot legally sit inside this .def() chain expression under GCC).
+    .def("Norm", &tensor_Norm_deprecated)
+    // norm() returns a Scalar in C++ (dtype-preserving); hand Python a native float so
+    // cytnx.Scalar is not exposed on the Python surface.
+    .def("norm", [](cytnx::Tensor &self) { return double(self.norm()); })
     .def("Trace", &cytnx::Tensor::Trace)
 
     ;  // end of object line
