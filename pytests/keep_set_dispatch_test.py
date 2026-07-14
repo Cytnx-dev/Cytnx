@@ -46,6 +46,14 @@ def test_storage_from_pylist_int_overflow_uses_uint64():
     assert int(s[0]) == big
 
 
+def test_storage_from_pylist_negative_overflow_raises():
+    # A magnitude too negative for int64 does not fit uint64 either (uint64
+    # cannot represent any negative value); must raise, not silently cast.
+    too_negative = -(2**64)
+    with pytest.raises(cytnx.CytnxError):
+        cytnx.Storage.from_pylist([too_negative])
+
+
 def test_storage_from_pylist_float_and_complex_dtype():
     assert cytnx.Storage.from_pylist([1.5]).dtype() == Type.Double
     assert cytnx.Storage.from_pylist([1 + 2j]).dtype() == Type.ComplexDouble
@@ -92,6 +100,15 @@ def test_unitensor_get_block_by_qnum_int_list():
     B.put_block(t, [0, 0])
     assert B.get_block([0, 0], False)[0, 0].item() == pytest.approx(42.0)
     assert B.get_block_([0, 0], False)[0, 0].item() == pytest.approx(42.0)
+
+
+def test_unitensor_get_block_by_qnum_negative_overflow_raises():
+    # Same magnitude-dispatch helper as Storage.from_pylist: a value too
+    # negative for int64 does not fit uint64 either and must raise.
+    B = _u1_pair()
+    too_negative = -(2**64)
+    with pytest.raises(cytnx.CytnxError):
+        B.get_block([too_negative, 0], False)
 
 
 # ---------------------------------------------------------------------------

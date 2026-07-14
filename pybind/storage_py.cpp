@@ -361,9 +361,11 @@ void storage_binding(py::module &m) {
         for (const py::int_ &v : pylist) {
           int overflow = 0;
           PyLong_AsLongLongAndOverflow(v.ptr(), &overflow);
-          if (overflow != 0) {
+          if (overflow < 0) {
+            cytnx_error_msg(
+              true, "[ERROR] integer scalar out of the supported int64/uint64 range.%s", "\n");
+          } else if (overflow > 0) {
             needs_uint64 = true;
-            break;
           }
         }
         if (needs_uint64) {
