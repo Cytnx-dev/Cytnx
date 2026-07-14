@@ -609,11 +609,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Add(v); });
          })
+    .def("__add__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Add(rhs); })
     .def("__add__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Add(rhs); })
     .def("__add__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Add(rhs); })
-    .def("__add__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Add(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
@@ -661,11 +661,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Add(v, self); });
          })
+    .def("__radd__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Add(lhs, self); })
     .def("__radd__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Add(lhs, self); })
     .def("__radd__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Add(lhs, self); })
-    .def("__radd__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Add(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__iadd__",
@@ -781,11 +781,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Sub(v); });
          })
+    .def("__sub__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Sub(rhs); })
     .def("__sub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Sub(rhs); })
     .def("__sub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Sub(rhs); })
-    .def("__sub__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Sub(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
@@ -833,11 +833,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Sub(v, self); });
          })
+    .def("__rsub__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Sub(lhs, self); })
-    .def("__rsub__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Sub(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__isub__",
@@ -953,11 +953,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Mul(v); });
          })
+    .def("__mul__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mul(rhs); })
     .def("__mul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Mul(rhs); })
     .def("__mul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Mul(rhs); })
-    .def("__mul__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mul(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
@@ -1005,11 +1005,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Mul(v, self); });
          })
+    .def("__rmul__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Mul(lhs, self); })
-    .def("__rmul__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mul(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__imul__",
@@ -1125,11 +1125,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Div(v); });
          })
+    .def("__truediv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
     .def("__truediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Div(rhs); })
     .def("__truediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Div(rhs); })
-    .def("__truediv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
@@ -1177,11 +1177,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Div(v, self); });
          })
+    .def("__rtruediv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Div(lhs, self); })
-    .def("__rtruediv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__itruediv__",
@@ -1297,11 +1297,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Div(v); });
          })
+    .def("__floordiv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
     .def("__floordiv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Div(rhs); })
     .def("__floordiv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Div(rhs); })
-    .def("__floordiv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
@@ -1349,11 +1349,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Div(v, self); });
          })
+    .def("__rfloordiv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rfloordiv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rfloordiv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Div(lhs, self); })
-    .def("__rfloordiv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__ifloordiv__",
@@ -1469,11 +1469,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Mod(v); });
          })
+    .def("__mod__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mod(rhs); })
     .def("__mod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Mod(rhs); })
     .def("__mod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Mod(rhs); })
-    .def("__mod__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mod(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
@@ -1521,11 +1521,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Mod(v, self); });
          })
+    .def("__rmod__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mod(lhs, self); })
     .def("__rmod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Mod(lhs, self); })
     .def("__rmod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Mod(lhs, self); })
-    .def("__rmod__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mod(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__eq__", [](cytnx::Tensor &self, const cytnx::Tensor &rhs) { return self == rhs; })
@@ -1569,10 +1569,10 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self == v; });
          })
+    .def("__eq__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self == rhs; })
     .def("__eq__", [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self == rhs; })
     .def("__eq__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self == rhs; })
-    .def("__eq__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self == rhs; })
 
     // __ne__ (#928/#916/#692 background): cytnx has no elementwise
     // operator!= or Neq/logical-not kernel (checked: no `Neq`, no

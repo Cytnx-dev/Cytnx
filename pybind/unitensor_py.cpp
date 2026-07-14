@@ -1293,11 +1293,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return linalg::Add(self, v); });
          })
+    .def("__add__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Add(self, rhs); })
     .def("__add__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return linalg::Add(self, rhs); })
     .def("__add__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return linalg::Add(self, rhs); })
-    .def("__add__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Add(self, rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__radd__",
@@ -1340,11 +1340,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return linalg::Add(v, self); });
          })
+    .def("__radd__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Add(lhs, self); })
     .def("__radd__",
          [](UniTensor &self, const cytnx::cytnx_double &lhs) { return linalg::Add(lhs, self); })
     .def("__radd__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Add(lhs, self); })
-    .def("__radd__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Add(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor+=UniTensor is kept but
@@ -1395,11 +1395,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Add_(v); });
          })
+    .def("__iadd__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Add_(rhs); })
     .def("__iadd__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return self.Add_(rhs); })
     .def("__iadd__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Add_(rhs); })
-    .def("__iadd__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Add_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor-UniTensor is kept but
@@ -1455,11 +1455,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return linalg::Sub(self, v); });
          })
+    .def("__sub__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Sub(self, rhs); })
     .def("__sub__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return linalg::Sub(self, rhs); })
     .def("__sub__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return linalg::Sub(self, rhs); })
-    .def("__sub__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Sub(self, rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__rsub__",
@@ -1502,11 +1502,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return linalg::Sub(v, self); });
          })
+    .def("__rsub__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](UniTensor &self, const cytnx::cytnx_double &lhs) { return linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Sub(lhs, self); })
-    .def("__rsub__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Sub(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Phase-2 Task 3 (#934/2026-07-06 decision, amended): UniTensor-=UniTensor is kept but
@@ -1557,11 +1557,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Sub_(v); });
          })
+    .def("__isub__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Sub_(rhs); })
     .def("__isub__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return self.Sub_(rhs); })
     .def("__isub__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Sub_(rhs); })
-    .def("__isub__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Sub_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*UniTensor (Hadamard/elementwise
@@ -1611,11 +1611,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return linalg::Mul(self, v); });
          })
+    .def("__mul__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Mul(self, rhs); })
     .def("__mul__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return linalg::Mul(self, rhs); })
     .def("__mul__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return linalg::Mul(self, rhs); })
-    .def("__mul__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Mul(self, rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__rmul__",
@@ -1658,11 +1658,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return linalg::Mul(v, self); });
          })
+    .def("__rmul__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](UniTensor &self, const cytnx::cytnx_double &lhs) { return linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Mul(lhs, self); })
-    .def("__rmul__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Mul(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor*=UniTensor (Hadamard/elementwise
@@ -1711,11 +1711,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Mul_(v); });
          })
+    .def("__imul__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Mul_(rhs); })
     .def("__imul__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return self.Mul_(rhs); })
     .def("__imul__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Mul_(rhs); })
-    .def("__imul__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Mul_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/UniTensor (elementwise division)
@@ -1766,11 +1766,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return linalg::Div(self, v); });
          })
+    .def("__truediv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Div(self, rhs); })
     .def("__truediv__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return linalg::Div(self, rhs); })
     .def("__truediv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return linalg::Div(self, rhs); })
-    .def("__truediv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Div(self, rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__rtruediv__",
@@ -1813,11 +1813,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return linalg::Div(v, self); });
          })
+    .def("__rtruediv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](UniTensor &self, const cytnx::cytnx_double &lhs) { return linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Div(lhs, self); })
-    .def("__rtruediv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Phase-2 Task 3 (#934/2026-07-06 decision): UniTensor/=UniTensor (elementwise
@@ -1866,11 +1866,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Div_(v); });
          })
+    .def("__itruediv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
     .def("__itruediv__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return self.Div_(rhs); })
     .def("__itruediv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Div_(rhs); })
-    .def("__itruediv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // Python '//' maps to __floordiv__, a distinct dunder from '/'. It must mirror __truediv__:
@@ -1921,11 +1921,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return linalg::Div(self, v); });
          })
+    .def("__floordiv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Div(self, rhs); })
     .def("__floordiv__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return linalg::Div(self, rhs); })
     .def("__floordiv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return linalg::Div(self, rhs); })
-    .def("__floordiv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return linalg::Div(self, rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__rfloordiv__",
@@ -1968,11 +1968,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return linalg::Div(v, self); });
          })
+    .def("__rfloordiv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
     .def("__rfloordiv__",
          [](UniTensor &self, const cytnx::cytnx_double &lhs) { return linalg::Div(lhs, self); })
     .def("__rfloordiv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &lhs) { return linalg::Div(lhs, self); })
-    .def("__rfloordiv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     // '//=' maps to __ifloordiv__; mirror __itruediv__ -- UniTensor//=UniTensor is the removed
@@ -2021,11 +2021,11 @@ void unitensor_binding(py::module &m) {
          [](UniTensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Div_(v); });
          })
+    .def("__ifloordiv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
     .def("__ifloordiv__",
          [](UniTensor &self, const cytnx::cytnx_double &rhs) { return self.Div_(rhs); })
     .def("__ifloordiv__",
          [](UniTensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Div_(rhs); })
-    .def("__ifloordiv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
 
 
     /*
