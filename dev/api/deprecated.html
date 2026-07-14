@@ -88,101 +88,125 @@ $(function() {
 <div class="contents">
 <div class="textblock"><dl class="reflist">
 <dt>Member <a class="el" href="namespacecytnx.html#ab3eaecf9ef354a43851bb3e4fd24147a">cytnx::Contracts</a>  (const std::vector&lt; UniTensor &gt; &amp;TNs, const std::string &amp;order, const bool &amp;optimal)</dt>
-<dd><a class="anchor" id="_deprecated000003"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000006"></a>This function is deprecated. Please use <br  />
 <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="namespacecytnx.html#ae707018c91a03ba0c43b9b0b20830a62" title="Contract multiple UniTensor by tracing the ranks with common labels with pairwise operation.">Contract(const std::vector&lt;UniTensor&gt; &amp;TNs, const std::string &amp;order, const bool
 &amp;optimal)</a><br  />
  instead.  </dd>
 <dt>Member <a class="el" href="namespacecytnx.html#ac17fa8d955067a516de44a7704a731ba">cytnx::Contracts</a>  (const <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;in, const T &amp;...args, const std::string &amp;order, const bool &amp;optimal)</dt>
-<dd><a class="anchor" id="_deprecated000004"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000007"></a>This function is deprecated. Please use <br  />
 <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="namespacecytnx.html#aded169a56c47928185057cc8f24b4d66" title="Contract multiple UniTensor by tracing the indices with common labels with pairwise operation.">Contract(const UniTensor &amp;in, const T &amp;...args, const std::string &amp;order, const bool
 &amp;optimal)</a><br  />
  instead.  </dd>
 <dt>Member <a class="el" href="namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77">cytnx::linalg::Expf</a>  (const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;Tin)</dt>
-<dd><a class="anchor" id="_deprecated000001"></a>Use <a class="el" href="namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471" title="Exponential all the element in Tensor.">Exp()</a> instead, which is dtype-preserving (a Float input already yields a Float result); for the old float-precision-forcing behavior use Exp(Tin.astype(Type.Float)).  </dd>
+<dd><a class="anchor" id="_deprecated000003"></a>Use <a class="el" href="namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471" title="Exponential all the element in Tensor.">Exp()</a> instead, which is dtype-preserving (a Float input already yields a Float result); for the old float-precision-forcing behavior use Exp(Tin.astype(Type.Float)).  </dd>
 <dt>Member <a class="el" href="namespacecytnx_1_1linalg.html#a5de1faf71c76cdc6b7fa5ba3a3e21bbb">cytnx::linalg::Expf_</a>  (<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;Tin)</dt>
-<dd><a class="anchor" id="_deprecated000002"></a>Use <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor.">Exp_()</a> instead, which is dtype-preserving; for the old float-precision-forcing behavior cast first (Tin.astype_(Type.Float)) then call <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor.">Exp_()</a>.  </dd>
+<dd><a class="anchor" id="_deprecated000004"></a>Use <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor.">Exp_()</a> instead, which is dtype-preserving; for the old float-precision-forcing behavior cast first (Tin.astype_(Type.Float)) then call <a class="el" href="namespacecytnx_1_1linalg.html#aaab08439dde94ee87939d07933ede6e3" title="inplace perform Exponential on all the element in Tensor.">Exp_()</a>.  </dd>
+<dt>Member <a class="el" href="namespacecytnx_1_1linalg.html#a00e435cae51f9e3a9b5506d328b8d118">cytnx::linalg::Norm</a>  (const <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">cytnx::UniTensor</a> &amp;uTl)</dt>
+<dd><a class="anchor" id="_deprecated000002"></a>Use <a class="el" href="namespacecytnx_1_1linalg.html#a0a7b82a2cde2874f25798048058222e3" title="Calculate the norm of an UniTensor.">norm(const UniTensor&amp;)</a> instead, which returns a Scalar directly.  </dd>
+<dt>Member <a class="el" href="namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680">cytnx::linalg::Norm</a>  (const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;Tl)</dt>
+<dd><a class="anchor" id="_deprecated000001"></a>Use <a class="el" href="namespacecytnx_1_1linalg.html#ab8116911911c9310a1ce078c47b22ffe" title="Calculate the norm of a tensor.">norm(const Tensor&amp;)</a> instead, which returns a Scalar directly.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1Tensor.html#a7889abcab99ca9800c0cbccbd6767819">cytnx::Tensor::Norm</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000005"></a>Use <a class="el" href="classcytnx_1_1Tensor.html#ad83b459aa87307866e41d537e30fc05e" title="the norm member function. Same as linalg::norm(const Tensor &amp;Tin), where Tin is the current Tensor....">norm()</a> instead, which returns a Scalar directly.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a286ea6434384864cc38f3b4c0736fdc9">cytnx::UniTensor::combineBonds</a>  (const std::vector&lt; cytnx_int64 &gt; &amp;indicators, const bool &amp;force=false)</dt>
-<dd><a class="anchor" id="_deprecated000022"></a>This function is deprecated. Please use <br  />
- <a class="el" href="classcytnx_1_1UniTensor.html#a8963181b34820940d2f33813c33a4f78" title="Combine the sevral bonds of the UniTensor.">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</a> <br  />
+<dd><a class="anchor" id="_deprecated000028"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html#a7aa27b93bde18e51a81a05f4e8506e85" title="Combine the sevral bonds of the UniTensor, in-place.">combineBond_(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</a> <br  />
  instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a893a7715779cd9b7369ac2e0011aee99">cytnx::UniTensor::combineBonds</a>  (const std::vector&lt; std::string &gt; &amp;indicators, const bool &amp;force=false)</dt>
-<dd><a class="anchor" id="_deprecated000021"></a>This function is deprecated. Please use <br  />
- <a class="el" href="classcytnx_1_1UniTensor.html#a8963181b34820940d2f33813c33a4f78" title="Combine the sevral bonds of the UniTensor.">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</a> <br  />
+<dd><a class="anchor" id="_deprecated000027"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html#a7aa27b93bde18e51a81a05f4e8506e85" title="Combine the sevral bonds of the UniTensor, in-place.">combineBond_(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</a> <br  />
  instead. </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#aaadfa8d665c76353ea6eef35d5be976d">cytnx::UniTensor::combineBonds</a>  (const std::vector&lt; cytnx_int64 &gt; &amp;indicators, const bool &amp;force, const bool &amp;by_label)</dt>
-<dd><a class="anchor" id="_deprecated000020"></a>This function is deprecated. Please use <br  />
- <a class="el" href="classcytnx_1_1UniTensor.html#a8963181b34820940d2f33813c33a4f78" title="Combine the sevral bonds of the UniTensor.">combineBond(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</a> <br  />
+<dd><a class="anchor" id="_deprecated000026"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html#a7aa27b93bde18e51a81a05f4e8506e85" title="Combine the sevral bonds of the UniTensor, in-place.">combineBond_(const std::vector&lt;std::string&gt; &amp;indicators, const bool &amp;force)</a> <br  />
+ instead.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a0cad52c38726a58b9cdc3f4a99c6e8e7">cytnx::UniTensor::convert_from</a>  (const <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;rhs, bool force=false, cytnx_double tol=0.)</dt>
+<dd><a class="anchor" id="_deprecated000033"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html#a807fea9904711bc637bba632b679272a" title="Copy data from a UniTensor of different type, in-place.">convert_from_(const UniTensor &amp;rhs, bool force, cytnx_double tol)</a><br  />
  instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a0c5a3ca425fdb2467007c3bf9816dde7">cytnx::UniTensor::get_elem</a>  (const std::vector&lt; cytnx_uint64 &gt; &amp;locator) const</dt>
-<dd><a class="anchor" id="_deprecated000023"></a> This function is deprecated, please use <a class="el" href="classcytnx_1_1UniTensor.html#a6910e0251891d7289b5014b7987369ff" title="Get an element at a specific location.">at()</a> instread.  </dd>
+<dd><a class="anchor" id="_deprecated000031"></a> This function is deprecated, please use <a class="el" href="classcytnx_1_1UniTensor.html#a6910e0251891d7289b5014b7987369ff" title="Get an element at a specific location.">at()</a> instread.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a3d328126eaf4f8ac2854f96cba81d592">cytnx::UniTensor::Norm</a>  () const</dt>
+<dd><a class="anchor" id="_deprecated000029"></a>Use <a class="el" href="classcytnx_1_1UniTensor.html#abb5b13105b05303757eb673071d3671f" title="Return the norm of the UniTensor.">norm()</a> instead, which returns a Scalar directly. </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a0eaa545881f5de347199910555b9532f">cytnx::UniTensor::put_block</a>  (const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;in, const cytnx_uint64 &amp;idx, const bool &amp;force)</dt>
+<dd><a class="anchor" id="_deprecated000021"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html#a9c894a11bd5e9a1d5c042c5bb61c8e48" title="Put the block into the UniTensor with given index.">put_block(const Tensor &amp;in, const cytnx_uint64 &amp;idx)</a> <br  />
+ instead.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a9df943e88dec88c5ee1a9723797d9179">cytnx::UniTensor::put_block</a>  (const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;in_tens, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</dt>
+<dd><a class="anchor" id="_deprecated000022"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html#a3858de1d359d85ecdaa54bb7d73a75a3" title="Put the block into the UniTensor with given quantum number.">put_block(const Tensor &amp;in_tens, const std::vector&lt;cytnx_int64&gt; &amp;qidx)</a> <br  />
+ instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#addf4ec2c8db5c4172eb8bc5acb843665">cytnx::UniTensor::put_block</a>  (<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;in, const std::vector&lt; std::string &gt; &amp;lbls, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</dt>
-<dd><a class="anchor" id="_deprecated000017"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000023"></a>This function is deprecated. Please use <br  />
  <a class="el" href="classcytnx_1_1UniTensor.html#a5771a65dbc78c563fd1556af159d3adb" title="Put the block into the UniTensor with given quantum indices, will copy the input tensor.">put_block(Tensor &amp;in, const std::vector&lt;std::string&gt; &amp;lbls, const std::vector&lt;cytnx_int64&gt;
 &amp;qidx)</a> <br  />
  instead.  </dd>
-<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a9df943e88dec88c5ee1a9723797d9179">cytnx::UniTensor::put_block</a>  (const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;in_tens, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</dt>
-<dd><a class="anchor" id="_deprecated000016"></a>This function is deprecated. Please use <br  />
- <a class="el" href="classcytnx_1_1UniTensor.html#a3858de1d359d85ecdaa54bb7d73a75a3" title="Put the block into the UniTensor with given quantum number.">put_block(const Tensor &amp;in_tens, const std::vector&lt;cytnx_int64&gt; &amp;qidx)</a> <br  />
- instead.  </dd>
-<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a0eaa545881f5de347199910555b9532f">cytnx::UniTensor::put_block</a>  (const <a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;in, const cytnx_uint64 &amp;idx, const bool &amp;force)</dt>
-<dd><a class="anchor" id="_deprecated000015"></a>This function is deprecated. Please use <br  />
- <a class="el" href="classcytnx_1_1UniTensor.html#a9c894a11bd5e9a1d5c042c5bb61c8e48" title="Put the block into the UniTensor with given index.">put_block(const Tensor &amp;in, const cytnx_uint64 &amp;idx)</a> <br  />
- instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#ae9cda7e4b96ae82e7d8e4eea3b8d17f3">cytnx::UniTensor::put_block_</a>  (<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;in, const std::vector&lt; std::string &gt; &amp;lbls, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</dt>
-<dd><a class="anchor" id="_deprecated000019"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000025"></a>This function is deprecated. Please use <br  />
  <a class="el" href="classcytnx_1_1UniTensor.html#a6c19f2c2119009097a4b9f26151cc4aa" title="Put the block into the UniTensor with given quantum indices, inplacely.">put_block_(Tensor &amp;in, const std::vector&lt;std::string&gt; &amp;lbls, const std::vector&lt;cytnx_int64&gt;
 &amp;qidx)</a> <br  />
  instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a94e1b0c5abad291972ad29598cfd4bbd">cytnx::UniTensor::put_block_</a>  (<a class="el" href="classcytnx_1_1Tensor.html" title="an tensor (multi-dimensional array)">Tensor</a> &amp;in, const std::vector&lt; cytnx_int64 &gt; &amp;qidx, const bool &amp;force)</dt>
-<dd><a class="anchor" id="_deprecated000018"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000024"></a>This function is deprecated. Please use <br  />
  <a class="el" href="classcytnx_1_1UniTensor.html#a085299bccf586326e0b82b434255e3c1" title="Put the block into the UniTensor with given quantum indices, inplacely.">put_block_(Tensor &amp;in, const std::vector&lt;cytnx_int64&gt; &amp;qidx)</a> <br  />
  instead.  </dd>
-<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#ad1e94c2ce8a085b471b4ea2e21dacc70">cytnx::UniTensor::relabels</a>  (const std::initializer_list&lt; char * &gt; &amp;old_labels, const std::initializer_list&lt; char * &gt; &amp;new_labels) const</dt>
-<dd><a class="anchor" id="_deprecated000013"></a>This function is deprecated. Please use <br  />
-<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="classcytnx_1_1UniTensor.html#aeb569a5ea02641e9814bb50004a2c534">relabel(const std::initializer_list&lt;char *&gt; &amp;old_labels, const
-std::initializer_list&lt;char *&gt; &amp;new_labels) const </a><br  />
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#aea30e0417a4b6552a016d77ff10cc032">cytnx::UniTensor::relabels</a>  (const std::vector&lt; std::string &gt; &amp;new_labels) const</dt>
+<dd><a class="anchor" id="_deprecated000014"></a>This function is deprecated. Please use <br  />
+<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="classcytnx_1_1UniTensor.html#a8368a52036f9ff25572bd455ecece2dd" title="relabel all of the labels in UniTensor.">relabel(const std::vector&lt;std::string&gt; &amp;new_labels) const</a><br  />
+ instead. </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#abb243634aaeecdde1c973e78fa66acbc">cytnx::UniTensor::relabels</a>  (const std::initializer_list&lt; char * &gt; &amp;new_labels) const</dt>
+<dd><a class="anchor" id="_deprecated000015"></a>This function is deprecated. Please use <br  />
+<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="classcytnx_1_1UniTensor.html#af19f7b1442c93f00f46d14b49bd4eec3" title="relables all of the labels in UniTensor.">relabel(const std::initializer_list&lt;char *&gt; &amp;new_labels) const</a><br  />
  instead. </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a7f59300d4e1226d80c701ee5181cdf49">cytnx::UniTensor::relabels</a>  (const std::vector&lt; std::string &gt; &amp;old_labels, const std::vector&lt; std::string &gt; &amp;new_labels) const</dt>
-<dd><a class="anchor" id="_deprecated000011"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000017"></a>This function is deprecated. Please use <br  />
 <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="classcytnx_1_1UniTensor.html#a9bc53d5c8da90d3c9321b1e4128c786d" title="replace part or all labels by given new labels for the bonds.">relabel(const std::vector&lt;std::string&gt; &amp;old_labels, const std::vector&lt;std::string&gt;
 &amp;new_labels) const</a><br  />
  instead.  </dd>
-<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#abb243634aaeecdde1c973e78fa66acbc">cytnx::UniTensor::relabels</a>  (const std::initializer_list&lt; char * &gt; &amp;new_labels) const</dt>
-<dd><a class="anchor" id="_deprecated000009"></a>This function is deprecated. Please use <br  />
-<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="classcytnx_1_1UniTensor.html#af19f7b1442c93f00f46d14b49bd4eec3" title="relables all of the labels in UniTensor.">relabel(const std::initializer_list&lt;char *&gt; &amp;new_labels) const</a><br  />
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#ad1e94c2ce8a085b471b4ea2e21dacc70">cytnx::UniTensor::relabels</a>  (const std::initializer_list&lt; char * &gt; &amp;old_labels, const std::initializer_list&lt; char * &gt; &amp;new_labels) const</dt>
+<dd><a class="anchor" id="_deprecated000019"></a>This function is deprecated. Please use <br  />
+<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="classcytnx_1_1UniTensor.html#aeb569a5ea02641e9814bb50004a2c534">relabel(const std::initializer_list&lt;char *&gt; &amp;old_labels, const
+std::initializer_list&lt;char *&gt; &amp;new_labels) const </a><br  />
  instead. </dd>
-<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#aea30e0417a4b6552a016d77ff10cc032">cytnx::UniTensor::relabels</a>  (const std::vector&lt; std::string &gt; &amp;new_labels) const</dt>
-<dd><a class="anchor" id="_deprecated000008"></a>This function is deprecated. Please use <br  />
-<a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> <a class="el" href="classcytnx_1_1UniTensor.html#a8368a52036f9ff25572bd455ecece2dd" title="relabel all of the labels in UniTensor.">relabel(const std::vector&lt;std::string&gt; &amp;new_labels) const</a><br  />
- instead. </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#afb9812c7247f573bf659a98f24b12715">cytnx::UniTensor::relabels_</a>  (const std::vector&lt; std::string &gt; &amp;new_labels)</dt>
+<dd><a class="anchor" id="_deprecated000013"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#a8241712bf34eee2ce6e2963833c1a156" title="Set new labels for all the bonds.">relabel_(const std::vector&lt;std::string&gt; &amp;new_labels)</a><br  />
+ instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#ab28f13002b796f7b741574b4d5fa6644">cytnx::UniTensor::relabels_</a>  (const std::initializer_list&lt; char * &gt; &amp;old_labels, const std::initializer_list&lt; char * &gt; &amp;new_labels)</dt>
-<dd><a class="anchor" id="_deprecated000014"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000020"></a>This function is deprecated. Please use <br  />
 <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#ad5a368eb5eaf1223de1e63c90f7d25b2">relabel_(const std::initializer_list&lt;char *&gt; &amp;old_labels, const
 std::initializer_list&lt;char *&gt; &amp;new_labels)</a><br  />
  instead. </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a38cb9dcf09a704aa10567f77e7354f37">cytnx::UniTensor::relabels_</a>  (const std::vector&lt; std::string &gt; &amp;old_labels, const std::vector&lt; std::string &gt; &amp;new_labels)</dt>
-<dd><a class="anchor" id="_deprecated000012"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000018"></a>This function is deprecated. Please use <br  />
 <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#abfc0b1faeef378712dab6124dc26930f" title="relabel part or all of the labels in UniTensor by given new labels">relabel_(const std::vector&lt;std::string&gt; &amp;old_labels, const std::vector&lt;std::string&gt;
 &amp;new_labels)</a><br  />
  instead. </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a2c1273dcc551489e466999bb5cee57b3">cytnx::UniTensor::relabels_</a>  (const std::initializer_list&lt; char * &gt; &amp;new_labels)</dt>
-<dd><a class="anchor" id="_deprecated000010"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000016"></a>This function is deprecated. Please use <br  />
 <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#a3fdf3353f8cf66739814b047e174edac">relabel_(const std::initializer_list&lt;char *&gt; &amp;new_labels)</a><br  />
  instead. </dd>
-<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#afb9812c7247f573bf659a98f24b12715">cytnx::UniTensor::relabels_</a>  (const std::vector&lt; std::string &gt; &amp;new_labels)</dt>
-<dd><a class="anchor" id="_deprecated000007"></a>This function is deprecated. Please use <br  />
- <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#a8241712bf34eee2ce6e2963833c1a156" title="Set new labels for all the bonds.">relabel_(const std::vector&lt;std::string&gt; &amp;new_labels)</a><br  />
- instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a066c45760deaa7a5c109ddb94827717d">cytnx::UniTensor::set_elem</a>  (const std::vector&lt; cytnx_uint64 &gt; &amp;locator, const T2 &amp;rc)</dt>
-<dd><a class="anchor" id="_deprecated000024"></a> This function is deprecated, please use <a class="el" href="classcytnx_1_1UniTensor.html#a6910e0251891d7289b5014b7987369ff" title="Get an element at a specific location.">at()</a> instread.  </dd>
-<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a3edc556b2b60d672d1e1b40d2ccd69e6">cytnx::UniTensor::set_labels</a>  (const std::initializer_list&lt; char * &gt; &amp;new_labels)</dt>
-<dd><a class="anchor" id="_deprecated000006"></a>This function is deprecated. Please use <br  />
- <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#a3fdf3353f8cf66739814b047e174edac">relabel_(const std::initializer_list&lt;char *&gt; &amp;new_labels)</a><br  />
+<dd><a class="anchor" id="_deprecated000032"></a> This function is deprecated, please use <a class="el" href="classcytnx_1_1UniTensor.html#a6910e0251891d7289b5014b7987369ff" title="Get an element at a specific location.">at()</a> instread.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a32f8c1ca6d2e782c2fd1a443df4884fa">cytnx::UniTensor::set_label</a>  (const std::string &amp;old_label, const std::string &amp;new_label)</dt>
+<dd><a class="anchor" id="_deprecated000010"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#a0a6d41ae4f05aa18a4133ce48646dc04" title="set a new label for bond to replace one of the current label, in-place.">set_label_(const std::string &amp;old_label, const std::string &amp;new_label)</a><br  />
+ instead.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a6e81820a5c1de5e398ccff44ae3cb3a5">cytnx::UniTensor::set_label</a>  (const cytnx_int64 &amp;idx, const std::string &amp;new_label)</dt>
+<dd><a class="anchor" id="_deprecated000009"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#aa5b18098934a3b45eaf7672ab1f431f9" title="Set a new label for bond at the assigned index, in-place.">set_label_(const cytnx_int64 &amp;idx, const std::string &amp;new_label)</a><br  />
  instead.  </dd>
 <dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a54712d4aedcfe01324bd7d4aa042cf8c">cytnx::UniTensor::set_labels</a>  (const std::vector&lt; std::string &gt; &amp;new_labels)</dt>
-<dd><a class="anchor" id="_deprecated000005"></a>This function is deprecated. Please use <br  />
+<dd><a class="anchor" id="_deprecated000011"></a>This function is deprecated. Please use <br  />
  <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#a8241712bf34eee2ce6e2963833c1a156" title="Set new labels for all the bonds.">relabel_(const std::vector&lt;std::string&gt; &amp;new_labels)</a><br  />
- instead. </dd>
+ instead.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a3edc556b2b60d672d1e1b40d2ccd69e6">cytnx::UniTensor::set_labels</a>  (const std::initializer_list&lt; char * &gt; &amp;new_labels)</dt>
+<dd><a class="anchor" id="_deprecated000012"></a>This function is deprecated. Please use <br  />
+ <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> &amp;<a class="el" href="classcytnx_1_1UniTensor.html#a3fdf3353f8cf66739814b047e174edac">relabel_(const std::initializer_list&lt;char *&gt; &amp;new_labels)</a><br  />
+ instead.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a9ea55737e39a8d81f4e90a81fd47692d">cytnx::UniTensor::set_name</a>  (const std::string &amp;in)</dt>
+<dd><a class="anchor" id="_deprecated000008"></a>This function is deprecated. Please use <a class="el" href="classcytnx_1_1UniTensor.html#a51a40ebe65c12f2d55cd98588437cb97" title="Set the name of a UniTensor, in-place.">set_name_(const std::string &amp;in)</a> instead.  </dd>
+<dt>Member <a class="el" href="classcytnx_1_1UniTensor.html#a26a40f3cfae8d14b33fcf883ee300abf">cytnx::UniTensor::tag</a>  ()</dt>
+<dd><a class="anchor" id="_deprecated000030"></a>This function is deprecated. Please use <a class="el" href="classcytnx_1_1UniTensor.html#a071142ea1190b278bdec21a91af5de4b" title="Set the UniTensor as a tagged UniTensor, in-place.">tag_()</a> instead. </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

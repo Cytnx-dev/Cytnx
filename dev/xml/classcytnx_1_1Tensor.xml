@@ -3839,10 +3839,27 @@ B(i) &amp; \text{if } j = N
 <para>the Norm member function. Same as <ref refid="namespacecytnx_1_1linalg_1a9cd2be179860bb4742ebe320fa063680" kindref="member">linalg::Norm(const Tensor &amp;Tin)</ref>, where <computeroutput>Tin</computeroutput> is the current <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
+<para><xrefsect id="deprecated_1_deprecated000005"><xreftitle>Deprecated</xreftitle><xrefdescription><para>Use <ref refid="classcytnx_1_1Tensor_1ad83b459aa87307866e41d537e30fc05e" kindref="member">norm()</ref> instead, which returns a Scalar directly. </para>
+</xrefdescription></xrefsect></para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1736" column="12"/>
+        <location file="include/Tensor.hpp" line="1737" column="13"/>
+      </memberdef>
+      <memberdef kind="function" id="classcytnx_1_1Tensor_1ad83b459aa87307866e41d537e30fc05e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Scalar</ref></type>
+        <definition>Scalar cytnx::Tensor::norm</definition>
+        <argsstring>() const</argsstring>
+        <name>norm</name>
+        <qualifiedname>cytnx::Tensor::norm</qualifiedname>
+        <briefdescription>
+<para>the norm member function. Same as <ref refid="namespacecytnx_1_1linalg_1ab8116911911c9310a1ce078c47b22ffe" kindref="member">linalg::norm(const Tensor &amp;Tin)</ref>, where <computeroutput>Tin</computeroutput> is the current <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. Returns the 2-norm as a Scalar carrying the tensor&apos;s own precision (Float for Float/ComplexFloat input, Double otherwise), so <computeroutput>x /= x.norm()</computeroutput> stays dtype-preserving rather than promoting a Float tensor to Double. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/Tensor.hpp" line="1745" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ac5bd2525bacc3713694a063074538e20" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3862,7 +3879,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1742" column="12"/>
+        <location file="include/Tensor.hpp" line="1751" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a977738a47390feeab721a599fc21ec28" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3882,7 +3899,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1748" column="12"/>
+        <location file="include/Tensor.hpp" line="1757" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a8d2f499d0c79e4c46909d2341c374723" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3908,7 +3925,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1754" column="12"/>
+        <location file="include/Tensor.hpp" line="1763" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a312a8b7b963199a98e59d9f6a97c32e6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3923,7 +3940,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1760" column="12"/>
+        <location file="include/Tensor.hpp" line="1769" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aa8e04d45e4c5b8e6f334e2be38433e07" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3938,7 +3955,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1766" column="12"/>
+        <location file="include/Tensor.hpp" line="1775" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1adb752367adea78b251e5a584276c1f40" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3953,7 +3970,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1772" column="12"/>
+        <location file="include/Tensor.hpp" line="1781" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1af540bb4dc6887bf29289722101899a57" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3968,7 +3985,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1778" column="12"/>
+        <location file="include/Tensor.hpp" line="1787" column="12"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -4154,7 +4171,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/Tensor.hpp" line="41" column="3" bodyfile="include/Tensor.hpp" bodystart="41" bodyend="1780"/>
+    <location file="include/Tensor.hpp" line="41" column="3" bodyfile="include/Tensor.hpp" bodystart="41" bodyend="1789"/>
     <listofallmembers>
       <member refid="classcytnx_1_1Tensor_1a312a8b7b963199a98e59d9f6a97c32e6" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>Abs</name></member>
       <member refid="classcytnx_1_1Tensor_1aa8e04d45e4c5b8e6f334e2be38433e07" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>Abs_</name></member>
@@ -4210,6 +4227,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
       <member refid="classcytnx_1_1Tensor_1a443885c8f02ab5352d81255e4650cf32" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>Mul</name></member>
       <member refid="classcytnx_1_1Tensor_1a9eb8827f29f8932c24d8315017b7c7e2" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>Mul_</name></member>
       <member refid="classcytnx_1_1Tensor_1a7889abcab99ca9800c0cbccbd6767819" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>Norm</name></member>
+      <member refid="classcytnx_1_1Tensor_1ad83b459aa87307866e41d537e30fc05e" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>norm</name></member>
       <member refid="classcytnx_1_1Tensor_1a0409dea9e50793f689eba740638b86a1" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>operator*=</name></member>
       <member refid="classcytnx_1_1Tensor_1a84d7c47ea4cdb206a8ad70b8b3783876" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>operator+=</name></member>
       <member refid="classcytnx_1_1Tensor_1a0bb7ebda69ea886804cec7d23249b5e9" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>operator-</name></member>
