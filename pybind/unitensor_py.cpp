@@ -318,36 +318,32 @@ namespace {
   #if defined(__GNUC__) || defined(__clang__)
     #pragma GCC diagnostic pop
   #endif
-// Converts a list of Python ints to a single homogeneous vector<cytnx_int64>
-// or vector<cytnx_uint64> (int64 unless any element needs uint64's range),
-// then calls fn with it. Vector counterpart of dispatch_pyint
-// (pyint_dispatch.hpp): get_block/get_block_'s qnum parameter previously had
-// separate vector<int64>/vector<uint64> overloads, which rendered as the
-// identical stub annotation regardless of registration order, so one was
-// always flagged overload-cannot-match even though both were reachable by
-// list content.
-template <class Fn>
-auto dispatch_pyint_vector(const std::vector<py::int_> &vals, Fn &&fn) {
-  bool needs_uint64 = false;
-  for (const py::int_ &v : vals) {
-    int overflow = 0;
-    PyLong_AsLongLongAndOverflow(v.ptr(), &overflow);
-    if (overflow != 0) {
-      needs_uint64 = true;
-      break;
+  // Converts a list of Python ints to a single homogeneous vector<cytnx_int64>
+  // or vector<cytnx_uint64> (int64 unless any element needs uint64's range),
+  // then calls fn with it. Vector counterpart of dispatch_pyint
+  // (pyint_dispatch.hpp).
+  template <class Fn>
+  auto dispatch_pyint_vector(const std::vector<py::int_> &vals, Fn &&fn) {
+    bool needs_uint64 = false;
+    for (const py::int_ &v : vals) {
+      int overflow = 0;
+      PyLong_AsLongLongAndOverflow(v.ptr(), &overflow);
+      if (overflow != 0) {
+        needs_uint64 = true;
+        break;
+      }
     }
-  }
-  if (needs_uint64) {
-    std::vector<cytnx_uint64> converted;
+    if (needs_uint64) {
+      std::vector<cytnx_uint64> converted;
+      converted.reserve(vals.size());
+      for (const py::int_ &v : vals) converted.push_back(v.cast<cytnx_uint64>());
+      return fn(converted);
+    }
+    std::vector<cytnx_int64> converted;
     converted.reserve(vals.size());
-    for (const py::int_ &v : vals) converted.push_back(v.cast<cytnx_uint64>());
+    for (const py::int_ &v : vals) converted.push_back(v.cast<cytnx_int64>());
     return fn(converted);
   }
-  std::vector<cytnx_int64> converted;
-  converted.reserve(vals.size());
-  for (const py::int_ &v : vals) converted.push_back(v.cast<cytnx_int64>());
-  return fn(converted);
-}
 
 }  // namespace
 

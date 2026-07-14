@@ -334,32 +334,24 @@ void storage_binding(py::module &m) {
       py::arg("val"))
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in
-    // pybind/pyint_dispatch.hpp. complex64/float/{u,}int{32,16} are dropped:
+    // pybind/pyint_dispatch.hpp. complex64/float/{u,}int{32,16} are covered:
     // a plain Python list's elements match the complex128/double/uint64/
     // int64 casters in pybind11's first (no-convert) overload-resolution
     // pass regardless of registration order, so the narrower-width
-    // overloads were already unreachable duplicates (confirmed empirically:
-    // from_pylist([1.5]) -> Double, from_pylist([1+2j]) -> ComplexDouble
-    // both before and after this change). bool is registered first: Python
-    // bool implements __index__ (via int), so typing considers
-    // Sequence[bool] a subtype of the SupportsFloat/SupportsComplex unions
-    // double/complex128 render as, and registering bool after them (its
-    // previous position) both let uint64 (see below) silently produce a
-    // Uint64-dtype Storage from from_pylist([True, False]) instead of Bool,
-    // and left it stub-unreachable; moving it first, consistent with every
-    // numpy_scalar<bool> overload elsewhere in this keep-set family, fixes
-    // both. double is registered before complex128 for the same
-    // covariance reason (Sequence[SupportsFloat | SupportsIndex] is a
-    // subtype of Sequence[SupportsComplex | SupportsFloat | SupportsIndex]).
-    // The plain-int case is a single py::sequence overload with
-    // list_dispatch_pyint below instead of separate uint64/int64
-    // overloads (which rendered as the identical stub annotation no matter
-    // their order, so one was always flagged as unreachable even though
-    // both were reachable by list content): int64 wins unless any element
-    // needs uint64's range, matching dispatch_pyint's int64-preferred
-    // convention used by every other keep-set in this codebase (previously
-    // uint64 won for an all-non-negative list purely from being registered
-    // first, e.g. from_pylist([1,2,3]).dtype() was Uint64, not Int64).
+    // overloads are unreachable duplicates (confirmed empirically:
+    // from_pylist([1.5]) -> Double, from_pylist([1+2j]) -> ComplexDouble).
+    // bool is registered first: Python bool implements __index__ (via int),
+    // so typing considers Sequence[bool] a subtype of the SupportsFloat/
+    // SupportsComplex unions double/complex128 render as, and this
+    // ordering is also required for correctness -- from_pylist([True,
+    // False]) must produce a Bool-dtype Storage, not Uint64. double is
+    // registered before complex128 for the same covariance reason
+    // (Sequence[SupportsFloat | SupportsIndex] is a subtype of
+    // Sequence[SupportsComplex | SupportsFloat | SupportsIndex]). The
+    // plain-int case is a single py::sequence overload below: int64 wins
+    // unless any element needs uint64's range, matching dispatch_pyint's
+    // int64-preferred convention used by every other keep-set in this
+    // codebase.
     .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"),
                 py::arg("device") = (int)cytnx::Device.cpu)
     .def_static(
