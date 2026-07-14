@@ -1443,8 +1443,13 @@ namespace cytnx {
         (long long)n);
       if (this->_block.device() == Device.cpu) {
         for (cytnx_uint64 i = 0; i < n; i++) {
+          // `this` and `rhs` are independent UniTensors and need not share a
+          // dtype, so the two Scalars here can differ (e.g. Int64 vs Double).
+          // Compute out-of-place (which promotes via Type.type_promote) and
+          // assign back into this->_block, which narrows the promoted result
+          // to the block's dtype.
           Scalar v = Scalar(this->_block.at({i, i}));
-          v += Scalar(rhs_block.at({i}));
+          v = v + Scalar(rhs_block.at({i}));
           this->_block.at({i, i}) = v;
         }
       } else {
@@ -1494,8 +1499,11 @@ namespace cytnx {
         (long long)n);
       if (this->_block.device() == Device.cpu) {
         for (cytnx_uint64 i = 0; i < n; i++) {
+          // See the analogous comment in Add_(): compute out-of-place (which
+          // promotes across the two independent UniTensors' potentially
+          // differing dtypes) and narrow back on assignment into this->_block.
           Scalar v = Scalar(this->_block.at({i, i}));
-          v -= Scalar(rhs_block.at({i}));
+          v = v - Scalar(rhs_block.at({i}));
           this->_block.at({i, i}) = v;
         }
       } else {

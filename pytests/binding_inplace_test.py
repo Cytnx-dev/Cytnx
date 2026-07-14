@@ -95,4 +95,4 @@ def test_imatmul_preserves_identity():
     assert a is alias  # in-place: no new object was created
     assert id(a) == aid
     # the mutation is visible through the alias and matches a @ b
-    assert (alias - expected).Norm().item() == 0.0
+    assert (alias - expected).norm() == 0.0

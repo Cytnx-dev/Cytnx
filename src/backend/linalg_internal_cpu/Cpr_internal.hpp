@@ -17,7 +17,7 @@ namespace cytnx {
                                 const std::vector<cytnx_uint64> &invmapper_L,
                                 const std::vector<cytnx_uint64> &invmapper_R) {
       using Tout = cytnx_bool;
-      using TPromote = cytnx::Scalar_init_interface::type_promote_t<TLin, TRin>;
+      using TPromote = cytnx::Type_class::type_promote_t<TLin, TRin>;
       Tout *_out = reinterpret_cast<Tout *>(out->data());
       const TLin *_Lin = reinterpret_cast<const TLin *>(Lin->data());
       const TRin *_Rin = reinterpret_cast<const TRin *>(Rin->data());

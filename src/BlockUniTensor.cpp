@@ -1248,7 +1248,13 @@ namespace cytnx {
   };
 
   void BlockUniTensor::normalize_() {
-    Scalar out(0, this->dtype());
+    // Seed the accumulator with the dtype linalg::Norm() actually produces,
+    // not this->dtype(): Norm() always returns a real floating-point result,
+    // so seeding with the norm dtype keeps the whole accumulation in that
+    // dtype. (Seeding with an integer this->dtype() would instead let the
+    // first += promote the accumulator to floating -- correct in value, but
+    // seeding directly is clearer and avoids a mid-loop dtype change.)
+    Scalar out(0, Type_class::norm_result_dtype(this->dtype()));
     for (auto &block : this->_blocks) {
       double bn = double(linalg::norm(block));
       out += Scalar(bn * bn);

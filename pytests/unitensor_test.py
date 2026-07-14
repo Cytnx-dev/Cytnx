@@ -144,7 +144,7 @@ def test_truncate_inplace_string_and_index_overloads_agree():
     A.truncate_("b", 2)
     B.truncate_(1, 2)
     assert list(A.shape()) == list(B.shape())
-    assert (A.get_block_() - B.get_block_()).Norm().item() < 1e-12
+    assert (A.get_block_() - B.get_block_()).norm() < 1e-12
 
 
 def test_convert_from_tol_default_rejects_forbidden_nonzero():
