@@ -13,14 +13,30 @@ import cytnx
 # ---------------------------------------------------------------------------
 
 def _are_nearly_eq(a, b, tol=1e-12):
-    """Return True if two UniTensors have the same labels and nearly equal values."""
+    """Return True if two block UniTensors have nearly equal raw block data.
+
+    Blocks are matched by their quantum-number indices, not by position:
+    e.g. permute().contiguous() keeps the source tensor's block enumeration
+    order, which differs from that of a freshly constructed tensor (see the
+    C++ AreNearlyEqUniTensor in tests/test_tools.cpp). Pending signflips must
+    agree so that raw block data can be compared directly -- this keeps the
+    comparison sensitive to whether apply() actually folded the signs in.
+    """
     a = a.permute(b.labels())
     blocks_a = a.get_blocks_()
     blocks_b = b.get_blocks_()
     if len(blocks_a) != len(blocks_b):
         return False
-    for ba, bb in zip(blocks_a, blocks_b):
-        if (ba - bb).Norm().item() > tol:
+    flips_a = a.signflip()
+    flips_b = b.signflip()
+    idx_b = {tuple(b.get_qindices(j)): j for j in range(len(blocks_b))}
+    for i, ba in enumerate(blocks_a):
+        j = idx_b.get(tuple(a.get_qindices(i)))
+        if j is None:
+            return False
+        if flips_a[i] != flips_b[j]:
+            return False
+        if (ba - blocks_b[j]).norm() > tol:
             return False
     return True
 
@@ -30,7 +46,7 @@ def _make_bfut3():
     fp = cytnx.Symmetry.FermionParity()
     B1 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
     B2 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
-    B12 = B1.combineBond(B2).redirect_()
+    B12 = B1.combineBond(B2).redirect()
     B3 = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
     B4 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
 
@@ -74,7 +90,7 @@ class TestApplyDenseUniTensor:
     def test_apply_is_noop(self):
         result = self.ut.apply()
         diff = result.get_block() - self.ut.get_block()
-        assert diff.Norm().item() < 1e-14
+        assert diff.norm() < 1e-14
 
     def test_apply_inplace_returns_unitensor(self):
         assert isinstance(self.ut.apply_(), cytnx.UniTensor)
@@ -82,7 +98,7 @@ class TestApplyDenseUniTensor:
     def test_apply_inplace_is_noop(self):
         original = self.ut.get_block().clone()
         self.ut.apply_()
-        assert (self.ut.get_block() - original).Norm().item() < 1e-14
+        assert (self.ut.get_block() - original).norm() < 1e-14
 
 
 # ---------------------------------------------------------------------------

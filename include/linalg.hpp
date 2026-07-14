@@ -2289,50 +2289,47 @@ namespace cytnx {
     \f[
         T_{o}[i] = e^{T_{i}[i]}
     \f]
-    Note that it will cast to Double type or ComplexDouble type.
+    The output preserves the input's floating precision (Float stays Float, Double stays Double,
+    ComplexFloat/ComplexDouble preserved); integer/bool inputs promote to Double.
     @param[in] Tin a Tensor
-    @return
-        [Double Tensor] or [ComplexDouble Tensor]
+    @return a Tensor with the same floating dtype as \p Tin (Double for integer/bool input)
 
     */
     Tensor Exp(const Tensor &Tin);
 
     /**
-    @brief Exponential all the element in Tensor.
-    @details This function will perform Exponential on all the elements in Tensor \p Tin.
-    That is, the output will be:
-    \f[
-        T_{o}[i] = e^{T_{i}[i]}
-    \f]
-    Note that it will cast to Float type or ComplexFloat type.
+    @brief Exponential all the element in Tensor (deprecated).
+    @details This function will perform Exponential on all the elements in Tensor \p Tin,
+    casting to Float type or ComplexFloat type.
     @param[in] Tin a Tensor
     @return
         [Float Tensor] or [ComplexFloat Tensor]
-
+    @deprecated Use Exp() instead, which is dtype-preserving (a Float input already yields a
+    Float result); for the old float-precision-forcing behavior use Exp(Tin.astype(Type.Float)).
     */
-    Tensor Expf(const Tensor &Tin);
+    [[deprecated("use Exp() (dtype-preserving) instead")]] Tensor Expf(const Tensor &Tin);
 
     /**
     @brief inplace perform Exponential on all the element in Tensor.
     @details This function will perform Exponential on all the elements in Tensor \p Tin.
     Furthermore,
         1. on return, the elements in Tin will be modified to it's exponetial value.
-        2. For Real, if the type is not Double, change the type of the input tensor to Double.
-        3. For Complex, if input is ComplexFloat, promote to ComplexDouble.
+        2. the floating precision is preserved (Float stays Float, Double stays Double); only
+           integer/bool inputs are promoted to Double.
+        3. Complex inputs keep their precision (ComplexFloat stays ComplexFloat).
     @param[in] Tin, the input Tensor.
     */
     void Exp_(Tensor &Tin);
 
     /**
-    @brief inplace perform Exponential on all the element in Tensor.
-    @details This function will perform Exponential on all the elements in Tensor \p Tin.
-    Furthermore,
-        1. on return, the elements in Tin will be modified to it's exponetial value.
-        2. For Real, if the type is not Float, change the type of the input tensor to Float.
-        3. For Complex, if input is ComplexDouble, promote to ComplexFloat.
+    @brief inplace perform Exponential on all the element in Tensor (deprecated).
+    @details This function will perform Exponential on all the elements in Tensor \p Tin,
+    casting the input to Float / ComplexFloat in place.
     @param[in] Tin, the input Tensor.
+    @deprecated Use Exp_() instead, which is dtype-preserving; for the old float-precision-forcing
+    behavior cast first (Tin.astype_(Type.Float)) then call Exp_().
     */
-    void Expf_(Tensor &Tin);
+    [[deprecated("use Exp_() (dtype-preserving) instead")]] void Expf_(Tensor &Tin);
 
     // Pow:
     //==================================================

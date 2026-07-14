@@ -868,7 +868,6 @@ void unitensor_binding(py::module &m) {
     .def("bond", [](UniTensor &self, const std::string &label){return self.bond(label);} ,py::arg("label"))
     .def("shape", &UniTensor::shape)
     .def("signflip", &UniTensor::signflip)
-//     .def("signflip_", &UniTensor::signflip_)
     .def("to_", &UniTensor::to_)
     .def(
       "to_different_device",
@@ -1874,7 +1873,14 @@ void unitensor_binding(py::module &m) {
     .def("__itruediv__", [](UniTensor &self, const cytnx::Scalar &rhs) { return self.Div_(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__floordiv__", [](UniTensor &self, const UniTensor &rhs) { return linalg::Div(self, rhs); })
+    // Python '//' maps to __floordiv__, a distinct dunder from '/'. It must mirror __truediv__:
+    // UniTensor//UniTensor is the same removed elementwise (Hadamard) division (#934), so it raises
+    // rather than silently routing to linalg::Div -- otherwise 'a // b' is a back-door for the
+    // quotient that 'a / b' rejects. Scalar floordiv ('ut // 2.0') stays, matching scalar '/'.
+    .def("__floordiv__",
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor {
+           raise_unitensor_elementwise_removed(" // ", kUniTensorDivRemovedGuidance);
+         })
     .def("__floordiv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return linalg::Div(self, static_cast<cytnx::cytnx_float>(rhs));
@@ -1969,8 +1975,12 @@ void unitensor_binding(py::module &m) {
     .def("__rfloordiv__", [](UniTensor &self, const cytnx::Scalar &lhs) { return linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // '//=' maps to __ifloordiv__; mirror __itruediv__ -- UniTensor//=UniTensor is the removed
+    // in-place elementwise division (#934), so it raises instead of routing to Div_.
     .def("__ifloordiv__",
-         [](UniTensor &self, const UniTensor &rhs) { return self.Div_(rhs); })
+         [](UniTensor &self, const UniTensor &rhs) -> UniTensor & {
+           raise_unitensor_elementwise_removed(" //= ", kUniTensorDivRemovedGuidance);
+         })
     .def("__ifloordiv__",
          [](UniTensor &self, const py::numpy_scalar<float> &rhs) {
            return self.Div_(static_cast<cytnx::cytnx_float>(rhs));

@@ -235,8 +235,36 @@ void linalg_binding(py::module &m) {
 
   m_linalg.def("Exp", &cytnx::linalg::Exp, py::arg("Tin"));
   m_linalg.def("Exp_", &cytnx::linalg::Exp_, py::arg("Tio"));
-  m_linalg.def("Expf_", &cytnx::linalg::Expf_, py::arg("Tio"));
-  m_linalg.def("Expf", &cytnx::linalg::Expf, py::arg("Tio"));
+  // Expf/Expf_ are deprecated: Exp/Exp_ are now dtype-preserving (a Float input already yields a
+  // Float result), so the float-precision variants are redundant. The -Wdeprecated-declarations
+  // warning from calling the [[deprecated]] cytnx::linalg::Expf/Expf_ is suppressed around these
+  // standalone binding statements (legal at statement scope, unlike inside a .def() chain).
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+  m_linalg.def(
+    "Expf_",
+    [](cytnx::Tensor &Tio) {
+      // PyErr_WarnEx returns -1 when the warning is turned into an exception (e.g. under
+      // -W error::DeprecationWarning); propagate it instead of continuing.
+      if (PyErr_WarnEx(PyExc_DeprecationWarning, "Expf_() is deprecated, use Exp_() instead.", 1) <
+          0)
+        throw py::error_already_set();
+      cytnx::linalg::Expf_(Tio);
+    },
+    py::arg("Tio"));
+  m_linalg.def(
+    "Expf",
+    [](cytnx::Tensor &Tio) {
+      if (PyErr_WarnEx(PyExc_DeprecationWarning, "Expf() is deprecated, use Exp() instead.", 1) < 0)
+        throw py::error_already_set();
+      return cytnx::linalg::Expf(Tio);
+    },
+    py::arg("Tio"));
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
 
   // UT, [Note] no bool type!
   m_linalg.def(

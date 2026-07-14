@@ -13,7 +13,11 @@ well defined:
     TypeError instead.
   * ``*`` ``/`` ``*=`` ``/=`` are REMOVED: the elementwise (Hadamard)
     product/quotient of two UniTensors is basis-dependent and has no
-    tensor-network meaning. They raise TypeError with guidance.
+    tensor-network meaning. They raise TypeError with guidance. Python's
+    floor-division ``//`` / ``//=`` map to the distinct ``__floordiv__`` /
+    ``__ifloordiv__`` dunders but route to the same removed elementwise
+    division, so they must raise too (otherwise ``a // b`` back-doors the
+    quotient that ``a / b`` rejects).
 
 The C++ ``operator+``/``operator-`` on UniTensor (declared in
 include/linalg.hpp) is unchanged: src/linalg/Lanczos_Gnd_Ut.cpp and
@@ -139,6 +143,20 @@ def test_itruediv_unitensor_unitensor_raises():
         ut1 /= ut2
 
 
+def test_floordiv_unitensor_unitensor_raises():
+    # '//' (__floordiv__) is a distinct dunder from '/' but routes to the same
+    # removed elementwise division -- it must not back-door the quotient.
+    ut1, ut2 = _pair()
+    with pytest.raises(TypeError, match=r"(?s)934.*get_block"):
+        ut1 // ut2
+
+
+def test_ifloordiv_unitensor_unitensor_raises():
+    ut1, ut2 = _pair()
+    with pytest.raises(TypeError, match=r"(?s)934.*get_block"):
+        ut1 //= ut2
+
+
 # ---------------------------------------------------------------------------
 # Kept: scalar (+) UniTensor / UniTensor (+) scalar in both directions,
 # out-of-place and in-place.
@@ -175,6 +193,17 @@ def test_scalar_truediv_unitensor_still_works():
     r2 = 4.0 / ut
     assert r1.get_block()[0, 0].item() == 0.5
     assert r2.get_block()[0, 0].item() == 4.0
+
+
+def test_scalar_floordiv_unitensor_still_works():
+    # scope boundary: only the two-UniTensor '//' overload is removed; scalar
+    # floor division stays, mirroring scalar '/'. (It routes to linalg::Div, so
+    # 'ut // 2.0' matches 'ut / 2.0' rather than performing an integer floor.)
+    ut = cytnx.UniTensor(cytnx.ones([2, 2]))
+    r1 = ut // 2.0
+    assert r1.get_block()[0, 0].item() == 0.5
+    ut //= 2.0
+    assert ut.get_block()[0, 0].item() == 0.5
 
 
 def test_iadd_scalar_still_works():

@@ -14,7 +14,7 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
 
   Bond B1 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1}, {Symmetry::FermionParity()});
-  Bond B12 = B1.combineBond(B2).redirect_();
+  Bond B12 = B1.combineBond(B2).redirect();
   Bond B3 = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   Bond B4 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   Bond B1g = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});

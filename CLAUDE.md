@@ -26,35 +26,14 @@ machines, including cloud agents; only *running* GPU tests needs real hardware).
 
 ## Test
 
-C++ tests need `RUN_TESTS=ON` — use a `debug-*` preset:
+C++ tests need `RUN_TESTS=ON` (a `debug-*` preset sets this already). Two agent
+skills carry the full build/test/benchmark mechanics — invoke them instead of
+re-deriving commands:
 
-```bash
-cmake --preset debug-openblas-cpu
-cmake --build --preset debug-openblas-cpu --target test_main
-ctest --preset cpu-only --output-on-failure
-# single suite: build/debug-openblas-cpu/tests/test_main --gtest_filter='Storage.*'
-```
-
-Debug presets build with AddressSanitizer (`USE_DEBUG=ON` → `-fsanitize=address`).
-If a debug test binary aborts inside ASAN on startup — common under CUDA — run it
-with `ASAN_OPTIONS='protect_shadow_gap=0:replace_intrin=0:detect_leaks=0'`.
-
-GPU tests — target `gpu_test_main` (binary under `tests/gpu/`), NOT `test_main`:
-
-```bash
-cmake --preset debug-openblas-cuda                # add -DCMAKE_CUDA_ARCHITECTURES=<arch> if autodetect fails
-cmake --build --preset debug-openblas-cuda --target gpu_test_main test_main
-ctest --preset cpu-and-cuda --output-on-failure   # full GPU arith suite is slow (~10 min)
-```
-
-Python — CI installs editable and runs pytest (pyproject pins `--preset=openblas-cpu`):
-
-```bash
-pip install --editable '.[dev]' --config-settings=build-dir=build \
-  --config-settings=cmake.define.CMAKE_BUILD_TYPE=Debug \
-  --config-settings=cmake.define.RUN_TESTS=ON
-pytest pytests/ --doctest-modules
-```
+- **`build-test-workflow`** — invoke before any build or test run (any
+  preset, C++ or Python, with or without a GPU).
+- **`cross-revision-benchmark`** — invoke before making or checking any
+  performance claim.
 
 ## Format — must match CI exactly
 
@@ -143,6 +122,12 @@ Green locally before opening a PR. CI enforces:
   codebase this size; prefer stacked, single-purpose PRs.
 - **Physics / numerical-correctness changes require human review.** An agent must
   not alter algorithmic or mathematical behavior unprompted — flag it explicitly.
+- **Heuristic tie-breaks are observable behavior.** Changing *which* of several
+  equal-cost candidates a greedy/heuristic planner picks (e.g. the contraction
+  order from `OptimalTreeSolver`) changes user-visible results even though every
+  choice is individually valid — treat it like the physics guardrail: flag it and
+  get sign-off. Verify a reviewer's counterexample by reproducing it on both
+  revisions before accepting or disputing it.
 - **Call out any mixed-dtype or type-promotion change** — it is easy to get subtly
   wrong (see gotchas below).
 - **Tests must check independent expected values.** Do not compare one Cytnx

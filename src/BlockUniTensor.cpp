@@ -1239,7 +1239,8 @@ namespace cytnx {
 
   void BlockUniTensor::Transpose_() {
     const int rank = this->rank();
-    for (auto &bond : this->_bonds) bond.redirect_();
+    // Bond is immutable (#1001): redirect() returns a new Bond, assign it back.
+    for (auto &bond : this->_bonds) bond = bond.redirect();
     // Make reverse sequence [rank - 1, rank - 2, ..., 0].
     auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
     std::vector<cytnx_int64> idxorder(idxorder_view.begin(), idxorder_view.end());
@@ -1864,7 +1865,9 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
       if (this->_bonds[i].has_duplicate_qnums()) {
         has_dup.push_back(i);
-        idx_mappers.push_back(this->_bonds[i].group_duplicates_());
+        std::vector<cytnx_uint64> mapper;
+        this->_bonds[i] = this->_bonds[i].group_duplicates(mapper);
+        idx_mappers.push_back(mapper);
       }
     }
 
@@ -1928,14 +1931,14 @@ namespace cytnx {
     std::vector<cytnx_uint64> cb_stride(indicators.size());
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
-        Bond tmp = this->_bonds[i];
+        Bond tmp = this->_bonds[i].clone();
         cb_stride[0] = this->_bonds[i].qnums().size();
         for (int j = 1; j < indicators.size(); j++) {
           cb_stride[j] = this->_bonds[i + j].qnums().size();
           if (force)
             tmp._impl->force_combineBond_(this->_bonds[i + j]._impl, false);  // no grouping
           else
-            tmp.combineBond_(this->_bonds[i + j], false);  // no grouping
+            tmp = tmp.combineBond(this->_bonds[i + j], false);  // no grouping
         }
         new_bonds.push_back(tmp);
         i += indicators.size() - 1;

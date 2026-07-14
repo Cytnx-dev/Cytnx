@@ -28,13 +28,17 @@ TEST(Bond, SimpleBondNoSymm) {
 TEST(Bond, SimpleBondOperation) {
   Bond bd(4, BD_KET);
   EXPECT_EQ(bd.type(), BD_KET);
-  bd.set_type(BD_BRA);
-  EXPECT_EQ(bd.type(), BD_BRA);
+  // Bond is immutable: retype() returns a new Bond and leaves bd untouched.
+  Bond bd_bra = bd.retype(BD_BRA);
+  EXPECT_EQ(bd_bra.type(), BD_BRA);
+  EXPECT_EQ(bd.type(), BD_KET);
 
-  Bond bd1 = bd.retype(BD_KET);
+  Bond bd1 = bd_bra.retype(BD_KET);
   EXPECT_EQ(bd1.type(), BD_KET);
+  EXPECT_EQ(bd_bra.type(), BD_BRA);
   Bond bd2 = bd1.redirect();
   EXPECT_EQ(bd2.type(), BD_BRA);
+  EXPECT_EQ(bd1.type(), BD_KET);
 }
 
 TEST(Bond, CombineBondNoSymmReg) {
@@ -54,8 +58,8 @@ TEST(Bond, CombineBondNoSymmBraKet) {
   EXPECT_THROW(Bond bd5 = bd1.combineBond(bd3);, std::logic_error);
   Bond bd5 = bd1.combineBond(bd2);
   EXPECT_EQ(bd5.type(), BD_BRA);
-  bd3.set_type(BD_BRA);
-  bd4.set_type(BD_BRA);
+  bd3 = bd3.retype(BD_BRA);
+  bd4 = bd4.retype(BD_BRA);
   Bond bd_all = bd1.combineBonds({bd2, bd3, bd4});
   EXPECT_EQ(bd_all.dim(), 210);
   EXPECT_EQ(bd_all.type(), BD_BRA);
@@ -212,10 +216,76 @@ TEST(Bond, ZnSymmetryRejectsOutOfRangeInputs) {
 }
 
 TEST(Bond, Clear_type) {
+  // clear_type()/set_type() are removed from the public Bond interface (Bond is immutable,
+  // #846); retype() is the only way left to change a symmetry bond's type, and it must still
+  // reject regularizing a bond that carries quantum numbers.
   Bond bd_sym = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 
-  EXPECT_THROW(bd_sym.clear_type(), std::logic_error);
-  EXPECT_THROW(bd_sym.set_type(BD_REG), std::logic_error);
+  EXPECT_THROW(bd_sym.retype(BD_REG), std::logic_error);
+}
+
+// --- #846: Bond immutability regression tests -----------------------------
+// Pin the replacement behavior: redirect()/combineBond()/retype() always
+// return a NEW Bond and leave the receiver (and anything sharing its impl)
+// untouched. This is the property the removed in-place mutators
+// (set_type/redirect_/combineBond_/clear_type) would have violated.
+
+TEST(Bond, RedirectReturnsNewBondOriginalUntouched) {
+  Bond bd(4, BD_KET);
+  Bond shared = bd;  // shares the same Bond_impl (cheap copy).
+  Bond redirected = bd.redirect();
+
+  EXPECT_EQ(redirected.type(), BD_BRA);
+  EXPECT_EQ(bd.type(), BD_KET);
+  // Sharing is safe: a holder that aliased the original impl never observes
+  // the redirect() call because redirect() operates on a clone.
+  EXPECT_EQ(shared.type(), BD_KET);
+}
+
+TEST(Bond, CombineBondReturnsNewBondOriginalUntouched) {
+  Bond bd1 = Bond(BD_BRA, {{0}, {3}}, {2, 3}, {Symmetry::U1()});
+  Bond bd2 = Bond(BD_BRA, {{1}}, {4}, {Symmetry::U1()});
+  Bond bd1_shared = bd1;
+
+  Bond combined = bd1.combineBond(bd2);
+
+  EXPECT_EQ(combined.dim(), bd1.dim() * bd2.dim());
+  // bd1 itself (and anything aliasing it) must be unaffected by the combine.
+  EXPECT_EQ(bd1.dim(), 5);
+  EXPECT_EQ(bd1.qnums(), (std::vector<std::vector<cytnx_int64>>{{0}, {3}}));
+  EXPECT_EQ(bd1_shared.qnums(), bd1.qnums());
+}
+
+TEST(Bond, RetypeReturnsNewBondOriginalUntouched) {
+  Bond bd(4, BD_KET);
+  Bond bd_shared = bd;
+
+  Bond retyped = bd.retype(BD_BRA);
+
+  EXPECT_EQ(retyped.type(), BD_BRA);
+  EXPECT_EQ(bd.type(), BD_KET);
+  EXPECT_EQ(bd_shared.type(), BD_KET);
+}
+
+TEST(Bond, PublicSurfaceHasNoInPlaceMutators) {
+  // Compile-surface guarantee (#846): the following are not member functions
+  // of Bond anymore. If any of these lines were uncommented, this file would
+  // fail to compile:
+  //   bd.set_type(BD_BRA);
+  //   bd.redirect_();
+  //   bd.clear_type();
+  //   bd.combineBond_(bd2);
+  //   bd.group_duplicates_();
+  //   bd *= bd2;
+  // Only the const accessors and return-new forms remain reachable, so any
+  // Bond obtained from a UniTensor (or aliased elsewhere) cannot be mutated
+  // through the public API -- this test documents and locks in that surface.
+  Bond bd(4, BD_KET);
+  Bond bd2(4, BD_KET);
+  static_assert(!std::is_void<decltype(bd.redirect())>::value, "redirect() must exist");
+  static_assert(!std::is_void<decltype(bd.retype(BD_BRA))>::value, "retype() must exist");
+  static_assert(!std::is_void<decltype(bd.combineBond(bd2))>::value, "combineBond() must exist");
+  SUCCEED();
 }
 
 // TEST(Bond, ConstructorTypeQnums){
