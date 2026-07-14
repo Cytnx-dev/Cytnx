@@ -172,22 +172,23 @@ namespace cytnx {
         }
 
         if (Tin.is_tag()) {
-          outCyT[0].tag();
-          outCyT[1].tag();
-          outCyT[2].tag();
+          outCyT[0].tag_();
+          outCyT[1].tag_();
+          outCyT[2].tag_();
           for (int i = 0; i < Tin.rowrank(); i++) {
-            outCyT[0].bonds()[i].set_type(Tin.bonds()[i].type());
+            outCyT[0]._impl->_bonds[i] = outCyT[0]._impl->_bonds[i].retype(Tin.bonds()[i].type());
           }
-          outCyT[0].bonds().back().set_type(cytnx::BD_BRA);
+          outCyT[0]._impl->_bonds.back() = outCyT[0]._impl->_bonds.back().retype(cytnx::BD_BRA);
           outCyT[0]._impl->_is_braket_form = outCyT[0]._impl->_update_braket();
 
-          outCyT[1].bonds()[0].set_type(cytnx::BD_KET);
-          outCyT[1].bonds()[1].set_type(cytnx::BD_BRA);
+          outCyT[1]._impl->_bonds[0] = outCyT[1]._impl->_bonds[0].retype(cytnx::BD_KET);
+          outCyT[1]._impl->_bonds[1] = outCyT[1]._impl->_bonds[1].retype(cytnx::BD_BRA);
           outCyT[1]._impl->_is_braket_form = outCyT[1]._impl->_update_braket();
 
-          outCyT[2].bonds()[0].set_type(cytnx::BD_KET);
+          outCyT[2]._impl->_bonds[0] = outCyT[2]._impl->_bonds[0].retype(cytnx::BD_KET);
           for (int i = 1; i < outCyT[2].rank(); i++) {
-            outCyT[2].bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+            outCyT[2]._impl->_bonds[i] =
+              outCyT[2]._impl->_bonds[i].retype(Tin.bonds()[Tin.rowrank() + i - 1].type());
           }
           outCyT[2]._impl->_is_braket_form = outCyT[2]._impl->_update_braket();
         }

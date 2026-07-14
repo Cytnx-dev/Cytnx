@@ -254,7 +254,7 @@ namespace cytnx {
                                                                const std::string &new_label) {
     boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label);
+    out_raw->set_label_(inx, new_label);
     return out_raw;
   }
 
@@ -262,7 +262,7 @@ namespace cytnx {
                                                                const std::string &new_label) {
     boost::intrusive_ptr<DenseUniTensor> out_raw = this->clone_meta();
     out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label);
+    out_raw->set_label_(inx, new_label);
     return out_raw;
   }
 
@@ -828,12 +828,12 @@ namespace cytnx {
     std::vector<Bond> new_bonds;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
-        Bond tmp = this->_bonds[i];
+        Bond tmp = this->_bonds[i].clone();
         for (int j = 1; j < indicators.size(); j++) {
           if (force)
             tmp._impl->force_combineBond_(this->_bonds[i + j]._impl, false);
           else
-            tmp.combineBond_(this->_bonds[i + j]);
+            tmp = tmp.combineBond(this->_bonds[i + j]);
         }
         new_bonds.push_back(tmp);
         i += indicators.size() - 1;
@@ -1170,7 +1170,19 @@ namespace cytnx {
     return out;
   }
 
+  // DenseUniTensor::Norm() (non-deprecated internal virtual) intentionally keeps
+  // delegating to the deprecated linalg::Norm free function for one release so the
+  // returned rank-0 Tensor's dtype stays bit-identical to the old behavior; the
+  // local pragma silences -Wdeprecated-declarations the same way the pybind Norm
+  // shims do.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
   Tensor DenseUniTensor::Norm() const { return linalg::Norm(this->_block); }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
   void DenseUniTensor::Trace_(const std::string &a, const std::string &b) {
     // 1) from label to indx.
     cytnx_uint64 ida, idb;
@@ -1287,7 +1299,8 @@ namespace cytnx {
   void DenseUniTensor::Transpose_() {
     const int rank = this->rank();
     if (this->is_tag()) {
-      for (auto &bond : this->_bonds) bond.redirect_();
+      // Bond is immutable (#1001): redirect() returns a new Bond, assign it back.
+      for (auto &bond : this->_bonds) bond = bond.redirect();
     }
     // Make reverse sequence [rank - 1, rank - 2, ..., 0].
     auto idxorder_view = std::ranges::iota_view(0, rank) | std::views::reverse;
@@ -1295,7 +1308,17 @@ namespace cytnx {
     this->permute_(idxorder, rank - this->_rowrank);
   };
 
-  void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
+  void DenseUniTensor::normalize_() {
+    // Divide by the norm carried as an on-device rank-1 {1} Tensor via the non-deprecated
+    // internal Norm() (whose dtype is Float for Float/ComplexFloat blocks and Double
+    // otherwise). Routing through Tensor /= keeps linalg::iDiv's in-place, dtype-preserving
+    // path -- an Int32 block stays Int32; dividing by a bare double or Scalar would take the
+    // promoting Div + storage-swap path and silently retype integer blocks to Double
+    // (regression caught by DenseUniTensorTest.normalize_int_type). Keeping the divisor a
+    // device Tensor also avoids the device->host->device scalar roundtrip that norm() (which
+    // returns a host double) forces on GPU.
+    this->_block /= this->Norm();
+  }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
   void DenseUniTensor::_load_dispatch(std::fstream &f, unsigned int version) {
@@ -1420,8 +1443,13 @@ namespace cytnx {
         (long long)n);
       if (this->_block.device() == Device.cpu) {
         for (cytnx_uint64 i = 0; i < n; i++) {
+          // `this` and `rhs` are independent UniTensors and need not share a
+          // dtype, so the two Scalars here can differ (e.g. Int64 vs Double).
+          // Compute out-of-place (which promotes via Type.type_promote) and
+          // assign back into this->_block, which narrows the promoted result
+          // to the block's dtype.
           Scalar v = Scalar(this->_block.at({i, i}));
-          v += Scalar(rhs_block.at({i}));
+          v = v + Scalar(rhs_block.at({i}));
           this->_block.at({i, i}) = v;
         }
       } else {
@@ -1471,8 +1499,11 @@ namespace cytnx {
         (long long)n);
       if (this->_block.device() == Device.cpu) {
         for (cytnx_uint64 i = 0; i < n; i++) {
+          // See the analogous comment in Add_(): compute out-of-place (which
+          // promotes across the two independent UniTensors' potentially
+          // differing dtypes) and narrow back on assignment into this->_block.
           Scalar v = Scalar(this->_block.at({i, i}));
-          v -= Scalar(rhs_block.at({i}));
+          v = v - Scalar(rhs_block.at({i}));
           this->_block.at({i, i}) = v;
         }
       } else {

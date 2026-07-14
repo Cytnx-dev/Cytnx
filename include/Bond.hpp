@@ -367,18 +367,12 @@ namespace cytnx {
     */
     bondType type() const { return this->_impl->type(); };
 
-    //@{
     /**
     @brief return the current quantum number set(s) by reference
     @return [2d vector] with shape: (dim, # of Symmetry)
         @note Compare to qnums_clone(), this function return reference.
     */
     const std::vector<std::vector<cytnx_int64>> &qnums() const { return this->_impl->qnums(); };
-    /**
-        @see qnums() const
-    */
-    std::vector<std::vector<cytnx_int64>> &qnums() { return this->_impl->qnums(); };
-    //@}
 
     /**
     @brief return the clone (deep copy) of the current quantum number set(s)
@@ -401,18 +395,12 @@ namespace cytnx {
     */
     cytnx_uint32 Nsym() const { return this->_impl->syms().size(); };
 
-    //@{
     /**
     @brief return the vector of symmetry objects by reference.
         @note Compare to syms_clone() const, this function return by reference.
     @return [vector of Symmetry]
     */
     const std::vector<Symmetry> &syms() const { return this->_impl->syms(); };
-    /**
-        @see syms() const
-    */
-    std::vector<Symmetry> &syms() { return this->_impl->syms(); };
-    //@}
 
     /**
     @brief return copy of the vector of symmetry objects.
@@ -422,29 +410,17 @@ namespace cytnx {
     std::vector<Symmetry> syms_clone() const { return this->_impl->syms_clone(); };
 
     /**
-    @brief change the tag-type of the instance Bond
-    @param[in] new_bondType the new tag-type, it can be bondType.BD_BRA,
-            boncType.BD_KET or bondType.BD_REG. See cytnx::bondType.
-        @attention You cannot change the symmetry bond (bondType.BD_BRA or bondType.BD_KET
-            to regular type (bondType.BD_REG) except the size of the quantum number is 0.
-    */
-    Bond &set_type(const bondType &new_bondType) {
-      this->_impl->set_type(new_bondType);
-      return *this;
-    }
-
-    /**
     @brief create a new instance of Bond with type changed to the new tag-type.
     @param[in]  new_bondType the new tag-type, it can be bondType.BD_BRA,
             bondType.BD_KET or bondType.BD_REG. See cytnx::bondType.
-        @note This is equivalent to Bond.clone().set_type()
+        @note This is equivalent to Bond.clone() with the type changed.
         @attention You cannot change the symmetry bond (bondType.BD_BRA or bondType.BD_KET
             to regular type (bondType.BD_REG) except the size of the quantum number is 0.
-        @see clone(), set_type(const bondType & new_bondType)
+        @see clone()
     */
-    Bond retype(const bondType &new_bondType) {
-      auto out = this->clone();
-      out.set_type(new_bondType);
+    Bond retype(const bondType &new_bondType) const {
+      Bond out = this->clone();
+      out._impl->set_type(new_bondType);
       return out;
     }
 
@@ -453,26 +429,10 @@ namespace cytnx {
             bondType.BD_BRA / bondType.BD_KET.
     */
     Bond redirect() const {
-      auto out = this->clone();
-      out.set_type(bondType(int(out.type()) * -1));
+      Bond out = this->clone();
+      out._impl->set_type(bondType(int(out.type()) * -1));
       return out;
     }
-
-    /**
-    @brief Change the bond type between bondType.BD_BRA and bondType.BD_KET
-            in the Bond.
-    */
-    Bond &redirect_() {
-      this->set_type(bondType(int(this->type()) * -1));
-      return *this;
-    }
-
-    /**
-    @brief change the tag-type to the default value bondType.BD_REG.
-        @pre The size of quantum number should be 0. Namely, you cannot clear the
-            symmetric bond.
-    */
-    void clear_type() { this->_impl->clear_type(); }
 
     /**
     @brief return a copy of the instance Bond
@@ -495,36 +455,6 @@ namespace cytnx {
     }
 
     /**
-    @brief Combine the input bond with self, inplacely.
-    @param[in] bd_in the bond that to be combined with self.
-          @param[in] is_grp this parameter is only used when the bond is
-      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
-      If is_grp is true, the basis with duplicated quantum number will be
-      grouped together as a single basis. See
-      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
-          @pre
-            1. The type of two bonds (see cytnx::bondType) need to be same.
-            2. The Symmetry of two bonds should be same.
-          @note Compare to \n
-      combineBond(const Bond &bd_in, const bool &is_grp) const, \n
-            this function in inplace function.
-          @see combineBond(const Bond &bd_in, const bool &is_grp)const
-
-    ## Example:
-    ### c++ API:
-    \include example/Bond/combineBondinplace.cpp
-    #### output>
-    \verbinclude example/Bond/combineBondinplace.cpp.out
-    ### python API:
-    \include example/Bond/combineBondinplace.py
-    #### output>
-    \verbinclude example/Bond/combineBondinplace.py.out
-    */
-    void combineBond_(const Bond &bd_in, const bool &is_grp = true) {
-      this->_impl->combineBond_(bd_in._impl, is_grp);
-    }
-
-    /**
     @brief combine the input bond with self, and return a new combined Bond instance.
     @param[in] bd_in the bond that to be combined.
           @param[in] is_grp this parameter is only used when the bond is
@@ -536,10 +466,7 @@ namespace cytnx {
           @pre
             1. The type of two bonds (see cytnx::bondType) need to be same.
             2. The Symmetry of two bonds should be same.
-          @note Compare to \n
-      combineBond_(const Bond &bd_in, const bool &is_grp), \n
-            this function will create a new Bond object.
-          @see combineBond_(const Bond &bd_in, const bool &is_grp)
+          @note This function always returns a new Bond object; Bond is immutable.
 
     ## Example:
     ### c++ API:
@@ -569,10 +496,7 @@ namespace cytnx {
           @pre
             1. The type of all bonds (see cytnx::bondType) need to be same.
             2. The Symmetry of all bonds should be same.
-          @note Compare to \n
-      combineBond_(const std::vector<Bond> &bds, const bool &is_grp),\n
-            this function will create a new Bond object.
-    @see combineBond_(const std::vector<Bond> &bds, const bool &is_grp)
+          @note This function always returns a new Bond object; Bond is immutable.
 
     ## Example:
     ### c++ API:
@@ -584,34 +508,12 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBond.py.out
     */
-    Bond combineBond(const std::vector<Bond> &bds, const bool &is_grp = true) {
+    Bond combineBond(const std::vector<Bond> &bds, const bool &is_grp = true) const {
       Bond out = this->clone();
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
-        out.combineBond_(bds[i], is_grp);
+        out._impl->combineBond_(bds[i]._impl, is_grp);
       }
       return out;
-    }
-
-    /**
-    @brief combine multiple input bonds with self, inplacely
-    @param[in] bds the bonds that to be combined with self.
-          @param[in] is_grp this parameter is only used when the bond is
-      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
-      If is_grp is true, the basis with duplicated quantum number will be
-      grouped together as a single basis. See
-      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
-        @pre
-          1. The type of all bonds (see cytnx::bondType) need to be same.
-          2. The Symmetry of all bonds should be same.
-        @note Compare to \n
-      combineBond(const std::vector<Bond> &bds, const bool &is_grp),\n
-          this function will create a new Bond object.
-    @see combineBond(const std::vector<Bond> &bds, const bool &is_grp)
-    */
-    void combineBond_(const std::vector<Bond> &bds, const bool &is_grp = true) {
-      for (cytnx_uint64 i = 0; i < bds.size(); i++) {
-        this->combineBond_(bds[i], is_grp);
-      }
     }
 
     /**
@@ -629,10 +531,7 @@ namespace cytnx {
           @pre
             1. The type of all bonds (see cytnx::bondType) need to be same.
             2. The Symmetry of all bonds should be same.
-          @note Compare to \n
-      combineBonds_(const std::vector<Bond> &bds, const bool &is_grp),\n
-            this function will create a new Bond object.
-    @see combineBonds_(const std::vector<Bond> &bds, const bool &is_grp)
+          @note This function always returns a new Bond object; Bond is immutable.
 
     ## Example:
     ### c++ API:
@@ -648,51 +547,12 @@ namespace cytnx {
       "Please use "
       "Bond combineBond(const Bond &bd_in, const bool &is_grp) const "
       "instead.")]] Bond
-      combineBonds(const std::vector<Bond> &bds, const bool &is_grp = true) {
+      combineBonds(const std::vector<Bond> &bds, const bool &is_grp = true) const {
       Bond out = this->clone();
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
-        out.combineBond_(bds[i], is_grp);
+        out._impl->combineBond_(bds[i]._impl, is_grp);
       }
       return out;
-    }
-
-    /**
-        @deprecated This function is deprecated. Please use \n
-    combineBond_(const std::vector<Bond> &bds, const bool &is_grp)\n
-        instead.
-    @brief combine multiple input bonds with self, inplacely
-    @param[in] bds the bonds that to be combined with self.
-          @param[in] is_grp this parameter is only used when the bond is
-      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
-      If is_grp is true, the basis with duplicated quantum number will be
-      grouped together as a single basis. See
-      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
-        @pre
-          1. The type of all bonds (see cytnx::bondType) need to be same.
-          2. The Symmetry of all bonds should be same.
-        @note Compare to \n
-      combineBonds(const std::vector<Bond> &bds, const bool &is_grp),\n
-          this function will create a new Bond object.
-    @see combineBonds(const std::vector<Bond> &bds, const bool &is_grp)
-
-    ## Example:
-    ### c++ API:
-    \include example/Bond/combineBonds_.cpp
-    #### output>
-    \verbinclude example/Bond/combineBonds_.cpp.out
-    ### python API:
-    \include example/Bond/combineBonds_.py
-    #### output>
-    \verbinclude example/Bond/combineBonds_.py.out
-    */
-    [[deprecated(
-      "Please use "
-      "combineBond_(const std::vector<Bond> &bds, const bool &is_grp) "
-      "instead.")]] void
-      combineBonds_(const std::vector<Bond> &bds, const bool &is_grp = true) {
-      for (cytnx_uint64 i = 0; i < bds.size(); i++) {
-        this->combineBond_(bds[i], is_grp);
-      }
     }
 
     /**
@@ -757,15 +617,9 @@ namespace cytnx {
     /**
     @brief return all degeneracies.
     @return std::vector<cytnx_uint64> degeneracy
-        @see getDegeneracies() const,
-         getDegeneracy(const std::vector<cytnx_int64> &qnum) const,
+        @see getDegeneracy(const std::vector<cytnx_int64> &qnum) const,
          getDegeneracy(const std::vector<cytnx_int64> &qnum,
                        std::vector<cytnx_uint64> &indices) const.
-    */
-    std::vector<cytnx_uint64> &getDegeneracies() { return this->_impl->getDegeneracies(); }
-
-    /**
-        @see getDegeneracies()
     */
     const std::vector<cytnx_uint64> &getDegeneracies() const {
       return this->_impl->getDegeneracies();
@@ -781,24 +635,6 @@ namespace cytnx {
     }
 
     /**
-    @brief Group the duplicated quantum number, inplacely.
-        @details This function will group the duplicated quantum number and return the
-            mapper, where mapper is about the new index from old index via\n
-        new_index = return<cytnx_uint64>[old_index].
-        @pre The Bond need to be symmetric type (namely, bondType should be
-            bondType.BD_BRA or bondType.BD_DET, see \ref bondType.)
-        @note
-            1. Compare to the function
-              group_duplicates(std::vector<cytnx_uint64> &mapper) const,
-                  this function is inplace function.
-                2. This function will sort ascending of the quantum number.
-        @see group_duplicates(std::vector<cytnx_uint64> &mapper) const,
-            has_duplicate_qnums() const.
-    @return std::vector<cytnx_uint64> mapper
-    */
-    std::vector<cytnx_uint64> group_duplicates_() { return this->_impl->group_duplicates_(); }
-
-    /**
     @brief Group the duplicated quantum number and return the new instance
             of the Bond object.
         @details This function will group the duplicated quantum number and return
@@ -809,13 +645,8 @@ namespace cytnx {
         new_index = return<cytnx_uint64>[old_index].
         @pre The Bond need to be symmetric type (namely, bondType should be
             bondType.BD_BRA or bondType.BD_DET, see \ref bondType.)
-        @note
-            1. Compare to the function
-              group_duplicates_(), this function will create the new instance of
-                  Bond object.
-                2. This function will sort ascending of the quantum number.
-        @see group_duplicates_(std::vector<cytnx_uint64> &mapper),
-            has_duplicate_qnums() const.
+        @note This function will sort ascending of the quantum number.
+        @see has_duplicate_qnums() const.
     @return Bond
     */
     Bond group_duplicates(std::vector<cytnx_uint64> &mapper) const {
@@ -829,9 +660,7 @@ namespace cytnx {
         @details This function will check whether there is any duplicated quantum number
             is the Bond. If yes, return ture. Otherwise, return false.
         @note For the regular bond (bondType.BD_REG), it will always return false.
-        @see
-            group_duplicates_(std::vector<cytnx_uint64> &mapper)
-            group_duplicates(std::vector<cytnx_uint64> &mapper) const
+        @see group_duplicates(std::vector<cytnx_uint64> &mapper) const
     @return bool
     */
     bool has_duplicate_qnums() const { return this->_impl->has_duplicate_qnums(); }
@@ -912,32 +741,9 @@ namespace cytnx {
             // bd1, bd2 and bd3 are Bond objects.
                 bd3 = bd1 * bd2;
         @endcode
-        @see operator*=(const Bond &rhs),
-        combineBond(const Bond &bd_in, const bool &is_grp) const
+        @see combineBond(const Bond &bd_in, const bool &is_grp) const
     */
     Bond operator*(const Bond &rhs) const { return this->combineBond(rhs); }
-
-    /**
-    @brief The multiplication assignment operator of the Bond object.
-    @details The multiplication assignment operator of the Bond means that Combine
-            two Bond inplacely, So this operator is same as
-                \ref combineBond_ "combineBond_".
-            The following code are same result:
-        @code
-            // bd1 and bd2 are Bond objects.
-                bd1.combineBond_(bd2);
-        @endcode
-        @code
-            // bd1 and bd2 are Bond objects.
-                bd1 *= bd2;
-        @endcode
-        @see operator*(const Bond &rhs) const,
-                combineBond_(const Bond &bd_in, const bool &is_grp)
-    */
-    Bond &operator*=(const Bond &rhs) {
-      this->combineBond_(rhs);
-      return *this;
-    }
   };
 
   ///@cond

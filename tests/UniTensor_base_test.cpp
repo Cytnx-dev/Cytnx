@@ -16,6 +16,9 @@ TEST_F(UniTensor_baseTest, get_index) {
 
 TEST_F(UniTensor_baseTest, rank_detects_label_bond_mismatch) {
   ASSERT_EQ(utzero345.rank(), 3);
-  utzero345.bonds().pop_back();
+  // rank() guards against an internal labels/bonds size mismatch. Since #1001 made bonds()
+  // immutable, that desync is unreachable through the public API by design, so poke the
+  // internal vector directly (const_cast on the reference to _bonds) to exercise the guard.
+  const_cast<std::vector<cytnx::Bond> &>(utzero345.bonds()).pop_back();
   EXPECT_THROW(utzero345.rank(), cytnx::error);
 }

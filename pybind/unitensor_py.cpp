@@ -271,6 +271,55 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
   return accessors;
 };
 
+namespace {
+  // Deprecated combineBonds()/Norm() binding helpers. Calling the [[deprecated]]
+  // UniTensor::combineBonds / UniTensor::Norm warns; the suppression lives here at file scope
+  // because a #pragma GCC diagnostic cannot legally sit inside the .def() chain expression under
+  // GCC (only clang tolerated that). These bindings intentionally keep exposing the deprecated
+  // calls for one release: use combineBond_()/combineBond() and norm() instead.
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+  #endif
+  py::object unitensor_combineBonds_int_deprecated(py::object self,
+                                                   const std::vector<cytnx_int64> &indicators,
+                                                   const bool &force, const bool &by_label) {
+    if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                     "combineBonds() is deprecated, use combineBond_()/combineBond() instead.",
+                     1) < 0)
+      throw py::error_already_set();
+    auto &self_ref = self.cast<UniTensor &>();
+    if (by_label) {
+      cytnx_warning_msg(true,
+                        "[Deprecated notice] by_label option is going to be deprecated. using "
+                        "string will automatically recognized as labels.%s",
+                        "\n");
+      self_ref.combineBonds(indicators, force, by_label);
+    } else {
+      self_ref.combineBonds(indicators, force);
+    }
+    return self;
+  }
+  py::object unitensor_combineBonds_str_deprecated(py::object self,
+                                                   const std::vector<std::string> &indicators,
+                                                   const bool &force) {
+    if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                     "combineBonds() is deprecated, use combineBond_()/combineBond() instead.",
+                     1) < 0)
+      throw py::error_already_set();
+    self.cast<UniTensor &>().combineBonds(indicators, force);
+    return self;
+  }
+  Tensor unitensor_Norm_deprecated(UniTensor &self) {
+    if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) < 0)
+      throw py::error_already_set();
+    return self.Norm();
+  }
+  #if defined(__GNUC__) || defined(__clang__)
+    #pragma GCC diagnostic pop
+  #endif
+}  // namespace
+
 void unitensor_binding(py::module &m) {
   py::class_<cHclass>(m, "Helpclass")
     .def("exists", &cHclass::exists)
@@ -328,30 +377,53 @@ void unitensor_binding(py::module &m) {
          py::arg("rowrank") = (cytnx_int64)(-1),
          py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
          py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
+    .def("set_name_",
+         [](py::object self, const std::string &name) {
+           self.cast<UniTensor &>().set_name_(name);
+           return self;
+         })
     .def("set_name",
          [](py::object self, const std::string &name) {
-           self.cast<UniTensor &>().set_name(name);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_name() is deprecated, use set_name_() instead.", 1) < 0) throw py::error_already_set();
+           self.cast<UniTensor &>().set_name_(name);
            return self;
          })
 
 
+    .def("set_label_",
+         [](py::object self, const cytnx_int64 &idx, const std::string &new_label) {
+           self.cast<UniTensor &>().set_label_(idx, new_label);
+           return self;
+         }, py::arg("idx"), py::arg("new_label"))
+
+    .def("set_label_",
+         [](py::object self, const std::string &old_label, const std::string &new_label) {
+           self.cast<UniTensor &>().set_label_(old_label, new_label);
+           return self;
+         }, py::arg("old_label"), py::arg("new_label"))
+
     .def("set_label",
          [](py::object self, const cytnx_int64 &idx, const std::string &new_label) {
-           self.cast<UniTensor &>().set_label(idx, new_label);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_label() is deprecated, use set_label_() instead.", 1) < 0) throw py::error_already_set();
+           self.cast<UniTensor &>().set_label_(idx, new_label);
            return self;
          }, py::arg("idx"), py::arg("new_label"))
 
     .def("set_label",
          [](py::object self, const std::string &old_label, const std::string &new_label) {
-           self.cast<UniTensor &>().set_label(old_label, new_label);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_label() is deprecated, use set_label_() instead.", 1) < 0) throw py::error_already_set();
+           self.cast<UniTensor &>().set_label_(old_label, new_label);
            return self;
          }, py::arg("old_label"), py::arg("new_label"))
 
 
     .def("set_labels",
          [](py::object self, const std::vector<std::string> &new_labels) {
-           PyErr_WarnEx(PyExc_DeprecationWarning,
-             "set_labels() is deprecated, use relabel_() instead.", 1);
+           if (PyErr_WarnEx(PyExc_DeprecationWarning,
+             "set_labels() is deprecated, use relabel_() instead.", 1) < 0) throw py::error_already_set();
            self.cast<UniTensor &>().relabel_(new_labels);
            return self;
          }, py::arg("new_labels"))
@@ -368,8 +440,8 @@ void unitensor_binding(py::module &m) {
                         return self.relabel(new_labels);
                     }, py::arg("new_labels"))
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels() is deprecated, use relabel() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1) < 0) throw py::error_already_set();
                         return self.relabel(new_labels);
                     }, py::arg("new_labels"))
 
@@ -378,8 +450,8 @@ void unitensor_binding(py::module &m) {
                         return self;
                     }, py::arg("new_labels"))
      .def("relabels_",[](py::object self, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels_() is deprecated, use relabel_() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels_() is deprecated, use relabel_() instead.", 1) < 0) throw py::error_already_set();
                         self.cast<UniTensor &>().relabel_(new_labels);
                         return self;
                     }, py::arg("new_labels"))
@@ -413,14 +485,14 @@ void unitensor_binding(py::module &m) {
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels() is deprecated, use relabel() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1) < 0) throw py::error_already_set();
                         return self.relabel(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels_",[](py::object self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        PyErr_WarnEx(PyExc_DeprecationWarning,
-                          "relabels_() is deprecated, use relabel_() instead.", 1);
+                        if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels_() is deprecated, use relabel_() instead.", 1) < 0) throw py::error_already_set();
                         self.cast<UniTensor &>().relabel_(old_labels,new_labels);
                         return self;
                     } ,py::arg("old_labels"), py::arg("new_labels"))
@@ -446,9 +518,13 @@ void unitensor_binding(py::module &m) {
 
     .def("get_index",&UniTensor::get_index)
 
+    // reshape()/reshape_() accept both the variadic form (ut.reshape(2, 3)) and the
+    // list form (ut.reshape([2, 3])); see pybind_cytnx::parse_index_args in
+    // pyint_dispatch.hpp (#293, ruling 4).
     .def("reshape",
          [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            cytnx_uint64 rowrank = 0;
 
            if (kwargs) {
@@ -459,7 +535,8 @@ void unitensor_binding(py::module &m) {
          })
     .def("reshape_",
          [](UniTensor &self, py::args args, py::kwargs kwargs) {
-           std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
+           std::vector<cytnx::cytnx_int64> c_args =
+             pybind_cytnx::parse_index_args<cytnx::cytnx_int64>(args);
            cytnx_uint64 rowrank = 0;
 
            if (kwargs) {
@@ -791,7 +868,6 @@ void unitensor_binding(py::module &m) {
     .def("bond", [](UniTensor &self, const std::string &label){return self.bond(label);} ,py::arg("label"))
     .def("shape", &UniTensor::shape)
     .def("signflip", &UniTensor::signflip)
-//     .def("signflip_", &UniTensor::signflip_)
     .def("to_", &UniTensor::to_)
     .def(
       "to_different_device",
@@ -839,6 +915,36 @@ void unitensor_binding(py::module &m) {
     .def("permute", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
                         return self.permute(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+    // permute_()/permute() ALSO accept the variadic forms (ut.permute_(1, 2, 0) and
+    // ut.permute_("a", "b", "c")), on top of the list forms bound just above (#293,
+    // ruling 4). These py::args catch-all overloads are registered AFTER the
+    // specific std::vector<...> overloads so a genuine single-list call
+    // (ut.permute([1, 2, 0])) keeps matching those first; only calls with 0, 2+
+    // positional args, or exactly 1 non-list/tuple positional arg fall through to
+    // here. is_string_args()/parse_index_args() (pyint_dispatch.hpp) resolve
+    // whether the mapper is int- or string-valued, and unwrap a sole list/tuple
+    // argument if present so both variadic and list calls funnel through the same
+    // path once they reach this overload.
+    .def("permute_",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) {
+           cytnx_int64 rowrank = -1;
+           if (kwargs && kwargs.contains("rowrank")) rowrank = kwargs["rowrank"].cast<cytnx_int64>();
+           if (pybind_cytnx::is_string_args(args)) {
+             return &self.permute_(pybind_cytnx::parse_index_args<std::string>(args), rowrank);
+           }
+           return &self.permute_(pybind_cytnx::parse_index_args<cytnx_int64>(args), rowrank);
+         })
+
+    .def("permute",
+         [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
+           cytnx_int64 rowrank = -1;
+           if (kwargs && kwargs.contains("rowrank")) rowrank = kwargs["rowrank"].cast<cytnx_int64>();
+           if (pybind_cytnx::is_string_args(args)) {
+             return self.permute(pybind_cytnx::parse_index_args<std::string>(args), rowrank);
+           }
+           return self.permute(pybind_cytnx::parse_index_args<cytnx_int64>(args), rowrank);
+         })
 
      .def("permute_nosignflip", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
                         return self.permute_nosignflip(mapper,rowrank);
@@ -1083,23 +1189,26 @@ void unitensor_binding(py::module &m) {
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("to_dense", &UniTensor::to_dense)
     .def("to_dense_", &UniTensor::to_dense_)
-    .def("combineBonds",
-         [](UniTensor &self, const std::vector<cytnx_int64> &indicators, const bool &force,
-            const bool &by_label)
-         {
-            if(by_label){
-                cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                self.combineBonds(indicators,force,by_label);
-            }else{
-                self.combineBonds(indicators,force);
-            }
-         },
-         py::arg("indicators"), py::arg("force") = false, py::arg("by_label") = false)
+    // combineBonds() is deprecated (#421/#422): use combineBond_() (in-place) or combineBond()
+    // (out-of-place) instead. Deprecation-warning suppression lives in the file-scope helpers
+    // (a #pragma GCC diagnostic cannot legally sit inside this .def() chain expression under GCC).
+    .def("combineBonds", &unitensor_combineBonds_int_deprecated, py::arg("indicators"),
+         py::arg("force") = false, py::arg("by_label") = false)
+    .def("combineBonds", &unitensor_combineBonds_str_deprecated, py::arg("indicators"),
+         py::arg("force") = false)
 
-    .def("combineBonds",
-         [](UniTensor &self, const std::vector<std::string> &indicators, const bool &force)
+    .def("combineBond_",
+         [](py::object self, const std::vector<std::string> &indicators, const bool &force)
          {
-            self.combineBonds(indicators,force);
+            self.cast<UniTensor &>().combineBond_(indicators,force);
+            return self;
+         },
+         py::arg("indicators"), py::arg("force") = false)
+
+    .def("combineBond",
+         [](const UniTensor &self, const std::vector<std::string> &indicators, const bool &force)
+         {
+            return self.combineBond(indicators,force);
          },
          py::arg("indicators"), py::arg("force") = false)
 
@@ -1141,7 +1250,7 @@ void unitensor_binding(py::module &m) {
            // restore the shared metadata since the operands matched.
            UniTensor out = self.Add(rhs);
            out.relabel_(self.labels());
-           out.set_name(self.name());
+           out.set_name_(self.name());
            return out;
          })
     .def("__add__",
@@ -1303,7 +1412,7 @@ void unitensor_binding(py::module &m) {
            // restore the shared metadata since the operands matched.
            UniTensor out = self.Sub(rhs);
            out.relabel_(self.labels());
-           out.set_name(self.name());
+           out.set_name_(self.name());
            return out;
          })
     .def("__sub__",
@@ -2057,7 +2166,13 @@ void unitensor_binding(py::module &m) {
                  },
                  py::arg("a"), py::arg("b"))
 
-    .def("Norm", &UniTensor::Norm)
+    // Norm() is deprecated (returns a rank-0 Tensor); use norm() (returns a python float).
+    // Deprecation-warning suppression lives in unitensor_Norm_deprecated() at file scope (a
+    // #pragma GCC diagnostic cannot legally sit inside this .def() chain expression under GCC).
+    .def("Norm", &unitensor_Norm_deprecated)
+    // norm() returns a Scalar in C++ (dtype-preserving); hand Python a native float so
+    // cytnx.Scalar is not exposed on the Python surface.
+    .def("norm", [](UniTensor &self) { return double(self.norm()); })
     .def("Transpose_",
          [](py::object self) {
            self.cast<UniTensor &>().Transpose_();
@@ -2077,9 +2192,15 @@ void unitensor_binding(py::module &m) {
            return self;
          })
     .def("Dagger", &UniTensor::Dagger)
+    .def("tag_",
+         [](py::object self) {
+           self.cast<UniTensor &>().tag_();
+           return self;
+         })
     .def("tag",
          [](py::object self) {
-           self.cast<UniTensor &>().tag();
+           if (PyErr_WarnEx(PyExc_DeprecationWarning, "tag() is deprecated, use tag_() instead.", 1) < 0) throw py::error_already_set();
+           self.cast<UniTensor &>().tag_();
            return self;
          })
     .def("truncate",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim){
@@ -2271,9 +2392,18 @@ void unitensor_binding(py::module &m) {
                 },
 				py::arg("low"), py::arg("high"), py::arg("seed")= -1)
 
+	.def("convert_from_",
+                    [](py::object self, const UniTensor &in, bool force, cytnx_double tol) {
+                      self.cast<UniTensor &>().convert_from_(in, force, tol);
+                      return self;
+                    },
+                    py::arg("Tin"), py::arg("force") = false, py::arg("tol") = 0.)
+
 	.def("convert_from",
                     [](py::object self, const UniTensor &in, bool force, cytnx_double tol) {
-                      self.cast<UniTensor &>().convert_from(in, force, tol);
+                      if (PyErr_WarnEx(PyExc_DeprecationWarning,
+                        "convert_from() is deprecated, use convert_from_() instead.", 1) < 0) throw py::error_already_set();
+                      self.cast<UniTensor &>().convert_from_(in, force, tol);
                       return self;
                     },
                     py::arg("Tin"), py::arg("force") = false, py::arg("tol") = 0.)

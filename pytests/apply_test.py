@@ -36,7 +36,7 @@ def _are_nearly_eq(a, b, tol=1e-12):
             return False
         if flips_a[i] != flips_b[j]:
             return False
-        if (ba - blocks_b[j]).Norm().item() > tol:
+        if (ba - blocks_b[j]).norm() > tol:
             return False
     return True
 
@@ -46,7 +46,7 @@ def _make_bfut3():
     fp = cytnx.Symmetry.FermionParity()
     B1 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
     B2 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
-    B12 = B1.combineBond(B2).redirect_()
+    B12 = B1.combineBond(B2).redirect()
     B3 = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
     B4 = cytnx.Bond(cytnx.BD_IN,  [cytnx.Qs(0) >> 1, cytnx.Qs(1) >> 1], [fp])
 
@@ -90,7 +90,7 @@ class TestApplyDenseUniTensor:
     def test_apply_is_noop(self):
         result = self.ut.apply()
         diff = result.get_block() - self.ut.get_block()
-        assert diff.Norm().item() < 1e-14
+        assert diff.norm() < 1e-14
 
     def test_apply_inplace_returns_unitensor(self):
         assert isinstance(self.ut.apply_(), cytnx.UniTensor)
@@ -98,7 +98,7 @@ class TestApplyDenseUniTensor:
     def test_apply_inplace_is_noop(self):
         original = self.ut.get_block().clone()
         self.ut.apply_()
-        assert (self.ut.get_block() - original).Norm().item() < 1e-14
+        assert (self.ut.get_block() - original).norm() < 1e-14
 
 
 # ---------------------------------------------------------------------------

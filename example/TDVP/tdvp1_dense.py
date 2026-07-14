@@ -187,7 +187,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
             old_LR = LR[p].clone()
             if p != 0:
                 LR[p] = anet.Launch()
-                s = s/s.Norm().item() # normalize s
+                s = s/s.norm() # normalize s
                 C = cytnx.Contract(_, s)
                 #C = time_evolve_b(C, (old_LR, LR[p]), dt)
                 C = time_evolve_Lan_b(C, (old_LR, LR[p]), dt)
@@ -233,7 +233,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
             if p != Nsites - 1:
                 LR[p+1] = anet.Launch()
-                s = s/s.Norm().item() # normalize s
+                s = s/s.norm() # normalize s
                 C = cytnx.Contract(s, _)
                 C = time_evolve_Lan_b(C, (LR[p+1],old_LR), dt)
                 A[p+1] = cytnx.Contract(A[p+1], C)

@@ -1732,8 +1732,17 @@ namespace cytnx {
     /**
      * @brief the Norm member function. Same as linalg::Norm(const Tensor &Tin), where \p Tin is
      * the current Tensor.
+     * @deprecated Use norm() instead, which returns a Scalar directly.
      */
-    Tensor Norm() const;
+    [[deprecated("use norm() (returns Scalar) instead")]] Tensor Norm() const;
+
+    /**
+     * @brief the norm member function. Same as linalg::norm(const Tensor &Tin), where \p Tin is
+     * the current Tensor. Returns the 2-norm as a Scalar carrying the tensor's own precision
+     * (Float for Float/ComplexFloat input, Double otherwise), so `x /= x.norm()` stays
+     * dtype-preserving rather than promoting a Float tensor to Double.
+     */
+    Scalar norm() const;
 
     /**
      * @brief the Pow member function. Same as linalg::Pow(const Tensor &Tin, const cytnx_double

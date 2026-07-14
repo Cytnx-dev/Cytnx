@@ -207,6 +207,22 @@ TEST_F(DenseUniTensorTest, RankZeroSaveLoadNormalizesBlock) {
 }
 
 /*=====test info=====
+describe:Test norm() (#676): returns a Scalar carrying the UniTensor's precision, equal in
+value to the deprecated Norm().item(), on a known all-ones DenseUniTensor (norm = sqrt(N)).
+====================*/
+TEST_F(DenseUniTensorTest, norm) {
+  double n = double(utone345.norm());
+  EXPECT_DOUBLE_EQ(n, std::sqrt(3.0 * 4.0 * 5.0));
+  EXPECT_DOUBLE_EQ(n, double(utone345.Norm().item().real()));
+
+  // norm() returns a Scalar carrying the UniTensor's precision (#1000 review, ianmccul):
+  // a ComplexDouble UniTensor yields a Double-precision norm; a Float one yields Float.
+  EXPECT_EQ(utone345.norm().dtype(), Type.Double);
+  UniTensor utf = UniTensor(ones({3, 4, 5}, Type.Float));
+  EXPECT_EQ(utf.norm().dtype(), Type.Float);
+}
+
+/*=====test info=====
 describe:Test set_name
 ====================*/
 TEST_F(DenseUniTensorTest, set_name) {
@@ -227,6 +243,16 @@ TEST_F(DenseUniTensorTest, set_name_uninit) {
 }
 
 /*=====test info=====
+describe:Test set_name_ (#335/#336/#421, ruling 3): canonical in-place spelling,
+returns a reference to self so it chains.
+====================*/
+TEST_F(DenseUniTensorTest, set_name_underscore_returns_self) {
+  UniTensor &r = ut1.set_name_("org name");
+  EXPECT_EQ(&r, &ut1);
+  EXPECT_EQ(ut1.name(), "org name");
+}
+
+/*=====test info=====
 describe:Test set label by index.
 input:
   idx: a index to set.
@@ -240,6 +266,20 @@ TEST_F(DenseUniTensorTest, set_label_idx_str) {
   std::string new_str_label = "testing string label";
   utzero345.set_label(1, new_str_label);
   EXPECT_EQ(utzero345.labels()[1], new_str_label);
+}
+
+/*=====test info=====
+describe:Test set_label_ (#335/#336/#421, ruling 3): canonical in-place spelling,
+returns a reference to self so it chains.
+====================*/
+TEST_F(DenseUniTensorTest, set_label_underscore_returns_self) {
+  UniTensor &r = utzero345.set_label_(1, "org_label");
+  EXPECT_EQ(&r, &utzero345);
+  EXPECT_EQ(utzero345.labels()[1], "org_label");
+
+  UniTensor &r2 = utzero345.set_label_("org_label", "renamed");
+  EXPECT_EQ(&r2, &utzero345);
+  EXPECT_EQ(utzero345.labels()[1], "renamed");
 }
 
 /*=====test info=====
@@ -2392,16 +2432,19 @@ TEST_F(DenseUniTensorTest, combineBonds_ut_uninit) {
 }
 
 /*=====test info=====
-describe:test combineBond
+describe:test combineBond_ (#421/#422, ruling 3): canonical in-place spelling,
+returns a reference to self so it chains. (Formerly this coverage lived on the
+now-out-of-place combineBond(); see combineBond_is_out_of_place below.)
 ====================*/
-TEST_F(DenseUniTensorTest, combineBond) {
+TEST_F(DenseUniTensorTest, combineBond_) {
   std::vector<std::string> labels = {"a", "b", "c"};
   auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
   ut.set_rowrank(1);
   int seed = 0;
   random::uniform_(ut, -100.0, 100.0, seed);
   std::vector<std::string> labels_combine = {"b", "c"};
-  ut.combineBond(labels_combine);
+  UniTensor &r = ut.combineBond_(labels_combine);
+  EXPECT_EQ(&r, &ut);
 
   // construct answer directly
   labels = {"a", "b"};
@@ -2412,6 +2455,58 @@ TEST_F(DenseUniTensorTest, combineBond) {
 
   // compare
   EXPECT_TRUE(AreEqUniTensor(ut, ans_ut));
+}
+
+/*=====test info=====
+describe:test combineBond (#421/#422, ruling 3): out-of-place spelling; the
+original UniTensor is left unchanged and a new UniTensor with the bonds
+combined is returned.
+====================*/
+TEST_F(DenseUniTensorTest, combineBond_is_out_of_place) {
+  std::vector<std::string> labels = {"a", "b", "c"};
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+  std::vector<std::string> labels_combine = {"b", "c"};
+  UniTensor out = ut.combineBond(labels_combine);
+
+  // ut itself is unchanged:
+  EXPECT_EQ(ut.labels(), (std::vector<std::string>{"a", "b", "c"}));
+  EXPECT_EQ(ut.shape(), (std::vector<cytnx_uint64>{5, 4, 3}));
+
+  // out has the bonds combined:
+  labels = {"a", "b"};
+  int rowrank = 1;
+  auto ans_ut = UniTensor({Bond(5), Bond(12)}, labels, rowrank);
+  auto tens = out.get_block().reshape({5, 12});
+  ans_ut.put_block(tens);
+  EXPECT_TRUE(AreEqUniTensor(out, ans_ut));
+}
+
+/*=====test info=====
+describe:#846 aliasing regression -- a user-held copy of a tensor's bond shares the Bond impl
+  with the tensor's own _bonds entry. combineBond_(force=true) legitimately mutates a CLONE of
+  that entry in place (Bond_impl::force_combineBond_); if the .clone() in
+  DenseUniTensor::combineBonds were ever dropped, the user's bond would be silently rewritten.
+  Pin that the held copy stays untouched. (Uses combineBond_ -- the in-place spelling that
+  mutates the receiver -- since #421/#422 redefined bare combineBond() as out-of-place.)
+====================*/
+TEST_F(DenseUniTensorTest, combineBondForceDoesNotRewriteUserHeldBond) {
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, {"a", "b", "c"});
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+
+  Bond held = ut.bonds()[0];  // shares the impl of ut's bond "a"
+  const cytnx_uint64 held_dim = held.dim();
+  const bondType held_type = held.type();
+
+  ut.combineBond_({"a", "b"}, /*force=*/true);
+
+  EXPECT_EQ(ut.bonds()[0].dim(), 20);  // the tensor itself did combine
+  EXPECT_EQ(held.dim(), held_dim);  // ...but the user-held copy is untouched
+  EXPECT_EQ(held.type(), held_type);
 }
 
 /*=====test info=====
@@ -4908,6 +5003,21 @@ TEST_F(DenseUniTensorTest, tag) {
   EXPECT_EQ(bonds[0].type(), BD_KET);
   EXPECT_EQ(bonds[1].type(), BD_BRA);
   EXPECT_EQ(bonds[2].type(), BD_BRA);
+  EXPECT_TRUE(ut.is_braket_form());
+}
+
+/*=====test info=====
+describe:Test tag_ (#335/#336, ruling 3): canonical in-place spelling, returns a
+reference to self so it chains.
+====================*/
+TEST_F(DenseUniTensorTest, tag_underscore_returns_self) {
+  auto row_rank = 1u;
+  std::vector<Bond> bonds = {Bond(3), Bond(2), Bond(2)};
+  std::vector<std::string> labels = {"a", "b", "c"};
+  auto ut = UniTensor(bonds, labels, row_rank);
+  EXPECT_FALSE(ut.is_braket_form());
+  UniTensor &r = ut.tag_();
+  EXPECT_EQ(&r, &ut);
   EXPECT_TRUE(ut.is_braket_form());
 }
 

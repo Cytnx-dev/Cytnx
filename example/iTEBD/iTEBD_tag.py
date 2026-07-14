@@ -28,11 +28,11 @@ def itebd_tfim_tag(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
     H.reshape_(2,2,2,2)
 
     eH = cytnx.UniTensor(eH).set_rowrank_(2)
-    eH.tag() # this will tag with in/out(ket/bra) on each bond.
+    eH.tag_() # this will tag with in/out(ket/bra) on each bond.
     eH.print_diagram()
 
     H = cytnx.UniTensor(H).set_rowrank_(2)
-    H.tag()
+    H.tag_()
     H.print_diagram()
 
 
