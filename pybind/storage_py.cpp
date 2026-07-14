@@ -12,11 +12,13 @@
 #include <pybind11/functional.h>
 
 #include "cytnx.hpp"
+#include "pyint_dispatch.hpp"
 // #include "../include/cytnx_error.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
+using pybind_cytnx::dispatch_pyint;
 
 #ifdef BACKEND_TORCH
 #else
@@ -192,58 +194,201 @@ void storage_binding(py::module &m) {
     .def("__copy__", &cytnx::Storage::clone)
     .def("__deepcopy__", &cytnx::Storage::clone)
     .def("size", &cytnx::Storage::size)
-    .def("__len__", [](cytnx::Storage &self) { return self.size(); })
     .def("print_info", &cytnx::Storage::print_info,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("set_zeros", &cytnx::Storage::set_zeros)
     .def("__eq__",
          [](cytnx::Storage &self, const cytnx::Storage &rhs) -> bool { return self == rhs; })
 
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_complex128>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_complex64>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_double>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_float>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_int64>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_uint64>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_int32>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_uint32>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_int16>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_uint16>, py::arg("val"))
-    .def("fill", &cytnx::Storage::fill<cytnx::cytnx_bool>, py::arg("val"))
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<float> &val) {
+        self.fill(static_cast<cytnx_float>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<std::complex<float>> &val) {
+        self.fill(static_cast<cytnx_complex64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<int64_t> &val) {
+        self.fill(static_cast<cytnx_int64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<uint64_t> &val) {
+        self.fill(static_cast<cytnx_uint64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<int32_t> &val) {
+        self.fill(static_cast<cytnx_int32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<uint32_t> &val) {
+        self.fill(static_cast<cytnx_uint32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<int16_t> &val) {
+        self.fill(static_cast<cytnx_int16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<uint16_t> &val) {
+        self.fill(static_cast<cytnx_uint16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::numpy_scalar<bool> &val) {
+        self.fill(static_cast<cytnx_bool>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](Storage &self, const py::int_ &val) {
+        dispatch_pyint(val, [&](auto v) { self.fill(v); });
+      },
+      py::arg("val"))
+    .def(
+      "fill", [](Storage &self, const cytnx_double &val) { self.fill(val); }, py::arg("val"))
+    .def(
+      "fill", [](Storage &self, const cytnx_complex128 &val) { self.fill(val); }, py::arg("val"))
 
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_complex128>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_complex64>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_double>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_float>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_int64>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_uint64>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_int32>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_uint32>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_int16>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_uint16>, py::arg("val"))
-    .def("append", &cytnx::Storage::append<cytnx::cytnx_bool>, py::arg("val"))
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<float> &val) {
+        self.append(static_cast<cytnx_float>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<std::complex<float>> &val) {
+        self.append(static_cast<cytnx_complex64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<int64_t> &val) {
+        self.append(static_cast<cytnx_int64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<uint64_t> &val) {
+        self.append(static_cast<cytnx_uint64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<int32_t> &val) {
+        self.append(static_cast<cytnx_int32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<uint32_t> &val) {
+        self.append(static_cast<cytnx_uint32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<int16_t> &val) {
+        self.append(static_cast<cytnx_int16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<uint16_t> &val) {
+        self.append(static_cast<cytnx_uint16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::numpy_scalar<bool> &val) {
+        self.append(static_cast<cytnx_bool>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](Storage &self, const py::int_ &val) {
+        dispatch_pyint(val, [&](auto v) { self.append(v); });
+      },
+      py::arg("val"))
+    .def(
+      "append", [](Storage &self, const cytnx_double &val) { self.append(val); }, py::arg("val"))
+    .def(
+      "append", [](Storage &self, const cytnx_complex128 &val) { self.append(val); },
+      py::arg("val"))
 
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex128>, py::arg("pylist"),
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in
+    // pybind/pyint_dispatch.hpp. complex64/float/{u,}int{32,16} are dropped:
+    // a plain Python list's elements match the complex128/double/uint64/
+    // int64 casters in pybind11's first (no-convert) overload-resolution
+    // pass regardless of registration order, so the narrower-width
+    // overloads were already unreachable duplicates (confirmed empirically:
+    // from_pylist([1.5]) -> Double, from_pylist([1+2j]) -> ComplexDouble
+    // both before and after this change). bool is registered first: Python
+    // bool implements __index__ (via int), so typing considers
+    // Sequence[bool] a subtype of the SupportsFloat/SupportsComplex unions
+    // double/complex128 render as, and registering bool after them (its
+    // previous position) both let uint64 (see below) silently produce a
+    // Uint64-dtype Storage from from_pylist([True, False]) instead of Bool,
+    // and left it stub-unreachable; moving it first, consistent with every
+    // numpy_scalar<bool> overload elsewhere in this keep-set family, fixes
+    // both. double is registered before complex128 for the same
+    // covariance reason (Sequence[SupportsFloat | SupportsIndex] is a
+    // subtype of Sequence[SupportsComplex | SupportsFloat | SupportsIndex]).
+    // The plain-int case is a single py::sequence overload with
+    // list_dispatch_pyint below instead of separate uint64/int64
+    // overloads (which rendered as the identical stub annotation no matter
+    // their order, so one was always flagged as unreachable even though
+    // both were reachable by list content): int64 wins unless any element
+    // needs uint64's range, matching dispatch_pyint's int64-preferred
+    // convention used by every other keep-set in this codebase (previously
+    // uint64 won for an all-non-negative list purely from being registered
+    // first, e.g. from_pylist([1,2,3]).dtype() was Uint64, not Int64).
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"),
                 py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex64>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::int_> &pylist, const int &device) {
+        bool needs_uint64 = false;
+        for (const py::int_ &v : pylist) {
+          int overflow = 0;
+          PyLong_AsLongLongAndOverflow(v.ptr(), &overflow);
+          if (overflow != 0) {
+            needs_uint64 = true;
+            break;
+          }
+        }
+        if (needs_uint64) {
+          std::vector<cytnx_uint64> vals;
+          vals.reserve(pylist.size());
+          for (const py::int_ &v : pylist) vals.push_back(v.cast<cytnx_uint64>());
+          return cytnx::Storage::from_vector<cytnx_uint64>(vals, device);
+        }
+        std::vector<cytnx_int64> vals;
+        vals.reserve(pylist.size());
+        for (const py::int_ &v : pylist) vals.push_back(v.cast<cytnx_int64>());
+        return cytnx::Storage::from_vector<cytnx_int64>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
     .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_double>, py::arg("pylist"),
                 py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_float>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint64>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int64>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint32>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int32>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint16>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int16>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"),
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex128>, py::arg("pylist"),
                 py::arg("device") = (int)cytnx::Device.cpu)
 
     .def("pylist",

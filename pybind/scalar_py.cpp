@@ -11,29 +11,35 @@
 #include <pybind11/functional.h>
 
 #include "cytnx.hpp"
+#include "pyint_dispatch.hpp"
 // #include "../include/cytnx_error.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
+using pybind_cytnx::dispatch_pyint;
 
 #ifdef BACKEND_TORCH
 #else
 
 void scalar_binding(py::module &m) {
   py::class_<cytnx::Scalar>(m, "Scalar")
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in
+    // pybind/pyint_dispatch.hpp. complex64/float/{u,}int{16,32} are dropped:
+    // they are already covered by the numpy_scalar overloads below. Plain
+    // Python int is handled by a single py::int_ overload with
+    // dispatch_pyint instead of separate uint64/int64 constructors, so it
+    // no longer duplicates that pair's stub annotation; this also fixes the
+    // reachability, since a plain Python value already matches
+    // cytnx_double/cytnx_complex128's raw casters ahead of the numpy_scalar
+    // overloads below, and (checked against the previous registration
+    // order) uint64 previously won over int64 for a small positive value
+    // (Scalar(5).dtype() was Uint64) only by being declared first, not from
+    // any Scalar-specific magnitude handling -- dispatch_pyint's int64-
+    // preferred convention already used by every other keep-set in this
+    // codebase is adopted here for consistency (Scalar(5).dtype() is now
+    // Int64).
     .def(py::init<>())
-    .def(py::init<const cytnx::cytnx_complex128 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_complex64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_double &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_float &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint32 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int32 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint16 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int16 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_bool &>(), py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<std::complex<double>> value) {
@@ -100,6 +106,14 @@ void scalar_binding(py::module &m) {
         new (&self) Scalar(static_cast<cytnx::cytnx_bool>(value));
       },
       py::arg("a"))
+    .def(
+      "__init__",
+      [](Scalar &self, const py::int_ &value) {
+        dispatch_pyint(value, [&](auto v) { new (&self) Scalar(v); });
+      },
+      py::arg("a"))
+    .def(py::init<const cytnx::cytnx_double &>(), py::arg("a"))
+    .def(py::init<const cytnx::cytnx_complex128 &>(), py::arg("a"))
 
     // ---- Static methods ----
     .def_static("maxval", &Scalar::maxval)
