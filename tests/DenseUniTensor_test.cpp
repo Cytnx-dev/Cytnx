@@ -2398,6 +2398,28 @@ TEST_F(DenseUniTensorTest, combineBonds) {
 }
 
 /*=====test info=====
+describe:#1052 sibling -- combineBonds' new_shape tail shift (src/DenseUniTensor.cpp) uses the
+  same overlapping-memcpy left-shift pattern fixed for BlockUniTensor/BlockFermionicUniTensor in
+  #1054. Combining the first two of four adjacent bonds (idor=0, indicators.size()=2, pre-combine
+  rank 4) reproduces the identical overlap geometry ASan caught there. Checks the combined shape
+  and values against an independently-computed reshape, not just absence of a crash.
+====================*/
+TEST_F(DenseUniTensorTest, CombineBondsFourBondsPreservesDataAndShape) {
+  std::vector<std::string> labels = {"a", "b", "c", "d"};
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3), Bond(2)}, labels);
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+  auto original_block = ut.get_block();
+
+  ut.combineBonds(std::vector<std::string>{"a", "b"});
+
+  EXPECT_EQ(ut.labels(), (std::vector<std::string>{"a", "c", "d"}));
+  EXPECT_EQ(ut.shape(), (std::vector<cytnx_uint64>{20, 3, 2}));
+  EXPECT_TRUE(AreNearlyEqTensor(ut.get_block(), original_block.reshape({20, 3, 2}), 1e-12));
+}
+
+/*=====test info=====
 describe:test combineBonds with diagonal UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, combinebonds_diag) {
