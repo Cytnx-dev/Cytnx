@@ -9,6 +9,18 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
+    namespace {
+      // Output dtype for true division. On CPU the result is always floating-point (#941 true
+      // division: int / int -> Double). The GPU path still runs the legacy cuDiv kernels
+      // (#1013 tracks its typed conversion), which emit Type.type_promote(lhs, rhs) and validate
+      // the output storage against it -- so on GPU keep the promoted (possibly integer) dtype to
+      // avoid an output-dtype-mismatch throw; seeding a floating dtype there would break
+      // gpu_int / gpu_int (behavior unchanged from master on GPU).
+      inline unsigned int div_output_dtype(unsigned int promoted_dtype, int device) {
+        return device == Device.cpu ? Type_class::make_floating_point_dtype(promoted_dtype)
+                                    : promoted_dtype;
+      }
+    }  // namespace
     Tensor Div(const Tensor &Lt, const Tensor &Rt) {
       detail::check_binary_tensor_inputs(Lt, Rt, "Div");
       cytnx_error_msg(Lt.device() != Rt.device(),
@@ -16,19 +28,19 @@ namespace cytnx {
 
       Tensor out;
       bool icnst = false;
-      // True division (#941): the output is always floating-point, so seed the
-      // broadcast-output dtype with make_floating_point_dtype(type_promote(...)).
-      // init_broadcast_binary_output keeps the rank-zero / zero-extent handling
-      // added in #1026.
+      // True division (#941): on CPU the output is floating-point, so seed the
+      // broadcast-output dtype via div_output_dtype (the GPU legacy path keeps the
+      // promoted dtype -- see that helper). init_broadcast_binary_output keeps the
+      // rank-zero / zero-extent handling added in #1026.
       if (detail::init_broadcast_binary_output(
             out, Lt, Rt,
-            Type_class::make_floating_point_dtype(Type.type_promote(Lt.dtype(), Rt.dtype())))) {
+            div_output_dtype(Type.type_promote(Lt.dtype(), Rt.dtype()), Rt.device()))) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[Div] The two tensors do not have the same shape.%s", "\n");
         out.Init(Lt.shape(),
-                 Type_class::make_floating_point_dtype(Type.type_promote(Lt.dtype(), Rt.dtype())),
+                 div_output_dtype(Type.type_promote(Lt.dtype(), Rt.dtype()), Rt.device()),
                  Lt.device());
       }
 
@@ -135,10 +147,10 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() = Storage(
-        Rt._impl->storage().size(),
-        Type_class::make_floating_point_dtype(Type.type_promote(Type.ComplexFloat, Rt.dtype())),
-        Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(),
+                div_output_dtype(Type.type_promote(Type.ComplexFloat, Rt.dtype()), Rt.device()),
+                Rt.device());
       // Tensor out(Rt.shape(),Type.ComplexFloat <
       // Rt.dtype()?Type.ComplexFloat:Rt.dtype(),Rt.device());
 
@@ -175,10 +187,9 @@ namespace cytnx {
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Double, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Double, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Double, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -213,10 +224,9 @@ namespace cytnx {
       Cnst.at<cytnx_float>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Float, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Float, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Float, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -252,10 +262,9 @@ namespace cytnx {
       Cnst.at<cytnx_int64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Int64, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int64, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Int64, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -290,10 +299,9 @@ namespace cytnx {
       Cnst.at<cytnx_uint64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Uint64, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint64, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Uint64, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -329,10 +337,9 @@ namespace cytnx {
       Cnst.at<cytnx_int32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Int32, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int32, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Int32, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -368,10 +375,9 @@ namespace cytnx {
       Cnst.at<cytnx_uint32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Uint32, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint32, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Uint32, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -407,10 +413,9 @@ namespace cytnx {
       Cnst.at<cytnx_int16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Int16, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int16, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Int16, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -446,10 +451,9 @@ namespace cytnx {
       Cnst.at<cytnx_uint16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Uint16, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint16, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Uint16, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -485,10 +489,9 @@ namespace cytnx {
       Cnst.at<cytnx_bool>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Bool, Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Bool, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Bool, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
@@ -525,10 +528,9 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(lc.dtype(), Rt.dtype())),
-                Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(lc.dtype(), Rt.dtype()), Rt.device()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
@@ -597,10 +599,10 @@ namespace cytnx {
       Cnst.at<cytnx_complex64>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(
-        Lt._impl->storage().size(),
-        Type_class::make_floating_point_dtype(Type.type_promote(Type.ComplexFloat, Lt.dtype())),
-        Lt.device());
+      out._impl->storage() =
+        Storage(Lt._impl->storage().size(),
+                div_output_dtype(Type.type_promote(Type.ComplexFloat, Lt.dtype()), Lt.device()),
+                Lt.device());
       // Tensor out(Lt.shape(),Type.ComplexFloat <
       // Lt.dtype()?Type.ComplexFloat:Lt.dtype(),Lt.device());
 
@@ -636,10 +638,9 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Double, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Double, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Double, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -673,10 +674,9 @@ namespace cytnx {
       Cnst.at<cytnx_float>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Float, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Float, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Float, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -710,10 +710,9 @@ namespace cytnx {
       Cnst.at<cytnx_int64>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Int64, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int64, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Int64, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -747,10 +746,9 @@ namespace cytnx {
       Cnst.at<cytnx_uint64>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Uint64, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint64, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Uint64, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -784,10 +782,9 @@ namespace cytnx {
       Cnst.at<cytnx_int32>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Int32, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int32, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Int32, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -821,10 +818,9 @@ namespace cytnx {
       Cnst.at<cytnx_uint32>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Uint32, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint32, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Uint32, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -859,10 +855,9 @@ namespace cytnx {
       Cnst.at<cytnx_int16>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Int16, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int16, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Int16, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -896,10 +891,9 @@ namespace cytnx {
       Cnst.at<cytnx_uint16>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Uint16, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint16, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Uint16, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -933,10 +927,9 @@ namespace cytnx {
       Cnst.at<cytnx_bool>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Type.Bool, Lt.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Bool, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Bool, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
@@ -972,10 +965,9 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(),
-                Type_class::make_floating_point_dtype(Type.type_promote(Lt.dtype(), rc.dtype())),
-                Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Lt.dtype(), rc.dtype()), Lt.device()), Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
