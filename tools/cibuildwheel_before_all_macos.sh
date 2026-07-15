@@ -23,7 +23,14 @@ set -euo pipefail
 # MACOSX_DEPLOYMENT_TARGET keeps tracking whatever floor the actual
 # vendored dylibs require instead of a value guessed in advance.
 
-deps_prefix="${PWD}/.cytnx-deps"
+# CMake refuses to export an INTERFACE_INCLUDE_DIRECTORIES entry that lives
+# inside the source directory (a hard error: "which is prefixed in the
+# source directory"), which the cytnx target needs to do for downstream
+# find_package(Cytnx) consumers (see ci-downstream-find-package.yml). So
+# this prefix must live outside ${PWD} (the checkout), unlike
+# tools/cibuildwheel_before_all.sh's /opt/cytnx-deps on Linux, which already
+# is outside the checkout by construction.
+deps_prefix="${TMPDIR:-/tmp}/cytnx-deps"
 arch="$(uname -m)"
 if [[ "${arch}" == "arm64" ]]; then
   conda_subdir="osx-arm64"
@@ -31,8 +38,8 @@ else
   conda_subdir="osx-64"
 fi
 
-curl -Ls "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj bin/micromamba
-export MAMBA_ROOT_PREFIX="${PWD}/.micromamba"
+curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj bin/micromamba
+export MAMBA_ROOT_PREFIX="${TMPDIR:-/tmp}/cytnx-micromamba"
 ./bin/micromamba create -y -p "${deps_prefix}" -c conda-forge \
   "openblas=*=*openmp*" \
   liblapacke \

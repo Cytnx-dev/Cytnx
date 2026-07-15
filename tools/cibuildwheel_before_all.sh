@@ -13,9 +13,15 @@ CYTNX_DEPS_PREFIX="/opt/cytnx-deps"
 # ci-cmake_tests.yml's own mamba-based dependency install already relies on
 # this same conda-forge OpenMP runtime for the native test build.
 if command -v dnf >/dev/null 2>&1; then
-    dnf install -y ccache curl
+    dnf install -y ccache curl bzip2
 
-    curl -Ls "https://micro.mamba.pm/api/micromamba/linux-64/latest" | tar -xj -C /usr/local bin/micromamba
+    arch="$(uname -m)"
+    if [[ "${arch}" == "aarch64" || "${arch}" == "arm64" ]]; then
+      conda_subdir="linux-aarch64"
+    else
+      conda_subdir="linux-64"
+    fi
+    curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj -C /usr/local bin/micromamba
     MAMBA_ROOT_PREFIX=/opt/micromamba /usr/local/bin/micromamba create -y -p "${CYTNX_DEPS_PREFIX}" -c conda-forge \
       "openblas=*=*openmp*" \
       liblapacke \
