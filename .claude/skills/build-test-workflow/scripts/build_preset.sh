@@ -233,6 +233,66 @@ fi
 if [[ ${needs_python} -eq 1 ]]; then
   # shellcheck disable=SC1090
   source "${venv_dir}/bin/activate"
+
+  # debug-*-cpu (ASan-instrumented cytnx.so) needs help to run under a plain
+  # `python` process -- Linux/GCC-specific (matched by the "-cpu" suffix,
+  # which already excludes debug-openblas-apple; macOS ASan discovery is
+  # dylib-based and unverified here, so it deliberately gets none of this):
+  #   1. ASan's __cxa_throw interceptor resolves the real __cxa_throw from
+  #      libstdc++, but plain `python` never links libstdc++ -- so the first
+  #      C++ exception thrown inside cytnx.so (cytnx_error_msg surfaces as
+  #      cytnx.CytnxError, which ordinary error-path tests hit constantly)
+  #      CHECK-fails the interceptor and kills the process instantly, with no
+  #      traceback under pytest's captured fds. Preloading libasan.so
+  #      together with libstdc++.so fixes it.
+  #   2. LeakSanitizer's default (on) reports hundreds of "leaks" that are
+  #      actually CPython's own deliberate non-cleanup at interpreter
+  #      shutdown (interned strings, static type objects, allocator arenas),
+  #      none attributable to Cytnx. detect_leaks=0 turns that off for this
+  #      python-hosted run only -- the test_main/ctest path below is
+  #      untouched and keeps leak detection on, since that's where a real
+  #      Cytnx leak would actually be caught.
+  # Mirrors the debug-*-cuda ASAN_OPTIONS export above: unconditionally set,
+  # not deferred to a caller-supplied value.
+  #
+  # The compiler that actually built cytnx.so -- not a bare `gcc` guess --
+  # matters here: preloading one GCC's libasan.so into a binary built by a
+  # different GCC (or by Clang, if one happens to be on PATH too) is an ASan
+  # runtime/ABI mismatch, and -print-file-name silently returns its bare
+  # input filename (a relative path) when it can't resolve the library,
+  # which LD_PRELOAD then fails to find. Read CMAKE_CXX_COMPILER from the
+  # configured build's own cache, confirm it identifies as GCC (Clang's
+  # --version has no "Free Software Foundation" line), and require both
+  # resolved paths to be absolute before preloading anything.
+  #
+  # The cache entry's type is normally FILEPATH, but a build configured with
+  # an explicit -DCMAKE_CXX_COMPILER=... records it as STRING instead; match
+  # either. Under this script's `set -euo pipefail`, a `var=$(grep ... |
+  # ...)` with no match would abort the whole script right here -- `|| true`
+  # keeps a genuinely no-match cache falling through to the `gcc` fallback
+  # below instead.
+  case "${preset}" in
+    debug-*-cpu)
+      compiler_path=""
+      if [[ -f "${build_dir}/CMakeCache.txt" ]]; then
+        compiler_path=$(grep "^CMAKE_CXX_COMPILER:[^=]*=" "${build_dir}/CMakeCache.txt" | \
+          head -n 1 | cut -d= -f2 || true)
+      fi
+      if [[ -z "${compiler_path}" ]] && command -v gcc >/dev/null 2>&1; then
+        compiler_path="gcc"
+      fi
+      if [[ -n "${compiler_path}" ]] && \
+         "${compiler_path}" --version 2>/dev/null | grep -q "Free Software Foundation"; then
+        libasan_path=$("${compiler_path}" -print-file-name=libasan.so)
+        libstdcxx_path=$("${compiler_path}" -print-file-name=libstdc++.so)
+        if [[ "${libasan_path}" == /* && "${libstdcxx_path}" == /* ]]; then
+          export LD_PRELOAD="${libasan_path} ${libstdcxx_path}"
+          export ASAN_OPTIONS='detect_leaks=0'
+        fi
+      fi
+      ;;
+  esac
+
   if [[ ${#test_args[@]} -gt 0 ]]; then
     pytest "${test_args[@]}"
   else
