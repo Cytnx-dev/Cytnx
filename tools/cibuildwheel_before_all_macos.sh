@@ -27,18 +27,16 @@ set -euo pipefail
 # inside the source directory (a hard error: "which is prefixed in the
 # source directory"), which the cytnx target needs to do for downstream
 # find_package(Cytnx) consumers (see ci-downstream-find-package.yml). So
-# this prefix must live outside ${PWD} (the checkout), unlike
-# tools/cibuildwheel_before_all.sh's /opt/cytnx-deps on Linux, which already
-# is outside the checkout by construction. The resolved path is written to
-# deps_prefix_file below (rather than referenced as $TMPDIR directly from
-# pyproject.toml's [tool.cibuildwheel.macos].environment) because
-# cibuildwheel's environment-table evaluator does not expand
-# ${VAR:-default}-style parameter substitution the way a real shell does;
-# only plain $VAR references and $(command) substitutions are honored
-# there, matching how MACOSX_DEPLOYMENT_TARGET below is already read back.
-deps_prefix="${TMPDIR:-/tmp}/cytnx-deps"
-deps_prefix_file="${PWD}/.cibw_macos_deps_prefix.txt"
-echo -n "${deps_prefix}" > "${deps_prefix_file}"
+# this prefix must live outside ${PWD} (the checkout). A fixed, hardcoded
+# path (rather than one derived from $TMPDIR) means
+# pyproject.toml's [tool.cibuildwheel.macos].environment can reference it
+# as a plain literal -- no dynamic discovery needed, and no dependency on
+# cibuildwheel's environment-table evaluator supporting shell parameter
+# expansion (it doesn't: only plain $VAR references and $(command)
+# substitutions are honored there, which is why MACOSX_DEPLOYMENT_TARGET
+# below still goes through a file instead of a literal, since its value
+# is only known after probing the installed dylibs).
+deps_prefix="/tmp/cytnx-deps"
 
 arch="$(uname -m)"
 if [[ "${arch}" == "arm64" ]]; then
@@ -48,7 +46,7 @@ else
 fi
 
 curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj bin/micromamba
-export MAMBA_ROOT_PREFIX="${TMPDIR:-/tmp}/cytnx-micromamba"
+export MAMBA_ROOT_PREFIX="/tmp/cytnx-micromamba"
 ./bin/micromamba create -y -p "${deps_prefix}" -c conda-forge \
   "openblas=*=*openmp*" \
   liblapacke \
