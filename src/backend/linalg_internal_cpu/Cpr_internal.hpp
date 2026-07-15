@@ -9,24 +9,27 @@
 
 namespace cytnx {
   namespace linalg_internal {
-    template <typename TLin, typename TRin>
-    inline void CprInternalImpl(boost::intrusive_ptr<Storage_base> &out,
-                                boost::intrusive_ptr<Storage_base> &Lin,
-                                boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &len,
-                                const std::vector<cytnx_uint64> &shape,
+    // Cpr's output dtype is always cytnx_bool regardless of TL/TR -- unlike
+    // Add/Sub/Mul/Div/Mod there is no output-type template parameter here,
+    // since there is no choice to make (#941's dispatch-boundary-computes-TO
+    // rule collapses to a constant for comparison operators).
+    template <typename TL, typename TR>
+    inline void CprInternalImpl(const boost::intrusive_ptr<StorageImplementation<cytnx_bool>> &out,
+                                const boost::intrusive_ptr<StorageImplementation<TL>> &lhs,
+                                const boost::intrusive_ptr<StorageImplementation<TR>> &rhs,
+                                const cytnx_uint64 &len, const std::vector<cytnx_uint64> &shape,
                                 const std::vector<cytnx_uint64> &invmapper_L,
                                 const std::vector<cytnx_uint64> &invmapper_R) {
-      using Tout = cytnx_bool;
-      using TPromote = cytnx::Type_class::type_promote_t<TLin, TRin>;
-      Tout *_out = reinterpret_cast<Tout *>(out->data());
-      const TLin *_Lin = reinterpret_cast<const TLin *>(Lin->data());
-      const TRin *_Rin = reinterpret_cast<const TRin *>(Rin->data());
+      using TPromote = cytnx::Type_class::type_promote_t<TL, TR>;
+      cytnx_bool *_out = out->data();
+      const TL *_Lin = lhs->data();
+      const TR *_Rin = rhs->data();
 
-      if (Lin->size() == 1) {
+      if (lhs->size() == 1) {
         for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
           _out[i] = (static_cast<TPromote>(_Lin[0]) == static_cast<TPromote>(_Rin[i]));
         }
-      } else if (Rin->size() == 1) {
+      } else if (rhs->size() == 1) {
         for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
           _out[i] = (static_cast<TPromote>(_Lin[i]) == static_cast<TPromote>(_Rin[0]));
         }

@@ -975,3 +975,158 @@ TEST(Tensor, ScalarInplaceRealTimesComplexErrorNamesOperator) {
     EXPECT_NE(std::string(e.what()).find("/="), std::string::npos) << e.what();
   }
 }
+
+// --- #941 mixed-dtype arithmetic regression tests ---
+//
+// Motivation (#941): a dispatch table can select a kernel whose C++ output
+// type is e.g. double, while the actual output storage object is still
+// StorageImplementation<int16_t> -- writing promoted/floating results into
+// narrower/integer storage. These tests pin the CORRECT behavior: in-place
+// arithmetic must promote dtype exactly like the equivalent out-of-place
+// operation (never truncate into the original lhs storage type), and Div
+// must implement Python true-division semantics.
+
+TEST(MixedDtypeArithmetic, InplaceSubIntMinusDoublePromotes) {
+  Tensor Lt = Tensor({3}, Type.Int16, Device.cpu);
+  Lt.at<cytnx_int16>({0}) = 10;
+  Lt.at<cytnx_int16>({1}) = 20;
+  Lt.at<cytnx_int16>({2}) = 30;
+  Tensor Rt = Tensor({3}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 0.5;
+  Rt.at<cytnx_double>({1}) = 0.5;
+  Rt.at<cytnx_double>({2}) = 0.5;
+
+  linalg::iSub(Lt, Rt);
+
+  EXPECT_EQ(Lt.dtype(), (unsigned int)Type.Double)
+    << "Int16 -= Double must promote Lt's storage to Double, not truncate into Int16";
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({0}), 9.5);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({1}), 19.5);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({2}), 29.5);
+}
+
+TEST(MixedDtypeArithmetic, InplaceAddIntPlusDoublePromotes) {
+  Tensor Lt = Tensor({2}, Type.Int32, Device.cpu);
+  Lt.at<cytnx_int32>({0}) = 1;
+  Lt.at<cytnx_int32>({1}) = 2;
+  Tensor Rt = Tensor({2}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 1.25;
+  Rt.at<cytnx_double>({1}) = 2.25;
+
+  linalg::iAdd(Lt, Rt);
+
+  EXPECT_EQ(Lt.dtype(), (unsigned int)Type.Double);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({0}), 2.25);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({1}), 4.25);
+}
+
+TEST(MixedDtypeArithmetic, InplaceMulIntTimesDoublePromotes) {
+  Tensor Lt = Tensor({2}, Type.Int64, Device.cpu);
+  Lt.at<cytnx_int64>({0}) = 3;
+  Lt.at<cytnx_int64>({1}) = 4;
+  Tensor Rt = Tensor({2}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 1.5;
+  Rt.at<cytnx_double>({1}) = 2.5;
+
+  linalg::iMul(Lt, Rt);
+
+  EXPECT_EQ(Lt.dtype(), (unsigned int)Type.Double);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({0}), 4.5);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({1}), 10.0);
+}
+
+TEST(MixedDtypeArithmetic, DivTrueDivisionIntOverIntProducesDouble) {
+  Tensor Lt = Tensor({1}, Type.Int64, Device.cpu);
+  Lt.at<cytnx_int64>({0}) = 3;
+  Tensor Rt = Tensor({1}, Type.Int64, Device.cpu);
+  Rt.at<cytnx_int64>({0}) = 2;
+
+  Tensor out = linalg::Div(Lt, Rt);
+
+  EXPECT_EQ(out.dtype(), (unsigned int)Type.Double)
+    << "Int64/Int64 must produce a floating-point result (Python true-division semantics)";
+  EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), 1.5);
+}
+
+TEST(MixedDtypeArithmetic, IDivTrueDivisionPromotesLhsToDouble) {
+  Tensor Lt = Tensor({1}, Type.Int16, Device.cpu);
+  Lt.at<cytnx_int16>({0}) = 3;
+  Tensor Rt = Tensor({1}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 2.0;
+
+  linalg::iDiv(Lt, Rt);
+
+  EXPECT_EQ(Lt.dtype(), (unsigned int)Type.Double);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({0}), 1.5);
+}
+
+TEST(MixedDtypeArithmetic, IDivInt64OverDoublePromotes) {
+  Tensor Lt = Tensor({1}, Type.Int64, Device.cpu);
+  Lt.at<cytnx_int64>({0}) = 3;
+  Tensor Rt = Tensor({1}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 2.0;
+  linalg::iDiv(Lt, Rt);
+  EXPECT_EQ(Lt.dtype(), (unsigned int)Type.Double);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({0}), 1.5);
+}
+
+TEST(MixedDtypeArithmetic, IDivInt32OverDoublePromotes) {
+  Tensor Lt = Tensor({1}, Type.Int32, Device.cpu);
+  Lt.at<cytnx_int32>({0}) = 3;
+  Tensor Rt = Tensor({1}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 2.0;
+  linalg::iDiv(Lt, Rt);
+  EXPECT_EQ(Lt.dtype(), (unsigned int)Type.Double);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({0}), 1.5);
+}
+
+TEST(MixedDtypeArithmetic, IDivUint16OverDoublePromotes) {
+  Tensor Lt = Tensor({1}, Type.Uint16, Device.cpu);
+  Lt.at<cytnx_uint16>({0}) = 3;
+  Tensor Rt = Tensor({1}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 2.0;
+  linalg::iDiv(Lt, Rt);
+  EXPECT_EQ(Lt.dtype(), (unsigned int)Type.Double);
+  EXPECT_DOUBLE_EQ(Lt.at<cytnx_double>({0}), 1.5);
+}
+
+TEST(MixedDtypeArithmetic, OutOfPlaceAddMixedComplexReal) {
+  // Sanity check: the already-working out-of-place complex/real promotion
+  // path is unaffected by the typed-storage conversion.
+  Tensor Lt = Tensor({1}, Type.ComplexFloat, Device.cpu);
+  Lt.at<cytnx_complex64>({0}) = cytnx_complex64(1.0f, 1.0f);
+  Tensor Rt = Tensor({1}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 2.0;
+  Tensor out = linalg::Add(Lt, Rt);
+  EXPECT_EQ(out.dtype(), (unsigned int)Type.ComplexDouble);
+}
+
+TEST(MixedDtypeArithmetic, CprMixedIntDoubleComparesCorrectly) {
+  Tensor Lt = Tensor({3}, Type.Int32, Device.cpu);
+  Lt.at<cytnx_int32>({0}) = 1;
+  Lt.at<cytnx_int32>({1}) = 2;
+  Lt.at<cytnx_int32>({2}) = 3;
+  Tensor Rt = Tensor({3}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 1.0;
+  Rt.at<cytnx_double>({1}) = 2.5;
+  Rt.at<cytnx_double>({2}) = 3.0;
+
+  Tensor out = linalg::Cpr(Lt, Rt);
+
+  EXPECT_EQ(out.dtype(), (unsigned int)Type.Bool);
+  EXPECT_EQ(out.at<cytnx_bool>({0}), true);
+  EXPECT_EQ(out.at<cytnx_bool>({1}), false);
+  EXPECT_EQ(out.at<cytnx_bool>({2}), true);
+}
+
+TEST(MixedDtypeArithmetic, ModMixedIntDoublePromotes) {
+  Tensor Lt = Tensor({1}, Type.Int32, Device.cpu);
+  Lt.at<cytnx_int32>({0}) = 7;
+  Tensor Rt = Tensor({1}, Type.Double, Device.cpu);
+  Rt.at<cytnx_double>({0}) = 2.5;
+
+  Tensor out = linalg::Mod(Lt, Rt);
+
+  EXPECT_EQ(out.dtype(), (unsigned int)Type.Double);
+  EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), std::fmod(7.0, 2.5));
+}
