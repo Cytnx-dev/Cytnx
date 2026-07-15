@@ -1723,3 +1723,38 @@ TEST_F(BlockUniTensorTest, CombineBondForceDoesNotRewriteUserHeldBond) {
   EXPECT_EQ(held.qnums(), held_qnums);
   EXPECT_EQ(held.getDegeneracies(), held_degs);
 }
+
+/*=====test info=====
+describe:#1052 regression -- BlockUniTensor::combineBonds must correctly regroup a *three*-bond
+  merge, not just two. Two internal bookkeeping steps behave differently once 3+ bonds are
+  combined at once: the cb_stride left-shift (previously done with an overlapping memcpy that
+  is well-defined UB only up to 2 combined bonds) and the _inner_to_outer_idx tail shift. Check
+  both a structural invariant (the combined bond's dimension is the product of the three input
+  dimensions, computed independently of combineBonds -- it comes straight from
+  Bond::force_combineBond_) and a numeric one: the block reachable at the all-qnum-0 sector
+  after combining must equal the pre-combine block simply reshaped (row-major merge of its
+  first three axes), which is how Bond_impl::force_combineBond_ orders the combined qnum index
+  (idx_a * (N_b*N_c) + idx_b*N_c + idx_c) -- independent of the buggy bookkeeping this PR fixes.
+====================*/
+TEST_F(BlockUniTensorTest, CombineBondsThreeBondsPreservesDataAndDimension) {
+  Bond bi = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3});
+  Bond bo = bi.redirect();
+  UniTensor A = UniTensor({bi, bi, bi, bo}, {"a", "b", "c", "d"}, 3, Type.Double);
+  random::uniform_(A, -1.0, 1.0, 11);
+
+  const cytnx_uint64 dim_a = bi.dim();  // 2 + 3 = 5
+
+  // the all-qnum-0 sector trivially conserves (0+0+0-0 == 0) for any direction convention, so
+  // it is guaranteed to be a materialized block.
+  Tensor block_before = A.get_block({0, 0, 0, 0}, false);
+  const auto shape_before = block_before.shape();
+  Tensor expected =
+    block_before.reshape({(cytnx_int64)(shape_before[0] * shape_before[1] * shape_before[2]),
+                          (cytnx_int64)shape_before[3]});
+
+  A.combineBond_({"a", "b", "c"}, /*force=*/true);
+
+  EXPECT_EQ(A.bonds()[0].dim(), dim_a * dim_a * dim_a);
+  Tensor block_after = A.get_block({0, 0}, false);
+  EXPECT_TRUE(AreNearlyEqTensor(block_after, expected, 1e-12));
+}
