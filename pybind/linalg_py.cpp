@@ -10,6 +10,7 @@
 #include <random>
 #include <vector>
 
+#include "complex_arg.hpp"
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
 
@@ -62,22 +63,21 @@ namespace {
   // accept the same Python int, so only one Python-int path (dispatched to the
   // int64/uint64 kernels) is kept.
   //
-  // Two `b` defaults are passed through py::arg_v with an explicit repr so the
-  // stub stays valid, instead of letting pybind11 format the default itself:
-  //   - The numpy_scalar overloads use a `numpy.<type>(...)` repr. Left alone,
-  //     pybind11 formats the default from the numpy scalar's own repr
-  //     (`np.<type>(...)` under numpy 2.x), an unimported `np` alias that mypy
-  //     rejects; naming the imported `numpy` module fixes it. stubgen evaluates
-  //     that repr and emits an elided `...`.
-  //   - The cytnx_complex128 overload uses a literal `...` repr. pybind11 3.0.4
-  //     annotates the parameter `SupportsComplex | SupportsFloat | SupportsIndex`,
-  //     which does not include the builtin `complex` (typeshed's `complex` has
-  //     no `__complex__`), so a `0j` default is rejected as an incompatible
-  //     default. A `numpy.complex128(...)` repr would elide too, but it would
-  //     misdescribe the default since this overload accepts a Python `complex`,
-  //     not a numpy scalar; `...` states "elided" without claiming a type.
-  // Either way the default still exists at runtime, so mypy.stubtest is
-  // unaffected and tools/generate_stubs.py needs no special-casing.
+  // The numpy_scalar overloads' `b` default is passed through py::arg_v with
+  // an explicit `numpy.<type>(...)` repr, instead of letting pybind11 format
+  // the default itself: left alone, pybind11 formats the default from the
+  // numpy scalar's own repr (`np.<type>(...)` under numpy 2.x), an unimported
+  // `np` alias that mypy rejects; naming the imported `numpy` module fixes
+  // it. stubgen evaluates that repr and emits an elided `...`. The default
+  // still exists at runtime either way, so mypy.stubtest is unaffected and
+  // tools/generate_stubs.py needs no special-casing.
+  //
+  // The final overload takes `a`/`b` as complex_arg.hpp's ComplexArg rather
+  // than a raw cytnx_complex128, so its stub-visible parameter annotation
+  // includes the builtin `complex` type (see that header for why pybind11's
+  // own std::complex<T> caster doesn't already do this). Because the
+  // corrected annotation includes `complex`, its `b` default can use a real
+  // `0j` repr instead of an elided `...`.
   template <class TensorT, class Call>
   void bind_exp_scalar(py::module &m, const char *name, Call call) {
     m.def(
@@ -162,10 +162,11 @@ namespace {
       py::arg("Tin"), py::arg("a"), py::arg("b") = double(0));
     m.def(
       name,
-      [call](const TensorT &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
-        return call(Tin, a, b);
+      [call](const TensorT &Tin, const pybind_cytnx::ComplexArg &a,
+             const pybind_cytnx::ComplexArg &b) {
+        return call(Tin, cytnx_complex128(a), cytnx_complex128(b));
       },
-      py::arg("Tin"), py::arg("a"), py::arg_v("b", complex128(0), "..."));
+      py::arg("Tin"), py::arg("a"), py::arg_v("b", pybind_cytnx::ComplexArg(complex128(0)), "0j"));
   }
 }  // namespace
 
