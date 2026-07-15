@@ -13,7 +13,7 @@ namespace cytnx {
 
       // op_code: 0=Add, 1=Mul, 2=Sub, 3=Div (true division).
       template <char op_code, typename TO, typename TL, typename TR>
-      inline TO ApplyInplaceArithmeticOp(const TL &lhs, const TR &rhs) {
+      inline TO ApplyInplaceArithmeticOp(TL lhs, TR rhs) {
         if constexpr (!cytnx::is_complex_v<TO> &&
                       (cytnx::is_complex_v<TL> || cytnx::is_complex_v<TR>)) {
           cytnx_error_msg(true, "[ERROR][inplace arithmetic] Cannot narrow complex into real%s",
@@ -35,7 +35,7 @@ namespace cytnx {
 
       template <char op_code, typename TO, typename TL, typename TR>
       inline void ApplyInplaceArithmeticKernel(TO *out, const TL *lhs, const TR *rhs,
-                                               const cytnx_uint64 &len, const bool &rhs_is_scalar,
+                                               cytnx_uint64 len, bool rhs_is_scalar,
                                                const std::vector<cytnx_uint64> &shape,
                                                const std::vector<cytnx_uint64> &invmapper_L,
                                                const std::vector<cytnx_uint64> &invmapper_R) {
@@ -104,27 +104,31 @@ namespace cytnx {
       // table could select a kernel whose C++ output type was e.g. double,
       // while the actual output storage object was still
       // StorageImplementation<int16_t>).
+      // rhs_is_weak_scalar: the RHS is a python-scalar wrapper (the scalar
+      // operators route through scalar_as_rank0_tensor, see src/Tensor.cpp), not a
+      // user-provided tensor. Per the #1015 ruling affirming #980, `tensor op=
+      // python-scalar` follows numpy weak-scalar semantics: it PRESERVES the LHS
+      // dtype (the scalar is cast into TL) rather than promoting. A genuine tensor
+      // RHS -- including a rank-0 tensor such as cytnx.zeros([]) -- promotes (#941),
+      // so this must be signaled explicitly by the caller rather than inferred from
+      // Rt.rank(), which cannot distinguish the two. Complex-into-real is still
+      // rejected by ApplyInplaceArithmeticOp.
       template <char op_code>
       inline void DispatchInplaceArithmeticCPU(Tensor &Lt, const Tensor &Rt,
+                                               bool rhs_is_weak_scalar,
                                                const std::vector<cytnx_uint64> &shape,
                                                const std::vector<cytnx_uint64> &invmapper_L,
                                                const std::vector<cytnx_uint64> &invmapper_R) {
-        const cytnx_uint64 len = Lt._impl->storage()._impl->size();
+        const uint64_t len = Lt._impl->storage()._impl->size();
         const bool rhs_is_scalar = is_singleton_tensor(Rt);
         const int device = Lt.device();
-        // A rank-0 RHS is a python-scalar wrapper (Tensor::operator op=(scalar)
-        // routes through scalar_as_rank0_tensor). Per the #1015 ruling affirming
-        // #980, `tensor op= python-scalar` follows numpy weak-scalar semantics:
-        // it PRESERVES the LHS dtype (the scalar is cast into TL) rather than
-        // promoting. A rank>=1 RHS is a genuine tensor and promotes (#941).
-        // Complex-into-real is still rejected by ApplyInplaceArithmeticOp.
-        const bool weak_scalar_rhs = (Rt.rank() == 0);
 
         std::visit(
           [&](auto lhs_impl, auto rhs_impl) {
             using TL = storage_value_t<decltype(lhs_impl)>;
             using TR = storage_value_t<decltype(rhs_impl)>;
-            // weak-scalar RHS keeps TL; a genuine tensor RHS promotes.
+            // Promoting output type, used for a genuine-tensor RHS below; the
+            // weak-scalar branch recomputes it as TO_weak (TL vs TL) instead.
             using TO = InplaceOutputType_t<op_code, TL, TR>;
 
             // storage_as_type_or_replace<TO> may replace Lt._impl->storage()._impl
@@ -134,7 +138,7 @@ namespace cytnx {
             // to the ORIGINAL buffer before this call, so lhs_impl->data() stays
             // valid and points at the pre-replacement data for the kernel call
             // below, exactly as #941 describes for the aliased in-place case.
-            if (weak_scalar_rhs) {
+            if (rhs_is_weak_scalar) {
               // Weak-scalar output: treat the RHS dtype as TL, so Add/Sub/Mul
               // keep TL (numpy weak-scalar, #980) while Div still follows #941
               // true-division (make_floating_point(TL): Int64 /= 2.0 -> Double,

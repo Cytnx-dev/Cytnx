@@ -10,7 +10,7 @@
 namespace cytnx {
   namespace linalg {
 
-    void iMul(Tensor &Lt, const Tensor &Rt) {
+    void iMul(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar) {
       detail::check_binary_tensor_inputs(Lt, Rt, "iMul");
       // A singleton RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
       // read it with a host-side dereference and pass it into the kernel by value, so it needs
@@ -64,7 +64,8 @@ namespace cytnx {
       if ((Lt.is_contiguous() && Rt.is_contiguous())) {
         // contiguous section.
         if (Lt.device() == Device.cpu) {
-          detail::DispatchInplaceArithmeticCPU<1>(Lt, R, empty_mapper, empty_mapper, empty_mapper);
+          detail::DispatchInplaceArithmeticCPU<1>(Lt, R, rhs_is_weak_scalar, empty_mapper,
+                                                  empty_mapper, empty_mapper);
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -88,8 +89,8 @@ namespace cytnx {
       } else {
         // non-contiguous section
         if (Lt.device() == Device.cpu) {
-          detail::DispatchInplaceArithmeticCPU<1>(Lt, R, Lt._impl->shape(), Lt._impl->invmapper(),
-                                                  Rt._impl->invmapper());
+          detail::DispatchInplaceArithmeticCPU<1>(Lt, R, rhs_is_weak_scalar, Lt._impl->shape(),
+                                                  Lt._impl->invmapper(), Rt._impl->invmapper());
         } else {
   #ifdef UNI_GPU
           if (rhs_is_scalar) {

@@ -1233,8 +1233,12 @@ namespace cytnx {
      * Add(const T &lc, const Tensor &Rt),
      * Add(const Tensor &Lt, const T &rc),
      * operator+(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iAdd(Tensor &Lt, const Tensor &Rt);
+    void iAdd(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Sub:
     //==================================================
@@ -1333,8 +1337,12 @@ namespace cytnx {
      * Sub(const T &lc, const Tensor &Rt),
      * Sub(const Tensor &Lt, const T &rc),
      * operator-(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iSub(Tensor &Lt, const Tensor &Rt);
+    void iSub(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Mul:
     //==================================================
@@ -1433,8 +1441,12 @@ namespace cytnx {
      * Mul(const T &lc, const Tensor &Rt),
      * Mul(const Tensor &Lt, const T &rc),
      * operator*(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iMul(Tensor &Lt, const Tensor &Rt);
+    void iMul(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Div:
     //==================================================
@@ -1536,8 +1548,12 @@ namespace cytnx {
      * Div(const T &lc, const Tensor &Rt),
      * Div(const Tensor &Lt, const T &rc),
      * operator/(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iDiv(Tensor &Lt, const Tensor &Rt);
+    void iDiv(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Mod:
     //==================================================
