@@ -95,9 +95,10 @@ jobs:
         # env above and are inherited via PATH (build isolation only
         # isolates Python packages, not env vars or executables on PATH).
         #
-        # pyproject.toml already pins `--preset=openblas-cpu`. We override
-        # only the two cache values that the release preset doesn't set the
-        # way coverage CI needs:
+        # pyproject.toml already pins `--preset=openblas-cpu`. We override it
+        # with the debug-openblas-cpu preset (see CMakePresets.json), which
+        # gives coverage CI everything it needs from one place instead of
+        # individual cmake.define overrides:
         #
         #   CMAKE_BUILD_TYPE=Debug
         #     -O0 / no inlining, so gcov line + branch hit counts aren't
@@ -109,20 +110,85 @@ jobs:
         #     compiler-portable coverage flags applied to the cytnx target
         #     (see CMakeLists.txt under `if(RUN_TESTS)`).
         #
-        # USE_DEBUG stays at the preset default OFF, so -fsanitize=address
-        # is NOT applied to the cytnx library and pytest needs no
-        # LD_PRELOAD shim. ASan can have its own CI job.
+        #   USE_DEBUG=ON
+        #     Applies -fsanitize=address to the cytnx library, so this job
+        #     is now the main CI gate that runs the whole suite under ASan.
+        #     A real overlapping-memcpy UB bug (BlockUniTensor::combineBonds,
+        #     #1052) went undetected for a long time because nothing in CI
+        #     built with ASan on; only a developer happening to build with a
+        #     debug-* preset locally would see it. The two Python-hosted
+        #     steps below ("Sanity-check the install" and "Run pytest with
+        #     Python coverage") need an LD_PRELOAD shim for ASan-instrumented
+        #     cytnx.so to load correctly into the uninstrumented `python`
+        #     binary; see the comments on those steps. The gtest steps need
+        #     no shim since test_main links against ASan natively.
         #
         # build-dir=build pins scikit-build-core's build tree (it defaults
         # to a temp dir) so the subsequent ctest and gcovr steps have a
-        # stable path to point at.
+        # stable path to point at. It overrides the preset's own binaryDir
+        # the same way it already overrides pyproject.toml's hardcoded
+        # `--preset=openblas-cpu` below (cmake.args=--preset=X empirically
+        # wins over the pyproject.toml default; see
+        # .claude/skills/build-test-workflow/scripts/build_preset.sh for the
+        # verified mechanics).
         run: |
           pip install --editable '.[dev]' --verbose \
             --config-settings=build-dir=build \
-            --config-settings=cmake.define.CMAKE_BUILD_TYPE=Debug \
-            --config-settings=cmake.define.RUN_TESTS=ON
+            --config-settings=cmake.args=--preset=debug-openblas-cpu
+
+      - name: Resolve ASan runtime paths for Python-hosted steps
+        id: asan_preload
+        # ASan-instrumented cytnx.so loaded into the uninstrumented `python`
+        # binary needs libasan.so preloaded, or every native (C++-side)
+        # exception crashes the process: ASan's __cxa_throw interceptor
+        # CHECK-fails on real___cxa_throw != 0 because plain `python` doesn't
+        # link libstdc++ at all, so the interceptor can't resolve the real
+        # symbol at init. libstdc++.so must be preloaded alongside libasan.so
+        # for the same reason.
+        #
+        # Resolved from the build's own CMAKE_CXX_COMPILER (not a bare `gcc`
+        # guess) -- preloading one GCC's libasan.so into a binary built by a
+        # different compiler/GCC version is an ASan runtime/ABI mismatch, and
+        # -print-file-name silently returns its bare input filename (a
+        # relative path) when it can't resolve the library, which LD_PRELOAD
+        # then fails to find. This CI job's toolchain is always GCC (the
+        # `compilers` conda package above), so an unexpected result here
+        # means something about the environment changed -- fail loudly
+        # rather than silently skip the shim and hit a confusing crash two
+        # steps later.
+        #
+        # A dedicated step so the lookup runs once and both Python-hosted
+        # steps below reuse its output, instead of recomputing it twice.
+        run: |
+          compiler_path=$(grep "^CMAKE_CXX_COMPILER:FILEPATH=" "${{ env.BUILD_DIR }}/CMakeCache.txt" | head -n 1 | cut -d= -f2)
+          if [[ -z "${compiler_path}" ]]; then
+            echo "::error::CMAKE_CXX_COMPILER not found in ${{ env.BUILD_DIR }}/CMakeCache.txt" >&2
+            exit 1
+          fi
+          if ! "${compiler_path}" --version 2>/dev/null | grep -q "Free Software Foundation"; then
+            echo "::error::${compiler_path} does not identify as GCC; this job's ASan preload assumes GCC" >&2
+            exit 1
+          fi
+          libasan_path=$("${compiler_path}" -print-file-name=libasan.so)
+          libstdcxx_path=$("${compiler_path}" -print-file-name=libstdc++.so)
+          if [[ "${libasan_path}" != /* || "${libstdcxx_path}" != /* ]]; then
+            echo "::error::could not resolve absolute paths for libasan.so/libstdc++.so via ${compiler_path}" >&2
+            exit 1
+          fi
+          echo "ld_preload=${libasan_path} ${libstdcxx_path}" >> "$GITHUB_OUTPUT"
 
       - name: Sanity-check the install
+        # LD_PRELOAD from the "Resolve ASan runtime paths" step above.
+        # ASAN_OPTIONS=detect_leaks=0 suppresses LeakSanitizer's exit-time
+        # scan, which otherwise reports CPython's own deliberately-not-
+        # cleaned-up interpreter state (interned strings, static type
+        # objects, allocator arenas) as leaks -- noise unrelated to whether
+        # Cytnx itself leaks. Scoped to this step's env, not exported
+        # job-wide, so it doesn't reach the ctest step below, which keeps
+        # leak detection on deliberately (see "Run gtest via ctest").
+        env:
+          LD_PRELOAD: ${{ steps.asan_preload.outputs.ld_preload }}
+          ASAN_OPTIONS: detect_leaks=0
         run: python -c "import cytnx; print('cytnx', cytnx.__version__)"
 
       - name: Build the gtest binary
@@ -149,6 +215,14 @@ jobs:
         # No PYTHONPATH needed: the editable install already wired up
         # `import cytnx`. .gcda files for any C++ paths exercised here
         # accumulate alongside the .gcno files in $BUILD_DIR.
+        #
+        # LD_PRELOAD/ASAN_OPTIONS: see "Sanity-check the install" above for
+        # why the ASan-instrumented cytnx.so needs both preloaded when
+        # hosted in plain `python` (via pytest), and why leak detection is
+        # off here specifically.
+        env:
+          LD_PRELOAD: ${{ steps.asan_preload.outputs.ld_preload }}
+          ASAN_OPTIONS: detect_leaks=0
         run: |
           mkdir -p junit
           pytest pytests/ \
