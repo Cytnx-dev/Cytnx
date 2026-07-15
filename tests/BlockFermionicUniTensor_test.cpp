@@ -683,3 +683,27 @@ TEST_F(BlockFermionicUniTensorTest, ContractLeavesSharedBlockObserverUntouched) 
   EXPECT_TRUE(observer.is_contiguous());
   EXPECT_TRUE(R.is_contiguous());
 }
+
+/*=====test info=====
+describe:#1052 scope note -- BlockFermionicUniTensor::combineBonds(vector<cytnx_int64>, force)
+  starts with an unconditional cytnx_error_msg(true, "not implemented yet."), so every public
+  entry point that reaches it (combineBond(labels), combineBonds(labels),
+  combineBonds(indices, force, by_label)) always throws before any bond-combining logic runs.
+  That makes the two overlapping-memcpy sites fixed alongside BlockUniTensor's (the cb_stride
+  shift and the _inner_to_outer_idx tail shift, a few lines below this guard) unreachable code
+  today -- there is no way to exercise them through the public API without also lifting this
+  "not implemented" guard, which is a functional change to fermionic sign-flip handling (see
+  the function's own "TODOfermion: signflips need to be included!!!" comment) outside this
+  memory-safety-only PR. Pin the current throw so this scope statement stays true; the memcpy
+  fix itself is applied for source hygiene/consistency with BlockUniTensor and to avoid the
+  same latent bug when this function is eventually implemented.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, CombineBondsStillUnimplemented) {
+  Bond ba = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2}, {Symmetry::FermionParity()});
+  Bond bb = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 3}, {Symmetry::FermionParity()});
+  Bond bc = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+  Bond bd = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 2}, {Symmetry::FermionParity()});
+  UniTensor A = UniTensor({ba, bb, bc, bd}, {"a", "b", "c", "d"}, 3, Type.Double);
+  EXPECT_THROW(A.combineBond_({"a", "b"}, /*force=*/true), cytnx::error);
+  EXPECT_THROW(A.combineBond_({"a", "b", "c"}, /*force=*/true), cytnx::error);
+}
