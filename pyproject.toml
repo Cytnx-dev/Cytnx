@@ -169,6 +169,10 @@ before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
 # environment-table evaluator doesn't expand ${VAR:-default}-style
 # parameter substitution the way a real shell does -- only plain $VAR and
 # $(command) substitutions are honored, same as MACOSX_DEPLOYMENT_TARGET
-# below already relies on.
+# below already relies on. The read must degrade gracefully (Path.exists()
+# check, not a bare `cat`) because cibuildwheel evaluates this whole table
+# -- including to build before-all's own subprocess environment -- before
+# before-all has run and created the file at all; a `cat` on a missing file
+# exits non-zero and aborts the before-all step outright.
 # Keep compiler selection stable across Python versions for reproducible builds and better ccache reuse.
-environment = { CC = "clang", CXX = "clang++", CMAKE_PREFIX_PATH = "$(cat .cibw_macos_deps_prefix.txt)", PATH = "$(cat .cibw_macos_deps_prefix.txt)/bin:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deployment_target.txt\"); print(p.read_text().strip() if p.exists() else \"10.9\")')", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }
+environment = { CC = "clang", CXX = "clang++", CMAKE_PREFIX_PATH = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deps_prefix.txt\"); print(p.read_text().strip() if p.exists() else \"/tmp/cytnx-deps\")')", PATH = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deps_prefix.txt\"); print(p.read_text().strip() if p.exists() else \"/tmp/cytnx-deps\")')/bin:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deployment_target.txt\"); print(p.read_text().strip() if p.exists() else \"10.9\")')", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }
