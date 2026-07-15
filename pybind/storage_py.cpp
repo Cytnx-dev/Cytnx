@@ -352,8 +352,114 @@ void storage_binding(py::module &m) {
     // unless any element needs uint64's range, matching dispatch_pyint's
     // int64-preferred convention used by every other keep-set in this
     // codebase.
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"),
-                py::arg("device") = (int)cytnx::Device.cpu)
+    //
+    // numpy_scalar block: numpy integer/bool scalars are not subclasses of
+    // Python int/bool (unlike np.float64/np.complex128, which are Python
+    // float/complex subclasses and so already match the double/complex128
+    // overloads below), so without a dedicated overload here a list of them
+    // matches nothing in pybind11's no-convert pass and falls through to
+    // the convert pass, where the plain Bool overload's truthiness-based
+    // conversion silently accepts any object as True/False -- e.g.
+    // from_pylist([np.int32(2)]) produced a Bool storage instead of
+    // raising or dispatching to Int32/Int64. Registering these ahead of
+    // the plain Bool overload (matching every other keep-set's numpy_scalar-
+    // first ordering) lets them win in the no-convert pass instead.
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<std::complex<float>>> &pylist, const int &device) {
+        std::vector<cytnx_complex64> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_complex64>(v));
+        return cytnx::Storage::from_vector<cytnx_complex64>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<float>> &pylist, const int &device) {
+        std::vector<cytnx_float> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_float>(v));
+        return cytnx::Storage::from_vector<cytnx_float>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<int64_t>> &pylist, const int &device) {
+        std::vector<cytnx_int64> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_int64>(v));
+        return cytnx::Storage::from_vector<cytnx_int64>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<uint64_t>> &pylist, const int &device) {
+        std::vector<cytnx_uint64> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_uint64>(v));
+        return cytnx::Storage::from_vector<cytnx_uint64>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<int32_t>> &pylist, const int &device) {
+        std::vector<cytnx_int32> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_int32>(v));
+        return cytnx::Storage::from_vector<cytnx_int32>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<uint32_t>> &pylist, const int &device) {
+        std::vector<cytnx_uint32> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_uint32>(v));
+        return cytnx::Storage::from_vector<cytnx_uint32>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<int16_t>> &pylist, const int &device) {
+        std::vector<cytnx_int16> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_int16>(v));
+        return cytnx::Storage::from_vector<cytnx_int16>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<uint16_t>> &pylist, const int &device) {
+        std::vector<cytnx_uint16> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_uint16>(v));
+        return cytnx::Storage::from_vector<cytnx_uint16>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<bool>> &pylist, const int &device) {
+        std::vector<cytnx_bool> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_bool>(v));
+        return cytnx::Storage::from_vector<cytnx_bool>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    // Plain Bool overload: requires every element to already be an exact
+    // Python bool (py::bool_'s caster does a strict isinstance check with
+    // no truthiness-based convert-pass fallback, unlike the arithmetic
+    // cytnx_bool/C++-bool caster from_vector<cytnx_bool> would get if bound
+    // directly) -- see the numpy_scalar block above for why the lenient
+    // fallback is unsafe.
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::bool_> &pylist, const int &device) {
+        std::vector<cytnx_bool> vals;
+        vals.reserve(pylist.size());
+        for (const py::bool_ &v : pylist) vals.push_back(v.cast<cytnx_bool>());
+        return cytnx::Storage::from_vector<cytnx_bool>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
     .def_static(
       "from_pylist",
       [](const std::vector<py::int_> &pylist, const int &device) {
