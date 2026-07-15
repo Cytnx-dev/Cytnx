@@ -16,7 +16,7 @@ namespace cytnx {
     inline void SubInternalImpl(const boost::intrusive_ptr<StorageImplementation<TO>> &out,
                                 const boost::intrusive_ptr<StorageImplementation<TL>> &lhs,
                                 const boost::intrusive_ptr<StorageImplementation<TR>> &rhs,
-                                const cytnx_uint64 &len, const std::vector<cytnx_uint64> &shape,
+                                cytnx_uint64 len, const std::vector<cytnx_uint64> &shape,
                                 const std::vector<cytnx_uint64> &invmapper_L,
                                 const std::vector<cytnx_uint64> &invmapper_R) {
       TO *_out = out->data();

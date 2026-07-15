@@ -17,7 +17,7 @@ namespace cytnx {
     inline void CprInternalImpl(const boost::intrusive_ptr<StorageImplementation<cytnx_bool>> &out,
                                 const boost::intrusive_ptr<StorageImplementation<TL>> &lhs,
                                 const boost::intrusive_ptr<StorageImplementation<TR>> &rhs,
-                                const cytnx_uint64 &len, const std::vector<cytnx_uint64> &shape,
+                                cytnx_uint64 len, const std::vector<cytnx_uint64> &shape,
                                 const std::vector<cytnx_uint64> &invmapper_L,
                                 const std::vector<cytnx_uint64> &invmapper_R) {
       using TPromote = cytnx::Type_class::type_promote_t<TL, TR>;
