@@ -152,6 +152,41 @@ def test_unitensor_get_block_by_qnum_int_list():
     assert B.get_block_([0, 0], False)[0, 0].item() == pytest.approx(42.0)
 
 
+# ---------------------------------------------------------------------------
+# UniTensor.get_block/get_block_: the qnum consolidation above replaced raw
+# vector<cytnx_int64>/vector<cytnx_uint64> overloads (whose arithmetic-type
+# casters accept anything satisfying __index__, numpy integer scalars
+# included) with a single std::vector<py::int_> dispatcher, whose caster does
+# a strict isinstance(int) check with no such fallback. Without a dedicated
+# numpy_scalar keep-set ahead of it, get_block([np.int64(0), np.int64(0)],
+# False) regressed from working to raising TypeError.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "np_dtype",
+    [np.int64, np.uint64, np.int32, np.uint32, np.int16, np.uint16],
+)
+def test_unitensor_get_block_by_qnum_numpy_scalar_list(np_dtype):
+    B = _u1_pair()
+    t = cytnx.zeros([1, 1])
+    t[0, 0] = 42.0
+    B.put_block(t, [0, 0])
+    qnum = [np_dtype(0), np_dtype(0)]
+    assert B.get_block(qnum, False)[0, 0].item() == pytest.approx(42.0)
+    assert B.get_block_(qnum, False)[0, 0].item() == pytest.approx(42.0)
+
+
+def test_unitensor_get_block_by_qnum_numpy_scalar_list_labeled():
+    B = _u1_pair()
+    t = cytnx.zeros([1, 1])
+    t[0, 0] = 42.0
+    B.put_block(t, [0, 0])
+    qnum = [np.int32(0), np.int32(0)]
+    assert B.get_block(B.labels(), qnum, False)[0, 0].item() == pytest.approx(42.0)
+    assert B.get_block_(B.labels(), qnum, False)[0, 0].item() == pytest.approx(42.0)
+
+
 def test_unitensor_get_block_by_qnum_negative_overflow_raises():
     # Same magnitude-dispatch helper as Storage.from_pylist: a value too
     # negative for int64 does not fit uint64 either and must raise. This is
