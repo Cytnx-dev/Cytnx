@@ -3,6 +3,7 @@
 #include <map>
 #include <random>
 #include <string>
+#include <type_traits>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -318,6 +319,30 @@ namespace {
   #if defined(__GNUC__) || defined(__clang__)
     #pragma GCC diagnostic pop
   #endif
+  // Converts a homogeneous list of numpy integer scalars to vector<cytnx_int64>
+  // (or vector<cytnx_uint64> for numpy_scalar<uint64_t>, the one numpy width
+  // that doesn't always fit in int64), then calls fn with it. numpy integer
+  // scalars are not subclasses of Python int, so they don't match
+  // dispatch_pyint_vector's std::vector<py::int_> parameter below -- without
+  // this overload, get_block/get_block_'s qnum parameter would silently stop
+  // accepting np.int64/np.int32/etc. elements it accepted before this
+  // consolidation (when it had raw vector<cytnx_int64>/vector<cytnx_uint64>
+  // overloads, whose arithmetic-type casters accept anything with __index__).
+  template <class T, class Fn>
+  auto dispatch_numpy_int_vector(const std::vector<py::numpy_scalar<T>> &vals, Fn &&fn) {
+    if constexpr (std::is_same_v<T, uint64_t>) {
+      std::vector<cytnx_uint64> converted;
+      converted.reserve(vals.size());
+      for (const auto &v : vals) converted.push_back(static_cast<cytnx_uint64>(static_cast<T>(v)));
+      return fn(converted);
+    } else {
+      std::vector<cytnx_int64> converted;
+      converted.reserve(vals.size());
+      for (const auto &v : vals) converted.push_back(static_cast<cytnx_int64>(static_cast<T>(v)));
+      return fn(converted);
+    }
+  }
+
   // Converts a list of Python ints to a single homogeneous vector<cytnx_int64>
   // or vector<cytnx_uint64> (int64 unless any element needs uint64's range),
   // then calls fn with it. Vector counterpart of dispatch_pyint
@@ -1058,6 +1083,195 @@ void unitensor_binding(py::module &m) {
     .def("get_block",
       [](const UniTensor &self, const cytnx_uint64 &idx) { return self.get_block(idx); },
       py::arg("idx") = (cytnx_uint64)(0))
+
+    // numpy_scalar keep-set for the qnum parameter, ahead of the py::int_
+    // dispatcher below -- see dispatch_numpy_int_vector's comment.
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<py::numpy_scalar<int64_t>> &qnum,
+         const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &label,
+         const std::vector<py::numpy_scalar<int64_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block(label, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<py::numpy_scalar<int64_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block_(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<std::string> &labels,
+         const std::vector<py::numpy_scalar<int64_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block_(labels, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<py::numpy_scalar<uint64_t>> &qnum,
+         const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &label,
+         const std::vector<py::numpy_scalar<uint64_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block(label, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<py::numpy_scalar<uint64_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block_(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<std::string> &labels,
+         const std::vector<py::numpy_scalar<uint64_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block_(labels, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<py::numpy_scalar<int32_t>> &qnum,
+         const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &label,
+         const std::vector<py::numpy_scalar<int32_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block(label, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<py::numpy_scalar<int32_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block_(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<std::string> &labels,
+         const std::vector<py::numpy_scalar<int32_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block_(labels, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<py::numpy_scalar<uint32_t>> &qnum,
+         const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &label,
+         const std::vector<py::numpy_scalar<uint32_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block(label, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<py::numpy_scalar<uint32_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block_(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<std::string> &labels,
+         const std::vector<py::numpy_scalar<uint32_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block_(labels, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<py::numpy_scalar<int16_t>> &qnum,
+         const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &label,
+         const std::vector<py::numpy_scalar<int16_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block(label, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<py::numpy_scalar<int16_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block_(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<std::string> &labels,
+         const std::vector<py::numpy_scalar<int16_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block_(labels, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<py::numpy_scalar<uint16_t>> &qnum,
+         const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &label,
+         const std::vector<py::numpy_scalar<uint16_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block(label, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<py::numpy_scalar<uint16_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(qnum,
+                                          [&](const auto &v) { return self.get_block_(v, force); });
+      },
+      py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<std::string> &labels,
+         const std::vector<py::numpy_scalar<uint16_t>> &qnum, const bool &force) {
+        return dispatch_numpy_int_vector(
+          qnum, [&](const auto &v) { return self.get_block_(labels, v, force); });
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
 
     .def("get_block",
       [](const UniTensor &self, const std::vector<py::int_> &qnum, const bool &force) {
