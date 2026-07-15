@@ -62,6 +62,54 @@ def test_storage_from_pylist_float_and_complex_dtype():
 
 
 # ---------------------------------------------------------------------------
+# Storage.from_pylist: numpy integer/bool scalars are not subclasses of
+# Python int/bool (unlike np.float64/np.complex128, which subclass Python
+# float/complex and already worked), so a list of them matched nothing in
+# pybind11's no-convert pass and fell through to the plain Bool overload's
+# convert-pass truthiness fallback -- e.g. from_pylist([np.int32(2)])
+# silently produced a Bool storage holding True instead of an Int32 value of
+# 2. Fixed by adding a numpy_scalar keep-set ahead of a Bool overload that
+# now requires an exact Python bool (no truthiness fallback).
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "np_dtype,dtype",
+    [
+        (np.int64, Type.Int64),
+        (np.uint64, Type.Uint64),
+        (np.int32, Type.Int32),
+        (np.uint32, Type.Uint32),
+        (np.int16, Type.Int16),
+        (np.uint16, Type.Uint16),
+    ],
+)
+def test_storage_from_pylist_numpy_int_scalar_dtype_and_value(np_dtype, dtype):
+    s = cytnx.Storage.from_pylist([np_dtype(2), np_dtype(3)])
+    assert s.dtype() == dtype
+    assert int(s[0]) == 2
+    assert int(s[1]) == 3
+
+
+def test_storage_from_pylist_numpy_float32_scalar_dtype_and_value():
+    s = cytnx.Storage.from_pylist([np.float32(1.5)])
+    assert s.dtype() == Type.Float
+    assert float(s[0]) == pytest.approx(1.5)
+
+
+def test_storage_from_pylist_numpy_complex64_scalar_dtype():
+    s = cytnx.Storage.from_pylist([np.complex64(1 + 2j)])
+    assert s.dtype() == Type.ComplexFloat
+
+
+def test_storage_from_pylist_numpy_bool_scalar_dtype():
+    s = cytnx.Storage.from_pylist([np.bool_(True), np.bool_(False)])
+    assert s.dtype() == Type.Bool
+    assert bool(s[0]) is True
+    assert bool(s[1]) is False
+
+
+# ---------------------------------------------------------------------------
 # Scalar's plain-int constructor: adopts dispatch_pyint's int64-preferred
 # convention (matching every other keep-set in the codebase) instead of
 # uint64 winning purely from being registered first.
