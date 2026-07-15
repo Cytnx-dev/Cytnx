@@ -2,18 +2,46 @@
 set -euo pipefail
 
 # NOTE:
-# We intentionally install dependencies via Homebrew here. Their dylibs may
-# encode a minimum supported macOS version (minos). We inspect that metadata
-# and persist both a report and an effective deployment target for cibuildwheel.
+# We install native dependencies via conda-forge (through a self-contained
+# micromamba environment) rather than Homebrew. Two reasons:
+#
+#  * Homebrew's bottled dylibs encode whatever macOS deployment target
+#    Homebrew itself currently targets for that formula, which trends
+#    upward release over release -- Cytnx's actual minimum supported macOS
+#    version was rising as a side effect of Homebrew's own build policy,
+#    not a decision made here (#963). conda-forge's clang_osx-64 /
+#    clang_osx-arm64 toolchain targets a pinned, deliberately old SDK, so
+#    its packages carry a controlled, low minos regardless of the runner's
+#    own OS version.
+#  * conda-forge ships an explicit "openmp" build variant of OpenBLAS,
+#    replacing Homebrew's pthreads-only build (see
+#    tools/cibuildwheel_before_all.sh for why that matters with HPTT's
+#    OpenMP usage).
+#
+# The dylib-minos-probing logic below is unchanged from the Homebrew
+# version of this script; only the package source and prefix changed, so
+# MACOSX_DEPLOYMENT_TARGET keeps tracking whatever floor the actual
+# vendored dylibs require instead of a value guessed in advance.
 
-probe_packages=(arpack boost openblas)
-install_only_packages=(ccache libomp)
-install_packages=("${probe_packages[@]}" "${install_only_packages[@]}")
+deps_prefix="${PWD}/.cytnx-deps"
+arch="$(uname -m)"
+if [[ "${arch}" == "arm64" ]]; then
+  conda_subdir="osx-arm64"
+else
+  conda_subdir="osx-64"
+fi
 
-brew update
-brew install "${install_packages[@]}"
+curl -Ls "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj bin/micromamba
+export MAMBA_ROOT_PREFIX="${PWD}/.micromamba"
+./bin/micromamba create -y -p "${deps_prefix}" -c conda-forge \
+  "openblas=*=*openmp*" \
+  liblapacke \
+  "arpack=*=nompi*" \
+  libboost-headers \
+  llvm-openmp \
+  ccache
 
-report_file="${PWD}/.cibw_macos_brew_minos_report.txt"
+report_file="${PWD}/.cibw_macos_condaforge_minos_report.txt"
 target_file="${PWD}/.cibw_macos_deployment_target.txt"
 
 # Truncate/create report file before appending package diagnostics.
@@ -21,45 +49,25 @@ target_file="${PWD}/.cibw_macos_deployment_target.txt"
 
 max_minos="0.0"
 
-# Expand the probe set with the full transitive runtime dependency closure,
-# since dylibs we link against may in turn load deeper brewed dylibs whose
-# minos is higher than the direct dependencies'. macOS ships bash 3.2 which
-# lacks `mapfile`, so read into arrays with a while-loop instead.
-transitive_deps=()
-while IFS= read -r dep; do
-  transitive_deps+=("${dep}")
-done < <(brew deps --union "${probe_packages[@]}")
+# macOS ships bash 3.2 which lacks `mapfile`, so read into arrays with a
+# while-loop instead.
+while IFS= read -r dylib; do
+  minos="$(vtool -show-build "${dylib}" 2>/dev/null | awk '/minos/ {print $2; exit}')"
+  minos="${minos:-unknown}"
+  echo "  ${minos}  $(basename "${dylib}")" | tee -a "${report_file}"
 
-all_probe_packages=()
-while IFS= read -r pkg; do
-  all_probe_packages+=("${pkg}")
-done < <(printf '%s\n' "${probe_packages[@]}" "${transitive_deps[@]}" | awk 'NF && !seen[$0]++')
-
-for pkg in "${all_probe_packages[@]}"; do
-  echo "### ${pkg} ###" | tee -a "${report_file}"
-  prefix="$(brew --prefix "${pkg}")"
-  if [[ -d "${prefix}/lib" ]]; then
-    while IFS= read -r dylib; do
-      minos="$(vtool -show-build "${dylib}" 2>/dev/null | awk '/minos/ {print $2; exit}')"
-      minos="${minos:-unknown}"
-      echo "  ${minos}  $(basename "${dylib}")" | tee -a "${report_file}"
-
-      if [[ "${minos}" != "unknown" ]]; then
-        if [[ "$(printf '%s\n' "${max_minos}" "${minos}" | sort -V | tail -n1)" == "${minos}" ]]; then
-          max_minos="${minos}"
-        fi
-      fi
-    # -L follows brew's version symlinks (e.g. gcc's lib/gcc/current -> 15)
-    # so dylibs nested under lib/<formula>/<version>/ such as libgfortran,
-    # libquadmath and libgcc_s are picked up. Keep -maxdepth bounded to
-    # guard against symlink-induced recursion.
-    done < <(find -L "${prefix}/lib" -maxdepth 4 -name "*.dylib" -type f)
+  if [[ "${minos}" != "unknown" ]]; then
+    if [[ "$(printf '%s\n' "${max_minos}" "${minos}" | sort -V | tail -n1)" == "${minos}" ]]; then
+      max_minos="${minos}"
+    fi
   fi
-  echo | tee -a "${report_file}"
-done
+# -L follows conda-forge's own symlinks so dylibs nested a level deeper are
+# still picked up. Keep -maxdepth bounded to guard against symlink-induced
+# recursion.
+done < <(find -L "${deps_prefix}/lib" -maxdepth 4 -name "*.dylib" -type f)
 
-# Use the highest minos observed to avoid building wheels that reference
-# brewed dylibs requiring a newer macOS than the deployment target.
+# Use the highest minos observed to avoid building wheels that reference a
+# vendored dylib requiring a newer macOS than the deployment target.
 echo "${max_minos}" > "${target_file}"
 echo "Computed MACOSX_DEPLOYMENT_TARGET=${max_minos}" | tee -a "${report_file}"
 echo "Wrote minos report: ${report_file}"
