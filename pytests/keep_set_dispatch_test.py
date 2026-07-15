@@ -49,8 +49,10 @@ def test_storage_from_pylist_int_overflow_uses_uint64():
 def test_storage_from_pylist_negative_overflow_raises():
     # A magnitude too negative for int64 does not fit uint64 either (uint64
     # cannot represent any negative value); must raise, not silently cast.
+    # Match the specific out-of-range message so this doesn't pass merely
+    # because *some* unrelated CytnxError was raised.
     too_negative = -(2**64)
-    with pytest.raises(cytnx.CytnxError):
+    with pytest.raises(cytnx.CytnxError, match="out of the supported int64/uint64 range"):
         cytnx.Storage.from_pylist([too_negative])
 
 
@@ -104,21 +106,29 @@ def test_unitensor_get_block_by_qnum_int_list():
 
 def test_unitensor_get_block_by_qnum_negative_overflow_raises():
     # Same magnitude-dispatch helper as Storage.from_pylist: a value too
-    # negative for int64 does not fit uint64 either and must raise.
+    # negative for int64 does not fit uint64 either and must raise. This is
+    # not about U1 physically supporting negative charges (it does) -- match
+    # the specific out-of-range message so the test fails if some unrelated
+    # qnum-validation error fires instead of dispatch_pyint_vector's check.
     B = _u1_pair()
     too_negative = -(2**64)
-    with pytest.raises(cytnx.CytnxError):
+    with pytest.raises(cytnx.CytnxError, match="out of the supported int64/uint64 range"):
         B.get_block([too_negative, 0], False)
 
 
 # ---------------------------------------------------------------------------
 # LinOp.set_elem: numpy_scalar overloads registered ahead of the plain
-# double/complex128 ones so every numpy dtype in the keep-set dispatches
-# through its own overload rather than an unrelated wider one.
+# double/complex128 ones, matching every other keep-set's convention. This is
+# a reachability check only, not a discriminating regression test: set_elem's
+# target assignment (Tensor::Tproxy::operator=) tolerates a value routed
+# through a wider overload (e.g. a real value cast via the raw complex128
+# overload instead of numpy_scalar<float>) without raising or changing the
+# resulting numeric value, so no test can observe *which* overload matched
+# from the result alone. See 09cdee2's commit message.
 # ---------------------------------------------------------------------------
 
 
-def test_linop_set_elem_numpy_scalar_dtypes():
+def test_linop_set_elem_numpy_scalar_dtypes_are_accepted():
     lop = cytnx.LinOp("mv_elem", nx=2, dtype=Type.ComplexDouble)
     lop.set_elem(0, 0, np.float32(1.5))
     lop.set_elem(0, 1, np.complex64(2 + 1j))
@@ -128,25 +138,17 @@ def test_linop_set_elem_numpy_scalar_dtypes():
 
 
 # ---------------------------------------------------------------------------
-# Tensor's __r*__ operators: the numpy_scalar-typed overloads are dead code
-# (issue #692) because Tensor's __iter__ makes numpy's ufunc dispatch try to
-# iterate a numpy-scalar-on-the-left operand before ever falling back to
-# __radd__/etc.; removed to fix the corresponding mypy.stubtest [misc]
-# errors. The plain py::int_/Scalar/double/complex128 overloads are
-# unaffected (a plain Python operand never goes through numpy's ufunc
-# dispatch) and the pre-existing failure mode for a numpy scalar on the left
-# is unchanged.
+# Tensor's __r*__ operators: the numpy_scalar-typed overloads were dead code
+# (issue #692, a genuine unfixed bug, not by design) because Tensor's
+# __iter__ makes numpy's ufunc dispatch try to iterate a numpy-scalar-on-the-
+# left operand before ever falling back to __radd__/etc.; removed to fix the
+# corresponding mypy.stubtest [misc] errors. The still-broken numpy-scalar-
+# on-the-left case is intentionally not pinned by a test here -- #692 tracks
+# it, and a test asserting it still fails would need updating (and could be
+# forgotten) the moment #692 is fixed. The regression coverage that matters
+# for this PR is that the *kept* overloads (int/Scalar/double/complex128)
+# still work, below.
 # ---------------------------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    "np_value",
-    [np.int64(3), np.float32(1.5), np.complex64(1 + 2j), np.uint16(4), np.bool_(True)],
-)
-def test_tensor_numpy_scalar_on_left_still_raises_typeerror(np_value):
-    t = cytnx.zeros([2], dtype=Type.Double)
-    with pytest.raises(TypeError):
-        _ = np_value + t
 
 
 def test_tensor_plain_python_and_scalar_reverse_ops_still_work():
