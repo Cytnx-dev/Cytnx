@@ -5,10 +5,13 @@ The script
 
   1. renames the PyPI project from `cytnx` to `cytnx-cuda`;
   2. adds the NVIDIA/cuTENSOR/cuQuantum runtime packages as ordinary
-     `[project.dependencies]`, pinned exactly to the versions this wheel
-     was built and linked against (the PyTorch approach: the CUDA
-     libraries are dynamically linked at runtime from these pip
-     packages, never vendored into the wheel itself). Only the packages
+     `[project.dependencies]`, pinned with PEP 440 compatible-release
+     (`~=`) constraints anchored to the versions this wheel was built
+     and linked against (the PyTorch approach: the CUDA libraries are
+     dynamically linked at runtime from these pip packages, never
+     vendored into the wheel itself), allowing patch-level upgrades
+     within the same minor version while blocking anything that could
+     break binary compatibility. Only the packages
      cytnx links directly are listed; each pulls in its own transitive
      NVIDIA dependencies (nvidia-cusolver -> nvidia-cublas/
      nvidia-nvjitlink/nvidia-cusparse, nvidia-cublas -> nvidia-cuda-nvrtc,
@@ -40,18 +43,20 @@ import tomlkit
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 PYPROJECT = REPO_ROOT / "pyproject.toml"
 
-# Pinned exactly to the versions this wheel is built and linked against
-# (see the module docstring for why only these, not their transitive
-# NVIDIA/cuTENSOR dependencies, need listing).
+# PEP 440 compatible-release ("~=") constraints anchored to the versions
+# this wheel is built and linked against -- patch releases within the
+# same minor version are allowed to satisfy the dependency, anything
+# outside it is not (see the module docstring for why only these, not
+# their transitive NVIDIA/cuTENSOR dependencies, need listing).
 CUDA_RUNTIME_DEPENDENCIES = [
-    "nvidia-cuda-runtime ==13.3.29 ; sys_platform == 'linux'",
-    "nvidia-cublas ==13.6.0.2 ; sys_platform == 'linux'",
-    "nvidia-cusparse ==12.8.2.51 ; sys_platform == 'linux'",
-    "nvidia-curand ==10.4.3.29 ; sys_platform == 'linux'",
-    "nvidia-cusolver ==12.2.6.9 ; sys_platform == 'linux'",
-    "cutensor-cu13 ==2.7.0 ; sys_platform == 'linux'",
-    "cutensornet-cu13 ==2.13.0 ; sys_platform == 'linux'",
-    "custatevec-cu13 ==1.14.0 ; sys_platform == 'linux'",
+    "nvidia-cuda-runtime ~=13.3.29 ; sys_platform == 'linux'",
+    "nvidia-cublas ~=13.6.0.2 ; sys_platform == 'linux'",
+    "nvidia-cusparse ~=12.8.2.51 ; sys_platform == 'linux'",
+    "nvidia-curand ~=10.4.3.29 ; sys_platform == 'linux'",
+    "nvidia-cusolver ~=12.2.6.9 ; sys_platform == 'linux'",
+    "cutensor-cu13 ~=2.7.0 ; sys_platform == 'linux'",
+    "cutensornet-cu13 ~=2.13.0 ; sys_platform == 'linux'",
+    "custatevec-cu13 ~=1.14.0 ; sys_platform == 'linux'",
 ]
 
 # SONAMEs provided by the pip packages above (including their transitive
