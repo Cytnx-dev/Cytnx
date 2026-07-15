@@ -29,8 +29,17 @@ set -euo pipefail
 # find_package(Cytnx) consumers (see ci-downstream-find-package.yml). So
 # this prefix must live outside ${PWD} (the checkout), unlike
 # tools/cibuildwheel_before_all.sh's /opt/cytnx-deps on Linux, which already
-# is outside the checkout by construction.
+# is outside the checkout by construction. The resolved path is written to
+# deps_prefix_file below (rather than referenced as $TMPDIR directly from
+# pyproject.toml's [tool.cibuildwheel.macos].environment) because
+# cibuildwheel's environment-table evaluator does not expand
+# ${VAR:-default}-style parameter substitution the way a real shell does;
+# only plain $VAR references and $(command) substitutions are honored
+# there, matching how MACOSX_DEPLOYMENT_TARGET below is already read back.
 deps_prefix="${TMPDIR:-/tmp}/cytnx-deps"
+deps_prefix_file="${PWD}/.cibw_macos_deps_prefix.txt"
+echo -n "${deps_prefix}" > "${deps_prefix_file}"
+
 arch="$(uname -m)"
 if [[ "${arch}" == "arm64" ]]; then
   conda_subdir="osx-arm64"
