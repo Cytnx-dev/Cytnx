@@ -174,7 +174,27 @@ void tensor_binding(py::module &m) {
           cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s", "\n");
         }
 
-        npbuf = py::buffer_info(tmpIN.storage()._impl->data(),  // ptr
+        // Zero-copy ownership transfer (#941 ruling 4): the capsule owns a
+        // copy of the intrusive_ptr<Storage_base>, keeping the storage alive
+        // for the numpy array's lifetime. The previous release()-based path
+        // both leaked the buffer AND still copied (py::array with a raw
+        // pointer and no base object cannot take ownership). For
+        // share_mem=false, tmpIN is a fresh clone/contiguous copy, so numpy
+        // gets an independent (but not leaked) buffer; for share_mem=true,
+        // tmpIN aliases self and numpy genuinely shares self's buffer (the
+        // old path silently copied even with share_mem=true).
+        auto *owner = new boost::intrusive_ptr<cytnx::Storage_base>(tmpIN.storage()._impl);
+        py::capsule base(owner, [](void *p) {
+          delete static_cast<boost::intrusive_ptr<cytnx::Storage_base> *>(p);
+        });
+
+        // Recover the data pointer through the typed #941 path rather than
+        // the legacy erased Storage_base::data() accessor.
+        void *typed_ptr = std::visit(
+          [](auto impl) -> void * { return static_cast<void *>(impl->data()); },
+          tmpIN.storage().as_storage_variant());
+
+        npbuf = py::buffer_info(typed_ptr,  // ptr
                                 cytnx::Type.typeSize(tmpIN.dtype()),  // size of elem
                                 chr_dtype,  // pss format
                                 tmpIN.rank(),  // rank
@@ -182,12 +202,7 @@ void tensor_binding(py::module &m) {
                                 stride  // stride
         );
 
-        if (!share_mem) {
-          // Avoid the memory passed to numpy being freed.
-          tmpIN.storage().release();
-        }
-
-        return py::array(npbuf);
+        return py::array(npbuf, base);
       },
       py::arg("share_mem") = false)
     // construction
