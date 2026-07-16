@@ -157,3 +157,25 @@ before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
 # `.cibw_macos_deployment_target.txt` is generated in tools/cibuildwheel_before_all_macos.sh.
 # Keep compiler selection stable across Python versions for reproducible builds and better ccache reuse.
 environment = { CC = "clang", CXX = "clang++", CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deployment_target.txt\"); print(p.read_text().strip() if p.exists() else \"10.9\")')", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+conda-pypi-map = false
+
+[tool.pixi.pypi-dependencies]
+cytnx = { path = ".", editable = true }
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+coverage = { features = ["coverage"], solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+release-tools = { features = ["release-tools"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
+viz = { features = ["viz"], solve-group = "default" }
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+openblas = ">=0.3.33,<0.4"
