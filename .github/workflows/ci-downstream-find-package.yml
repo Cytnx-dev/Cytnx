@@ -111,10 +111,19 @@ jobs:
         # gtest is omitted on purpose (RUN_TESTS=OFF builds no gtest binary);
         # OpenBLAS + LAPACKE match the openblas-cpu preset used below. ccache
         # backs the CMAKE_*_COMPILER_LAUNCHER set in this job's env.
+        #
+        # libopenblas=*=*openmp* matches ci-cmake_tests.yml's own pin: without
+        # it the solver is free to substitute a pthreads-threaded OpenBLAS
+        # build, which runs its own thread pool independent of the consumer
+        # binary's OpenMP usage (permute() -> HPTT, compiled with -fopenmp).
+        # _openmp_mutex=*_llvm then pins which concrete OpenMP runtime that
+        # OpenBLAS build and the -fopenmp-compiled code both resolve to, so
+        # they share a single thread pool instead of just being individually
+        # "openmp-based" and still oversubscribing.
         run: |
           mamba install -y \
             _openmp_mutex=*=*_llvm cmake make boost git compilers ccache \
-            blas=*=openblas liblapacke arpack
+            blas=*=openblas "libopenblas=*=*openmp*" liblapacke arpack
 
       - name: Configure cytnx (openblas-cpu preset, USE_HPTT=ON)
         # The openblas-cpu preset inherits USE_HPTT=ON + HPTT_ENABLE_FINE_TUNE=ON.
