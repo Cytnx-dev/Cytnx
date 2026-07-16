@@ -1,4 +1,17 @@
 import os,sys,warnings
+
+def _is_cuda_build__():
+    vinfo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vinfo.tmp")
+    try:
+        with open(vinfo_path) as f:
+            return "cuda" in f.read().split()
+    except FileNotFoundError:
+        return False
+
+if _is_cuda_build__():
+    from . import _cuda_preload
+    _cuda_preload.preload()
+
 from . import cytnx
 from .cytnx import *
 from .cytnx import __version__
