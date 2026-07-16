@@ -20,12 +20,14 @@ The script
      deliberately NOT depended on: it pulls in cudensitymat/cupauliprop/
      custabilizer, none of which cytnx links;
   3. switches `[tool.scikit-build].cmake.args` to the `openblas-cuda`
-     preset;
+     preset and sets `CMAKE_INSTALL_RPATH` to an $ORIGIN-relative RUNPATH
+     (see CUDA_INSTALL_RPATH) so the installed extension finds those
+     libraries in their sibling pip packages at runtime without
+     LD_LIBRARY_PATH;
   4. overrides `[tool.cibuildwheel.linux].repair-wheel-command` to
      exclude those same libraries from `auditwheel repair`'s vendoring,
-     so the wheel stays small and relies on the pip dependencies at
-     import time (see cytnx/_cuda_preload.py for how they get resolved
-     without requiring LD_LIBRARY_PATH); and
+     so the wheel stays small and relies on the pip dependencies (found
+     via the RUNPATH from step 3) instead; and
   5. chains tools/cibuildwheel_before_all_cuda.sh onto
      `[tool.cibuildwheel.linux].before-all` and points CMAKE_CUDA_COMPILER/
      CUTENSOR_ROOT/CUQUANTUM_ROOT/PATH/CMAKE_PREFIX_PATH at the toolchain it
@@ -83,11 +85,29 @@ CUDA_BUILD_TOOLCHAIN = ["nvidia-cuda-nvcc ~=13.3.73"] + [
     spec.split(";")[0].strip() for spec in CUDA_RUNTIME_DEPENDENCIES
 ]
 
+# $ORIGIN-relative RUNPATH baked into the installed extension so the
+# dynamic loader finds the excluded CUDA libraries in their pip packages'
+# site-packages directories at runtime, without LD_LIBRARY_PATH. From the
+# extension at site-packages/cytnx/, the sibling packages are one level up:
+# nvidia/cu13/lib, cutensor/lib, and cuquantum/lib (cutensornet-cu13 and
+# custatevec-cu13 both install under cuquantum/). Each of those libraries in
+# turn carries its own $ORIGIN-relative RUNPATH reaching across the three
+# directories, so this only needs to cover the extension's own direct
+# NEEDED entries; the transitive graph resolves itself. Semicolon-separated
+# because CMAKE_INSTALL_RPATH is a CMake list (CMake emits it to the linker
+# colon-separated).
+CUDA_INSTALL_RPATH = ";".join(
+    f"$ORIGIN/../{rel}"
+    for rel in ("nvidia/cu13/lib", "cutensor/lib", "cuquantum/lib")
+)
+
 # SONAMEs provided by the pip packages above (including their transitive
 # NVIDIA dependencies -- nvidia-cuda-nvrtc via nvidia-cublas,
 # nvidia-nvjitlink via nvidia-cusolver), excluded from auditwheel's
 # vendoring so the wheel relies on them at runtime instead of bundling
-# its own copies.
+# its own copies. auditwheel preserves the CMAKE_INSTALL_RPATH above through
+# `repair` (appending its own vendored-libs dir to it) precisely because
+# these are excluded, so the loader keeps both search paths.
 EXCLUDED_SONAMES = [
     "libcudart.so.*",
     "libcublas.so.*",
@@ -119,7 +139,10 @@ def rewrite_pyproject(doc: tomlkit.TOMLDocument) -> None:
             "--preset=openblas-cpu before this rewrite; pyproject.toml's "
             "structure may have changed"
         )
-    skb["cmake"]["args"] = ["--preset=openblas-cuda"]
+    skb["cmake"]["args"] = [
+        "--preset=openblas-cuda",
+        f"-DCMAKE_INSTALL_RPATH={CUDA_INSTALL_RPATH}",
+    ]
 
     exclude_flags = " ".join(f"--exclude {name}" for name in EXCLUDED_SONAMES)
     linux = doc["tool"]["cibuildwheel"]["linux"]

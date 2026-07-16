@@ -1,9 +1,4 @@
 import os,sys,warnings
-from . import _cuda_preload
-
-if _cuda_preload.is_cuda_build(os.path.dirname(os.path.abspath(__file__))):
-    _cuda_preload.preload()
-
 from . import cytnx
 from .cytnx import *
 from .cytnx import __version__
