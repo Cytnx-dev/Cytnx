@@ -16,9 +16,10 @@ name: Release CUDA wheels
 #     alongside the CPU nightly wheels (no filename collision: the
 #     package name is `cytnx-cuda`, not `cytnx`).
 #
-# Deliberately NOT run on pull_request: an nvcc build is much slower and
-# more expensive than the CPU wheel matrix, and this repo has no
-# GitHub-hosted GPU runner budget for validating it per-PR (#538).
+# Pull requests build the CUDA wheel as a build-health check (the nvcc
+# build path is validated) but never publish, mirroring release_pypi.yml:
+# the PR is merged with its target branch and the wheel is built, but no
+# upload happens. Only push/tag/dispatch runs publish.
 #
 # Single leg only: Linux x86_64, manylinux_2_28, built on a plain
 # ubuntu-24.04 (no GPU) runner -- cibuildwheel's manylinux container has
@@ -41,6 +42,7 @@ name: Release CUDA wheels
 #               cytnx-cuda
 
 on:
+  pull_request:
   push:
     branches:
       - master
@@ -58,32 +60,49 @@ on:
         default: auto
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.run_id }}
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   DetermineChannel:
-    # See release_pypi.yml's DetermineChannel for the full rationale; this
-    # is the same resolution logic minus the pull_request case, since this
-    # workflow never triggers on pull_request.
+    # See release_pypi.yml's DetermineChannel for the full rationale. Same
+    # resolution logic: pull requests resolve to nightly with publish=false
+    # (build-validated, never uploaded); push/tag/dispatch set publish=true.
     name: DetermineChannel
     runs-on: ubuntu-24.04
     outputs:
       channel: ${{ steps.pick.outputs.channel }}
+      publish: ${{ steps.pick.outputs.publish }}
       dev_tag: ${{ steps.pick.outputs.dev_tag }}
     steps:
     - id: pick
       run: |
         event="${{ github.event_name }}"
         ref="${{ github.ref }}"
-        if [[ "$event" == "push" && "$ref" == refs/tags/v* ]]; then
-          channel=stable
-        elif [[ "$event" == "workflow_dispatch" && "${{ inputs.channel }}" != "auto" ]]; then
-          channel="${{ inputs.channel }}"
-        elif [[ "$event" == "workflow_dispatch" && "$ref" == refs/tags/v* ]]; then
-          channel=stable
-        else
+        if [[ "$event" == "pull_request" ]]; then
+          # PRs validate the CUDA build path but never upload.
           channel=nightly
+          publish=false
+        elif [[ "$event" == "push" ]]; then
+          if [[ "$ref" == refs/tags/v* ]]; then
+            channel=stable
+          else
+            channel=nightly
+          fi
+          publish=true
+        else
+          # workflow_dispatch
+          requested="${{ inputs.channel }}"
+          if [[ "$requested" == "auto" ]]; then
+            if [[ "$ref" == refs/tags/v* ]]; then
+              channel=stable
+            else
+              channel=nightly
+            fi
+          else
+            channel="$requested"
+          fi
+          publish=true
         fi
         if [[ "$channel" == "nightly" ]]; then
           dev_tag=".dev$(date -u +%Y%m%d%H%M)"
@@ -91,8 +110,9 @@ jobs:
           dev_tag=""
         fi
         echo "channel=$channel" >> "$GITHUB_OUTPUT"
+        echo "publish=$publish" >> "$GITHUB_OUTPUT"
         echo "dev_tag=$dev_tag" >> "$GITHUB_OUTPUT"
-        echo "event=$event ref=$ref -> channel=$channel dev_tag=$dev_tag"
+        echo "event=$event ref=$ref -> channel=$channel publish=$publish dev_tag=$dev_tag"
 
   BuildWheel:
     name: BuildWheel-${{ matrix.os }}
@@ -111,6 +131,22 @@ jobs:
       with:
         fetch-depth: 0
         submodules: recursive
+
+    - name: Merge with latest target branch (pull_request only)
+      if: github.event_name == 'pull_request'
+      # When re-running a PR job, GitHub Actions reuses the merge commit
+      # created at the time of the original run, not a fresh merge with the
+      # latest target branch. Re-merging here validates the release build
+      # against the current target branch. A committer identity is required
+      # because a non-fast-forward merge creates a merge commit.
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+        # Refresh submodules in case the merge moved any gitlinks
+        # (e.g. cmake_modules/morse_cmake).
+        git submodule update --init --recursive
 
     - name: Install release stamping helpers
       # `release-tools` (tomlkit) backs both scripts below. See
@@ -179,7 +215,7 @@ jobs:
   ReleasePyPI:
     name: ReleasePyPI
     needs: [DetermineChannel, BuildWheel]
-    if: needs.DetermineChannel.outputs.channel == 'stable'
+    if: needs.DetermineChannel.outputs.channel == 'stable' && needs.DetermineChannel.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     permissions:
       id-token: write
@@ -198,7 +234,7 @@ jobs:
   PublishNightlyAnaconda:
     name: PublishNightlyAnaconda
     needs: [DetermineChannel, BuildWheel]
-    if: needs.DetermineChannel.outputs.channel == 'nightly'
+    if: needs.DetermineChannel.outputs.channel == 'nightly' && needs.DetermineChannel.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     concurrency:
       # Shares release_pypi.yml's serialization group: both workflows
