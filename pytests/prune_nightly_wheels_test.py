@@ -8,7 +8,11 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 
-from prune_nightly_wheels import _urlopen_with_retry, select_versions_to_delete  # noqa: E402
+from prune_nightly_wheels import (  # noqa: E402
+    _urlopen_with_retry,
+    fetch_versions,
+    select_versions_to_delete,
+)
 
 
 def test_fewer_than_keep_deletes_nothing():
@@ -113,3 +117,29 @@ def test_http_error_is_not_retried(mock_urlopen, mock_sleep):
         _urlopen_with_retry(Mock(), timeout=30)
     assert mock_urlopen.call_count == 1
     mock_sleep.assert_not_called()
+
+
+@patch("prune_nightly_wheels._urlopen_with_retry")
+def test_fetch_versions_missing_package_returns_empty(mock_urlopen_retry):
+    # First nightly for a brand-new package: it isn't on the channel yet, so
+    # anaconda.org returns 404. Pruning has nothing to do, and must not fail
+    # the publish job before the upload can create the package.
+    mock_urlopen_retry.side_effect = urllib.error.HTTPError(
+        "url", 404, "not found", hdrs=None, fp=None
+    )
+    assert fetch_versions("cytnx-cuda") == []
+
+
+@patch("prune_nightly_wheels._urlopen_with_retry")
+def test_fetch_versions_propagates_non_404(mock_urlopen_retry):
+    mock_urlopen_retry.side_effect = urllib.error.HTTPError(
+        "url", 500, "server error", hdrs=None, fp=None
+    )
+    with pytest.raises(urllib.error.HTTPError):
+        fetch_versions("cytnx-cuda")
+
+
+@patch("prune_nightly_wheels._urlopen_with_retry")
+def test_fetch_versions_parses_version_list(mock_urlopen_retry):
+    mock_urlopen_retry.return_value = b'{"versions": ["1.2.0.dev202601010000"]}'
+    assert fetch_versions("cytnx") == ["1.2.0.dev202601010000"]

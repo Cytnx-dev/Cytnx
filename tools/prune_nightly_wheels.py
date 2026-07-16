@@ -76,7 +76,16 @@ def _urlopen_with_retry(request: urllib.request.Request, *, timeout: int) -> byt
 
 def fetch_versions(package: str) -> list[str]:
     url = f"{API_BASE}/package/{ORGANIZATION}/{package}"
-    body = _urlopen_with_retry(urllib.request.Request(url), timeout=30)
+    try:
+        body = _urlopen_with_retry(urllib.request.Request(url), timeout=30)
+    except urllib.error.HTTPError as error:
+        if error.code == 404:
+            # The package is not on the channel yet -- e.g. the first
+            # nightly upload for a brand-new package, where this prune runs
+            # before any wheel has created it. Nothing to prune.
+            print(f"{package}: not on the channel yet, nothing to prune")
+            return []
+        raise
     return list(json.loads(body)["versions"])
 
 
