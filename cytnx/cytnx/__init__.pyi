@@ -894,6 +894,14 @@ class Storage:
         ...
     @staticmethod
     @typing.overload
+    def from_pylist(pylist: collections.abc.Sequence[numpy.int8], device: typing.SupportsInt | typing.SupportsIndex = -1) -> Storage:
+        ...
+    @staticmethod
+    @typing.overload
+    def from_pylist(pylist: collections.abc.Sequence[numpy.uint8], device: typing.SupportsInt | typing.SupportsIndex = -1) -> Storage:
+        ...
+    @staticmethod
+    @typing.overload
     def from_pylist(pylist: collections.abc.Sequence[numpy.bool], device: typing.SupportsInt | typing.SupportsIndex = -1) -> Storage:
         ...
     @staticmethod
