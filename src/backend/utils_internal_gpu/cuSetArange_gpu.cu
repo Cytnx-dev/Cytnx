@@ -8,7 +8,7 @@ namespace cytnx {
                                        cytnx_uint64 Nelem) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         in[blockIdx.x * blockDim.x + threadIdx.x] =
-          start + step * blockIdx.x * blockDim.x + threadIdx.x;
+          start + step * (blockIdx.x * blockDim.x + threadIdx.x);
       }
     }
     __global__ void cuSetArange_kernel(cuDoubleComplex *in, cytnx_double start, cytnx_double step,
