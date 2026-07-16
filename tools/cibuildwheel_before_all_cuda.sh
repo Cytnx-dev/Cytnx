@@ -52,5 +52,21 @@ for lib_dir in \
   done
 done
 
+# Device LTO (-dlto) makes nvlink dlopen libnvvm to run the offline LTO
+# codegen. In a normal CUDA toolkit libnvvm lives at <top>/nvvm/lib64/;
+# nvcc.profile's TOP-relative search and nvlink's default nvvmpath both look
+# there. The nvidia-nvvm wheel instead relocates it to <top>/lib/libnvvm.so.4
+# and leaves nvvm/ with only bin/ and libdevice/ (no lib64), so nvlink fails
+# device LTO with "elfLink linker library load error". Recreate the canonical
+# nvvm/lib64/libnvvm.so{,.4} so nvlink finds it there.
+nvvm_lib64="${toolchain_prefix}/nvidia/cu13/nvvm/lib64"
+libnvvm="$(find "${toolchain_prefix}/nvidia/cu13/lib" -maxdepth 1 -name 'libnvvm.so.*' | head -1)"
+if [ -n "${libnvvm}" ]; then
+  mkdir -p "${nvvm_lib64}"
+  libnvvm_base="$(basename "${libnvvm}")"
+  ln -sf "../../lib/${libnvvm_base}" "${nvvm_lib64}/${libnvvm_base}"
+  ln -sf "${libnvvm_base}" "${nvvm_lib64}/libnvvm.so"
+fi
+
 echo "CUDA toolchain installed at ${toolchain_prefix}/nvidia/cu13"
 "${toolchain_prefix}/nvidia/cu13/bin/nvcc" --version
