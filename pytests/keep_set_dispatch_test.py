@@ -109,6 +109,38 @@ def test_storage_from_pylist_numpy_bool_scalar_dtype():
     assert bool(s[1]) is False
 
 
+@pytest.mark.parametrize(
+    "np_dtype,dtype",
+    [(np.int8, Type.Int16), (np.uint8, Type.Uint16)],
+)
+def test_storage_from_pylist_numpy_8bit_int_widens_to_16bit_not_double(np_dtype, dtype):
+    # Same gap as Scalar's constructor (cytnx has no Int8/Uint8 dtype): an
+    # 8-bit numpy int has no exact numpy_scalar overload here, and without
+    # one it fell through to the double overload -- from_pylist([np.int8(5)])
+    # silently produced a Double storage instead of an integer one.
+    s = cytnx.Storage.from_pylist([np_dtype(5)])
+    assert s.dtype() == dtype
+    assert int(s[0]) == 5
+
+
+def test_storage_from_pylist_empty_list_defaults_to_complex_float():
+    # An empty list has no elements for any vector<T> caster to check, so
+    # pybind11's no-convert pass accepts it for every from_pylist overload
+    # equally and the first-registered one wins regardless of T --
+    # from_pylist([]) is at the mercy of registration order alone. This
+    # changed from ComplexDouble (before the keep-set consolidation) to
+    # ComplexFloat, since the numpy_scalar block (which must precede the
+    # plain Bool/py::int_ overloads for correctness -- see
+    # test_storage_from_pylist_numpy_int_scalar_dtype_and_value above) opens
+    # with numpy_scalar<complex64>. Pinned here as a regression test for the
+    # empty-list default itself, not an endorsement of ComplexFloat as
+    # "correct" -- see storage_py.cpp's from_pylist comment for why no
+    # registration order gives every non-empty list its correct dtype AND
+    # preserves the old ComplexDouble empty-list default.
+    s = cytnx.Storage.from_pylist([])
+    assert s.dtype() == Type.ComplexFloat
+
+
 # ---------------------------------------------------------------------------
 # Scalar's plain-int constructor: adopts dispatch_pyint's int64-preferred
 # convention (matching every other keep-set in the codebase) instead of
