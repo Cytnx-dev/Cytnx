@@ -32,5 +32,25 @@ python3 -m pip install --target "${toolchain_prefix}" "$@"
 # package, so they merge into one nvidia/cu13/{bin,include,lib} tree).
 chmod +x "${toolchain_prefix}/nvidia/cu13/bin/"*
 
+# The pip CUDA wheels ship only the versioned sonames (libcudart.so.13,
+# libcutensor.so.2, ...), but CMake's find_package(CUDAToolkit) and the
+# cuTENSOR/cuQuantum finders resolve libraries with find_library(), which
+# only matches the unversioned libX.so name. Create those dev symlinks in
+# each toolchain lib dir so configuration can locate the import libraries.
+# (CUTENSOR_ROOT/CUQUANTUM_ROOT point at the cutensor/ and cuquantum/
+# namespace-package roots; nvidia-* all merge under nvidia/cu13/.)
+for lib_dir in \
+  "${toolchain_prefix}/nvidia/cu13/lib" \
+  "${toolchain_prefix}/cutensor/lib" \
+  "${toolchain_prefix}/cuquantum/lib"; do
+  [ -d "${lib_dir}" ] || continue
+  for versioned in "${lib_dir}"/lib*.so.*; do
+    [ -e "${versioned}" ] || continue
+    base="$(basename "${versioned}")"
+    unversioned="${base%%.so.*}.so"
+    ln -sf "${base}" "${lib_dir}/${unversioned}"
+  done
+done
+
 echo "CUDA toolchain installed at ${toolchain_prefix}/nvidia/cu13"
 "${toolchain_prefix}/nvidia/cu13/bin/nvcc" --version
