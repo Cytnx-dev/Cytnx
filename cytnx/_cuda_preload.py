@@ -14,14 +14,38 @@ extension's own NEEDED entries resolve against libraries already mapped into
 the process by soname -- avoids requiring LD_LIBRARY_PATH at all (the
 approach PyTorch's nvidia-* wheel dependencies use).
 
-cytnx/__init__.py calls preload() before `from . import cytnx`, gated on the
-"cuda" marker CMakeLists.txt writes to vinfo.tmp only for USE_CUDA builds, so
-this is a no-op import on CPU-only installs.
+cytnx/__init__.py calls preload() before `from . import cytnx`, gated on
+is_cuda_build() reading the "cuda" marker CMakeLists.txt writes to vinfo.tmp
+only for USE_CUDA builds, so this is a no-op import on CPU-only installs.
 """
 
 import ctypes
 import importlib.util
 import pathlib
+from collections.abc import Callable
+
+
+def is_cuda_build(package_dir: str) -> bool:
+    """Whether vinfo.tmp under package_dir carries CMakeLists.txt's "cuda" marker.
+
+    Checked from a plain vinfo.tmp read (not by importing the compiled
+    extension and checking e.g. cytnx.Device) since the whole point is to
+    decide whether to preload CUDA libraries *before* that extension import
+    is attempted.
+
+    Args:
+        package_dir: Directory to look for vinfo.tmp in -- the installed
+            cytnx/ package directory in normal use.
+
+    Returns:
+        True for a USE_CUDA build, False for a CPU-only build or when
+        vinfo.tmp hasn't been installed there at all.
+    """
+    try:
+        return "cuda" in (pathlib.Path(package_dir) / "vinfo.tmp").read_text().split()
+    except FileNotFoundError:
+        return False
+
 
 # (namespace package, path segments under it) for each package family that
 # installs shared libraries this needs preloaded. nvidia-cuda-runtime,
@@ -55,7 +79,14 @@ def _discover_lib_paths() -> list[pathlib.Path]:
     return paths
 
 
-def preload() -> None:
+def _default_loader(lib_path: pathlib.Path) -> None:
+    ctypes.CDLL(str(lib_path), mode=ctypes.RTLD_GLOBAL)
+
+
+def preload(
+    lib_paths: list[pathlib.Path] | None = None,
+    loader: Callable[[pathlib.Path], None] = _default_loader,
+) -> None:
     """Load every discovered library with RTLD_GLOBAL.
 
     Libraries are tried in a fixed-point loop rather than a hardcoded order:
@@ -64,19 +95,25 @@ def preload() -> None:
     among these packages resolves itself without this module having to track
     it explicitly.
 
+    Args:
+        lib_paths: Libraries to load; defaults to _discover_lib_paths().
+            Overridable for testing without real CUDA packages installed.
+        loader: Called once per library path to load it; defaults to
+            ctypes.CDLL(..., RTLD_GLOBAL). Overridable for testing.
+
     Raises:
         ImportError: A pass completed without loading any of the still-
             pending libraries, so no ordering will make them load; usually
             means the pip packages are missing or version-mismatched.
     """
-    pending = _discover_lib_paths()
+    pending = _discover_lib_paths() if lib_paths is None else list(lib_paths)
     last_error = None
     while pending:
         still_pending = []
         loaded_this_pass = False
         for lib_path in pending:
             try:
-                ctypes.CDLL(str(lib_path), mode=ctypes.RTLD_GLOBAL)
+                loader(lib_path)
                 loaded_this_pass = True
             except OSError as exc:
                 still_pending.append(lib_path)
