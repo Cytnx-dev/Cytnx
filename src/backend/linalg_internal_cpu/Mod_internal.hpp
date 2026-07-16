@@ -38,35 +38,41 @@ namespace cytnx {
       }
     };
 
-    // Main template implementation for Mod operation
-    template <typename TLin, typename TRin>
-    inline void ModInternalImpl(boost::intrusive_ptr<Storage_base> &out,
-                                boost::intrusive_ptr<Storage_base> &Lin,
-                                boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &len,
-                                const std::vector<cytnx_uint64> &shape,
+    // Typed ModInternalImpl (#941): TO is part of the signature, not recovered
+    // from a dtype() check at runtime -- the caller is responsible for
+    // recovering typed storage (storage_cast<T> / storage_as_type_or_replace<T>)
+    // before calling in.
+    template <typename TO, typename TL, typename TR>
+    inline void ModInternalImpl(const boost::intrusive_ptr<StorageImplementation<TO>> &out,
+                                const boost::intrusive_ptr<StorageImplementation<TL>> &lhs,
+                                const boost::intrusive_ptr<StorageImplementation<TR>> &rhs,
+                                cytnx_uint64 len, const std::vector<cytnx_uint64> &shape,
                                 const std::vector<cytnx_uint64> &invmapper_L,
                                 const std::vector<cytnx_uint64> &invmapper_R) {
-      using TOut = cytnx::Type_class::type_promote_t<TLin, TRin>;
-      if constexpr (cytnx::is_complex_v<TOut>) {
+      // Eager guard: a complex output has no modulo. Checked before the element
+      // loop so a zero-extent (len == 0) complex Mod still throws, matching the
+      // ZeroExtentLinalgTest contract (the per-element ModOp<TO> guard would
+      // never fire when there are no elements).
+      if constexpr (cytnx::is_complex_v<TO>) {
         cytnx_error_msg(true, "[Mod] Cannot mod complex numbers%s", "\n");
       }
 
-      TOut *_out = reinterpret_cast<TOut *>(out->data());
-      const TLin *_Lin = reinterpret_cast<const TLin *>(Lin->data());
-      const TRin *_Rin = reinterpret_cast<const TRin *>(Rin->data());
+      TO *_out = out->data();
+      const TL *_Lin = lhs->data();
+      const TR *_Rin = rhs->data();
 
-      if (Lin->size() == 1) {
+      if (lhs->size() == 1) {
         for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-          _out[i] = ModOp<TOut>::compute(static_cast<TOut>(_Lin[0]), static_cast<TOut>(_Rin[i]));
+          _out[i] = ModOp<TO>::compute(static_cast<TO>(_Lin[0]), static_cast<TO>(_Rin[i]));
         }
-      } else if (Rin->size() == 1) {
+      } else if (rhs->size() == 1) {
         for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-          _out[i] = ModOp<TOut>::compute(static_cast<TOut>(_Lin[i]), static_cast<TOut>(_Rin[0]));
+          _out[i] = ModOp<TO>::compute(static_cast<TO>(_Lin[i]), static_cast<TO>(_Rin[0]));
         }
       } else {
         if (shape.size() == 0) {
           for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-            _out[i] = ModOp<TOut>::compute(static_cast<TOut>(_Lin[i]), static_cast<TOut>(_Rin[i]));
+            _out[i] = ModOp<TO>::compute(static_cast<TO>(_Lin[i]), static_cast<TO>(_Rin[i]));
           }
         } else {
           // Non-contiguous case: handle permutations
@@ -94,7 +100,7 @@ namespace cytnx {
             cytnx::cytnx_uint64 idx_R =
               cytnx::cartesian2c(cytnx::vec_map(tmpv, invmapper_R), old_accu_shapeR);
             _out[i] =
-              ModOp<TOut>::compute(static_cast<TOut>(_Lin[idx_L]), static_cast<TOut>(_Rin[idx_R]));
+              ModOp<TO>::compute(static_cast<TO>(_Lin[idx_L]), static_cast<TO>(_Rin[idx_R]));
           }
         }
       }

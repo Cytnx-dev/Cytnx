@@ -4092,7 +4092,12 @@ TEST_F(DenseUniTensorTest, Div_UT_Scalar) {
     for (size_t i = 0; i < shape[0]; i++) {
       for (size_t j = 0; j < shape[1]; j++) {
         for (size_t k = 0; k < shape[2]; k++) {
-          auto diff = abs(ut.at({i, j, k}) / cnst - out.at({i, j, k}));
+          // True-division reference (#941): Div now follows Python semantics
+          // (int/int produces a floating result), so compute the expected
+          // value in complex double instead of via Scalar's (still
+          // truncating) integer operator/.
+          auto ref = complex128(Scalar(ut.at({i, j, k}))) / complex128(cnst);
+          auto diff = abs(ref - complex128(Scalar(out.at({i, j, k}))));
           EXPECT_TRUE(diff <= tol);
         }
       }
@@ -4296,7 +4301,12 @@ TEST_F(DenseUniTensorTest, Div__UT_Scalar) {
     for (size_t i = 0; i < shape[0]; i++) {
       for (size_t j = 0; j < shape[1]; j++) {
         for (size_t k = 0; k < shape[2]; k++) {
-          auto diff = abs(clone.at({i, j, k}) / cnst - ut.at({i, j, k}));
+          // True-division reference (#941): in-place Div_ now promotes the
+          // storage dtype and follows Python true-division semantics, so
+          // compute the expected value in complex double instead of via
+          // Scalar's (still truncating) integer operator/.
+          auto ref = complex128(Scalar(clone.at({i, j, k}))) / complex128(cnst);
+          auto diff = abs(ref - complex128(Scalar(ut.at({i, j, k}))));
           EXPECT_TRUE(diff <= tol);
         }
       }
@@ -4698,8 +4708,13 @@ TEST_F(DenseUniTensorTest, normalize_int_type) {
   auto clone = ut.clone();
   auto ut_n = ut.normalize();
   auto norm = ut.Norm();
+  // True-division semantics (#941): dividing an integer UniTensor by its
+  // (floating) norm now promotes to a floating dtype instead of truncating
+  // back into the integer storage, so both normalize() and ut/norm produce
+  // Double here and the old `ans.astype(Type.Int32)` truncation no longer
+  // reflects the library's behavior.
   auto ans = ut / norm.item();
-  ans = ans.astype(Type.Int32);
+  EXPECT_EQ(ut_n.dtype(), (unsigned int)Type.Double);
   EXPECT_TRUE(AreEqUniTensor(ut, clone));
   EXPECT_TRUE(AreEqUniTensor(ut_n, ans));
 }
