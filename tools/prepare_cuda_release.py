@@ -77,11 +77,18 @@ CUDA_RUNTIME_DEPENDENCIES = [
 ]
 
 # The compiler toolchain tools/cibuildwheel_before_all_cuda.sh installs to
-# CUDA_TOOLCHAIN_PREFIX for the build step (nvcc is a build-time tool, not a
-# wheel runtime dependency, so it isn't in CUDA_RUNTIME_DEPENDENCIES above).
-# The environment marker on each CUDA_RUNTIME_DEPENDENCIES entry is dropped
-# here since this only ever runs inside the Linux manylinux container.
-CUDA_BUILD_TOOLCHAIN = ["nvidia-cuda-nvcc ~=13.3.73"] + [
+# CUDA_TOOLCHAIN_PREFIX for the build step. These are build-time-only tools,
+# not wheel runtime dependencies, so they aren't in CUDA_RUNTIME_DEPENDENCIES
+# above: nvidia-cuda-nvcc is the compiler; nvidia-cuda-cccl provides the CUDA
+# C++ Core Libraries headers (thrust/cub/libcudacxx) under
+# nvidia/cu13/include/cccl, which CMake's FindCUDAToolkit adds to the
+# CUDA::toolkit include interface and errors out on if the directory is
+# absent. The environment marker on each CUDA_RUNTIME_DEPENDENCIES entry is
+# dropped here since this only ever runs inside the Linux manylinux container.
+CUDA_BUILD_TOOLCHAIN = [
+    "nvidia-cuda-nvcc ~=13.3.73",
+    "nvidia-cuda-cccl ~=13.3.3.4.1",
+] + [
     spec.split(";")[0].strip() for spec in CUDA_RUNTIME_DEPENDENCIES
 ]
 
