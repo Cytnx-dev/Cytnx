@@ -20,12 +20,17 @@ The script
      deliberately NOT depended on: it pulls in cudensitymat/cupauliprop/
      custabilizer, none of which cytnx links;
   3. switches `[tool.scikit-build].cmake.args` to the `openblas-cuda`
-     preset; and
+     preset;
   4. overrides `[tool.cibuildwheel.linux].repair-wheel-command` to
      exclude those same libraries from `auditwheel repair`'s vendoring,
      so the wheel stays small and relies on the pip dependencies at
      import time (see cytnx/_cuda_preload.py for how they get resolved
-     without requiring LD_LIBRARY_PATH).
+     without requiring LD_LIBRARY_PATH); and
+  5. chains tools/cibuildwheel_before_all_cuda.sh onto
+     `[tool.cibuildwheel.linux].before-all` and points CMAKE_CUDA_COMPILER/
+     CUTENSOR_ROOT/CUQUANTUM_ROOT/PATH/CMAKE_PREFIX_PATH at the toolchain it
+     installs, so the build step can compile CUDA/cuTENSOR/cuQuantum code
+     without a system-wide CUDA install (see that script's own docstring).
 
 This is intended to run inside a fresh CI checkout before cibuildwheel,
 after (or before -- the two don't conflict) tools/prepare_nightly_release.py
@@ -37,11 +42,21 @@ round-trip.
 """
 
 import pathlib
+import shlex
 
 import tomlkit
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 PYPROJECT = REPO_ROOT / "pyproject.toml"
+
+# Where tools/cibuildwheel_before_all_cuda.sh installs the CUDA toolchain
+# inside the manylinux container (see that script's docstring for why an
+# isolated --target dir rather than the build venv's site-packages).
+CUDA_TOOLCHAIN_PREFIX = "/opt/cuda-toolchain"
+# All nvidia-* packages share the "nvidia" namespace package, so installing
+# them together into CUDA_TOOLCHAIN_PREFIX merges them into one
+# nvidia/cu13/{bin,include,lib} tree.
+CUDA_TOOLCHAIN_ROOT = f"{CUDA_TOOLCHAIN_PREFIX}/nvidia/cu13"
 
 # PEP 440 compatible-release ("~=") constraints anchored to the versions
 # this wheel is built and linked against -- patch releases within the
@@ -57,6 +72,15 @@ CUDA_RUNTIME_DEPENDENCIES = [
     "cutensor-cu13 ~=2.7.0 ; sys_platform == 'linux'",
     "cutensornet-cu13 ~=2.13.0 ; sys_platform == 'linux'",
     "custatevec-cu13 ~=1.14.0 ; sys_platform == 'linux'",
+]
+
+# The compiler toolchain tools/cibuildwheel_before_all_cuda.sh installs to
+# CUDA_TOOLCHAIN_PREFIX for the build step (nvcc is a build-time tool, not a
+# wheel runtime dependency, so it isn't in CUDA_RUNTIME_DEPENDENCIES above).
+# The environment marker on each CUDA_RUNTIME_DEPENDENCIES entry is dropped
+# here since this only ever runs inside the Linux manylinux container.
+CUDA_BUILD_TOOLCHAIN = ["nvidia-cuda-nvcc ~=13.3.73"] + [
+    spec.split(";")[0].strip() for spec in CUDA_RUNTIME_DEPENDENCIES
 ]
 
 # SONAMEs provided by the pip packages above (including their transitive
@@ -102,6 +126,36 @@ def rewrite_pyproject(doc: tomlkit.TOMLDocument) -> None:
     linux["repair-wheel-command"] = (
         f"auditwheel repair {exclude_flags} -w {{dest_dir}} {{wheel}}"
     )
+
+    toolchain_args = " ".join(shlex.quote(spec) for spec in CUDA_BUILD_TOOLCHAIN)
+    linux["before-all"] = (
+        f"{linux['before-all']} && "
+        f"bash ./tools/cibuildwheel_before_all_cuda.sh "
+        f"{CUDA_TOOLCHAIN_PREFIX} {toolchain_args}"
+    )
+
+    # CMAKE_PREFIX_PATH may not be set yet on a checkout that predates the
+    # conda-forge dependency migration (#1057) -- append rather than assume
+    # it's there, so this keeps working regardless of merge order between
+    # that PR and this one.
+    existing_prefix_path = linux["environment"].get("CMAKE_PREFIX_PATH", "")
+    new_prefix_path = (
+        f"{existing_prefix_path};{CUDA_TOOLCHAIN_ROOT}"
+        if existing_prefix_path
+        else CUDA_TOOLCHAIN_ROOT
+    )
+    # Rebuild the inline table from scratch rather than assigning new keys
+    # onto the parsed one in place: tomlkit does not add the separating
+    # comma when a key is added to an already-parsed InlineTable, which
+    # silently produces invalid TOML.
+    env = tomlkit.inline_table()
+    env.update(dict(linux["environment"]))
+    env["CMAKE_PREFIX_PATH"] = new_prefix_path
+    env["PATH"] = f"{CUDA_TOOLCHAIN_ROOT}/bin:$PATH"
+    env["CMAKE_CUDA_COMPILER"] = f"{CUDA_TOOLCHAIN_ROOT}/bin/nvcc"
+    env["CUTENSOR_ROOT"] = f"{CUDA_TOOLCHAIN_PREFIX}/cutensor"
+    env["CUQUANTUM_ROOT"] = f"{CUDA_TOOLCHAIN_PREFIX}/cuquantum"
+    linux["environment"] = env
 
     PYPROJECT.write_text(tomlkit.dumps(doc))
 
