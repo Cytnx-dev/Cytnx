@@ -37,6 +37,14 @@ set -euo pipefail
 # below still goes through a file instead of a literal, since its value
 # is only known after probing the installed dylibs).
 deps_prefix="/tmp/cytnx-deps"
+# ccache is a build-only tool, never linked into or vendored with the
+# wheel, so it lives in its own prefix -- kept out of ${deps_prefix} so the
+# minos probe below (which scans every dylib under ${deps_prefix}/lib)
+# only ever sees the wheel's actual runtime dependency closure. Installing
+# it in the same env as openblas/arpack/boost/llvm-openmp would let one of
+# ccache's own transitive deps (built with a newer minos than the actual
+# runtime libs) needlessly raise MACOSX_DEPLOYMENT_TARGET.
+build_tools_prefix="/tmp/cytnx-build-tools"
 
 arch="$(uname -m)"
 if [[ "${arch}" == "arm64" ]]; then
@@ -52,8 +60,8 @@ export MAMBA_ROOT_PREFIX="/tmp/cytnx-micromamba"
   liblapacke \
   "arpack=*=nompi*" \
   libboost-headers \
-  llvm-openmp \
-  ccache
+  llvm-openmp
+./bin/micromamba create -y -p "${build_tools_prefix}" -c conda-forge ccache
 
 report_file="${PWD}/.cibw_macos_condaforge_minos_report.txt"
 target_file="${PWD}/.cibw_macos_deployment_target.txt"
