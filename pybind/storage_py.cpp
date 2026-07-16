@@ -353,6 +353,25 @@ void storage_binding(py::module &m) {
     // int64-preferred convention used by every other keep-set in this
     // codebase.
     //
+    // Empty-list default: an empty Python list has no elements for any
+    // vector<T> caster to check, so pybind11's no-convert pass accepts it
+    // for every from_pylist overload equally and the FIRST-registered one
+    // wins regardless of T -- from_pylist([]) is at the mercy of
+    // registration order alone, and now defaults to ComplexFloat rather
+    // than the ComplexDouble it defaulted to before this keep-set (numpy
+    // integer/bool scalars must be checked ahead of the plain Bool/py::int_
+    // overloads for correctness, and complex128 must stay registered LAST
+    // -- see the note below -- so there is no ordering that gives every
+    // non-empty list its correct dtype AND keeps complex128 first for the
+    // empty case; moving it first was tried and reverted, since mypy has
+    // no notion of pybind11's runtime no-convert/convert passes and treats
+    // an earlier "complex" stub signature as unconditionally shadowing
+    // every later, narrower one, regardless of what pybind11 actually does
+    // at runtime -- reintroducing the exact overload-cannot-match class of
+    // bug this PR exists to fix). from_pylist([]) with an explicit
+    // ComplexDouble intent should use from_pylist([], device) plus a
+    // separate astype(), or Storage(0, Type.ComplexDouble) directly.
+    //
     // numpy_scalar block: numpy integer/bool scalars are not subclasses of
     // Python int/bool (unlike np.float64/np.complex128, which are Python
     // float/complex subclasses and so already match the double/complex128
@@ -433,6 +452,28 @@ void storage_binding(py::module &m) {
         std::vector<cytnx_uint16> vals;
         vals.reserve(pylist.size());
         for (const auto &v : pylist) vals.push_back(static_cast<cytnx_uint16>(v));
+        return cytnx::Storage::from_vector<cytnx_uint16>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    // cytnx has no Int8/Uint8 dtype, so these widen to the narrowest integer
+    // dtype cytnx does have (Int16/Uint16) rather than falling through to
+    // the double overload above, matching Scalar's constructor fix (#1053).
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<int8_t>> &pylist, const int &device) {
+        std::vector<cytnx_int16> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist) vals.push_back(static_cast<cytnx_int16>(static_cast<int8_t>(v)));
+        return cytnx::Storage::from_vector<cytnx_int16>(vals, device);
+      },
+      py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static(
+      "from_pylist",
+      [](const std::vector<py::numpy_scalar<uint8_t>> &pylist, const int &device) {
+        std::vector<cytnx_uint16> vals;
+        vals.reserve(pylist.size());
+        for (const auto &v : pylist)
+          vals.push_back(static_cast<cytnx_uint16>(static_cast<uint8_t>(v)));
         return cytnx::Storage::from_vector<cytnx_uint16>(vals, device);
       },
       py::arg("pylist"), py::arg("device") = (int)cytnx::Device.cpu)
