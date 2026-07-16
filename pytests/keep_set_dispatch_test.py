@@ -2,7 +2,7 @@
 per-dtype duplicate overloads into "keep-sets" (see pybind/pyint_dispatch.hpp's
 "KEEP-SET ORDERING"): Storage.from_pylist mis-selecting a dtype for a Python
 bool/int list, and Scalar's plain-int constructor's uint64/int64 tie-break.
-Also covers a few reachability checks (UniTensor.get_block's qnum dispatch,
+Also covers a few reachability checks (UniTensor.get_block's qindex dispatch,
 LinOp.set_elem's numpy-scalar dispatch, Tensor's numpy-scalar-on-the-left
 dead reverse operators) added alongside the same consolidation.
 """
@@ -133,8 +133,19 @@ def test_scalar_plain_int_overflow_uses_uint64():
 
 
 # ---------------------------------------------------------------------------
-# UniTensor.get_block/get_block_: qnum vector<int64>/vector<uint64> collapsed
-# into a single py::sequence overload dispatching on magnitude.
+# UniTensor.get_block/get_block_: despite the pybind-level py::arg("qnum")
+# name (pre-existing, unrelated to this PR, not renamed here), the vector
+# argument is the per-leg quantum-number SECTOR INDEX -- BlockUniTensor's
+# get_block matches it against _inner_to_outer_idx after casting to unsigned
+# (include/UniTensor.hpp, "this one for Block will return the indicies!!"),
+# not the physical charge value. See the guide's worked example:
+# https://cytnx-dev.github.io/Cytnx/dev/guide/uniten/blocks.html#getting-a-block-by-its-quantum-number-indices
+# (charges [Qs(1), Qs(-1), Qs(0)] map to sector indices [0, 1, 1]). The bond
+# below deliberately uses charges 0/1 that happen to equal their own sector
+# index, purely so a single assertion can stand in for "the right block was
+# selected" -- it is not evidence that get_block accepts charge values in
+# general. Originally the vector<int64>/vector<uint64> overloads were
+# collapsed into a single py::sequence overload dispatching on magnitude.
 # ---------------------------------------------------------------------------
 
 
@@ -143,7 +154,7 @@ def _u1_pair():
     return cytnx.UniTensor([bi, bi.redirect()])
 
 
-def test_unitensor_get_block_by_qnum_int_list():
+def test_unitensor_get_block_by_qindex_int_list():
     B = _u1_pair()
     t = cytnx.zeros([1, 1])
     t[0, 0] = 42.0
@@ -153,7 +164,7 @@ def test_unitensor_get_block_by_qnum_int_list():
 
 
 # ---------------------------------------------------------------------------
-# UniTensor.get_block/get_block_: the qnum consolidation above replaced raw
+# UniTensor.get_block/get_block_: the qindex consolidation above replaced raw
 # vector<cytnx_int64>/vector<cytnx_uint64> overloads (whose arithmetic-type
 # casters accept anything satisfying __index__, numpy integer scalars
 # included) with a single std::vector<py::int_> dispatcher, whose caster does
@@ -167,32 +178,33 @@ def test_unitensor_get_block_by_qnum_int_list():
     "np_dtype",
     [np.int64, np.uint64, np.int32, np.uint32, np.int16, np.uint16],
 )
-def test_unitensor_get_block_by_qnum_numpy_scalar_list(np_dtype):
+def test_unitensor_get_block_by_qindex_numpy_scalar_list(np_dtype):
     B = _u1_pair()
     t = cytnx.zeros([1, 1])
     t[0, 0] = 42.0
     B.put_block(t, [0, 0])
-    qnum = [np_dtype(0), np_dtype(0)]
-    assert B.get_block(qnum, False)[0, 0].item() == pytest.approx(42.0)
-    assert B.get_block_(qnum, False)[0, 0].item() == pytest.approx(42.0)
+    qindex = [np_dtype(0), np_dtype(0)]
+    assert B.get_block(qindex, False)[0, 0].item() == pytest.approx(42.0)
+    assert B.get_block_(qindex, False)[0, 0].item() == pytest.approx(42.0)
 
 
-def test_unitensor_get_block_by_qnum_numpy_scalar_list_labeled():
+def test_unitensor_get_block_by_qindex_numpy_scalar_list_labeled():
     B = _u1_pair()
     t = cytnx.zeros([1, 1])
     t[0, 0] = 42.0
     B.put_block(t, [0, 0])
-    qnum = [np.int32(0), np.int32(0)]
-    assert B.get_block(B.labels(), qnum, False)[0, 0].item() == pytest.approx(42.0)
-    assert B.get_block_(B.labels(), qnum, False)[0, 0].item() == pytest.approx(42.0)
+    qindex = [np.int32(0), np.int32(0)]
+    assert B.get_block(B.labels(), qindex, False)[0, 0].item() == pytest.approx(42.0)
+    assert B.get_block_(B.labels(), qindex, False)[0, 0].item() == pytest.approx(42.0)
 
 
-def test_unitensor_get_block_by_qnum_negative_overflow_raises():
+def test_unitensor_get_block_by_qindex_negative_overflow_raises():
     # Same magnitude-dispatch helper as Storage.from_pylist: a value too
     # negative for int64 does not fit uint64 either and must raise. This is
-    # not about U1 physically supporting negative charges (it does) -- match
-    # the specific out-of-range message so the test fails if some unrelated
-    # qnum-validation error fires instead of dispatch_pyint_vector's check.
+    # a mechanical check of dispatch_pyint_vector's overflow guard -- not a
+    # claim that a negative sector index is otherwise meaningful (it isn't;
+    # see the section comment above). Match the specific out-of-range
+    # message so the test fails if some other error fires instead.
     B = _u1_pair()
     too_negative = -(2**64)
     with pytest.raises(cytnx.CytnxError, match="out of the supported int64/uint64 range"):
