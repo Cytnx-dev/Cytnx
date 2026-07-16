@@ -7,6 +7,9 @@
   #include "backend/linalg_internal_interface.hpp"
   #include "Arithmetic_shape.hpp"
   #include "iArithmetic_visit.hpp"
+  #ifdef UNI_GPU
+    #include "backend/linalg_internal_gpu/cuiArithmetic_dispatch.hpp"
+  #endif
 
 namespace cytnx {
   namespace linalg {
@@ -35,12 +38,9 @@ namespace cytnx {
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
       // A zero-extent tensor has nothing to compute, but in-place arithmetic must still
-      // promote Lt's dtype to match the non-empty path and the out-of-place operator (#941):
-      // the CPU dispatcher below performs that dtype replacement with a no-op kernel when the
-      // length is 0. Only short-circuit the legacy GPU path here (GPU keeps the LHS dtype in
-      // place regardless; #1013).
-      if (Lt.storage().size() == 0 && Lt.device() != Device.cpu) return;
-
+      // promote Lt's dtype to match the non-empty path and the out-of-place operator (#941).
+      // Both the CPU and (as of #1013) the GPU dispatchers below perform that dtype
+      // replacement with a no-op kernel when the length is 0, so no early return is needed.
       Tensor R;
       if (Lt._impl->storage()._impl == Rt._impl->storage()._impl) {
         R = Rt.clone();
@@ -49,20 +49,11 @@ namespace cytnx {
       }
       R = detail::host_singleton_for_gpu_broadcast(R, Lt.device());
 
-      // GPU broadcast scalar with a LHS *narrower* than the promoted dtype (e.g. a Float tensor
-      // plus a Double scalar, or an integer tensor plus a fractional scalar): the in-place GPU
-      // kernels write the promoted-width result straight into the narrower LHS buffer, an
-      // out-of-bounds write that corrupts memory. Compute in the promoted dtype, then truncate
-      // back to the LHS dtype -- this matches the CPU element-wise semantics (compute in the
-      // promoted type, store into the LHS type). See #988. The CPU path already does this
-      // in place, and real += complex is rejected above.
-      if (rhs_is_scalar && Lt.device() != Device.cpu && Lt.dtype() > Rt.dtype()) {
-        Tensor promoted = Lt.astype(Type.type_promote(Lt.dtype(), Rt.dtype()));
-        iAdd(promoted, R);
-        Lt = promoted.astype(Lt.dtype());
-        return;
-      }
-
+      // The GPU dispatch below promotes Lt's storage to the output dtype like the CPU
+      // path (#1013), so a genuine higher-precision scalar RHS no longer needs the
+      // legacy promote-then-truncate dance (which existed to avoid the narrow-LHS
+      // out-of-bounds write of #988); a python weak-scalar RHS still preserves the
+      // LHS dtype via rhs_is_weak_scalar. real += complex is rejected above.
       static const std::vector<cytnx_uint64> empty_mapper;
 
       // if contiguous, then no need to calculate the mappers
@@ -73,19 +64,8 @@ namespace cytnx {
                                                   empty_mapper, empty_mapper);
         } else {
   #ifdef UNI_GPU
-          checkCudaErrors(cudaSetDevice(Lt.device()));
-          Tensor tmpo;
-          if (Lt.dtype() <= Rt.dtype())
-            tmpo = Lt;
-          else
-            tmpo = Lt.clone();
-          linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
-            tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), {}, {}, {}, 0);
-          // cytnx_error_msg(true, "[Developing] iAdd for GPU%s", "\n");
-
-          if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
-
+          linalg_internal::cuiArithmeticDispatch(0, Lt, R, rhs_is_weak_scalar, empty_mapper,
+                                                 empty_mapper, empty_mapper);
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -98,17 +78,8 @@ namespace cytnx {
                                                   Lt._impl->invmapper(), Rt._impl->invmapper());
         } else {
   #ifdef UNI_GPU
-          checkCudaErrors(cudaSetDevice(Lt.device()));
-          Tensor tmpo;
-          if (Lt.dtype() <= Rt.dtype())
-            tmpo = Lt;
-          else
-            tmpo = Lt.clone();
-          linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
-            tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
-            Rt._impl->invmapper(), 0);
-          if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
+          linalg_internal::cuiArithmeticDispatch(0, Lt, R, rhs_is_weak_scalar, Lt._impl->shape(),
+                                                 Lt._impl->invmapper(), Rt._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
