@@ -93,6 +93,22 @@ void scalar_binding(py::module &m) {
         new (&self) Scalar(static_cast<cytnx::cytnx_uint16>(value));
       },
       py::arg("a"))
+    // cytnx has no Int8/Uint8 dtype, so these widen to the narrowest integer
+    // dtype cytnx does have (Int16/Uint16) rather than falling through to
+    // the raw cytnx_double constructor below, which would silently produce
+    // a real-valued Scalar from an integer input.
+    .def(
+      "__init__",
+      [](Scalar &self, const py::numpy_scalar<int8_t> value) {
+        new (&self) Scalar(static_cast<cytnx::cytnx_int16>(static_cast<int8_t>(value)));
+      },
+      py::arg("a"))
+    .def(
+      "__init__",
+      [](Scalar &self, const py::numpy_scalar<uint8_t> value) {
+        new (&self) Scalar(static_cast<cytnx::cytnx_uint16>(static_cast<uint8_t>(value)));
+      },
+      py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<bool> value) {
