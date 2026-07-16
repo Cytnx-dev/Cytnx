@@ -149,6 +149,17 @@ def rewrite_pyproject(doc: tomlkit.TOMLDocument) -> None:
     skb["cmake"]["args"] = [
         "--preset=openblas-cuda",
         f"-DCMAKE_INSTALL_RPATH={CUDA_INSTALL_RPATH}",
+        # Disable interprocedural optimization for the wheel build. On CUDA
+        # this would emit -dlto, whose device link step (nvlink -dlink)
+        # needs the offline device-LTO backend library -- which the pip
+        # nvidia-cuda-nvcc wheel does not ship (it bundles only nvcc/
+        # cudafe++/nvlink/ptxas/fatbinary), so nvlink aborts with
+        # "elfLink linker library load error". CMakeLists.txt otherwise
+        # defaults this ON; it honors an explicit -D override. IPO is a
+        # per-target, not per-language, property, so this also drops host
+        # -flto -- an accepted tradeoff for a working CUDA wheel until the
+        # device-LTO backend is available in the pip toolchain.
+        "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF",
     ]
 
     exclude_flags = " ".join(f"--exclude {name}" for name in EXCLUDED_SONAMES)
