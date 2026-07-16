@@ -295,7 +295,15 @@ if(USE_CUDA)
       endif()
     endforeach()
     if(NOT "${_cytnx_cccl_dir}" STREQUAL "")
-      target_include_directories(cytnx PRIVATE "${_cytnx_cccl_dir}")
+      # UNI_GPU is PUBLIC and makes the public header Type.hpp include
+      # <cuda/std/complex>, which CUDA 12+/13 relocate under the cccl/ subdir.
+      # That subdir is not part of any CUDA:: imported target's INTERFACE, so it
+      # must propagate to in-tree consumers (gpu_test_main, benchmarks_main,
+      # test_doc_cplusplus) that inherit the PUBLIC UNI_GPU macro; otherwise their
+      # host .cpp compilation fails with "cuda/std/complex: No such file". Wrap in
+      # BUILD_INTERFACE so the absolute build-machine path is not baked into the
+      # installed/exported target (keeps find_package(Cytnx) relocatable).
+      target_include_directories(cytnx PUBLIC $<BUILD_INTERFACE:${_cytnx_cccl_dir}>)
       message(STATUS "Detected CCCL headers at: ${_cytnx_cccl_dir}")
     endif()
 
