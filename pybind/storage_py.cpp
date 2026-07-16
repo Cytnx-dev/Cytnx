@@ -357,20 +357,19 @@ void storage_binding(py::module &m) {
     // vector<T> caster to check, so pybind11's no-convert pass accepts it
     // for every from_pylist overload equally and the FIRST-registered one
     // wins regardless of T -- from_pylist([]) is at the mercy of
-    // registration order alone, and now defaults to ComplexFloat rather
-    // than the ComplexDouble it defaulted to before this keep-set (numpy
-    // integer/bool scalars must be checked ahead of the plain Bool/py::int_
-    // overloads for correctness, and complex128 must stay registered LAST
-    // -- see the note below -- so there is no ordering that gives every
-    // non-empty list its correct dtype AND keeps complex128 first for the
-    // empty case; moving it first was tried and reverted, since mypy has
-    // no notion of pybind11's runtime no-convert/convert passes and treats
-    // an earlier "complex" stub signature as unconditionally shadowing
-    // every later, narrower one, regardless of what pybind11 actually does
-    // at runtime -- reintroducing the exact overload-cannot-match class of
-    // bug this PR exists to fix). from_pylist([]) with an explicit
-    // ComplexDouble intent should use from_pylist([], device) plus a
-    // separate astype(), or Storage(0, Type.ComplexDouble) directly.
+    // registration order alone. Handled explicitly in the first-registered
+    // overload's body below (not by reordering: complex128 must stay
+    // registered LAST -- see the numpy_scalar block note -- so there is no
+    // registration order that gives every non-empty list its correct dtype
+    // AND makes a specific overload win the empty case; moving complex128
+    // first was tried and reverted, since mypy has no notion of pybind11's
+    // runtime no-convert/convert passes and treats an earlier "complex"
+    // stub signature as unconditionally shadowing every later, narrower
+    // one, regardless of what pybind11 actually does at runtime --
+    // reintroducing the exact overload-cannot-match class of bug this PR
+    // exists to fix). Matches numpy/the Python array API's own empty-array,
+    // no-explicit-dtype default (`np.array([]).dtype == float64`), not the
+    // ComplexDouble this defaulted to before this keep-set.
     //
     // numpy_scalar block: numpy integer/bool scalars are not subclasses of
     // Python int/bool (unlike np.float64/np.complex128, which are Python
@@ -386,6 +385,7 @@ void storage_binding(py::module &m) {
     .def_static(
       "from_pylist",
       [](const std::vector<py::numpy_scalar<std::complex<float>>> &pylist, const int &device) {
+        if (pylist.empty()) return cytnx::Storage::from_vector<cytnx_double>({}, device);
         std::vector<cytnx_complex64> vals;
         vals.reserve(pylist.size());
         for (const auto &v : pylist) vals.push_back(static_cast<cytnx_complex64>(v));
