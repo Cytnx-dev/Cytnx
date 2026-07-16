@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['iadd_0',['iAdd',['../namespacecytnx_1_1linalg.html#adcc9a0ef0b78b0e43a66eea808c77594',1,'cytnx::linalg']]],
+  ['iadd_0',['iAdd',['../namespacecytnx_1_1linalg.html#ab9fe989375c5c8f3b57d443969251e85',1,'cytnx::linalg']]],
   ['identity_1',['identity',['../namespacecytnx.html#acf9cf080bb224422e598b614f8520085',1,'cytnx::identity()'],['../classcytnx_1_1UniTensor.html#abff3b7086d6c286c538e2dc5a80b8743',1,'cytnx::UniTensor::identity()']]],
-  ['idiv_2',['iDiv',['../namespacecytnx_1_1linalg.html#ac4f2dc588ac44dfb8bf75efd8182ac47',1,'cytnx::linalg']]],
+  ['idiv_2',['iDiv',['../namespacecytnx_1_1linalg.html#aa9c75b7d0b04b445ad5dc93cacc3d0ab',1,'cytnx::linalg']]],
   ['imag_3',['imag',['../classcytnx_1_1Tensor.html#accd77970630990baca3a18638b23fe95',1,'cytnx::Tensor']]],
-  ['imul_4',['iMul',['../namespacecytnx_1_1linalg.html#afb6077bb2282f7d164315481a5f7cb4d',1,'cytnx::linalg']]],
+  ['imul_4',['iMul',['../namespacecytnx_1_1linalg.html#adb1642e4dab78364bd2dd482689c41c6',1,'cytnx::linalg']]],
   ['init_5',['init',['../classcytnx_1_1UniTensor.html#a2d0d50a0e14e4f77228d6cc8fe443a83',1,'cytnx::UniTensor::Init()'],['../classcytnx_1_1Bond.html#ae7a70f6506d6035ec022ab03099a915d',1,'cytnx::Bond::Init(const bondType &amp;bd_type, const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;in_qnums, const std::vector&lt; cytnx_uint64 &gt; &amp;degs, const std::vector&lt; Symmetry &gt; &amp;in_syms={})'],['../classcytnx_1_1Bond.html#a3034fd7472ae82db9b45742c43dd66d3',1,'cytnx::Bond::Init(const bondType &amp;bd_type, const std::vector&lt; std::pair&lt; std::vector&lt; cytnx_int64 &gt;, cytnx_uint64 &gt; &gt; &amp;in_qnums_dims, const std::vector&lt; Symmetry &gt; &amp;in_syms={})'],['../classcytnx_1_1Tensor.html#a9b4644ac4257508defe563bb41221a7b',1,'cytnx::Tensor::Init()'],['../classcytnx_1_1Bond.html#a60bda58b57be2f709abb6aa0b9a04c68',1,'cytnx::Bond::Init()'],['../classcytnx_1_1Tensor.html#acf0773457c7202603d2c15a191c782d6',1,'cytnx::Tensor::Init()'],['../classcytnx_1_1UniTensor.html#a60507be1cb58a25749d53c32a76f846f',1,'cytnx::UniTensor::Init()']]],
   ['inv_6',['inv',['../namespacecytnx_1_1linalg.html#a189a72fc032787f89b865e175c86c641',1,'cytnx::linalg::Inv(const cytnx::UniTensor &amp;Tin, double clip=-1.)'],['../namespacecytnx_1_1linalg.html#a6b7c861f65e3ee03c246887c64c405ff',1,'cytnx::linalg::Inv(const Tensor &amp;Tin, const double &amp;clip=-1.)'],['../classcytnx_1_1UniTensor.html#acdc2a73c9d270bbb33091f2fbf92b046',1,'cytnx::UniTensor::Inv()'],['../classcytnx_1_1Tensor.html#a42984fbfc14c73716c88b871161cf490',1,'cytnx::Tensor::Inv()']]],
   ['inv_5f_7',['inv_',['../classcytnx_1_1UniTensor.html#a8c989c263d0875976dc5b2c3b3aabafc',1,'cytnx::UniTensor::Inv_()'],['../namespacecytnx_1_1linalg.html#af289299ee7e7fca7c551b87231acbba3',1,'cytnx::linalg::Inv_(cytnx::UniTensor &amp;Tin, double clip=-1.)'],['../namespacecytnx_1_1linalg.html#acae5e14ab0cf35a1a713b92444850f89',1,'cytnx::linalg::Inv_(Tensor &amp;Tin, const double &amp;clip=-1.)'],['../classcytnx_1_1Tensor.html#aef59ec68b04de4ffc2d7977208cf2c2d',1,'cytnx::Tensor::Inv_(const double &amp;clip=-1.)']]],
@@ -19,6 +19,6 @@ var searchData=
   ['is_5fscalar_16',['is_scalar',['../classcytnx_1_1UniTensor.html#a27ea3c7fdbc1ba070cc5d3c2fd69920a',1,'cytnx::UniTensor::is_scalar()'],['../classcytnx_1_1Tensor.html#a15a44044ca516c53b9e3bb4c3146d745',1,'cytnx::Tensor::is_scalar()']]],
   ['is_5ftag_17',['is_tag',['../classcytnx_1_1UniTensor.html#a1c3cbcbe162042897fe77c9ce7632af2',1,'cytnx::UniTensor']]],
   ['is_5fvoid_18',['is_void',['../classcytnx_1_1UniTensor.html#a233c731821bcf0064d6e536cdfe7cb22',1,'cytnx::UniTensor::is_void()'],['../classcytnx_1_1Tensor.html#a03a7559b5904da8f2402d1101a50bd08',1,'cytnx::Tensor::is_void()']]],
-  ['isub_19',['iSub',['../namespacecytnx_1_1linalg.html#a2683918483159953c002fe09fae0929b',1,'cytnx::linalg']]],
+  ['isub_19',['iSub',['../namespacecytnx_1_1linalg.html#ac9373342ca15958f1e03779b2215c200',1,'cytnx::linalg']]],
   ['item_20',['item',['../classcytnx_1_1UniTensor.html#ae46713d86ffeae73218f696eb5de3507',1,'cytnx::UniTensor::item() const'],['../classcytnx_1_1UniTensor.html#a06d8f228e0440461df89e9604b66a141',1,'cytnx::UniTensor::item()'],['../classcytnx_1_1Tensor.html#a59bb8b7cf3d142d49c51d694e58ace68',1,'cytnx::Tensor::item()']]]
 ];

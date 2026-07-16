@@ -596,19 +596,19 @@
     <member refid="namespacecytnx_1_1linalg_1af36e9e20e4c7d74f2f6f838902482d98" kind="function"><name>Add</name></member>
     <member refid="namespacecytnx_1_1linalg_1a33643657d8cc96b037818e2003c049c7" kind="function"><name>Add</name></member>
     <member refid="namespacecytnx_1_1linalg_1ae158543bf09e9e6914eab96995015d9e" kind="function"><name>Add</name></member>
-    <member refid="namespacecytnx_1_1linalg_1adcc9a0ef0b78b0e43a66eea808c77594" kind="function"><name>iAdd</name></member>
+    <member refid="namespacecytnx_1_1linalg_1ab9fe989375c5c8f3b57d443969251e85" kind="function"><name>iAdd</name></member>
     <member refid="namespacecytnx_1_1linalg_1a78477b25b3eed121847f1a13b878a925" kind="function"><name>Sub</name></member>
     <member refid="namespacecytnx_1_1linalg_1a4fa0cd62f3723518ae4e46db00d8be50" kind="function"><name>Sub</name></member>
     <member refid="namespacecytnx_1_1linalg_1a0fa9fc16ad7e8d2685d0acfa25efc479" kind="function"><name>Sub</name></member>
-    <member refid="namespacecytnx_1_1linalg_1a2683918483159953c002fe09fae0929b" kind="function"><name>iSub</name></member>
+    <member refid="namespacecytnx_1_1linalg_1ac9373342ca15958f1e03779b2215c200" kind="function"><name>iSub</name></member>
     <member refid="namespacecytnx_1_1linalg_1a2fc49876b7b53f6f6e97ce70f475f636" kind="function"><name>Mul</name></member>
     <member refid="namespacecytnx_1_1linalg_1a2d21f1d35bcecf3e257146540c668779" kind="function"><name>Mul</name></member>
     <member refid="namespacecytnx_1_1linalg_1a5b2930a8759b8ceb7cd92df6b27bdf24" kind="function"><name>Mul</name></member>
-    <member refid="namespacecytnx_1_1linalg_1afb6077bb2282f7d164315481a5f7cb4d" kind="function"><name>iMul</name></member>
+    <member refid="namespacecytnx_1_1linalg_1adb1642e4dab78364bd2dd482689c41c6" kind="function"><name>iMul</name></member>
     <member refid="namespacecytnx_1_1linalg_1abc1940e0e7364299ea1481c81003ba13" kind="function"><name>Div</name></member>
     <member refid="namespacecytnx_1_1linalg_1acb8965e9a67906d0c8064725c7d499a8" kind="function"><name>Div</name></member>
     <member refid="namespacecytnx_1_1linalg_1a9296701c7aad0456965f42b8ea01ad2e" kind="function"><name>Div</name></member>
-    <member refid="namespacecytnx_1_1linalg_1ac4f2dc588ac44dfb8bf75efd8182ac47" kind="function"><name>iDiv</name></member>
+    <member refid="namespacecytnx_1_1linalg_1aa9c75b7d0b04b445ad5dc93cacc3d0ab" kind="function"><name>iDiv</name></member>
     <member refid="namespacecytnx_1_1linalg_1ab8ac85bd0291ab12523eec073aef1fa3" kind="function"><name>Mod</name></member>
     <member refid="namespacecytnx_1_1linalg_1a6c9fca4a4fd4cea1738babc120e51690" kind="function"><name>Mod</name></member>
     <member refid="namespacecytnx_1_1linalg_1a35ed41287fa71215d4575de818f02e43" kind="function"><name>Mod</name></member>
