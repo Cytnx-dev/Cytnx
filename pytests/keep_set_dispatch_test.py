@@ -133,6 +133,32 @@ def test_scalar_plain_int_overflow_uses_uint64():
 
 
 # ---------------------------------------------------------------------------
+# Scalar's constructor: cytnx has no Int8/Uint8 dtype, so np.int8/np.uint8
+# have no numpy_scalar overload of their own -- without one ahead of the
+# raw cytnx_double constructor, they fell through to it and silently
+# produced a floating-point Scalar from an integer input (e.g.
+# Scalar(np.int8(5)).dtype() became Double). Widened to Int16/Uint16, the
+# narrowest integer dtype cytnx does support, instead.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "np_dtype,dtype",
+    [(np.int8, Type.Int16), (np.uint8, Type.Uint16)],
+)
+def test_scalar_numpy_8bit_int_widens_to_16bit_not_double(np_dtype, dtype):
+    s = cytnx.Scalar(np_dtype(5))
+    assert s.dtype() == dtype
+    assert int(s) == 5
+
+
+def test_scalar_numpy_int8_preserves_sign():
+    s = cytnx.Scalar(np.int8(-5))
+    assert s.dtype() == Type.Int16
+    assert int(s) == -5
+
+
+# ---------------------------------------------------------------------------
 # UniTensor.get_block/get_block_: despite the pybind-level py::arg("qnum")
 # name (pre-existing, unrelated to this PR, not renamed here), the vector
 # argument is the per-leg quantum-number SECTOR INDEX -- BlockUniTensor's
