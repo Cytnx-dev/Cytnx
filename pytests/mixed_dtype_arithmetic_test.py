@@ -108,6 +108,44 @@ def test_inplace_rank0_tensor_rhs_promotes_not_weak_scalar():
     assert lt_div.numpy()[0] == 1.5
 
 
+def test_inplace_zero_extent_promotes_dtype():
+    # A zero-extent tensor has no elements to compute, but in-place arithmetic
+    # must still promote its dtype to match the non-empty path and the
+    # out-of-place op (#941) -- otherwise `empty_int / empty_int` returns Double
+    # while `empty_int /= empty_int` stays Int, an inconsistency. Regression for
+    # the `size() == 0` early return firing before the dtype dispatch.
+    D = cytnx.Type.Double
+
+    # true division: empty int / int -> Double (empty), matching out-of-place.
+    lt = cytnx.zeros([0], dtype=cytnx.Type.Int64)
+    rt = cytnx.zeros([0], dtype=cytnx.Type.Int64)
+    lt /= rt
+    assert lt.dtype() == D
+    assert lt.shape() == [0]
+
+    # true division against a python scalar (weak) still floats: -> Double.
+    lt_s = cytnx.zeros([0], dtype=cytnx.Type.Int64)
+    lt_s /= 2
+    assert lt_s.dtype() == D
+
+    # mixed-dtype promotion for +=/-=/*= on empty tensors.
+    for op in ("iadd", "isub", "imul"):
+        lhs = cytnx.zeros([0], dtype=cytnx.Type.Int16)
+        rhs = cytnx.zeros([0], dtype=cytnx.Type.Double)
+        if op == "iadd":
+            lhs += rhs
+        elif op == "isub":
+            lhs -= rhs
+        else:
+            lhs *= rhs
+        assert lhs.dtype() == D, op
+
+    # a python weak-scalar RHS still preserves the lhs dtype, even when empty.
+    lt_w = cytnx.zeros([0], dtype=cytnx.Type.Int64)
+    lt_w += 2
+    assert lt_w.dtype() == cytnx.Type.Int64
+
+
 def test_out_of_place_add_keeps_promotion():
     # Sanity: the already-correct out-of-place promotion path is unchanged.
     lt = cytnx.zeros([2], dtype=cytnx.Type.Int32)

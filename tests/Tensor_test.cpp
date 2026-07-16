@@ -256,9 +256,13 @@ TEST_F(TensorTest, ZeroExtentArithmeticAndSlicing) {
   EXPECT_TRUE((2.0 * empty).is_empty());
   EXPECT_TRUE((2.0 / empty).is_empty());
 
+  // `scalar` is a genuine rank-0 Double tensor, not a python weak scalar, so an
+  // in-place op promotes the Float lhs to Double (#941) -- matching the
+  // out-of-place `empty + scalar` above and the non-empty path. A zero-extent
+  // lhs still takes this dtype promotion even though there is nothing to compute.
   empty += scalar;
   EXPECT_EQ(empty.shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
-  EXPECT_EQ(empty.dtype(), Type.Float);
+  EXPECT_EQ(empty.dtype(), Type.Double);
   EXPECT_TRUE(empty.is_empty());
 
   Tensor slice = empty.get({Accessor::all(), Accessor::all(), Accessor::all()});

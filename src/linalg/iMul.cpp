@@ -33,7 +33,12 @@ namespace cytnx {
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
-      if (Lt.storage().size() == 0) return;
+      // A zero-extent tensor has nothing to compute, but in-place arithmetic must still
+      // promote Lt's dtype to match the non-empty path and the out-of-place operator (#941):
+      // the CPU dispatcher below performs that dtype replacement with a no-op kernel when the
+      // length is 0. Only short-circuit the legacy GPU path here (GPU keeps the LHS dtype in
+      // place regardless; #1013).
+      if (Lt.storage().size() == 0 && Lt.device() != Device.cpu) return;
 
       Tensor R;
       if (Lt._impl->storage()._impl == Rt._impl->storage()._impl) {
