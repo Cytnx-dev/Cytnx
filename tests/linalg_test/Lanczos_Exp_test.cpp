@@ -9,18 +9,21 @@
 #include "test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
-    UniTensor CreateOneSiteEffHam(const int d, const int D, const unsigned int dypte = Type.Double,
-                                  const int device = Device.cpu);
-    UniTensor CreateA(const int d, const int D, const unsigned int dtype = Type.Double,
-                      const int device = Device.cpu);
-    UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin, const Scalar& tau);
-    Scalar Dot(const UniTensor& A, const UniTensor& B) { return Contract(A.Dagger(), B).item(); }
-    class OneSiteOp : public LinOp {
+    static UniTensor CreateOneSiteEffHam(const int d, const int D,
+                                         const unsigned int dypte = Type.Double,
+                                         const int device = Device.cpu);
+    static UniTensor CreateA(const int d, const int D, const unsigned int dtype = Type.Double,
+                             const int device = Device.cpu);
+    static UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin, const Scalar& tau);
+    static Scalar Dot(const UniTensor& A, const UniTensor& B) {
+      return Contract(A.Dagger(), B).item();
+    }
+    class LanczosExpOneSiteOp : public LinOp {
      public:
-      OneSiteOp(const int d, const int D, const unsigned int dtype = Type.Double,
-                const int& device = Device.cpu)
+      LanczosExpOneSiteOp(const int d, const int D, const unsigned int dtype = Type.Double,
+                          const int& device = Device.cpu)
           : LinOp("mv", D * d * D, dtype, device) {
         EffH = CreateOneSiteEffHam(d, D, dtype, device);
       }
@@ -84,39 +87,39 @@ namespace cytnx {
 
     double FloatLanczosExpTolerance() { return 100.0 * std::numeric_limits<float>::epsilon(); }
 
-    bool IsSinglePrecisionDType(const unsigned int dtype) {
+    static bool IsSinglePrecisionDType(const unsigned int dtype) {
       return dtype == Type.Float || dtype == Type.ComplexFloat;
     }
 
-    UniTensor SmallResidualInitialState(const unsigned int dtype) {
+    static UniTensor SmallResidualInitialState(const unsigned int dtype) {
       UniTensor Tin = UniTensor::zeros({3, 1}, {}, dtype, Device.cpu).set_rowrank_(1);
       Tin.at({0, 0}) = 1.0;
       return Tin;
     }
 
-    UniTensor SmallResidualExpectedState(const double coupling, const double tau,
-                                         const unsigned int dtype) {
+    static UniTensor SmallResidualExpectedState(const double coupling, const double tau,
+                                                const unsigned int dtype) {
       auto ans = UniTensor::zeros({3, 1}, {}, dtype, Device.cpu).set_rowrank_(1);
       ans.at({0, 0}) = std::cosh(coupling * tau);
       ans.at({1, 0}) = std::sinh(coupling * tau);
       return ans;
     }
 
-    UniTensor SmallResidualExpectedState(const double coupling, const cytnx_complex128 tau,
-                                         const unsigned int dtype) {
+    static UniTensor SmallResidualExpectedState(const double coupling, const cytnx_complex128 tau,
+                                                const unsigned int dtype) {
       auto ans = UniTensor::zeros({3, 1}, {}, dtype, Device.cpu).set_rowrank_(1);
       ans.at({0, 0}) = std::cosh(coupling * tau);
       ans.at({1, 0}) = std::sinh(coupling * tau);
       return ans;
     }
 
-    UniTensor TwoDimInitialState() {
+    static UniTensor TwoDimInitialState() {
       auto Tin = UniTensor::zeros({2, 1}, {}, Type.Double, Device.cpu).set_rowrank_(1);
       Tin.at({0, 0}) = 1.0;
       return Tin;
     }
 
-    UniTensor TwoDimExpectedState(const double tau) {
+    static UniTensor TwoDimExpectedState(const double tau) {
       auto ans = UniTensor::zeros({2, 1}, {}, Type.Double, Device.cpu).set_rowrank_(1);
       ans.at({0, 0}) = std::cosh(tau);
       ans.at({1, 0}) = std::sinh(tau);
@@ -126,7 +129,7 @@ namespace cytnx {
     // describe:Real type test
     TEST(LanczosExpUt, RealTypeTest) {
       int d = 2, D = 5;
-      auto op = OneSiteOp(d, D);
+      auto op = LanczosExpOneSiteOp(d, D);
       auto Tin = CreateA(d, D);
       const double crit = 1.0e-10;
       double tau = 0.1;
@@ -139,7 +142,7 @@ namespace cytnx {
     // describe:Complex type test
     TEST(LanczosExpUt, ComplexTypeTest) {
       int d = 2, D = 5;
-      auto op = OneSiteOp(d, D, Type.ComplexDouble);
+      auto op = LanczosExpOneSiteOp(d, D, Type.ComplexDouble);
       auto Tin = CreateA(d, D, Type.ComplexDouble);
       const double crit = 1.0e-9;
       std::complex<double> tau = std::complex<double>(0, 1) * 0.1;
@@ -153,7 +156,7 @@ namespace cytnx {
     TEST(LanczosExpUt, NonHermit) {
       int d = 2, D = 5;
       double low = -1.0, high = 1.0;
-      auto op = OneSiteOp(d, D);
+      auto op = LanczosExpOneSiteOp(d, D);
       op.EffH.uniform_(low, high, 0);
       auto Tin = CreateA(d, D);
       const double crit = 1.0e-3;
@@ -164,7 +167,7 @@ namespace cytnx {
     // describe:input |v| != 1
     TEST(LanczosExpUt, NormVNot1) {
       int d = 2, D = 5;
-      auto op = OneSiteOp(d, D);
+      auto op = LanczosExpOneSiteOp(d, D);
       auto Tin = CreateA(d, D) * 1.1;
       const double crit = 1.0e-7;
       double tau = 0.1;
@@ -287,7 +290,7 @@ namespace cytnx {
     // describe:test incorrect data type
     TEST(LanczosExpUt, IncorrectDType) {
       int d = 2, D = 10;
-      auto op = OneSiteOp(d, D, Type.Int64);
+      auto op = LanczosExpOneSiteOp(d, D, Type.Int64);
       auto Tin = CreateA(d, D, Type.Int64);
       const double crit = 1.0e-3;
       double tau = 0.1;
@@ -301,7 +304,7 @@ namespace cytnx {
      *     |
      *  0--A--2
      */
-    UniTensor CreateA(const int d, const int D, const unsigned int dtype, const int device) {
+    static UniTensor CreateA(const int d, const int D, const unsigned int dtype, const int device) {
       double low = -1.0, high = 1.0;
       UniTensor A = UniTensor({Bond(D), Bond(d), Bond(D)}, {}, -1, dtype, device)
                       .set_name("A")
@@ -321,8 +324,8 @@ namespace cytnx {
      *         | |         +          | |
      *         |_|--"vol" "po" "vor"--|_|
      */
-    UniTensor CreateOneSiteEffHam(const int d, const int D, const unsigned int dtype,
-                                  const int device) {
+    static UniTensor CreateOneSiteEffHam(const int d, const int D, const unsigned int dtype,
+                                         const int device) {
       double low = -1.0, high = 1.0;
       std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D), Bond(D), Bond(d), Bond(D)};
       std::vector<std::string> heff_labels = {"vil", "pi", "vir", "vol", "po", "vor"};
@@ -360,7 +363,7 @@ namespace cytnx {
       return HEff;
     }
 
-    UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin, const Scalar& tau) {
+    static UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin, const Scalar& tau) {
       auto expH = HEff.clone();
       auto HEff_shape = HEff.shape();
       auto in_dim = 1;
@@ -379,5 +382,5 @@ namespace cytnx {
       return ans;
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

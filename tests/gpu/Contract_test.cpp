@@ -1,8 +1,7 @@
 #include "Contract_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::ContractTest;
+  namespace gpu_test {
 
     TEST_F(ContractTest, GpuContractDenseUtOptimalOrder) {
       UniTensor res = Contract({utdnA, utdnB, utdnC}, "", true);
@@ -48,5 +47,5 @@ namespace cytnx {
                                 "(C,(A,B))", true);
       EXPECT_TRUE(AreNearlyEqTensor(res.get_block().contiguous(), utdnAns.get_block(), 1e-12));
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

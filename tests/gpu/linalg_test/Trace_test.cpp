@@ -17,7 +17,7 @@
 // the comparison since AreNearlyEqTensor compares host-side.
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     // Reference: trace a contiguous CPU clone of the (possibly permuted) GPU
     // tensor through the same public API, then keep it on the CPU.
@@ -266,6 +266,6 @@ namespace cytnx {
       EXPECT_EQ(out.shape()[0], 0u);
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 
 }  // namespace cytnx

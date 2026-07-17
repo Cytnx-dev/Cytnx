@@ -19,8 +19,7 @@
 // }
 
 namespace cytnx {
-  namespace {
-    using gpu_test::NetworkTest;
+  namespace gpu_test {
 
     TEST_F(NetworkTest, GpuNetworkDenseFromString) {
       auto net = Network();
@@ -67,7 +66,8 @@ namespace cytnx {
 
     // Helper: Copy tensors to CPU. Contract them directly with Contract, and permute the open legs
     // into the requested TOUT order.
-    UniTensor BlockNetworkReferenceCPU(const UniTensor& A, const UniTensor& B, const UniTensor& C) {
+    static UniTensor BlockNetworkReferenceCPU(const UniTensor& A, const UniTensor& B,
+                                              const UniTensor& C) {
       UniTensor a = A.to(Device.cpu).relabel({"a", "e"});
       UniTensor b = B.to(Device.cpu).relabel({"a", "c_", "d_", "h"});
       UniTensor c = C.to(Device.cpu).relabel({"e", "f_", "g_", "h"});
@@ -132,5 +132,5 @@ namespace cytnx {
         AreNearlyEqUniTensor(res_cpu, BlockNetworkReferenceCPU(bkut1, bkut2, bkut3), 1e-8));
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

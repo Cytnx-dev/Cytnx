@@ -7,9 +7,7 @@
 #include "test_tools.h"
 
 namespace cytnx {
-  namespace {
-
-    using test::DenseUniTensorTest;
+  namespace test {
 
     using std::complex_literals::operator""i;
 
@@ -5848,5 +5846,5 @@ describe:test Trace with diagonal UniTensor
       EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
       EXPECT_DOUBLE_EQ(ut.at<double>({2}), 1);
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

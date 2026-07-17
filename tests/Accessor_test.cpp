@@ -7,9 +7,7 @@
 // Test Accessor::type() method
 
 namespace cytnx {
-  namespace {
-
-    using test::AccessorTest;
+  namespace test {
 
     TEST_F(AccessorTest, Type) {
       EXPECT_EQ(single.type(), Accessor::Singl);
@@ -171,5 +169,5 @@ namespace cytnx {
       EXPECT_FALSE(tilend == single);
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

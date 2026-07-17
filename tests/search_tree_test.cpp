@@ -7,7 +7,7 @@
 #include "search_tree.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     class SearchTreeTest : public ::testing::Test {
      protected:
@@ -373,5 +373,5 @@ namespace cytnx {
       // The network is fully contracted: no bond survives (TOUT is empty).
       EXPECT_TRUE(result->labels.empty());
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

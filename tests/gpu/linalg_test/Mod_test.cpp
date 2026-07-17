@@ -4,9 +4,9 @@
 #include "gpu_test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
-    cytnx_double GetTolerance(const unsigned int& dtype) {
+    static cytnx_double GetTolerance(const unsigned int& dtype) {
       cytnx_double tolerance;
       if (dtype == Type.Float) {
         tolerance = 1e-4;
@@ -196,5 +196,5 @@ namespace cytnx {
 
     INSTANTIATE_TEST_SUITE_P(ModTests, ModTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

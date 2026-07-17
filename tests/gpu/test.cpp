@@ -3,11 +3,11 @@
 #include "cytnx.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     typedef Accessor ac;
 
-    int main(int argc, char *argv[]) {
+    static int main(int argc, char *argv[]) {
       /*
       std::vector<cytnx_int64> A(10);
       for(int i=0;i<10;i++){
@@ -322,5 +322,5 @@ namespace cytnx {
 
       return 0;
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

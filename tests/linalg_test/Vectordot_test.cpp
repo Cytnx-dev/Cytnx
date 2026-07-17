@@ -4,10 +4,10 @@
 #include "cytnx.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     auto device = Device.cpu;
-    bool CheckResult(const Tensor& l, const Tensor& r, const Tensor& out, bool is_conj) {
+    static bool CheckResult(const Tensor& l, const Tensor& r, const Tensor& out, bool is_conj) {
       if (!out.is_scalar()) {
         return false;
       }
@@ -30,7 +30,7 @@ namespace cytnx {
       return test::AreNearlyEqTensor(ans, out, tol);
     }
 
-    Tensor InitTensor(const cytnx_uint64 len, const unsigned int dtype, const int seed = 0) {
+    static Tensor InitTensor(const cytnx_uint64 len, const unsigned int dtype, const int seed = 0) {
       Tensor t;
       if (Type.is_float(dtype)) {
         double low = -1.0;
@@ -148,5 +148,5 @@ namespace cytnx {
         SUCCEED();
       }
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

@@ -1,8 +1,7 @@
 #include "vec_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::VecTest;
+  namespace gpu_test {
 
     /*
      * Complex types and bool types are not avaiable for vec_unique
@@ -38,5 +37,5 @@ namespace cytnx {
       EXPECT_EQ(std::vector<cytnx_float>({1, 7, 15, 423, 990}), vec_unique(floatv));
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

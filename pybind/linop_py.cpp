@@ -11,11 +11,13 @@
 #include <pybind11/functional.h>
 
 #include "cytnx.hpp"
+#include "pyint_dispatch.hpp"
 // #include "../include/cytnx_error.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
+using pybind_cytnx::dispatch_pyint;
 
 #ifdef BACKEND_TORCH
 #else
@@ -46,28 +48,18 @@ void linop_binding(py::module &m) {
     .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &>(),
          py::arg("type"), py::arg("nx"), py::arg("dtype") = (int)Type.Double,
          py::arg("device") = (int)Device.cpu)
-    .def("set_elem", &LinOp::set_elem<cytnx_complex128>, py::arg("i"), py::arg("j"),
-         py::arg("elem"), py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_complex64>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_double>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_float>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_int64>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_uint64>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_int32>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_uint32>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_int16>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_uint16>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
-    .def("set_elem", &LinOp::set_elem<cytnx_bool>, py::arg("i"), py::arg("j"), py::arg("elem"),
-         py::arg("check_exists") = true)
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    // complex64/float/{u,}int{16,32} are covered by the numpy_scalar
+    // overloads immediately below (a plain Python value never reaches them;
+    // only a numpy scalar of that exact width would). uint64 is handled by
+    // the single py::int_ overload with dispatch_pyint (int64 when the
+    // value fits, uint64 otherwise), avoiding a stub-visible duplicate. The
+    // numpy_scalar overloads are registered FIRST, before py::int_/double/
+    // complex128: a numpy scalar satisfies __index__/__float__/__complex__,
+    // so a plain integral/double/complex128 overload registered earlier
+    // would greedily consume it in pybind11's conversion pass (see the
+    // "__index__ no-convert trap" and "__float__-fallback trap" in
+    // pyint_dispatch.hpp).
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
@@ -145,6 +137,17 @@ void linop_binding(py::module &m) {
         self.set_elem(i, j, static_cast<cytnx::cytnx_bool>(elem), check_exists);
       },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
+    .def(
+      "set_elem",
+      [](LinOp &self, const cytnx_uint64 i, const cytnx_uint64 j, const py::int_ &elem,
+         const bool check_exists) {
+        dispatch_pyint(elem, [&](auto v) { self.set_elem(i, j, v, check_exists); });
+      },
+      py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
+    .def("set_elem", &LinOp::set_elem<cytnx_double>, py::arg("i"), py::arg("j"), py::arg("elem"),
+         py::arg("check_exists") = true)
+    .def("set_elem", &LinOp::set_elem<cytnx_complex128>, py::arg("i"), py::arg("j"),
+         py::arg("elem"), py::arg("check_exists") = true)
 
     //.def("__call__",[](cytnx::LinOp &self, const cytnx_uint64 &i, const cytnx_uint64 &j){
     //        return Tensor(self(i,j));

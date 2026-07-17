@@ -3,7 +3,7 @@
 #include "gmock/gmock.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
     TEST(Bond, GpuEmptyBond) {
       Bond bd;
 
@@ -308,5 +308,5 @@ namespace cytnx {
     // }
     //
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

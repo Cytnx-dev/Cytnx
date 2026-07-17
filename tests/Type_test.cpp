@@ -9,7 +9,7 @@
 #include "Type.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
 #ifdef UNI_GPU
 #endif
@@ -45,46 +45,45 @@ namespace cytnx {
                                  cytnx_cuda_complex128>);
 #endif
 
-  }  // namespace
+    TEST(TypeTest, VariantContainsRecognizesSupportedTypes) {
+      EXPECT_TRUE((variant_contains_v<cytnx_double, Type_list>));
+      EXPECT_TRUE((variant_contains_v<cytnx_bool, Type_list>));
+      EXPECT_FALSE((variant_contains_v<std::string, Type_list>));
+    }
 
-  TEST(TypeTest, VariantContainsRecognizesSupportedTypes) {
-    EXPECT_TRUE((variant_contains_v<cytnx_double, Type_list>));
-    EXPECT_TRUE((variant_contains_v<cytnx_bool, Type_list>));
-    EXPECT_FALSE((variant_contains_v<std::string, Type_list>));
-  }
+    TEST(TypeTest, ToRealMapsToRealCounterpart) {
+      EXPECT_EQ(Type.to_real(Type.ComplexDouble), Type.Double);
+      EXPECT_EQ(Type.to_real(Type.ComplexFloat), Type.Float);
+      EXPECT_EQ(Type.to_real(Type.Double), Type.Double);
+      EXPECT_EQ(Type.to_real(Type.Int64), Type.Int64);
+    }
 
-  TEST(TypeTest, ToRealMapsToRealCounterpart) {
-    EXPECT_EQ(Type.to_real(Type.ComplexDouble), Type.Double);
-    EXPECT_EQ(Type.to_real(Type.ComplexFloat), Type.Float);
-    EXPECT_EQ(Type.to_real(Type.Double), Type.Double);
-    EXPECT_EQ(Type.to_real(Type.Int64), Type.Int64);
-  }
+    TEST(TypeTest, ToComplexMapsToComplexCounterpart) {
+      EXPECT_EQ(Type.to_complex(Type.Double), Type.ComplexDouble);
+      EXPECT_EQ(Type.to_complex(Type.Float), Type.ComplexFloat);
+      EXPECT_EQ(Type.to_complex(Type.ComplexFloat), Type.ComplexFloat);
+      EXPECT_EQ(Type.to_complex(Type.Int64), Type.ComplexDouble);
+    }
 
-  TEST(TypeTest, ToComplexMapsToComplexCounterpart) {
-    EXPECT_EQ(Type.to_complex(Type.Double), Type.ComplexDouble);
-    EXPECT_EQ(Type.to_complex(Type.Float), Type.ComplexFloat);
-    EXPECT_EQ(Type.to_complex(Type.ComplexFloat), Type.ComplexFloat);
-    EXPECT_EQ(Type.to_complex(Type.Int64), Type.ComplexDouble);
-  }
+    TEST(TypeTest, PromoteMixedComplexRealUsesMaxPrecision) {
+      EXPECT_EQ(Type.type_promote(Type.ComplexFloat, Type.Double), Type.ComplexDouble);
+      EXPECT_EQ(Type.type_promote(Type.Double, Type.ComplexFloat), Type.ComplexDouble);
+      EXPECT_EQ(Type.type_promote(Type.ComplexFloat, Type.Float), Type.ComplexFloat);
+      EXPECT_EQ(Type.type_promote(Type.ComplexDouble, Type.Float), Type.ComplexDouble);
+      // unchanged same-kind rules
+      EXPECT_EQ(Type.type_promote(Type.Double, Type.Float), Type.Double);
+      EXPECT_EQ(Type.type_promote(Type.ComplexFloat, Type.Int64), Type.ComplexFloat);
+      EXPECT_EQ(Type.type_promote(Type.Int64, Type.Uint64), Type.Int64);
+      // unsigned/signed adjustment: promote to the next-wider signed type
+      EXPECT_EQ(Type.type_promote(Type.Uint64, Type.Int32), Type.Int64);
+    }
 
-  TEST(TypeTest, PromoteMixedComplexRealUsesMaxPrecision) {
-    EXPECT_EQ(Type.type_promote(Type.ComplexFloat, Type.Double), Type.ComplexDouble);
-    EXPECT_EQ(Type.type_promote(Type.Double, Type.ComplexFloat), Type.ComplexDouble);
-    EXPECT_EQ(Type.type_promote(Type.ComplexFloat, Type.Float), Type.ComplexFloat);
-    EXPECT_EQ(Type.type_promote(Type.ComplexDouble, Type.Float), Type.ComplexDouble);
-    // unchanged same-kind rules
-    EXPECT_EQ(Type.type_promote(Type.Double, Type.Float), Type.Double);
-    EXPECT_EQ(Type.type_promote(Type.ComplexFloat, Type.Int64), Type.ComplexFloat);
-    EXPECT_EQ(Type.type_promote(Type.Int64, Type.Uint64), Type.Int64);
-    // unsigned/signed adjustment: promote to the next-wider signed type
-    EXPECT_EQ(Type.type_promote(Type.Uint64, Type.Int32), Type.Int64);
-  }
+    TEST(TypeTest, TensorAddMixedComplexRealPromotes) {
+      auto a = zeros({2}, Type.ComplexFloat);
+      auto b = zeros({2}, Type.Double);
+      EXPECT_EQ((a + b).dtype(), Type.ComplexDouble);
+      EXPECT_EQ((b + a).dtype(), Type.ComplexDouble);
+    }
 
-  TEST(TypeTest, TensorAddMixedComplexRealPromotes) {
-    auto a = zeros({2}, Type.ComplexFloat);
-    auto b = zeros({2}, Type.Double);
-    EXPECT_EQ((a + b).dtype(), Type.ComplexDouble);
-    EXPECT_EQ((b + a).dtype(), Type.ComplexDouble);
-  }
-
+  }  // namespace test
 }  // namespace cytnx

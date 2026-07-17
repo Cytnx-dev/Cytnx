@@ -9,7 +9,7 @@
 #include "Type.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     static Tensor ZeroExtentTensor(const std::vector<cytnx_uint64>& shape, unsigned int dtype) {
       return Tensor(shape, dtype, Device.cpu);
@@ -129,6 +129,6 @@ namespace cytnx {
       EXPECT_EQ(out.shape()[0], 0u);
     }
 
-  }  // namespace
+  }  // namespace test
 
 }  // namespace cytnx

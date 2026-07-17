@@ -6,7 +6,7 @@
 #include "Type.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
     template <typename T>
     class LinalgSumHomogeneousValuesTest : public ::testing::Test {
      public:
@@ -141,5 +141,5 @@ namespace cytnx {
       EXPECT_GT(result, static_cast<cytnx_float>(N / 2));
       EXPECT_LE(result, static_cast<cytnx_float>(N));
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

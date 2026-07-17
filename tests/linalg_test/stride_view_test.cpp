@@ -9,7 +9,7 @@
 #include "backend/linalg_internal_cpu/stride_view.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     using linalg_internal::PairwiseSum;
     using linalg_internal::stride;
@@ -126,6 +126,6 @@ namespace cytnx {
       EXPECT_DOUBLE_EQ(s.imag(), -6.0);
     }
 
-  }  // namespace
+  }  // namespace test
 
 }  // namespace cytnx

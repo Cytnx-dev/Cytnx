@@ -19,8 +19,7 @@
 // }
 
 namespace cytnx {
-  namespace {
-    using test::NetworkTest;
+  namespace test {
 
     TEST_F(NetworkTest, NetworkDenseFromString) {
       auto net = Network();
@@ -230,5 +229,5 @@ namespace cytnx {
       EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), res_net.get_block(), 1e-12));
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

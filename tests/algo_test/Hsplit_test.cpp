@@ -4,10 +4,10 @@
 #include "test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
-    void CheckResult(const Tensor& T_in, const std::vector<Tensor>& hsplit_tens,
-                     const std::vector<cytnx_uint64>& dims);
+    static void CheckResult(const Tensor& T_in, const std::vector<Tensor>& hsplit_tens,
+                            const std::vector<cytnx_uint64>& dims);
 
     /*=====test info=====
     describe:Test 'dims' only one element.
@@ -195,8 +195,8 @@ namespace cytnx {
       EXPECT_THROW({ auto Ts = algo::Hsplit(T, dims); }, std::logic_error);
     }
 
-    void CheckResult(const Tensor& T_in, const std::vector<Tensor>& hsplit_tens,
-                     const std::vector<cytnx_uint64>& dims) {
+    static void CheckResult(const Tensor& T_in, const std::vector<Tensor>& hsplit_tens,
+                            const std::vector<cytnx_uint64>& dims) {
       // 1. check tensor data type
       for (const auto& tens : hsplit_tens) {
         EXPECT_EQ(T_in.dtype(), tens.dtype());
@@ -241,5 +241,5 @@ namespace cytnx {
       EXPECT_TRUE(is_same_elem);
     }  // fucn:CheckResult
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

@@ -1,7 +1,7 @@
 #include "ExpM_test.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
     TEST(ExpM, GpuExpMTest) {
       GTEST_SKIP() << "ExpM is not implemented on the GPU.";
       // CompareWithScipy
@@ -30,5 +30,5 @@ namespace cytnx {
       }
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

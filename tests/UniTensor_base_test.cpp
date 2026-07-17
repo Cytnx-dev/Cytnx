@@ -1,8 +1,7 @@
 #include "UniTensor_base_test.h"
 
 namespace cytnx {
-  namespace {
-    using test::UniTensor_baseTest;
+  namespace test {
 
     TEST_F(UniTensor_baseTest, GetIndex) {
       utzero345.relabel_({"abc", "ABC", "CBA"});
@@ -27,5 +26,5 @@ namespace cytnx {
       EXPECT_THROW(utzero345.rank(), error);
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

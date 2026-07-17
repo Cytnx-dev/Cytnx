@@ -334,29 +334,138 @@ void tensor_binding(py::module &m) {
         return std::string("");
       },
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_complex128>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_complex64>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_double>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_float>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_int64>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_uint64>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_int32>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_uint32>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_int16>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_uint16>, py::arg("val"))
-    .def("fill", &cytnx::Tensor::fill<cytnx::cytnx_bool>, py::arg("val"))
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<float> &val) {
+        self.fill(static_cast<cytnx::cytnx_float>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &val) {
+        self.fill(static_cast<cytnx::cytnx_complex64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &val) {
+        self.fill(static_cast<cytnx::cytnx_int64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &val) {
+        self.fill(static_cast<cytnx::cytnx_uint64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &val) {
+        self.fill(static_cast<cytnx::cytnx_int32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &val) {
+        self.fill(static_cast<cytnx::cytnx_uint32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &val) {
+        self.fill(static_cast<cytnx::cytnx_int16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &val) {
+        self.fill(static_cast<cytnx::cytnx_uint16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::numpy_scalar<bool> &val) {
+        self.fill(static_cast<cytnx::cytnx_bool>(val));
+      },
+      py::arg("val"))
+    .def(
+      "fill",
+      [](cytnx::Tensor &self, const py::int_ &val) {
+        dispatch_pyint(val, [&](auto v) { self.fill(v); });
+      },
+      py::arg("val"))
+    .def(
+      "fill", [](cytnx::Tensor &self, const cytnx::cytnx_double &val) { self.fill(val); }, py::arg("val"))
+    .def(
+      "fill", [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &val) { self.fill(val); }, py::arg("val"))
 
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_complex128>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_complex64>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_double>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_float>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_int64>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_uint64>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_int32>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_uint32>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_int16>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_uint16>, py::arg("val"))
-    .def("append", &cytnx::Tensor::append<cytnx::cytnx_bool>, py::arg("val"))
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<float> &val) {
+        self.append(static_cast<cytnx::cytnx_float>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &val) {
+        self.append(static_cast<cytnx::cytnx_complex64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &val) {
+        self.append(static_cast<cytnx::cytnx_int64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &val) {
+        self.append(static_cast<cytnx::cytnx_uint64>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &val) {
+        self.append(static_cast<cytnx::cytnx_int32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &val) {
+        self.append(static_cast<cytnx::cytnx_uint32>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &val) {
+        self.append(static_cast<cytnx::cytnx_int16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &val) {
+        self.append(static_cast<cytnx::cytnx_uint16>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::numpy_scalar<bool> &val) {
+        self.append(static_cast<cytnx::cytnx_bool>(val));
+      },
+      py::arg("val"))
+    .def(
+      "append",
+      [](cytnx::Tensor &self, const py::int_ &val) {
+        dispatch_pyint(val, [&](auto v) { self.append(v); });
+      },
+      py::arg("val"))
+    .def(
+      "append", [](cytnx::Tensor &self, const cytnx::cytnx_double &val) { self.append(val); }, py::arg("val"))
+    .def(
+      "append", [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &val) { self.append(val); },
+      py::arg("val"))
     .def(
       "append", [](cytnx::Tensor &self, const cytnx::Tensor &rhs) { self.append(rhs); },
       py::arg("val"))
@@ -563,9 +672,9 @@ void tensor_binding(py::module &m) {
            dispatch_pyint(
              rc, [&](auto v) { f_Tensor_setitem_scal(self, locators, v); });
          })
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::Scalar>)
     .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_double>)
     .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_complex128>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::Scalar>)
     // arithmetic >>
     .def("__neg__",
          [](cytnx::Tensor &self) {
@@ -624,63 +733,31 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Add(v); });
          })
+    .def("__add__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Add(rhs); })
     .def("__add__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Add(rhs); })
     .def("__add__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Add(rhs); })
-    .def("__add__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Add(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
-    // (e.g. np.float32(1.0) + t) does not reach this __r*__ binding at all --
-    // Tensor defines __iter__, so numpy's ufunc machinery treats it as an
-    // array-like and tries to iterate it instead, raising
-    // "TypeError: 'TensorIterator' object is not iterable" (issue #692).
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<float> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_float>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_complex64>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_int64>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_uint64>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_int32>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_uint32>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_int16>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_uint16>(lhs), self);
-         })
-    .def("__radd__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<bool> &lhs) {
-           return cytnx::linalg::Add(static_cast<cytnx::cytnx_bool>(lhs), self);
-         })
+    // numpy_scalar overloads are omitted here (unlike every other keep-set in
+    // this file): a numpy scalar on the LEFT (e.g. np.float32(1.0) + t) never
+    // reaches __radd__ at all -- Tensor defines __iter__, so numpy's ufunc
+    // machinery treats it as an array-like and tries to iterate it instead,
+    // raising "TypeError: 'TensorIterator' object is not iterable" (issue #692),
+    // so those overloads were dead code. py::int_/Scalar/double/complex128 are
+    // unaffected: a plain Python operand does not go through numpy's ufunc
+    // dispatch, so it reaches this binding via the normal reflected-operator
+    // protocol.
     .def("__radd__",
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Add(v, self); });
          })
+    .def("__radd__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Add(lhs, self); })
     .def("__radd__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Add(lhs, self); })
     .def("__radd__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Add(lhs, self); })
-    .def("__radd__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Add(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__iadd__",
@@ -739,17 +816,17 @@ void tensor_binding(py::module &m) {
            return self;
          })
     .def("__iadd__",
+         [](py::object self, const cytnx::Scalar &rhs) {
+           self.cast<cytnx::Tensor &>().Add_(rhs);
+           return self;
+         })
+    .def("__iadd__",
          [](py::object self, const cytnx::cytnx_double &rhs) {
            self.cast<cytnx::Tensor &>().Add_(rhs);
            return self;
          })
     .def("__iadd__",
          [](py::object self, const cytnx::cytnx_complex128 &rhs) {
-           self.cast<cytnx::Tensor &>().Add_(rhs);
-           return self;
-         })
-    .def("__iadd__",
-         [](py::object self, const cytnx::Scalar &rhs) {
            self.cast<cytnx::Tensor &>().Add_(rhs);
            return self;
          })
@@ -796,63 +873,31 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Sub(v); });
          })
+    .def("__sub__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Sub(rhs); })
     .def("__sub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Sub(rhs); })
     .def("__sub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Sub(rhs); })
-    .def("__sub__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Sub(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
-    // (e.g. np.float32(1.0) + t) does not reach this __r*__ binding at all --
-    // Tensor defines __iter__, so numpy's ufunc machinery treats it as an
-    // array-like and tries to iterate it instead, raising
-    // "TypeError: 'TensorIterator' object is not iterable" (issue #692).
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<float> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_float>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_complex64>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_int64>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_uint64>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_int32>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_uint32>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_int16>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_uint16>(lhs), self);
-         })
-    .def("__rsub__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<bool> &lhs) {
-           return cytnx::linalg::Sub(static_cast<cytnx::cytnx_bool>(lhs), self);
-         })
+    // numpy_scalar overloads are omitted here (unlike every other keep-set in
+    // this file): a numpy scalar on the LEFT (e.g. np.float32(1.0) + t) never
+    // reaches __rsub__ at all -- Tensor defines __iter__, so numpy's ufunc
+    // machinery treats it as an array-like and tries to iterate it instead,
+    // raising "TypeError: 'TensorIterator' object is not iterable" (issue #692),
+    // so those overloads were dead code. py::int_/Scalar/double/complex128 are
+    // unaffected: a plain Python operand does not go through numpy's ufunc
+    // dispatch, so it reaches this binding via the normal reflected-operator
+    // protocol.
     .def("__rsub__",
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Sub(v, self); });
          })
+    .def("__rsub__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Sub(lhs, self); })
-    .def("__rsub__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Sub(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__isub__",
@@ -911,17 +956,17 @@ void tensor_binding(py::module &m) {
            return self;
          })
     .def("__isub__",
+         [](py::object self, const cytnx::Scalar &rhs) {
+           self.cast<cytnx::Tensor &>().Sub_(rhs);
+           return self;
+         })
+    .def("__isub__",
          [](py::object self, const cytnx::cytnx_double &rhs) {
            self.cast<cytnx::Tensor &>().Sub_(rhs);
            return self;
          })
     .def("__isub__",
          [](py::object self, const cytnx::cytnx_complex128 &rhs) {
-           self.cast<cytnx::Tensor &>().Sub_(rhs);
-           return self;
-         })
-    .def("__isub__",
-         [](py::object self, const cytnx::Scalar &rhs) {
            self.cast<cytnx::Tensor &>().Sub_(rhs);
            return self;
          })
@@ -968,63 +1013,31 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Mul(v); });
          })
+    .def("__mul__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mul(rhs); })
     .def("__mul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Mul(rhs); })
     .def("__mul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Mul(rhs); })
-    .def("__mul__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mul(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
-    // (e.g. np.float32(1.0) + t) does not reach this __r*__ binding at all --
-    // Tensor defines __iter__, so numpy's ufunc machinery treats it as an
-    // array-like and tries to iterate it instead, raising
-    // "TypeError: 'TensorIterator' object is not iterable" (issue #692).
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<float> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_float>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_complex64>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_int64>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_uint64>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_int32>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_uint32>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_int16>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_uint16>(lhs), self);
-         })
-    .def("__rmul__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<bool> &lhs) {
-           return cytnx::linalg::Mul(static_cast<cytnx::cytnx_bool>(lhs), self);
-         })
+    // numpy_scalar overloads are omitted here (unlike every other keep-set in
+    // this file): a numpy scalar on the LEFT (e.g. np.float32(1.0) + t) never
+    // reaches __rmul__ at all -- Tensor defines __iter__, so numpy's ufunc
+    // machinery treats it as an array-like and tries to iterate it instead,
+    // raising "TypeError: 'TensorIterator' object is not iterable" (issue #692),
+    // so those overloads were dead code. py::int_/Scalar/double/complex128 are
+    // unaffected: a plain Python operand does not go through numpy's ufunc
+    // dispatch, so it reaches this binding via the normal reflected-operator
+    // protocol.
     .def("__rmul__",
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Mul(v, self); });
          })
+    .def("__rmul__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Mul(lhs, self); })
-    .def("__rmul__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mul(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__imul__",
@@ -1083,17 +1096,17 @@ void tensor_binding(py::module &m) {
            return self;
          })
     .def("__imul__",
+         [](py::object self, const cytnx::Scalar &rhs) {
+           self.cast<cytnx::Tensor &>().Mul_(rhs);
+           return self;
+         })
+    .def("__imul__",
          [](py::object self, const cytnx::cytnx_double &rhs) {
            self.cast<cytnx::Tensor &>().Mul_(rhs);
            return self;
          })
     .def("__imul__",
          [](py::object self, const cytnx::cytnx_complex128 &rhs) {
-           self.cast<cytnx::Tensor &>().Mul_(rhs);
-           return self;
-         })
-    .def("__imul__",
-         [](py::object self, const cytnx::Scalar &rhs) {
            self.cast<cytnx::Tensor &>().Mul_(rhs);
            return self;
          })
@@ -1140,63 +1153,31 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Div(v); });
          })
+    .def("__truediv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
     .def("__truediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Div(rhs); })
     .def("__truediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Div(rhs); })
-    .def("__truediv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
-    // (e.g. np.float32(1.0) + t) does not reach this __r*__ binding at all --
-    // Tensor defines __iter__, so numpy's ufunc machinery treats it as an
-    // array-like and tries to iterate it instead, raising
-    // "TypeError: 'TensorIterator' object is not iterable" (issue #692).
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<float> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_float>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_complex64>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_int64>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint64>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_int32>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint32>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_int16>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint16>(lhs), self);
-         })
-    .def("__rtruediv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<bool> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_bool>(lhs), self);
-         })
+    // numpy_scalar overloads are omitted here (unlike every other keep-set in
+    // this file): a numpy scalar on the LEFT (e.g. np.float32(1.0) + t) never
+    // reaches __rtruediv__ at all -- Tensor defines __iter__, so numpy's ufunc
+    // machinery treats it as an array-like and tries to iterate it instead,
+    // raising "TypeError: 'TensorIterator' object is not iterable" (issue #692),
+    // so those overloads were dead code. py::int_/Scalar/double/complex128 are
+    // unaffected: a plain Python operand does not go through numpy's ufunc
+    // dispatch, so it reaches this binding via the normal reflected-operator
+    // protocol.
     .def("__rtruediv__",
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Div(v, self); });
          })
+    .def("__rtruediv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Div(lhs, self); })
-    .def("__rtruediv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__itruediv__",
@@ -1255,17 +1236,17 @@ void tensor_binding(py::module &m) {
            return self;
          })
     .def("__itruediv__",
+         [](py::object self, const cytnx::Scalar &rhs) {
+           self.cast<cytnx::Tensor &>().Div_(rhs);
+           return self;
+         })
+    .def("__itruediv__",
          [](py::object self, const cytnx::cytnx_double &rhs) {
            self.cast<cytnx::Tensor &>().Div_(rhs);
            return self;
          })
     .def("__itruediv__",
          [](py::object self, const cytnx::cytnx_complex128 &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(rhs);
-           return self;
-         })
-    .def("__itruediv__",
-         [](py::object self, const cytnx::Scalar &rhs) {
            self.cast<cytnx::Tensor &>().Div_(rhs);
            return self;
          })
@@ -1320,63 +1301,31 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Mod(v); });
          })
+    .def("__mod__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mod(rhs); })
     .def("__mod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Mod(rhs); })
     .def("__mod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Mod(rhs); })
-    .def("__mod__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mod(rhs); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
-    // (e.g. np.float32(1.0) + t) does not reach this __r*__ binding at all --
-    // Tensor defines __iter__, so numpy's ufunc machinery treats it as an
-    // array-like and tries to iterate it instead, raising
-    // "TypeError: 'TensorIterator' object is not iterable" (issue #692).
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<float> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_float>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_complex64>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_int64>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_uint64>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_int32>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_uint32>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_int16>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_uint16>(lhs), self);
-         })
-    .def("__rmod__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<bool> &lhs) {
-           return cytnx::linalg::Mod(static_cast<cytnx::cytnx_bool>(lhs), self);
-         })
+    // numpy_scalar overloads are omitted here (unlike every other keep-set in
+    // this file): a numpy scalar on the LEFT (e.g. np.float32(1.0) + t) never
+    // reaches __rmod__ at all -- Tensor defines __iter__, so numpy's ufunc
+    // machinery treats it as an array-like and tries to iterate it instead,
+    // raising "TypeError: 'TensorIterator' object is not iterable" (issue #692),
+    // so those overloads were dead code. py::int_/Scalar/double/complex128 are
+    // unaffected: a plain Python operand does not go through numpy's ufunc
+    // dispatch, so it reaches this binding via the normal reflected-operator
+    // protocol.
     .def("__rmod__",
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Mod(v, self); });
          })
+    .def("__rmod__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mod(lhs, self); })
     .def("__rmod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Mod(lhs, self); })
     .def("__rmod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Mod(lhs, self); })
-    .def("__rmod__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mod(lhs, self); })
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__eq__", [](cytnx::Tensor &self, const cytnx::Tensor &rhs) { return self == rhs; })
@@ -1420,10 +1369,10 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self == v; });
          })
+    .def("__eq__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self == rhs; })
     .def("__eq__", [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self == rhs; })
     .def("__eq__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self == rhs; })
-    .def("__eq__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self == rhs; })
 
     // __ne__ (#928/#916/#692 background): cytnx has no elementwise
     // operator!= or Neq/logical-not kernel (checked: no `Neq`, no
@@ -1492,16 +1441,16 @@ void tensor_binding(py::module &m) {
            });
          })
     .def("__ne__",
+         [](cytnx::Tensor &self, const cytnx::Scalar &rhs) {
+           return (1 - (self == rhs)).astype(cytnx::Type.Bool);
+         })
+    .def("__ne__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) {
            return (1 - self.Cpr(rhs)).astype(cytnx::Type.Bool);
          })
     .def("__ne__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) {
            return (1 - self.Cpr(rhs)).astype(cytnx::Type.Bool);
-         })
-    .def("__ne__",
-         [](cytnx::Tensor &self, const cytnx::Scalar &rhs) {
-           return (1 - (self == rhs)).astype(cytnx::Type.Bool);
          })
 
     // __bool__ (numpy semantics, #928/#916/#692 background): previously

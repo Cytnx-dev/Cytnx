@@ -9,7 +9,7 @@
 #include "utils/checked_cast.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
     TEST(CytnxError, LongMessagesDoNotOverflow) {
       std::string big(5000, 'x');
       try {
@@ -135,5 +135,5 @@ namespace cytnx {
       }
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

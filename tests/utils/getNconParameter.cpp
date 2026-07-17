@@ -16,7 +16,7 @@ namespace cytnx {
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define abs(x) (((x) < 0) ? (-(x)) : (x))
     std::mt19937 mrand(std::random_device{}());
-    int rnd(int x) { return mrand() % x; }
+    static int rnd(int x) { return mrand() % x; }
     // head
     int t, n, m, b;
     std::vector<std::vector<cytnx_int64>> bonds;

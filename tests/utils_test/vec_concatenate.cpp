@@ -1,8 +1,7 @@
 #include "vec_test.h"
 
 namespace cytnx {
-  namespace {
-    using test::VecTest;
+  namespace test {
 
     TEST_F(VecTest, VecConcatenate) {
       EXPECT_EQ(std::vector<cytnx_uint64>(), vec_concatenate(ui64v, ui64v));
@@ -134,5 +133,5 @@ namespace cytnx {
       EXPECT_EQ(std::vector<cytnx_bool>({1, 0, 1, 0, 0}), boolv3);
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

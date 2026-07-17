@@ -6,7 +6,7 @@
 #include "cytnx.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     void ExpectGpuEmpty(const Tensor &tensor, const std::vector<cytnx_uint64> &shape,
                         unsigned int dtype) {
@@ -16,7 +16,7 @@ namespace cytnx {
       EXPECT_EQ(tensor.device(), Device.cuda);
     }
 
-    void ExpectGpuAllEqual(const Tensor &tensor, double expected) {
+    static void ExpectGpuAllEqual(const Tensor &tensor, double expected) {
       Tensor flat = tensor.to(Device.cpu).reshape({static_cast<cytnx_int64>(tensor.size())});
       for (cytnx_uint64 i = 0; i < flat.size(); ++i) {
         EXPECT_DOUBLE_EQ(flat.at<double>({i}), expected);
@@ -111,5 +111,5 @@ namespace cytnx {
       EXPECT_DOUBLE_EQ(result.at<double>({2}), 9.0);
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

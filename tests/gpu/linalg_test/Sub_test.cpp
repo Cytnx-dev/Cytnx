@@ -4,7 +4,7 @@
 #include "gpu_test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     ::testing::AssertionResult CheckSubResult(const Tensor& gpu_result, const Tensor& left_tensor,
                                               const Tensor& right_tensor);
@@ -15,7 +15,7 @@ namespace cytnx {
 
     std::vector<std::vector<cytnx_uint64>> GetTestShapes();
 
-    cytnx_double GetTolerance(const unsigned int& dtype);
+    static cytnx_double GetTolerance(const unsigned int& dtype);
 
     class SubTestAllShapes : public ::testing::TestWithParam<std::vector<cytnx_uint64>> {};
 
@@ -224,10 +224,10 @@ namespace cytnx {
       return all_shapes;
     }
 
-    cytnx_double GetTolerance(const unsigned int& dtype) {
+    static cytnx_double GetTolerance(const unsigned int& dtype) {
       cytnx_double tolerance = 1e-6;
       return tolerance;
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

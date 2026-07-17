@@ -9,7 +9,7 @@
 #if NEED_GEN_COMMON_DATA
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     /*
      * This file contains code to generate the test data in the directory
@@ -199,7 +199,7 @@ namespace cytnx {
       UT.Save(file_name);
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx
 
 #endif

@@ -5,25 +5,23 @@
 #include "linalg_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::expect_lowest_states;
+  namespace gpu_test {
     using gpu_test::ferm_dense_lowest;
-    using gpu_test::ferm_ket_nx;
     using gpu_test::FermiAdaOp;
-    using gpu_test::make_ferm_A;
     using gpu_test::make_ferm_ada_ket;
 
     // define the customize LinOp
-    class MatOp : public LinOp {
+    class GpuLanczosMatOp : public LinOp {
      public:
       Tensor opMat;
       Tensor T_init;
-      MatOp(const cytnx_uint64& nx, const int& dtype, const int& in_device);
+      GpuLanczosMatOp(const cytnx_uint64& nx, const int& dtype, const int& in_device);
       Tensor matvec(const Tensor& v) override { return (linalg::Dot(opMat, v)); }
       void InitVec();
       friend class CheckOp;
     };
-    MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype, const int& in_device)
+    GpuLanczosMatOp::GpuLanczosMatOp(const cytnx_uint64& in_nx, const int& in_dtype,
+                                     const int& in_device)
         : LinOp("mv", in_nx, in_dtype, in_device) {
       opMat = zeros({in_nx, in_nx}, this->dtype(), this->device());
       if (Type.is_float(this->dtype())) {
@@ -32,7 +30,7 @@ namespace cytnx {
       opMat += opMat.permute({1, 0}).Conj();  // Hermitian
       InitVec();
     }
-    void MatOp::InitVec() {
+    void GpuLanczosMatOp::InitVec() {
       T_init = zeros({nx()}, this->dtype(), this->device());
       if (Type.is_float(this->dtype())) {
         random::normal_(T_init, 0.0, 1.0, 0);
@@ -43,8 +41,9 @@ namespace cytnx {
      public:
       Tensor opMat;
       Tensor T_init;
-      MatOp* op;
-      CheckOp(MatOp* in_op) : op(in_op), LinOp("mv", in_op->nx(), in_op->dtype(), Device.cpu) {
+      GpuLanczosMatOp* op;
+      CheckOp(GpuLanczosMatOp* in_op)
+          : op(in_op), LinOp("mv", in_op->nx(), in_op->dtype(), Device.cpu) {
         opMat = op->opMat.to(Device.cpu);
         T_init = op->T_init.to(Device.cpu);
       }
@@ -52,12 +51,12 @@ namespace cytnx {
     };
 
     // the function to check the answer
-    bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda,
-                     const std::vector<Tensor>& lanczos_eigs_cpu);
+    static bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda,
+                            const std::vector<Tensor>& lanczos_eigs_cpu);
 
-    void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
-                    const cytnx_uint64& k = 5, cytnx_uint64 dim = 23) {
-      MatOp H = MatOp(dim, mat_type, Device.cuda);
+    static void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
+                           const cytnx_uint64& k = 5, cytnx_uint64 dim = 23) {
+      GpuLanczosMatOp H = GpuLanczosMatOp(dim, mat_type, Device.cuda);
       CheckOp H_check = CheckOp(&H);
       const cytnx_uint64 maxiter = 10000;
       auto dtype = H.dtype();
@@ -74,14 +73,14 @@ namespace cytnx {
     }
 
     // get resigue |Hv - ev|
-    Scalar GetResidue(CheckOp& H, const Scalar& eigval, const Tensor& eigvec) {
+    static Scalar GetResidue(CheckOp& H, const Scalar& eigval, const Tensor& eigvec) {
       Tensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
       Scalar resi = resi_vec.Norm().item();
       return resi;
     }
 
-    bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda,
-                     const std::vector<Tensor>& lanczos_eigs_cpu) {
+    static bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda,
+                            const std::vector<Tensor>& lanczos_eigs_cpu) {
       auto dtype = H.dtype();
       const double tolerance =
         (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-4;
@@ -185,5 +184,5 @@ namespace cytnx {
                                (cytnx_double)1e-12, (cytnx_uint64)2, true, (cytnx_int32)0, false));
       expect_lowest_states(A, eigs, low, tol);
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

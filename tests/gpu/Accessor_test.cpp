@@ -7,9 +7,7 @@
 // Test Accessor::type() method
 
 namespace cytnx {
-  namespace {
-
-    using gpu_test::AccessorTest;
+  namespace gpu_test {
 
     TEST_F(AccessorTest, GpuType) {
       EXPECT_EQ(single.type(), Accessor::Singl);
@@ -155,5 +153,5 @@ namespace cytnx {
       ASSERT_EQ(acc.type(), Accessor::All);
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

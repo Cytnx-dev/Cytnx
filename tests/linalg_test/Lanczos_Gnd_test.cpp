@@ -4,18 +4,15 @@
 #include "linalg_test.h"
 
 namespace cytnx {
-  namespace {
-    using test::expect_lowest_states;
+  namespace test {
     using test::ferm_dense_lowest;
-    using test::ferm_ket_nx;
     using test::FermiAdaOp;
-    using test::make_ferm_A;
     using test::make_ferm_ada_ket;
 
-    class OneSiteOp : public LinOp {
+    class LanczosGndOneSiteOp : public LinOp {
      public:
-      OneSiteOp(const int d = 2, const int D = 5, const int dw = 3,
-                const unsigned int dtype = Type.Double, const int& device = Device.cpu)
+      LanczosGndOneSiteOp(const int d = 2, const int D = 5, const int dw = 3,
+                          const unsigned int dtype = Type.Double, const int& device = Device.cpu)
           : LinOp("mv", D * D * d, dtype, device) {
         if (!Type.is_float(dtype)) return;
         std::vector<UniTensor> LRO = CreateLRO(D, d, dw);
@@ -125,13 +122,13 @@ namespace cytnx {
       }
     };
     // the function to check the answer
-    bool CheckResult(OneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
-                     const std::string& which, const cytnx_uint64 k);
+    static bool CheckResult(LanczosGndOneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
+                            const std::string& which, const cytnx_uint64 k);
 
-    void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
-                    const cytnx_uint64& k = 3) {
+    static void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
+                           const cytnx_uint64& k = 3) {
       int D = 5, d = 2, dw = 3;
-      OneSiteOp op = OneSiteOp(d, D, dw, mat_type);
+      LanczosGndOneSiteOp op = LanczosGndOneSiteOp(d, D, dw, mat_type);
       const cytnx_uint64 maxiter = 1000;
       const cytnx_double cvg_crit = 0;
       std::vector<UniTensor> lanczos_eigs =
@@ -141,7 +138,7 @@ namespace cytnx {
     }
 
     // error test
-    class ErrorTestClass {
+    class LanczosGndErrorTestClass {
      public:
       std::string which = "LM";
       cytnx_uint64 k = 1;
@@ -150,19 +147,19 @@ namespace cytnx {
       cytnx_double cvg_crit = 0;
       bool is_V = true;
       cytnx_int32 ncv = 0;
-      ErrorTestClass(){};
+      LanczosGndErrorTestClass(){};
       void ExcuteErrorTest();
       // set
       void Set_mat_type(const int _mat_type) {
         mat_type = _mat_type;
-        op = OneSiteOp(d, D, dw, mat_type);
+        op = LanczosGndOneSiteOp(d, D, dw, mat_type);
       }
 
      private:
       int mat_type = Type.Double;
-      OneSiteOp op = OneSiteOp(d, D, dw, mat_type);
+      LanczosGndOneSiteOp op = LanczosGndOneSiteOp(d, D, dw, mat_type);
     };
-    void ErrorTestClass::ExcuteErrorTest() {
+    void LanczosGndErrorTestClass::ExcuteErrorTest() {
       try {
         auto lanczos_eigs =
           linalg::Lanczos(&op, op.UT_init, which, maxiter, cvg_crit, k, is_V, ncv);
@@ -175,9 +172,10 @@ namespace cytnx {
     }
 
     // For given 'which' = 'LM', 'SR', ...etc, sort the given eigenvalues.
-    bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
-    bool cmpAlgebra(const Scalar& l, const Scalar& r) { return l < r; }
-    std::vector<Scalar> OrderEigvals(const UniTensor& eigvals, const std::string& order_type) {
+    static bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
+    static bool cmpAlgebra(const Scalar& l, const Scalar& r) { return l < r; }
+    static std::vector<Scalar> OrderEigvals(const UniTensor& eigvals,
+                                            const std::string& order_type) {
       char small_or_large = order_type[0];  //'S' or 'L'
       char metric_type = order_type[1];  //'M' or 'A'
       auto eigvals_len = eigvals.shape()[0];
@@ -201,15 +199,16 @@ namespace cytnx {
     }
 
     // get resigue |Hv - ev|
-    Scalar GetResidue(OneSiteOp& H, const Scalar& eigval, const UniTensor& eigvec) {
+    static Scalar GetResidue(LanczosGndOneSiteOp& H, const Scalar& eigval,
+                             const UniTensor& eigvec) {
       UniTensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
       Scalar resi = resi_vec.Norm().item();
       return resi;
     }
 
     // compare the lanczos results with full spectrum (calculated by the function Eig.)
-    bool CheckResult(OneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
-                     const std::string& which, const cytnx_uint64 k) {
+    static bool CheckResult(LanczosGndOneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
+                            const std::string& which, const cytnx_uint64 k) {
       // get full spectrum (eigenvalues)
       std::vector<UniTensor> full_eigs = linalg::Eigh(H.EffH);
       UniTensor full_eigvals = full_eigs[0];
@@ -288,7 +287,7 @@ namespace cytnx {
 
     // 1-10, test 'is_V' is false
     TEST(LanczosUt, IsVFalse) {
-      OneSiteOp op = OneSiteOp();
+      LanczosGndOneSiteOp op = LanczosGndOneSiteOp();
       const cytnx_uint64 maxiter = 1000;
       const cytnx_double cvg_crit = 0;
       const std::string which = "LM";
@@ -307,28 +306,28 @@ namespace cytnx {
 
     // 2-1, test for wrong input 'which'
     TEST(LanczosUt, ErrWhich) {
-      ErrorTestClass err_task1;
+      LanczosGndErrorTestClass err_task1;
       err_task1.which = "ML";
       err_task1.ExcuteErrorTest();
     }
 
     // 2-2, test SM is not support for UniTensor
     TEST(LanczosUt, ErrWhichSM) {
-      ErrorTestClass err_task;
+      LanczosGndErrorTestClass err_task;
       err_task.which = "SM";
       err_task.ExcuteErrorTest();
     }
 
     // 2-3, test for wrong input LinOp dtype
     TEST(LanczosUt, ErrMatType) {
-      ErrorTestClass err_task;
+      LanczosGndErrorTestClass err_task;
       err_task.Set_mat_type(Type.Int64);
       err_task.ExcuteErrorTest();
     }
 
     // 2-4, test for 'k' = 0
     TEST(LanczosUt, ErrZeroK) {
-      ErrorTestClass err_task;
+      LanczosGndErrorTestClass err_task;
       err_task.k = 0;
       err_task.ExcuteErrorTest();
     }
@@ -338,7 +337,7 @@ namespace cytnx {
 
     // 2-6, test cvg_crit <= 0
     TEST(LanczosUt, ErrCritNegative) {
-      ErrorTestClass err_task;
+      LanczosGndErrorTestClass err_task;
       err_task.cvg_crit = -0.001;
       err_task.ExcuteErrorTest();
     }
@@ -365,7 +364,7 @@ namespace cytnx {
 
     // 2-8, test ncv is out of allowd range
     TEST(LanczosUt, ErrNcvOutOfRange) {
-      ErrorTestClass err_task;
+      LanczosGndErrorTestClass err_task;
       err_task.ncv = err_task.k + 1;
       err_task.ExcuteErrorTest();
       auto dim = err_task.D * err_task.D * err_task.d;
@@ -460,5 +459,5 @@ namespace cytnx {
       // eigenvalue + residual + sigma^2 membership + per-state fidelity + unit norm (k=1).
       expect_lowest_states(A, eigs, low, tol);
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

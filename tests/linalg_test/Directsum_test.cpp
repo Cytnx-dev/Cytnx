@@ -4,15 +4,15 @@
 #include "test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     static cytnx_uint64 rand_seed1, rand_seed2;
 
-    void ExcuteDirectsumTest(const Tensor& T1, const Tensor& T2,
-                             const std::vector<cytnx_uint64> shared_axes);
+    static void ExcuteDirectsumTest(const Tensor& T1, const Tensor& T2,
+                                    const std::vector<cytnx_uint64> shared_axes);
 
-    void ErrorTestExcute(const Tensor& T1, const Tensor& T2,
-                         const std::vector<cytnx_uint64> shared_axes);
+    static void ErrorTestExcute(const Tensor& T1, const Tensor& T2,
+                                const std::vector<cytnx_uint64> shared_axes);
 
     /*=====test info=====
     describe:Test all possible data type and check the results.
@@ -446,8 +446,8 @@ namespace cytnx {
       }  // switch
     }
 
-    Tensor ConstructExpectTens(const Tensor& T1, const Tensor& T2,
-                               const std::vector<cytnx_uint64> shared_axes) {
+    static Tensor ConstructExpectTens(const Tensor& T1, const Tensor& T2,
+                                      const std::vector<cytnx_uint64> shared_axes) {
       auto rank = T1.rank();
       // promote across the real/complex boundary (Type.type_promote), not the lower-enum operand.
       auto expect_dtype = Type.type_promote(T1.dtype(), T2.dtype());
@@ -465,8 +465,8 @@ namespace cytnx {
       return dst_T;
     }
 
-    void ExcuteDirectsumTest(const Tensor& T1, const Tensor& T2,
-                             const std::vector<cytnx_uint64> shared_axes) {
+    static void ExcuteDirectsumTest(const Tensor& T1, const Tensor& T2,
+                                    const std::vector<cytnx_uint64> shared_axes) {
       auto dirsum_T = linalg::Directsum(T1, T2, shared_axes);
       Tensor expect_T;
       // if shared axes contain all axes, the output is equal to T2 but convert to strongest type.
@@ -480,8 +480,8 @@ namespace cytnx {
       EXPECT_TRUE(AreEqTensor(dirsum_T, expect_T));
     }
 
-    void ErrorTestExcute(const Tensor& T1, const Tensor& T2,
-                         const std::vector<cytnx_uint64> shared_axes) {
+    static void ErrorTestExcute(const Tensor& T1, const Tensor& T2,
+                                const std::vector<cytnx_uint64> shared_axes) {
       try {
         auto dirsum_T = linalg::Directsum(T1, T2, shared_axes);
         std::cerr << "[Test Error] This test should throw error but not !" << std::endl;
@@ -493,5 +493,5 @@ namespace cytnx {
       }
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

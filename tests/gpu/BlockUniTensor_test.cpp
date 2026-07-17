@@ -1,8 +1,7 @@
 #include "BlockUniTensor_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::BlockUniTensorTest;
+  namespace gpu_test {
 
     TEST_F(BlockUniTensorTest, GpuTrace) {
       auto tmp = BUT4.Trace(0, 3);
@@ -1066,5 +1065,5 @@ namespace cytnx {
       EXPECT_DOUBLE_EQ(double(out.imag()), double(0));
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

@@ -4,17 +4,17 @@
 #include "cytnx.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     static TestFailMsg fail_msg;
 
-    bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                     const cytnx_uint64& power_iteration);
-    bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
-    std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
-    std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
+    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                            const cytnx_uint64& power_iteration);
+    static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+    static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+    static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
+    static std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
+    static std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
     // normal test
 
     /*=====test info=====
@@ -113,7 +113,7 @@ namespace cytnx {
       }
     }
 
-    bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
       bool is_double_float_acc = true;
       auto dtype = Tin.dtype();
       if (dtype == Type.Float || dtype == Type.ComplexFloat) {
@@ -133,7 +133,7 @@ namespace cytnx {
       return is_eq;
     }
 
-    bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
       const std::vector<std::string>& in_labels = Tin.labels();
       const std::vector<std::string>& s_labels = Tout[0].labels();
       const std::vector<std::string>& u_labels = Tout[1].labels();
@@ -165,7 +165,7 @@ namespace cytnx {
       return true;
     }
 
-    bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
+    static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
       bool is_double_float_acc = true;
       auto dtype = res.dtype();
       if (dtype == Type.Float || dtype == Type.ComplexFloat) {
@@ -183,7 +183,7 @@ namespace cytnx {
     }
 
     // no use
-    void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    static void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
       const UniTensor& U = Tout[1];
       const UniTensor& V = Tout[2];
       auto UD = U.Dagger();
@@ -192,8 +192,8 @@ namespace cytnx {
       auto UUD = Contract(U, UD);
     }
 
-    bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                     const cytnx_uint64& power_iteration) {
+    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                            const cytnx_uint64& power_iteration) {
       // test data source file
       std::string src_file_name = src_data_root + case_name + ".cytnx";
       // anscer file
@@ -285,5 +285,5 @@ namespace cytnx {
         }
       }
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

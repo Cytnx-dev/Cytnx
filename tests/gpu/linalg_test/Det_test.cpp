@@ -10,12 +10,10 @@
 #include "Type.hpp"
 
 namespace cytnx {
-  namespace {
-
-    using gpu_test::dtype_list;
+  namespace gpu_test {
     using gpu_test::InitTensorUniform;
 
-    Tensor CalculateDeterminant(const Tensor& T) {
+    static Tensor CalculateDeterminant(const Tensor& T) {
       // Regardless of whether the input tensor is on the GPU or CPU, the result tensor of Det is
       // always on the CPU, so we always initialize `determinant` on the CPU to avoid the error of
       // adding two tensors on different devices.
@@ -43,13 +41,13 @@ namespace cytnx {
       return determinant;
     }
 
-    cytnx_complex128 ExpectedDeterminant(const Tensor& T) {
+    static cytnx_complex128 ExpectedDeterminant(const Tensor& T) {
       return CalculateDeterminant(Type_class::is_float(T.dtype()) ? T : T.astype(Type.Double))
         .astype(Type.ComplexDouble)
         .item<cytnx_complex128>();
     }
 
-    cytnx_complex128 TestingDeterminant(const Tensor& T) {
+    static cytnx_complex128 TestingDeterminant(const Tensor& T) {
       return linalg::Det(T).astype(Type.ComplexDouble).item<cytnx_complex128>();
     }
 
@@ -139,5 +137,5 @@ namespace cytnx {
       InitTensorUniform(T, /*rand_seed=*/0);
       EXPECT_THROW(linalg::Det(T), std::logic_error);
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

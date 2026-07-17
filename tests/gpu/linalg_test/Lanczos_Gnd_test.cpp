@@ -5,12 +5,9 @@
 #include "linalg_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::expect_lowest_states;
+  namespace gpu_test {
     using gpu_test::ferm_dense_lowest;
-    using gpu_test::ferm_ket_nx;
     using gpu_test::FermiAdaOp;
-    using gpu_test::make_ferm_A;
     using gpu_test::make_ferm_ada_ket;
 
     class MyOp : public LinOp {
@@ -105,5 +102,5 @@ namespace cytnx {
       EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
       // EXPECT_DOUBLE_EQ(ev, evans);
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

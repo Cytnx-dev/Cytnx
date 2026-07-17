@@ -9,7 +9,7 @@
 #if NEED_GEN_COMMON_DATA
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     /*
      * This file contains code to generate the test data in the directory
@@ -219,7 +219,7 @@ namespace cytnx {
       bd.Save(symDir + "bond_mixed_syms.cybd");
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx
 
 #endif

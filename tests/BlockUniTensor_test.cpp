@@ -1,8 +1,7 @@
 #include "BlockUniTensor_test.h"
 
 namespace cytnx {
-  namespace {
-    using test::BlockUniTensorTest;
+  namespace test {
 
     TEST_F(BlockUniTensorTest, InitByTensor) {
       // not a valid operation
@@ -1739,5 +1738,5 @@ namespace cytnx {
       EXPECT_EQ(held.getDegeneracies(), held_degs);
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

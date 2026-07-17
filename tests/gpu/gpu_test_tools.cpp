@@ -180,7 +180,8 @@ namespace cytnx {
 
     // Tensor
     // random initialize
-    void GetRandRange(const unsigned int dtype, cytnx_double* low_bd, cytnx_double* high_bd) {
+    static void GetRandRange(const unsigned int dtype, cytnx_double* low_bd,
+                             cytnx_double* high_bd) {
       if (dtype == Type.Void) return;
       switch (dtype) {
         case Type.Void:  // return directly

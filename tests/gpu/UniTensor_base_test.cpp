@@ -1,8 +1,7 @@
 #include "UniTensor_base_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::UniTensor_baseTest;
+  namespace gpu_test {
 
     TEST_F(UniTensor_baseTest, GpuGetIndex) {
       utzero345.relabel_({"abc", "ABC", "CBA"});
@@ -18,5 +17,5 @@ namespace cytnx {
       std::cout << utzero345.get_index("") << std::endl;
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

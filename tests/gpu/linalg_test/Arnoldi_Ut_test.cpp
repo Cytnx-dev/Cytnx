@@ -5,12 +5,9 @@
 #include "linalg_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::expect_lowest_states;
+  namespace gpu_test {
     using gpu_test::ferm_dense_lowest;
-    using gpu_test::ferm_ket_nx;
     using gpu_test::FermiAdaOp;
-    using gpu_test::make_ferm_A;
     using gpu_test::make_ferm_ada_ket;
 
     /*
@@ -75,11 +72,11 @@ namespace cytnx {
     };
 
     // the function to check the answer
-    bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda,
-                     const std::vector<UniTensor>& arnoldi_eigs_cpu);
+    static bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda,
+                            const std::vector<UniTensor>& arnoldi_eigs_cpu);
 
-    void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
-                    const cytnx_uint64& k = 3) {
+    static void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
+                           const cytnx_uint64& k = 3) {
       int D = 5, d = 2;
       int dim = D * D;
       TMOp H = TMOp(d, D, dim, mat_type, Device.cuda);
@@ -98,15 +95,15 @@ namespace cytnx {
     }
 
     // get resigue |Hv - ev|
-    Scalar GetResidue(CheckOp& H, const Scalar& eigval, const UniTensor& eigvec) {
+    static Scalar GetResidue(CheckOp& H, const Scalar& eigval, const UniTensor& eigvec) {
       UniTensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
       Scalar resi = resi_vec.Norm().item();
       return resi;
     }
 
     // compare the arnoldi results with full spectrum (calculated by the function Eig.)
-    bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda,
-                     const std::vector<UniTensor>& arnoldi_eigs_cpu) {
+    static bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda,
+                            const std::vector<UniTensor>& arnoldi_eigs_cpu) {
       auto dtype = H.dtype();
       const double tolerance =
         (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
@@ -220,5 +217,5 @@ namespace cytnx {
       auto eigs = to_cpu(linalg::Arnoldi(&op, v0.to(Device.cuda), "SR", 1000, 1e-12, 2, true));
       expect_lowest_states(A, eigs, low, tol);
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

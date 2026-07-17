@@ -3,7 +3,7 @@
 #include "gmock/gmock.h"
 
 namespace cytnx {
-  namespace {
+  namespace test {
     TEST(Bond, EmptyBond) {
       Bond bd;
 
@@ -426,5 +426,5 @@ namespace cytnx {
     // }
     //
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

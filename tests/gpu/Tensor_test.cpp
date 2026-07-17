@@ -3,8 +3,7 @@
 #include "gpu_test_tools.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::TensorTest;
+  namespace gpu_test {
 
     TEST_F(TensorTest, GpuConstructor) {
       Tensor D({3, 4, 5}, Type.Double, Device.cuda);
@@ -599,5 +598,5 @@ namespace cytnx {
       EXPECT_THROW(a /= b, std::logic_error);
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

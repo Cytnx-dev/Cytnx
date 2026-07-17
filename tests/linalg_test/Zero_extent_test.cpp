@@ -6,7 +6,7 @@
 #include "cytnx.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     void ExpectEmpty(const Tensor &tensor, const std::vector<cytnx_uint64> &shape,
                      unsigned int dtype) {
@@ -15,7 +15,7 @@ namespace cytnx {
       EXPECT_EQ(tensor.dtype(), dtype);
     }
 
-    void ExpectAllEqual(const Tensor &tensor, double expected) {
+    static void ExpectAllEqual(const Tensor &tensor, double expected) {
       Tensor flat = tensor.to(Device.cpu).reshape({static_cast<cytnx_int64>(tensor.size())});
       for (cytnx_uint64 i = 0; i < flat.size(); ++i) {
         EXPECT_DOUBLE_EQ(flat.at<double>({i}), expected);
@@ -262,5 +262,5 @@ namespace cytnx {
                    std::logic_error);
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

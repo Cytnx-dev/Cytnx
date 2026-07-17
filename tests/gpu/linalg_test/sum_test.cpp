@@ -10,7 +10,7 @@
 #include "Type.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
     template <typename T>
     class LinalgSumHomogeneousValuesTest : public ::testing::Test {
      public:
@@ -71,5 +71,5 @@ namespace cytnx {
       EXPECT_NUMBER_EQ(sum_result.item<TypeParam>(),
                        value * static_cast<TypeParam>(element_number));
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

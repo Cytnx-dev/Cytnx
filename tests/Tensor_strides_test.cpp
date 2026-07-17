@@ -8,14 +8,14 @@
 #include "Type.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     // For a tensor T (possibly permuted / non-contiguous), the storage offset
     // implied by strides() at multi-index idx must equal the offset that at(idx)
     // actually reads -- otherwise the trace's stride-aware diagonal sum would
     // disagree with Tensor::at across permutations.
     template <typename T>
-    void ExpectStridesMatchAt(const Tensor& tensor) {
+    static void ExpectStridesMatchAt(const Tensor& tensor) {
       const auto shape = tensor.shape();
       const auto strides = tensor.strides();
       ASSERT_EQ(strides.size(), shape.size());
@@ -72,6 +72,6 @@ namespace cytnx {
       ExpectStridesMatchAt<cytnx_int32>(ti.permute({1, 2, 0}));
     }
 
-  }  // namespace
+  }  // namespace test
 
 }  // namespace cytnx

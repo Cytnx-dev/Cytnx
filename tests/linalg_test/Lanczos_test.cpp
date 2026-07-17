@@ -4,24 +4,22 @@
 #include "linalg_test.h"
 
 namespace cytnx {
-  namespace {
-    using test::expect_lowest_states;
+  namespace test {
     using test::ferm_dense_lowest;
-    using test::ferm_ket_nx;
     using test::FermiAdaOp;
-    using test::make_ferm_A;
     using test::make_ferm_ada_ket;
 
     // define the customize LinOp
-    class MatOp : public LinOp {
+    class LanczosMatOp : public LinOp {
      public:
       Tensor opMat;
       Tensor T_init;
-      MatOp(const cytnx_uint64& nx = 1, const int& dtype = Type.Double);
+      LanczosMatOp(const cytnx_uint64& nx = 1, const int& dtype = Type.Double);
       Tensor matvec(const Tensor& v) override { return (linalg::Dot(opMat, v)); }
       void InitVec();
     };
-    MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype) : LinOp("mv", in_nx, in_dtype) {
+    LanczosMatOp::LanczosMatOp(const cytnx_uint64& in_nx, const int& in_dtype)
+        : LinOp("mv", in_nx, in_dtype) {
       opMat = zeros({in_nx, in_nx}, this->dtype(), this->device());
       if (Type.is_float(this->dtype())) {
         random::normal_(opMat, 0.0, 1.0, 0);
@@ -29,7 +27,7 @@ namespace cytnx {
       opMat += opMat.permute({1, 0}).Conj();
       InitVec();
     }
-    void MatOp::InitVec() {
+    void LanczosMatOp::InitVec() {
       T_init = zeros({nx()}, this->dtype());
       if (Type.is_float(this->dtype())) {
         random::normal_(T_init, 0.0, 1.0, 0);
@@ -37,12 +35,12 @@ namespace cytnx {
     }
 
     // the function to check the answer
-    bool CheckResult(MatOp& H, const std::vector<Tensor>& lanczos_eigs, const std::string& which,
-                     const cytnx_uint64 k);
+    static bool CheckResult(LanczosMatOp& H, const std::vector<Tensor>& lanczos_eigs,
+                            const std::string& which, const cytnx_uint64 k);
 
-    void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
-                    const cytnx_uint64& k = 5, cytnx_uint64 dim = 23) {
-      MatOp H = MatOp(dim, mat_type);
+    static void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
+                           const cytnx_uint64& k = 5, cytnx_uint64 dim = 23) {
+      LanczosMatOp H = LanczosMatOp(dim, mat_type);
       const cytnx_uint64 maxiter = 10000;
       const cytnx_double cvg_crit = 0;
       std::vector<Tensor> lanczos_eigs = linalg::Lanczos(&H, H.T_init, which, maxiter, cvg_crit, k);
@@ -51,13 +49,13 @@ namespace cytnx {
     }
 
     // error test
-    class ErrorTestClass {
+    class LanczosErrorTestClass {
      public:
       std::string which = "LM";
       cytnx_uint64 k = 1;
       cytnx_uint64 maxiter = 10000;
       cytnx_double cvg_crit = 0;
-      ErrorTestClass(){};
+      LanczosErrorTestClass(){};
       cytnx_uint64 dim = 25;
       bool is_V = true;
       cytnx_int32 ncv = 0;
@@ -65,14 +63,14 @@ namespace cytnx {
       // set
       void Set_mat_type(const int _mat_type) {
         mat_type = _mat_type;
-        H = MatOp(dim, mat_type);
+        H = LanczosMatOp(dim, mat_type);
       }
 
      private:
       int mat_type = Type.Double;
-      MatOp H = MatOp(dim, mat_type);
+      LanczosMatOp H = LanczosMatOp(dim, mat_type);
     };
-    void ErrorTestClass::ExcuteErrorTest() {
+    void LanczosErrorTestClass::ExcuteErrorTest() {
       try {
         auto lanczos_eigs = linalg::Lanczos(&H, H.T_init, which, maxiter, cvg_crit, k, is_V, ncv);
         FAIL();
@@ -84,9 +82,9 @@ namespace cytnx {
     }
 
     // For given 'which' = 'LM', 'SM', ...etc, sort the given eigenvalues.
-    bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
-    bool cmpAlgebra(const Scalar& l, const Scalar& r) { return l < r; }
-    std::vector<Scalar> OrderEigvals(const Tensor& eigvals, const std::string& order_type) {
+    static bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
+    static bool cmpAlgebra(const Scalar& l, const Scalar& r) { return l < r; }
+    static std::vector<Scalar> OrderEigvals(const Tensor& eigvals, const std::string& order_type) {
       char small_or_large = order_type[0];  //'S' or 'L'
       char metric_type = order_type[1];  //'M', o 'A'
       auto eigvals_len = eigvals.shape()[0];
@@ -109,15 +107,15 @@ namespace cytnx {
     }
 
     // get resigue |Hv - ev|
-    Scalar GetResidue(MatOp& H, const Scalar& eigval, const Tensor& eigvec) {
+    static Scalar GetResidue(LanczosMatOp& H, const Scalar& eigval, const Tensor& eigvec) {
       Tensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
       Scalar resi = resi_vec.Norm().item();
       return resi;
     }
 
     // compare the lanczos results with full spectrum (calculated by the function Eig.)
-    bool CheckResult(MatOp& H, const std::vector<Tensor>& lanczos_eigs, const std::string& which,
-                     const cytnx_uint64 k) {
+    static bool CheckResult(LanczosMatOp& H, const std::vector<Tensor>& lanczos_eigs,
+                            const std::string& which, const cytnx_uint64 k) {
       // get full spectrum (eigenvalues)
       std::vector<Tensor> full_eigs = linalg::Eigh(H.opMat);
       Tensor full_eigvals = full_eigs[0];
@@ -212,42 +210,42 @@ namespace cytnx {
 
     // 2-1, test for wrong input 'which'
     TEST(Lanczos, ErrWhich) {
-      ErrorTestClass err_task;
+      LanczosErrorTestClass err_task;
       err_task.which = "ML";
       err_task.ExcuteErrorTest();
     }
 
     // 2-2, test for wrong input LinOp dtype
     TEST(Lanczos, ErrMatType) {
-      ErrorTestClass err_task;
+      LanczosErrorTestClass err_task;
       err_task.Set_mat_type(Type.Int64);
       err_task.ExcuteErrorTest();
     }
 
     // 2-3, test for 'k' = 0
     TEST(Lanczos, ErrZeroK) {
-      ErrorTestClass err_task;
+      LanczosErrorTestClass err_task;
       err_task.k = 0;
       err_task.ExcuteErrorTest();
     }
 
     // 2-4, test for 'k' > 'max_iter'
     TEST(Lanczos, ErrKTooLarge) {
-      ErrorTestClass err_task;
+      LanczosErrorTestClass err_task;
       err_task.k = err_task.dim + 1;
       err_task.ExcuteErrorTest();
     }
 
     // 2-5, test cvg_crit <= 0
     TEST(Lanczos, ErrCritNegative) {
-      ErrorTestClass err_task;
+      LanczosErrorTestClass err_task;
       err_task.cvg_crit = -0.001;
       err_task.ExcuteErrorTest();
     }
 
     // 2-6, test ncv is out of allowd range
     TEST(Lanczos, ErrNcvOutOfRange) {
-      ErrorTestClass err_task;
+      LanczosErrorTestClass err_task;
       err_task.ncv = err_task.k + 1;
       err_task.ExcuteErrorTest();
       err_task.ncv = err_task.dim + 1;
@@ -272,5 +270,5 @@ namespace cytnx {
                         (cytnx_uint64)2, true, (cytnx_int32)0, false);  // k=2
       expect_lowest_states(A, eigs, low, tol);
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

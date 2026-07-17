@@ -13,7 +13,7 @@
 #include "cytnx.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     // Pin the legacy accessor signature: `int &n() const` must keep returning a
     // mutable reference even from a const Symmetry (see the note in Symmetry.hpp;
@@ -321,5 +321,5 @@ namespace cytnx {
         std::remove(path.c_str());
       }
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

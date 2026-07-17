@@ -4,7 +4,7 @@
 #include "gpu_test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     ::testing::AssertionResult CheckAbsResult(const Tensor& gpu_result,
                                               const Tensor& original_gpu_tensor);
@@ -102,5 +102,5 @@ namespace cytnx {
       return all_shapes;
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

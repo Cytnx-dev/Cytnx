@@ -5,22 +5,14 @@
 #include "test_tools.h"
 
 namespace cytnx {
-  namespace {
-    using test::expect_exp_spectrum;
+  namespace test {
     using test::expect_same_diagonal;
-    using test::expect_same_eigenvectors;
     using test::expect_svd_reconstructs;
-    using test::expect_unitary;
     using test::make_mixed_inout_fermionic;
-    using test::make_rank4_herm_dt;
     using test::make_rank4_hermitian;
-    using test::make_square_fermionic;
     using test::permute_with_signflips;
-    using test::sorted_diagonal;
 
-    using test::linalg_Test;
-
-    Tensor SortedBlockSingularValues(const UniTensor &S) {
+    static Tensor SortedBlockSingularValues(const UniTensor &S) {
       Tensor all_svals = S.get_block_(0);
       for (cytnx_int64 i = 1; i < S.Nblocks(); i++) {
         all_svals = algo::Concatenate(all_svals, S.get_block_(i));
@@ -1385,5 +1377,5 @@ namespace cytnx {
         EXPECT_TRUE(AreNearlyEqUniTensor(T.Pow(p), tmp, tol));
       }
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

@@ -6,8 +6,7 @@
 #include "test_tools.h"
 
 namespace cytnx {
-  namespace {
-    using test::TensorTest;
+  namespace test {
 
     TEST_F(TensorTest, Constructor) {
       Tensor A;
@@ -1141,5 +1140,5 @@ namespace cytnx {
       EXPECT_DOUBLE_EQ(out.at<cytnx_double>({0}), std::fmod(7.0, 2.5));
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

@@ -1,7 +1,7 @@
 #include "ExpH_test.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
     TEST(ExpH, GpuExpHTest) {
       // CompareWithScipy
       std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
@@ -74,5 +74,5 @@ namespace cytnx {
       }
     };
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

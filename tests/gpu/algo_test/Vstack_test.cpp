@@ -4,9 +4,9 @@
 #include "gpu_test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
-    void CheckResult(const Tensor& vstack_tens, const std::vector<Tensor>& input_tens);
+    static void CheckResult(const Tensor& vstack_tens, const std::vector<Tensor>& input_tens);
 
     /*=====test info=====
     describe:Input only one tensor. Test all possible data type on cpu device.
@@ -174,7 +174,7 @@ namespace cytnx {
       EXPECT_THROW({ Tensor tens = algo::Vstack(Ts); }, std::logic_error);
     }
 
-    void CheckResult(const Tensor& vstack_tens, const std::vector<Tensor>& input_tens) {
+    static void CheckResult(const Tensor& vstack_tens, const std::vector<Tensor>& input_tens) {
       // 1. check tensor data type
       std::vector<unsigned int> input_types;
       for (size_t i = 0; i < input_tens.size(); ++i) {
@@ -222,5 +222,5 @@ namespace cytnx {
       EXPECT_TRUE(is_same_elem);
     }  // fucn:CheckResult
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

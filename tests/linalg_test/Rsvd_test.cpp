@@ -4,23 +4,24 @@
 #include "test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     static TestFailMsg fail_msg;
 
-    bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                     const cytnx_uint64& power_iteration);
-    bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                     const std::vector<cytnx_uint64> min_blockdim,
-                     const cytnx_uint64& power_iteration);
-    bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
-    UniTensor BuildCombinedBlockFermionicTensorWithSignflip();
-    UniTensor BuildLowRankRectangularDenseUniTensor(const int device);
-    void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T, const UniTensor& src_Tt);
-    std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
-    std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
+    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                            const cytnx_uint64& power_iteration);
+    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                            const std::vector<cytnx_uint64> min_blockdim,
+                            const cytnx_uint64& power_iteration);
+    static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+    static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+    static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
+    static UniTensor BuildCombinedBlockFermionicTensorWithSignflip();
+    static UniTensor BuildLowRankRectangularDenseUniTensor(const int device);
+    static void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T,
+                                                          const UniTensor& src_Tt);
+    static std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
+    static std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
     // normal test
 
     /*=====test info=====
@@ -309,7 +310,7 @@ namespace cytnx {
       for (cytnx_uint64 b = 0; b < 3; ++b) EXPECT_GE(withf_degs[b], 1u) << "block " << b;
     }
 
-    bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
       bool is_double_float_acc = true;
       auto dtype = Tin.dtype();
       if (dtype == Type.Float || dtype == Type.ComplexFloat) {
@@ -329,7 +330,7 @@ namespace cytnx {
       return is_eq;
     }
 
-    bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
       const std::vector<std::string>& in_labels = Tin.labels();
       const std::vector<std::string>& s_labels = Tout[0].labels();
       const std::vector<std::string>& u_labels = Tout[1].labels();
@@ -361,7 +362,7 @@ namespace cytnx {
       return true;
     }
 
-    bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
+    static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
       bool is_double_float_acc = true;
       auto dtype = res.dtype();
       if (dtype == Type.Float || dtype == Type.ComplexFloat) {
@@ -378,15 +379,15 @@ namespace cytnx {
       return (relative_err < tol);
     }
 
-    UniTensor BuildLowRankRectangularDenseUniTensor(const int device) {
+    static UniTensor BuildLowRankRectangularDenseUniTensor(const int device) {
       Tensor left = arange(0, 18, 1, Type.Double, device).reshape({6, 3}) + 1.0;
       Tensor right = arange(0, 15, 1, Type.Double, device).reshape({3, 5}) + 1.0;
       Tensor src = linalg::Matmul(left, right).reshape({2, 3, 5});
       return UniTensor(src, false, 2, {"a", "b", "c"});
     }
 
-    void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T,
-                                                   const UniTensor& src_Tt) {
+    static void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T,
+                                                          const UniTensor& src_Tt) {
       const cytnx_uint64 keepdim = 3;
       std::vector<UniTensor> rsvd_src =
         linalg::Rsvd(src_T, keepdim, 0., true, true, 0, 1, 0, 0., 0, 7);
@@ -420,7 +421,7 @@ namespace cytnx {
     }
 
     // no use
-    void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    static void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
       const UniTensor& U = Tout[1];
       const UniTensor& V = Tout[2];
       auto UD = U.Dagger();
@@ -429,8 +430,8 @@ namespace cytnx {
       auto UUD = Contract(U, UD);
     }
 
-    bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                     const cytnx_uint64& power_iteration) {
+    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                            const cytnx_uint64& power_iteration) {
       // test data source file
       std::string src_file_name = src_data_root + case_name + ".cytnx";
       // anscer file
@@ -470,9 +471,9 @@ namespace cytnx {
       return true;
     }
 
-    bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                     const std::vector<cytnx_uint64> min_blockdim,
-                     const cytnx_uint64& power_iteration) {
+    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                            const std::vector<cytnx_uint64> min_blockdim,
+                            const cytnx_uint64& power_iteration) {
       // test data source file
       std::string src_file_name = src_data_root + case_name + ".cytnx";
       // anscer file
@@ -512,7 +513,7 @@ namespace cytnx {
       return true;
     }
 
-    UniTensor BuildCombinedBlockFermionicTensorWithSignflip() {
+    static UniTensor BuildCombinedBlockFermionicTensorWithSignflip() {
       std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 1}};
       auto syms = std::vector<Symmetry>{Symmetry::FermionParity(), Symmetry(SymmetryType::U)};
       Bond l1 = Bond(BD_IN, qnums, {2, 3}, syms);
@@ -555,23 +556,24 @@ namespace cytnx {
                             const cytnx_uint64& power_iteration);
     bool NoTruncReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
     bool NoTruncCheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans);
-    bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
-                                  const cytnx_uint64& power_iteration, bool is_U = true,
-                                  bool is_vT = true, cytnx_uint64 mindim = 1,
-                                  cytnx_uint64 oversampling_summand = 0,
-                                  double oversampling_factor = 0.0);
-    UniTensor BuildNoTruncCombinedBlockTensor();
-    UniTensor BuildNoTruncCombinedBlockTensorU1xZ2();
-    UniTensor BuildNoTruncCombinedBlockFermionicTensor();
-    UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip();
+    static bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans);
+    static bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
+                                         const cytnx_uint64& power_iteration, bool is_U = true,
+                                         bool is_vT = true, cytnx_uint64 mindim = 1,
+                                         cytnx_uint64 oversampling_summand = 0,
+                                         double oversampling_factor = 0.0);
+    static UniTensor BuildNoTruncCombinedBlockTensor();
+    static UniTensor BuildNoTruncCombinedBlockTensorU1xZ2();
+    static UniTensor BuildNoTruncCombinedBlockFermionicTensor();
+    static UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip();
     std::vector<cytnx_uint64> NoTruncExpectedKeptDims(const UniTensor& Tin,
                                                       const UniTensor& full_svals,
                                                       cytnx_uint64 keepdim);
-    bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals, const UniTensor& gesvd_svals,
-                                          double tol);
-    cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin, const UniTensor& full_svals,
-                                               bool require_full, bool require_one_kept);
+    static bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals,
+                                                 const UniTensor& gesvd_svals, double tol);
+    static cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin,
+                                                      const UniTensor& full_svals,
+                                                      bool require_full, bool require_one_kept);
     void NoTruncCheckCategoryCoverage(const std::vector<cytnx_uint64>& full_dims,
                                       const std::vector<cytnx_uint64>& kept_dims, bool& has_full,
                                       bool& has_trunc, bool& has_one_kept);
@@ -861,7 +863,7 @@ namespace cytnx {
       return true;
     }
 
-    bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
+    static bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
       bool is_double_float_acc = true;
       auto dtype = res.dtype();
       if (dtype == Type.Float || dtype == Type.ComplexFloat) {
@@ -915,10 +917,10 @@ namespace cytnx {
       return true;
     }
 
-    bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
-                                  const cytnx_uint64& power_iteration, bool is_U, bool is_vT,
-                                  cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
-                                  double oversampling_factor) {
+    static bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
+                                         const cytnx_uint64& power_iteration, bool is_U, bool is_vT,
+                                         cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+                                         double oversampling_factor) {
       std::vector<UniTensor> rsvd =
         linalg::Rsvd(src_T, keepdim, 0., is_U, is_vT, 0, mindim, oversampling_summand,
                      oversampling_factor, power_iteration, 0);
@@ -950,7 +952,7 @@ namespace cytnx {
       return true;
     }
 
-    UniTensor BuildNoTruncCombinedBlockTensor() {
+    static UniTensor BuildNoTruncCombinedBlockTensor() {
       std::vector<std::vector<cytnx_int64>> qnums = {{0}, {1}};
       auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
       Bond l1 = Bond(BD_KET, qnums, {2, 3}, syms);
@@ -963,7 +965,7 @@ namespace cytnx {
       return T;
     }
 
-    UniTensor BuildNoTruncCombinedBlockTensorU1xZ2() {
+    static UniTensor BuildNoTruncCombinedBlockTensorU1xZ2() {
       std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
       auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U), Symmetry(SymmetryType::Z, 2)};
       Bond l1 = Bond(BD_KET, qnums, {1, 2, 1, 2}, syms);
@@ -976,7 +978,7 @@ namespace cytnx {
       return T;
     }
 
-    UniTensor BuildNoTruncCombinedBlockFermionicTensor() {
+    static UniTensor BuildNoTruncCombinedBlockFermionicTensor() {
       std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 1}};
       auto syms = std::vector<Symmetry>{Symmetry::FermionParity(), Symmetry(SymmetryType::U)};
       Bond l1 = Bond(BD_IN, qnums, {2, 3}, syms);
@@ -989,7 +991,7 @@ namespace cytnx {
       return T;
     }
 
-    UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip() {
+    static UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip() {
       UniTensor base = BuildNoTruncCombinedBlockFermionicTensor();
       std::vector<std::vector<cytnx_int64>> perms = {
         {1, 0, 2, 3},
@@ -1032,8 +1034,8 @@ namespace cytnx {
       return expected;
     }
 
-    bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals, const UniTensor& gesvd_svals,
-                                          double tol) {
+    static bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals,
+                                                 const UniTensor& gesvd_svals, double tol) {
       std::map<std::vector<cytnx_int64>, size_t> gblk_map;
       const auto& gqnums = gesvd_svals.bonds()[0].qnums();
       for (size_t i = 0; i < gqnums.size(); i++) {
@@ -1060,8 +1062,9 @@ namespace cytnx {
       return true;
     }
 
-    cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin, const UniTensor& full_svals,
-                                               bool require_full, bool require_one_kept) {
+    static cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin,
+                                                      const UniTensor& full_svals,
+                                                      bool require_full, bool require_one_kept) {
       const auto full_dims = full_svals.bonds()[0].getDegeneracies();
       cytnx_uint64 rowdim = 1, coldim = 1;
       const auto tshape = Tin.shape();
@@ -1092,5 +1095,5 @@ namespace cytnx {
         if (kept_dims[i] == 1 && full_dims[i] > 1) has_one_kept = true;
       }
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

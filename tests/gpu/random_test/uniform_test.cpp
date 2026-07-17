@@ -13,7 +13,7 @@
 #include "Type.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     template <typename Container, typename T>
     struct PushFront;
@@ -114,5 +114,5 @@ namespace cytnx {
       EXPECT_THAT(copied_numbers, Contains(Ge(4.0)));
       EXPECT_THAT(copied_numbers, Not(Contains(Gt(5.0))));
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

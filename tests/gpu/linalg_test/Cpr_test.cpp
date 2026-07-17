@@ -4,7 +4,7 @@
 #include "gpu_test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     ::testing::AssertionResult CheckCprResult(const Tensor& gpu_result, const Tensor& left_tensor,
                                               const Tensor& right_tensor) {
@@ -213,5 +213,5 @@ namespace cytnx {
 
     INSTANTIATE_TEST_SUITE_P(CprTests, CprTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

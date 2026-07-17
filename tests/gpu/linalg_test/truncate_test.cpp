@@ -7,7 +7,7 @@
 #include "gpu_test_tools.h"
 
 namespace cytnx {
-  namespace {
+  namespace gpu_test {
 
     // GPU regression tests for the truncated SVD family (Svd_truncate / Gesvd_truncate /
     // Rsvd). These mirror the CPU flag-combination tests and exercise the refactored
@@ -150,5 +150,5 @@ namespace cytnx {
       EXPECT_EQ(out[2].shape(), std::vector<cytnx_uint64>({mindim, 5}));
     }
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

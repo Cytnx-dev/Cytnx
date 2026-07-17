@@ -7,8 +7,7 @@ describe:scalar product between two vectors
 ====================*/
 
 namespace cytnx {
-  namespace {
-    using test::BlockFermionicUniTensorTest;
+  namespace test {
 
     TEST_F(BlockFermionicUniTensorTest, VectorContract) {
       // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32
@@ -726,5 +725,5 @@ namespace cytnx {
       EXPECT_TRUE(R.is_contiguous());
     }
 
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

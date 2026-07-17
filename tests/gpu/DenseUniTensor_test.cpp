@@ -1,8 +1,7 @@
 #include "DenseUniTensor_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::DenseUniTensorTest;
+  namespace gpu_test {
 
     using std::complex_literals::operator""i;
     TEST_F(DenseUniTensorTest, GpuTrace) {
@@ -706,5 +705,5 @@ namespace cytnx {
                                  double(tmp.at({i - 1, j - 1, k - 1, l - 1}).imag()));
               }
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

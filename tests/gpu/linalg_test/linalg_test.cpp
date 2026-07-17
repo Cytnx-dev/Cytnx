@@ -1,15 +1,10 @@
 #include "linalg_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::expect_same;
+  namespace gpu_test {
     using gpu_test::expect_svd_reconstructs;
-    using gpu_test::expect_unitary;
     using gpu_test::make_rank4_hermitian;
-    using gpu_test::permute_with_signflips;
     using gpu_test::sorted_diagonal;
-
-    using gpu_test::linalg_Test;
 
     TEST_F(linalg_Test, GpuBkUtSvdTruncate1) {
       std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
@@ -434,5 +429,5 @@ namespace cytnx {
     // GPU backend ("Eig for non-symmetric matrix is not supported"); only ExpH (via the Hermitian
     // Eigh / cuEigh) runs on the GPU. ExpM is covered by the CPU test.
 
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx

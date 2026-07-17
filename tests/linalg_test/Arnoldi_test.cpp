@@ -7,25 +7,26 @@
 #include <omp.h>
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     // define the customize LinOp
-    class MatOp : public LinOp {
+    class ArnoldiMatOp : public LinOp {
      public:
       Tensor opMat;
       Tensor T_init;
-      MatOp(const cytnx_uint64& nx = 1, const int& dtype = Type.Double);
+      ArnoldiMatOp(const cytnx_uint64& nx = 1, const int& dtype = Type.Double);
       Tensor matvec(const Tensor& v) override { return (linalg::Dot(opMat, v)); }
       void InitVec();
     };
-    MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype) : LinOp("mv", in_nx, in_dtype) {
+    ArnoldiMatOp::ArnoldiMatOp(const cytnx_uint64& in_nx, const int& in_dtype)
+        : LinOp("mv", in_nx, in_dtype) {
       opMat = zeros({in_nx, in_nx}, this->dtype(), this->device());
       if (Type.is_float(this->dtype())) {
         random::normal_(opMat, 0.0, 1.0, 0);
       }
       InitVec();
     }
-    void MatOp::InitVec() {
+    void ArnoldiMatOp::InitVec() {
       T_init = zeros({nx()}, this->dtype());
       if (Type.is_float(this->dtype())) {
         random::normal_(T_init, 0.0, 1.0, 0);
@@ -33,12 +34,12 @@ namespace cytnx {
     }
 
     // the function to check the answer
-    bool CheckResult(MatOp& H, const std::vector<Tensor>& arnoldi_eigs, const std::string& which,
-                     const cytnx_uint64 k);
+    static bool CheckResult(ArnoldiMatOp& H, const std::vector<Tensor>& arnoldi_eigs,
+                            const std::string& which, const cytnx_uint64 k);
 
-    void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
-                    const cytnx_uint64& k = 4, cytnx_uint64 dim = 23) {
-      MatOp H = MatOp(dim, mat_type);
+    static void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
+                           const cytnx_uint64& k = 4, cytnx_uint64 dim = 23) {
+      ArnoldiMatOp H = ArnoldiMatOp(dim, mat_type);
       const cytnx_uint64 maxiter = 10000;
       auto dtype = H.dtype();
       const cytnx_double cvg_crit = 0;
@@ -47,13 +48,13 @@ namespace cytnx {
       EXPECT_TRUE(is_pass);
     }
     // error test
-    class ErrorTestClass {
+    class ArnoldiErrorTestClass {
      public:
       std::string which = "LM";
       cytnx_uint64 k = 1;
       cytnx_uint64 maxiter = 10000;
       cytnx_double cvg_crit = 0;
-      ErrorTestClass(){};
+      ArnoldiErrorTestClass(){};
       cytnx_uint64 dim = 25;
       bool is_V = true;
       cytnx_int32 ncv = 0;
@@ -61,14 +62,14 @@ namespace cytnx {
       // set
       void Set_mat_type(const int _mat_type) {
         mat_type = _mat_type;
-        H = MatOp(dim, mat_type);
+        H = ArnoldiMatOp(dim, mat_type);
       }
 
      private:
       int mat_type = Type.ComplexDouble;
-      MatOp H = MatOp(dim, mat_type);
+      ArnoldiMatOp H = ArnoldiMatOp(dim, mat_type);
     };
-    void ErrorTestClass::ExcuteErrorTest() {
+    void ArnoldiErrorTestClass::ExcuteErrorTest() {
       try {
         auto arnoldi_eigs = linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k, is_V, ncv);
         FAIL();
@@ -79,10 +80,10 @@ namespace cytnx {
       }
     }
     // For given 'which' = 'LM', 'SM', ...etc, sort the given eigenvalues.
-    bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
-    bool cmpReal(const Scalar& l, const Scalar& r) { return l.real() < r.real(); }
-    bool cmpImag(const Scalar& l, const Scalar& r) { return l.imag() < r.imag(); }
-    std::vector<Scalar> OrderEigvals(const Tensor& eigvals, const std::string& order_type) {
+    static bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
+    static bool cmpReal(const Scalar& l, const Scalar& r) { return l.real() < r.real(); }
+    static bool cmpImag(const Scalar& l, const Scalar& r) { return l.imag() < r.imag(); }
+    static std::vector<Scalar> OrderEigvals(const Tensor& eigvals, const std::string& order_type) {
       char small_or_large = order_type[0];  //'S' or 'L'
       char metric_type = order_type[1];  //'M', 'R' or 'I'
       auto eigvals_len = eigvals.shape()[0];
@@ -108,15 +109,15 @@ namespace cytnx {
     }
 
     // get resigue |Hv - ev|
-    Scalar GetResidue(MatOp& H, const Scalar& eigval, const Tensor& eigvec) {
+    static Scalar GetResidue(ArnoldiMatOp& H, const Scalar& eigval, const Tensor& eigvec) {
       Tensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
       Scalar resi = resi_vec.Norm().item();
       return resi;
     }
 
     // compare the arnoldi results with full spectrum (calculated by the function Eig.)
-    bool CheckResult(MatOp& H, const std::vector<Tensor>& arnoldi_eigs, const std::string& which,
-                     const cytnx_uint64 k) {
+    static bool CheckResult(ArnoldiMatOp& H, const std::vector<Tensor>& arnoldi_eigs,
+                            const std::string& which, const cytnx_uint64 k) {
       // get full spectrum (eigenvalues)
       std::vector<Tensor> full_eigs = linalg::Eig(H.opMat);
       Tensor full_eigvals = full_eigs[0];
@@ -221,7 +222,7 @@ namespace cytnx {
     TEST(Arnoldi, IsVFalse) {
       int dim = 23;
       int k = 3;
-      MatOp H = MatOp(dim, Type.ComplexDouble);
+      ArnoldiMatOp H = ArnoldiMatOp(dim, Type.ComplexDouble);
       const cytnx_uint64 maxiter = 10000;
       auto dtype = H.dtype();
       std::string which = "LM";
@@ -243,46 +244,46 @@ namespace cytnx {
 
     // 2-1, test for wrong input 'which'
     TEST(Arnoldi, ErrWhich) {
-      ErrorTestClass err_task;
+      ArnoldiErrorTestClass err_task;
       err_task.which = "ML";
       err_task.ExcuteErrorTest();
     }
 
     // 2-2, test for wrong input LinOp dtype
     TEST(Arnoldi, ErrMatType) {
-      ErrorTestClass err_task;
+      ArnoldiErrorTestClass err_task;
       err_task.Set_mat_type(Type.Int64);
       err_task.ExcuteErrorTest();
     }
 
     // 2-3, test for 'k' = 0
     TEST(Arnoldi, ErrZeroK) {
-      ErrorTestClass err_task;
+      ArnoldiErrorTestClass err_task;
       err_task.k = 0;
       err_task.ExcuteErrorTest();
     }
 
     // 2-4, test for 'k' > 'max_iter'
     TEST(Arnoldi, ErrKTooLarge) {
-      ErrorTestClass err_task;
+      ArnoldiErrorTestClass err_task;
       err_task.k = err_task.dim + 1;
       err_task.ExcuteErrorTest();
     }
 
     // 2-5, test cvg_crit <= 0
     TEST(Arnoldi, ErrCritNegative) {
-      ErrorTestClass err_task;
+      ArnoldiErrorTestClass err_task;
       err_task.cvg_crit = -0.001;
       err_task.ExcuteErrorTest();
     }
 
     // 2-6, test ncv is out of allowd range
     TEST(Arnoldi, ErrNcvOutOfRange) {
-      ErrorTestClass err_task;
+      ArnoldiErrorTestClass err_task;
       err_task.ncv = err_task.k + 1;
       err_task.ExcuteErrorTest();
       err_task.ncv = err_task.dim + 1;
       err_task.ExcuteErrorTest();
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

@@ -3,7 +3,7 @@
 #include "cytnx.hpp"
 
 namespace cytnx {
-  namespace {
+  namespace test {
 
     typedef std::vector<std::complex<double>> ValuesList;
     typedef Accessor ac;
@@ -36,14 +36,14 @@ namespace cytnx {
                                                         {Device.cuda, "cytnx device: CUDA"}};
 
     // declaration of methods
-    void CheckTensStruct(const Tensor& T, unsigned int expect_type, int expect_device,
-                         std::vector<unsigned int> expect_shape);
-    void tens3test(const Tensor& T, ValuesList values_array);
-    void tens2test(const Tensor& T, ValuesList values_array);
+    static void CheckTensStruct(const Tensor& T, unsigned int expect_type, int expect_device,
+                                std::vector<unsigned int> expect_shape);
+    static void tens3test(const Tensor& T, ValuesList values_array);
+    static void tens2test(const Tensor& T, ValuesList values_array);
 
     // check tensor struct
-    void CheckTensStruct(const Tensor& T, unsigned int expect_type, int expect_device,
-                         std::vector<unsigned int> expect_shape) {
+    static void CheckTensStruct(const Tensor& T, unsigned int expect_type, int expect_device,
+                                std::vector<unsigned int> expect_shape) {
       EXPECT_EQ(T.dtype(), expect_type);
       EXPECT_EQ(T.device(), expect_device);
       // check shape
@@ -55,7 +55,7 @@ namespace cytnx {
       }
     }
 
-    void tens3test(const Tensor& T, ValuesList values_array) {
+    static void tens3test(const Tensor& T, ValuesList values_array) {
       auto tens_shape = T.shape();  // std::vector
       ASSERT_EQ(tens_shape.size(), 3);
       unsigned int i_num = tens_shape[0], j_num = tens_shape[1], k_num = tens_shape[2], index = 0;
@@ -129,7 +129,7 @@ namespace cytnx {
       }
     }
 
-    void tens2test(const Tensor& T, ValuesList values_array) {
+    static void tens2test(const Tensor& T, ValuesList values_array) {
       auto tens_shape = T.shape();  // std::vector
       ASSERT_EQ(tens_shape.size(), 2);
       unsigned int i_num = tens_shape[0], j_num = tens_shape[1], index = 0;
@@ -718,5 +718,5 @@ namespace cytnx {
         }
       }
     }
-  }  // namespace
+  }  // namespace test
 }  // namespace cytnx

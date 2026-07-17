@@ -1,8 +1,7 @@
 #include "ncon_test.h"
 
 namespace cytnx {
-  namespace {
-    using gpu_test::NconTest;
+  namespace gpu_test {
 
     TEST_F(NconTest, GpuNconDefaultOrder) {
       std::vector<UniTensor> tn_list = {utdnA, utdnB, utdnC};
@@ -24,5 +23,5 @@ namespace cytnx {
       UniTensor res = ncon(tn_list, connect_list, true, true);
       EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
     }
-  }  // namespace
+  }  // namespace gpu_test
 }  // namespace cytnx
