@@ -10,8 +10,9 @@
 #include <gtest/gtest.h>
 
 #include "cytnx.hpp"
+
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
 
     using std::complex_literals::operator""i;
 
@@ -344,6 +345,6 @@ namespace cytnx {
       return eigs;
     }
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx
 #endif  // CYTNX_TESTS_GPU_LINALG_TEST_LINALG_TEST_H_

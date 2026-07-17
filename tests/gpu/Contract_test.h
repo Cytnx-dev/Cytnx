@@ -5,8 +5,9 @@
 
 #include "cytnx.hpp"
 #include "gpu_test_tools.h"
+
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
 
     class ContractTest : public ::testing::Test {
      public:
@@ -42,6 +43,6 @@ namespace cytnx {
       void TearDown() override {}
     };
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx
 #endif  // CYTNX_TESTS_GPU_CONTRACT_TEST_H_

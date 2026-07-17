@@ -2,7 +2,7 @@
 
 namespace cytnx {
   namespace {
-    using test::VecTest;
+    using gpu_test::VecTest;
 
     TEST_F(VecTest, GpuVecConcatenate) {
       EXPECT_EQ(std::vector<cytnx_uint64>(), vec_concatenate(ui64v, ui64v));

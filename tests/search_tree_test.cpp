@@ -5,6 +5,7 @@
 
 #include "cytnx.hpp"
 #include "search_tree.hpp"
+
 namespace cytnx {
   namespace {
 

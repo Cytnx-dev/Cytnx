@@ -2,7 +2,7 @@
 
 namespace cytnx {
   namespace {
-    using test::BlockUniTensorTest;
+    using gpu_test::BlockUniTensorTest;
 
     TEST_F(BlockUniTensorTest, GpuTrace) {
       auto tmp = BUT4.Trace(0, 3);

@@ -2,7 +2,7 @@
 
 namespace cytnx {
   namespace {
-    using test::UniTensor_baseTest;
+    using gpu_test::UniTensor_baseTest;
 
     TEST_F(UniTensor_baseTest, GpuGetIndex) {
       utzero345.relabel_({"abc", "ABC", "CBA"});

@@ -4,6 +4,7 @@
 #include "Tensor.hpp"
 #include "test_tools.h"
 #include "Type.hpp"
+
 namespace cytnx {
   namespace {
     template <typename T>

@@ -3,6 +3,7 @@
 #include <complex>
 
 #include "test_tools.h"
+
 namespace cytnx {
   namespace {
     using test::expect_exp_spectrum;
@@ -19,15 +20,13 @@ namespace cytnx {
 
     using test::linalg_Test;
 
-    namespace {
-      Tensor SortedBlockSingularValues(const UniTensor &S) {
-        Tensor all_svals = S.get_block_(0);
-        for (cytnx_int64 i = 1; i < S.Nblocks(); i++) {
-          all_svals = algo::Concatenate(all_svals, S.get_block_(i));
-        }
-        return algo::Sort(all_svals);
+    Tensor SortedBlockSingularValues(const UniTensor &S) {
+      Tensor all_svals = S.get_block_(0);
+      for (cytnx_int64 i = 1; i < S.Nblocks(); i++) {
+        all_svals = algo::Concatenate(all_svals, S.get_block_(i));
       }
-    }  // namespace
+      return algo::Sort(all_svals);
+    }
 
     TEST(LinalgKronTest, PadsLowerRankLhsOnLeft) {
       Tensor lhs = zeros({2}, Type.Double);

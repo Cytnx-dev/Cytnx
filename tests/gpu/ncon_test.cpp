@@ -1,7 +1,8 @@
 #include "ncon_test.h"
+
 namespace cytnx {
   namespace {
-    using test::NconTest;
+    using gpu_test::NconTest;
 
     TEST_F(NconTest, GpuNconDefaultOrder) {
       std::vector<UniTensor> tn_list = {utdnA, utdnB, utdnC};

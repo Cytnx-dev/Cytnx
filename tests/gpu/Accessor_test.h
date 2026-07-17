@@ -7,7 +7,7 @@
 // Test fixture for Accessor class
 
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
     class AccessorTest : public ::testing::Test {
      protected:
       // Declare member variables that are used in the tests
@@ -24,6 +24,6 @@ namespace cytnx {
       }
     };
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx
 #endif  // CYTNX_TESTS_GPU_ACCESSOR_TEST_H_

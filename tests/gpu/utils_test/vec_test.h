@@ -4,8 +4,9 @@
 #include <gtest/gtest.h>
 
 #include "cytnx.hpp"
+
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
     class VecTest : public ::testing::Test {
      public:
       std::vector<cytnx_uint64> ui64v;
@@ -50,6 +51,6 @@ namespace cytnx {
       void TearDown() override { ui64v.clear(); }
     };
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx
 #endif  // CYTNX_TESTS_GPU_UTILS_TEST_VEC_TEST_H_

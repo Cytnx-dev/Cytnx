@@ -33,7 +33,7 @@ namespace cytnx {
       return linalg::Trace(gpu_t, a, b).to(Device.cpu);
     }
 
-    TEST(LinalgGpuTraceTest, PermutedRank3MatchesContiguous) {
+    TEST(LinalgGpuTraceTest, GpuPermutedRank3MatchesContiguous) {
       auto t =
         random::random_tensor({4, 3, 4}, -1.0, 1.0, Device.cpu, 0, Type.Double).to(Device.cuda);
       auto p = t.permute({2, 1, 0});  // shape {4, 3, 4} but non-contiguous
@@ -43,7 +43,7 @@ namespace cytnx {
       EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-12));
     }
 
-    TEST(LinalgGpuTraceTest, PermutedTracesAcrossRanksAndDtypes) {
+    TEST(LinalgGpuTraceTest, GpuPermutedTracesAcrossRanksAndDtypes) {
       struct Case {
         std::vector<cytnx_uint64> shape;
         std::vector<cytnx_uint64> perm;
@@ -71,7 +71,7 @@ namespace cytnx {
       }
     }
 
-    TEST(LinalgGpuTraceTest, Rank2Path) {
+    TEST(LinalgGpuTraceTest, GpuRank2Path) {
       // Exercises the rank-2 branch (out_rank == 0 / n_elem == 1): the single
       // block traces the whole matrix diagonal.
       auto t = random::random_tensor({6, 6}, -1.0, 1.0, Device.cpu, 0, Type.Double).to(Device.cuda);
@@ -84,7 +84,7 @@ namespace cytnx {
       EXPECT_TRUE(test::AreNearlyEqTensor(out_p, out_c, 1e-12));
     }
 
-    TEST(LinalgGpuTraceTest, OutputRankIsInputMinusTwo) {
+    TEST(LinalgGpuTraceTest, GpuOutputRankIsInputMinusTwo) {
       // tr(rank-N) -> rank-(N-2); tr(rank-2) -> a rank-0 scalar tensor.
       auto r4 =
         random::random_tensor({2, 3, 2, 4}, -1.0, 1.0, Device.cpu, 0, Type.Double).to(Device.cuda);
@@ -105,7 +105,7 @@ namespace cytnx {
       EXPECT_TRUE(out2.is_scalar());
     }
 
-    TEST(LinalgGpuTraceTest, SwappedAxisOrderMatches) {
+    TEST(LinalgGpuTraceTest, GpuSwappedAxisOrderMatches) {
       // Trace(T, a, b) == Trace(T, b, a) (the kernels are symmetric in the axes).
       auto t =
         random::random_tensor({3, 4, 3, 2}, -1.0, 1.0, Device.cpu, 0, Type.Double).to(Device.cuda);
@@ -114,7 +114,7 @@ namespace cytnx {
       EXPECT_TRUE(test::AreNearlyEqTensor(ab, ba, 1e-12));
     }
 
-    TEST(LinalgGpuTraceTest, MatchesCpuTraceOnContiguousInput) {
+    TEST(LinalgGpuTraceTest, GpuMatchesCpuTraceOnContiguousInput) {
       // The headline cross-device equivalence: the GPU kernel result equals the
       // CPU pairwise result on identical contiguous data, across dtypes.
       for (unsigned int dtype : {Type.Double, Type.ComplexDouble, Type.Int32}) {
@@ -125,7 +125,7 @@ namespace cytnx {
       }
     }
 
-    TEST(LinalgGpuTraceTest, BlockSizeBoundaries) {
+    TEST(LinalgGpuTraceTest, GpuBlockSizeBoundaries) {
       // The launch sizes each block to its diagonal:
       //   threads_per_block = min(round_up_to_warp(diagonal_length), 256).
       // Walk diagonal lengths that straddle every sizing boundary -- sub-warp
@@ -146,7 +146,7 @@ namespace cytnx {
       }
     }
 
-    TEST(LinalgGpuTraceTest, ShortDiagonalsManyOutputs) {
+    TEST(LinalgGpuTraceTest, GpuShortDiagonalsManyOutputs) {
       // The many-blocks regime: {n, middle, n} traced over (0, 2) launches
       // `middle` blocks, each sized to the short diagonal n. Covers a sub-warp
       // diagonal (n = 2 -> 32-thread blocks), an exact warp (n = 32), and one
@@ -166,7 +166,7 @@ namespace cytnx {
       }
     }
 
-    TEST(LinalgGpuTraceTest, LargeDiagonalAccuracyBound) {
+    TEST(LinalgGpuTraceTest, GpuLargeDiagonalAccuracyBound) {
       // Upper bound the GPU's diagonal-sum accuracy at a large diagonal_length.
       // The current TraceDiagonalBlock accumulates serially per thread; a future
       // intra-block tree reduction would tighten the bound. The assertion is on
@@ -187,7 +187,7 @@ namespace cytnx {
       EXPECT_NEAR(gpu.item<cytnx_double>(), expected, slack);
     }
 
-    TEST(LinalgGpuTraceTest, SingletonSurvivingAxesDoNotCountTowardTraceLayoutCap) {
+    TEST(LinalgGpuTraceTest, GpuSingletonSurvivingAxesDoNotCountTowardTraceLayoutCap) {
       // Regression test: a surviving axis of extent 1 must not count toward
       // TraceImplGpu's kMaxTraceRank cap, since it contributes nothing to the
       // kernel's per-output decode (its odometer step is always a no-op -- see
@@ -204,7 +204,7 @@ namespace cytnx {
       EXPECT_EQ(gpu.shape().size(), 60u);
     }
 
-    TEST(LinalgGpuTraceTest, MixedSingletonAndNonTrivialSurvivingAxesPreserveShape) {
+    TEST(LinalgGpuTraceTest, GpuMixedSingletonAndNonTrivialSurvivingAxesPreserveShape) {
       // Non-trivial (extent > 1) surviving axes interleaved with singleton
       // ones: pins that TraceImplGpu counts and stores only the non-trivial
       // axes in TraceLayout for the decode, while still keeping every
@@ -225,14 +225,14 @@ namespace cytnx {
     // path -- and its NumPy-matching output -- against regression independently
     // of the CPU implementation.
 
-    TEST(LinalgGpuTraceTest, Rank2ZeroExtentReturnsZeroScalar) {
+    TEST(LinalgGpuTraceTest, GpuRank2ZeroExtentReturnsZeroScalar) {
       auto t = ZeroExtentGpuTensor({0, 0}, Type.Double);
       auto out = linalg::Trace(t, 0, 1).to(Device.cpu);
       ASSERT_TRUE(out.is_scalar());
       EXPECT_DOUBLE_EQ(out.item<cytnx_double>(), 0.0);
     }
 
-    TEST(LinalgGpuTraceTest, ZeroTracedAxisReturnsZeroFilledOutput) {
+    TEST(LinalgGpuTraceTest, GpuZeroTracedAxisReturnsZeroFilledOutput) {
       // shape {3, 0, 0} traced over (1, 2): the diagonal is empty for every one of
       // the 3 surviving indices, so each sums to 0 -> output shape {3}, all zero.
       auto t = ZeroExtentGpuTensor({3, 0, 0}, Type.Double);
@@ -242,7 +242,7 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < 3; i++) EXPECT_DOUBLE_EQ(out.at<cytnx_double>({i}), 0.0);
     }
 
-    TEST(LinalgGpuTraceTest, ZeroRemainingAxisReturnsEmptyOutput) {
+    TEST(LinalgGpuTraceTest, GpuZeroRemainingAxisReturnsEmptyOutput) {
       // shape {3, 0, 3} traced over (0, 2): the surviving axis (1) is zero-length,
       // so the output is an empty tensor of shape {0}.
       auto t = ZeroExtentGpuTensor({3, 0, 3}, Type.Double);
@@ -251,7 +251,7 @@ namespace cytnx {
       EXPECT_EQ(out.shape()[0], 0u);
     }
 
-    TEST(LinalgGpuTraceTest, ManyNonTrivialSurvivingAxesWithZeroExtentReturnsEmptyOutput) {
+    TEST(LinalgGpuTraceTest, GpuManyNonTrivialSurvivingAxesWithZeroExtentReturnsEmptyOutput) {
       // Regression test: a surviving axis of extent 0 must take the
       // empty-output early return before TraceImplGpu's kMaxTraceRank guard is
       // ever consulted, even when the tensor also has more non-trivial

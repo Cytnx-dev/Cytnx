@@ -1,4 +1,5 @@
 #include "Contract_test.h"
+
 namespace cytnx {
   namespace {
     using test::ContractTest;

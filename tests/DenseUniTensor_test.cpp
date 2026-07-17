@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "test_tools.h"
+
 namespace cytnx {
   namespace {
 

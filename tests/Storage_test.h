@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "cytnx.hpp"
+
 namespace cytnx {
   namespace test {
 

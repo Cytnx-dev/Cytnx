@@ -3,14 +3,15 @@
 #include "cytnx.hpp"
 #include "gpu_test_tools.h"
 #include "linalg_test.h"
+
 namespace cytnx {
   namespace {
-    using test::expect_lowest_states;
-    using test::ferm_dense_lowest;
-    using test::ferm_ket_nx;
-    using test::FermiAdaOp;
-    using test::make_ferm_A;
-    using test::make_ferm_ada_ket;
+    using gpu_test::expect_lowest_states;
+    using gpu_test::ferm_dense_lowest;
+    using gpu_test::ferm_ket_nx;
+    using gpu_test::FermiAdaOp;
+    using gpu_test::make_ferm_A;
+    using gpu_test::make_ferm_ada_ket;
 
     class MyOp : public LinOp {
      public:
@@ -69,7 +70,7 @@ namespace cytnx {
 
     // GPU fermionic Krylov: O = A^dag A (sign-flip-active 4-leg A); eigenpairs computed on the GPU
     // and checked against an independent CPU dense diagonalization.
-    TEST(LanczosGnd, FermionicLanczos) {  // naive Lanczos 'Gnd', ground state
+    TEST(LanczosGnd, GpuFermionicLanczos) {  // naive Lanczos 'Gnd', ground state
       const double tol = 1e-7;
       UniTensor A = make_ferm_A();
       UniTensor v0 = make_ferm_ada_ket(A);

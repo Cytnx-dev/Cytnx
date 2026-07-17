@@ -1,7 +1,8 @@
 #include "Contract_test.h"
+
 namespace cytnx {
   namespace {
-    using test::ContractTest;
+    using gpu_test::ContractTest;
 
     TEST_F(ContractTest, GpuContractDenseUtOptimalOrder) {
       UniTensor res = Contract({utdnA, utdnB, utdnC}, "", true);

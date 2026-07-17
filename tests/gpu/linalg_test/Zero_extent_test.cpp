@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "cytnx.hpp"
+
 namespace cytnx {
   namespace {
 
@@ -22,7 +23,7 @@ namespace cytnx {
       }
     }
 
-    TEST(ZeroExtentGpuLinalgTest, ElementwiseAndReductionsDoNotLaunchZeroBlockKernels) {
+    TEST(ZeroExtentGpuLinalgTest, GpuElementwiseAndReductionsDoNotLaunchZeroBlockKernels) {
       const std::vector<cytnx_uint64> shape{2, 0, 3};
       Tensor lhs(shape, Type.Float, Device.cuda);
       Tensor rhs(shape, Type.Double, Device.cuda);
@@ -48,7 +49,7 @@ namespace cytnx {
       EXPECT_THROW(linalg::Max(rhs), std::logic_error);
     }
 
-    TEST(ZeroExtentGpuLinalgTest, ProductsUseEmptyAndZeroInnerDimensionSemantics) {
+    TEST(ZeroExtentGpuLinalgTest, GpuProductsUseEmptyAndZeroInnerDimensionSemantics) {
       Tensor product = linalg::Matmul(Tensor({2, 0}, Type.Float, Device.cuda),
                                       Tensor({0, 3}, Type.Double, Device.cuda));
       EXPECT_EQ(product.shape(), (std::vector<cytnx_uint64>{2, 3}));
@@ -73,7 +74,7 @@ namespace cytnx {
       EXPECT_DOUBLE_EQ(linalg::Det(Tensor({0, 0}, Type.Double, Device.cuda)).at<double>({}), 1.0);
     }
 
-    TEST(ZeroExtentGpuLinalgTest, ThinFactorizationsBypassGpuLibraries) {
+    TEST(ZeroExtentGpuLinalgTest, GpuThinFactorizationsBypassGpuLibraries) {
       Tensor matrix({3, 0}, Type.Float, Device.cuda);
 
       std::vector<Tensor> svd = linalg::Svd(matrix);
@@ -100,7 +101,7 @@ namespace cytnx {
       ExpectGpuEmpty(tridiag[1], {0, 0}, Type.Double);
     }
 
-    TEST(ZeroExtentGpuLinalgTest, IntegerPowReadsThePromotedBuffer) {
+    TEST(ZeroExtentGpuLinalgTest, GpuIntegerPowReadsThePromotedBuffer) {
       Tensor input = arange(1, 4, 1, Type.Int32, Device.cuda);
       Tensor result = linalg::Pow(input, 2.0).to(Device.cpu);
 

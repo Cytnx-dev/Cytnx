@@ -2,6 +2,7 @@
 
 #include "cytnx.hpp"
 #include "linalg_test.h"
+
 namespace cytnx {
   namespace {
     using test::expect_lowest_states;
@@ -12,173 +13,170 @@ namespace cytnx {
     using test::make_ferm_A;
     using test::make_ferm_ada_ket;
 
-    namespace {
+    /*
+     *   "al"+---A--- "ar"               +-"al"
+     *       |   |                       |
+     *      (l)  |"phys"    = lambda_i  (l)
+     *       |   |                       |
+     *   "bl"+---B--- "br"               +-"bl"
+     */
+    // define the Transfer matrix LinOp
+    class TMOp : public LinOp {
+     public:
+      UniTensor A, B;
+      UniTensor T_init;
+      TMOp(const int& d, const int& D, const cytnx_uint64& nx,
+           const unsigned int& dtype = Type.Double, const int& device = Device.cpu);
+      UniTensor matvec(const UniTensor& l) override {
+        auto tmp = Contracts({A, l, B}, "", true);
+        tmp.relabel_(l.labels()).set_rowrank(l.rowrank());
+        return tmp;
+      }
 
+      // only for test
       /*
-       *   "al"+---A--- "ar"               +-"al"
-       *       |   |                       |
-       *      (l)  |"phys"    = lambda_i  (l)
-       *       |   |                       |
-       *   "bl"+---B--- "br"               +-"bl"
+       *   "al"+---A--- "ar"
+       *           |
+       *           |"phys"
+       *           |
+       *   "bl"+---B--- "br"
        */
-      // define the Transfer matrix LinOp
-      class TMOp : public LinOp {
-       public:
-        UniTensor A, B;
-        UniTensor T_init;
-        TMOp(const int& d, const int& D, const cytnx_uint64& nx,
-             const unsigned int& dtype = Type.Double, const int& device = Device.cpu);
-        UniTensor matvec(const UniTensor& l) override {
-          auto tmp = Contracts({A, l, B}, "", true);
-          tmp.relabel_(l.labels()).set_rowrank(l.rowrank());
-          return tmp;
-        }
-
-        // only for test
-        /*
-         *   "al"+---A--- "ar"
-         *           |
-         *           |"phys"
-         *           |
-         *   "bl"+---B--- "br"
-         */
-        Tensor GetOpAsMat() {
-          int D = A.shape()[0];
-          auto tmp = Contract(A, B);
-          auto mat = tmp.permute({"al", "bl", "ar", "br"}, 2).get_block_().reshape(D * D, D * D);
-          return mat;
-        }
-      };
-      TMOp::TMOp(const int& d, const int& D, const cytnx_uint64& in_nx,
-                 const unsigned int& in_dtype, const int& in_device)
-          : LinOp("mv", in_nx, in_dtype, in_device) {
-        std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D)};
-        A = UniTensor(bonds, {}, -1, in_dtype, in_device)
-              .set_name("A")
-              .relabel_({"al", "phys", "ar"})
-              .set_rowrank(2);
-        B = UniTensor(bonds, {}, -1, in_dtype, in_device)
-              .set_name("B")
-              .relabel_({"bl", "phys", "br"})
-              .set_rowrank(2);
-        T_init = UniTensor({Bond(D), Bond(D)}, {}, -1, in_dtype, in_device)
-                   .set_name("l")
-                   .relabel_({"al", "bl"})
-                   .set_rowrank(1);
-        if (Type.is_float(this->dtype())) {
-          double low = -1.0, high = 1.0;
-          int seed = 0;
-          A.uniform_(low, high, seed);
-          B.uniform_(low, high, seed);
-          T_init.uniform_(low, high, seed);
-        }
+      Tensor GetOpAsMat() {
+        int D = A.shape()[0];
+        auto tmp = Contract(A, B);
+        auto mat = tmp.permute({"al", "bl", "ar", "br"}, 2).get_block_().reshape(D * D, D * D);
+        return mat;
       }
-
-      class MyOp2 : public LinOp {
-       public:
-        UniTensor H;
-        MyOp2(int dim) : LinOp("mv", dim) {
-          Bond lan_I = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
-          Bond lan_J = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
-          H = UniTensor({lan_I, lan_J});
-          double low = -1.0, high = 1.0;
-          int seed = 0;
-          H.uniform_(low, high, seed);
-          H.relabel_({"a", "b"});
-          // H.print_diagram();
-          // H.print_blocks();
-        }
-        UniTensor matvec(const UniTensor& psi) override {
-          auto out = (H.astype(psi.dtype())).contract(psi);
-          out.relabel_({"b", "c"});
-          return out;
-        }
-      };
-
-      // For given 'which' = 'LM', 'SR', ...etc, sort the given eigenvalues.
-      bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
-      bool cmpReal(const Scalar& l, const Scalar& r) { return l.real() < r.real(); }
-      bool cmpImag(const Scalar& l, const Scalar& r) { return l.imag() < r.imag(); }
-      std::vector<Scalar> OrderEigvals(const Tensor& eigvals, const std::string& order_type) {
-        char small_or_large = order_type[0];  //'S' or 'L'
-        char metric_type = order_type[1];  //'M', 'R' or 'I'
-        auto eigvals_len = eigvals.shape()[0];
-        auto ordered_eigvals = std::vector<Scalar>(eigvals_len, Scalar());
-        for (cytnx_uint64 i = 0; i < eigvals_len; ++i) ordered_eigvals[i] = eigvals.storage().at(i);
-        std::function<bool(const Scalar&, const Scalar&)> cmpFncPtr;
-        if (metric_type == 'M') {
-          cmpFncPtr = cmpNorm;
-        } else if (metric_type == 'R') {
-          cmpFncPtr = cmpReal;
-        } else if (metric_type == 'I') {
-          cmpFncPtr = cmpImag;
-        } else {  // wrong input
-          ;
-        }
-        // sort eigenvalues
-        if (small_or_large == 'S') {
-          std::stable_sort(ordered_eigvals.begin(), ordered_eigvals.end(), cmpFncPtr);
-        } else {  // 'L'
-          std::stable_sort(ordered_eigvals.rbegin(), ordered_eigvals.rend(), cmpFncPtr);
-        }
-        return ordered_eigvals;
+    };
+    TMOp::TMOp(const int& d, const int& D, const cytnx_uint64& in_nx, const unsigned int& in_dtype,
+               const int& in_device)
+        : LinOp("mv", in_nx, in_dtype, in_device) {
+      std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D)};
+      A = UniTensor(bonds, {}, -1, in_dtype, in_device)
+            .set_name("A")
+            .relabel_({"al", "phys", "ar"})
+            .set_rowrank(2);
+      B = UniTensor(bonds, {}, -1, in_dtype, in_device)
+            .set_name("B")
+            .relabel_({"bl", "phys", "br"})
+            .set_rowrank(2);
+      T_init = UniTensor({Bond(D), Bond(D)}, {}, -1, in_dtype, in_device)
+                 .set_name("l")
+                 .relabel_({"al", "bl"})
+                 .set_rowrank(1);
+      if (Type.is_float(this->dtype())) {
+        double low = -1.0, high = 1.0;
+        int seed = 0;
+        A.uniform_(low, high, seed);
+        B.uniform_(low, high, seed);
+        T_init.uniform_(low, high, seed);
       }
+    }
 
-      // get resigue |Hv - ev|
-      Scalar GetResidue(TMOp& H, const Scalar& eigval, const UniTensor& eigvec) {
-        UniTensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
-        Scalar resi = resi_vec.Norm().item();
-        return resi;
+    class MyOp2 : public LinOp {
+     public:
+      UniTensor H;
+      MyOp2(int dim) : LinOp("mv", dim) {
+        Bond lan_I = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
+        Bond lan_J = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
+        H = UniTensor({lan_I, lan_J});
+        double low = -1.0, high = 1.0;
+        int seed = 0;
+        H.uniform_(low, high, seed);
+        H.relabel_({"a", "b"});
+        // H.print_diagram();
+        // H.print_blocks();
       }
-
-      // compare the arnoldi results with full spectrum (calculated by the function Eig.)
-      bool CheckResult(TMOp& H, const std::vector<UniTensor>& arnoldi_eigs,
-                       const std::string& which, const cytnx_uint64 k) {
-        // get full spectrum (eigenvalues)
-        std::vector<Tensor> full_eigs = linalg::Eig(H.GetOpAsMat());
-        Tensor full_eigvals = full_eigs[0];
-        std::vector<Scalar> ordered_eigvals = OrderEigvals(full_eigvals, which);
-        auto fst_few_eigvals =
-          std::vector<Scalar>(ordered_eigvals.begin(), ordered_eigvals.begin() + k);
-        Tensor arnoldi_eigvals = arnoldi_eigs[0].get_block_();
-
-        // check the number of the eigenvalues
-        cytnx_uint64 arnoldi_eigvals_len = arnoldi_eigvals.shape()[0];
-        auto dtype = H.dtype();
-        const double tolerance =
-          (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
-        if (arnoldi_eigvals_len != k) return false;
-        for (cytnx_uint64 i = 0; i < k; ++i) {
-          auto arnoldi_eigval = arnoldi_eigvals.storage().at(i);
-          // if k == 1, arnoldi_eigvecs will be a rank-1 tensor
-          auto arnoldi_eigvec = arnoldi_eigs[i + 1];
-          auto exact_eigval = fst_few_eigvals[i];
-          // check eigenvalue by comparing with the full spectrum results.
-          // avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
-          auto eigval_err = abs(abs(arnoldi_eigval) - abs(exact_eigval)) / abs(exact_eigval);
-          if (eigval_err >= tolerance) return false;
-          // check the is the eigenvector correct
-          auto resi_err = GetResidue(H, arnoldi_eigval, arnoldi_eigvec);
-          if (resi_err >= tolerance) return false;
-          // check phase
-        }
-        return true;
+      UniTensor matvec(const UniTensor& psi) override {
+        auto out = (H.astype(psi.dtype())).contract(psi);
+        out.relabel_({"b", "c"});
+        return out;
       }
+    };
 
-      void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
-                      const cytnx_uint64& k = 3) {
-        int D = 5, d = 2;
-        int dim = D * D;
-        TMOp H = TMOp(d, D, dim, mat_type);
-        const cytnx_uint64 maxiter = 10000;
-        const cytnx_double cvg_crit = 0;
-        std::vector<UniTensor> arnoldi_eigs =
-          linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k);
-        H.GetOpAsMat();
-        bool is_pass = CheckResult(H, arnoldi_eigs, which, k);
-        EXPECT_TRUE(is_pass);
+    // For given 'which' = 'LM', 'SR', ...etc, sort the given eigenvalues.
+    bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
+    bool cmpReal(const Scalar& l, const Scalar& r) { return l.real() < r.real(); }
+    bool cmpImag(const Scalar& l, const Scalar& r) { return l.imag() < r.imag(); }
+    std::vector<Scalar> OrderEigvals(const Tensor& eigvals, const std::string& order_type) {
+      char small_or_large = order_type[0];  //'S' or 'L'
+      char metric_type = order_type[1];  //'M', 'R' or 'I'
+      auto eigvals_len = eigvals.shape()[0];
+      auto ordered_eigvals = std::vector<Scalar>(eigvals_len, Scalar());
+      for (cytnx_uint64 i = 0; i < eigvals_len; ++i) ordered_eigvals[i] = eigvals.storage().at(i);
+      std::function<bool(const Scalar&, const Scalar&)> cmpFncPtr;
+      if (metric_type == 'M') {
+        cmpFncPtr = cmpNorm;
+      } else if (metric_type == 'R') {
+        cmpFncPtr = cmpReal;
+      } else if (metric_type == 'I') {
+        cmpFncPtr = cmpImag;
+      } else {  // wrong input
+        ;
       }
-    }  // namespace
+      // sort eigenvalues
+      if (small_or_large == 'S') {
+        std::stable_sort(ordered_eigvals.begin(), ordered_eigvals.end(), cmpFncPtr);
+      } else {  // 'L'
+        std::stable_sort(ordered_eigvals.rbegin(), ordered_eigvals.rend(), cmpFncPtr);
+      }
+      return ordered_eigvals;
+    }
+
+    // get resigue |Hv - ev|
+    Scalar GetResidue(TMOp& H, const Scalar& eigval, const UniTensor& eigvec) {
+      UniTensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
+      Scalar resi = resi_vec.Norm().item();
+      return resi;
+    }
+
+    // compare the arnoldi results with full spectrum (calculated by the function Eig.)
+    bool CheckResult(TMOp& H, const std::vector<UniTensor>& arnoldi_eigs, const std::string& which,
+                     const cytnx_uint64 k) {
+      // get full spectrum (eigenvalues)
+      std::vector<Tensor> full_eigs = linalg::Eig(H.GetOpAsMat());
+      Tensor full_eigvals = full_eigs[0];
+      std::vector<Scalar> ordered_eigvals = OrderEigvals(full_eigvals, which);
+      auto fst_few_eigvals =
+        std::vector<Scalar>(ordered_eigvals.begin(), ordered_eigvals.begin() + k);
+      Tensor arnoldi_eigvals = arnoldi_eigs[0].get_block_();
+
+      // check the number of the eigenvalues
+      cytnx_uint64 arnoldi_eigvals_len = arnoldi_eigvals.shape()[0];
+      auto dtype = H.dtype();
+      const double tolerance =
+        (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
+      if (arnoldi_eigvals_len != k) return false;
+      for (cytnx_uint64 i = 0; i < k; ++i) {
+        auto arnoldi_eigval = arnoldi_eigvals.storage().at(i);
+        // if k == 1, arnoldi_eigvecs will be a rank-1 tensor
+        auto arnoldi_eigvec = arnoldi_eigs[i + 1];
+        auto exact_eigval = fst_few_eigvals[i];
+        // check eigenvalue by comparing with the full spectrum results.
+        // avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
+        auto eigval_err = abs(abs(arnoldi_eigval) - abs(exact_eigval)) / abs(exact_eigval);
+        if (eigval_err >= tolerance) return false;
+        // check the is the eigenvector correct
+        auto resi_err = GetResidue(H, arnoldi_eigval, arnoldi_eigvec);
+        if (resi_err >= tolerance) return false;
+        // check phase
+      }
+      return true;
+    }
+
+    void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
+                    const cytnx_uint64& k = 3) {
+      int D = 5, d = 2;
+      int dim = D * D;
+      TMOp H = TMOp(d, D, dim, mat_type);
+      const cytnx_uint64 maxiter = 10000;
+      const cytnx_double cvg_crit = 0;
+      std::vector<UniTensor> arnoldi_eigs =
+        linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k);
+      H.GetOpAsMat();
+      bool is_pass = CheckResult(H, arnoldi_eigs, which, k);
+      EXPECT_TRUE(is_pass);
+    }
 
     // corrected test
     // 1-1, test for 'which' = 'LM'

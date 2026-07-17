@@ -11,6 +11,7 @@
 #include "random.hpp"
 #include "Tensor.hpp"
 #include "Type.hpp"
+
 namespace cytnx {
   namespace {
 

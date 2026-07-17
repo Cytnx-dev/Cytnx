@@ -1,4 +1,5 @@
 #include "ncon_test.h"
+
 namespace cytnx {
   namespace {
     using test::NconTest;

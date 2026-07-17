@@ -7,6 +7,7 @@
 
 #include "backend/linalg_internal_cpu/pairwise_sum.hpp"
 #include "backend/linalg_internal_cpu/stride_view.hpp"
+
 namespace cytnx {
   namespace {
 

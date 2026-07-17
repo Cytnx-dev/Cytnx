@@ -2,46 +2,45 @@
 
 #include "../test_tools.h"
 #include "cytnx.hpp"
+
 namespace cytnx {
   namespace {
 
-    namespace {
-      auto device = Device.cpu;
-      bool CheckResult(const Tensor& l, const Tensor& r, const Tensor& out, bool is_conj) {
-        if (!out.is_scalar()) {
-          return false;
-        }
-        if (l.shape().size() != 1 || r.shape().size() != 1) {
-          return false;
-        }
-        auto len = l.shape()[0];
-        auto tmp = l;
-        tmp = is_conj ? tmp.Conj() : tmp;
-        auto tmp_mul = linalg::Mul(tmp, r);
-        Tensor ans = Tensor({}, tmp_mul.dtype());
-        ans.item() = 0;
-        for (cytnx_uint64 i = 0; i < len; ++i) {
-          ans += tmp_mul.at({i});
-        }
-        double tol = (tmp_mul.dtype() == Type.Float || Type.ComplexFloat) ? 1.0e-4 : 1.0e-12;
-        if (ans.item() == 0) {
-          return false;
-        }
-        return test::AreNearlyEqTensor(ans, out, tol);
+    auto device = Device.cpu;
+    bool CheckResult(const Tensor& l, const Tensor& r, const Tensor& out, bool is_conj) {
+      if (!out.is_scalar()) {
+        return false;
       }
+      if (l.shape().size() != 1 || r.shape().size() != 1) {
+        return false;
+      }
+      auto len = l.shape()[0];
+      auto tmp = l;
+      tmp = is_conj ? tmp.Conj() : tmp;
+      auto tmp_mul = linalg::Mul(tmp, r);
+      Tensor ans = Tensor({}, tmp_mul.dtype());
+      ans.item() = 0;
+      for (cytnx_uint64 i = 0; i < len; ++i) {
+        ans += tmp_mul.at({i});
+      }
+      double tol = (tmp_mul.dtype() == Type.Float || Type.ComplexFloat) ? 1.0e-4 : 1.0e-12;
+      if (ans.item() == 0) {
+        return false;
+      }
+      return test::AreNearlyEqTensor(ans, out, tol);
+    }
 
-      Tensor InitTensor(const cytnx_uint64 len, const unsigned int dtype, const int seed = 0) {
-        Tensor t;
-        if (Type.is_float(dtype)) {
-          double low = -1.0;
-          double high = 1.0;
-          t = random::uniform({len}, low, high, device, seed, dtype);
-        } else {
-          t = arange(len);
-        }
-        return t;
+    Tensor InitTensor(const cytnx_uint64 len, const unsigned int dtype, const int seed = 0) {
+      Tensor t;
+      if (Type.is_float(dtype)) {
+        double low = -1.0;
+        double high = 1.0;
+        t = random::uniform({len}, low, high, device, seed, dtype);
+      } else {
+        t = arange(len);
       }
-    }  // namespace
+      return t;
+    }
 
     // test is_conj = treu
     TEST(Vectordot, Complex128Conj) {

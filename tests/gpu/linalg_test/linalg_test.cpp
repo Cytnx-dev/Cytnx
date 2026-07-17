@@ -2,14 +2,14 @@
 
 namespace cytnx {
   namespace {
-    using test::expect_same;
-    using test::expect_svd_reconstructs;
-    using test::expect_unitary;
-    using test::make_rank4_hermitian;
-    using test::permute_with_signflips;
-    using test::sorted_diagonal;
+    using gpu_test::expect_same;
+    using gpu_test::expect_svd_reconstructs;
+    using gpu_test::expect_unitary;
+    using gpu_test::make_rank4_hermitian;
+    using gpu_test::permute_with_signflips;
+    using gpu_test::sorted_diagonal;
 
-    using test::linalg_Test;
+    using gpu_test::linalg_Test;
 
     TEST_F(linalg_Test, GpuBkUtSvdTruncate1) {
       std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
@@ -355,7 +355,7 @@ namespace cytnx {
         }
     }
 
-    // TEST_F(linalg_Test, DenseUtModUtUt){
+    // TEST_F(linalg_Test, GpuDenseUtModUtUt){
     //     UniTensor At = UniTensor(A);
     //     UniTensor Bt = UniTensor(B);
     //     auto res = linalg::Mod(100*At, Bt);

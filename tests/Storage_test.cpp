@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "test_tools.h"
+
 namespace cytnx {
   namespace {
     using test::StorageTest;

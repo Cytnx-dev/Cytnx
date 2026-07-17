@@ -178,7 +178,7 @@ namespace cytnx {
       EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
     }
 
-    // TEST(Bond, ConstructorTypeQnums){
+    // TEST(Bond, GpuConstructorTypeQnums){
     //   // Bond(bondType tp, const std::vector<Qnum>& qnums);
     //
     //   Qnum q1(1);
@@ -225,7 +225,7 @@ namespace cytnx {
     //
     // }
     //
-    // TEST(Bond, CopyConstructor){
+    // TEST(Bond, GpuCopyConstructor){
     //   // Bond(const Bond& bd);
     //   Bond bd1(BD_IN, 100);
     //   Bond bd2(bd1);
@@ -233,7 +233,7 @@ namespace cytnx {
     //   EXPECT_EQ(bd1,bd2);
     // }
     //
-    // TEST(Bond, ChangeBondType){
+    // TEST(Bond, GpuChangeBondType){
     //   // Bond& change(bondType tp);
     //
     //   Bond bd(BD_IN, 100);
@@ -242,11 +242,11 @@ namespace cytnx {
     //   // test if the qnum is inverted
     // }
     //
-    // TEST(Bond, DummyChangeBondType){
+    // TEST(Bond, GpuDummyChangeBondType){
     //   // Bond& dummy_change(bondType tp);
     // }
     //
-    // TEST(Bond, Combine){
+    // TEST(Bond, GpuCombine){
     //   // Bond& combine(Bond bd);
     //   uni10::Qnum q2(2);
     //   uni10::Qnum q1(1);

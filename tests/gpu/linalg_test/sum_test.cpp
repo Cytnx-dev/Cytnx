@@ -8,6 +8,7 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
 #include "Type.hpp"
+
 namespace cytnx {
   namespace {
     template <typename T>

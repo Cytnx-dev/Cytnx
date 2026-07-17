@@ -1,9 +1,10 @@
 #include "Tensor_test.h"
 
 #include "gpu_test_tools.h"
+
 namespace cytnx {
   namespace {
-    using test::TensorTest;
+    using gpu_test::TensorTest;
 
     TEST_F(TensorTest, GpuConstructor) {
       Tensor D({3, 4, 5}, Type.Double, Device.cuda);

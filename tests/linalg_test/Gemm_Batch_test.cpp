@@ -7,6 +7,7 @@
 #include "Generator.hpp"
 #include "linalg.hpp"
 #include "Type.hpp"
+
 namespace cytnx {
   namespace {
 

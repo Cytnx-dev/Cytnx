@@ -7,6 +7,7 @@
 
 #include "cytnx.hpp"
 #include "utils/checked_cast.hpp"
+
 namespace cytnx {
   namespace {
     TEST(CytnxError, LongMessagesDoNotOverflow) {
@@ -70,15 +71,13 @@ namespace cytnx {
       }
     }
 
-    namespace {
-      std::string CallVformat(const char *fmt, ...) {
-        va_list ap;
-        va_start(ap, fmt);
-        std::string s = internal::vformat_message(fmt, ap);
-        va_end(ap);
-        return s;
-      }
-    }  // namespace
+    std::string CallVformat(const char *fmt, ...) {
+      va_list ap;
+      va_start(ap, fmt);
+      std::string s = internal::vformat_message(fmt, ap);
+      va_end(ap);
+      return s;
+    }
 
     // A null format must not be dereferenced (vsnprintf(nullptr,...)/std::string(nullptr) are UB).
     TEST(CytnxError, NullFormatDoesNotCrash) { EXPECT_EQ(CallVformat(nullptr), std::string()); }

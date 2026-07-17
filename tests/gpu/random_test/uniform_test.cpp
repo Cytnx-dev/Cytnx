@@ -11,6 +11,7 @@
 #include "random.hpp"
 #include "Tensor.hpp"
 #include "Type.hpp"
+
 namespace cytnx {
   namespace {
 
@@ -83,7 +84,7 @@ namespace cytnx {
     using ::testing::Lt;
     using ::testing::Not;
 
-    TYPED_TEST(RandomUniformGpu, RespectGivenRange) {
+    TYPED_TEST(RandomUniformGpu, GpuRespectGivenRange) {
       // (2/3)^50 = 1.57e-9, so there is only a very small chance of failing this test even if
       // giving an arbitrary seed.
       const int kCount = 50;

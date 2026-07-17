@@ -2,6 +2,7 @@
 
 #include "cytnx.hpp"
 #include "linalg_test.h"
+
 namespace cytnx {
   namespace {
     using test::expect_lowest_states;
@@ -11,237 +12,234 @@ namespace cytnx {
     using test::make_ferm_A;
     using test::make_ferm_ada_ket;
 
-    namespace {
-      class OneSiteOp : public LinOp {
-       public:
-        OneSiteOp(const int d = 2, const int D = 5, const int dw = 3,
-                  const unsigned int dtype = Type.Double, const int& device = Device.cpu)
-            : LinOp("mv", D * D * d, dtype, device) {
-          if (!Type.is_float(dtype)) return;
-          std::vector<UniTensor> LRO = CreateLRO(D, d, dw);
-          L_ = LRO[0];
-          R_ = LRO[1];
-          O_ = LRO[2];
-          net_.FromString({"psi:'vil', 'pi', 'vir'", "L:'vil', 'Lm', 'vol'",
-                           "O:'Lm', 'pi', 'Rm', 'po'", "R:'vir', 'Rm', 'vor'",
-                           "TOUT:'vol'; 'po', 'vor'"});
-          net_.PutUniTensors({"L", "O", "R"}, {L_, O_, R_});
-          UT_init = Create_UTinit(D, d);
-          EffH = CreateEffH();
-        }
-        UniTensor UT_init;
-        UniTensor EffH;
+    class OneSiteOp : public LinOp {
+     public:
+      OneSiteOp(const int d = 2, const int D = 5, const int dw = 3,
+                const unsigned int dtype = Type.Double, const int& device = Device.cpu)
+          : LinOp("mv", D * D * d, dtype, device) {
+        if (!Type.is_float(dtype)) return;
+        std::vector<UniTensor> LRO = CreateLRO(D, d, dw);
+        L_ = LRO[0];
+        R_ = LRO[1];
+        O_ = LRO[2];
+        net_.FromString({"psi:'vil', 'pi', 'vir'", "L:'vil', 'Lm', 'vol'",
+                         "O:'Lm', 'pi', 'Rm', 'po'", "R:'vir', 'Rm', 'vor'",
+                         "TOUT:'vol'; 'po', 'vor'"});
+        net_.PutUniTensors({"L", "O", "R"}, {L_, O_, R_});
+        UT_init = Create_UTinit(D, d);
+        EffH = CreateEffH();
+      }
+      UniTensor UT_init;
+      UniTensor EffH;
 
-        /*
-         *         |-|--"vil" "pi" "vir"--|-|
-         *         | |         +          | |      "vil"--psi--"vir"
-         *         |L|--"Lm"---O----"Rm"--|R|  dot         |
-         *         | |         +          | |             "pi"
-         *         |_|--"vol" "po" "vor"--|_|
-         *
-         * Then relabel ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
-         *
-         * "vil":virtual in bond left
-         * "po":physical out bond
-         */
+      /*
+       *         |-|--"vil" "pi" "vir"--|-|
+       *         | |         +          | |      "vil"--psi--"vir"
+       *         |L|--"Lm"---O----"Rm"--|R|  dot         |
+       *         | |         +          | |             "pi"
+       *         |_|--"vol" "po" "vor"--|_|
+       *
+       * Then relabel ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
+       *
+       * "vil":virtual in bond left
+       * "po":physical out bond
+       */
 
-        UniTensor matvec(const UniTensor& psi) override {
-          net_.PutUniTensor("psi", psi);
-          return net_.Launch();
-        }
-
-       private:
-        UniTensor L_, R_, O_;
-        Network net_;
-        std::vector<UniTensor> CreateLRO(const cytnx_uint64 D, const cytnx_uint64 d,
-                                         const cytnx_uint64 dw) {
-          double low = -1.0, high = 1.0;
-          int seed = 0;
-          UniTensor L = UniTensor::uniform({D, dw, D}, low, high, {"vil", "Lm", "vol"}, seed,
-                                           dtype(), device());
-          seed = 1;
-          UniTensor R = UniTensor::uniform({D, dw, D}, low, high, {"vir", "Rm", "vor"}, seed,
-                                           dtype(), device());
-          seed = 1;
-          UniTensor O = UniTensor::uniform({dw, d, dw, d}, low, high, {"Lm", "pi", "Rm", "po"},
-                                           seed, dtype(), device());
-          L = L + L.permute({"vol", "Lm", "vil"}).Conj().contiguous();
-          R = R + R.permute({"vor", "Rm", "vir"}).Conj().contiguous();
-          O = O + O.permute({"Lm", "po", "Rm", "pi"}).Conj().contiguous();
-          return {L, R, O};
-        }
-
-        UniTensor Create_UTinit(const cytnx_uint64 D, const cytnx_uint64 d) {
-          double low = -1.0, high = 1.0;
-          int seed = 0;
-          UniTensor psi =
-            UniTensor::uniform({D, d, D}, low, high, {"vil", "pi", "vir"}, seed, dtype(), device());
-          return psi;
-        }
-        UniTensor CreateEffH() {
-          Network net;
-          net.FromString({"L:'vil', 'Lm', 'vol'", "O:'Lm', 'pi', 'Rm', 'po'",
-                          "R:'vir', 'Rm', 'vor'", "TOUT:'vil', 'pi', 'vir'; 'vol', 'po', 'vor'"});
-          net.PutUniTensors({"L", "O", "R"}, {L_, O_, R_});
-          return net.Launch();
-        }
-      };
-
-      class MyOp : public LinOp {
-       public:
-        MyOp() : LinOp("mv", 27) {}
-
-        UniTensor matvec(const UniTensor& v) override {
-          Tensor tA = arange(27 * 27).reshape(27, 27);
-          UniTensor A = UniTensor(tA);
-          // A = A + A.clone().permute({1, 0},-1,false);
-          A = A + A.Transpose();
-          return UniTensor(linalg::Dot(A.get_block_(), v.get_block_()));
-        }
-      };
-
-      class MyOp2 : public LinOp {
-       public:
-        UniTensor H;
-        MyOp2(int dim) : LinOp("mv", dim) {
-          Tensor A = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_A.cytn");
-          Tensor B = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_B.cytn");
-          Tensor C = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_C.cytn");
-          Bond lan_I = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
-          Bond lan_J = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
-          H = UniTensor({lan_I, lan_J});
-          H.put_block(A, 0);
-          H.put_block(B, 1);
-          H.put_block(C, 2);
-          H.relabel_({"a", "b"});
-          // H.print_diagram();
-          // H.print_blocks();
-        }
-        UniTensor matvec(const UniTensor& psi) override {
-          auto out = H.contract(psi);
-          out.relabel_({"b", "c"});
-          // out.print_diagram();
-          return out;
-        }
-      };
-      // the function to check the answer
-      bool CheckResult(OneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
-                       const std::string& which, const cytnx_uint64 k);
-
-      void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
-                      const cytnx_uint64& k = 3) {
-        int D = 5, d = 2, dw = 3;
-        OneSiteOp op = OneSiteOp(d, D, dw, mat_type);
-        const cytnx_uint64 maxiter = 1000;
-        const cytnx_double cvg_crit = 0;
-        std::vector<UniTensor> lanczos_eigs =
-          linalg::Lanczos(&op, op.UT_init, which, maxiter, cvg_crit, k);
-        bool is_pass = CheckResult(op, lanczos_eigs, which, k);
-        EXPECT_TRUE(is_pass);
+      UniTensor matvec(const UniTensor& psi) override {
+        net_.PutUniTensor("psi", psi);
+        return net_.Launch();
       }
 
-      // error test
-      class ErrorTestClass {
-       public:
-        std::string which = "LM";
-        cytnx_uint64 k = 1;
-        cytnx_uint64 maxiter = 10;
-        cytnx_int32 d = 2, D = 5, dw = 3;
-        cytnx_double cvg_crit = 0;
-        bool is_V = true;
-        cytnx_int32 ncv = 0;
-        ErrorTestClass(){};
-        void ExcuteErrorTest();
-        // set
-        void Set_mat_type(const int _mat_type) {
-          mat_type = _mat_type;
-          op = OneSiteOp(d, D, dw, mat_type);
-        }
-
-       private:
-        int mat_type = Type.Double;
-        OneSiteOp op = OneSiteOp(d, D, dw, mat_type);
-      };
-      void ErrorTestClass::ExcuteErrorTest() {
-        try {
-          auto lanczos_eigs =
-            linalg::Lanczos(&op, op.UT_init, which, maxiter, cvg_crit, k, is_V, ncv);
-          FAIL();
-        } catch (const std::exception& ex) {
-          auto err_msg = ex.what();
-          std::cerr << err_msg << std::endl;
-          SUCCEED();
-        }
+     private:
+      UniTensor L_, R_, O_;
+      Network net_;
+      std::vector<UniTensor> CreateLRO(const cytnx_uint64 D, const cytnx_uint64 d,
+                                       const cytnx_uint64 dw) {
+        double low = -1.0, high = 1.0;
+        int seed = 0;
+        UniTensor L =
+          UniTensor::uniform({D, dw, D}, low, high, {"vil", "Lm", "vol"}, seed, dtype(), device());
+        seed = 1;
+        UniTensor R =
+          UniTensor::uniform({D, dw, D}, low, high, {"vir", "Rm", "vor"}, seed, dtype(), device());
+        seed = 1;
+        UniTensor O = UniTensor::uniform({dw, d, dw, d}, low, high, {"Lm", "pi", "Rm", "po"}, seed,
+                                         dtype(), device());
+        L = L + L.permute({"vol", "Lm", "vil"}).Conj().contiguous();
+        R = R + R.permute({"vor", "Rm", "vir"}).Conj().contiguous();
+        O = O + O.permute({"Lm", "po", "Rm", "pi"}).Conj().contiguous();
+        return {L, R, O};
       }
 
-      // For given 'which' = 'LM', 'SR', ...etc, sort the given eigenvalues.
-      bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
-      bool cmpAlgebra(const Scalar& l, const Scalar& r) { return l < r; }
-      std::vector<Scalar> OrderEigvals(const UniTensor& eigvals, const std::string& order_type) {
-        char small_or_large = order_type[0];  //'S' or 'L'
-        char metric_type = order_type[1];  //'M' or 'A'
-        auto eigvals_len = eigvals.shape()[0];
-        auto ordered_eigvals = std::vector<Scalar>(eigvals_len, Scalar());
-        for (cytnx_uint64 i = 0; i < eigvals_len; ++i)
-          ordered_eigvals[i] = eigvals.get_block_().storage().at(i);
-        std::function<bool(const Scalar&, const Scalar&)> cmpFncPtr;
-        if (metric_type == 'M') {
-          cmpFncPtr = cmpNorm;
-        } else if (metric_type == 'A') {
-          cmpFncPtr = cmpAlgebra;
-        } else {
-        }  // wrong input
-        // sort eigenvalues
-        if (small_or_large == 'S') {
-          std::stable_sort(ordered_eigvals.begin(), ordered_eigvals.end(), cmpFncPtr);
-        } else {  // 'L'
-          std::stable_sort(ordered_eigvals.rbegin(), ordered_eigvals.rend(), cmpFncPtr);
-        }
-        return ordered_eigvals;
+      UniTensor Create_UTinit(const cytnx_uint64 D, const cytnx_uint64 d) {
+        double low = -1.0, high = 1.0;
+        int seed = 0;
+        UniTensor psi =
+          UniTensor::uniform({D, d, D}, low, high, {"vil", "pi", "vir"}, seed, dtype(), device());
+        return psi;
+      }
+      UniTensor CreateEffH() {
+        Network net;
+        net.FromString({"L:'vil', 'Lm', 'vol'", "O:'Lm', 'pi', 'Rm', 'po'", "R:'vir', 'Rm', 'vor'",
+                        "TOUT:'vil', 'pi', 'vir'; 'vol', 'po', 'vor'"});
+        net.PutUniTensors({"L", "O", "R"}, {L_, O_, R_});
+        return net.Launch();
+      }
+    };
+
+    class MyOp : public LinOp {
+     public:
+      MyOp() : LinOp("mv", 27) {}
+
+      UniTensor matvec(const UniTensor& v) override {
+        Tensor tA = arange(27 * 27).reshape(27, 27);
+        UniTensor A = UniTensor(tA);
+        // A = A + A.clone().permute({1, 0},-1,false);
+        A = A + A.Transpose();
+        return UniTensor(linalg::Dot(A.get_block_(), v.get_block_()));
+      }
+    };
+
+    class MyOp2 : public LinOp {
+     public:
+      UniTensor H;
+      MyOp2(int dim) : LinOp("mv", dim) {
+        Tensor A = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_A.cytn");
+        Tensor B = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_B.cytn");
+        Tensor C = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_C.cytn");
+        Bond lan_I = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
+        Bond lan_J = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
+        H = UniTensor({lan_I, lan_J});
+        H.put_block(A, 0);
+        H.put_block(B, 1);
+        H.put_block(C, 2);
+        H.relabel_({"a", "b"});
+        // H.print_diagram();
+        // H.print_blocks();
+      }
+      UniTensor matvec(const UniTensor& psi) override {
+        auto out = H.contract(psi);
+        out.relabel_({"b", "c"});
+        // out.print_diagram();
+        return out;
+      }
+    };
+    // the function to check the answer
+    bool CheckResult(OneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
+                     const std::string& which, const cytnx_uint64 k);
+
+    void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
+                    const cytnx_uint64& k = 3) {
+      int D = 5, d = 2, dw = 3;
+      OneSiteOp op = OneSiteOp(d, D, dw, mat_type);
+      const cytnx_uint64 maxiter = 1000;
+      const cytnx_double cvg_crit = 0;
+      std::vector<UniTensor> lanczos_eigs =
+        linalg::Lanczos(&op, op.UT_init, which, maxiter, cvg_crit, k);
+      bool is_pass = CheckResult(op, lanczos_eigs, which, k);
+      EXPECT_TRUE(is_pass);
+    }
+
+    // error test
+    class ErrorTestClass {
+     public:
+      std::string which = "LM";
+      cytnx_uint64 k = 1;
+      cytnx_uint64 maxiter = 10;
+      cytnx_int32 d = 2, D = 5, dw = 3;
+      cytnx_double cvg_crit = 0;
+      bool is_V = true;
+      cytnx_int32 ncv = 0;
+      ErrorTestClass(){};
+      void ExcuteErrorTest();
+      // set
+      void Set_mat_type(const int _mat_type) {
+        mat_type = _mat_type;
+        op = OneSiteOp(d, D, dw, mat_type);
       }
 
-      // get resigue |Hv - ev|
-      Scalar GetResidue(OneSiteOp& H, const Scalar& eigval, const UniTensor& eigvec) {
-        UniTensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
-        Scalar resi = resi_vec.Norm().item();
-        return resi;
+     private:
+      int mat_type = Type.Double;
+      OneSiteOp op = OneSiteOp(d, D, dw, mat_type);
+    };
+    void ErrorTestClass::ExcuteErrorTest() {
+      try {
+        auto lanczos_eigs =
+          linalg::Lanczos(&op, op.UT_init, which, maxiter, cvg_crit, k, is_V, ncv);
+        FAIL();
+      } catch (const std::exception& ex) {
+        auto err_msg = ex.what();
+        std::cerr << err_msg << std::endl;
+        SUCCEED();
       }
+    }
 
-      // compare the lanczos results with full spectrum (calculated by the function Eig.)
-      bool CheckResult(OneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
-                       const std::string& which, const cytnx_uint64 k) {
-        // get full spectrum (eigenvalues)
-        std::vector<UniTensor> full_eigs = linalg::Eigh(H.EffH);
-        UniTensor full_eigvals = full_eigs[0];
-        std::vector<Scalar> ordered_eigvals = OrderEigvals(full_eigvals, which);
-        auto fst_few_eigvals =
-          std::vector<Scalar>(ordered_eigvals.begin(), ordered_eigvals.begin() + k);
-        UniTensor lanczos_eigvals = lanczos_eigs[0];
-
-        // check the number of the eigenvalues
-        cytnx_uint64 lanczos_eigvals_len = lanczos_eigvals.shape()[0];
-        auto dtype = H.dtype();
-        const double tolerance =
-          (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
-        if (lanczos_eigvals_len != k) return false;
-        for (cytnx_uint64 i = 0; i < k; ++i) {
-          auto lanczos_eigval = lanczos_eigvals.get_block_().storage().at(i);
-          // if k == 1, lanczos_eigvecs will be a rank-1 tensor
-          auto lanczos_eigvec = lanczos_eigs[i + 1];
-          auto exact_eigval = fst_few_eigvals[i];
-          // check eigenvalue by comparing with the full spectrum results.
-          // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
-          auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
-          if (eigval_err >= tolerance) return false;
-          // check the is the eigenvector correct
-          auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
-          if (resi_err >= tolerance) return false;
-          // check phase
-        }
-        return true;
+    // For given 'which' = 'LM', 'SR', ...etc, sort the given eigenvalues.
+    bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
+    bool cmpAlgebra(const Scalar& l, const Scalar& r) { return l < r; }
+    std::vector<Scalar> OrderEigvals(const UniTensor& eigvals, const std::string& order_type) {
+      char small_or_large = order_type[0];  //'S' or 'L'
+      char metric_type = order_type[1];  //'M' or 'A'
+      auto eigvals_len = eigvals.shape()[0];
+      auto ordered_eigvals = std::vector<Scalar>(eigvals_len, Scalar());
+      for (cytnx_uint64 i = 0; i < eigvals_len; ++i)
+        ordered_eigvals[i] = eigvals.get_block_().storage().at(i);
+      std::function<bool(const Scalar&, const Scalar&)> cmpFncPtr;
+      if (metric_type == 'M') {
+        cmpFncPtr = cmpNorm;
+      } else if (metric_type == 'A') {
+        cmpFncPtr = cmpAlgebra;
+      } else {
+      }  // wrong input
+      // sort eigenvalues
+      if (small_or_large == 'S') {
+        std::stable_sort(ordered_eigvals.begin(), ordered_eigvals.end(), cmpFncPtr);
+      } else {  // 'L'
+        std::stable_sort(ordered_eigvals.rbegin(), ordered_eigvals.rend(), cmpFncPtr);
       }
+      return ordered_eigvals;
+    }
 
-    }  // namespace
+    // get resigue |Hv - ev|
+    Scalar GetResidue(OneSiteOp& H, const Scalar& eigval, const UniTensor& eigvec) {
+      UniTensor resi_vec = H.matvec(eigvec) - eigval * eigvec;
+      Scalar resi = resi_vec.Norm().item();
+      return resi;
+    }
+
+    // compare the lanczos results with full spectrum (calculated by the function Eig.)
+    bool CheckResult(OneSiteOp& H, const std::vector<UniTensor>& lanczos_eigs,
+                     const std::string& which, const cytnx_uint64 k) {
+      // get full spectrum (eigenvalues)
+      std::vector<UniTensor> full_eigs = linalg::Eigh(H.EffH);
+      UniTensor full_eigvals = full_eigs[0];
+      std::vector<Scalar> ordered_eigvals = OrderEigvals(full_eigvals, which);
+      auto fst_few_eigvals =
+        std::vector<Scalar>(ordered_eigvals.begin(), ordered_eigvals.begin() + k);
+      UniTensor lanczos_eigvals = lanczos_eigs[0];
+
+      // check the number of the eigenvalues
+      cytnx_uint64 lanczos_eigvals_len = lanczos_eigvals.shape()[0];
+      auto dtype = H.dtype();
+      const double tolerance =
+        (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
+      if (lanczos_eigvals_len != k) return false;
+      for (cytnx_uint64 i = 0; i < k; ++i) {
+        auto lanczos_eigval = lanczos_eigvals.get_block_().storage().at(i);
+        // if k == 1, lanczos_eigvecs will be a rank-1 tensor
+        auto lanczos_eigvec = lanczos_eigs[i + 1];
+        auto exact_eigval = fst_few_eigvals[i];
+        // check eigenvalue by comparing with the full spectrum results.
+        // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
+        auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
+        if (eigval_err >= tolerance) return false;
+        // check the is the eigenvector correct
+        auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
+        if (resi_err >= tolerance) return false;
+        // check phase
+      }
+      return true;
+    }
 
     // corrected test
     // 1-1, test for 'which' = 'LM'

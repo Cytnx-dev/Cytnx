@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 
 #include "cytnx.hpp"
+
 namespace cytnx {
   namespace {
 
@@ -20,31 +21,27 @@ namespace cytnx {
     static_assert(std::is_same_v<decltype(std::declval<const Symmetry &>().n()), int &>,
                   "Symmetry::n() must preserve the legacy `int &n() const` signature");
 
-    namespace {
+    const std::string kDataDir = CYTNX_TEST_DATA_DIR "/common/Symmetry/";
 
-      const std::string kDataDir = CYTNX_TEST_DATA_DIR "/common/Symmetry/";
+    std::vector<char> ReadAllBytes(const std::string &path) {
+      std::ifstream f(path, std::ios::binary);
+      EXPECT_TRUE(f.is_open()) << "cannot open " << path;
+      return std::vector<char>((std::istreambuf_iterator<char>(f)),
+                               std::istreambuf_iterator<char>());
+    }
 
-      std::vector<char> ReadAllBytes(const std::string &path) {
-        std::ifstream f(path, std::ios::binary);
-        EXPECT_TRUE(f.is_open()) << "cannot open " << path;
-        return std::vector<char>((std::istreambuf_iterator<char>(f)),
-                                 std::istreambuf_iterator<char>());
-      }
+    std::string TmpPath(const std::string &name) {
+      return (std::filesystem::temp_directory_path() / name).string();
+    }
 
-      std::string TmpPath(const std::string &name) {
-        return (std::filesystem::temp_directory_path() / name).string();
-      }
-
-      // Save `sym` to a temporary file and return its bytes.
-      std::vector<char> SaveToBytes(const Symmetry &sym, const std::string &tag) {
-        const std::string path = TmpPath("cytnx_symmetry_test_" + tag + ".cysym");
-        sym.Save(path);
-        std::vector<char> bytes = ReadAllBytes(path);
-        std::remove(path.c_str());
-        return bytes;
-      }
-
-    }  // namespace
+    // Save `sym` to a temporary file and return its bytes.
+    std::vector<char> SaveToBytes(const Symmetry &sym, const std::string &tag) {
+      const std::string path = TmpPath("cytnx_symmetry_test_" + tag + ".cysym");
+      sym.Save(path);
+      std::vector<char> bytes = ReadAllBytes(path);
+      std::remove(path.c_str());
+      return bytes;
+    }
 
     // ---------------------------------------------------------------------------
     // Byte-compatibility contract.

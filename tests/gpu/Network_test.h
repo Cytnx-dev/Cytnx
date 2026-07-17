@@ -5,8 +5,9 @@
 
 #include "cytnx.hpp"
 #include "gpu_test_tools.h"
+
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
 
     class NetworkTest : public ::testing::Test {
      public:
@@ -46,6 +47,6 @@ namespace cytnx {
       }
     };
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx
 #endif  // CYTNX_TESTS_GPU_NETWORK_TEST_H_

@@ -1,7 +1,8 @@
 #include "DenseUniTensor_test.h"
+
 namespace cytnx {
   namespace {
-    using test::DenseUniTensorTest;
+    using gpu_test::DenseUniTensorTest;
 
     using std::complex_literals::operator""i;
     TEST_F(DenseUniTensorTest, GpuTrace) {
@@ -144,7 +145,7 @@ namespace cytnx {
     /*=====test info=====
     describe:test pseudo-inverse
     ====================*/
-    TEST_F(DenseUniTensorTest, Inv) {
+    TEST_F(DenseUniTensorTest, GpuInv) {
       const double tol = 1e-12;
       double clip = 1e-14;
       EXPECT_TRUE(AreNearlyEqUniTensor(utarcomplex3456.Inv(tol).Inv_(tol), utarcomplex3456, tol));
@@ -238,7 +239,7 @@ namespace cytnx {
               }
     }
 
-    // TEST_F(DenseUniTensorTest, Truncate){
+    // TEST_F(DenseUniTensorTest, GpuTruncate){
     //   auto tmp = utarcomplex3456.truncate(0,1);
     //   // EXPECT_EQ(tmp.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0,2}, {1,6},
     //   {0,1}}));

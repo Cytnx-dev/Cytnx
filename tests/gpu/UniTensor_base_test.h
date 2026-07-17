@@ -4,8 +4,9 @@
 #include <gtest/gtest.h>
 
 #include "cytnx.hpp"
+
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
     class UniTensor_baseTest : public ::testing::Test {
      public:
       UniTensor utzero345;
@@ -18,6 +19,6 @@ namespace cytnx {
       void TearDown() override {}
     };
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx
 #endif  // CYTNX_TESTS_GPU_UNITENSOR_BASE_TEST_H_

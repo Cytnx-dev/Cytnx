@@ -4,8 +4,9 @@
 #include <gtest/gtest.h>
 
 #include "cytnx.hpp"
+
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
 
     class TensorTest : public ::testing::Test {
      public:
@@ -44,6 +45,6 @@ namespace cytnx {
       void TearDown() override {}
     };
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx
 #endif  // CYTNX_TESTS_GPU_TENSOR_TEST_H_

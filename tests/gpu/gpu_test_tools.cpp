@@ -16,7 +16,7 @@
 #define RAND_MIN_VAL ((-1) * RAND_MAX_VAL)
 
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
 
     void TestFailMsg::AppendMsg(const std::string& fail_msg, const std::string& func_name,
                                 const int line) {
@@ -587,5 +587,5 @@ namespace cytnx {
       return shapes;
     }
 
-  }  // namespace test
+  }  // namespace gpu_test
 }  // namespace cytnx

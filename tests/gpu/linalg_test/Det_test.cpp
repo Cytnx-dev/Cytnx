@@ -8,11 +8,12 @@
 #include "gpu_test_tools.h"
 #include "linalg.hpp"
 #include "Type.hpp"
+
 namespace cytnx {
   namespace {
 
-    using test::dtype_list;
-    using test::InitTensorUniform;
+    using gpu_test::dtype_list;
+    using gpu_test::InitTensorUniform;
 
     Tensor CalculateDeterminant(const Tensor& T) {
       // Regardless of whether the input tensor is on the GPU or CPU, the result tensor of Det is
@@ -67,7 +68,7 @@ namespace cytnx {
       T:Tensor with shape {6, 6} or {2, 2}, {1, 1}, {3, 3}, {4, 4} and test for all
     possilbe data type.
     ====================*/
-    TEST(DetGpu, HandleAllDtype) {
+    TEST(DetGpu, GpuHandleAllDtype) {
       for (auto dtype : dtype_list) {
         Tensor T = Tensor({6, 6}, dtype, Device.cuda);
         InitTensorUniform(T, /*rand_seed=*/3);
@@ -96,7 +97,7 @@ namespace cytnx {
     input:
       T:Tensor with shape {1} on the GPU, testing for all possible data type.
     ====================*/
-    TEST(DetGpu, HandleSingleElementTensor) {
+    TEST(DetGpu, GpuHandleSingleElementTensor) {
       for (auto dtype : dtype_list) {
         Tensor T = Tensor({1, 1}, dtype, Device.cuda);
         InitTensorUniform(T, /*rand_seed=*/6);
@@ -109,7 +110,7 @@ namespace cytnx {
     input:
       T:Double data type not contiguous tensor with shape {9,9} on the GPU.
     ====================*/
-    TEST(DetGpu, HandleNotContiguous) {
+    TEST(DetGpu, GpuHandleNotContiguous) {
       Tensor T = Tensor({9, 9}, Type.Double, Device.cuda);
       InitTensorUniform(T, /*rand_seed=*/1);
       // permute then they will not contiguous
@@ -123,7 +124,7 @@ namespace cytnx {
     input:
       T:void tensor
     ====================*/
-    TEST(DetGpu, ThrowsOnNonInitializedTensor) {
+    TEST(DetGpu, GpuThrowsOnNonInitializedTensor) {
       Tensor T = Tensor();
       EXPECT_THROW(linalg::Det(T), std::logic_error);
     }
@@ -133,7 +134,7 @@ namespace cytnx {
     input:
       T:double type tensor with shape {2, 3} on the GPU.
     ====================*/
-    TEST(DetGpu, ThrowsOnNonSquareTensor) {
+    TEST(DetGpu, GpuThrowsOnNonSquareTensor) {
       Tensor T = Tensor({2, 3}, Type.Double, Device.cuda);
       InitTensorUniform(T, /*rand_seed=*/0);
       EXPECT_THROW(linalg::Det(T), std::logic_error);

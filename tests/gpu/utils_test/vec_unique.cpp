@@ -2,7 +2,7 @@
 
 namespace cytnx {
   namespace {
-    using test::VecTest;
+    using gpu_test::VecTest;
 
     /*
      * Complex types and bool types are not avaiable for vec_unique

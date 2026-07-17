@@ -14,7 +14,7 @@
 // This file contains some function we may usually use in the unit test
 // such as the data initialization and comparison.
 namespace cytnx {
-  namespace test {
+  namespace gpu_test {
 
     // test error message trace
     class TestFailMsg {
@@ -115,19 +115,19 @@ namespace cytnx {
       cytnx_uint64 dim, cytnx_uint64 min_size = 1, cytnx_uint64 max_size = 1024,
       cytnx_uint64 num_shapes = 10, cytnx_bool include_edge_case = true, cytnx_uint32 seed = 0);
 
-  }  // namespace test
+  }  // namespace gpu_test
 
-  using test::AreElemSame;
-  using test::AreEqTensor;
-  using test::AreEqUniTensor;
-  using test::AreNearlyEqTensor;
-  using test::AreNearlyEqUniTensor;
-  using test::device_list;
-  using test::dtype_list;
-  using test::GenerateTestShapes;
-  using test::InitTensorUniform;
-  using test::InitUniTensorUniform;
-  using test::TestFailMsg;
+  using gpu_test::AreElemSame;
+  using gpu_test::AreEqTensor;
+  using gpu_test::AreEqUniTensor;
+  using gpu_test::AreNearlyEqTensor;
+  using gpu_test::AreNearlyEqUniTensor;
+  using gpu_test::device_list;
+  using gpu_test::dtype_list;
+  using gpu_test::GenerateTestShapes;
+  using gpu_test::InitTensorUniform;
+  using gpu_test::InitUniTensorUniform;
+  using gpu_test::TestFailMsg;
 }  // namespace cytnx
 
 /**
