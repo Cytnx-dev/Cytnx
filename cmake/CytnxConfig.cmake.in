@@ -32,4 +32,21 @@ if(NOT TARGET Cytnx::cytnx)
     include("${CMAKE_CURRENT_LIST_DIR}/CytnxTargets.cmake")
 endif()
 
+if(@USE_CUDA@)
+  # cytnx was built with UNI_GPU (applied PUBLIC), so its public header Type.hpp
+  # includes <cuda/std/complex>. CUDA 12+/13 relocate that header under the
+  # toolkit's cccl/ subdir, which is in no CUDA:: imported target's INTERFACE.
+  # The build tree added the dir only through $<BUILD_INTERFACE:>, so the
+  # exported target carries no cccl path. Re-detect it against the consumer's own
+  # CUDAToolkit (found above) and append it to the imported target's interface
+  # includes — this stays relocatable because the path comes from the consumer's
+  # toolkit, not the build machine. Detection is shared with the in-tree build.
+  include("${CMAKE_CURRENT_LIST_DIR}/CytnxDetectCCCL.cmake")
+  cytnx_detect_cccl_include_dir(_cytnx_cccl_dir)
+  if(_cytnx_cccl_dir)
+    set_property(TARGET Cytnx::cytnx APPEND PROPERTY
+      INTERFACE_INCLUDE_DIRECTORIES "${_cytnx_cccl_dir}")
+  endif()
+endif()
+
 check_required_components(Cytnx)

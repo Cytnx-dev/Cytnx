@@ -272,28 +272,11 @@ if(USE_CUDA)
     #      -gencode=arch=compute_75,code=compute_75 ")
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
-    # CUDA 12+/13 may place Thrust/CUB headers under include/cccl.
-    set(_cytnx_cccl_candidates)
-    if(DEFINED CUDAToolkit_TARGET_DIR AND NOT "${CUDAToolkit_TARGET_DIR}" STREQUAL "")
-      list(APPEND _cytnx_cccl_candidates "${CUDAToolkit_TARGET_DIR}/include/cccl")
-    endif()
-    foreach(_cuda_inc IN LISTS CUDAToolkit_INCLUDE_DIRS)
-      list(APPEND _cytnx_cccl_candidates
-        "${_cuda_inc}/cccl"
-        "${_cuda_inc}/../include/cccl"
-        "${_cuda_inc}/../../include/cccl"
-        "${_cuda_inc}/../../../include/cccl")
-    endforeach()
-    list(REMOVE_DUPLICATES _cytnx_cccl_candidates)
-
-    set(_cytnx_cccl_dir "")
-    foreach(_cccl_candidate IN LISTS _cytnx_cccl_candidates)
-      get_filename_component(_cccl_candidate_abs "${_cccl_candidate}" ABSOLUTE)
-      if(EXISTS "${_cccl_candidate_abs}")
-        set(_cytnx_cccl_dir "${_cccl_candidate_abs}")
-        break()
-      endif()
-    endforeach()
+    # CUDA 12+/13 may place Thrust/CUB headers (incl. <cuda/std/complex>) under
+    # include/cccl. Detection is shared with the installed CytnxConfig.cmake so
+    # both use identical logic; see cmake/CytnxDetectCCCL.cmake.
+    include(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake)
+    cytnx_detect_cccl_include_dir(_cytnx_cccl_dir)
     if(NOT "${_cytnx_cccl_dir}" STREQUAL "")
       # UNI_GPU is PUBLIC and makes the public header Type.hpp include
       # <cuda/std/complex>, which CUDA 12+/13 relocate under the cccl/ subdir.
@@ -302,7 +285,9 @@ if(USE_CUDA)
       # test_doc_cplusplus) that inherit the PUBLIC UNI_GPU macro; otherwise their
       # host .cpp compilation fails with "cuda/std/complex: No such file". Wrap in
       # BUILD_INTERFACE so the absolute build-machine path is not baked into the
-      # installed/exported target (keeps find_package(Cytnx) relocatable).
+      # installed/exported target; the installed package re-detects cccl against
+      # the consumer's own toolkit in CytnxConfig.cmake (keeps find_package(Cytnx)
+      # relocatable).
       target_include_directories(cytnx PUBLIC $<BUILD_INTERFACE:${_cytnx_cccl_dir}>)
       message(STATUS "Detected CCCL headers at: ${_cytnx_cccl_dir}")
     endif()
