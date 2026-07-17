@@ -73,6 +73,12 @@ target:
   `LD_PRELOAD` of both `libasan.so` and `libstdc++.so`, plus
   `ASAN_OPTIONS='detect_leaks=0'`, Linux only. ctest paths are unaffected —
   the ctest path keeps leak detection on.
+- If every ctest test fails with a LeakSanitizer report in
+  `__kmp_allocate_align`, that is LLVM libomp's startup allocation — a
+  conda-forge openmp-variant OpenBLAS pulled in a `libgomp.so.1` that is
+  really `libomp.so`. Make the `libgomp.so.1` soname resolve to GNU libgomp
+  instead (symlink it, or `LD_PRELOAD` `libasan.so` followed by the system
+  `libgomp.so.1`) rather than turning leak detection off.
 
 ## How much to run, when
 
