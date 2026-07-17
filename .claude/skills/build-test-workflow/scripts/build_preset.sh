@@ -244,12 +244,10 @@ fi
 #                                    pool, which ignores OMP_WAIT_POLICY
 #                                    (the value is the spin-loop count
 #                                    exponent: 2^4 iterations, then sleep).
-# Tests only, never benchmarks: benchmarks_main runs below without these so
-# measured numbers keep the default threading behavior users get.
-if [[ "${target}" != "benchmarks_main" ]]; then
-  export OMP_WAIT_POLICY=passive
-  export OPENBLAS_THREAD_TIMEOUT=4
-fi
+# Applies to benchmarks_main too, so ctest, pytest, and benchmark runs all
+# time Cytnx under one and the same threading environment.
+export OMP_WAIT_POLICY=passive
+export OPENBLAS_THREAD_TIMEOUT=4
 
 if [[ ${needs_python} -eq 1 ]]; then
   # shellcheck disable=SC1090
