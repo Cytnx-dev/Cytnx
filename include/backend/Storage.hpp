@@ -9,6 +9,8 @@
   #include <iostream>
   #include <string>
   #include <type_traits>
+  #include <utility>
+  #include <variant>
   #include <vector>
 
   #include "boost/smart_ptr/intrusive_ptr.hpp"
@@ -454,55 +456,37 @@ namespace cytnx {
                                                                             int device);
 
   ///@cond
-  using StorageInitFn = boost::intrusive_ptr<Storage_base> (*)();
-  inline boost::intrusive_ptr<Storage_base> SIInit_cd() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
-    return out;
+  namespace internal {
+    // Fold over Type_list (skipping void at index 0) that constructs the
+    // StorageImplementation<T> whose dtype matches `dtype`. Mirrors
+    // as_storage_variant_impl so the supported dtype set stays single-sourced
+    // from Type_list.
+    template <std::size_t... Is>
+    boost::intrusive_ptr<Storage_base> init_storage_impl(unsigned int dtype,
+                                                         std::index_sequence<Is...>) {
+      boost::intrusive_ptr<Storage_base> out;
+      const bool matched = (... || [&]() {
+        using T = std::variant_alternative_t<Is + 1, Type_list>;
+        if (dtype != Type_class::cy_typeid_v<T>) return false;
+        out = boost::intrusive_ptr<Storage_base>(new StorageImplementation<T>());
+        return true;
+      }());
+      cytnx_error_msg(!matched, "[Storage] init_storage: invalid dtype %u.%s", dtype, "\n");
+      return out;
+    }
+  }  // namespace internal
+
+  // Runtime dtype -> storage factory. Constructs the (uninitialized)
+  // StorageImplementation<T> matching `dtype`; the caller then calls
+  // Init(size, device, init_zero) on the result. Type.Void has no
+  // StorageImplementation and is rejected. Callers that already know the
+  // element type T should construct StorageImplementation<T> directly instead
+  // of routing through this runtime dispatch.
+  inline boost::intrusive_ptr<Storage_base> init_storage(unsigned int dtype) {
+    constexpr std::size_t n_non_void = std::variant_size_v<Type_list> - 1;
+    return internal::init_storage_impl(dtype, std::make_index_sequence<n_non_void>());
   }
-  inline boost::intrusive_ptr<Storage_base> SIInit_cf() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_d() {
-    boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_f() {
-    boost::intrusive_ptr<Storage_base> out(new FloatStorage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_u64() {
-    boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_i64() {
-    boost::intrusive_ptr<Storage_base> out(new Int64Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_u32() {
-    boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_i32() {
-    boost::intrusive_ptr<Storage_base> out(new Int32Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_u16() {
-    boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_i16() {
-    boost::intrusive_ptr<Storage_base> out(new Int16Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_b() {
-    boost::intrusive_ptr<Storage_base> out(new BoolStorage());
-    return out;
-  }
-  static StorageInitFn storage_init_fns[N_Type] = {
-    nullptr,    SIInit_cd,  SIInit_cf,  SIInit_d,   SIInit_f,   SIInit_i64,
-    SIInit_u64, SIInit_i32, SIInit_u32, SIInit_i16, SIInit_u16, SIInit_b};
-  ///@endcond
+    ///@endcond
 
   #ifdef UNI_GPU
   // Explicit specialization declarations for the GPU complex pointer views, so they are visible
@@ -547,7 +531,7 @@ namespace cytnx {
     void Init(const unsigned long long &size, const unsigned int &dtype = Type.Double,
               int device = -1, const bool &init_zero = true) {
       cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
-      this->_impl = storage_init_fns[dtype]();
+      this->_impl = init_storage(dtype);
       this->_impl->Init(size, device, init_zero);
     }
 
