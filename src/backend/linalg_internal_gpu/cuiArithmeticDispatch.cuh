@@ -44,11 +44,15 @@ namespace cytnx {
       template <char op_code, typename TL, typename TR>
       using InplaceOutputType_t = typename InplaceOutputType<op_code, TL, TR>::type;
 
-      // Apply op_code in the output/compute type TO. Complex-into-real is rejected
-      // at the host dispatch (iAdd/iSub/iMul/iDiv guard real (op)= complex), so that
-      // branch is unreachable and only needs to be well-formed -- a
-      // static_cast<real>(complex) would otherwise be ill-formed for the
-      // instantiation the visit generates for a real LHS + complex weak-scalar RHS.
+      // Apply op_code in the output/compute type TO. The only way to reach a real TO
+      // with a complex operand is a real LHS + complex *weak-scalar* RHS (TO recomputed
+      // as TL, see DispatchInplaceArithmeticGPU); that case is rejected at the host
+      // dispatch (iAdd/iSub/iMul/iDiv guard real (op)= complex-scalar), so this branch
+      // is unreachable at runtime. A genuine complex tensor RHS promotes TO to complex,
+      // so TO is never real there. The branch still needs to be well-formed because the
+      // visit instantiates it -- a static_cast<real>(complex) would otherwise be
+      // ill-formed. Note it silently returns TO{}, it does NOT throw: correctness of the
+      // rejection depends entirely on the host guard above.
       template <char op_code, typename TO, typename TL, typename TR>
       __device__ inline TO ApplyInplaceGpuArithOp(TL lhs, TR rhs) {
         if constexpr (!is_complex_v<TO> && (is_complex_v<TL> || is_complex_v<TR>)) {
@@ -180,7 +184,8 @@ namespace cytnx {
     // runs op_code in place. rhs_is_weak_scalar signals a python-scalar RHS (numpy
     // weak-scalar semantics, #980/#1015): it preserves the LHS dtype (RHS treated
     // as TL) rather than promoting; a genuine tensor RHS (incl. a rank-0 tensor)
-    // promotes (#941). Complex-into-real is rejected by the caller.
+    // promotes (#941), so a real LHS + complex tensor RHS becomes complex here. Only
+    // the real-LHS + complex-weak-scalar case is rejected by the caller.
     template <char op_code>
     void DispatchInplaceArithmeticGPU(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar,
                                       const std::vector<cytnx_uint64> &shape,

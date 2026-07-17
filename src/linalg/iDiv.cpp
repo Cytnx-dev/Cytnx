@@ -23,14 +23,19 @@ namespace cytnx {
       const bool rhs_is_host_scalar = (Rt.device() == Device.cpu && rhs_is_scalar);
       cytnx_error_msg(Lt.device() != Rt.device() && !rhs_is_host_scalar,
                       "[iDiv] The two tensors cannot be on different devices.%s", "\n");
-      // In-place ops write the result back into the LHS storage, so a complex result cannot be
-      // stored in a real LHS. Guard here (device-independent) so the GPU path throws like the CPU
-      // path instead of reinterpreting the real output buffer as complex and corrupting it. See
-      // #988.
-      cytnx_error_msg(!Type.is_complex(Lt.dtype()) && Type.is_complex(Rt.dtype()),
-                      "[iDiv] Cannot perform real /= complex in-place: a complex result cannot be "
-                      "stored in a real tensor.%s",
-                      "\n");
+      // Reject only a complex python *weak scalar* into a real LHS. numpy weak-scalar
+      // semantics (#980/#1015) keep the LHS dtype, so a complex weak scalar cannot be
+      // stored in a real tensor. A GENUINE complex tensor RHS is allowed: it promotes
+      // Lt's storage to complex like the out-of-place op (#941/#1013). This guard stays
+      // device-independent because the GPU kernel's complex-into-real branch silently
+      // returns zero instead of throwing (see cuiArithmeticDispatch.cuh) and so relies
+      // on this host-side rejection. See #988.
+      cytnx_error_msg(
+        rhs_is_weak_scalar && !Type.is_complex(Lt.dtype()) && Type.is_complex(Rt.dtype()),
+        "[iDiv] Cannot perform real /= complex-scalar in-place: weak-scalar "
+        "semantics preserve the real LHS dtype, so the complex scalar cannot be "
+        "stored. Use a complex LHS, or a genuine complex tensor RHS to promote.%s",
+        "\n");
 
       if (!rhs_is_scalar) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
@@ -55,8 +60,8 @@ namespace cytnx {
       // promoted type) -- so a genuine higher-precision scalar RHS no longer needs the
       // legacy promote-then-truncate dance (which existed to avoid the narrow-LHS
       // out-of-bounds write of #988); a python weak-scalar RHS still preserves the LHS
-      // dtype (its floating form for Div) via rhs_is_weak_scalar. real /= complex is
-      // rejected above.
+      // dtype (its floating form for Div) via rhs_is_weak_scalar. real /= complex-scalar
+      // is rejected above; a genuine complex tensor RHS promotes the real LHS to complex.
       static const std::vector<cytnx_uint64> empty_mapper;
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous())) {

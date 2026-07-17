@@ -45,9 +45,9 @@ namespace InplacePromoteTest {
         if (ldtype == Type.Bool) continue;
         for (auto rdtype : cytnx::TestTools::dtype_list) {
           if (rdtype == Type.Bool) continue;
-          // real (op)= complex is rejected: a complex result cannot be stored in a
-          // real LHS.
-          if (!Type.is_complex(ldtype) && Type.is_complex(rdtype)) continue;
+          // real (op)= genuine complex tensor RHS now PROMOTES the LHS to complex like
+          // the out-of-place op (#1067 review): it is no longer rejected. Only a complex
+          // python *weak scalar* is rejected -- see the dedicated rejection test below.
 
           unsigned int expected = Type.type_promote(ldtype, rdtype);
           if (op == 3) expected = Type_class::make_floating_point_dtype(expected);
@@ -162,6 +162,128 @@ namespace InplacePromoteTest {
       EXPECT_EQ(got.at<cytnx_int64>({1, 0}), -28);
       EXPECT_EQ(got.at<cytnx_int64>({1, 1}), -36);
       EXPECT_EQ(got.at<cytnx_int64>({1, 2}), -44);
+    }
+    // A genuine complex *tensor* RHS promotes a real LHS to ComplexDouble in place
+    // (#1067 review): the pre-fix guard wrongly rejected every real (op)= complex; only
+    // a complex weak scalar is rejected (see the dedicated test below). Inputs are built
+    // on the CPU (never depending on GPU kernels) then moved to the GPU. Real Double
+    // [1,2,3] and ComplexDouble [1+2i, 2+1i, 3+3i], with hand-computed results.
+    auto make_real = []() {
+      Tensor t = zeros({3}, Type.Double);
+      t.at<cytnx_double>({0}) = 1.0;
+      t.at<cytnx_double>({1}) = 2.0;
+      t.at<cytnx_double>({2}) = 3.0;
+      return t;
+    };
+    auto make_cplx = []() {
+      Tensor r = zeros({3}, Type.ComplexDouble);
+      r.at<cytnx_complex128>({0}) = cytnx_complex128(1, 2);
+      r.at<cytnx_complex128>({1}) = cytnx_complex128(2, 1);
+      r.at<cytnx_complex128>({2}) = cytnx_complex128(3, 3);
+      return r;
+    };
+    // iAdd -> [2+2i, 4+1i, 6+3i]
+    {
+      Tensor l = make_real().to(Device.cuda);
+      linalg::iAdd(l, make_cplx().to(Device.cuda));
+      EXPECT_EQ(l.dtype(), Type.ComplexDouble);
+      Tensor got = l.to(Device.cpu);
+      EXPECT_EQ(got.at<cytnx_complex128>({0}), cytnx_complex128(2, 2));
+      EXPECT_EQ(got.at<cytnx_complex128>({1}), cytnx_complex128(4, 1));
+      EXPECT_EQ(got.at<cytnx_complex128>({2}), cytnx_complex128(6, 3));
+    }
+    // iSub -> [0-2i, 0-1i, 0-3i]
+    {
+      Tensor l = make_real().to(Device.cuda);
+      linalg::iSub(l, make_cplx().to(Device.cuda));
+      EXPECT_EQ(l.dtype(), Type.ComplexDouble);
+      Tensor got = l.to(Device.cpu);
+      EXPECT_EQ(got.at<cytnx_complex128>({0}), cytnx_complex128(0, -2));
+      EXPECT_EQ(got.at<cytnx_complex128>({1}), cytnx_complex128(0, -1));
+      EXPECT_EQ(got.at<cytnx_complex128>({2}), cytnx_complex128(0, -3));
+    }
+    // iMul -> [1+2i, 4+2i, 9+9i]
+    {
+      Tensor l = make_real().to(Device.cuda);
+      linalg::iMul(l, make_cplx().to(Device.cuda));
+      EXPECT_EQ(l.dtype(), Type.ComplexDouble);
+      Tensor got = l.to(Device.cpu);
+      EXPECT_EQ(got.at<cytnx_complex128>({0}), cytnx_complex128(1, 2));
+      EXPECT_EQ(got.at<cytnx_complex128>({1}), cytnx_complex128(4, 2));
+      EXPECT_EQ(got.at<cytnx_complex128>({2}), cytnx_complex128(9, 9));
+    }
+    // iDiv (true division in the complex field) ->
+    // [0.2-0.4i, 0.8-0.4i, 0.5-0.5i]
+    {
+      Tensor l = make_real().to(Device.cuda);
+      linalg::iDiv(l, make_cplx().to(Device.cuda));
+      EXPECT_EQ(l.dtype(), Type.ComplexDouble);
+      Tensor got = l.to(Device.cpu);
+      const cytnx_complex128 e0 = got.at<cytnx_complex128>({0});
+      const cytnx_complex128 e1 = got.at<cytnx_complex128>({1});
+      const cytnx_complex128 e2 = got.at<cytnx_complex128>({2});
+      EXPECT_NEAR(e0.real(), 0.2, 1e-10);
+      EXPECT_NEAR(e0.imag(), -0.4, 1e-10);
+      EXPECT_NEAR(e1.real(), 0.8, 1e-10);
+      EXPECT_NEAR(e1.imag(), -0.4, 1e-10);
+      EXPECT_NEAR(e2.real(), 0.5, 1e-10);
+      EXPECT_NEAR(e2.imag(), -0.5, 1e-10);
+    }
+  }
+
+  // The complementary rejection on the GPU: a complex python *weak scalar* into a real
+  // LHS is still rejected (numpy weak-scalar semantics preserve the LHS dtype,
+  // #980/#1015). The guard is device-independent, so it fires before any GPU dispatch --
+  // important because the GPU kernel's complex-into-real branch silently returns zero
+  // rather than throwing. Both the user-facing scalar operator and the explicit
+  // rhs_is_weak_scalar flag must throw.
+  TEST(InplacePromoteTest, gpu_inplace_real_op_complex_weak_scalar_rejected) {
+    for (int op = 0; op < 4; ++op) {
+      SCOPED_TRACE(OpName(op));
+      // user-facing: real GPU tensor (op)= complex scalar -> weak-scalar path -> reject.
+      Tensor t = zeros({3}, Type.Double).to(Device.cuda);
+      switch (op) {
+        case 0:
+          EXPECT_THROW(t += cytnx_complex128(1, 1), std::logic_error);
+          break;
+        case 1:
+          EXPECT_THROW(t *= cytnx_complex128(1, 1), std::logic_error);
+          break;
+        case 2:
+          EXPECT_THROW(t -= cytnx_complex128(1, 1), std::logic_error);
+          break;
+        default:
+          EXPECT_THROW(t /= cytnx_complex128(1, 1), std::logic_error);
+          break;
+      }
+      // explicit weak-scalar flag with a genuine complex tensor RHS also throws; the
+      // same RHS with the default (genuine-tensor) flag promotes instead. c is nonzero
+      // so the genuine iDiv below is not a divide-by-zero.
+      Tensor l = zeros({3}, Type.Double).to(Device.cuda);
+      Tensor c_cpu = zeros({3}, Type.ComplexDouble);
+      c_cpu.at<cytnx_complex128>({0}) = cytnx_complex128(2, 1);
+      c_cpu.at<cytnx_complex128>({1}) = cytnx_complex128(2, 1);
+      c_cpu.at<cytnx_complex128>({2}) = cytnx_complex128(2, 1);
+      Tensor c = c_cpu.to(Device.cuda);
+      switch (op) {
+        case 0:
+          EXPECT_THROW(linalg::iAdd(l, c, /*rhs_is_weak_scalar=*/true), std::logic_error);
+          EXPECT_NO_THROW(linalg::iAdd(l, c));
+          break;
+        case 1:
+          EXPECT_THROW(linalg::iMul(l, c, /*rhs_is_weak_scalar=*/true), std::logic_error);
+          EXPECT_NO_THROW(linalg::iMul(l, c));
+          break;
+        case 2:
+          EXPECT_THROW(linalg::iSub(l, c, /*rhs_is_weak_scalar=*/true), std::logic_error);
+          EXPECT_NO_THROW(linalg::iSub(l, c));
+          break;
+        default:
+          EXPECT_THROW(linalg::iDiv(l, c, /*rhs_is_weak_scalar=*/true), std::logic_error);
+          EXPECT_NO_THROW(linalg::iDiv(l, c));
+          break;
+      }
+      EXPECT_EQ(l.dtype(), Type.ComplexDouble);
     }
   }
 
