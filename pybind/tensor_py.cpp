@@ -174,7 +174,27 @@ void tensor_binding(py::module &m) {
           cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s", "\n");
         }
 
-        npbuf = py::buffer_info(tmpIN.storage()._impl->data(),  // ptr
+        // Zero-copy ownership transfer (#941 ruling 4): the capsule owns a
+        // copy of the intrusive_ptr<Storage_base>, keeping the storage alive
+        // for the numpy array's lifetime. The previous release()-based path
+        // both leaked the buffer AND still copied (py::array with a raw
+        // pointer and no base object cannot take ownership). For
+        // share_mem=false, tmpIN is a fresh clone/contiguous copy, so numpy
+        // gets an independent (but not leaked) buffer; for share_mem=true,
+        // tmpIN aliases self and numpy genuinely shares self's buffer (the
+        // old path silently copied even with share_mem=true).
+        auto *owner = new boost::intrusive_ptr<cytnx::Storage_base>(tmpIN.storage()._impl);
+        py::capsule base(owner, [](void *p) {
+          delete static_cast<boost::intrusive_ptr<cytnx::Storage_base> *>(p);
+        });
+
+        // Recover the data pointer through the typed #941 path rather than
+        // the legacy erased Storage_base::data() accessor.
+        void *typed_ptr = std::visit(
+          [](auto impl) -> void * { return static_cast<void *>(impl->data()); },
+          tmpIN.storage().as_storage_variant());
+
+        npbuf = py::buffer_info(typed_ptr,  // ptr
                                 cytnx::Type.typeSize(tmpIN.dtype()),  // size of elem
                                 chr_dtype,  // pss format
                                 tmpIN.rank(),  // rank
@@ -182,12 +202,7 @@ void tensor_binding(py::module &m) {
                                 stride  // stride
         );
 
-        if (!share_mem) {
-          // Avoid the memory passed to numpy being freed.
-          tmpIN.storage().release();
-        }
-
-        return py::array(npbuf);
+        return py::array(npbuf, base);
       },
       py::arg("share_mem") = false)
     // construction
@@ -1255,177 +1270,13 @@ void tensor_binding(py::module &m) {
            return self;
          })
 
-    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__floordiv__", [](cytnx::Tensor &self, const cytnx::Tensor &rhs) { return self.Div(rhs); })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<float> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_float>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_complex64>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_int64>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_uint64>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_int32>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_uint32>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_int16>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_uint16>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<bool> &rhs) {
-           return self.Div(static_cast<cytnx::cytnx_bool>(rhs));
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const py::int_ &rhs) {
-           return dispatch_pyint(rhs, [&](auto v) { return self.Div(v); });
-         })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Div(rhs); })
-    .def("__floordiv__",
-         [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self.Div(rhs); })
-    .def("__floordiv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
-
-    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    // NOTE (pre-existing, out of scope here): a numpy scalar on the LEFT
-    // (e.g. np.float32(1.0) + t) does not reach this __r*__ binding at all --
-    // Tensor defines __iter__, so numpy's ufunc machinery treats it as an
-    // array-like and tries to iterate it instead, raising
-    // "TypeError: 'TensorIterator' object is not iterable" (issue #692).
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<float> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_float>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<std::complex<float>> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_complex64>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int64_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_int64>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint64_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint64>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int32_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_int32>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint32_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint32>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<int16_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_int16>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<uint16_t> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_uint16>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::numpy_scalar<bool> &lhs) {
-           return cytnx::linalg::Div(static_cast<cytnx::cytnx_bool>(lhs), self);
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const py::int_ &lhs) {
-           return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Div(v, self); });
-         })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Div(lhs, self); })
-    .def("__rfloordiv__",
-         [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) { return cytnx::linalg::Div(lhs, self); })
-    .def("__rfloordiv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
-
-    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
-    .def("__ifloordiv__",
-         [](py::object self, const cytnx::Tensor &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(rhs);
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<float> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_float>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<std::complex<float>> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_complex64>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<int64_t> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_int64>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<uint64_t> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_uint64>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<int32_t> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_int32>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<uint32_t> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_uint32>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<int16_t> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_int16>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<uint16_t> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_uint16>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::numpy_scalar<bool> &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(static_cast<cytnx::cytnx_bool>(rhs));
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const py::int_ &rhs) {
-           dispatch_pyint(rhs, [&](auto v) { self.cast<cytnx::Tensor &>().Div_(v); });
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const cytnx::cytnx_double &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(rhs);
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const cytnx::cytnx_complex128 &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(rhs);
-           return self;
-         })
-    .def("__ifloordiv__",
-         [](py::object self, const cytnx::Scalar &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(rhs);
-           return self;
-         })
+    // __floordiv__/__rfloordiv__/__ifloordiv__ are deliberately UNBOUND
+    // (#941: "// makes no sense at all for any tensor object that Cytnx
+    // cares about -- leave it unbound"). They previously aliased Div, which
+    // after the true-division change would have made `t // x` silently
+    // perform TRUE division -- strictly worse than the old truncation.
+    // Python raises TypeError naturally for unbound dunders. This supersedes
+    // the P1-T2/T3 keep-set treatment these operator groups received.
 
     // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__mod__", [](cytnx::Tensor &self, const cytnx::Tensor &rhs) { return self.Mod(rhs); })

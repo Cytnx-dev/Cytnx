@@ -38,9 +38,12 @@ namespace cytnx {
     // void Init(const std::initializer_list<unsigned int> &init_shape);
     std::string dtype_str() const;
     std::string device_str() const;
-    virtual const unsigned long long capacity() const {
-      cytnx_error_msg(true, "Not implemented.%s", "");
-    }
+    // capacity()/capacity_ were removed (#941 ruling 2): Storage always
+    // allocates exactly size() elements; append()/resize() reallocate
+    // exactly (documented O(n) per call, numpy-like) instead of the previous
+    // STORAGE_DEFT_SZ-rounded over-allocation. This also guarantees a
+    // buffer's allocated extent always equals its size, which the zero-copy
+    // numpy view (ruling 4) relies on.
     virtual const unsigned long long size() const {
       cytnx_error_msg(true, "Not implemented.%s", "");
     }
@@ -67,6 +70,19 @@ namespace cytnx {
 
     // `Storage_base` can be instanitiated directly. It's deconstructor calls `data()`, so we cannot
     // throw a runtime error here.
+    //
+    // Legacy erased data accessor (#941). Retained ONLY for consumers not yet
+    // converted to typed dispatch via as_storage_variant()/storage_cast<T>:
+    //   - Tensor::ptr()/gpu_ptr() (include/Tensor.hpp) -- feeds many more
+    //     call sites than the six arithmetic families converted in #941's
+    //     first pass (Add/Sub/Mul/Div/Cpr/Mod) and is out of scope for that
+    //     task.
+    //   - GPU kernel dispatch (src/backend/linalg_internal_gpu/*, the
+    //     cuAri_ii table) -- ruling 3 keeps GPU on the legacy table; see GPU
+    //     tracking issue #1013.
+    // New code should use StorageImplementation<T>::data() (typed) via
+    // as_storage_variant()/storage_cast<T> instead. Do not add new callers of
+    // this accessor.
     virtual void *data() const { return nullptr; }
     virtual int dtype() const { return Type.Void; }
     virtual int device() const { return Device.cpu; }
@@ -156,19 +172,12 @@ namespace cytnx {
                             const std::vector<std::vector<cytnx_uint64>> &locators,
                             const cytnx_uint64 &Nunit, const bool &is_scalar);
 
-    /**
-     * @brief Drop the ownership of the underlying contiguous memory.
-     *
-     * The caller MUST take the ownership before calling this method. Any operation following this
-     * method causes undefined behavior.
-     *
-     * @return The pointer referencing the underlying storage.
-     * @deprecated This method may be removed without any notification.
-     */
-    [[deprecated("This method is deprecated and may be removed in the future.")]] virtual void *
-      release() noexcept {
-      return nullptr;
-    }
+    // release() was removed (#941 migration step 12): it returned an erased
+    // void*, dropped the allocation from StorageImplementation<T>, and left a
+    // typed storage object in a deliberately invalid state -- incompatible
+    // with trustworthy typed storage invariants. Its only callers (the
+    // .numpy() bindings) now use a py::capsule holding an
+    // intrusive_ptr<Storage_base> for ownership/keepalive instead.
 
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);
@@ -250,8 +259,11 @@ namespace cytnx {
   template <typename DType>
   class StorageImplementation : public Storage_base {
    public:
+    using value_type = DType;
+    static constexpr unsigned int dtype_value = Type_class::cy_typeid_v<DType>;
+
     StorageImplementation()
-        : capacity_(0), size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
+        : size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
     void Init(const unsigned long long &len_in, const int &device = -1,
               const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
@@ -275,28 +287,25 @@ namespace cytnx {
     boost::intrusive_ptr<Storage_base> real();
     boost::intrusive_ptr<Storage_base> imag();
 
-    const unsigned long long capacity() const override { return capacity_; }
     const unsigned long long size() const override { return size_; }
     void *data() const override { return start_; }
     int dtype() const override { return dtype_; }
     int device() const override { return device_; }
 
-    /**
-     * @brief Drop the ownership of the underlying contiguous memory.
-     *
-     * The caller MUST take the ownership before calling this method. Any operation following this
-     * method causes undefined behavior.
-     *
-     * @return The pointer referencing the underlying storage.
-     * @deprecated This method may be removed without any notification.
-     */
-    void *release() noexcept override {
-      void *original_start = start_;
-      start_ = nullptr;
-      size_ = 0;
-      capacity_ = 0;
-      return original_start;
-    };
+    // Typed data pointer -- the #941 foundation. Prefer this over the
+    // inherited void* data() in all new code; the void* accessor remains
+    // only for callers not yet converted to typed dispatch (see
+    // Storage_base::data() doc comment).
+    //
+    // Only a non-const overload is provided here: Storage_base already
+    // declares `void *data() const override` (retained for the transition,
+    // see the doc comment on that declaration), and a same-signature
+    // const-qualified `const value_type *data() const` would be an illegal
+    // return-type-only overload against it. Typed const access can go
+    // through storage_cast<T>(...)->data() on a non-const object, or through
+    // as_storage_variant()'s visitor, which is the primary typed-dispatch
+    // entry point anyway.
+    value_type *data() { return static_cast<value_type *>(start_); }
 
     // generators:
     void fill(const cytnx_complex128 &val);
@@ -354,7 +363,6 @@ namespace cytnx {
 
     void *start_;
     unsigned long long size_;
-    unsigned long long capacity_;
     unsigned int dtype_;
     int device_;
   };
@@ -371,6 +379,79 @@ namespace cytnx {
   using Uint16Storage = StorageImplementation<cytnx_uint16>;
   using Int16Storage = StorageImplementation<cytnx_int16>;
   using BoolStorage = StorageImplementation<cytnx_bool>;
+
+  // A variant over intrusive_ptr<StorageImplementation<T>> for every non-void
+  // dtype in Type_list, in Type_list order (excluding void at index 0).
+  // StorageImplementation<void> deliberately does not exist and must never
+  // appear here -- Type.Void is not a dtype that arithmetic/typed kernels can
+  // consume (#941). Built with a metafunction over Type_list so the supported
+  // dtype set has exactly one source of truth (mirrors T2's Scalar variant
+  // deriving from Type_list rather than hand-listing dtypes).
+  //
+  // Exhaustiveness note: any std::visit over StorageVariant is instantiated
+  // for all 11 current alternatives at compile time. Adding a 12th dtype to
+  // Type_list without a corresponding StorageImplementation<T> specialization
+  // (or without that T supporting whatever operation the visitor performs,
+  // guarded by if constexpr per #941's "Pattern 1") will fail to compile at
+  // every visit call site -- this is deliberate and is the mechanism that
+  // makes the dtype set single-sourced from Type_list.
+  namespace internal {
+    template <typename Variant>
+    struct storage_variant_from_type_list;
+
+    template <typename... Ts>
+    struct storage_variant_from_type_list<std::variant<void, Ts...>> {
+      using type = std::variant<boost::intrusive_ptr<StorageImplementation<Ts>>...>;
+    };
+  }  // namespace internal
+
+  using StorageVariant = typename internal::storage_variant_from_type_list<Type_list>::type;
+
+  // storage_value_t<Ptr>: the DType of a boost::intrusive_ptr<StorageImplementation<DType>>,
+  // for use inside std::visit lambdas over StorageVariant, e.g.:
+  //   using T = storage_value_t<decltype(impl)>;
+  template <class Ptr>
+  struct storage_value;
+
+  template <class T>
+  struct storage_value<boost::intrusive_ptr<StorageImplementation<T>>> {
+    using type = T;
+  };
+
+  template <class Ptr>
+  using storage_value_t = typename storage_value<std::remove_cvref_t<Ptr>>::type;
+
+  // Checked downcast from erased Storage_base to typed StorageImplementation<T>.
+  // Throws (via cytnx_error_msg) on dtype mismatch. This is the single
+  // recovery point between erased storage and typed storage (#941).
+  template <class T>
+  boost::intrusive_ptr<StorageImplementation<T>> storage_cast(
+    const boost::intrusive_ptr<Storage_base> &base) {
+    cytnx_error_msg(base->dtype() != (int)Type_class::cy_typeid_v<T>,
+                    "[Storage] dtype mismatch in storage_cast. got=%d expected=%d%s", base->dtype(),
+                    Type_class::cy_typeid_v<T>, "\n");
+    auto *raw = dynamic_cast<StorageImplementation<T> *>(base.get());
+    cytnx_error_msg(raw == nullptr, "[Storage] internal dtype/type mismatch in storage_cast.%s",
+                    "\n");
+    return boost::intrusive_ptr<StorageImplementation<T>>(raw);
+  }
+
+  // Convert an erased Storage_base pointer to the typed StorageVariant.
+  // Type.Void is rejected with a hard error -- it has no StorageImplementation
+  // and cannot be consumed by typed/arithmetic kernels (#941).
+  StorageVariant as_storage_variant(const boost::intrusive_ptr<Storage_base> &base);
+
+  // Prepare out._impl as a StorageImplementation<T> of the requested size and
+  // device, reusing the existing buffer when it already matches (fast path
+  // for in-place arithmetic), otherwise allocating a fresh typed buffer and
+  // replacing out._impl (#941). out is explicitly allowed to be empty
+  // (Type.Void): in that case a new buffer is always allocated. On return,
+  // the returned intrusive_ptr always refers to the typed object now held by
+  // out._impl.
+  template <class T>
+  boost::intrusive_ptr<StorageImplementation<T>> storage_as_type_or_replace(class Storage &out,
+                                                                            std::size_t size,
+                                                                            int device);
 
   ///@cond
   typedef boost::intrusive_ptr<Storage_base> (*pStorage_init)();
@@ -653,6 +734,13 @@ namespace cytnx {
     }
 
     /**
+     * @brief Recover a typed variant over this Storage's underlying
+     * StorageImplementation<T> for use with std::visit-based typed dispatch
+     * (#941). Throws if this Storage is Type.Void (uninitialized/empty).
+     */
+    StorageVariant as_storage_variant() const { return cytnx::as_storage_variant(this->_impl); }
+
+    /**
     @brief the dtype-id of current Storage, see cytnx::Type for more details.
     @return [cytnx_uint64] the dtype-id.
     */
@@ -775,26 +863,6 @@ namespace cytnx {
 
     */
     unsigned long long size() const { return this->_impl->size(); }
-
-    /**
-    @brief the capacity in the Storage.
-    @details the capacity is the actual allocated memory in the Storage. The behavior of
-      capacity is similar to std::vector::capacity() in c++.
-    @return [cytnx_uint64]
-
-    */
-    unsigned long long capacity() const { return this->_impl->capacity(); }
-
-    /**
-     * @brief Drop the ownership of the underlying contiguous memory.
-     *
-     * The caller MUST take the ownership before calling this method. Any operation following this
-     * method causes undefined behavior.
-     *
-     * @return The pointer referencing the underlying storage.
-     * @deprecated This method may be removed without any notification.
-     */
-    void *release() noexcept { return this->_impl->release(); }
 
     /**
     @brief print the info of the Storage, including the device, dtype and size.
@@ -1040,6 +1108,25 @@ namespace cytnx {
     //   return this->_impl->approx_eq(rhs._impl, tol);
     // };
   };
+
+  // Out-of-line definition: needs Storage's complete type (out._impl), so it
+  // is defined here after the Storage class body rather than at the
+  // declaration site above.
+  template <class T>
+  boost::intrusive_ptr<StorageImplementation<T>> storage_as_type_or_replace(Storage &out,
+                                                                            std::size_t size,
+                                                                            int device) {
+    constexpr unsigned int dtype = Type_class::cy_typeid_v<T>;
+    if (out._impl && out._impl->dtype() == (int)dtype && out._impl->size() == size &&
+        out._impl->device() == device) {
+      return storage_cast<T>(out._impl);
+    }
+    auto new_storage =
+      boost::intrusive_ptr<StorageImplementation<T>>(new StorageImplementation<T>());
+    new_storage->Init(size, device);
+    out._impl = new_storage;
+    return new_storage;
+  }
 
   ///@cond
   std::ostream &operator<<(std::ostream &os, const Storage &in);

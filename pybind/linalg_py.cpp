@@ -406,7 +406,9 @@ void linalg_binding(py::module &m) {
     py::arg("Tio"));
   m_linalg.def(
     "Expf",
-    [](cytnx::Tensor &Tio) {
+    // Expf is non-in-place (returns a new Tensor); take const& so pybind11 also accepts
+    // const/temporary Tensors, matching how Exp is bound. Expf_ above stays non-const (in-place).
+    [](const cytnx::Tensor &Tio) {
       if (PyErr_WarnEx(PyExc_DeprecationWarning, "Expf() is deprecated, use Exp() instead.", 1) < 0)
         throw py::error_already_set();
       return cytnx::linalg::Expf(Tio);
