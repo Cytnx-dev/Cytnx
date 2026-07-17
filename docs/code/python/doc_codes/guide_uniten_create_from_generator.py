@@ -14,9 +14,9 @@ uTu = cytnx.UniTensor.uniform([2,3,4],0,100).relabel(["a","b","c"]).set_name("ra
 # Existing UniTensor instances can be randomized in place either through instance
 # methods or the cytnx.random module.
 uT_inplace_normal = cytnx.UniTensor.zeros([2,3,4], ["a","b","c"], name="normal template")
-cytnx.random.normal_(uT_inplace_normal, mean=0., std=1.)
+uT_inplace_normal.normal_(mean=0., std=1.)
 uT_inplace_uniform = cytnx.UniTensor.zeros([2,3,4], ["a","b","c"], name="uniform template")
-uT_inplace_uniform.uniform_(low=0., high=100.)
+cytnx.random.uniform_(uT_inplace_uniform, low=0., high=100.)
 
 # 5) initialize with subsequent numbers from 0 to 2*3*4 - 1 = 23
 uTarr0 = cytnx.UniTensor.arange(2*3*4).reshape(2,3,4).set_rowrank(1) \
