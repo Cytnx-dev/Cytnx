@@ -230,6 +230,27 @@ if [[ ${do_test} -eq 0 ]]; then
   exit 0
 fi
 
+# Idle worker threads busy-spin between the tiny, microsecond-spaced
+# parallel regions the test suites trigger (HPTT opens an OpenMP team of
+# Device.Ncpus on every permute, even 50-element ones), oversubscribing the
+# CPU and inflating test wall time several-fold -- worst under parallel
+# ctest (issue #1058). Make idle workers sleep instead. One knob per
+# threading runtime, and both are set because either OpenBLAS variant may
+# be the one linked:
+#   OMP_WAIT_POLICY=passive       -- every OpenMP runtime in the process
+#                                    (HPTT's/cytnx's -fopenmp team, and an
+#                                    openmp-variant OpenBLAS's workers).
+#   OPENBLAS_THREAD_TIMEOUT=4     -- a pthreads-variant OpenBLAS's own
+#                                    pool, which ignores OMP_WAIT_POLICY
+#                                    (the value is the spin-loop count
+#                                    exponent: 2^4 iterations, then sleep).
+# Tests only, never benchmarks: benchmarks_main runs below without these so
+# measured numbers keep the default threading behavior users get.
+if [[ "${target}" != "benchmarks_main" ]]; then
+  export OMP_WAIT_POLICY=passive
+  export OPENBLAS_THREAD_TIMEOUT=4
+fi
+
 if [[ ${needs_python} -eq 1 ]]; then
   # shellcheck disable=SC1090
   source "${venv_dir}/bin/activate"
