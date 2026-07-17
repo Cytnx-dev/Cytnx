@@ -26,6 +26,13 @@ jobs:
       # Pinned via --config-settings=build-dir=build below so ctest and
       # gcovr know where the build tree (and .gcno / .gcda files) live.
       BUILD_DIR: ${{ github.workspace }}/build
+      # HPTT and the OpenMP-threaded OpenBLAS share one OpenMP runtime (see
+      # the install step). passive makes idle worker threads sleep instead
+      # of busy-spinning between the microsecond-spaced parallel regions the
+      # iterative eigensolver suites (Lanczos/Arnoldi) trigger; the spinners
+      # otherwise oversubscribe the runner's cores and inflate ctest wall
+      # time several-fold (issue #1058).
+      OMP_WAIT_POLICY: passive
     steps:
       - uses: actions/checkout@v4
         with:
@@ -65,6 +72,18 @@ jobs:
         # system C/C++ libraries, and gtest. BLAS is OpenBLAS to match
         # pyproject.toml's `--preset=openblas-cpu`.
         #
+        # blas=*=openblas + libopenblas=*=*openmp* pins the OpenMP-threaded
+        # OpenBLAS build (matching the wheel build,
+        # tools/cibuildwheel_before_all.sh): HPTT and cytnx's own code use
+        # OpenMP (-fopenmp), and a pthreads-threaded OpenBLAS runs its own
+        # independent pool that oversubscribes the CPU when a BLAS call
+        # originates from inside an OpenMP region. conda-forge's openmp
+        # OpenBLAS hard-requires _openmp_mutex=*_llvm, so this pin alone
+        # settles the whole environment on the single llvm OpenMP runtime --
+        # no separate _openmp_mutex pin is needed. libgomp is present as a
+        # symlink to libomp, so GCC's -fopenmp -lgomp and OpenBLAS resolve to
+        # that one runtime, which OMP_WAIT_POLICY (job env) then controls.
+        #
         # graphviz is the system package (the `dot`/`circo` executables),
         # which the PyPI `graphviz` package does not bundle. It is needed by
         # the Network.Diagram() rendering test (pytests/network_diagram_test.py);
@@ -78,7 +97,7 @@ jobs:
         # pyproject.toml as the single source of truth for everything
         # Python.
         run: |
-          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest graphviz
+          mamba install cmake make boost git compilers "blas=*=openblas" "libopenblas=*=*openmp*" liblapacke arpack gtest graphviz
 
       - name: CPU info
         run: lscpu
