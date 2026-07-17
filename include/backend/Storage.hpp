@@ -927,68 +927,17 @@ namespace cytnx {
 
     template <class T>
     void _from_vector(const std::vector<T> &vin, const int device = -1) {
-      // auto dispatch:
-      // check:
-      cytnx_error_msg(true, "[FATAL] ERROR unsupport type%s", "\n");
-      // this->_impl->Init(vin.size(),device);
-      // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
-    }
-
-    void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.ComplexDouble]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex128) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.ComplexFloat]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex64) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_double> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Double]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_double) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_float> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Float]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_float) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Uint64]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint64) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_int64> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Int64]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int64) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Uint32]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint32) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_int32> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Int32]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int32) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Uint16]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint16) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_int16> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Int16]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int16) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_bool> &vin, const int device = -1) {
-      this->_impl = storage_init_fns[Type.Bool]();
-      this->_impl->Init(vin.size(), device);
-      this->_impl->_cpy_bool(this->_impl->data(), vin);
-      // memcpy(this->_impl->data(),vin.data(),sizeof(cytnx_bool)*vin.size());
+      static_assert(CytnxType<T>, "[ERROR][Storage._from_vector] unsupported vector element type.");
+      auto impl = boost::intrusive_ptr<Storage_base>(new StorageImplementation<T>());
+      impl->Init(vin.size(), device);
+      if constexpr (std::is_same_v<T, cytnx_bool>) {
+        // std::vector<bool> is bit-packed, so copy element-by-element rather than
+        // memcpy from a contiguous buffer.
+        impl->_cpy_bool(impl->data(), vin);
+      } else {
+        memcpy(impl->data(), vin.data(), sizeof(T) * vin.size());
+      }
+      this->_impl = impl;
     }
     /// @endcond
 
