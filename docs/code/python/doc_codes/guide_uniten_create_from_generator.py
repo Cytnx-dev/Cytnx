@@ -7,16 +7,15 @@ uT1 = cytnx.UniTensor.ones([2,3,4], ["a","b","c"], name="all ones")
 
 # 3) initialize by normally distributed elements with mean value 0 and standard deviation 1
 uTg = cytnx.UniTensor.normal([2,3,4],0,1).relabel(["a","b","c"]).set_name("Gaussian")
+# The values can also be filled by the in-place method and the global method
+uTg.normal_(mean=0., std=1.)
+cytnx.random.normal_(uTg, mean=0., std=1.)
 
 # 4) initialize by uniformly distributed elements between 0 and 100
 uTu = cytnx.UniTensor.uniform([2,3,4],0,100).relabel(["a","b","c"]).set_name("random uniform")
-
-# Existing UniTensor instances can be randomized in place either through instance
-# methods or the cytnx.random module.
-uT_inplace_normal = cytnx.UniTensor.zeros([2,3,4], ["a","b","c"], name="normal template")
-uT_inplace_normal.normal_(mean=0., std=1.)
-uT_inplace_uniform = cytnx.UniTensor.zeros([2,3,4], ["a","b","c"], name="uniform template")
-cytnx.random.uniform_(uT_inplace_uniform, low=0., high=100.)
+# The values can also be filled by the in-place method and the global method
+uTu.uniform_(low=0., high=100.)
+cytnx.random.uniform_(uTu, low=0., high=100.)
 
 # 5) initialize with subsequent numbers from 0 to 2*3*4 - 1 = 23
 uTarr0 = cytnx.UniTensor.arange(2*3*4).reshape(2,3,4).set_rowrank(1) \
