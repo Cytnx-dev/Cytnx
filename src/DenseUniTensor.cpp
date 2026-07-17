@@ -851,11 +851,7 @@ namespace cytnx {
     // new shape:
     std::vector<cytnx_int64> new_shape(this->_block.shape().begin(), this->_block.shape().end());
     new_shape[idor] = -1;
-    if (idor + indicators.size() < new_shape.size()) {
-      memcpy(&new_shape[idor + 1], &new_shape[idor + indicators.size()],
-             sizeof(cytnx_int64) * (new_shape.size() - idor - indicators.size()));
-    }
-    new_shape.resize(this->rank());  // rank follows this->_labels.size()!
+    new_shape.erase(new_shape.begin() + idor + 1, new_shape.begin() + idor + indicators.size());
 
     // Rebind to a freshly-reshaped block instead of mutating the (possibly shared) block Tensor
     // in place, so other UniTensors sharing this block are not corrupted (#724).
