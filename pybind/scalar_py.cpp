@@ -11,29 +11,28 @@
 #include <pybind11/functional.h>
 
 #include "cytnx.hpp"
+#include "pyint_dispatch.hpp"
 // #include "../include/cytnx_error.hpp"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
+using pybind_cytnx::dispatch_pyint;
 
 #ifdef BACKEND_TORCH
 #else
 
 void scalar_binding(py::module &m) {
   py::class_<cytnx::Scalar>(m, "Scalar")
+    // keep-set; registration ORDER matters -- see "KEEP-SET ORDERING" in
+    // pybind/pyint_dispatch.hpp. complex64/float/{u,}int{16,32} are covered
+    // by the numpy_scalar overloads below. Plain Python int is handled by a
+    // single py::int_ overload with dispatch_pyint: int64 when the value
+    // fits, uint64 otherwise -- the same int64-preferred convention every
+    // other keep-set in this codebase uses, so Scalar(5).dtype() is Int64.
+    // A plain Python value matches cytnx_double/cytnx_complex128's raw
+    // casters ahead of the numpy_scalar overloads below.
     .def(py::init<>())
-    .def(py::init<const cytnx::cytnx_complex128 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_complex64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_double &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_float &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int64 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint32 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int32 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_uint16 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_int16 &>(), py::arg("a"))
-    .def(py::init<const cytnx::cytnx_bool &>(), py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<std::complex<double>> value) {
@@ -94,12 +93,36 @@ void scalar_binding(py::module &m) {
         new (&self) Scalar(static_cast<cytnx::cytnx_uint16>(value));
       },
       py::arg("a"))
+    // cytnx has no Int8/Uint8 dtype, so these widen to the narrowest integer
+    // dtype cytnx does have (Int16/Uint16) rather than falling through to
+    // the raw cytnx_double constructor below, which would silently produce
+    // a real-valued Scalar from an integer input.
+    .def(
+      "__init__",
+      [](Scalar &self, const py::numpy_scalar<int8_t> value) {
+        new (&self) Scalar(static_cast<cytnx::cytnx_int16>(static_cast<int8_t>(value)));
+      },
+      py::arg("a"))
+    .def(
+      "__init__",
+      [](Scalar &self, const py::numpy_scalar<uint8_t> value) {
+        new (&self) Scalar(static_cast<cytnx::cytnx_uint16>(static_cast<uint8_t>(value)));
+      },
+      py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<bool> value) {
         new (&self) Scalar(static_cast<cytnx::cytnx_bool>(value));
       },
       py::arg("a"))
+    .def(
+      "__init__",
+      [](Scalar &self, const py::int_ &value) {
+        dispatch_pyint(value, [&](auto v) { new (&self) Scalar(v); });
+      },
+      py::arg("a"))
+    .def(py::init<const cytnx::cytnx_double &>(), py::arg("a"))
+    .def(py::init<const cytnx::cytnx_complex128 &>(), py::arg("a"))
 
     // ---- Static methods ----
     .def_static("maxval", &Scalar::maxval)

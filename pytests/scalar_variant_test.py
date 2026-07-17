@@ -86,13 +86,9 @@ def test_inplace_int_plus_float_promotes_to_double():
 
 
 def test_inplace_signed_unsigned_mix_promotes_to_signed():
-    # Unsigned-dtype Scalars are constructed via astype() here: the pybind
-    # numpy-scalar constructor overloads currently resolve every integer
-    # numpy type except int64 to the Int64 constructor (a pre-existing
-    # binding quirk, see test_numpy_scalar_constructor_paths_narrower_ints_
-    # preexisting_quirk below), so astype() is the reliable way to pin an
-    # unsigned dtype from Python. type_promote(Uint64, Int64) == Int64, so the
-    # destination promotes to the signed dtype.
+    # Unsigned-dtype Scalars are constructed via astype() here for symmetry
+    # with the other dtypes in this file. type_promote(Uint64, Int64) ==
+    # Int64, so the destination promotes to the signed dtype.
     s = cytnx.Scalar(np.int64(3)).astype(Type.Uint64)
     assert s.dtype() == Type.Uint64
     s -= cytnx.Scalar(np.int64(2))
@@ -254,22 +250,18 @@ def test_numpy_scalar_constructor_paths(np_dtype, dtype):
 
 
 @pytest.mark.parametrize(
-    "np_dtype",
-    [np.uint64, np.int32, np.uint32, np.int16, np.uint16],
+    "np_dtype,dtype",
+    [
+        (np.uint64, Type.Uint64),
+        (np.int32, Type.Int32),
+        (np.uint32, Type.Uint32),
+        (np.int16, Type.Int16),
+        (np.uint16, Type.Uint16),
+    ],
 )
-def test_numpy_scalar_constructor_paths_narrower_ints_preexisting_quirk(np_dtype):
-    # Pre-existing pybind11 overload-resolution behavior (confirmed present
-    # on master d6dcd160, before this refactor): numpy scalar types narrower
-    # than int64/uint64 (uint64, int32, uint32, int16, uint16) all resolve to
-    # the Int64 constructor overload instead of their own. This is a
-    # pre-existing pybind/numpy_scalar dispatch quirk in scalar_py.cpp's
-    # __init__ overload set, not something introduced or fixed by the
-    # Scalar->std::variant refactor (T2's scope is Scalar's internals; the
-    # pybind constructor overload set is unchanged). Documented here so a
-    # future fix has a regression test to flip green; not treated as a T2
-    # gate failure.
+def test_numpy_scalar_constructor_paths_narrower_ints(np_dtype, dtype):
     s = cytnx.Scalar(np_dtype(5))
-    assert s.dtype() == Type.Int64  # pinned pre-existing behavior, not the "correct" dtype
+    assert s.dtype() == dtype
 
 
 def test_comparison_operators_across_dtypes():

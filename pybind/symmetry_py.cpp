@@ -65,7 +65,6 @@ void symmetry_binding(py::module &m) {
     .def("stype", &Symmetry::stype)
     .def("stype_str", &Symmetry::stype_str)
     .def("n", &Symmetry::n)
-    .def("clone", &Symmetry::clone)
     .def("__copy__", &Symmetry::clone)
     .def("__deepcopy__", &Symmetry::clone)
     .def("__eq__", &Symmetry::operator==)
