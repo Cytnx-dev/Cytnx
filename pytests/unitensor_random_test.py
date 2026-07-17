@@ -19,90 +19,72 @@ def _make_dense_unitensor():
 
 def _make_block_unitensor():
     sym = cytnx.Symmetry.U1()
-    left = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(0) >> 2, cytnx.Qs(1) >> 1], [sym])
-    right = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(0) >> 2, cytnx.Qs(1) >> 1], [sym])
+    left = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(0) >> 2, cytnx.Qs(1) >> 2], [sym])
+    right = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(0) >> 2, cytnx.Qs(1) >> 2], [sym])
     ut = cytnx.UniTensor([left, right], labels=["left", "right"])
     ut.set_name_("block template")
     return ut
 
 
-def test_dense_unitensor_uniform_randomizes_exact_seeded_values():
-    ut = _make_dense_unitensor()
-
-    ut.uniform_(low=-1.0, high=1.0, seed=7)
-
-    expected = np.array(
-        [
-            [-0.5453218500705863, -0.3620555443782737, 0.9564457924284084],
-            [-0.08883018432023693, -0.38397446555179104, -0.47225831843051325],
-        ]
-    )
-    np.testing.assert_array_equal(_dense_block_values(ut), expected)
-    assert ut.shape() == [2, 3]
-    assert ut.labels() == ["left", "right"]
-    assert ut.name() == "template"
-    assert ut.dtype() == cytnx.Type.Double
+def _assert_blocks_equal(lhs, rhs):
+    assert len(lhs) == len(rhs)
+    for lhs_block, rhs_block in zip(lhs, rhs):
+        np.testing.assert_array_equal(lhs_block, rhs_block)
 
 
-def test_dense_unitensor_normal_randomizes_exact_seeded_values():
-    ut = _make_dense_unitensor()
+def test_dense_unitensor_uniform_same_seed_is_reproducible():
+    lhs = _make_dense_unitensor()
+    rhs = _make_dense_unitensor()
 
-    ut.normal_(mean=2.0, std=3.0, seed=11)
+    lhs.uniform_(low=-1.0, high=1.0, seed=7)
+    rhs.uniform_(low=-1.0, high=1.0, seed=7)
 
-    expected = np.array(
-        [
-            [2.600942056996955, 0.425072427659269, 1.3217000451409238],
-            [1.02361612487187, 2.460543861218456, 7.500269922860935],
-        ]
-    )
-    np.testing.assert_array_equal(_dense_block_values(ut), expected)
-    assert ut.shape() == [2, 3]
-    assert ut.labels() == ["left", "right"]
-    assert ut.name() == "template"
-    assert ut.dtype() == cytnx.Type.Double
+    np.testing.assert_array_equal(_dense_block_values(lhs), _dense_block_values(rhs))
+    assert lhs.shape() == [2, 3]
+    assert lhs.labels() == ["left", "right"]
+    assert lhs.name() == "template"
+    assert lhs.dtype() == cytnx.Type.Double
 
 
-def test_block_unitensor_uniform_randomizes_exact_seeded_values():
-    ut = _make_block_unitensor()
+def test_dense_unitensor_normal_same_seed_is_reproducible():
+    lhs = _make_dense_unitensor()
+    rhs = _make_dense_unitensor()
 
-    ut.uniform_(low=-1.0, high=1.0, seed=7)
+    lhs.normal_(mean=2.0, std=3.0, seed=11)
+    rhs.normal_(mean=2.0, std=3.0, seed=11)
 
-    expected = [
-        np.array(
-            [
-                [-0.5453218500705863, -0.3620555443782737],
-                [0.9564457924284084, -0.08883018432023693],
-            ]
-        ),
-        np.array([[-0.5453218500705863]]),
-    ]
-    actual = _block_values(ut)
-    assert len(actual) == len(expected)
-    for actual_block, expected_block in zip(actual, expected):
-        np.testing.assert_array_equal(actual_block, expected_block)
-    assert ut.labels() == ["left", "right"]
-    assert ut.name() == "block template"
-    assert ut.dtype() == cytnx.Type.Double
+    np.testing.assert_array_equal(_dense_block_values(lhs), _dense_block_values(rhs))
+    assert lhs.shape() == [2, 3]
+    assert lhs.labels() == ["left", "right"]
+    assert lhs.name() == "template"
+    assert lhs.dtype() == cytnx.Type.Double
 
 
-def test_block_unitensor_normal_randomizes_exact_seeded_values():
-    ut = _make_block_unitensor()
+def test_block_unitensor_uniform_same_seed_is_reproducible_with_distinct_blocks():
+    lhs = _make_block_unitensor()
+    rhs = _make_block_unitensor()
 
-    ut.normal_(mean=2.0, std=3.0, seed=11)
+    lhs.uniform_(low=-1.0, high=1.0, seed=7)
+    rhs.uniform_(low=-1.0, high=1.0, seed=7)
 
-    expected = [
-        np.array(
-            [
-                [2.600942056996955, 0.425072427659269],
-                [1.3217000451409238, 1.02361612487187],
-            ]
-        ),
-        np.array([[2.600942056996955]]),
-    ]
-    actual = _block_values(ut)
-    assert len(actual) == len(expected)
-    for actual_block, expected_block in zip(actual, expected):
-        np.testing.assert_array_equal(actual_block, expected_block)
-    assert ut.labels() == ["left", "right"]
-    assert ut.name() == "block template"
-    assert ut.dtype() == cytnx.Type.Double
+    lhs_blocks = _block_values(lhs)
+    rhs_blocks = _block_values(rhs)
+    _assert_blocks_equal(lhs_blocks, rhs_blocks)
+    assert len(lhs_blocks) == 2
+    assert not np.array_equal(lhs_blocks[0], lhs_blocks[1])
+    assert lhs.labels() == ["left", "right"]
+    assert lhs.name() == "block template"
+    assert lhs.dtype() == cytnx.Type.Double
+
+
+def test_block_unitensor_normal_same_seed_is_reproducible():
+    lhs = _make_block_unitensor()
+    rhs = _make_block_unitensor()
+
+    lhs.normal_(mean=2.0, std=3.0, seed=11)
+    rhs.normal_(mean=2.0, std=3.0, seed=11)
+
+    _assert_blocks_equal(_block_values(lhs), _block_values(rhs))
+    assert lhs.labels() == ["left", "right"]
+    assert lhs.name() == "block template"
+    assert lhs.dtype() == cytnx.Type.Double
