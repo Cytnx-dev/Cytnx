@@ -2,13 +2,13 @@
 
 #include <algorithm>
 #include <cmath>
-/*=====test info=====
-describe:scalar product between two vectors
-====================*/
 
 namespace cytnx {
   namespace test {
 
+    /*=====test info=====
+    describe:scalar product between two vectors
+    ====================*/
     TEST_F(BlockFermionicUniTensorTest, VectorContract) {
       // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32
       UniTensor out = BFUT1.contract(BFUT2);
