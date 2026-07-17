@@ -12,6 +12,7 @@
 #include "random.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
+
 #define RAND_MAX_VAL 1000
 #define RAND_MIN_VAL ((-1) * RAND_MAX_VAL)
 

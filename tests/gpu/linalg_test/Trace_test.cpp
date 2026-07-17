@@ -43,7 +43,7 @@ namespace cytnx {
         ASSERT_FALSE(p.is_contiguous());
         auto gpu = TraceOnGpuToCpu(p, 0, 2);
         auto reference = ContiguousCpuReferenceTrace(p, 0, 2);
-        EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-12));
+        EXPECT_TRUE(AreNearlyEqTensor(gpu, reference, 1e-12));
       }
 
       TEST(LinalgGpuTraceTest, GpuPermutedTracesAcrossRanksAndDtypes) {
@@ -69,7 +69,7 @@ namespace cytnx {
             EXPECT_FALSE(p.is_contiguous());
             auto gpu = TraceOnGpuToCpu(p, c.ax1, c.ax2);
             auto reference = ContiguousCpuReferenceTrace(p, c.ax1, c.ax2);
-            EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-10))
+            EXPECT_TRUE(AreNearlyEqTensor(gpu, reference, 1e-10))
               << "dtype=" << dtype << " rank=" << c.shape.size();
           }
         }
@@ -86,7 +86,7 @@ namespace cytnx {
         auto out_c = ContiguousCpuReferenceTrace(t, 0, 1);  // tr(A) == tr(A^T)
         ASSERT_TRUE(out_p.is_scalar());
         ASSERT_TRUE(out_c.is_scalar());
-        EXPECT_TRUE(test::AreNearlyEqTensor(out_p, out_c, 1e-12));
+        EXPECT_TRUE(AreNearlyEqTensor(out_p, out_c, 1e-12));
       }
 
       TEST(LinalgGpuTraceTest, GpuOutputRankIsInputMinusTwo) {
@@ -116,7 +116,7 @@ namespace cytnx {
                    .to(Device.cuda);
         auto ab = TraceOnGpuToCpu(t, 0, 2);
         auto ba = TraceOnGpuToCpu(t, 2, 0);
-        EXPECT_TRUE(test::AreNearlyEqTensor(ab, ba, 1e-12));
+        EXPECT_TRUE(AreNearlyEqTensor(ab, ba, 1e-12));
       }
 
       TEST(LinalgGpuTraceTest, GpuMatchesCpuTraceOnContiguousInput) {
@@ -126,7 +126,7 @@ namespace cytnx {
           auto cpu = random::random_tensor({8, 5, 8}, -2.0, 2.0, Device.cpu, 0, dtype);
           auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 2);
           auto reference = linalg::Trace(cpu, 0, 2);
-          EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-10)) << "dtype=" << dtype;
+          EXPECT_TRUE(AreNearlyEqTensor(gpu, reference, 1e-10)) << "dtype=" << dtype;
         }
       }
 
@@ -146,7 +146,7 @@ namespace cytnx {
                                            Device.cpu, 0, Type.Double);
           auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
           auto reference = linalg::Trace(cpu, 0, 1);
-          EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-9))
+          EXPECT_TRUE(AreNearlyEqTensor(gpu, reference, 1e-9))
             << "diagonal_length=" << diagonal_length;
         }
       }
@@ -166,7 +166,7 @@ namespace cytnx {
             random::random_tensor({c.n, c.middle, c.n}, -2.0, 2.0, Device.cpu, 0, Type.Double);
           auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 2);
           auto reference = linalg::Trace(cpu, 0, 2);
-          EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-9))
+          EXPECT_TRUE(AreNearlyEqTensor(gpu, reference, 1e-9))
             << "n=" << c.n << " middle=" << c.middle;
         }
       }
@@ -205,7 +205,7 @@ namespace cytnx {
         auto cpu = random::random_tensor(shape, -2.0, 2.0, Device.cpu, 0, Type.Double);
         auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
         auto reference = linalg::Trace(cpu, 0, 1);
-        EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-10));
+        EXPECT_TRUE(AreNearlyEqTensor(gpu, reference, 1e-10));
         EXPECT_EQ(gpu.shape().size(), 60u);
       }
 
@@ -219,7 +219,7 @@ namespace cytnx {
         auto cpu = random::random_tensor(shape, -2.0, 2.0, Device.cpu, 0, Type.Double);
         auto gpu = TraceOnGpuToCpu(cpu.to(Device.cuda), 0, 1);
         auto reference = linalg::Trace(cpu, 0, 1);
-        EXPECT_TRUE(test::AreNearlyEqTensor(gpu, reference, 1e-10));
+        EXPECT_TRUE(AreNearlyEqTensor(gpu, reference, 1e-10));
         EXPECT_EQ(gpu.shape().size(), 6u);
       }
 

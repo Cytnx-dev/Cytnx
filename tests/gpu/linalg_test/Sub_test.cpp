@@ -25,7 +25,7 @@ namespace cytnx {
       TEST_P(SubTestAllShapes, GpuTensorSubTensorAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           if (dtype == Type.Bool) {
             continue;
           }
@@ -35,8 +35,8 @@ namespace cytnx {
 
           Tensor gpu_tensor1 = Tensor(shape, dtype).to(Device.cuda);
           Tensor gpu_tensor2 = Tensor(shape, dtype).to(Device.cuda);
-          test::InitTensorUniform(gpu_tensor1);
-          test::InitTensorUniform(gpu_tensor2);
+          InitTensorUniform(gpu_tensor1);
+          InitTensorUniform(gpu_tensor2);
 
           Tensor gpu_result = linalg::Sub(gpu_tensor1, gpu_tensor2);
           EXPECT_TRUE(CheckSubResult(gpu_result, gpu_tensor1, gpu_tensor2));
@@ -53,7 +53,7 @@ namespace cytnx {
       TEST_P(SubTestAllShapes, GpuScalarSubTensorAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           if (dtype == Type.Bool) {
             continue;
           }
@@ -62,7 +62,7 @@ namespace cytnx {
                        ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor = Tensor(shape, dtype).to(Device.cuda);
-          test::InitTensorUniform(gpu_tensor);
+          InitTensorUniform(gpu_tensor);
           cytnx_double scalar = 2.3;
 
           Tensor gpu_result = linalg::Sub(scalar, gpu_tensor);
@@ -77,7 +77,7 @@ namespace cytnx {
       TEST_P(SubTestAllShapes, GpuTensorSubScalarAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           if (dtype == Type.Bool) {
             continue;
           }
@@ -86,7 +86,7 @@ namespace cytnx {
                        ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor = Tensor(shape, dtype).to(Device.cuda);
-          test::InitTensorUniform(gpu_tensor);
+          InitTensorUniform(gpu_tensor);
           cytnx_double scalar = 2.3;
 
           Tensor gpu_result = linalg::Sub(gpu_tensor, scalar);
@@ -104,7 +104,7 @@ namespace cytnx {
       TEST_P(SubTestAllShapes, GpuTensorIsubAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           if (dtype == Type.Bool) {
             continue;
           }
@@ -114,8 +114,8 @@ namespace cytnx {
 
           Tensor gpu_tensor1 = Tensor(shape, dtype).to(Device.cuda);
           Tensor gpu_tensor2 = Tensor(shape, dtype).to(Device.cuda);
-          test::InitTensorUniform(gpu_tensor1);
-          test::InitTensorUniform(gpu_tensor2);
+          InitTensorUniform(gpu_tensor1);
+          InitTensorUniform(gpu_tensor2);
 
           Tensor original_gpu_tensor1 = gpu_tensor1.clone();
           Tensor original_gpu_tensor2 = gpu_tensor2.clone();
@@ -140,7 +140,7 @@ namespace cytnx {
         Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
 
         EXPECT_EQ(gpu_result.dtype(), expected_cpu.dtype());
-        EXPECT_TRUE(test::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, 1e-6));
+        EXPECT_TRUE(AreNearlyEqTensor(gpu_result_cpu, expected_cpu, 1e-6));
       }
 
       TEST(SubMixedDtypeTest, GpuScalarSubTensorMixedUnsignedSignedTypePromote) {
@@ -158,8 +158,8 @@ namespace cytnx {
 
         EXPECT_EQ(gpu_result_l.dtype(), expected_l.dtype());
         EXPECT_EQ(gpu_result_r.dtype(), expected_r.dtype());
-        EXPECT_TRUE(test::AreNearlyEqTensor(gpu_result_l_cpu, expected_l, 1e-6));
-        EXPECT_TRUE(test::AreNearlyEqTensor(gpu_result_r_cpu, expected_r, 1e-6));
+        EXPECT_TRUE(AreNearlyEqTensor(gpu_result_l_cpu, expected_l, 1e-6));
+        EXPECT_TRUE(AreNearlyEqTensor(gpu_result_r_cpu, expected_r, 1e-6));
       }
 
       INSTANTIATE_TEST_SUITE_P(SubTests, SubTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
@@ -174,7 +174,7 @@ namespace cytnx {
 
         cytnx_double tolerance = GetTolerance(gpu_result.dtype());
 
-        if (!test::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
+        if (!AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
           return ::testing::AssertionFailure()
                  << "Sub result mismatch: CUDA Sub result differs from CPU Sub result. "
                  << "Left dtype: " << left_tensor.dtype()
@@ -202,7 +202,7 @@ namespace cytnx {
 
         cytnx_double tolerance = GetTolerance(gpu_result.dtype());
 
-        if (!test::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
+        if (!AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
           return ::testing::AssertionFailure()
                  << "Sub scalar result mismatch: CUDA Sub result differs from CPU Sub result. "
                  << "Tensor dtype: " << tensor.dtype() << ", scalar: " << scalar
@@ -215,10 +215,10 @@ namespace cytnx {
       std::vector<std::vector<cytnx_uint64>> GetTestShapes() {
         std::vector<std::vector<cytnx_uint64>> all_shapes;
 
-        auto shapes_1d = test::GenerateTestShapes(1, 1, 1024, 4);
-        auto shapes_2d = test::GenerateTestShapes(2, 1, 512, 4);
-        auto shapes_3d = test::GenerateTestShapes(3, 1, 64, 4);
-        auto shapes_4d = test::GenerateTestShapes(4, 1, 32, 4);
+        auto shapes_1d = GenerateTestShapes(1, 1, 1024, 4);
+        auto shapes_2d = GenerateTestShapes(2, 1, 512, 4);
+        auto shapes_3d = GenerateTestShapes(3, 1, 64, 4);
+        auto shapes_4d = GenerateTestShapes(4, 1, 32, 4);
 
         all_shapes.insert(all_shapes.end(), shapes_1d.begin(), shapes_1d.end());
         all_shapes.insert(all_shapes.end(), shapes_2d.begin(), shapes_2d.end());

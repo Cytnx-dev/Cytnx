@@ -117,17 +117,6 @@ namespace cytnx {
 
   }  // namespace gpu_test
 
-  using gpu_test::AreElemSame;
-  using gpu_test::AreEqTensor;
-  using gpu_test::AreEqUniTensor;
-  using gpu_test::AreNearlyEqTensor;
-  using gpu_test::AreNearlyEqUniTensor;
-  using gpu_test::device_list;
-  using gpu_test::dtype_list;
-  using gpu_test::GenerateTestShapes;
-  using gpu_test::InitTensorUniform;
-  using gpu_test::InitUniTensorUniform;
-  using gpu_test::TestFailMsg;
 }  // namespace cytnx
 
 /**
@@ -136,6 +125,6 @@ namespace cytnx {
  * compares floating-point numbers based on their ULP (Units in Last Place) distance.
  */
 #define EXPECT_NUMBER_EQ(value1, value2) \
-  EXPECT_PRED_FORMAT2(cytnx::test::AreEqNumber, value1, value2)
+  EXPECT_PRED_FORMAT2(cytnx::gpu_test::AreEqNumber, value1, value2)
 
 #endif  // CYTNX_TESTS_GPU_GPU_TEST_TOOLS_H_

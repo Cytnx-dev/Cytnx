@@ -17,7 +17,7 @@ namespace cytnx {
       TEST_P(AbsTestAllShapes, GpuTensorAbsAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           if (dtype == Type.Bool) {
             continue;
           }
@@ -26,7 +26,7 @@ namespace cytnx {
                        " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor = Tensor(shape, dtype).to(Device.cuda);
-          test::InitTensorUniform(gpu_tensor);
+          InitTensorUniform(gpu_tensor);
 
           // Test standalone function
           Tensor gpu_result = linalg::Abs(gpu_tensor);
@@ -41,7 +41,7 @@ namespace cytnx {
       TEST_P(AbsTestAllShapes, GpuTensorAbsInplaceAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           if (dtype == Type.Bool) {
             continue;
           }
@@ -49,7 +49,7 @@ namespace cytnx {
                        " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor = Tensor(shape, dtype).to(Device.cuda);
-          test::InitTensorUniform(gpu_tensor);
+          InitTensorUniform(gpu_tensor);
           Tensor original_copy = gpu_tensor.clone();
 
           // Test standalone in-place function
@@ -77,7 +77,7 @@ namespace cytnx {
           tolerance = 1e-3;
         }
 
-        if (!test::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
+        if (!AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
           return ::testing::AssertionFailure()
                  << "Abs result mismatch: CUDA Abs result differs from CPU Abs result. "
                  << "Original dtype: " << original_gpu_tensor.dtype()
@@ -90,10 +90,10 @@ namespace cytnx {
       std::vector<std::vector<cytnx_uint64>> GetTestShapes() {
         std::vector<std::vector<cytnx_uint64>> all_shapes;
 
-        auto shapes_1d = test::GenerateTestShapes(1, 1, 1024, 4);
-        auto shapes_2d = test::GenerateTestShapes(2, 1, 512, 4);
-        auto shapes_3d = test::GenerateTestShapes(3, 1, 64, 4);
-        auto shapes_4d = test::GenerateTestShapes(4, 1, 32, 4);
+        auto shapes_1d = GenerateTestShapes(1, 1, 1024, 4);
+        auto shapes_2d = GenerateTestShapes(2, 1, 512, 4);
+        auto shapes_3d = GenerateTestShapes(3, 1, 64, 4);
+        auto shapes_4d = GenerateTestShapes(4, 1, 32, 4);
 
         all_shapes.insert(all_shapes.end(), shapes_1d.begin(), shapes_1d.end());
         all_shapes.insert(all_shapes.end(), shapes_2d.begin(), shapes_2d.end());

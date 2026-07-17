@@ -254,7 +254,7 @@ namespace cytnx {
         EXPECT_EQ(tmp.shape()[1], 4);
         EXPECT_EQ(tmp.shape()[2], 5);
         EXPECT_EQ(tmp.shape()[3], 6);
-        test::AreNearlyEqTensor(tmp, tslice1);
+        AreNearlyEqTensor(tmp, tslice1);
 
         tmp = tar3456.permute({2, 0, 1, 3});
         EXPECT_EQ(tmp.shape().size(), 4);
@@ -264,11 +264,11 @@ namespace cytnx {
         EXPECT_EQ(tmp.shape()[3], 6);
         EXPECT_EQ(tmp.is_contiguous(), false);
         std::cout << tmp(0, ":", ":", 0) << std::endl;
-        test::AreNearlyEqTensor(tmp(0, ":", ":", 0), arange(12).reshape({3, 4}), 1e-5);
-        test::AreNearlyEqTensor(tmp(":", 0, 0, ":"), arange(30).reshape({5, 6}), 1e-5);
-        test::AreNearlyEqTensor(tmp(":", 0, 0, "4:6"), arange(20, 30).reshape({5, 2}), 1e-5);
-        test::AreNearlyEqTensor(tmp(":", "2:4", ":", ":"),
-                                arange(3 * 2 * 5 * 6, 3 * 4 * 5 * 6).reshape({3, 2, 5, 6}), 1e-5);
+        AreNearlyEqTensor(tmp(0, ":", ":", 0), arange(12).reshape({3, 4}), 1e-5);
+        AreNearlyEqTensor(tmp(":", 0, 0, ":"), arange(30).reshape({5, 6}), 1e-5);
+        AreNearlyEqTensor(tmp(":", 0, 0, "4:6"), arange(20, 30).reshape({5, 2}), 1e-5);
+        AreNearlyEqTensor(tmp(":", "2:4", ":", ":"),
+                          arange(3 * 2 * 5 * 6, 3 * 4 * 5 * 6).reshape({3, 2, 5, 6}), 1e-5);
       }
 
       TEST_F(TensorTest, GpuSet) {

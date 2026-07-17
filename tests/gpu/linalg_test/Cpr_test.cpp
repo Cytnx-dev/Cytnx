@@ -16,7 +16,7 @@ namespace cytnx {
         Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
 
         // Cpr returns boolean results, so we need exact comparison
-        if (!test::AreEqTensor(gpu_result_cpu, expected_cpu)) {
+        if (!AreEqTensor(gpu_result_cpu, expected_cpu)) {
           return ::testing::AssertionFailure()
                  << "Cpr result mismatch: CUDA Cpr result differs from CPU Cpr result. "
                  << "Left dtype: " << left_tensor.dtype()
@@ -49,7 +49,7 @@ namespace cytnx {
         Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
 
         // Cpr returns boolean results, so we need exact comparison
-        if (!test::AreEqTensor(gpu_result_cpu, expected_cpu)) {
+        if (!AreEqTensor(gpu_result_cpu, expected_cpu)) {
           return ::testing::AssertionFailure()
                  << "Cpr scalar result mismatch: CUDA Cpr result differs from CPU Cpr result. "
                  << "Tensor dtype: " << tensor.dtype() << ", scalar: " << scalar
@@ -68,10 +68,10 @@ namespace cytnx {
       std::vector<std::vector<cytnx_uint64>> GetTestShapes() {
         std::vector<std::vector<cytnx_uint64>> all_shapes;
 
-        auto shapes_1d = test::GenerateTestShapes(1, 1, 1024, 4);
-        auto shapes_2d = test::GenerateTestShapes(2, 1, 512, 4);
-        auto shapes_3d = test::GenerateTestShapes(3, 1, 64, 4);
-        auto shapes_4d = test::GenerateTestShapes(4, 1, 32, 4);
+        auto shapes_1d = GenerateTestShapes(1, 1, 1024, 4);
+        auto shapes_2d = GenerateTestShapes(2, 1, 512, 4);
+        auto shapes_3d = GenerateTestShapes(3, 1, 64, 4);
+        auto shapes_4d = GenerateTestShapes(4, 1, 32, 4);
 
         all_shapes.insert(all_shapes.end(), shapes_1d.begin(), shapes_1d.end());
         all_shapes.insert(all_shapes.end(), shapes_2d.begin(), shapes_2d.end());
@@ -87,15 +87,15 @@ namespace cytnx {
       TEST_P(CprTestAllShapes, GpuTensorCprTensorAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           SCOPED_TRACE("Testing Cpr(tensor, tensor) with shape: " +
                        ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor1 = Tensor(shape, dtype, Device.cuda);
           Tensor gpu_tensor2 = Tensor(shape, dtype, Device.cuda);
 
-          test::InitTensorUniform(gpu_tensor1);
-          test::InitTensorUniform(gpu_tensor2);
+          InitTensorUniform(gpu_tensor1);
+          InitTensorUniform(gpu_tensor2);
 
           Tensor gpu_result = linalg::Cpr(gpu_tensor1, gpu_tensor2);
           EXPECT_TRUE(CheckCprResult(gpu_result, gpu_tensor1, gpu_tensor2));
@@ -112,12 +112,12 @@ namespace cytnx {
       TEST_P(CprTestAllShapes, GpuScalarCprTensorAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           SCOPED_TRACE("Testing Cpr(scalar, tensor) with shape: " +
                        ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor = Tensor(shape, dtype, Device.cuda);
-          test::InitTensorUniform(gpu_tensor);
+          InitTensorUniform(gpu_tensor);
 
           const cytnx_double scalar = 2.3;
 
@@ -133,12 +133,12 @@ namespace cytnx {
       TEST_P(CprTestAllShapes, GpuTensorCprScalarAllTypes) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           SCOPED_TRACE("Testing Cpr(tensor, scalar) with shape: " +
                        ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor = Tensor(shape, dtype, Device.cuda);
-          test::InitTensorUniform(gpu_tensor);
+          InitTensorUniform(gpu_tensor);
 
           const cytnx_double scalar = 2.3;
 
@@ -157,12 +157,12 @@ namespace cytnx {
       TEST_P(CprTestAllShapes, GpuTensorCprIdentical) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           SCOPED_TRACE("Testing Cpr with identical tensors, shape: " +
                        ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
           Tensor gpu_tensor = Tensor(shape, dtype, Device.cuda);
-          test::InitTensorUniform(gpu_tensor);
+          InitTensorUniform(gpu_tensor);
 
           // Compare tensor with itself
           Tensor gpu_result = linalg::Cpr(gpu_tensor, gpu_tensor);
@@ -172,7 +172,7 @@ namespace cytnx {
           Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
           Tensor expected_cpu = expected.to(Device.cpu);
 
-          EXPECT_TRUE(test::AreEqTensor(gpu_result_cpu, expected_cpu))
+          EXPECT_TRUE(AreEqTensor(gpu_result_cpu, expected_cpu))
             << "Comparison of identical tensors should yield all true values";
         }
       }
@@ -181,7 +181,7 @@ namespace cytnx {
       TEST_P(CprTestAllShapes, GpuTensorCprDifferent) {
         const std::vector<cytnx_uint64>& shape = GetParam();
 
-        for (auto dtype : test::dtype_list) {
+        for (auto dtype : dtype_list) {
           SCOPED_TRACE("Testing Cpr with different tensors, shape: " +
                        ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
@@ -189,7 +189,7 @@ namespace cytnx {
           Tensor gpu_tensor2 = Tensor(shape, dtype, Device.cuda);
 
           // Initialize both tensors with the same value first
-          test::InitTensorUniform(gpu_tensor1);
+          InitTensorUniform(gpu_tensor1);
           gpu_tensor2 = gpu_tensor1.clone();
 
           // Make tensor2 different
@@ -209,7 +209,7 @@ namespace cytnx {
           Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
           Tensor expected_cpu = expected.to(Device.cpu);
 
-          EXPECT_TRUE(test::AreEqTensor(gpu_result_cpu, expected_cpu))
+          EXPECT_TRUE(AreEqTensor(gpu_result_cpu, expected_cpu))
             << "Comparison of completely different tensors should yield all false values";
         }
       }

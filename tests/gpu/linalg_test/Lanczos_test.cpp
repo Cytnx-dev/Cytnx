@@ -92,7 +92,8 @@ namespace cytnx {
         }
         Tensor eigval_cuda_to_cpu = lanczos_eigs_cuda[0].to(Device.cpu);
         Tensor eigval_cpu = lanczos_eigs_cpu[0];
-        bool is_same_eigval = test::AreNearlyEqTensor(eigval_cuda_to_cpu, eigval_cpu, tolerance);
+
+        bool is_same_eigval = AreNearlyEqTensor(eigval_cuda_to_cpu, eigval_cpu, tolerance);
         if (!is_same_eigval) {
           return false;
         }

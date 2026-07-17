@@ -7,9 +7,6 @@
 namespace cytnx {
   namespace gpu_test {
     namespace {
-      using gpu_test::ferm_dense_lowest;
-      using gpu_test::FermiAdaOp;
-      using gpu_test::make_ferm_ada_ket;
 
       /*
        *   "al"+---A--- "ar"               +-"al"
@@ -115,7 +112,7 @@ namespace cytnx {
         }
         UniTensor eigval_cuda_to_cpu = arnoldi_eigs_cuda[0].to(Device.cpu);
         UniTensor eigval_cpu = arnoldi_eigs_cpu[0];
-        bool is_same_eigval = test::AreNearlyEqUniTensor(eigval_cuda_to_cpu, eigval_cpu, tolerance);
+        bool is_same_eigval = AreNearlyEqUniTensor(eigval_cuda_to_cpu, eigval_cpu, tolerance);
         if (!is_same_eigval) {
           return false;
         }
