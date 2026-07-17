@@ -521,21 +521,27 @@ TEST(Tensor, GpuScalarInplaceContiguousValues) {
     EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(i), 3.0 * i + 1.0);
 }
 
-TEST(Tensor, GpuRankZeroTensorRhsInplacePreserveDtype) {
+// A genuine rank-0 tensor RHS is NOT a python weak scalar: it PROMOTES the LHS like
+// any genuine tensor (#941/#1013), whereas a python-scalar broadcast preserves the LHS
+// dtype (see GpuScalarInplacePreserveDtype). So Float (op)= a Double rank-0 tensor
+// promotes the LHS storage to Double. (Before #1013's typed in-place dispatch this
+// wrongly preserved Float.)
+TEST(Tensor, GpuRankZeroTensorRhsInplacePromotesDtype) {
   Tensor rhs({}, Type.Double, Device.cuda);
   rhs.set(std::vector<Accessor>{}, 2.0);
 
-  Tensor a = ones({2}, Type.Float, Device.cuda);
-  a += rhs;
-  a -= rhs;
-  a *= rhs;
-  a /= rhs;
+  Tensor a = ones({2}, Type.Float, Device.cuda);  // [1,1]
+  a += rhs;  // [3,3], promoted Float -> Double
+  EXPECT_EQ(a.dtype(), Type.Double);
+  a -= rhs;  // [1,1]
+  a *= rhs;  // [2,2]
+  a /= rhs;  // [1,1]
 
-  EXPECT_EQ(a.dtype(), Type.Float);
+  EXPECT_EQ(a.dtype(), Type.Double);
   EXPECT_EQ(a.device(), Device.cuda);
   Tensor a_cpu = a.to(Device.cpu);
-  EXPECT_FLOAT_EQ(a_cpu.storage().at<cytnx_float>(0), 1.0f);
-  EXPECT_FLOAT_EQ(a_cpu.storage().at<cytnx_float>(1), 1.0f);
+  EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(0), 1.0);
+  EXPECT_DOUBLE_EQ(a_cpu.storage().at<cytnx_double>(1), 1.0);
 }
 
 // Scalar in-place ops mutate the LHS storage in place (never detach), so a
@@ -579,16 +585,43 @@ TEST(Tensor, GpuScalarInplaceRealOpComplexThrows) {
   EXPECT_THROW(a /= cytnx_complex128(0, 1), std::logic_error);
 }
 
-// The cuMul/cuDiv GPU kernels (unlike cuAdd/cuSub) do not consume layout
-// mappers, so a genuine non-contiguous tensor*=tensor must fail loudly instead
-// of silently pairing mismatched elements. (The scalar broadcast case above is
-// still supported because it ignores the mappers.)
-TEST(Tensor, GpuNoncontigTensorTensorMulDivThrows) {
-  Tensor a = arange(0, 6, 1, Type.Double, Device.cuda).reshape({2, 3});
-  Tensor b = arange(0, 6, 1, Type.Double, Device.cuda).reshape({3, 2}).permute({1, 0});
-  // {2,3}, non-contiguous
-  ASSERT_EQ(a.shape(), b.shape());
-  ASSERT_FALSE(b.is_contiguous());
-  EXPECT_THROW(a *= b, std::logic_error);
-  EXPECT_THROW(a /= b, std::logic_error);
+// Non-contiguous tensor (op)= tensor now works in place on the GPU: the #1013 typed
+// in-place dispatch feeds the layout mappers to the cuMul/cuDiv kernels, so they pair
+// corresponding logical elements instead of throwing (the legacy kernels ignored the
+// mappers, #988). Hand-computed expected values; inputs built on the CPU (arange) then
+// moved to the GPU, so the test data never depends on GPU kernels.
+TEST(Tensor, GpuNoncontigTensorTensorMulDivWorks) {
+  // a = [[1,2,3],[4,5,6]] (contiguous).
+  auto make_a = []() { return arange(1, 7, 1, Type.Double).reshape({2, 3}).to(Device.cuda); };
+  // b logical = [[1,3,5],[2,4,6]] (arange {3,2} permuted -> non-contiguous {2,3}); no
+  // zeros, so the /= below is well-defined.
+  auto make_b = []() {
+    return arange(1, 7, 1, Type.Double).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+  };
+  {
+    Tensor a = make_a();
+    Tensor b = make_b();
+    ASSERT_EQ(a.shape(), b.shape());
+    ASSERT_FALSE(b.is_contiguous());
+    a *= b;  // [[1*1,2*3,3*5],[4*2,5*4,6*6]] = [[1,6,15],[8,20,36]]
+    Tensor got = a.to(Device.cpu);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({0, 0}), 1.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({0, 1}), 6.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({0, 2}), 15.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 0}), 8.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 1}), 20.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 2}), 36.0);
+  }
+  {
+    Tensor a = make_a();
+    Tensor b = make_b();
+    a /= b;  // [[1/1,2/3,3/5],[4/2,5/4,6/6]]
+    Tensor got = a.to(Device.cpu);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({0, 0}), 1.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({0, 1}), 2.0 / 3.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({0, 2}), 3.0 / 5.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 0}), 2.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 1}), 5.0 / 4.0);
+    EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 2}), 1.0);
+  }
 }
