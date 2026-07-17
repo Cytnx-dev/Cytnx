@@ -15,6 +15,7 @@
 
 namespace cytnx {
   namespace test {
+
     void TestFailMsg::AppendMsg(const std::string& fail_msg, const std::string& func_name,
                                 const int line) {
       std::string full_msg;

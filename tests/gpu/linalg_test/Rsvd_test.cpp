@@ -5,969 +5,983 @@
 
 namespace cytnx {
   namespace gpu_test {
+    namespace {
 
-    static TestFailMsg fail_msg;
+      static TestFailMsg fail_msg;
 
-    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                            const cytnx_uint64& power_iteration);
-    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                            const std::vector<cytnx_uint64> min_blockdim,
-                            const cytnx_uint64& power_iteration);
-    static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
-    static UniTensor BuildCombinedBlockFermionicTensorWithSignflip();
-    static UniTensor BuildLowRankRectangularDenseUniTensor(const int device);
-    static void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T,
-                                                          const UniTensor& src_Tt);
-    static std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
-    static std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
+      static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                              const cytnx_uint64& power_iteration);
+      static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                              const std::vector<cytnx_uint64> min_blockdim,
+                              const cytnx_uint64& power_iteration);
+      static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+      static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+      static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
+      static UniTensor BuildCombinedBlockFermionicTensorWithSignflip();
+      static UniTensor BuildLowRankRectangularDenseUniTensor(const int device);
+      static void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T,
+                                                            const UniTensor& src_Tt);
+      static std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
+      static std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
 
-    /*=====test info=====
-    describe:Test dense UniTensor only one element.
-    input:
-      T:Dense UniTensor only one element.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(Rsvd, GpuDenseOneElem) {
-      std::string test_case_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-      fail_msg.Init(test_case_name);
-      int size = 1;
-      std::vector<Bond> bonds = {Bond(size), Bond(size), Bond(size)};
-      int rowrank = 1;
-      bool is_diag = false;
-      auto labels = std::vector<std::string>();
-      auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
-      random::Make_uniform(T, -10, 0, 0);
-      std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1);
-      EXPECT_TRUE(CheckLabels(T, rsvds)) << fail_msg.TraceFailMsgs();
-      EXPECT_TRUE(ReComposeCheck(T, rsvds)) << fail_msg.TraceFailMsgs();
-      EXPECT_DOUBLE_EQ(rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
-        << "Singular value is wrong."
-        << " line:" << __LINE__ << std::endl;
-    }
+      /*=====test info=====
+      describe:Test dense UniTensor only one element.
+      input:
+        T:Dense UniTensor only one element.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(Rsvd, GpuDenseOneElem) {
+        std::string test_case_name =
+          ::testing::UnitTest::GetInstance()->current_test_info()->name();
+        fail_msg.Init(test_case_name);
+        int size = 1;
+        std::vector<Bond> bonds = {Bond(size), Bond(size), Bond(size)};
+        int rowrank = 1;
+        bool is_diag = false;
+        auto labels = std::vector<std::string>();
+        auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
+        random::Make_uniform(T, -10, 0, 0);
+        std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1);
+        EXPECT_TRUE(CheckLabels(T, rsvds)) << fail_msg.TraceFailMsgs();
+        EXPECT_TRUE(ReComposeCheck(T, rsvds)) << fail_msg.TraceFailMsgs();
+        EXPECT_DOUBLE_EQ(rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
+          << "Singular value is wrong."
+          << " line:" << __LINE__ << std::endl;
+      }
 
-    TEST(Rsvd, GpuDenseLowRankRectangularAndTransposedExactReconstruction) {
+      TEST(Rsvd, GpuDenseLowRankRectangularAndTransposedExactReconstruction) {
 #ifndef UNI_CUQUANTUM
-      GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
+        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
 #endif
-      std::string test_case_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-      fail_msg.Init(test_case_name);
+        std::string test_case_name =
+          ::testing::UnitTest::GetInstance()->current_test_info()->name();
+        fail_msg.Init(test_case_name);
 
-      UniTensor src_T = BuildLowRankRectangularDenseUniTensor(Device.cuda);
-      UniTensor src_Tt = src_T.permute({2, 0, 1}, 1).contiguous_();
+        UniTensor src_T = BuildLowRankRectangularDenseUniTensor(Device.cuda);
+        UniTensor src_Tt = src_T.permute({2, 0, 1}, 1).contiguous_();
 
-      CheckLowRankRectangularDenseUniTensorCase(src_T, src_Tt);
-    }
+        CheckLowRankRectangularDenseUniTensorCase(src_T, src_Tt);
+      }
 
-    /*=====test info=====
-    describe:error test, Test Dense diagonal tensor.
-    input:
-      T:Dense diagonal complex real type UniTensor.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(Rsvd, GpuErrDenseDiagTest) {
-      int size = 5;
-      std::vector<Bond> bonds = {Bond(size), Bond(size)};
-      int rowrank = 1;
-      bool is_diag = true;
-      auto labels = std::vector<std::string>();
-      auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
-      random::Make_uniform(T, 0, 10, 0);
-      EXPECT_THROW({ std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2); }, std::logic_error);
-    }
+      /*=====test info=====
+      describe:error test, Test Dense diagonal tensor.
+      input:
+        T:Dense diagonal complex real type UniTensor.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(Rsvd, GpuErrDenseDiagTest) {
+        int size = 5;
+        std::vector<Bond> bonds = {Bond(size), Bond(size)};
+        int rowrank = 1;
+        bool is_diag = true;
+        auto labels = std::vector<std::string>();
+        auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
+        random::Make_uniform(T, 0, 10, 0);
+        EXPECT_THROW({ std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2); }, std::logic_error);
+      }
 
-    /*=====test info=====
-    describe:Test Dense UniTensor with exponentially decaying singular values.
-    input:
-      T:Dense UniTensor with real or complex real type.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(Rsvd, GpuDenseExpSvalsTest) {
+      /*=====test info=====
+      describe:Test Dense UniTensor with exponentially decaying singular values.
+      input:
+        T:Dense UniTensor with real or complex real type.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(Rsvd, GpuDenseExpSvalsTest) {
 #ifndef UNI_CUQUANTUM
-      GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
+        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
 #endif
-      std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
-                                            "dense_nondiag_exp_Svals_F64"};
-      for (const auto& case_name : case_list) {
-        std::string test_case_name =
-          ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        fail_msg.Init(test_case_name + ", " + case_name);
-        EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
+        std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                              "dense_nondiag_exp_Svals_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          fail_msg.Init(test_case_name + ", " + case_name);
+          EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
+        }
       }
-    }
 
-    /*=====test info=====
-    describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration
-    in Rsvd. input: T:Dense UniTensor with real or complex real type. is_U:true is_VT:true
-    ====================*/
-    TEST(Rsvd, GpuDenseExpSvalsNoPowerIterationTest) {
+      /*=====test info=====
+      describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration
+      in Rsvd. input: T:Dense UniTensor with real or complex real type. is_U:true is_VT:true
+      ====================*/
+      TEST(Rsvd, GpuDenseExpSvalsNoPowerIterationTest) {
 #ifndef UNI_CUQUANTUM
-      GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
+        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
 #endif
-      std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
-                                            "dense_nondiag_exp_Svals_F64"};
-      for (const auto& case_name : case_list) {
+        std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                              "dense_nondiag_exp_Svals_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          fail_msg.Init(test_case_name + ", " + case_name);
+          EXPECT_TRUE(CheckResult(case_name, 5, 0)) << fail_msg.TraceFailMsgs();
+        }
+      }
+
+      /*=====test info=====
+      describe:Test U(1) UniTensor with exponentially decaying singular values.
+      input:
+        T:U(1) UniTensor with real or complex real type.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(Rsvd, GpuU1ExpSvalsTest) {
+        std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128",
+                                              "sym_UT_U1_exp_Svals_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          fail_msg.Init(test_case_name + ", " + case_name);
+          EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
+        }
+      }
+
+      /*=====test info=====
+      describe:Test U(1) UniTensor with exponentially decaying singular values and use of
+      min_blockdim; input: T:U(1) UniTensor with real or complex real type. is_U:true is_VT:true
+      ====================*/
+      TEST(Rsvd, GpuU1ExpSvalsMinblockdimTest) {
+        std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128",
+                                              "sym_UT_U1_exp_Svals_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          fail_msg.Init(test_case_name + ", " + case_name);
+          EXPECT_TRUE(CheckResult(case_name, 5, {1, 1, 0, 2, 0}, 2)) << fail_msg.TraceFailMsgs();
+        }
+      }
+
+      /*=====test info=====
+      describe:Test BlockFermionic UniTensor.
+      input:
+        T:BlockFermionic UniTensor.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(Rsvd, GpuBlockFermionicTest) {
         std::string test_case_name =
           ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        fail_msg.Init(test_case_name + ", " + case_name);
-        EXPECT_TRUE(CheckResult(case_name, 5, 0)) << fail_msg.TraceFailMsgs();
+        fail_msg.Init(test_case_name);
+        UniTensor src_T = BuildCombinedBlockFermionicTensorWithSignflip();
+        std::vector<UniTensor> rsvds = linalg::Rsvd(src_T, 10, 0., true, true, 0, 0, 2, 1, 2, 0);
+        EXPECT_TRUE(CheckLabels(src_T, rsvds)) << fail_msg.TraceFailMsgs();
       }
-    }
 
-    /*=====test info=====
-    describe:Test U(1) UniTensor with exponentially decaying singular values.
-    input:
-      T:U(1) UniTensor with real or complex real type.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(Rsvd, GpuU1ExpSvalsTest) {
-      std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128", "sym_UT_U1_exp_Svals_F64"};
-      for (const auto& case_name : case_list) {
-        std::string test_case_name =
-          ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        fail_msg.Init(test_case_name + ", " + case_name);
-        EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
+      static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+        bool is_double_float_acc = true;
+        auto dtype = Tin.dtype();
+        if (dtype == Type.Float || dtype == Type.ComplexFloat) {
+          is_double_float_acc = false;
+        }
+        const UniTensor& S = Tout[0];
+        const UniTensor& U = Tout[1];
+        const UniTensor& V = Tout[2];
+        UniTensor recomposed = Contract(U, S);
+        recomposed = Contract(recomposed, V);
+        const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
+        auto T_float = Tin.clone();
+        if (Tin.dtype() > Type.Float) {
+          T_float = Tin.astype(Type.Double);
+        }
+        bool is_eq = AreNearlyEqUniTensor(T_float, recomposed.permute_(T_float.labels()), tol);
+        return is_eq;
       }
-    }
 
-    /*=====test info=====
-    describe:Test U(1) UniTensor with exponentially decaying singular values and use of
-    min_blockdim; input: T:U(1) UniTensor with real or complex real type. is_U:true is_VT:true
-    ====================*/
-    TEST(Rsvd, GpuU1ExpSvalsMinblockdimTest) {
-      std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128", "sym_UT_U1_exp_Svals_F64"};
-      for (const auto& case_name : case_list) {
-        std::string test_case_name =
-          ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        fail_msg.Init(test_case_name + ", " + case_name);
-        EXPECT_TRUE(CheckResult(case_name, 5, {1, 1, 0, 2, 0}, 2)) << fail_msg.TraceFailMsgs();
-      }
-    }
-
-    /*=====test info=====
-    describe:Test BlockFermionic UniTensor.
-    input:
-      T:BlockFermionic UniTensor.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(Rsvd, GpuBlockFermionicTest) {
-      std::string test_case_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-      fail_msg.Init(test_case_name);
-      UniTensor src_T = BuildCombinedBlockFermionicTensorWithSignflip();
-      std::vector<UniTensor> rsvds = linalg::Rsvd(src_T, 10, 0., true, true, 0, 0, 2, 1, 2, 0);
-      EXPECT_TRUE(CheckLabels(src_T, rsvds)) << fail_msg.TraceFailMsgs();
-    }
-
-    static bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
-      bool is_double_float_acc = true;
-      auto dtype = Tin.dtype();
-      if (dtype == Type.Float || dtype == Type.ComplexFloat) {
-        is_double_float_acc = false;
-      }
-      const UniTensor& S = Tout[0];
-      const UniTensor& U = Tout[1];
-      const UniTensor& V = Tout[2];
-      UniTensor recomposed = Contract(U, S);
-      recomposed = Contract(recomposed, V);
-      const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
-      auto T_float = Tin.clone();
-      if (Tin.dtype() > Type.Float) {
-        T_float = Tin.astype(Type.Double);
-      }
-      bool is_eq = AreNearlyEqUniTensor(T_float, recomposed.permute_(T_float.labels()), tol);
-      return is_eq;
-    }
-
-    static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
-      const std::vector<std::string>& in_labels = Tin.labels();
-      const std::vector<std::string>& s_labels = Tout[0].labels();
-      const std::vector<std::string>& u_labels = Tout[1].labels();
-      const std::vector<std::string>& v_labels = Tout[2].labels();
-      // check S
-      if (s_labels[0] != "_aux_L") {
-        fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__, __LINE__);
-        return false;
-      }
-      if (s_labels[1] != "_aux_R") {
-        fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__, __LINE__);
-        return false;
-      }
-      // check U
-      for (size_t i = 0; i < u_labels.size() - 1; ++i) {  // exclude U final lags label
-        if (u_labels[i] != in_labels[i]) {
-          fail_msg.AppendMsg("The label of 'U' is wrong. ", __func__, __LINE__);
+      static bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+        const std::vector<std::string>& in_labels = Tin.labels();
+        const std::vector<std::string>& s_labels = Tout[0].labels();
+        const std::vector<std::string>& u_labels = Tout[1].labels();
+        const std::vector<std::string>& v_labels = Tout[2].labels();
+        // check S
+        if (s_labels[0] != "_aux_L") {
+          fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__, __LINE__);
           return false;
         }
-      }
-      // check V
-      for (size_t i = 1; i < v_labels.size(); ++i) {  // exclude VT first lags label
-        auto in_indx = u_labels.size() - 2 + i;
-        if (v_labels[i] != in_labels[in_indx]) {
-          fail_msg.AppendMsg("The label of 'V' is wrong. ", __func__, __LINE__);
+        if (s_labels[1] != "_aux_R") {
+          fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__, __LINE__);
           return false;
         }
-      }
-      return true;
-    }
-
-    static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
-      bool is_double_float_acc = true;
-      auto dtype = res.dtype();
-      if (dtype == Type.Float || dtype == Type.ComplexFloat) {
-        is_double_float_acc = false;
-      }
-      Tensor diff_tens = (ans - res).Norm();
-      double ans_norm = (ans.Norm().storage()).at<double>(0);
-      ans_norm = ans_norm < 1.0 ? 1.0 : ans_norm;
-      double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
-      const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
-      return (relative_err < tol);
-    }
-
-    static UniTensor BuildLowRankRectangularDenseUniTensor(const int device) {
-      Tensor left = arange(0, 18, 1, Type.Double, device).reshape({6, 3}) + 1.0;
-      Tensor right = arange(0, 15, 1, Type.Double, device).reshape({3, 5}) + 1.0;
-      Tensor src = linalg::Matmul(left, right).reshape({2, 3, 5});
-      return UniTensor(src, false, 2, {"a", "b", "c"});
-    }
-
-    static void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T,
-                                                          const UniTensor& src_Tt) {
-      const cytnx_uint64 keepdim = 3;
-      std::vector<UniTensor> rsvd_src =
-        linalg::Rsvd(src_T, keepdim, 0., true, true, 0, 1, 0, 0., 0, 7);
-      std::vector<UniTensor> rsvd_src_t =
-        linalg::Rsvd(src_Tt, keepdim, 0., true, true, 0, 1, 0, 0., 0, 7);
-
-      ASSERT_EQ(rsvd_src.size(), 3UL);
-      ASSERT_EQ(rsvd_src_t.size(), 3UL);
-
-      EXPECT_TRUE(CheckLabels(src_T, rsvd_src)) << fail_msg.TraceFailMsgs();
-      EXPECT_TRUE(CheckLabels(src_Tt, rsvd_src_t)) << fail_msg.TraceFailMsgs();
-      EXPECT_TRUE(SingularValsCorrect(rsvd_src[0], rsvd_src_t[0])) << fail_msg.TraceFailMsgs();
-      EXPECT_TRUE(ReComposeCheck(src_T, rsvd_src)) << fail_msg.TraceFailMsgs();
-      EXPECT_TRUE(ReComposeCheck(src_Tt, rsvd_src_t)) << fail_msg.TraceFailMsgs();
-
-      ASSERT_EQ(rsvd_src[1].shape().size(), 3UL);
-      EXPECT_EQ(rsvd_src[1].shape()[0], 2UL);
-      EXPECT_EQ(rsvd_src[1].shape()[1], 3UL);
-      EXPECT_EQ(rsvd_src[1].shape()[2], keepdim);
-      ASSERT_EQ(rsvd_src[2].shape().size(), 2UL);
-      EXPECT_EQ(rsvd_src[2].shape()[0], keepdim);
-      EXPECT_EQ(rsvd_src[2].shape()[1], 5UL);
-
-      ASSERT_EQ(rsvd_src_t[1].shape().size(), 2UL);
-      EXPECT_EQ(rsvd_src_t[1].shape()[0], 5UL);
-      EXPECT_EQ(rsvd_src_t[1].shape()[1], keepdim);
-      ASSERT_EQ(rsvd_src_t[2].shape().size(), 3UL);
-      EXPECT_EQ(rsvd_src_t[2].shape()[0], keepdim);
-      EXPECT_EQ(rsvd_src_t[2].shape()[1], 2UL);
-      EXPECT_EQ(rsvd_src_t[2].shape()[2], 3UL);
-    }
-
-    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                            const cytnx_uint64& power_iteration) {
-      std::string src_file_name = src_data_root + case_name + ".cytnx";
-      std::string ans_file_name = ans_data_root + case_name + ".cytnx";
-      std::string rec_file_name = ans_data_root + case_name + "_reconstructed.cytnx";
-      UniTensor src_T = UniTensor::Load(src_file_name).to(Device.cuda);
-      UniTensor ans_T = UniTensor::Load(ans_file_name).to(Device.cuda);
-      UniTensor rec_T = UniTensor::Load(rec_file_name).to(Device.cuda);
-
-      std::vector<UniTensor> rsvds =
-        linalg::Rsvd(src_T, keepdim, 0, true, true, 0, 0, 2, 1, power_iteration, 0);
-
-      if (!CheckLabels(src_T, rsvds)) {
-        fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
-        return false;
-      }
-      if (!SingularValsCorrect(rsvds[0], ans_T)) {
-        fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
-        return false;
-      }
-      if (!ReComposeCheck(rec_T, rsvds)) {
-        fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.",
-                           __func__, __LINE__);
-        return false;
-      }
-
-      return true;
-    }
-
-    static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                            const std::vector<cytnx_uint64> min_blockdim,
-                            const cytnx_uint64& power_iteration) {
-      std::string src_file_name = src_data_root + case_name + ".cytnx";
-      std::string ans_file_name = ans_data_root + case_name + "_minblockdim.cytnx";
-      std::string rec_file_name = ans_data_root + case_name + "_minblockdim_reconstructed.cytnx";
-      UniTensor src_T = UniTensor::Load(src_file_name).to(Device.cuda);
-      UniTensor ans_T = UniTensor::Load(ans_file_name).to(Device.cuda);
-      UniTensor rec_T = UniTensor::Load(rec_file_name).to(Device.cuda);
-
-      std::vector<UniTensor> rsvds =
-        linalg::Rsvd(src_T, keepdim, min_blockdim, 0., true, true, 0, 0, 2, 1, power_iteration, 0);
-
-      if (!CheckLabels(src_T, rsvds)) {
-        fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
-        return false;
-      }
-      if (!SingularValsCorrect(rsvds[0], ans_T)) {
-        fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
-        return false;
-      }
-      if (!ReComposeCheck(rec_T, rsvds)) {
-        fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.",
-                           __func__, __LINE__);
-        return false;
-      }
-
-      return true;
-    }
-
-    static UniTensor BuildCombinedBlockFermionicTensorWithSignflip() {
-      std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 1}};
-      auto syms = std::vector<Symmetry>{Symmetry::FermionParity(), Symmetry(SymmetryType::U)};
-      Bond l1 = Bond(BD_IN, qnums, {2, 3}, syms);
-      Bond l2 = Bond(BD_IN, qnums, {1, 2}, syms);
-      Bond r1 = l1.redirect();
-      Bond r2 = l2.redirect();
-
-      UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
-      random::uniform_(T, -1, 1, 0);
-      std::vector<std::vector<cytnx_int64>> perms = {
-        {1, 0, 2, 3},
-        {0, 2, 1, 3},
-        {2, 1, 0, 3},
-        {0, 1, 3, 2},
-      };
-
-      for (const auto& p : perms) {
-        UniTensor cand = T.permute(p);
-        bool has_signflip = false;
-        for (auto sf : cand.signflip()) {
-          if (sf) {
-            has_signflip = true;
-            break;
+        // check U
+        for (size_t i = 0; i < u_labels.size() - 1; ++i) {  // exclude U final lags label
+          if (u_labels[i] != in_labels[i]) {
+            fail_msg.AppendMsg("The label of 'U' is wrong. ", __func__, __LINE__);
+            return false;
           }
         }
-        if (has_signflip) return cand;
-      }
-      return T.permute({1, 0, 2, 3});
-    }
-
-    // ============================================================================
-    // Rsvd no-truncation path: tests below exercise the randomized-SVD pipeline
-    // without any post-sketch truncation. Each call sets err=0, return_err=0, and
-    // keepdim/oversampling chosen so that all sampled singular values survive.
-    // (Originally a separate Rsvd_notruncate test suite.)
-    // ============================================================================
-
-    static TestFailMsg no_trunc_fail_msg;
-
-    bool CheckNoTruncResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                            const cytnx_uint64& power_iteration);
-    bool NoTruncReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    bool NoTruncCheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
-    static bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans);
-    static bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
-                                         const cytnx_uint64& power_iteration, bool is_U = true,
-                                         bool is_vT = true, cytnx_uint64 mindim = 1,
-                                         cytnx_uint64 oversampling_summand = 0,
-                                         double oversampling_factor = 0.0);
-    static UniTensor BuildNoTruncCombinedBlockTensor();
-    static UniTensor BuildNoTruncCombinedBlockTensorU1xZ2();
-    static UniTensor BuildNoTruncCombinedBlockFermionicTensor();
-    static UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip();
-    std::vector<cytnx_uint64> NoTruncExpectedKeptDims(const UniTensor& Tin,
-                                                      const UniTensor& full_svals,
-                                                      cytnx_uint64 keepdim);
-    static bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals,
-                                                 const UniTensor& gesvd_svals, double tol);
-    static cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin,
-                                                      const UniTensor& full_svals,
-                                                      bool require_full, bool require_one_kept);
-    void NoTruncCheckCategoryCoverage(const std::vector<cytnx_uint64>& full_dims,
-                                      const std::vector<cytnx_uint64>& kept_dims, bool& has_full,
-                                      bool& has_trunc, bool& has_one_kept);
-    std::string no_trunc_src_data_root = CYTNX_TEST_DATA_DIR "/common/";
-    std::string no_trunc_ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Rsvd/";
-
-    /*=====test info=====
-    describe:Test dense UniTensor only one element.
-    input:
-      T:Dense UniTensor only one element.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(RsvdNoTruncation, GpuDenseOneElem) {
-      std::string test_case_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-      no_trunc_fail_msg.Init(test_case_name);
-      int size = 1;
-      std::vector<Bond> bonds = {Bond(size), Bond(size), Bond(size)};
-      int rowrank = 1;
-      bool is_diag = false;
-      auto labels = std::vector<std::string>();
-      auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
-      random::uniform_(T, -10, 0, 0);
-      std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1, 0., true, true, 0, 1, 0, 0., 2);
-      EXPECT_TRUE(NoTruncCheckLabels(T, rsvds)) << no_trunc_fail_msg.TraceFailMsgs();
-      EXPECT_TRUE(NoTruncReComposeCheck(T, rsvds)) << no_trunc_fail_msg.TraceFailMsgs();
-      EXPECT_DOUBLE_EQ(rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
-        << "Singular value is wrong."
-        << " line:" << __LINE__ << std::endl;
-    }
-
-    /*=====test info=====
-    describe:Test Dense UniTensor against full Gesvd decomposition.
-    input:
-      T:Dense UniTensor with real or complex real type.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(RsvdNoTruncation, GpuDenseNondiagCompareGesvd) {
-#ifndef UNI_CUQUANTUM
-      GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
-#endif
-      std::vector<std::string> case_list = {"dense_nondiag_C128", "dense_nondiag_F64"};
-      for (const auto& case_name : case_list) {
-        std::string test_case_name =
-          ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
-        UniTensor src_T =
-          UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
-        std::vector<UniTensor> rsvd = linalg::Rsvd(src_T, 2, 0., true, true, 0, 1, 0, 0., 3, 0);
-        std::vector<UniTensor> gesvd = linalg::Gesvd(src_T, true, true);
-
-        ASSERT_TRUE(NoTruncCheckLabels(src_T, rsvd)) << no_trunc_fail_msg.TraceFailMsgs();
-        Tensor rsvd_s = rsvd[0].get_block_();
-        Tensor gesvd_s = gesvd[0].get_block_();
-        ASSERT_EQ(rsvd_s.shape().size(), 1U);
-        ASSERT_EQ(gesvd_s.shape().size(), 1U);
-        ASSERT_LE(rsvd_s.shape()[0], gesvd_s.shape()[0]);
-
-        const double tol = 1e-1;
-        bool matches_truncated_gesvd = true;
-        for (cytnx_uint64 i = 0; i < rsvd_s.shape()[0]; i++) {
-          const double r = rsvd_s.at<double>({i});
-          const double g = gesvd_s.at<double>({i});
-          const double denom = std::abs(g) < 1.0 ? 1.0 : std::abs(g);
-          if (std::abs(r - g) / denom > tol) {
-            std::cout << "rsvd_s:" << rsvd_s << std::endl;
-            std::cout << "gesvd_s:" << gesvd_s << std::endl;
-            no_trunc_fail_msg.AppendMsg(
-              "The leading singular values differ from the truncated Gesvd "
-              "reference beyond the randomized-SVD tolerance. ",
-              __func__, __LINE__);
-            matches_truncated_gesvd = false;
-            break;
+        // check V
+        for (size_t i = 1; i < v_labels.size(); ++i) {  // exclude VT first lags label
+          auto in_indx = u_labels.size() - 2 + i;
+          if (v_labels[i] != in_labels[in_indx]) {
+            fail_msg.AppendMsg("The label of 'V' is wrong. ", __func__, __LINE__);
+            return false;
           }
         }
-        EXPECT_TRUE(matches_truncated_gesvd) << no_trunc_fail_msg.TraceFailMsgs();
+        return true;
       }
-    }
 
-    /*=====test info=====
-    describe:error test, Test Dense diagonal tensor.
-    input:
-      T:Dense diagonal complex real type UniTensor.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(RsvdNoTruncation, GpuErrDenseDiagTest) {
-      int size = 5;
-      std::vector<Bond> bonds = {Bond(size), Bond(size)};
-      int rowrank = 1;
-      bool is_diag = true;
-      auto labels = std::vector<std::string>();
-      auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
-      random::uniform_(T, 0, 10, 0);
-      EXPECT_THROW(
-        { std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2, 0., true, true, 0, 1, 0, 0., 2); },
-        std::logic_error);
-    }
+      static bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
+        bool is_double_float_acc = true;
+        auto dtype = res.dtype();
+        if (dtype == Type.Float || dtype == Type.ComplexFloat) {
+          is_double_float_acc = false;
+        }
+        Tensor diff_tens = (ans - res).Norm();
+        double ans_norm = (ans.Norm().storage()).at<double>(0);
+        ans_norm = ans_norm < 1.0 ? 1.0 : ans_norm;
+        double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
+        const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
+        return (relative_err < tol);
+      }
 
-    /*=====test info=====
-    describe:error test, Test symmetric diagonal UniTensor.
-    input:
-      T:Symmetric diagonal UniTensor.
-    ====================*/
-    TEST(RsvdNoTruncation, GpuErrSymDiagTest) {
-      Bond bond_ket = Bond(BD_KET, {Qs(0), Qs(1), Qs(2)}, {2, 1, 2});
-      Bond bond_bra = bond_ket.redirect();
-      UniTensor UT = UniTensor({bond_ket, bond_bra}, {}, 1, Type.Double, Device.cuda, true);
-      EXPECT_THROW(
-        { std::vector<UniTensor> rsvds = linalg::Rsvd(UT, 2, 0., true, true, 0, 1, 0, 0., 2); },
-        std::logic_error);
-    }
+      static UniTensor BuildLowRankRectangularDenseUniTensor(const int device) {
+        Tensor left = arange(0, 18, 1, Type.Double, device).reshape({6, 3}) + 1.0;
+        Tensor right = arange(0, 15, 1, Type.Double, device).reshape({3, 5}) + 1.0;
+        Tensor src = linalg::Matmul(left, right).reshape({2, 3, 5});
+        return UniTensor(src, false, 2, {"a", "b", "c"});
+      }
 
-    /*=====test info=====
-    describe:error test, Test rank-1 UniTensor.
-    input:
-      T:rank-1 dense UniTensor.
-    ====================*/
-    TEST(RsvdNoTruncation, GpuErrRank1Unitensor) {
-      UniTensor T = UniTensor({Bond(8)}, {"x"}, 0, Type.Double, Device.cuda, false);
-      random::uniform_(T, 0, 10, 0);
-      EXPECT_THROW(
-        { std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2, 0., true, true, 0, 1, 0, 0., 2); },
-        std::logic_error);
-    }
+      static void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T,
+                                                            const UniTensor& src_Tt) {
+        const cytnx_uint64 keepdim = 3;
+        std::vector<UniTensor> rsvd_src =
+          linalg::Rsvd(src_T, keepdim, 0., true, true, 0, 1, 0, 0., 0, 7);
+        std::vector<UniTensor> rsvd_src_t =
+          linalg::Rsvd(src_Tt, keepdim, 0., true, true, 0, 1, 0, 0., 0, 7);
 
-    /*=====test info=====
-    describe:Test Dense UniTensor with exponentially decaying singular values.
-    input:
-      T:Dense UniTensor with real or complex real type.
-      is_U:true
-      is_VT:true
-    ====================*/
-    TEST(RsvdNoTruncation, GpuDenseExpSvalsTest) {
+        ASSERT_EQ(rsvd_src.size(), 3UL);
+        ASSERT_EQ(rsvd_src_t.size(), 3UL);
+
+        EXPECT_TRUE(CheckLabels(src_T, rsvd_src)) << fail_msg.TraceFailMsgs();
+        EXPECT_TRUE(CheckLabels(src_Tt, rsvd_src_t)) << fail_msg.TraceFailMsgs();
+        EXPECT_TRUE(SingularValsCorrect(rsvd_src[0], rsvd_src_t[0])) << fail_msg.TraceFailMsgs();
+        EXPECT_TRUE(ReComposeCheck(src_T, rsvd_src)) << fail_msg.TraceFailMsgs();
+        EXPECT_TRUE(ReComposeCheck(src_Tt, rsvd_src_t)) << fail_msg.TraceFailMsgs();
+
+        ASSERT_EQ(rsvd_src[1].shape().size(), 3UL);
+        EXPECT_EQ(rsvd_src[1].shape()[0], 2UL);
+        EXPECT_EQ(rsvd_src[1].shape()[1], 3UL);
+        EXPECT_EQ(rsvd_src[1].shape()[2], keepdim);
+        ASSERT_EQ(rsvd_src[2].shape().size(), 2UL);
+        EXPECT_EQ(rsvd_src[2].shape()[0], keepdim);
+        EXPECT_EQ(rsvd_src[2].shape()[1], 5UL);
+
+        ASSERT_EQ(rsvd_src_t[1].shape().size(), 2UL);
+        EXPECT_EQ(rsvd_src_t[1].shape()[0], 5UL);
+        EXPECT_EQ(rsvd_src_t[1].shape()[1], keepdim);
+        ASSERT_EQ(rsvd_src_t[2].shape().size(), 3UL);
+        EXPECT_EQ(rsvd_src_t[2].shape()[0], keepdim);
+        EXPECT_EQ(rsvd_src_t[2].shape()[1], 2UL);
+        EXPECT_EQ(rsvd_src_t[2].shape()[2], 3UL);
+      }
+
+      static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                              const cytnx_uint64& power_iteration) {
+        std::string src_file_name = src_data_root + case_name + ".cytnx";
+        std::string ans_file_name = ans_data_root + case_name + ".cytnx";
+        std::string rec_file_name = ans_data_root + case_name + "_reconstructed.cytnx";
+        UniTensor src_T = UniTensor::Load(src_file_name).to(Device.cuda);
+        UniTensor ans_T = UniTensor::Load(ans_file_name).to(Device.cuda);
+        UniTensor rec_T = UniTensor::Load(rec_file_name).to(Device.cuda);
+
+        std::vector<UniTensor> rsvds =
+          linalg::Rsvd(src_T, keepdim, 0, true, true, 0, 0, 2, 1, power_iteration, 0);
+
+        if (!CheckLabels(src_T, rsvds)) {
+          fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
+          return false;
+        }
+        if (!SingularValsCorrect(rsvds[0], ans_T)) {
+          fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
+          return false;
+        }
+        if (!ReComposeCheck(rec_T, rsvds)) {
+          fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.",
+                             __func__, __LINE__);
+          return false;
+        }
+
+        return true;
+      }
+
+      static bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                              const std::vector<cytnx_uint64> min_blockdim,
+                              const cytnx_uint64& power_iteration) {
+        std::string src_file_name = src_data_root + case_name + ".cytnx";
+        std::string ans_file_name = ans_data_root + case_name + "_minblockdim.cytnx";
+        std::string rec_file_name = ans_data_root + case_name + "_minblockdim_reconstructed.cytnx";
+        UniTensor src_T = UniTensor::Load(src_file_name).to(Device.cuda);
+        UniTensor ans_T = UniTensor::Load(ans_file_name).to(Device.cuda);
+        UniTensor rec_T = UniTensor::Load(rec_file_name).to(Device.cuda);
+
+        std::vector<UniTensor> rsvds = linalg::Rsvd(src_T, keepdim, min_blockdim, 0., true, true, 0,
+                                                    0, 2, 1, power_iteration, 0);
+
+        if (!CheckLabels(src_T, rsvds)) {
+          fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
+          return false;
+        }
+        if (!SingularValsCorrect(rsvds[0], ans_T)) {
+          fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
+          return false;
+        }
+        if (!ReComposeCheck(rec_T, rsvds)) {
+          fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.",
+                             __func__, __LINE__);
+          return false;
+        }
+
+        return true;
+      }
+
+      static UniTensor BuildCombinedBlockFermionicTensorWithSignflip() {
+        std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 1}};
+        auto syms = std::vector<Symmetry>{Symmetry::FermionParity(), Symmetry(SymmetryType::U)};
+        Bond l1 = Bond(BD_IN, qnums, {2, 3}, syms);
+        Bond l2 = Bond(BD_IN, qnums, {1, 2}, syms);
+        Bond r1 = l1.redirect();
+        Bond r2 = l2.redirect();
+
+        UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
+        random::uniform_(T, -1, 1, 0);
+        std::vector<std::vector<cytnx_int64>> perms = {
+          {1, 0, 2, 3},
+          {0, 2, 1, 3},
+          {2, 1, 0, 3},
+          {0, 1, 3, 2},
+        };
+
+        for (const auto& p : perms) {
+          UniTensor cand = T.permute(p);
+          bool has_signflip = false;
+          for (auto sf : cand.signflip()) {
+            if (sf) {
+              has_signflip = true;
+              break;
+            }
+          }
+          if (has_signflip) return cand;
+        }
+        return T.permute({1, 0, 2, 3});
+      }
+
+      // ============================================================================
+      // Rsvd no-truncation path: tests below exercise the randomized-SVD pipeline
+      // without any post-sketch truncation. Each call sets err=0, return_err=0, and
+      // keepdim/oversampling chosen so that all sampled singular values survive.
+      // (Originally a separate Rsvd_notruncate test suite.)
+      // ============================================================================
+
+      static TestFailMsg no_trunc_fail_msg;
+
+      bool CheckNoTruncResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                              const cytnx_uint64& power_iteration);
+      bool NoTruncReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+      bool NoTruncCheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
+      static bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans);
+      static bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
+                                           const cytnx_uint64& power_iteration, bool is_U = true,
+                                           bool is_vT = true, cytnx_uint64 mindim = 1,
+                                           cytnx_uint64 oversampling_summand = 0,
+                                           double oversampling_factor = 0.0);
+      static UniTensor BuildNoTruncCombinedBlockTensor();
+      static UniTensor BuildNoTruncCombinedBlockTensorU1xZ2();
+      static UniTensor BuildNoTruncCombinedBlockFermionicTensor();
+      static UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip();
+      std::vector<cytnx_uint64> NoTruncExpectedKeptDims(const UniTensor& Tin,
+                                                        const UniTensor& full_svals,
+                                                        cytnx_uint64 keepdim);
+      static bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals,
+                                                   const UniTensor& gesvd_svals, double tol);
+      static cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin,
+                                                        const UniTensor& full_svals,
+                                                        bool require_full, bool require_one_kept);
+      void NoTruncCheckCategoryCoverage(const std::vector<cytnx_uint64>& full_dims,
+                                        const std::vector<cytnx_uint64>& kept_dims, bool& has_full,
+                                        bool& has_trunc, bool& has_one_kept);
+      std::string no_trunc_src_data_root = CYTNX_TEST_DATA_DIR "/common/";
+      std::string no_trunc_ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Rsvd/";
+
+      /*=====test info=====
+      describe:Test dense UniTensor only one element.
+      input:
+        T:Dense UniTensor only one element.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(RsvdNoTruncation, GpuDenseOneElem) {
+        std::string test_case_name =
+          ::testing::UnitTest::GetInstance()->current_test_info()->name();
+        no_trunc_fail_msg.Init(test_case_name);
+        int size = 1;
+        std::vector<Bond> bonds = {Bond(size), Bond(size), Bond(size)};
+        int rowrank = 1;
+        bool is_diag = false;
+        auto labels = std::vector<std::string>();
+        auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
+        random::uniform_(T, -10, 0, 0);
+        std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1, 0., true, true, 0, 1, 0, 0., 2);
+        EXPECT_TRUE(NoTruncCheckLabels(T, rsvds)) << no_trunc_fail_msg.TraceFailMsgs();
+        EXPECT_TRUE(NoTruncReComposeCheck(T, rsvds)) << no_trunc_fail_msg.TraceFailMsgs();
+        EXPECT_DOUBLE_EQ(rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
+          << "Singular value is wrong."
+          << " line:" << __LINE__ << std::endl;
+      }
+
+      /*=====test info=====
+      describe:Test Dense UniTensor against full Gesvd decomposition.
+      input:
+        T:Dense UniTensor with real or complex real type.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(RsvdNoTruncation, GpuDenseNondiagCompareGesvd) {
 #ifndef UNI_CUQUANTUM
-      GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
+        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
 #endif
-      std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
-                                            "dense_nondiag_exp_Svals_F64"};
-      for (const auto& case_name : case_list) {
-        std::string test_case_name =
-          ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
-        EXPECT_TRUE(CheckNoTruncResult(case_name, 15, 2)) << no_trunc_fail_msg.TraceFailMsgs();
-      }
-    }
+        std::vector<std::string> case_list = {"dense_nondiag_C128", "dense_nondiag_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
+          UniTensor src_T =
+            UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
+          std::vector<UniTensor> rsvd = linalg::Rsvd(src_T, 2, 0., true, true, 0, 1, 0, 0., 3, 0);
+          std::vector<UniTensor> gesvd = linalg::Gesvd(src_T, true, true);
 
-    /*=====test info=====
-    describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration
-    in Rsvd_notruncate. input: T:Dense UniTensor with real or complex real type. is_U:true
-    is_VT:true
-    ====================*/
-    TEST(RsvdNoTruncation, GpuDenseExpSvalsNoPowerIterationTest) {
+          ASSERT_TRUE(NoTruncCheckLabels(src_T, rsvd)) << no_trunc_fail_msg.TraceFailMsgs();
+          Tensor rsvd_s = rsvd[0].get_block_();
+          Tensor gesvd_s = gesvd[0].get_block_();
+          ASSERT_EQ(rsvd_s.shape().size(), 1U);
+          ASSERT_EQ(gesvd_s.shape().size(), 1U);
+          ASSERT_LE(rsvd_s.shape()[0], gesvd_s.shape()[0]);
+
+          const double tol = 1e-1;
+          bool matches_truncated_gesvd = true;
+          for (cytnx_uint64 i = 0; i < rsvd_s.shape()[0]; i++) {
+            const double r = rsvd_s.at<double>({i});
+            const double g = gesvd_s.at<double>({i});
+            const double denom = std::abs(g) < 1.0 ? 1.0 : std::abs(g);
+            if (std::abs(r - g) / denom > tol) {
+              std::cout << "rsvd_s:" << rsvd_s << std::endl;
+              std::cout << "gesvd_s:" << gesvd_s << std::endl;
+              no_trunc_fail_msg.AppendMsg(
+                "The leading singular values differ from the truncated Gesvd "
+                "reference beyond the randomized-SVD tolerance. ",
+                __func__, __LINE__);
+              matches_truncated_gesvd = false;
+              break;
+            }
+          }
+          EXPECT_TRUE(matches_truncated_gesvd) << no_trunc_fail_msg.TraceFailMsgs();
+        }
+      }
+
+      /*=====test info=====
+      describe:error test, Test Dense diagonal tensor.
+      input:
+        T:Dense diagonal complex real type UniTensor.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(RsvdNoTruncation, GpuErrDenseDiagTest) {
+        int size = 5;
+        std::vector<Bond> bonds = {Bond(size), Bond(size)};
+        int rowrank = 1;
+        bool is_diag = true;
+        auto labels = std::vector<std::string>();
+        auto T = UniTensor(bonds, labels, rowrank, Type.Double, Device.cuda, is_diag);
+        random::uniform_(T, 0, 10, 0);
+        EXPECT_THROW(
+          { std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2, 0., true, true, 0, 1, 0, 0., 2); },
+          std::logic_error);
+      }
+
+      /*=====test info=====
+      describe:error test, Test symmetric diagonal UniTensor.
+      input:
+        T:Symmetric diagonal UniTensor.
+      ====================*/
+      TEST(RsvdNoTruncation, GpuErrSymDiagTest) {
+        Bond bond_ket = Bond(BD_KET, {Qs(0), Qs(1), Qs(2)}, {2, 1, 2});
+        Bond bond_bra = bond_ket.redirect();
+        UniTensor UT = UniTensor({bond_ket, bond_bra}, {}, 1, Type.Double, Device.cuda, true);
+        EXPECT_THROW(
+          { std::vector<UniTensor> rsvds = linalg::Rsvd(UT, 2, 0., true, true, 0, 1, 0, 0., 2); },
+          std::logic_error);
+      }
+
+      /*=====test info=====
+      describe:error test, Test rank-1 UniTensor.
+      input:
+        T:rank-1 dense UniTensor.
+      ====================*/
+      TEST(RsvdNoTruncation, GpuErrRank1Unitensor) {
+        UniTensor T = UniTensor({Bond(8)}, {"x"}, 0, Type.Double, Device.cuda, false);
+        random::uniform_(T, 0, 10, 0);
+        EXPECT_THROW(
+          { std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2, 0., true, true, 0, 1, 0, 0., 2); },
+          std::logic_error);
+      }
+
+      /*=====test info=====
+      describe:Test Dense UniTensor with exponentially decaying singular values.
+      input:
+        T:Dense UniTensor with real or complex real type.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(RsvdNoTruncation, GpuDenseExpSvalsTest) {
 #ifndef UNI_CUQUANTUM
-      GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
+        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
 #endif
-      std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
-                                            "dense_nondiag_exp_Svals_F64"};
-      for (const auto& case_name : case_list) {
-        std::string test_case_name =
-          ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
-        EXPECT_TRUE(CheckNoTruncResult(case_name, 15, 0)) << no_trunc_fail_msg.TraceFailMsgs();
+        std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                              "dense_nondiag_exp_Svals_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
+          EXPECT_TRUE(CheckNoTruncResult(case_name, 15, 2)) << no_trunc_fail_msg.TraceFailMsgs();
+        }
       }
-    }
 
-    /*=====test info=====
-    describe:Test tagged Dense UniTensor output bond types in Rsvd_notruncate.
-    input:
-      T:Tagged dense UniTensor with rowrank=2.
-      is_U:true
+      /*=====test info=====
+      describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration
+      in Rsvd_notruncate. input: T:Dense UniTensor with real or complex real type. is_U:true
       is_VT:true
-    ====================*/
-    TEST(RsvdNoTruncation, GpuDenseTaggedOutputBondTypes) {
-      std::vector<Bond> bonds = {Bond(2), Bond(3), Bond(4), Bond(5)};
-      std::vector<std::string> labels = {"a", "b", "c", "d"};
-      UniTensor T(bonds, labels, 2, Type.Double, Device.cuda, false);
-      random::uniform_(T, -10, 0, 0);
-      T.tag();
-
-      ASSERT_TRUE(T.is_tag());
-      ASSERT_TRUE(T.is_braket_form());
-
-      std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1000, 0., true, true, 0, 1, 0, 0., 2, 0);
-      ASSERT_EQ(rsvds.size(), 3);
-
-      const UniTensor& S = rsvds[0];
-      const UniTensor& U = rsvds[1];
-      const UniTensor& vT = rsvds[2];
-
-      EXPECT_TRUE(S.is_tag());
-      EXPECT_TRUE(U.is_tag());
-      EXPECT_TRUE(vT.is_tag());
-      EXPECT_TRUE(S.is_braket_form());
-      EXPECT_TRUE(U.is_braket_form());
-      EXPECT_TRUE(vT.is_braket_form());
-
-      EXPECT_EQ(S.bonds()[0].type(), BD_KET);
-      EXPECT_EQ(S.bonds()[1].type(), BD_BRA);
-
-      for (int i = 0; i < U.rowrank(); i++) {
-        EXPECT_EQ(U.bonds()[i].type(), T.bonds()[i].type());
-      }
-      EXPECT_EQ(U.bonds().back().type(), BD_BRA);
-
-      EXPECT_EQ(vT.bonds()[0].type(), BD_KET);
-      for (int i = 1; i < vT.rank(); i++) {
-        EXPECT_EQ(vT.bonds()[i].type(), T.bonds()[T.rowrank() + i - 1].type());
+      ====================*/
+      TEST(RsvdNoTruncation, GpuDenseExpSvalsNoPowerIterationTest) {
+#ifndef UNI_CUQUANTUM
+        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
+#endif
+        std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                              "dense_nondiag_exp_Svals_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
+          EXPECT_TRUE(CheckNoTruncResult(case_name, 15, 0)) << no_trunc_fail_msg.TraceFailMsgs();
+        }
       }
 
-      EXPECT_TRUE(NoTruncCheckLabels(T, rsvds));
-      EXPECT_TRUE(NoTruncReComposeCheck(T, rsvds));
-    }
+      /*=====test info=====
+      describe:Test tagged Dense UniTensor output bond types in Rsvd_notruncate.
+      input:
+        T:Tagged dense UniTensor with rowrank=2.
+        is_U:true
+        is_VT:true
+      ====================*/
+      TEST(RsvdNoTruncation, GpuDenseTaggedOutputBondTypes) {
+        std::vector<Bond> bonds = {Bond(2), Bond(3), Bond(4), Bond(5)};
+        std::vector<std::string> labels = {"a", "b", "c", "d"};
+        UniTensor T(bonds, labels, 2, Type.Double, Device.cuda, false);
+        random::uniform_(T, -10, 0, 0);
+        T.tag();
 
-    /*=====test info=====
-    describe:Test Block UniTensor against full Gesvd decomposition.
-    input:
-      T:Block UniTensor with U1 symmetry.
-    ====================*/
-    TEST(RsvdNoTruncation, GpuBlockU1CompareGesvd) {
-      std::vector<std::string> case_list = {"sym_UT_U1_C128", "sym_UT_U1_F64"};
-      for (const auto& case_name : case_list) {
+        ASSERT_TRUE(T.is_tag());
+        ASSERT_TRUE(T.is_braket_form());
+
+        std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1000, 0., true, true, 0, 1, 0, 0., 2, 0);
+        ASSERT_EQ(rsvds.size(), 3);
+
+        const UniTensor& S = rsvds[0];
+        const UniTensor& U = rsvds[1];
+        const UniTensor& vT = rsvds[2];
+
+        EXPECT_TRUE(S.is_tag());
+        EXPECT_TRUE(U.is_tag());
+        EXPECT_TRUE(vT.is_tag());
+        EXPECT_TRUE(S.is_braket_form());
+        EXPECT_TRUE(U.is_braket_form());
+        EXPECT_TRUE(vT.is_braket_form());
+
+        EXPECT_EQ(S.bonds()[0].type(), BD_KET);
+        EXPECT_EQ(S.bonds()[1].type(), BD_BRA);
+
+        for (int i = 0; i < U.rowrank(); i++) {
+          EXPECT_EQ(U.bonds()[i].type(), T.bonds()[i].type());
+        }
+        EXPECT_EQ(U.bonds().back().type(), BD_BRA);
+
+        EXPECT_EQ(vT.bonds()[0].type(), BD_KET);
+        for (int i = 1; i < vT.rank(); i++) {
+          EXPECT_EQ(vT.bonds()[i].type(), T.bonds()[T.rowrank() + i - 1].type());
+        }
+
+        EXPECT_TRUE(NoTruncCheckLabels(T, rsvds));
+        EXPECT_TRUE(NoTruncReComposeCheck(T, rsvds));
+      }
+
+      /*=====test info=====
+      describe:Test Block UniTensor against full Gesvd decomposition.
+      input:
+        T:Block UniTensor with U1 symmetry.
+      ====================*/
+      TEST(RsvdNoTruncation, GpuBlockU1CompareGesvd) {
+        std::vector<std::string> case_list = {"sym_UT_U1_C128", "sym_UT_U1_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
+          UniTensor src_T =
+            UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
+          EXPECT_TRUE(NoTruncCheckAgainstGesvd(src_T, 1000, 2))
+            << no_trunc_fail_msg.TraceFailMsgs();
+        }
+      }
+
+      /*=====test info=====
+      describe:Test Block UniTensor against full Gesvd decomposition with mixed symmetry.
+      input:
+        T:Block UniTensor with U1xZ2 symmetry.
+      ====================*/
+      TEST(RsvdNoTruncation, GpuBlockU1xz2CompareGesvd) {
+        std::vector<std::string> case_list = {"sym_UT_U1xZ2_C128", "sym_UT_U1xZ2_F64"};
+        for (const auto& case_name : case_list) {
+          std::string test_case_name =
+            ::testing::UnitTest::GetInstance()->current_test_info()->name();
+          no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
+          UniTensor src_T =
+            UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
+          EXPECT_TRUE(NoTruncCheckAgainstGesvd(src_T, 1000, 2))
+            << no_trunc_fail_msg.TraceFailMsgs();
+        }
+      }
+
+      /*=====test info=====
+      describe:Test BlockFermionic UniTensor against full Gesvd decomposition.
+      input:
+        T:BlockFermionic UniTensor loaded from test database.
+      ====================*/
+      TEST(RsvdNoTruncation, GpuBlockFermionicCompareGesvd) {
         std::string test_case_name =
           ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
-        UniTensor src_T =
-          UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
-        EXPECT_TRUE(NoTruncCheckAgainstGesvd(src_T, 1000, 2)) << no_trunc_fail_msg.TraceFailMsgs();
-      }
-    }
-
-    /*=====test info=====
-    describe:Test Block UniTensor against full Gesvd decomposition with mixed symmetry.
-    input:
-      T:Block UniTensor with U1xZ2 symmetry.
-    ====================*/
-    TEST(RsvdNoTruncation, GpuBlockU1xz2CompareGesvd) {
-      std::vector<std::string> case_list = {"sym_UT_U1xZ2_C128", "sym_UT_U1xZ2_F64"};
-      for (const auto& case_name : case_list) {
-        std::string test_case_name =
-          ::testing::UnitTest::GetInstance()->current_test_info()->name();
-        no_trunc_fail_msg.Init(test_case_name + ", " + case_name);
-        UniTensor src_T =
-          UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
-        EXPECT_TRUE(NoTruncCheckAgainstGesvd(src_T, 1000, 2)) << no_trunc_fail_msg.TraceFailMsgs();
-      }
-    }
-
-    /*=====test info=====
-    describe:Test BlockFermionic UniTensor against full Gesvd decomposition.
-    input:
-      T:BlockFermionic UniTensor loaded from test database.
-    ====================*/
-    TEST(RsvdNoTruncation, GpuBlockFermionicCompareGesvd) {
-      std::string test_case_name = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-      no_trunc_fail_msg.Init(test_case_name + ", in-test BlockFermionic tensor");
-      UniTensor src_T = BuildNoTruncCombinedBlockFermionicTensorWithSignflip();
-      EXPECT_TRUE(NoTruncCheckAgainstGesvd(src_T, 1000, 2)) << no_trunc_fail_msg.TraceFailMsgs();
-    }
-
-    /*=====test info=====
-    describe:Test is_U/is_vT output selection on block and block fermionic tensors.
-    input:
-      T:Block and BlockFermionic UniTensor.
-    ====================*/
-    TEST(RsvdNoTruncation, GpuBlockAndFermionicOutputSize) {
-      GTEST_SKIP() << "GPU backend issue: block/fermionic full-SVD path currently hits "
-                      "CUSOLVER_STATUS_EXECUTION_FAILED in cuGeSvd_internal.cu "
-                      "(cusolverDnDgesvdj) for this coverage case.";
-      {
-        std::string case_name = "sym_UT_U1_F64";
-        UniTensor src_T =
-          UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
-        auto out_UV = linalg::Rsvd(src_T, 1000, 0., true, true, 0, 1, 0, 0., 2, 0);
-        EXPECT_EQ(out_UV.size(), 3) << case_name;
-        auto out_S = linalg::Rsvd(src_T, 1000, 0., false, false, 0, 1, 0, 0., 2, 0);
-        EXPECT_EQ(out_S.size(), 1) << case_name;
-        EXPECT_TRUE(NoTruncSingularValsCorrect(out_S[0], out_UV[0])) << case_name;
-      }
-
-      {
-        std::string case_name = "constructed_BlockFermionic";
+        no_trunc_fail_msg.Init(test_case_name + ", in-test BlockFermionic tensor");
         UniTensor src_T = BuildNoTruncCombinedBlockFermionicTensorWithSignflip();
-        auto out_UV = linalg::Rsvd(src_T, 1000, 0., true, true, 0, 1, 0, 0., 2, 0);
-        EXPECT_EQ(out_UV.size(), 3) << case_name;
-        auto out_S = linalg::Rsvd(src_T, 1000, 0., false, false, 0, 1, 0, 0., 2, 0);
-        EXPECT_EQ(out_S.size(), 1) << case_name;
-        EXPECT_TRUE(NoTruncSingularValsCorrect(out_S[0], out_UV[0])) << case_name;
+        EXPECT_TRUE(NoTruncCheckAgainstGesvd(src_T, 1000, 2)) << no_trunc_fail_msg.TraceFailMsgs();
       }
-    }
 
-    // Note: the original Rsvd_notruncate suite had block_combined_sector_* tests covering per-
-    // sector truncation patterns produced by the un-truncated randomized SVD. Those tests are
-    // not portable to Rsvd because Rsvds outer global truncation overrides the per-sector dims
-    // the original tests asserted on. The per-sector sketch correctness is still covered by the
-    // block_*_compare_gesvd tests above.
-
-    bool NoTruncReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
-      bool is_double_float_acc = true;
-      auto dtype = Tin.dtype();
-      if (dtype == Type.Float || dtype == Type.ComplexFloat) {
-        is_double_float_acc = false;
-      }
-      const UniTensor& S = Tout[0];
-      const UniTensor& U = Tout[1];
-      const UniTensor& V = Tout[2];
-      UniTensor recomposed = Contract(U, S);
-      recomposed = Contract(recomposed, V);
-      const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
-      auto T_float = Tin.clone();
-      if (Tin.dtype() > Type.Float) {
-        T_float = Tin.astype(Type.Double);
-      }
-      T_float.contiguous_();
-      recomposed.permute_(T_float.labels());
-      recomposed.contiguous_();
-      bool is_eq = AreNearlyEqUniTensor(T_float, recomposed, tol);
-      return is_eq;
-    }
-
-    bool NoTruncCheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
-      const std::vector<std::string>& in_labels = Tin.labels();
-      const std::vector<std::string>& s_labels = Tout[0].labels();
-      const std::vector<std::string>& u_labels = Tout[1].labels();
-      const std::vector<std::string>& v_labels = Tout[2].labels();
-      // check S
-      if (s_labels[0] != "_aux_L") {
-        no_trunc_fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__,
-                                    __LINE__);
-        return false;
-      }
-      if (s_labels[1] != "_aux_R") {
-        no_trunc_fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__,
-                                    __LINE__);
-        return false;
-      }
-      // check U
-      for (size_t i = 0; i < u_labels.size() - 1; ++i) {  // exclude U final lags label
-        if (u_labels[i] != in_labels[i]) {
-          no_trunc_fail_msg.AppendMsg("The label of 'U' is wrong. ", __func__, __LINE__);
-          return false;
+      /*=====test info=====
+      describe:Test is_U/is_vT output selection on block and block fermionic tensors.
+      input:
+        T:Block and BlockFermionic UniTensor.
+      ====================*/
+      TEST(RsvdNoTruncation, GpuBlockAndFermionicOutputSize) {
+        GTEST_SKIP() << "GPU backend issue: block/fermionic full-SVD path currently hits "
+                        "CUSOLVER_STATUS_EXECUTION_FAILED in cuGeSvd_internal.cu "
+                        "(cusolverDnDgesvdj) for this coverage case.";
+        {
+          std::string case_name = "sym_UT_U1_F64";
+          UniTensor src_T =
+            UniTensor::Load(no_trunc_src_data_root + case_name + ".cytnx").to(Device.cuda);
+          auto out_UV = linalg::Rsvd(src_T, 1000, 0., true, true, 0, 1, 0, 0., 2, 0);
+          EXPECT_EQ(out_UV.size(), 3) << case_name;
+          auto out_S = linalg::Rsvd(src_T, 1000, 0., false, false, 0, 1, 0, 0., 2, 0);
+          EXPECT_EQ(out_S.size(), 1) << case_name;
+          EXPECT_TRUE(NoTruncSingularValsCorrect(out_S[0], out_UV[0])) << case_name;
         }
-      }
-      // check V
-      for (size_t i = 1; i < v_labels.size(); ++i) {  // exclude VT first lags label
-        auto in_indx = u_labels.size() - 2 + i;
-        if (v_labels[i] != in_labels[in_indx]) {
-          no_trunc_fail_msg.AppendMsg("The label of 'V' is wrong. ", __func__, __LINE__);
-          return false;
-        }
-      }
-      return true;
-    }
 
-    static bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
-      bool is_double_float_acc = true;
-      auto dtype = res.dtype();
-      if (dtype == Type.Float || dtype == Type.ComplexFloat) {
-        is_double_float_acc = false;
-      }
-      Tensor diff_tens = (ans - res).Norm();
-      double ans_norm = (ans.Norm().storage()).at<double>(0);
-      ans_norm = ans_norm < 1.0 ? 1.0 : ans_norm;
-      double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
-
-      const double tol = is_double_float_acc ? 1.0e-10 : 1.0e-5;
-      return (relative_err < tol);
-    }
-
-    bool CheckNoTruncResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                            const cytnx_uint64& power_iteration) {
-      std::string src_file_name = no_trunc_src_data_root + case_name + ".cytnx";
-      std::string ans_file_name = no_trunc_ans_data_root + case_name + ".cytnx";
-      UniTensor src_T = UniTensor::Load(src_file_name).to(Device.cuda);
-      UniTensor ans_T = UniTensor::Load(ans_file_name).to(Device.cuda);
-
-      std::vector<UniTensor> rsvds =
-        linalg::Rsvd(src_T, keepdim, 0., true, true, 0, 1, 0, 0., power_iteration, 0);
-
-      if (!NoTruncCheckLabels(src_T, rsvds)) {
-        no_trunc_fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
-        return false;
-      }
-      if (!NoTruncSingularValsCorrect(rsvds[0], ans_T)) {
-        std::cout << rsvds[0] << std::endl;
-        std::cout << ans_T << std::endl;
-        no_trunc_fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
-        return false;
-      }
-      if (!NoTruncReComposeCheck(src_T, rsvds)) {
-        no_trunc_fail_msg.AppendMsg(
-          "The result is wrong after recomposing, T is not equal to USV*.", __func__, __LINE__);
-        return false;
-      }
-
-      return true;
-    }
-
-    static bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
-                                         const cytnx_uint64& power_iteration, bool is_U, bool is_vT,
-                                         cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
-                                         double oversampling_factor) {
-      std::vector<UniTensor> rsvd =
-        linalg::Rsvd(src_T, keepdim, 0., is_U, is_vT, 0, mindim, oversampling_summand,
-                     oversampling_factor, power_iteration, 0);
-
-      std::vector<UniTensor> gesvd = linalg::Gesvd(src_T, is_U, is_vT);
-
-      if (!NoTruncSingularValsCorrect(rsvd[0], gesvd[0])) {
-        std::cout << rsvd[0] << std::endl;
-        std::cout << gesvd[0] << std::endl;
-        no_trunc_fail_msg.AppendMsg("The singular values differ from Gesvd. ", __func__, __LINE__);
-        return false;
-      }
-
-      if (is_U || is_vT) {
-        if (!NoTruncCheckLabels(src_T, rsvd)) {
-          no_trunc_fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
-          return false;
+        {
+          std::string case_name = "constructed_BlockFermionic";
+          UniTensor src_T = BuildNoTruncCombinedBlockFermionicTensorWithSignflip();
+          auto out_UV = linalg::Rsvd(src_T, 1000, 0., true, true, 0, 1, 0, 0., 2, 0);
+          EXPECT_EQ(out_UV.size(), 3) << case_name;
+          auto out_S = linalg::Rsvd(src_T, 1000, 0., false, false, 0, 1, 0, 0., 2, 0);
+          EXPECT_EQ(out_S.size(), 1) << case_name;
+          EXPECT_TRUE(NoTruncSingularValsCorrect(out_S[0], out_UV[0])) << case_name;
         }
       }
 
-      if (is_U && is_vT) {
-        if (!NoTruncReComposeCheck(src_T, rsvd)) {
-          no_trunc_fail_msg.AppendMsg("Recomposition from Rsvd_notruncate is wrong. ", __func__,
+      // Note: the original Rsvd_notruncate suite had block_combined_sector_* tests covering per-
+      // sector truncation patterns produced by the un-truncated randomized SVD. Those tests are
+      // not portable to Rsvd because Rsvds outer global truncation overrides the per-sector dims
+      // the original tests asserted on. The per-sector sketch correctness is still covered by the
+      // block_*_compare_gesvd tests above.
+
+      bool NoTruncReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+        bool is_double_float_acc = true;
+        auto dtype = Tin.dtype();
+        if (dtype == Type.Float || dtype == Type.ComplexFloat) {
+          is_double_float_acc = false;
+        }
+        const UniTensor& S = Tout[0];
+        const UniTensor& U = Tout[1];
+        const UniTensor& V = Tout[2];
+        UniTensor recomposed = Contract(U, S);
+        recomposed = Contract(recomposed, V);
+        const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
+        auto T_float = Tin.clone();
+        if (Tin.dtype() > Type.Float) {
+          T_float = Tin.astype(Type.Double);
+        }
+        T_float.contiguous_();
+        recomposed.permute_(T_float.labels());
+        recomposed.contiguous_();
+        bool is_eq = AreNearlyEqUniTensor(T_float, recomposed, tol);
+        return is_eq;
+      }
+
+      bool NoTruncCheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+        const std::vector<std::string>& in_labels = Tin.labels();
+        const std::vector<std::string>& s_labels = Tout[0].labels();
+        const std::vector<std::string>& u_labels = Tout[1].labels();
+        const std::vector<std::string>& v_labels = Tout[2].labels();
+        // check S
+        if (s_labels[0] != "_aux_L") {
+          no_trunc_fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__,
                                       __LINE__);
           return false;
         }
-      }
-
-      return true;
-    }
-
-    static UniTensor BuildNoTruncCombinedBlockTensor() {
-      std::vector<std::vector<cytnx_int64>> qnums = {{0}, {1}};
-      auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
-      Bond l1 = Bond(BD_KET, qnums, {2, 3}, syms);
-      Bond l2 = Bond(BD_KET, qnums, {1, 2}, syms);
-      Bond r1 = l1.redirect();
-      Bond r2 = l2.redirect();
-
-      UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
-      InitUniTensorUniform(T, 23);
-      return T;
-    }
-
-    static UniTensor BuildNoTruncCombinedBlockTensorU1xZ2() {
-      std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
-      auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U), Symmetry(SymmetryType::Z, 2)};
-      Bond l1 = Bond(BD_KET, qnums, {1, 2, 1, 2}, syms);
-      Bond l2 = Bond(BD_KET, qnums, {2, 1, 2, 1}, syms);
-      Bond r1 = l1.redirect();
-      Bond r2 = l2.redirect();
-
-      UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
-      InitUniTensorUniform(T, 31);
-      return T;
-    }
-
-    static UniTensor BuildNoTruncCombinedBlockFermionicTensor() {
-      std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 1}};
-      auto syms = std::vector<Symmetry>{Symmetry::FermionParity(), Symmetry(SymmetryType::U)};
-      Bond l1 = Bond(BD_IN, qnums, {2, 3}, syms);
-      Bond l2 = Bond(BD_IN, qnums, {1, 2}, syms);
-      Bond r1 = l1.redirect();
-      Bond r2 = l2.redirect();
-
-      UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
-      InitUniTensorUniform(T, 29);
-      return T;
-    }
-
-    static UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip() {
-      UniTensor base = BuildNoTruncCombinedBlockFermionicTensor();
-      std::vector<std::vector<cytnx_int64>> perms = {
-        {1, 0, 2, 3},
-        {0, 2, 1, 3},
-        {2, 1, 0, 3},
-        {0, 1, 3, 2},
-      };
-
-      for (const auto& p : perms) {
-        UniTensor cand = base.permute(p);
-        bool has_signflip = false;
-        for (auto sf : cand.signflip()) {
-          if (sf) {
-            has_signflip = true;
-            break;
+        if (s_labels[1] != "_aux_R") {
+          no_trunc_fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__,
+                                      __LINE__);
+          return false;
+        }
+        // check U
+        for (size_t i = 0; i < u_labels.size() - 1; ++i) {  // exclude U final lags label
+          if (u_labels[i] != in_labels[i]) {
+            no_trunc_fail_msg.AppendMsg("The label of 'U' is wrong. ", __func__, __LINE__);
+            return false;
           }
         }
-        if (has_signflip) return cand;
-      }
-      return base.permute({1, 0, 2, 3});
-    }
-
-    std::vector<cytnx_uint64> NoTruncExpectedKeptDims(const UniTensor& Tin,
-                                                      const UniTensor& full_svals,
-                                                      cytnx_uint64 keepdim) {
-      const auto full_dims = full_svals.bonds()[0].getDegeneracies();
-      cytnx_uint64 rowdim = 1, coldim = 1;
-      const auto tshape = Tin.shape();
-      for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tshape[i];
-      for (cytnx_uint64 i = Tin.rowrank(); i < Tin.rank(); i++) coldim *= tshape[i];
-      const cytnx_uint64 ten_dim = std::min(rowdim, coldim);
-
-      std::vector<cytnx_uint64> expected(full_dims.size(), 0);
-      for (size_t i = 0; i < full_dims.size(); i++) {
-        const cytnx_uint64 d = full_dims[i];
-        const cytnx_uint64 svalnum = std::max<cytnx_uint64>(
-          1, static_cast<cytnx_uint64>(std::ceil(static_cast<double>(keepdim * d) / ten_dim)));
-        expected[i] = std::min(d, svalnum);
-      }
-      return expected;
-    }
-
-    static bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals,
-                                                 const UniTensor& gesvd_svals, double tol) {
-      std::map<std::vector<cytnx_int64>, size_t> gblk_map;
-      const auto& gqnums = gesvd_svals.bonds()[0].qnums();
-      for (size_t i = 0; i < gqnums.size(); i++) {
-        gblk_map[gqnums[i]] = i;
+        // check V
+        for (size_t i = 1; i < v_labels.size(); ++i) {  // exclude VT first lags label
+          auto in_indx = u_labels.size() - 2 + i;
+          if (v_labels[i] != in_labels[in_indx]) {
+            no_trunc_fail_msg.AppendMsg("The label of 'V' is wrong. ", __func__, __LINE__);
+            return false;
+          }
+        }
+        return true;
       }
 
-      const auto rblks = rsvd_svals.get_blocks_();
-      const auto gblks = gesvd_svals.get_blocks_();
-      const auto& rqnums = rsvd_svals.bonds()[0].qnums();
-      if (rblks.size() != rqnums.size()) return false;
+      static bool NoTruncSingularValsCorrect(const UniTensor& res, const UniTensor& ans) {
+        bool is_double_float_acc = true;
+        auto dtype = res.dtype();
+        if (dtype == Type.Float || dtype == Type.ComplexFloat) {
+          is_double_float_acc = false;
+        }
+        Tensor diff_tens = (ans - res).Norm();
+        double ans_norm = (ans.Norm().storage()).at<double>(0);
+        ans_norm = ans_norm < 1.0 ? 1.0 : ans_norm;
+        double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
 
-      for (size_t b = 0; b < rblks.size(); b++) {
-        if (gblk_map.find(rqnums[b]) == gblk_map.end()) return false;
-        size_t gb = gblk_map[rqnums[b]];
-        const auto rdim = rblks[b].shape()[0];
-        if (rdim > gblks[gb].shape()[0]) return false;
-        for (cytnx_uint64 i = 0; i < rdim; i++) {
-          const double r = rblks[b].at<double>({i});
-          const double g = gblks[gb].at<double>({i});
-          const double denom = std::abs(g) < 1.0 ? 1.0 : std::abs(g);
-          if (std::abs(r - g) / denom > tol) return false;
+        const double tol = is_double_float_acc ? 1.0e-10 : 1.0e-5;
+        return (relative_err < tol);
+      }
+
+      bool CheckNoTruncResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                              const cytnx_uint64& power_iteration) {
+        std::string src_file_name = no_trunc_src_data_root + case_name + ".cytnx";
+        std::string ans_file_name = no_trunc_ans_data_root + case_name + ".cytnx";
+        UniTensor src_T = UniTensor::Load(src_file_name).to(Device.cuda);
+        UniTensor ans_T = UniTensor::Load(ans_file_name).to(Device.cuda);
+
+        std::vector<UniTensor> rsvds =
+          linalg::Rsvd(src_T, keepdim, 0., true, true, 0, 1, 0, 0., power_iteration, 0);
+
+        if (!NoTruncCheckLabels(src_T, rsvds)) {
+          no_trunc_fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
+          return false;
+        }
+        if (!NoTruncSingularValsCorrect(rsvds[0], ans_T)) {
+          std::cout << rsvds[0] << std::endl;
+          std::cout << ans_T << std::endl;
+          no_trunc_fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
+          return false;
+        }
+        if (!NoTruncReComposeCheck(src_T, rsvds)) {
+          no_trunc_fail_msg.AppendMsg(
+            "The result is wrong after recomposing, T is not equal to USV*.", __func__, __LINE__);
+          return false;
+        }
+
+        return true;
+      }
+
+      static bool NoTruncCheckAgainstGesvd(const UniTensor& src_T, const cytnx_uint64& keepdim,
+                                           const cytnx_uint64& power_iteration, bool is_U,
+                                           bool is_vT, cytnx_uint64 mindim,
+                                           cytnx_uint64 oversampling_summand,
+                                           double oversampling_factor) {
+        std::vector<UniTensor> rsvd =
+          linalg::Rsvd(src_T, keepdim, 0., is_U, is_vT, 0, mindim, oversampling_summand,
+                       oversampling_factor, power_iteration, 0);
+
+        std::vector<UniTensor> gesvd = linalg::Gesvd(src_T, is_U, is_vT);
+
+        if (!NoTruncSingularValsCorrect(rsvd[0], gesvd[0])) {
+          std::cout << rsvd[0] << std::endl;
+          std::cout << gesvd[0] << std::endl;
+          no_trunc_fail_msg.AppendMsg("The singular values differ from Gesvd. ", __func__,
+                                      __LINE__);
+          return false;
+        }
+
+        if (is_U || is_vT) {
+          if (!NoTruncCheckLabels(src_T, rsvd)) {
+            no_trunc_fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
+            return false;
+          }
+        }
+
+        if (is_U && is_vT) {
+          if (!NoTruncReComposeCheck(src_T, rsvd)) {
+            no_trunc_fail_msg.AppendMsg("Recomposition from Rsvd_notruncate is wrong. ", __func__,
+                                        __LINE__);
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      static UniTensor BuildNoTruncCombinedBlockTensor() {
+        std::vector<std::vector<cytnx_int64>> qnums = {{0}, {1}};
+        auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+        Bond l1 = Bond(BD_KET, qnums, {2, 3}, syms);
+        Bond l2 = Bond(BD_KET, qnums, {1, 2}, syms);
+        Bond r1 = l1.redirect();
+        Bond r2 = l2.redirect();
+
+        UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
+        InitUniTensorUniform(T, 23);
+        return T;
+      }
+
+      static UniTensor BuildNoTruncCombinedBlockTensorU1xZ2() {
+        std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 0}, {0, 1}, {1, 1}};
+        auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U), Symmetry(SymmetryType::Z, 2)};
+        Bond l1 = Bond(BD_KET, qnums, {1, 2, 1, 2}, syms);
+        Bond l2 = Bond(BD_KET, qnums, {2, 1, 2, 1}, syms);
+        Bond r1 = l1.redirect();
+        Bond r2 = l2.redirect();
+
+        UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
+        InitUniTensorUniform(T, 31);
+        return T;
+      }
+
+      static UniTensor BuildNoTruncCombinedBlockFermionicTensor() {
+        std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 1}};
+        auto syms = std::vector<Symmetry>{Symmetry::FermionParity(), Symmetry(SymmetryType::U)};
+        Bond l1 = Bond(BD_IN, qnums, {2, 3}, syms);
+        Bond l2 = Bond(BD_IN, qnums, {1, 2}, syms);
+        Bond r1 = l1.redirect();
+        Bond r2 = l2.redirect();
+
+        UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cuda, false);
+        InitUniTensorUniform(T, 29);
+        return T;
+      }
+
+      static UniTensor BuildNoTruncCombinedBlockFermionicTensorWithSignflip() {
+        UniTensor base = BuildNoTruncCombinedBlockFermionicTensor();
+        std::vector<std::vector<cytnx_int64>> perms = {
+          {1, 0, 2, 3},
+          {0, 2, 1, 3},
+          {2, 1, 0, 3},
+          {0, 1, 3, 2},
+        };
+
+        for (const auto& p : perms) {
+          UniTensor cand = base.permute(p);
+          bool has_signflip = false;
+          for (auto sf : cand.signflip()) {
+            if (sf) {
+              has_signflip = true;
+              break;
+            }
+          }
+          if (has_signflip) return cand;
+        }
+        return base.permute({1, 0, 2, 3});
+      }
+
+      std::vector<cytnx_uint64> NoTruncExpectedKeptDims(const UniTensor& Tin,
+                                                        const UniTensor& full_svals,
+                                                        cytnx_uint64 keepdim) {
+        const auto full_dims = full_svals.bonds()[0].getDegeneracies();
+        cytnx_uint64 rowdim = 1, coldim = 1;
+        const auto tshape = Tin.shape();
+        for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tshape[i];
+        for (cytnx_uint64 i = Tin.rowrank(); i < Tin.rank(); i++) coldim *= tshape[i];
+        const cytnx_uint64 ten_dim = std::min(rowdim, coldim);
+
+        std::vector<cytnx_uint64> expected(full_dims.size(), 0);
+        for (size_t i = 0; i < full_dims.size(); i++) {
+          const cytnx_uint64 d = full_dims[i];
+          const cytnx_uint64 svalnum = std::max<cytnx_uint64>(
+            1, static_cast<cytnx_uint64>(std::ceil(static_cast<double>(keepdim * d) / ten_dim)));
+          expected[i] = std::min(d, svalnum);
+        }
+        return expected;
+      }
+
+      static bool NoTruncCheckPerBlockLeadingSvals(const UniTensor& rsvd_svals,
+                                                   const UniTensor& gesvd_svals, double tol) {
+        std::map<std::vector<cytnx_int64>, size_t> gblk_map;
+        const auto& gqnums = gesvd_svals.bonds()[0].qnums();
+        for (size_t i = 0; i < gqnums.size(); i++) {
+          gblk_map[gqnums[i]] = i;
+        }
+
+        const auto rblks = rsvd_svals.get_blocks_();
+        const auto gblks = gesvd_svals.get_blocks_();
+        const auto& rqnums = rsvd_svals.bonds()[0].qnums();
+        if (rblks.size() != rqnums.size()) return false;
+
+        for (size_t b = 0; b < rblks.size(); b++) {
+          if (gblk_map.find(rqnums[b]) == gblk_map.end()) return false;
+          size_t gb = gblk_map[rqnums[b]];
+          const auto rdim = rblks[b].shape()[0];
+          if (rdim > gblks[gb].shape()[0]) return false;
+          for (cytnx_uint64 i = 0; i < rdim; i++) {
+            const double r = rblks[b].at<double>({i});
+            const double g = gblks[gb].at<double>({i});
+            const double denom = std::abs(g) < 1.0 ? 1.0 : std::abs(g);
+            if (std::abs(r - g) / denom > tol) return false;
+          }
+        }
+        return true;
+      }
+
+      static cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin,
+                                                        const UniTensor& full_svals,
+                                                        bool require_full, bool require_one_kept) {
+        const auto full_dims = full_svals.bonds()[0].getDegeneracies();
+        cytnx_uint64 rowdim = 1, coldim = 1;
+        const auto tshape = Tin.shape();
+        for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tshape[i];
+        for (cytnx_uint64 i = Tin.rowrank(); i < Tin.rank(); i++) coldim *= tshape[i];
+        const cytnx_uint64 ten_dim = std::min(rowdim, coldim);
+
+        for (cytnx_uint64 keepdim = 1; keepdim <= ten_dim; keepdim++) {
+          std::vector<cytnx_uint64> kept_dims = NoTruncExpectedKeptDims(Tin, full_svals, keepdim);
+          bool has_full = false, has_trunc = false, has_one_kept = false;
+          NoTruncCheckCategoryCoverage(full_dims, kept_dims, has_full, has_trunc, has_one_kept);
+          if (has_trunc && (!require_full || has_full) && (!require_one_kept || has_one_kept)) {
+            return keepdim;
+          }
+        }
+        return std::max<cytnx_uint64>(1, ten_dim / 2);
+      }
+
+      void NoTruncCheckCategoryCoverage(const std::vector<cytnx_uint64>& full_dims,
+                                        const std::vector<cytnx_uint64>& kept_dims, bool& has_full,
+                                        bool& has_trunc, bool& has_one_kept) {
+        has_full = false;
+        has_trunc = false;
+        has_one_kept = false;
+        for (size_t i = 0; i < full_dims.size(); i++) {
+          if (kept_dims[i] == full_dims[i]) has_full = true;
+          if (kept_dims[i] < full_dims[i]) has_trunc = true;
+          if (kept_dims[i] == 1 && full_dims[i] > 1) has_one_kept = true;
         }
       }
-      return true;
-    }
 
-    static cytnx_uint64 NoTruncFindKeepdimForCategory(const UniTensor& Tin,
-                                                      const UniTensor& full_svals,
-                                                      bool require_full, bool require_one_kept) {
-      const auto full_dims = full_svals.bonds()[0].getDegeneracies();
-      cytnx_uint64 rowdim = 1, coldim = 1;
-      const auto tshape = Tin.shape();
-      for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tshape[i];
-      for (cytnx_uint64 i = Tin.rowrank(); i < Tin.rank(); i++) coldim *= tshape[i];
-      const cytnx_uint64 ten_dim = std::min(rowdim, coldim);
-
-      for (cytnx_uint64 keepdim = 1; keepdim <= ten_dim; keepdim++) {
-        std::vector<cytnx_uint64> kept_dims = NoTruncExpectedKeptDims(Tin, full_svals, keepdim);
-        bool has_full = false, has_trunc = false, has_one_kept = false;
-        NoTruncCheckCategoryCoverage(full_dims, kept_dims, has_full, has_trunc, has_one_kept);
-        if (has_trunc && (!require_full || has_full) && (!require_one_kept || has_one_kept)) {
-          return keepdim;
-        }
-      }
-      return std::max<cytnx_uint64>(1, ten_dim / 2);
-    }
-
-    void NoTruncCheckCategoryCoverage(const std::vector<cytnx_uint64>& full_dims,
-                                      const std::vector<cytnx_uint64>& kept_dims, bool& has_full,
-                                      bool& has_trunc, bool& has_one_kept) {
-      has_full = false;
-      has_trunc = false;
-      has_one_kept = false;
-      for (size_t i = 0; i < full_dims.size(); i++) {
-        if (kept_dims[i] == full_dims[i]) has_full = true;
-        if (kept_dims[i] < full_dims[i]) has_trunc = true;
-        if (kept_dims[i] == 1 && full_dims[i] > 1) has_one_kept = true;
-      }
-    }
+    }  // namespace
   }  // namespace gpu_test
 }  // namespace cytnx
