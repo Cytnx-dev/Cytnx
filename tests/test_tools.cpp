@@ -10,12 +10,11 @@
 #include "random.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-
 #define RAND_MAX_VAL 1000
 #define RAND_MIN_VAL ((-1) * RAND_MAX_VAL)
 
 namespace cytnx {
-  namespace TestTools {
+  namespace test {
     void TestFailMsg::AppendMsg(const std::string& fail_msg, const std::string& func_name,
                                 const int line) {
       std::string full_msg;
@@ -611,5 +610,5 @@ namespace cytnx {
       }
     }
 
-  }  // namespace TestTools
+  }  // namespace test
 }  // namespace cytnx

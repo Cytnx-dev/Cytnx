@@ -3,13 +3,12 @@
 
 #include "gtest/gtest.h"
 
+#include "algo.hpp"
 #include "Device.hpp"
 #include "Generator.hpp"
-#include "Type.hpp"
 #include "linalg.hpp"
-#include "algo.hpp"
+#include "Type.hpp"
 #include "UniTensor.hpp"
-
 // Mixed-dtype promotion coverage for the linalg entry points that used to
 // hand-roll "pick the lower enum index" dtype selection instead of
 // Type.type_promote. The discriminating pairs:
@@ -67,13 +66,13 @@ namespace cytnx {
 
   }  // namespace
 
-  TEST(DtypePromotion, Matmul_complexfloat_double) {
+  TEST(DtypePromotion, MatmulComplexfloatDouble) {
     Tensor out = linalg::Matmul(MakeComplexFloatA(), MakeDoubleB());
     ASSERT_EQ(out.dtype(), Type.ComplexDouble);
     ExpectAB(out);
   }
 
-  TEST(DtypePromotion, Matmul_double_complexfloat) {
+  TEST(DtypePromotion, MatmulDoubleComplexfloat) {
     // Same pair, operands swapped: B*A = [[0.5, 3.5+0.5i], [2+5.5i, 3-0.75i]]
     Tensor out = linalg::Matmul(MakeDoubleB(), MakeComplexFloatA());
     ASSERT_EQ(out.dtype(), Type.ComplexDouble);
@@ -83,7 +82,7 @@ namespace cytnx {
     ExpectComplexNear(out, {1, 1}, 3, -0.75);
   }
 
-  TEST(DtypePromotion, Dot_matvec_complexfloat_double) {
+  TEST(DtypePromotion, DotMatvecComplexfloatDouble) {
     // Rank-2 x rank-1 goes through Dot's own Matvec path (not Matmul/Vectordot).
     Tensor v = zeros({2}, Type.Double, Device.cpu);
     v.at<cytnx_double>({0}) = 0.5;
@@ -95,7 +94,7 @@ namespace cytnx {
     ExpectComplexNear(out, {1}, 4, 0.5);
   }
 
-  TEST(DtypePromotion, Matmul_dg_complexfloat_double) {
+  TEST(DtypePromotion, MatmulDgComplexfloatDouble) {
     // diag(d) * B with d = {1+2i, -1i}: rows of B scaled by d.
     Tensor d = zeros({2}, Type.ComplexFloat, Device.cpu);
     d.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
@@ -108,7 +107,7 @@ namespace cytnx {
     ExpectComplexNear(out, {1, 1}, 0, 1.5);
   }
 
-  TEST(DtypePromotion, Matmul_dg_rank_zero_throws_controlled_error) {
+  TEST(DtypePromotion, MatmulDgRankZeroThrowsControlledError) {
     Tensor scalar({}, Type.Double);
     scalar.item<cytnx_double>() = 2.0;
     Tensor vector = zeros({2}, Type.Double, Device.cpu);
@@ -117,19 +116,19 @@ namespace cytnx {
     EXPECT_THROW(linalg::Matmul_dg(vector, scalar), std::logic_error);
   }
 
-  TEST(DtypePromotion, Tensordot_complexfloat_double) {
+  TEST(DtypePromotion, TensordotComplexfloatDouble) {
     Tensor out = linalg::Tensordot(MakeComplexFloatA(), MakeDoubleB(), {1}, {0});
     ASSERT_EQ(out.dtype(), Type.ComplexDouble);
     ExpectAB(out);
   }
 
-  TEST(DtypePromotion, Gemm_complexfloat_double) {
+  TEST(DtypePromotion, GemmComplexfloatDouble) {
     Tensor out = linalg::Gemm(Scalar(2.0), MakeComplexFloatA(), MakeDoubleB());
     ASSERT_EQ(out.dtype(), Type.ComplexDouble);
     ExpectAB(out, 2.0);
   }
 
-  TEST(DtypePromotion, Gemm_integer_floors_to_double) {
+  TEST(DtypePromotion, GemmIntegerFloorsToDouble) {
     Tensor x = MakeInt64({2, 2}, {1, 2, 3, 4});
     Tensor y = MakeInt64({2, 2}, {5, 6, 7, 8});
     Tensor out = linalg::Gemm(Scalar((cytnx_int64)1), x, y);
@@ -140,7 +139,7 @@ namespace cytnx {
     EXPECT_DOUBLE_EQ(out.at<cytnx_double>({1, 1}), 50);
   }
 
-  TEST(DtypePromotion, GemmInplace_promotes_c) {
+  TEST(DtypePromotion, GemmInplacePromotesC) {
     // c = 1*A*B + 2*c with c starting as the Double identity -> ComplexDouble
     Tensor c = zeros({2, 2}, Type.Double, Device.cpu);
     c.at<cytnx_double>({0, 0}) = 1;
@@ -153,7 +152,7 @@ namespace cytnx {
     ExpectComplexNear(c, {1, 1}, -1, -1.75);
   }
 
-  TEST(DtypePromotion, GemmBatch_complexfloat_double) {
+  TEST(DtypePromotion, GemmBatchComplexfloatDouble) {
     std::vector<Tensor> as = {MakeComplexFloatA()};
     std::vector<Tensor> bs = {MakeDoubleB()};
     std::vector<Tensor> cs = {zeros({2, 2}, Type.Double, Device.cpu)};
@@ -171,7 +170,7 @@ namespace cytnx {
 #endif
   }
 
-  TEST(DtypePromotion, Ger_complexfloat_double) {
+  TEST(DtypePromotion, GerComplexfloatDouble) {
     // outer product x ⊗ y (geru: no conjugation) with x = {1+2i, -1i}, y = {0.5, 2}
     Tensor x = zeros({2}, Type.ComplexFloat, Device.cpu);
     x.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
@@ -187,7 +186,7 @@ namespace cytnx {
     ExpectComplexNear(out, {1, 1}, 0, -2);
   }
 
-  TEST(DtypePromotion, Ger_integer_floors_to_double) {
+  TEST(DtypePromotion, GerIntegerFloorsToDouble) {
     Tensor x = MakeInt64({2}, {1, 2});
     Tensor y = MakeInt64({2}, {3, 4});
     Tensor out = linalg::Ger(x, y);
@@ -198,7 +197,7 @@ namespace cytnx {
     EXPECT_DOUBLE_EQ(out.at<cytnx_double>({1, 1}), 8);
   }
 
-  TEST(DtypePromotion, Mod_uint64_int32_promotes_to_int64) {
+  TEST(DtypePromotion, ModUint64Int32PromotesToInt64) {
     // The Mod kernel computes in Type_class::type_promote_t<TL,TR> (= Int64
     // for Uint64 x Int32); the output buffer dtype must agree with it.
     Tensor l = zeros({2}, Type.Uint64, Device.cpu);
@@ -213,7 +212,7 @@ namespace cytnx {
     EXPECT_EQ(out.at<cytnx_int64>({1}), 3);
   }
 
-  TEST(DtypePromotion, Mod_double_int64) {
+  TEST(DtypePromotion, ModDoubleInt64) {
     Tensor l = zeros({2}, Type.Double, Device.cpu);
     l.at<cytnx_double>({0}) = 5.5;
     l.at<cytnx_double>({1}) = 7.25;
@@ -224,7 +223,7 @@ namespace cytnx {
     EXPECT_DOUBLE_EQ(out.at<cytnx_double>({1}), 3.25);
   }
 
-  TEST(DtypePromotion, Mod_tensor_scalar_uint64_int32) {
+  TEST(DtypePromotion, ModTensorScalarUint64Int32) {
     Tensor l = zeros({2}, Type.Uint64, Device.cpu);
     l.at<cytnx_uint64>({0}) = 5;
     l.at<cytnx_uint64>({1}) = 7;
@@ -234,7 +233,7 @@ namespace cytnx {
     EXPECT_EQ(out.at<cytnx_int64>({1}), 1);
   }
 
-  TEST(DtypePromotion, Mod_scalar_tensor_uint64_int32) {
+  TEST(DtypePromotion, ModScalarTensorUint64Int32) {
     Tensor r = zeros({2}, Type.Uint64, Device.cpu);
     r.at<cytnx_uint64>({0}) = 3;
     r.at<cytnx_uint64>({1}) = 4;
@@ -244,7 +243,7 @@ namespace cytnx {
     EXPECT_EQ(out.at<cytnx_int64>({1}), 3);
   }
 
-  TEST(DtypePromotion, Mod_tensor_typed_scalar_uint64_int32) {
+  TEST(DtypePromotion, ModTensorTypedScalarUint64Int32) {
     // The typed-scalar specializations hard-code the same lower-enum-index
     // rule; Uint64 % cytnx_int32 must also come out Int64.
     Tensor l = zeros({2}, Type.Uint64, Device.cpu);
@@ -264,7 +263,7 @@ namespace cytnx {
   // narrower complex into the wider output buffer).
   // ---------------------------------------------------------------------------
 
-  TEST(DtypePromotion, Outer_complexfloat_double) {
+  TEST(DtypePromotion, OuterComplexfloatDouble) {
     Tensor a = zeros({2}, Type.ComplexFloat, Device.cpu);
     a.at<cytnx_complex64>({0}) = cytnx_complex64(1, 1);
     a.at<cytnx_complex64>({1}) = cytnx_complex64(2, 0);
@@ -279,7 +278,7 @@ namespace cytnx {
 
   // Exp() is dtype-preserving: a ComplexFloat input keeps ComplexFloat (it no longer promotes to
   // ComplexDouble). exp(1+i) = e*(cos 1 + i sin 1).
-  TEST(DtypePromotion, Exp_complexfloat_preserves_complexfloat) {
+  TEST(DtypePromotion, ExpComplexfloatPreservesComplexfloat) {
     Tensor a = zeros({1}, Type.ComplexFloat, Device.cpu);
     a.storage().at<cytnx_complex64>(0) = cytnx_complex64(1.0f, 1.0f);
     Tensor out = linalg::Exp(a);
@@ -291,7 +290,7 @@ namespace cytnx {
 
   // Exp() is dtype-preserving: a Float input keeps Float and reads its own buffer width. A
   // fractional, negative value exercises both the value and the (formerly mis-sized) read.
-  TEST(DtypePromotion, Exp_float_preserves_float) {
+  TEST(DtypePromotion, ExpFloatPreservesFloat) {
     Tensor a = zeros({1}, Type.Float, Device.cpu);
     a.storage().at<cytnx_float>(0) = -0.5f;
     Tensor out = linalg::Exp(a);
@@ -300,7 +299,7 @@ namespace cytnx {
   }
 
   // Double stays Double; integer promotes to Double (no floating exp kernel for ints).
-  TEST(DtypePromotion, Exp_double_and_int_dtypes) {
+  TEST(DtypePromotion, ExpDoubleAndIntDtypes) {
     Tensor d = zeros({2}, Type.Double, Device.cpu);
     d.at<cytnx_double>({0}) = 1.5;
     d.at<cytnx_double>({1}) = -2.0;
@@ -317,7 +316,7 @@ namespace cytnx {
   }
 
   // Exp_() (in-place) preserves the input dtype as well.
-  TEST(DtypePromotion, Exp_inplace_preserves_dtype) {
+  TEST(DtypePromotion, ExpInplacePreservesDtype) {
     Tensor f = zeros({1}, Type.Float, Device.cpu);
     f.storage().at<cytnx_float>(0) = 0.25f;
     linalg::Exp_(f);
@@ -325,7 +324,7 @@ namespace cytnx {
     EXPECT_NEAR(f.at<cytnx_float>({0}), std::exp(0.25f), 1e-6f);
   }
 
-  TEST(DtypePromotion, Concatenate_complexfloat_double) {
+  TEST(DtypePromotion, ConcatenateComplexfloatDouble) {
     Tensor a = zeros({2}, Type.ComplexFloat, Device.cpu);
     a.at<cytnx_complex64>({0}) = cytnx_complex64(1, 2);
     Tensor b = zeros({2}, Type.Double, Device.cpu);
@@ -336,7 +335,7 @@ namespace cytnx {
     ExpectComplexNear(out, {2}, 3, 0);
   }
 
-  TEST(DtypePromotion, Hstack_complexfloat_double) {
+  TEST(DtypePromotion, HstackComplexfloatDouble) {
     Tensor a = zeros({1, 1}, Type.ComplexFloat, Device.cpu);
     a.at<cytnx_complex64>({0, 0}) = cytnx_complex64(1, 2);
     Tensor b = zeros({1, 1}, Type.Double, Device.cpu);
@@ -347,7 +346,7 @@ namespace cytnx {
     ExpectComplexNear(out, {0, 1}, 3, 0);
   }
 
-  TEST(DtypePromotion, Vstack_complexfloat_double) {
+  TEST(DtypePromotion, VstackComplexfloatDouble) {
     Tensor a = zeros({1, 1}, Type.ComplexFloat, Device.cpu);
     a.at<cytnx_complex64>({0, 0}) = cytnx_complex64(1, 2);
     Tensor b = zeros({1, 1}, Type.Double, Device.cpu);
@@ -358,7 +357,7 @@ namespace cytnx {
     ExpectComplexNear(out, {1, 0}, 3, 0);
   }
 
-  TEST(DtypePromotion, Directsum_complexfloat_double) {
+  TEST(DtypePromotion, DirectsumComplexfloatDouble) {
     Tensor a = zeros({1, 1}, Type.ComplexFloat, Device.cpu);
     a.at<cytnx_complex64>({0, 0}) = cytnx_complex64(1, 2);
     Tensor b = zeros({1, 1}, Type.Double, Device.cpu);
@@ -369,7 +368,7 @@ namespace cytnx {
     ExpectComplexNear(out, {1, 1}, 3, 0);
   }
 
-  TEST(DtypePromotion, Lstsq_complexfloat_double) {
+  TEST(DtypePromotion, LstsqComplexfloatDouble) {
     Tensor A = MakeComplexFloatA();
     Tensor b = zeros({2, 1}, Type.Double, Device.cpu);
     b.at<cytnx_double>({0, 0}) = 1;
@@ -378,7 +377,7 @@ namespace cytnx {
     ASSERT_EQ(res[0].dtype(), Type.ComplexDouble);
   }
 
-  TEST(DtypePromotion, Scalar_complexfloat_double_promotes) {
+  TEST(DtypePromotion, ScalarComplexfloatDoublePromotes) {
     Scalar a = Scalar(cytnx_complex64(1, 2));
     Scalar b = Scalar(cytnx_double(3));
     EXPECT_EQ((a + b).dtype(), Type.ComplexDouble);
@@ -387,7 +386,7 @@ namespace cytnx {
     EXPECT_EQ((a / b).dtype(), Type.ComplexDouble);
   }
 
-  TEST(DtypePromotion, UniTensorArithmetic_complexfloat_double_promotes) {
+  TEST(DtypePromotion, UniTensorArithmeticComplexfloatDoublePromotes) {
     UniTensor A(ones({2, 2}, Type.ComplexFloat, Device.cpu));
     UniTensor B(ones({2, 2}, Type.Double, Device.cpu));
     EXPECT_EQ(linalg::Add(A, B).dtype(), Type.ComplexDouble);
@@ -419,7 +418,7 @@ namespace cytnx {
     }
   }  // namespace
 
-  TEST(DtypePromotion, Mod_typed_scalar_specializations_promote) {
+  TEST(DtypePromotion, ModTypedScalarSpecializationsPromote) {
     ExpectModTypedScalarPromotes(Type.Float, cytnx_double(3));
     ExpectModTypedScalarPromotes(Type.Int64, cytnx_float(3));
     ExpectModTypedScalarPromotes(Type.Uint64, cytnx_int64(3));
@@ -431,7 +430,7 @@ namespace cytnx {
     ExpectModTypedScalarPromotes(Type.Uint16, cytnx_bool(true));
   }
 
-  TEST(DtypePromotion, Mod_complexfloat_scalar_throws_after_promotion) {
+  TEST(DtypePromotion, ModComplexfloatScalarThrowsAfterPromotion) {
     // Mod on complex is rejected by the kernel, but the ComplexFloat-scalar
     // specializations still allocate the promoted output buffer first.
     Tensor t = zeros({2}, Type.Double, Device.cpu);
@@ -440,5 +439,4 @@ namespace cytnx {
     EXPECT_THROW(linalg::Mod(t, cytnx_complex64(1, 0)), std::logic_error);
     EXPECT_THROW(linalg::Mod(cytnx_complex64(1, 0), t), std::logic_error);
   }
-
 }  // namespace cytnx

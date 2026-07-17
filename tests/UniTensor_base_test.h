@@ -1,16 +1,20 @@
-#ifndef _H_UNITENSOR_BASE_TEST
-#define _H_UNITENSOR_BASE_TEST
+#ifndef CYTNX_TESTS_UNITENSOR_BASE_TEST_H_
+#define CYTNX_TESTS_UNITENSOR_BASE_TEST_H_
 
-#include "cytnx.hpp"
 #include <gtest/gtest.h>
 
-class UniTensor_baseTest : public ::testing::Test {
- public:
-  cytnx::UniTensor utzero345;
+#include "cytnx.hpp"
+namespace cytnx {
+  namespace test {
+    class UniTensor_baseTest : public ::testing::Test {
+     public:
+      UniTensor utzero345;
 
- protected:
-  void SetUp() override { utzero345 = cytnx::UniTensor(cytnx::zeros({3, 4, 5})); }
-  void TearDown() override {}
-};
+     protected:
+      void SetUp() override { utzero345 = UniTensor(zeros({3, 4, 5})); }
+      void TearDown() override {}
+    };
 
-#endif
+  }  // namespace test
+}  // namespace cytnx
+#endif  // CYTNX_TESTS_UNITENSOR_BASE_TEST_H_

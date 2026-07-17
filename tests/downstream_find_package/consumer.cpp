@@ -8,13 +8,11 @@
 #include <iostream>
 
 int main() {
-  using namespace cytnx;
-
   // A 2x3 tensor with values 0..5, then permute the two axes. permute goes
   // through the HPTT path; if libhptt or OpenMP failed to link, this would
   // not resolve at link time.
-  Tensor t = arange(6).reshape(2, 3);
-  Tensor tp = t.permute(1, 0).contiguous();
+  cytnx::Tensor t = cytnx::arange(6).reshape(2, 3);
+  cytnx::Tensor tp = t.permute(1, 0).contiguous();
 
   if (tp.shape().size() != 2 || tp.shape()[0] != 3 || tp.shape()[1] != 2) {
     std::cerr << "FAIL: unexpected permuted shape\n";

@@ -5,9 +5,8 @@
 
 #include "Device.hpp"
 #include "Generator.hpp"
-#include "Type.hpp"
 #include "linalg.hpp"
-
+#include "Type.hpp"
 namespace cytnx {
   namespace {
 
@@ -656,5 +655,4 @@ namespace cytnx {
     std::vector<Scalar> betas = {Scalar()};  // default-constructed → Void dtype
     EXPECT_THROW(linalg::Gemm_Batch(alphas, as, bs, betas, cs, {1}), std::logic_error);
   }
-
 }  // namespace cytnx

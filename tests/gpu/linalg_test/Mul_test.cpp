@@ -1,241 +1,241 @@
 #include "gtest/gtest.h"
 
-#include "gpu_test_tools.h"
 #include "cytnx.hpp"
+#include "gpu_test_tools.h"
+namespace cytnx {
+  namespace {
+    namespace MulTest {
 
-namespace MulTest {
+      ::testing::AssertionResult CheckMulResult(const Tensor& gpu_result, const Tensor& left_tensor,
+                                                const Tensor& right_tensor);
 
-  ::testing::AssertionResult CheckMulResult(const cytnx::Tensor& gpu_result,
-                                            const cytnx::Tensor& left_tensor,
-                                            const cytnx::Tensor& right_tensor);
+      ::testing::AssertionResult CheckMulScalarResult(const Tensor& gpu_result,
+                                                      const Tensor& tensor,
+                                                      const cytnx_double& scalar,
+                                                      bool scalar_left = false);
 
-  ::testing::AssertionResult CheckMulScalarResult(const cytnx::Tensor& gpu_result,
-                                                  const cytnx::Tensor& tensor,
-                                                  const cytnx::cytnx_double& scalar,
-                                                  bool scalar_left = false);
+      std::vector<std::vector<cytnx_uint64>> GetTestShapes();
 
-  std::vector<std::vector<cytnx::cytnx_uint64>> GetTestShapes();
+      cytnx_double GetTolerance(const unsigned int& dtype);
 
-  cytnx::cytnx_double GetTolerance(const unsigned int& dtype);
+      class MulTestAllShapes : public ::testing::TestWithParam<std::vector<cytnx_uint64>> {};
 
-  class MulTestAllShapes : public ::testing::TestWithParam<std::vector<cytnx::cytnx_uint64>> {};
+      // Test tensor-to-tensor multiplication
+      TEST_P(MulTestAllShapes, GpuTensorMulTensorAllTypes) {
+        const std::vector<cytnx_uint64>& shape = GetParam();
 
-  // Test tensor-to-tensor multiplication
-  TEST_P(MulTestAllShapes, gpu_tensor_mul_tensor_all_types) {
-    const std::vector<cytnx::cytnx_uint64>& shape = GetParam();
+        for (auto dtype : test::dtype_list) {
+          if (dtype == Type.Bool) {
+            continue;
+          }
 
-    for (auto dtype : cytnx::TestTools::dtype_list) {
-      if (dtype == cytnx::Type.Bool) {
-        continue;
+          SCOPED_TRACE("Testing Mul(tensor, tensor) with shape: " +
+                       ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
+
+          Tensor gpu_tensor1 = Tensor(shape, dtype).to(Device.cuda);
+          Tensor gpu_tensor2 = Tensor(shape, dtype).to(Device.cuda);
+          test::InitTensorUniform(gpu_tensor1);
+          test::InitTensorUniform(gpu_tensor2);
+
+          Tensor gpu_result = linalg::Mul(gpu_tensor1, gpu_tensor2);
+          EXPECT_TRUE(CheckMulResult(gpu_result, gpu_tensor1, gpu_tensor2));
+
+          Tensor gpu_result_member = gpu_tensor1.Mul(gpu_tensor2);
+          EXPECT_TRUE(CheckMulResult(gpu_result_member, gpu_tensor1, gpu_tensor2));
+
+          Tensor gpu_result_operator = gpu_tensor1 * gpu_tensor2;
+          EXPECT_TRUE(CheckMulResult(gpu_result_operator, gpu_tensor1, gpu_tensor2));
+        }
       }
 
-      SCOPED_TRACE("Testing Mul(tensor, tensor) with shape: " + ::testing::PrintToString(shape) +
-                   " and dtype: " + std::to_string(dtype));
+      // Test scalar-to-tensor multiplication
+      TEST_P(MulTestAllShapes, GpuScalarMulTensorAllTypes) {
+        const std::vector<cytnx_uint64>& shape = GetParam();
 
-      cytnx::Tensor gpu_tensor1 = cytnx::Tensor(shape, dtype).to(cytnx::Device.cuda);
-      cytnx::Tensor gpu_tensor2 = cytnx::Tensor(shape, dtype).to(cytnx::Device.cuda);
-      cytnx::TestTools::InitTensorUniform(gpu_tensor1);
-      cytnx::TestTools::InitTensorUniform(gpu_tensor2);
+        for (auto dtype : test::dtype_list) {
+          if (dtype == Type.Bool) {
+            continue;
+          }
 
-      cytnx::Tensor gpu_result = cytnx::linalg::Mul(gpu_tensor1, gpu_tensor2);
-      EXPECT_TRUE(CheckMulResult(gpu_result, gpu_tensor1, gpu_tensor2));
+          SCOPED_TRACE("Testing Mul(scalar, tensor) with shape: " +
+                       ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
-      cytnx::Tensor gpu_result_member = gpu_tensor1.Mul(gpu_tensor2);
-      EXPECT_TRUE(CheckMulResult(gpu_result_member, gpu_tensor1, gpu_tensor2));
+          Tensor gpu_tensor = Tensor(shape, dtype).to(Device.cuda);
+          test::InitTensorUniform(gpu_tensor);
+          cytnx_double scalar = 2.3;
 
-      cytnx::Tensor gpu_result_operator = gpu_tensor1 * gpu_tensor2;
-      EXPECT_TRUE(CheckMulResult(gpu_result_operator, gpu_tensor1, gpu_tensor2));
-    }
-  }
+          Tensor gpu_result = linalg::Mul(scalar, gpu_tensor);
+          EXPECT_TRUE(CheckMulScalarResult(gpu_result, gpu_tensor, scalar, true));
 
-  // Test scalar-to-tensor multiplication
-  TEST_P(MulTestAllShapes, gpu_scalar_mul_tensor_all_types) {
-    const std::vector<cytnx::cytnx_uint64>& shape = GetParam();
-
-    for (auto dtype : cytnx::TestTools::dtype_list) {
-      if (dtype == cytnx::Type.Bool) {
-        continue;
+          Tensor gpu_result_operator = scalar * gpu_tensor;
+          EXPECT_TRUE(CheckMulScalarResult(gpu_result_operator, gpu_tensor, scalar, true));
+        }
       }
 
-      SCOPED_TRACE("Testing Mul(scalar, tensor) with shape: " + ::testing::PrintToString(shape) +
-                   " and dtype: " + std::to_string(dtype));
+      // Test tensor-to-scalar multiplication
+      TEST_P(MulTestAllShapes, GpuTensorMulScalarAllTypes) {
+        const std::vector<cytnx_uint64>& shape = GetParam();
 
-      cytnx::Tensor gpu_tensor = cytnx::Tensor(shape, dtype).to(cytnx::Device.cuda);
-      cytnx::TestTools::InitTensorUniform(gpu_tensor);
-      cytnx::cytnx_double scalar = 2.3;
+        for (auto dtype : test::dtype_list) {
+          if (dtype == Type.Bool) {
+            continue;
+          }
 
-      cytnx::Tensor gpu_result = cytnx::linalg::Mul(scalar, gpu_tensor);
-      EXPECT_TRUE(CheckMulScalarResult(gpu_result, gpu_tensor, scalar, true));
+          SCOPED_TRACE("Testing Mul(tensor, scalar) with shape: " +
+                       ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
-      cytnx::Tensor gpu_result_operator = scalar * gpu_tensor;
-      EXPECT_TRUE(CheckMulScalarResult(gpu_result_operator, gpu_tensor, scalar, true));
-    }
-  }
+          Tensor gpu_tensor = Tensor(shape, dtype).to(Device.cuda);
+          test::InitTensorUniform(gpu_tensor);
+          cytnx_double scalar = 2.3;
 
-  // Test tensor-to-scalar multiplication
-  TEST_P(MulTestAllShapes, gpu_tensor_mul_scalar_all_types) {
-    const std::vector<cytnx::cytnx_uint64>& shape = GetParam();
+          Tensor gpu_result = linalg::Mul(gpu_tensor, scalar);
+          EXPECT_TRUE(CheckMulScalarResult(gpu_result, gpu_tensor, scalar, false));
 
-    for (auto dtype : cytnx::TestTools::dtype_list) {
-      if (dtype == cytnx::Type.Bool) {
-        continue;
+          Tensor gpu_result_member = gpu_tensor.Mul(scalar);
+          EXPECT_TRUE(CheckMulScalarResult(gpu_result_member, gpu_tensor, scalar, false));
+
+          Tensor gpu_result_operator = gpu_tensor * scalar;
+          EXPECT_TRUE(CheckMulScalarResult(gpu_result_operator, gpu_tensor, scalar, false));
+        }
       }
 
-      SCOPED_TRACE("Testing Mul(tensor, scalar) with shape: " + ::testing::PrintToString(shape) +
-                   " and dtype: " + std::to_string(dtype));
+      // Test in-place tensor multiplication
+      TEST_P(MulTestAllShapes, GpuTensorImulAllTypes) {
+        const std::vector<cytnx_uint64>& shape = GetParam();
 
-      cytnx::Tensor gpu_tensor = cytnx::Tensor(shape, dtype).to(cytnx::Device.cuda);
-      cytnx::TestTools::InitTensorUniform(gpu_tensor);
-      cytnx::cytnx_double scalar = 2.3;
+        for (auto dtype : test::dtype_list) {
+          if (dtype == Type.Bool) {
+            continue;
+          }
 
-      cytnx::Tensor gpu_result = cytnx::linalg::Mul(gpu_tensor, scalar);
-      EXPECT_TRUE(CheckMulScalarResult(gpu_result, gpu_tensor, scalar, false));
+          SCOPED_TRACE("Testing iMul(tensor, tensor) with shape: " +
+                       ::testing::PrintToString(shape) + " and dtype: " + std::to_string(dtype));
 
-      cytnx::Tensor gpu_result_member = gpu_tensor.Mul(scalar);
-      EXPECT_TRUE(CheckMulScalarResult(gpu_result_member, gpu_tensor, scalar, false));
+          Tensor gpu_tensor1 = Tensor(shape, dtype).to(Device.cuda);
+          Tensor gpu_tensor2 = Tensor(shape, dtype).to(Device.cuda);
+          test::InitTensorUniform(gpu_tensor1);
+          test::InitTensorUniform(gpu_tensor2);
 
-      cytnx::Tensor gpu_result_operator = gpu_tensor * scalar;
-      EXPECT_TRUE(CheckMulScalarResult(gpu_result_operator, gpu_tensor, scalar, false));
-    }
-  }
+          Tensor original_gpu_tensor1 = gpu_tensor1.clone();
+          Tensor original_gpu_tensor2 = gpu_tensor2.clone();
 
-  // Test in-place tensor multiplication
-  TEST_P(MulTestAllShapes, gpu_tensor_imul_all_types) {
-    const std::vector<cytnx::cytnx_uint64>& shape = GetParam();
+          linalg::iMul(gpu_tensor1, gpu_tensor2);
+          EXPECT_TRUE(CheckMulResult(gpu_tensor1, original_gpu_tensor1, original_gpu_tensor2));
 
-    for (auto dtype : cytnx::TestTools::dtype_list) {
-      if (dtype == cytnx::Type.Bool) {
-        continue;
+          Tensor gpu_tensor1_op = original_gpu_tensor1.clone();
+          gpu_tensor1_op *= original_gpu_tensor2;
+          EXPECT_TRUE(CheckMulResult(gpu_tensor1_op, original_gpu_tensor1, original_gpu_tensor2));
+        }
       }
 
-      SCOPED_TRACE("Testing iMul(tensor, tensor) with shape: " + ::testing::PrintToString(shape) +
-                   " and dtype: " + std::to_string(dtype));
+      TEST(MulMixedDtypeTest, GpuTensorMulTensorMixedUnsignedSignedTypePromote) {
+        Tensor lhs = arange(0, 6, 1, Type.Uint32).reshape({2, 3});
+        Tensor rhs = arange(0, 6, 1, Type.Int16).reshape({2, 3});
+        lhs = lhs.to(Device.cuda);
+        rhs = rhs.to(Device.cuda);
 
-      cytnx::Tensor gpu_tensor1 = cytnx::Tensor(shape, dtype).to(cytnx::Device.cuda);
-      cytnx::Tensor gpu_tensor2 = cytnx::Tensor(shape, dtype).to(cytnx::Device.cuda);
-      cytnx::TestTools::InitTensorUniform(gpu_tensor1);
-      cytnx::TestTools::InitTensorUniform(gpu_tensor2);
+        Tensor gpu_result = linalg::Mul(lhs, rhs);
+        Tensor expected_cpu = linalg::Mul(lhs.to(Device.cpu), rhs.to(Device.cpu));
+        Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
 
-      cytnx::Tensor original_gpu_tensor1 = gpu_tensor1.clone();
-      cytnx::Tensor original_gpu_tensor2 = gpu_tensor2.clone();
+        EXPECT_EQ(gpu_result.dtype(), expected_cpu.dtype());
+        EXPECT_TRUE(test::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, 1e-6));
+      }
 
-      cytnx::linalg::iMul(gpu_tensor1, gpu_tensor2);
-      EXPECT_TRUE(CheckMulResult(gpu_tensor1, original_gpu_tensor1, original_gpu_tensor2));
+      TEST(MulMixedDtypeTest, GpuScalarMulTensorMixedUnsignedSignedTypePromote) {
+        const cytnx_uint32 scalar = 5;
+        Tensor rhs = arange(0, 6, 1, Type.Int16, Device.cuda).reshape({2, 3});
 
-      cytnx::Tensor gpu_tensor1_op = original_gpu_tensor1.clone();
-      gpu_tensor1_op *= original_gpu_tensor2;
-      EXPECT_TRUE(CheckMulResult(gpu_tensor1_op, original_gpu_tensor1, original_gpu_tensor2));
-    }
-  }
+        Tensor gpu_result_l = linalg::Mul(scalar, rhs);
+        Tensor gpu_result_r = linalg::Mul(rhs, scalar);
 
-  TEST(MulMixedDtypeTest, gpu_tensor_mul_tensor_mixed_unsigned_signed_type_promote) {
-    cytnx::Tensor lhs = cytnx::arange(0, 6, 1, cytnx::Type.Uint32).reshape({2, 3});
-    cytnx::Tensor rhs = cytnx::arange(0, 6, 1, cytnx::Type.Int16).reshape({2, 3});
-    lhs = lhs.to(cytnx::Device.cuda);
-    rhs = rhs.to(cytnx::Device.cuda);
+        Tensor rhs_cpu = rhs.to(Device.cpu);
+        Tensor expected_l = linalg::Mul(scalar, rhs_cpu);
+        Tensor expected_r = linalg::Mul(rhs_cpu, scalar);
+        Tensor gpu_result_l_cpu = gpu_result_l.to(Device.cpu);
+        Tensor gpu_result_r_cpu = gpu_result_r.to(Device.cpu);
 
-    cytnx::Tensor gpu_result = cytnx::linalg::Mul(lhs, rhs);
-    cytnx::Tensor expected_cpu =
-      cytnx::linalg::Mul(lhs.to(cytnx::Device.cpu), rhs.to(cytnx::Device.cpu));
-    cytnx::Tensor gpu_result_cpu = gpu_result.to(cytnx::Device.cpu);
+        EXPECT_EQ(gpu_result_l.dtype(), expected_l.dtype());
+        EXPECT_EQ(gpu_result_r.dtype(), expected_r.dtype());
+        EXPECT_TRUE(test::AreNearlyEqTensor(gpu_result_l_cpu, expected_l, 1e-6));
+        EXPECT_TRUE(test::AreNearlyEqTensor(gpu_result_r_cpu, expected_r, 1e-6));
+      }
 
-    EXPECT_EQ(gpu_result.dtype(), expected_cpu.dtype());
-    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, 1e-6));
-  }
+      INSTANTIATE_TEST_SUITE_P(MulTests, MulTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
-  TEST(MulMixedDtypeTest, gpu_scalar_mul_tensor_mixed_unsigned_signed_type_promote) {
-    const cytnx::cytnx_uint32 scalar = 5;
-    cytnx::Tensor rhs =
-      cytnx::arange(0, 6, 1, cytnx::Type.Int16, cytnx::Device.cuda).reshape({2, 3});
+      ::testing::AssertionResult CheckMulResult(const Tensor& gpu_result, const Tensor& left_tensor,
+                                                const Tensor& right_tensor) {
+        // Compare CUDA Mul result against CPU Mul result
+        Tensor left_cpu = left_tensor.to(Device.cpu);
+        Tensor right_cpu = right_tensor.to(Device.cpu);
+        Tensor expected_cpu = linalg::Mul(left_cpu, right_cpu);
+        Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
 
-    cytnx::Tensor gpu_result_l = cytnx::linalg::Mul(scalar, rhs);
-    cytnx::Tensor gpu_result_r = cytnx::linalg::Mul(rhs, scalar);
+        cytnx_double tolerance = GetTolerance(gpu_result.dtype());
 
-    cytnx::Tensor rhs_cpu = rhs.to(cytnx::Device.cpu);
-    cytnx::Tensor expected_l = cytnx::linalg::Mul(scalar, rhs_cpu);
-    cytnx::Tensor expected_r = cytnx::linalg::Mul(rhs_cpu, scalar);
-    cytnx::Tensor gpu_result_l_cpu = gpu_result_l.to(cytnx::Device.cpu);
-    cytnx::Tensor gpu_result_r_cpu = gpu_result_r.to(cytnx::Device.cpu);
+        if (!test::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
+          return ::testing::AssertionFailure()
+                 << "Mul result mismatch: CUDA Mul result differs from CPU Mul result. "
+                 << "Left dtype: " << left_tensor.dtype()
+                 << ", Right dtype: " << right_tensor.dtype() << ", tolerance used: " << tolerance;
+        }
 
-    EXPECT_EQ(gpu_result_l.dtype(), expected_l.dtype());
-    EXPECT_EQ(gpu_result_r.dtype(), expected_r.dtype());
-    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_l_cpu, expected_l, 1e-6));
-    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_r_cpu, expected_r, 1e-6));
-  }
+        return ::testing::AssertionSuccess();
+      }
 
-  INSTANTIATE_TEST_SUITE_P(MulTests, MulTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
+      ::testing::AssertionResult CheckMulScalarResult(const Tensor& gpu_result,
+                                                      const Tensor& tensor,
+                                                      const cytnx_double& scalar,
+                                                      bool scalar_left) {
+        // Compare CUDA Mul result against CPU Mul result
+        Tensor tensor_cpu = tensor.to(Device.cpu);
+        Tensor expected_cpu;
 
-  ::testing::AssertionResult CheckMulResult(const cytnx::Tensor& gpu_result,
-                                            const cytnx::Tensor& left_tensor,
-                                            const cytnx::Tensor& right_tensor) {
-    // Compare CUDA Mul result against CPU Mul result
-    cytnx::Tensor left_cpu = left_tensor.to(cytnx::Device.cpu);
-    cytnx::Tensor right_cpu = right_tensor.to(cytnx::Device.cpu);
-    cytnx::Tensor expected_cpu = cytnx::linalg::Mul(left_cpu, right_cpu);
-    cytnx::Tensor gpu_result_cpu = gpu_result.to(cytnx::Device.cpu);
+        if (scalar_left) {
+          expected_cpu = linalg::Mul(scalar, tensor_cpu);
+        } else {
+          expected_cpu = linalg::Mul(tensor_cpu, scalar);
+        }
 
-    cytnx::cytnx_double tolerance = GetTolerance(gpu_result.dtype());
+        Tensor gpu_result_cpu = gpu_result.to(Device.cpu);
 
-    if (!cytnx::TestTools::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
-      return ::testing::AssertionFailure()
-             << "Mul result mismatch: CUDA Mul result differs from CPU Mul result. "
-             << "Left dtype: " << left_tensor.dtype() << ", Right dtype: " << right_tensor.dtype()
-             << ", tolerance used: " << tolerance;
-    }
+        cytnx_double tolerance = GetTolerance(gpu_result.dtype());
 
-    return ::testing::AssertionSuccess();
-  }
+        if (!test::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
+          return ::testing::AssertionFailure()
+                 << "Mul scalar result mismatch: CUDA Mul result differs from CPU Mul result. "
+                 << "Tensor dtype: " << tensor.dtype() << ", scalar: " << scalar
+                 << ", scalar_left: " << scalar_left << ", tolerance used: " << tolerance;
+        }
 
-  ::testing::AssertionResult CheckMulScalarResult(const cytnx::Tensor& gpu_result,
-                                                  const cytnx::Tensor& tensor,
-                                                  const cytnx::cytnx_double& scalar,
-                                                  bool scalar_left) {
-    // Compare CUDA Mul result against CPU Mul result
-    cytnx::Tensor tensor_cpu = tensor.to(cytnx::Device.cpu);
-    cytnx::Tensor expected_cpu;
+        return ::testing::AssertionSuccess();
+      }
 
-    if (scalar_left) {
-      expected_cpu = cytnx::linalg::Mul(scalar, tensor_cpu);
-    } else {
-      expected_cpu = cytnx::linalg::Mul(tensor_cpu, scalar);
-    }
+      std::vector<std::vector<cytnx_uint64>> GetTestShapes() {
+        std::vector<std::vector<cytnx_uint64>> all_shapes;
 
-    cytnx::Tensor gpu_result_cpu = gpu_result.to(cytnx::Device.cpu);
+        auto shapes_1d = test::GenerateTestShapes(1, 1, 1024, 4);
+        auto shapes_2d = test::GenerateTestShapes(2, 1, 512, 4);
+        auto shapes_3d = test::GenerateTestShapes(3, 1, 64, 4);
+        auto shapes_4d = test::GenerateTestShapes(4, 1, 32, 4);
 
-    cytnx::cytnx_double tolerance = GetTolerance(gpu_result.dtype());
+        all_shapes.insert(all_shapes.end(), shapes_1d.begin(), shapes_1d.end());
+        all_shapes.insert(all_shapes.end(), shapes_2d.begin(), shapes_2d.end());
+        all_shapes.insert(all_shapes.end(), shapes_3d.begin(), shapes_3d.end());
+        all_shapes.insert(all_shapes.end(), shapes_4d.begin(), shapes_4d.end());
 
-    if (!cytnx::TestTools::AreNearlyEqTensor(gpu_result_cpu, expected_cpu, tolerance)) {
-      return ::testing::AssertionFailure()
-             << "Mul scalar result mismatch: CUDA Mul result differs from CPU Mul result. "
-             << "Tensor dtype: " << tensor.dtype() << ", scalar: " << scalar
-             << ", scalar_left: " << scalar_left << ", tolerance used: " << tolerance;
-    }
+        return all_shapes;
+      }
 
-    return ::testing::AssertionSuccess();
-  }
+      cytnx_double GetTolerance(const unsigned int& dtype) {
+        cytnx_double tolerance = 1e-6;
+        if (dtype == Type.ComplexFloat) {
+          tolerance = 0.1;
+        }
+        return tolerance;
+      }
 
-  std::vector<std::vector<cytnx::cytnx_uint64>> GetTestShapes() {
-    std::vector<std::vector<cytnx::cytnx_uint64>> all_shapes;
+    }  // namespace MulTest
 
-    auto shapes_1d = cytnx::TestTools::GenerateTestShapes(1, 1, 1024, 4);
-    auto shapes_2d = cytnx::TestTools::GenerateTestShapes(2, 1, 512, 4);
-    auto shapes_3d = cytnx::TestTools::GenerateTestShapes(3, 1, 64, 4);
-    auto shapes_4d = cytnx::TestTools::GenerateTestShapes(4, 1, 32, 4);
-
-    all_shapes.insert(all_shapes.end(), shapes_1d.begin(), shapes_1d.end());
-    all_shapes.insert(all_shapes.end(), shapes_2d.begin(), shapes_2d.end());
-    all_shapes.insert(all_shapes.end(), shapes_3d.begin(), shapes_3d.end());
-    all_shapes.insert(all_shapes.end(), shapes_4d.begin(), shapes_4d.end());
-
-    return all_shapes;
-  }
-
-  cytnx::cytnx_double GetTolerance(const unsigned int& dtype) {
-    cytnx::cytnx_double tolerance = 1e-6;
-    if (dtype == cytnx::Type.ComplexFloat) {
-      tolerance = 0.1;
-    }
-    return tolerance;
-  }
-
-}  // namespace MulTest
+  }  // namespace
+}  // namespace cytnx
