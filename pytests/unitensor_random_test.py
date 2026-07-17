@@ -88,3 +88,23 @@ def test_block_unitensor_normal_same_seed_is_reproducible():
     assert lhs.labels() == ["left", "right"]
     assert lhs.name() == "block template"
     assert lhs.dtype() == cytnx.Type.Double
+
+
+def test_random_module_unitensor_in_place_apis_match_instance_methods():
+    module_normal = _make_dense_unitensor()
+    instance_normal = _make_dense_unitensor()
+    cytnx.random.normal_(module_normal, mean=2.0, std=3.0, seed=11)
+    instance_normal.normal_(mean=2.0, std=3.0, seed=11)
+
+    np.testing.assert_array_equal(
+        _dense_block_values(module_normal), _dense_block_values(instance_normal)
+    )
+
+    module_uniform = _make_dense_unitensor()
+    instance_uniform = _make_dense_unitensor()
+    cytnx.random.uniform_(module_uniform, low=-1.0, high=1.0, seed=7)
+    instance_uniform.uniform_(low=-1.0, high=1.0, seed=7)
+
+    np.testing.assert_array_equal(
+        _dense_block_values(module_uniform), _dense_block_values(instance_uniform)
+    )

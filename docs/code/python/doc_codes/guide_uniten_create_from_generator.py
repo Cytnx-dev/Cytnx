@@ -11,9 +11,10 @@ uTg = cytnx.UniTensor.normal([2,3,4],0,1).relabel(["a","b","c"]).set_name("Gauss
 # 4) initialize by uniformly distributed elements between 0 and 100
 uTu = cytnx.UniTensor.uniform([2,3,4],0,100).relabel(["a","b","c"]).set_name("random uniform")
 
-# Existing UniTensor instances can be randomized in place.
+# Existing UniTensor instances can be randomized in place either through instance
+# methods or the cytnx.random module.
 uT_inplace_normal = cytnx.UniTensor.zeros([2,3,4], ["a","b","c"], name="normal template")
-uT_inplace_normal.normal_(mean=0., std=1.)
+cytnx.random.normal_(uT_inplace_normal, mean=0., std=1.)
 uT_inplace_uniform = cytnx.UniTensor.zeros([2,3,4], ["a","b","c"], name="uniform template")
 uT_inplace_uniform.uniform_(low=0., high=100.)
 

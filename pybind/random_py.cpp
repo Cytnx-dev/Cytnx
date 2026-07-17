@@ -47,6 +47,17 @@ void random_binding(py::module &m) {
     py::arg("Sin"), py::arg("mean"), py::arg("std"), py::arg("seed") = -1);
 
   m_random.def(
+    "normal_",
+    [](cytnx::UniTensor &Tin, const double &mean, const double &std, int64_t &seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      cytnx::random::normal_(Tin, mean, std, seed);
+    },
+    py::arg("Tin"), py::arg("mean"), py::arg("std"), py::arg("seed") = -1);
+
+  m_random.def(
     "uniform_",
     [](cytnx::Tensor &Tin, const double &low, const double &high, int64_t &seed) {
       if (seed == -1) {
@@ -68,6 +79,18 @@ void random_binding(py::module &m) {
       cytnx::random::uniform_(Sin, low, high, seed);
     },
     py::arg("Sin"), py::arg("low") = double(0), py::arg("high") = double(1.0),
+    py::arg("seed") = -1);
+
+  m_random.def(
+    "uniform_",
+    [](cytnx::UniTensor &Tin, const double &low, const double &high, int64_t &seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      cytnx::random::uniform_(Tin, low, high, seed);
+    },
+    py::arg("Tin"), py::arg("low") = double(0), py::arg("high") = double(1.0),
     py::arg("seed") = -1);
 
   m_random.def(
