@@ -5626,11 +5626,15 @@ TEST_F(DenseUniTensorTest, arange) {
 }
 
 /*=====test info=====
-describe:test arange_step_error, start < end but step < 0
+describe:a direction-mismatched range (start < end but step < 0) is empty and yields a
+zero-extent tensor rather than throwing (#1076)
 ====================*/
-TEST_F(DenseUniTensorTest, arange_step_error) {
+TEST_F(DenseUniTensorTest, arange_direction_mismatch_is_empty) {
   const double start = 0.1, end = 0.7, step = -0.11;
-  EXPECT_THROW(UniTensor::arange(start, end, step), std::logic_error);
+  UniTensor ut;
+  EXPECT_NO_THROW(ut = UniTensor::arange(start, end, step));
+  EXPECT_EQ(ut.rank(), 1);
+  EXPECT_EQ(ut.shape()[0], 0u);
 }
 
 /*=====test info=====

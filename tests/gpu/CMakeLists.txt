@@ -11,6 +11,7 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  arange_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp

@@ -42,6 +42,7 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  arange_test.cpp
   Type_test.cpp
   cytnx_error_test.cpp
   include_order_canary_test.cpp
