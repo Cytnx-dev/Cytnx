@@ -235,7 +235,6 @@ TYPED_TEST(StoragePutValue, AppendWithReallocation) {
   Storage storage = Storage::from_vector(v);
 
   ASSERT_EQ(storage.dtype(), Type.cy_typeid(element1));
-  ASSERT_EQ(storage.size(), storage.capacity());
 
   auto value_to_append = ValueDType(10);
   auto value_in_storage_dtype = this->TryConvertToStorageDType(value_to_append);
@@ -245,8 +244,12 @@ TYPED_TEST(StoragePutValue, AppendWithReallocation) {
     EXPECT_THROW(storage.append(value_to_append), std::logic_error);
   } else {
     storage.append(value_to_append);
-    EXPECT_GE(storage.capacity(), storage.size());
+    // capacity() was removed (#941 ruling 2): every append reallocates
+    // exactly, so the only observable contract is size growth plus element
+    // preservation.
     EXPECT_EQ(storage.size(), 3);
+    EXPECT_EQ(storage.at<StorageDType>(0), element1);
+    EXPECT_EQ(storage.at<StorageDType>(1), element2);
   }
 }
 
@@ -364,4 +367,155 @@ TEST_F(StorageTest, AtDtypeMismatchThrowsForAllDtypes) {
     if (dt != Type.Bool)
       EXPECT_THROW(s.at<cytnx_bool>(0), std::logic_error) << "storage dtype " << name;
   }
+}
+
+// --- #941 typed storage dispatch foundation: Type.hpp helpers ---
+
+TEST(TypePromotion, MakeFloatingPointIntegralToDouble) {
+  static_assert(std::is_same_v<Type_class::make_floating_point_t<cytnx_int16>, cytnx_double>);
+  static_assert(std::is_same_v<Type_class::make_floating_point_t<cytnx_uint64>, cytnx_double>);
+  static_assert(std::is_same_v<Type_class::make_floating_point_t<cytnx_bool>, cytnx_double>);
+  SUCCEED();
+}
+
+TEST(TypePromotion, MakeFloatingPointFloatingUnchanged) {
+  static_assert(std::is_same_v<Type_class::make_floating_point_t<cytnx_double>, cytnx_double>);
+  static_assert(std::is_same_v<Type_class::make_floating_point_t<cytnx_float>, cytnx_float>);
+  SUCCEED();
+}
+
+TEST(TypePromotion, MakeFloatingPointComplexUnchanged) {
+  static_assert(
+    std::is_same_v<Type_class::make_floating_point_t<cytnx_complex128>, cytnx_complex128>);
+  static_assert(
+    std::is_same_v<Type_class::make_floating_point_t<cytnx_complex64>, cytnx_complex64>);
+  SUCCEED();
+}
+
+TEST(TypePromotion, MakeFloatingPointRuntimeMatchesCompileTime) {
+  EXPECT_EQ(Type_class::make_floating_point_dtype(Type.Int16), (unsigned int)Type.Double);
+  EXPECT_EQ(Type_class::make_floating_point_dtype(Type.Uint64), (unsigned int)Type.Double);
+  EXPECT_EQ(Type_class::make_floating_point_dtype(Type.Bool), (unsigned int)Type.Double);
+  EXPECT_EQ(Type_class::make_floating_point_dtype(Type.Double), (unsigned int)Type.Double);
+  EXPECT_EQ(Type_class::make_floating_point_dtype(Type.Float), (unsigned int)Type.Float);
+  EXPECT_EQ(Type_class::make_floating_point_dtype(Type.ComplexDouble),
+            (unsigned int)Type.ComplexDouble);
+  EXPECT_EQ(Type_class::make_floating_point_dtype(Type.ComplexFloat),
+            (unsigned int)Type.ComplexFloat);
+}
+
+// --- #941 typed storage dispatch foundation: StorageImplementation<T> typed accessors ---
+
+TEST(StorageImplementationTyped, ValueTypeAndDtypeValue) {
+  static_assert(std::is_same_v<StorageImplementation<cytnx_double>::value_type, cytnx_double>);
+  static_assert(StorageImplementation<cytnx_double>::dtype_value == Type.Double);
+  static_assert(StorageImplementation<cytnx_int16>::dtype_value == Type.Int16);
+  SUCCEED();
+}
+
+TEST(StorageImplementationTyped, TypedDataPointer) {
+  Storage s(5, Type.Double);
+  auto* impl = dynamic_cast<StorageImplementation<cytnx_double>*>(s._impl.get());
+  ASSERT_NE(impl, nullptr);
+  cytnx_double* p = impl->data();  // must be cytnx_double*, not void*
+  for (int i = 0; i < 5; i++) p[i] = static_cast<cytnx_double>(i);
+  EXPECT_DOUBLE_EQ(s.at<cytnx_double>(0), 0.0);
+  EXPECT_DOUBLE_EQ(s.at<cytnx_double>(4), 4.0);
+}
+
+// --- #941 typed storage dispatch foundation: StorageVariant / as_storage_variant ---
+
+TEST(StorageVariantTest, AsStorageVariantRoundTrip) {
+  Storage s = Storage::from_vector<cytnx_int32>({1, 2, 3});
+  StorageVariant v = s.as_storage_variant();
+  bool visited = false;
+  std::visit(
+    [&](auto impl) {
+      using T = storage_value_t<decltype(impl)>;
+      // std::visit instantiates this lambda body for every alternative in
+      // StorageVariant, not just the active one -- guard the dtype-specific
+      // assertion with if constexpr so only the actually-active Int32
+      // alternative runs it at runtime (the others compile but no-op).
+      if constexpr (std::is_same_v<T, cytnx_int32>) {
+        EXPECT_EQ(impl->size(), 3u);
+        EXPECT_EQ(impl->data()[0], 1);
+        visited = true;
+      }
+    },
+    v);
+  EXPECT_TRUE(visited);
+}
+
+TEST(StorageVariantTest, AsStorageVariantVoidThrows) {
+  Storage s;  // default-constructed Storage_base (dtype Void)
+  EXPECT_THROW(s.as_storage_variant(), std::logic_error);
+}
+
+TEST(StorageVariantTest, VariantSizeMatchesNonVoidTypeList) {
+  // 11 non-void alternatives, mirrors Type_list minus void -- same pattern as
+  // T2's Scalar static_asserts tying its variant to Type_list.
+  static_assert(std::variant_size_v<StorageVariant> == std::variant_size_v<Type_list> - 1);
+}
+
+// --- #941 typed storage dispatch foundation: storage_as_type_or_replace ---
+
+TEST(StorageAsTypeOrReplace, ReusesMatchingBuffer) {
+  Storage out = Storage::from_vector<cytnx_double>({1.0, 2.0, 3.0});
+  auto* original_impl = out._impl.get();
+  auto typed = storage_as_type_or_replace<cytnx_double>(out, 3, Device.cpu);
+  EXPECT_EQ(static_cast<Storage_base*>(typed.get()), original_impl);  // same object, reused
+  EXPECT_EQ(typed->size(), 3u);
+}
+
+TEST(StorageAsTypeOrReplace, ReplacesOnTypeMismatch) {
+  Storage out = Storage::from_vector<cytnx_int32>({1, 2, 3});
+  auto typed = storage_as_type_or_replace<cytnx_double>(out, 3, Device.cpu);
+  EXPECT_EQ(out.dtype(), (unsigned int)Type.Double);
+  EXPECT_EQ(typed->size(), 3u);
+}
+
+TEST(StorageAsTypeOrReplace, ReplacesOnSizeMismatch) {
+  Storage out = Storage::from_vector<cytnx_double>({1.0, 2.0, 3.0});
+  auto typed = storage_as_type_or_replace<cytnx_double>(out, 5, Device.cpu);
+  EXPECT_EQ(typed->size(), 5u);
+  EXPECT_EQ(out.size(), 5u);
+}
+
+TEST(StorageAsTypeOrReplace, AllocatesWhenOutIsEmpty) {
+  Storage out;  // Type.Void
+  auto typed = storage_as_type_or_replace<cytnx_float>(out, 4, Device.cpu);
+  EXPECT_EQ(out.dtype(), (unsigned int)Type.Float);
+  EXPECT_EQ(typed->size(), 4u);
+}
+
+// --- #941 ruling 2: capacity_ removed; append() = exact realloc (O(n), numpy-like) ---
+
+TEST(StorageCapacityRemoval, AppendGrowsExactly) {
+  Storage s = Storage::from_vector<cytnx_int32>({1, 2, 3});
+  EXPECT_EQ(s.size(), 3u);
+  s.append(cytnx_int32(4));
+  EXPECT_EQ(s.size(), 4u);
+  EXPECT_EQ(s.at<cytnx_int32>(3), 4);
+  s.append(cytnx_int32(5));
+  EXPECT_EQ(s.size(), 5u);
+  EXPECT_EQ(s.at<cytnx_int32>(4), 5);
+}
+
+TEST(StorageCapacityRemoval, AppendPreservesExistingElements) {
+  Storage s = Storage::from_vector<cytnx_double>({1.0, 2.0, 3.0});
+  s.append(cytnx_double(4.0));
+  for (int i = 0; i < 3; i++) EXPECT_DOUBLE_EQ(s.at<cytnx_double>(i), (double)(i + 1));
+  EXPECT_DOUBLE_EQ(s.at<cytnx_double>(3), 4.0);
+}
+
+TEST(StorageCapacityRemoval, ResizeShrinkAndGrowPreservesPrefix) {
+  Storage s = Storage::from_vector<cytnx_int64>({10, 20, 30, 40});
+  s.resize(2);
+  EXPECT_EQ(s.size(), 2u);
+  EXPECT_EQ(s.at<cytnx_int64>(0), 10);
+  EXPECT_EQ(s.at<cytnx_int64>(1), 20);
+  s.resize(5);
+  EXPECT_EQ(s.size(), 5u);
+  EXPECT_EQ(s.at<cytnx_int64>(0), 10);
+  EXPECT_EQ(s.at<cytnx_int64>(1), 20);
 }

@@ -140,7 +140,7 @@ namespace cytnx {
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->capacity());
+      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->size());
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -170,7 +170,7 @@ namespace cytnx {
         return out;
 
       } else {
-        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
+        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->size());
         return out;
       }
     }
@@ -193,8 +193,7 @@ namespace cytnx {
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
     #endif
 
-      CudaType *dtmp =
-        reinterpret_cast<CudaType *>(cuMalloc_gpu(sizeof(CudaType) * in->capacity()));
+      CudaType *dtmp = reinterpret_cast<CudaType *>(cuMalloc_gpu(sizeof(CudaType) * in->size()));
       cytnx_uint64 Nelem = in->size();
 
       std::vector<int> perm(mapper.begin(), mapper.end());
@@ -280,7 +279,7 @@ namespace cytnx {
         return out;
 
       } else {
-        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
+        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->size());
         return out;
       }
     }

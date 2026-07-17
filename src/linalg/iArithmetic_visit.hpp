@@ -11,47 +11,44 @@ namespace cytnx {
   namespace linalg {
     namespace detail {
 
-      template <char op_code, typename TLin, typename TRin>
-      inline void ApplyInplaceArithmeticOp(TLin &lhs, const TRin &rhs) {
-        if constexpr (!cytnx::is_complex_v<TLin> && cytnx::is_complex_v<TRin>) {
-          if constexpr (op_code == 0) {
-            cytnx_error_msg(true, "[ERROR][iadd] Cannot perform real+=complex%s", "\n");
-          } else if constexpr (op_code == 1) {
-            cytnx_error_msg(true, "[ERROR][imul] Cannot perform real*=complex%s", "\n");
-          } else if constexpr (op_code == 2) {
-            cytnx_error_msg(true, "[ERROR][isub] Cannot perform real-=complex%s", "\n");
-          } else if constexpr (op_code == 3) {
-            cytnx_error_msg(true, "[ERROR][idiv] Cannot perform real/=complex%s", "\n");
-          }
+      // op_code: 0=Add, 1=Mul, 2=Sub, 3=Div (true division).
+      template <char op_code, typename TO, typename TL, typename TR>
+      inline TO ApplyInplaceArithmeticOp(TL lhs, TR rhs) {
+        if constexpr (!cytnx::is_complex_v<TO> &&
+                      (cytnx::is_complex_v<TL> || cytnx::is_complex_v<TR>)) {
+          cytnx_error_msg(true, "[ERROR][inplace arithmetic] Cannot narrow complex into real%s",
+                          "\n");
+          return TO{};
         } else {
           if constexpr (op_code == 0) {
-            lhs += rhs;
+            return static_cast<TO>(static_cast<TO>(lhs) + static_cast<TO>(rhs));
           } else if constexpr (op_code == 1) {
-            lhs *= rhs;
+            return static_cast<TO>(static_cast<TO>(lhs) * static_cast<TO>(rhs));
           } else if constexpr (op_code == 2) {
-            lhs -= rhs;
-          } else if constexpr (op_code == 3) {
-            lhs /= rhs;
+            return static_cast<TO>(static_cast<TO>(lhs) - static_cast<TO>(rhs));
+          } else {
+            static_assert(op_code == 3);
+            return static_cast<TO>(static_cast<TO>(lhs) / static_cast<TO>(rhs));
           }
         }
       }
 
-      template <char op_code, typename TLin, typename TRin>
-      inline void ApplyInplaceArithmeticKernel(TLin *lhs, const TRin *rhs, const cytnx_uint64 &len,
-                                               const bool &rhs_is_scalar,
+      template <char op_code, typename TO, typename TL, typename TR>
+      inline void ApplyInplaceArithmeticKernel(TO *out, const TL *lhs, const TR *rhs,
+                                               cytnx_uint64 len, bool rhs_is_scalar,
                                                const std::vector<cytnx_uint64> &shape,
                                                const std::vector<cytnx_uint64> &invmapper_L,
                                                const std::vector<cytnx_uint64> &invmapper_R) {
         if (rhs_is_scalar) {
           for (cytnx_uint64 i = 0; i < len; i++) {
-            ApplyInplaceArithmeticOp<op_code>(lhs[i], rhs[0]);
+            out[i] = ApplyInplaceArithmeticOp<op_code, TO>(lhs[i], rhs[0]);
           }
           return;
         }
 
         if (shape.empty()) {
           for (cytnx_uint64 i = 0; i < len; i++) {
-            ApplyInplaceArithmeticOp<op_code>(lhs[i], rhs[i]);
+            out[i] = ApplyInplaceArithmeticOp<op_code, TO>(lhs[i], rhs[i]);
           }
           return;
         }
@@ -76,33 +73,90 @@ namespace cytnx {
             cytnx::cartesian2c(cytnx::vec_map(tmpv, invmapper_L), old_accu_shapeL);
           cytnx_uint64 idx_R =
             cytnx::cartesian2c(cytnx::vec_map(tmpv, invmapper_R), old_accu_shapeR);
-          ApplyInplaceArithmeticOp<op_code>(lhs[idx_L], rhs[idx_R]);
+          // In-place semantics: the result lands at lhs's PHYSICAL position
+          // idx_L (out either aliases lhs's buffer, or is a fresh promoted
+          // buffer that Lt's unchanged meta/invmapper will address the same
+          // way) -- NOT at the logical linear index i.
+          out[idx_L] = ApplyInplaceArithmeticOp<op_code, TO>(lhs[idx_L], rhs[idx_R]);
         }
       }
 
+      // Output-dtype rule per op_code: Div (3) uses true-division
+      // (make_floating_point_t<type_promote_t<TL,TR>>); everything else uses
+      // plain type_promote_t<TL,TR> (#941's stated default rule).
+      template <char op_code, typename TL, typename TR>
+      struct InplaceOutputType {
+        using type = Type_class::type_promote_t<TL, TR>;
+      };
+      template <typename TL, typename TR>
+      struct InplaceOutputType<3, TL, TR> {
+        using type = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+      };
+      template <char op_code, typename TL, typename TR>
+      using InplaceOutputType_t = typename InplaceOutputType<op_code, TL, TR>::type;
+
+      // Dispatch in-place arithmetic on CPU with correct dtype promotion: if
+      // the promoted output type differs from Lt's current storage dtype,
+      // allocate new storage of the promoted type and replace Lt's storage
+      // (matching the equivalent out-of-place operation's output type and
+      // Python in-place semantics) -- rather than truncating results into the
+      // original narrower/incompatible storage (#941's core bug: a dispatch
+      // table could select a kernel whose C++ output type was e.g. double,
+      // while the actual output storage object was still
+      // StorageImplementation<int16_t>).
+      // rhs_is_weak_scalar: the RHS is a python-scalar wrapper (the scalar
+      // operators route through scalar_as_rank0_tensor, see src/Tensor.cpp), not a
+      // user-provided tensor. Per the #1015 ruling affirming #980, `tensor op=
+      // python-scalar` follows numpy weak-scalar semantics: it PRESERVES the LHS
+      // dtype (the scalar is cast into TL) rather than promoting. A genuine tensor
+      // RHS -- including a rank-0 tensor such as cytnx.zeros([]) -- promotes (#941),
+      // so this must be signaled explicitly by the caller rather than inferred from
+      // Rt.rank(), which cannot distinguish the two. Complex-into-real is still
+      // rejected by ApplyInplaceArithmeticOp.
       template <char op_code>
       inline void DispatchInplaceArithmeticCPU(Tensor &Lt, const Tensor &Rt,
+                                               bool rhs_is_weak_scalar,
                                                const std::vector<cytnx_uint64> &shape,
                                                const std::vector<cytnx_uint64> &invmapper_L,
                                                const std::vector<cytnx_uint64> &invmapper_R) {
-        const cytnx_uint64 len = Lt._impl->storage()._impl->size();
+        const uint64_t len = Lt._impl->storage()._impl->size();
         const bool rhs_is_scalar = is_singleton_tensor(Rt);
+        const int device = Lt.device();
 
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            static_assert(!std::is_same_v<TL, void>);
+          [&](auto lhs_impl, auto rhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            // Promoting output type, used for a genuine-tensor RHS below; the
+            // weak-scalar branch recomputes it as TO_weak (TL vs TL) instead.
+            using TO = InplaceOutputType_t<op_code, TL, TR>;
 
-            std::visit(
-              [&](auto *rptr) {
-                using TR = std::remove_pointer_t<decltype(rptr)>;
-                static_assert(!std::is_same_v<TR, void>);
-                ApplyInplaceArithmeticKernel<op_code, TL, TR>(lptr, rptr, len, rhs_is_scalar, shape,
-                                                              invmapper_L, invmapper_R);
-              },
-              Rt.ptr());
+            // storage_as_type_or_replace<TO> may replace Lt._impl->storage()._impl
+            // (e.g. when TO != TL, the promoted output dtype differs from Lt's
+            // current storage dtype). That is safe here: lhs_impl was already
+            // captured above as an owning intrusive_ptr<StorageImplementation<TL>>
+            // to the ORIGINAL buffer before this call, so lhs_impl->data() stays
+            // valid and points at the pre-replacement data for the kernel call
+            // below, exactly as #941 describes for the aliased in-place case.
+            if (rhs_is_weak_scalar) {
+              // Weak-scalar output: treat the RHS dtype as TL, so Add/Sub/Mul
+              // keep TL (numpy weak-scalar, #980) while Div still follows #941
+              // true-division (make_floating_point(TL): Int64 /= 2.0 -> Double,
+              // Float /= 3.0 -> Float). Complex-into-real is still rejected by
+              // ApplyInplaceArithmeticOp below.
+              using TO_weak = InplaceOutputType_t<op_code, TL, TL>;
+              auto out_impl = storage_as_type_or_replace<TO_weak>(Lt._impl->storage(), len, device);
+              ApplyInplaceArithmeticKernel<op_code, TO_weak, TL, TR>(
+                out_impl->data(), lhs_impl->data(), rhs_impl->data(), len, /*rhs_is_scalar=*/true,
+                shape, invmapper_L, invmapper_R);
+            } else {
+              auto out_impl = storage_as_type_or_replace<TO>(Lt._impl->storage(), len, device);
+              ApplyInplaceArithmeticKernel<op_code, TO, TL, TR>(
+                out_impl->data(), lhs_impl->data(), rhs_impl->data(), len, rhs_is_scalar, shape,
+                invmapper_L, invmapper_R);
+            }
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
       }
 
     }  // namespace detail

@@ -27,12 +27,13 @@ void storage_binding(py::module &m) {
   py::class_<cytnx::Storage>(m, "Storage")
     .def("numpy",
          [](Storage &self) -> py::array {
-           // device on GPU? move to cpu:ref it;
+           // device on GPU? move to cpu; on CPU share the buffer directly
+           // (zero-copy, #941 ruling 4).
            Storage tmpIN;
            if (self.device() >= 0) {
              tmpIN = self.to(Device.cpu);
            } else {
-             tmpIN = self.clone();
+             tmpIN = self;
            }
 
            // calculate stride:
@@ -40,7 +41,6 @@ void storage_binding(py::module &m) {
            std::vector<ssize_t> stride(1, type_size);
            std::vector<ssize_t> shape(1, tmpIN.size());
 
-           py::buffer_info npbuf;
            std::string chr_dtype;
            if (tmpIN.dtype() == Type.ComplexDouble) {
              chr_dtype = py::format_descriptor<cytnx_complex128>::format();
@@ -65,11 +65,31 @@ void storage_binding(py::module &m) {
                              "\n");
            }
 
-           // Call `.release()` to avoid the memory passed to numpy being freed.
-           npbuf = py::buffer_info(tmpIN.release(), type_size,
-                                   chr_dtype,  // pss format
-                                   /* rank= */ 1, shape, stride);
-           return py::array(npbuf);
+           // Zero-copy ownership transfer (#941 ruling 4): the capsule owns a
+           // copy of the intrusive_ptr<Storage_base>, keeping the
+           // StorageImplementation<T> alive for as long as the returned numpy
+           // array is alive. The previous release()-based path both leaked
+           // the buffer AND still copied (py::array with a raw pointer and no
+           // base object cannot take ownership). This is safe now that
+           // capacity_ is gone (ruling 2): every size-changing Storage
+           // operation replaces _impl with a fresh buffer rather than
+           // mutating the allocation in place, so a live numpy view of the
+           // old buffer is never resized out from under it.
+           auto *owner = new boost::intrusive_ptr<cytnx::Storage_base>(tmpIN._impl);
+           py::capsule base(owner, [](void *p) {
+             delete static_cast<boost::intrusive_ptr<cytnx::Storage_base> *>(p);
+           });
+
+           // Recover the data pointer through the typed #941 path rather than
+           // the legacy erased Storage_base::data() accessor.
+           void *typed_ptr =
+             std::visit([](auto impl) -> void * { return static_cast<void *>(impl->data()); },
+                        tmpIN.as_storage_variant());
+
+           py::buffer_info npbuf(typed_ptr, type_size,
+                                 chr_dtype,  // pss format
+                                 /* rank= */ 1, shape, stride);
+           return py::array(npbuf, base);
          })
 
     // construction
@@ -189,7 +209,8 @@ void storage_binding(py::module &m) {
       py::arg("device"))
 
     .def("resize", &cytnx::Storage::resize)
-    .def("capacity", &cytnx::Storage::capacity)
+    // Storage.capacity() was removed (#941 ruling 2): storage always
+    // allocates exactly size() elements.
     .def("clone", &cytnx::Storage::clone)
     .def("__copy__", &cytnx::Storage::clone)
     .def("__deepcopy__", &cytnx::Storage::clone)

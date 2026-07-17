@@ -56,6 +56,10 @@ on:
           - nightly
         default: auto
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   DetermineChannel:
     # Resolves a single source of truth for the rest of the workflow:

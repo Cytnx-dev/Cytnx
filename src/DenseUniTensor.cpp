@@ -1309,14 +1309,12 @@ namespace cytnx {
   };
 
   void DenseUniTensor::normalize_() {
-    // Divide by the norm carried as an on-device rank-1 {1} Tensor via the non-deprecated
-    // internal Norm() (whose dtype is Float for Float/ComplexFloat blocks and Double
-    // otherwise). Routing through Tensor /= keeps linalg::iDiv's in-place, dtype-preserving
-    // path -- an Int32 block stays Int32; dividing by a bare double or Scalar would take the
-    // promoting Div + storage-swap path and silently retype integer blocks to Double
-    // (regression caught by DenseUniTensorTest.normalize_int_type). Keeping the divisor a
-    // device Tensor also avoids the device->host->device scalar roundtrip that norm() (which
-    // returns a host double) forces on GPU.
+    // Divide by the norm carried as an on-device Tensor via the non-deprecated internal Norm()
+    // (whose dtype is Float for Float/ComplexFloat blocks and Double otherwise). Under #941
+    // true-division an integer block promotes to its floating counterpart here (Int32 -> Double),
+    // which is the correct result for a normalization. Keeping the divisor a device Tensor
+    // avoids the device->host->device scalar roundtrip that norm() (which returns a host double)
+    // forces on GPU.
     this->_block /= this->Norm();
   }
 

@@ -9,6 +9,18 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
+    namespace {
+      // Output dtype for true division. On CPU the result is always floating-point (#941 true
+      // division: int / int -> Double). The GPU path still runs the legacy cuDiv kernels
+      // (#1013 tracks its typed conversion), which emit Type.type_promote(lhs, rhs) and validate
+      // the output storage against it -- so on GPU keep the promoted (possibly integer) dtype to
+      // avoid an output-dtype-mismatch throw; seeding a floating dtype there would break
+      // gpu_int / gpu_int (behavior unchanged from master on GPU).
+      inline unsigned int div_output_dtype(unsigned int promoted_dtype, int device) {
+        return device == Device.cpu ? Type_class::make_floating_point_dtype(promoted_dtype)
+                                    : promoted_dtype;
+      }
+    }  // namespace
     Tensor Div(const Tensor &Lt, const Tensor &Rt) {
       detail::check_binary_tensor_inputs(Lt, Rt, "Div");
       cytnx_error_msg(Lt.device() != Rt.device(),
@@ -16,13 +28,20 @@ namespace cytnx {
 
       Tensor out;
       bool icnst = false;
-      if (detail::init_broadcast_binary_output(out, Lt, Rt,
-                                               Type.type_promote(Lt.dtype(), Rt.dtype()))) {
+      // True division (#941): on CPU the output is floating-point, so seed the
+      // broadcast-output dtype via div_output_dtype (the GPU legacy path keeps the
+      // promoted dtype -- see that helper). init_broadcast_binary_output keeps the
+      // rank-zero / zero-extent handling added in #1026.
+      if (detail::init_broadcast_binary_output(
+            out, Lt, Rt,
+            div_output_dtype(Type.type_promote(Lt.dtype(), Rt.dtype()), Rt.device()))) {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[Div] The two tensors do not have the same shape.%s", "\n");
-        out.Init(Lt.shape(), Type.type_promote(Lt.dtype(), Rt.dtype()), Lt.device());
+        out.Init(Lt.shape(),
+                 div_output_dtype(Type.type_promote(Lt.dtype(), Rt.dtype()), Rt.device()),
+                 Lt.device());
       }
 
       if (out.storage().size() == 0) return out;
@@ -34,18 +53,15 @@ namespace cytnx {
         // contiguous section
         if (Lt.device() == Device.cpu) {
           std::visit(
-            [&](auto *lptr) {
-              using TL = std::remove_pointer_t<decltype(lptr)>;
-              std::visit(
-                [&](auto *rptr) {
-                  using TR = std::remove_pointer_t<decltype(rptr)>;
-                  cytnx::linalg_internal::DivInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, left._impl->storage()._impl,
-                    right._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
-                },
-                right.ptr());
+            [&](auto lhs_impl, auto rhs_impl) {
+              using TL = storage_value_t<decltype(lhs_impl)>;
+              using TR = storage_value_t<decltype(rhs_impl)>;
+              using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+              cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+                storage_cast<TO>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+                out._impl->storage().size(), {}, {}, {});
             },
-            left.ptr());
+            Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -61,19 +77,16 @@ namespace cytnx {
         // non-contiguous section
         if (Lt.device() == Device.cpu) {
           std::visit(
-            [&](auto *lptr) {
-              using TL = std::remove_pointer_t<decltype(lptr)>;
-              std::visit(
-                [&](auto *rptr) {
-                  using TR = std::remove_pointer_t<decltype(rptr)>;
-                  cytnx::linalg_internal::DivInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, left._impl->storage()._impl,
-                    right._impl->storage()._impl, left._impl->storage()._impl->size(),
-                    left._impl->shape(), left._impl->invmapper(), right._impl->invmapper());
-                },
-                right.ptr());
+            [&](auto lhs_impl, auto rhs_impl) {
+              using TL = storage_value_t<decltype(lhs_impl)>;
+              using TR = storage_value_t<decltype(rhs_impl)>;
+              using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+              cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+                storage_cast<TO>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+                out._impl->storage().size(), Lt._impl->shape(), Lt._impl->invmapper(),
+                Rt._impl->invmapper());
             },
-            left.ptr());
+            Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
           cytnx_error_msg(true,
@@ -102,13 +115,15 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_complex128, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_complex128;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -132,20 +147,24 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() = Storage(Rt._impl->storage().size(),
-                                     Type.type_promote(Type.ComplexFloat, Rt.dtype()), Rt.device());
+      out._impl->storage() =
+        Storage(Rt._impl->storage().size(),
+                div_output_dtype(Type.type_promote(Type.ComplexFloat, Rt.dtype()), Rt.device()),
+                Rt.device());
       // Tensor out(Rt.shape(),Type.ComplexFloat <
       // Rt.dtype()?Type.ComplexFloat:Rt.dtype(),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_complex64, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_complex64;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -168,19 +187,22 @@ namespace cytnx {
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() = Storage(Rt._impl->storage().size(),
-                                     Type.type_promote(Type.Double, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Double, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Double, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_double, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_double;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         linalg_internal::cuDiv_dispatch(out._impl->storage()._impl, Cnst._impl,
@@ -202,19 +224,22 @@ namespace cytnx {
       Cnst.at<cytnx_float>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Float, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Float, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Float, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_float, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_float;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -237,19 +262,22 @@ namespace cytnx {
       Cnst.at<cytnx_int64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Int64, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int64, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Int64, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_int64, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_int64;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         linalg_internal::cuDiv_dispatch(out._impl->storage()._impl, Cnst._impl,
@@ -271,19 +299,22 @@ namespace cytnx {
       Cnst.at<cytnx_uint64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() = Storage(Rt._impl->storage().size(),
-                                     Type.type_promote(Type.Uint64, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint64, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Uint64, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_uint64, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_uint64;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -306,19 +337,22 @@ namespace cytnx {
       Cnst.at<cytnx_int32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Int32, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int32, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Int32, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_int32, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_int32;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -341,19 +375,22 @@ namespace cytnx {
       Cnst.at<cytnx_uint32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() = Storage(Rt._impl->storage().size(),
-                                     Type.type_promote(Type.Uint32, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint32, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Uint32, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_uint32, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_uint32;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -376,19 +413,22 @@ namespace cytnx {
       Cnst.at<cytnx_int16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Int16, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int16, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Int16, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_int16, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_int16;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -411,19 +451,22 @@ namespace cytnx {
       Cnst.at<cytnx_uint16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() = Storage(Rt._impl->storage().size(),
-                                     Type.type_promote(Type.Uint16, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint16, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Uint16, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_uint16, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_uint16;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -446,19 +489,22 @@ namespace cytnx {
       Cnst.at<cytnx_bool>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.type_promote(Type.Bool, Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Bool, Rt.dtype()), Rt.device()), Rt.device());
       // Tensor out(Rt.shape(),Type.type_promote(Type.Bool, Rt.dtype()),Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::DivInternalImpl<cytnx_bool, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_bool;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl), rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -482,23 +528,21 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Rt._impl->storage().size(), Type.type_promote(lc.dtype(), Rt.dtype()), Rt.device());
+      out._impl->storage() = Storage(
+        Rt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(lc.dtype(), Rt.dtype()), Rt.device()), Rt.device());
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            std::visit(
-              [&](auto *rptr) {
-                using TR = std::remove_pointer_t<decltype(rptr)>;
-                cytnx::linalg_internal::DivInternalImpl<TL, TR>(
-                  out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-                  Rt._impl->storage()._impl->size(), {}, {}, {});
-              },
-              Rt.ptr());
+          [&](auto lhs_impl, auto rhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Tensor::from_storage(Cnst).ptr());
+          Cnst.as_storage_variant(), Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -526,13 +570,15 @@ namespace cytnx {
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_complex128>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_complex128;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -553,20 +599,24 @@ namespace cytnx {
       Cnst.at<cytnx_complex64>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(Lt._impl->storage().size(),
-                                     Type.type_promote(Type.ComplexFloat, Lt.dtype()), Lt.device());
+      out._impl->storage() =
+        Storage(Lt._impl->storage().size(),
+                div_output_dtype(Type.type_promote(Type.ComplexFloat, Lt.dtype()), Lt.device()),
+                Lt.device());
       // Tensor out(Lt.shape(),Type.ComplexFloat <
       // Lt.dtype()?Type.ComplexFloat:Lt.dtype(),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_complex64>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_complex64;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -588,19 +638,22 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
-      out._impl->storage() = Storage(Lt._impl->storage().size(),
-                                     Type.type_promote(Type.Double, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Double, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Double, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_double>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_double;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -621,19 +674,22 @@ namespace cytnx {
       Cnst.at<cytnx_float>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(), Type.type_promote(Type.Float, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Float, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Float, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_float>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_float;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -654,19 +710,22 @@ namespace cytnx {
       Cnst.at<cytnx_int64>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(), Type.type_promote(Type.Int64, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int64, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Int64, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_int64>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_int64;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -687,19 +746,22 @@ namespace cytnx {
       Cnst.at<cytnx_uint64>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(Lt._impl->storage().size(),
-                                     Type.type_promote(Type.Uint64, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint64, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Uint64, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_uint64>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_uint64;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -720,19 +782,22 @@ namespace cytnx {
       Cnst.at<cytnx_int32>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(), Type.type_promote(Type.Int32, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int32, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Int32, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_int32>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_int32;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -753,19 +818,22 @@ namespace cytnx {
       Cnst.at<cytnx_uint32>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(Lt._impl->storage().size(),
-                                     Type.type_promote(Type.Uint32, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint32, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Uint32, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_uint32>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_uint32;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -787,19 +855,22 @@ namespace cytnx {
       Cnst.at<cytnx_int16>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(), Type.type_promote(Type.Int16, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Int16, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Int16, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_int16>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_int16;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -820,19 +891,22 @@ namespace cytnx {
       Cnst.at<cytnx_uint16>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() = Storage(Lt._impl->storage().size(),
-                                     Type.type_promote(Type.Uint16, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Uint16, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Uint16, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_uint16>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_uint16;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -853,19 +927,22 @@ namespace cytnx {
       Cnst.at<cytnx_bool>(0) = rc;
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(), Type.type_promote(Type.Bool, Lt.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Type.Bool, Lt.dtype()), Lt.device()), Lt.device());
       // Tensor out(Lt.shape(),Type.type_promote(Type.Bool, Lt.dtype()),Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            cytnx::linalg_internal::DivInternalImpl<TL, cytnx_bool>(
-              out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-              Lt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto lhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = cytnx_bool;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, storage_cast<TR>(Cnst._impl),
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -888,23 +965,21 @@ namespace cytnx {
 
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
-      out._impl->storage() =
-        Storage(Lt._impl->storage().size(), Type.type_promote(Lt.dtype(), rc.dtype()), Lt.device());
+      out._impl->storage() = Storage(
+        Lt._impl->storage().size(),
+        div_output_dtype(Type.type_promote(Lt.dtype(), rc.dtype()), Lt.device()), Lt.device());
 
       if (Lt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            std::visit(
-              [&](auto *rptr) {
-                using TR = std::remove_pointer_t<decltype(rptr)>;
-                cytnx::linalg_internal::DivInternalImpl<TL, TR>(
-                  out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
-                  Lt._impl->storage()._impl->size(), {}, {}, {});
-              },
-              Tensor::from_storage(Cnst).ptr());
+          [&](auto lhs_impl, auto rhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TO = Type_class::make_floating_point_t<Type_class::type_promote_t<TL, TR>>;
+            cytnx::linalg_internal::DivInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Lt.ptr());
+          Lt._impl->storage().as_storage_variant(), Cnst.as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));

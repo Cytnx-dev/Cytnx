@@ -11,7 +11,7 @@
 namespace cytnx {
   namespace linalg {
 
-    void iAdd(Tensor &Lt, const Tensor &Rt) {
+    void iAdd(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar) {
       detail::check_binary_tensor_inputs(Lt, Rt, "iAdd");
       // A singleton RHS that stays on the host is treated as a broadcast scalar: the GPU kernels
       // read it with a host-side dereference and pass it into the kernel by value, so it needs
@@ -34,7 +34,12 @@ namespace cytnx {
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
-      if (Lt.storage().size() == 0) return;
+      // A zero-extent tensor has nothing to compute, but in-place arithmetic must still
+      // promote Lt's dtype to match the non-empty path and the out-of-place operator (#941):
+      // the CPU dispatcher below performs that dtype replacement with a no-op kernel when the
+      // length is 0. Only short-circuit the legacy GPU path here (GPU keeps the LHS dtype in
+      // place regardless; #1013).
+      if (Lt.storage().size() == 0 && Lt.device() != Device.cpu) return;
 
       Tensor R;
       if (Lt._impl->storage()._impl == Rt._impl->storage()._impl) {
@@ -64,7 +69,8 @@ namespace cytnx {
       if ((Lt.is_contiguous() && Rt.is_contiguous())) {
         // contiguous section.
         if (Lt.device() == Device.cpu) {
-          detail::DispatchInplaceArithmeticCPU<0>(Lt, R, empty_mapper, empty_mapper, empty_mapper);
+          detail::DispatchInplaceArithmeticCPU<0>(Lt, R, rhs_is_weak_scalar, empty_mapper,
+                                                  empty_mapper, empty_mapper);
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Lt.device()));
@@ -88,8 +94,8 @@ namespace cytnx {
       } else {
         // non-contiguous section
         if (Lt.device() == Device.cpu) {
-          detail::DispatchInplaceArithmeticCPU<0>(Lt, R, Lt._impl->shape(), Lt._impl->invmapper(),
-                                                  Rt._impl->invmapper());
+          detail::DispatchInplaceArithmeticCPU<0>(Lt, R, rhs_is_weak_scalar, Lt._impl->shape(),
+                                                  Lt._impl->invmapper(), Rt._impl->invmapper());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Lt.device()));

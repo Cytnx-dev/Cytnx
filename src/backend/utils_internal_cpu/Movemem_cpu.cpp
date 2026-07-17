@@ -42,7 +42,7 @@ namespace cytnx {
         accu_new *= newshape[i];
       }
 
-      T *des = (T *)malloc(in->capacity() * sizeof(T));
+      T *des = (T *)malloc(in->size() * sizeof(T));
       T *src = static_cast<T *>(in->data());
 
       std::vector<cytnx_uint64> old_inds(old_shape.size());
@@ -81,7 +81,7 @@ namespace cytnx {
         free(des);
         return out;
       } else {
-        out->_Init_byptr(des, accu_old, in->device(), true, in->capacity());
+        out->_Init_byptr(des, accu_old, in->device(), true, in->size());
         return out;
       }
     }
@@ -99,7 +99,7 @@ namespace cytnx {
         in->dtype_str().c_str(), Type.getname(Type.cy_typeid(T())));
 #endif
 
-      T *des = (T *)malloc(in->capacity() * sizeof(T));
+      T *des = (T *)malloc(in->size() * sizeof(T));
       T *src = static_cast<T *>(in->data());
       cytnx_uint64 accu_old = 1, accu_new = 1;
 
@@ -205,7 +205,7 @@ namespace cytnx {
         free(des);
         return out;
       } else {
-        out->_Init_byptr(des, accu_old, in->device(), true, in->capacity());
+        out->_Init_byptr(des, accu_old, in->device(), true, in->size());
         return out;
       }
     }
