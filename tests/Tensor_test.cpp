@@ -48,13 +48,13 @@ namespace cytnx {
         EXPECT_EQ(S.storage().size(), 1);
         EXPECT_EQ(S.is_contiguous(), true);
 
-        Tensor E({2, 0, 3}, Type.Float);
-        EXPECT_EQ(E.shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
-        EXPECT_EQ(E.rank(), 3);
-        EXPECT_EQ(E.size(), 0);
-        EXPECT_TRUE(E.is_empty());
-        EXPECT_FALSE(E.is_void());
-        EXPECT_FALSE(E.is_scalar());
+        Tensor T({2, 0, 3}, Type.Float);
+        EXPECT_EQ(T.shape(), (std::vector<cytnx_uint64>{2, 0, 3}));
+        EXPECT_EQ(T.rank(), 3);
+        EXPECT_EQ(T.size(), 0);
+        EXPECT_TRUE(T.is_empty());
+        EXPECT_FALSE(T.is_void());
+        EXPECT_FALSE(T.is_scalar());
 #ifdef UNI_GPU
         Tensor D({3, 4, 5}, Type.Double, Device.cuda);
         EXPECT_EQ(D.dtype(), Type.Double);
