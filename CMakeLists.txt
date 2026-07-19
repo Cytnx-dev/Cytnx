@@ -540,9 +540,19 @@ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
 )
 
+# The generated CytnxConfig.cmake also backs the build-tree export
+# (export(PACKAGE Cytnx) below), where CMAKE_CURRENT_LIST_DIR is the binary dir.
+# Copy the cccl-detection module next to it so both the build-tree and installed
+# configs can include() it.
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/CytnxDetectCCCL.cmake COPYONLY)
+
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfigVersion.cmake
+  # CytnxConfig.cmake includes this to re-detect the CUDA cccl include dir
+  # against the consumer's toolkit, so it must ship next to the config.
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
   COMPONENT Development
 )

@@ -10,15 +10,14 @@
 namespace cytnx {
   namespace linalg {
     namespace {
-      // Output dtype for true division. On CPU the result is always floating-point (#941 true
-      // division: int / int -> Double). The GPU path still runs the legacy cuDiv kernels
-      // (#1013 tracks its typed conversion), which emit Type.type_promote(lhs, rhs) and validate
-      // the output storage against it -- so on GPU keep the promoted (possibly integer) dtype to
-      // avoid an output-dtype-mismatch throw; seeding a floating dtype there would break
-      // gpu_int / gpu_int (behavior unchanged from master on GPU).
+      // Output dtype for true division: always floating-point (#941 true division:
+      // int / int -> Double). As of #1013 the GPU cuDiv dispatch is typed and also
+      // performs true division (make_floating_point_t<type_promote<TL,TR>>), so CPU
+      // and GPU agree and the dtype no longer depends on the device. The `device`
+      // parameter is retained (now unused) to keep this collapse a minimal, single
+      // -line change to a numerical path; it can be dropped in a follow-up cleanup.
       inline unsigned int div_output_dtype(unsigned int promoted_dtype, int device) {
-        return device == Device.cpu ? Type_class::make_floating_point_dtype(promoted_dtype)
-                                    : promoted_dtype;
+        return Type_class::make_floating_point_dtype(promoted_dtype);
       }
     }  // namespace
     Tensor Div(const Tensor &Lt, const Tensor &Rt) {
@@ -28,10 +27,10 @@ namespace cytnx {
 
       Tensor out;
       bool icnst = false;
-      // True division (#941): on CPU the output is floating-point, so seed the
-      // broadcast-output dtype via div_output_dtype (the GPU legacy path keeps the
-      // promoted dtype -- see that helper). init_broadcast_binary_output keeps the
-      // rank-zero / zero-extent handling added in #1026.
+      // True division (#941): the output is floating-point on both CPU and GPU
+      // (#1013), so seed the broadcast-output dtype via div_output_dtype.
+      // init_broadcast_binary_output keeps the rank-zero / zero-extent handling
+      // added in #1026.
       if (detail::init_broadcast_binary_output(
             out, Lt, Rt,
             div_output_dtype(Type.type_promote(Lt.dtype(), Rt.dtype()), Rt.device()))) {
