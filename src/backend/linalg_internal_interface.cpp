@@ -378,20 +378,6 @@ namespace cytnx {
       cuSum_ii[Type.Bool] = cuSum_internal_b;
 
       //=====================
-      cuAbs_ii = std::vector<Absfunc_oii>(N_Type);
-
-      cuAbs_ii[Type.ComplexDouble] = cuAbs_internal_cd;
-      cuAbs_ii[Type.ComplexFloat] = cuAbs_internal_cf;
-      cuAbs_ii[Type.Double] = cuAbs_internal_d;
-      cuAbs_ii[Type.Float] = cuAbs_internal_f;
-      cuAbs_ii[Type.Int64] = cuAbs_internal_i64;
-      cuAbs_ii[Type.Uint64] = cuAbs_internal_pass;
-      cuAbs_ii[Type.Int32] = cuAbs_internal_i32;
-      cuAbs_ii[Type.Uint32] = cuAbs_internal_pass;
-      cuAbs_ii[Type.Int16] = cuAbs_internal_i16;
-      cuAbs_ii[Type.Uint16] = cuAbs_internal_pass;
-      cuAbs_ii[Type.Bool] = cuAbs_internal_pass;
-
       //===============
       cuGer_ii = std::vector<ger_oii>(5);
       cuGer_ii[Type.ComplexDouble] = cuGer_internal_cd;
@@ -408,13 +394,6 @@ namespace cytnx {
 
       // Pow
       //====================
-      cuPow_ii = std::vector<Powfunc_oii>(5);
-
-      cuPow_ii[Type.ComplexDouble] = cuPow_internal_cd;
-      cuPow_ii[Type.ComplexFloat] = cuPow_internal_cf;
-      cuPow_ii[Type.Double] = cuPow_internal_d;
-      cuPow_ii[Type.Float] = cuPow_internal_f;
-
       // Norm
       //====================
       cuNorm_ii = std::vector<Normfunc_oii>(N_Type);
@@ -448,13 +427,6 @@ namespace cytnx {
       cuEigh_ii[Type.Float] = cuEigh_internal_f;
 
       //=====================
-      cuExp_ii = std::vector<Expfunc_oii>(5);
-
-      cuExp_ii[Type.ComplexDouble] = cuExp_internal_cd;
-      cuExp_ii[Type.ComplexFloat] = cuExp_internal_cf;
-      cuExp_ii[Type.Double] = cuExp_internal_d;
-      cuExp_ii[Type.Float] = cuExp_internal_f;
-
       //=====================
       cuDiag_ii = std::vector<Diagfunc_oii>(N_Type);
 
@@ -486,11 +458,6 @@ namespace cytnx {
       cuInv_inplace_ii[Type.Float] = cuInv_inplace_internal_f;
 
       //=====================
-      cuConj_inplace_ii = std::vector<Conjinplacefunc_oii>(3);
-
-      cuConj_inplace_ii[Type.ComplexDouble] = cuConj_inplace_internal_cd;
-      cuConj_inplace_ii[Type.ComplexFloat] = cuConj_inplace_internal_cf;
-
       //=====================
       cuGemm_ii = std::vector<Gemmfunc_oii>(5);
       cuGemm_ii[Type.ComplexDouble] = cuGemm_internal_cd;
