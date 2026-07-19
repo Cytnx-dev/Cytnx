@@ -1,7 +1,9 @@
-#pragma once
+#ifndef CYTNX_TESTS_LINALG_TEST_EXPH_TEST_H_
+#define CYTNX_TESTS_LINALG_TEST_EXPH_TEST_H_
+
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
+
 #include "cytnx.hpp"
 
-using namespace cytnx;
-using namespace testing;
+namespace cytnx {}  // namespace cytnx
+#endif  // CYTNX_TESTS_LINALG_TEST_EXPH_TEST_H_
