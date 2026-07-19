@@ -5,7 +5,6 @@
 #include "linalg.hpp"
 #include <cfloat>
 #include <cmath>
-#include <limits>
 #include <iostream>
 
 #ifdef BACKEND_TORCH
@@ -62,13 +61,15 @@ namespace cytnx {
     if (count > 0) {
       const cytnx_double nelem = std::ceil(count);
       // Guard the double -> uint64 cast below: `count` can overflow to +inf even for finite
-      // start/end/step (a huge span with a tiny step), and casting a non-representable double to
-      // an integer is undefined behavior. std::ceil(+inf) == +inf, so this catches that too.
-      cytnx_error_msg(
-        nelem > static_cast<cytnx_double>(std::numeric_limits<cytnx_uint64>::max()),
-        "[ERROR] arange(start=%f,end=%f,step=%f): the requested number of elements exceeds the "
-        "maximum representable size.\n",
-        start, end, step);
+      // start/end/step (a huge span with a tiny step), and casting a double whose truncated value
+      // is >= 2^64 to uint64_t is undefined behavior. The threshold is 2^64 (0x1p64), NOT
+      // UINT64_MAX: 2^64 - 1 is not representable as a double and rounds up to 2^64, so a `>`
+      // test against (double)UINT64_MAX would let nelem == 2^64 slip through into the UB cast --
+      // `>=` is required. std::ceil(+inf) == +inf, which this also catches.
+      cytnx_error_msg(nelem >= 0x1p64,
+                      "[ERROR] arange(start=%f,end=%f,step=%f): the requested number of elements "
+                      "exceeds the maximum representable size.\n",
+                      start, end, step);
       Nelem = static_cast<cytnx_uint64>(nelem);
     }
 
