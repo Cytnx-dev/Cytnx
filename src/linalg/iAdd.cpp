@@ -68,18 +68,25 @@ namespace cytnx {
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Lt.device()));
-          Tensor tmpo;
-          if (Lt.dtype() <= Rt.dtype())
-            tmpo = Lt;
-          else
-            tmpo = Lt.clone();
-          linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
-            tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), {}, {}, {}, 0);
-          // cytnx_error_msg(true, "[Developing] iAdd for GPU%s", "\n");
-
-          if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
-
+          // #1003: route in-place arithmetic through the typed cuAdd_dispatch instead of the
+          // legacy cuAri_ii dtype-pair table. In-place keeps the LHS dtype, so we compute in the
+          // promoted dtype and store into Lt's dtype (matching the CPU element-wise semantics).
+          // When the promoted dtype already equals the LHS dtype we write straight into Lt's
+          // storage, preserving shared-storage aliasing; otherwise we compute into a promoted
+          // temporary and narrow back. This also removes the #988 in-place hazards (mapper-
+          // ignoring kernels, narrow-LHS OOB writes, host-scalar dereference).
+          const unsigned int out_dtype = Type.type_promote(Lt.dtype(), Rt.dtype());
+          if (out_dtype == Lt.dtype()) {
+            linalg_internal::cuAdd_dispatch(
+              Lt._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
+              Lt._impl->storage()._impl->size(), empty_mapper, empty_mapper, empty_mapper);
+          } else {
+            Tensor out(Lt.shape(), out_dtype, Lt.device());
+            linalg_internal::cuAdd_dispatch(
+              out._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
+              Lt._impl->storage()._impl->size(), empty_mapper, empty_mapper, empty_mapper);
+            Lt = out.astype(Lt.dtype());
+          }
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -93,16 +100,33 @@ namespace cytnx {
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Lt.device()));
-          Tensor tmpo;
-          if (Lt.dtype() <= Rt.dtype())
-            tmpo = Lt;
-          else
-            tmpo = Lt.clone();
-          linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
-            tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
-            Rt._impl->invmapper(), 0);
-          if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
+          // #1003: typed dispatch (see the contiguous branch above). A broadcast scalar RHS is
+          // layout-uniform, so it is applied in place to Lt's storage in physical order, which
+          // preserves a non-contiguous view (and the CPU write-through semantics). A genuine
+          // tensor RHS uses the non-contiguous kernel, which reads both operands through their
+          // layout mappers and writes a fresh contiguous result, so the in-place LHS becomes
+          // contiguous.
+          const unsigned int out_dtype = Type.type_promote(Lt.dtype(), Rt.dtype());
+          if (rhs_is_scalar) {
+            if (out_dtype == Lt.dtype()) {
+              linalg_internal::cuAdd_dispatch(
+                Lt._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
+                Lt._impl->storage()._impl->size(), empty_mapper, empty_mapper, empty_mapper);
+            } else {
+              Tensor out = Lt.astype(out_dtype);
+              linalg_internal::cuAdd_dispatch(
+                out._impl->storage()._impl, out._impl->storage()._impl, R._impl->storage()._impl,
+                Lt._impl->storage()._impl->size(), empty_mapper, empty_mapper, empty_mapper);
+              Lt = out.astype(Lt.dtype());
+            }
+          } else {
+            Tensor out(Lt.shape(), out_dtype, Lt.device());
+            linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
+                                            R._impl->storage()._impl,
+                                            Lt._impl->storage()._impl->size(), Lt._impl->shape(),
+                                            Lt._impl->invmapper(), Rt._impl->invmapper());
+            Lt = (out_dtype == Lt.dtype()) ? out : out.astype(Lt.dtype());
+          }
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
