@@ -5,7 +5,6 @@
 #include "linalg.hpp"
 #include <cfloat>
 #include <cmath>
-#include <limits>
 #include <iostream>
 
 #ifdef BACKEND_TORCH
@@ -50,21 +49,27 @@ namespace cytnx {
       "[ERROR] arange(start=%f,end=%f,step=%f): start, end, and step must all be finite.\n", start,
       end, step);
 
-    // The range is half-open [start, end): the element count is ceil((end - start) / step).
-    // A non-positive count is an empty or direction-mismatched range and yields a zero-extent
-    // tensor rather than an error (zero-extent tensors are supported). This replaces the old
-    // integer-truncation + `fmod(...) > 1e-14` test, which was neither a reliable ceil nor a
-    // stable half-open test -- it could include the endpoint (fmod(1.0, 0.1) ~= 0.1, not 0) and
-    // its fixed absolute threshold miscounted at small scales. See #1076.
+    // The element count is ceil((end - start) / step), matching numpy.arange. The range is
+    // nominally half-open [start, end), but -- exactly as with numpy -- floating-point rounding
+    // can make the final element equal or slightly exceed `end` (e.g. arange(0.5, 0.8, 0.1) ->
+    // [0.5, 0.6, 0.7, 0.8]). A non-positive count is an empty or direction-mismatched range and
+    // yields a zero-extent tensor rather than an error (zero-extent tensors are supported). This
+    // replaced the old integer-truncation + `fmod(...) > 1e-14` test, which mishandled the
+    // endpoint and miscounted at small scales. See #1076, #1083.
     const cytnx_double count = (end - start) / step;
     cytnx_uint64 Nelem = 0;
     if (count > 0) {
       const cytnx_double nelem = std::ceil(count);
-      cytnx_error_msg(
-        nelem > static_cast<cytnx_double>(std::numeric_limits<cytnx_uint64>::max()),
-        "[ERROR] arange(start=%f,end=%f,step=%f): the requested number of elements exceeds the "
-        "maximum representable size.\n",
-        start, end, step);
+      // Guard the double -> uint64 cast below: `count` can overflow to +inf even for finite
+      // start/end/step (a huge span with a tiny step), and casting a double whose truncated value
+      // is >= 2^64 to uint64_t is undefined behavior. The threshold is 2^64 (0x1p64), NOT
+      // UINT64_MAX: 2^64 - 1 is not representable as a double and rounds up to 2^64, so a `>`
+      // test against (double)UINT64_MAX would let nelem == 2^64 slip through into the UB cast --
+      // `>=` is required. std::ceil(+inf) == +inf, which this also catches.
+      cytnx_error_msg(nelem >= 0x1p64,
+                      "[ERROR] arange(start=%f,end=%f,step=%f): the requested number of elements "
+                      "exceeds the maximum representable size.\n",
+                      start, end, step);
       Nelem = static_cast<cytnx_uint64>(nelem);
     }
 
