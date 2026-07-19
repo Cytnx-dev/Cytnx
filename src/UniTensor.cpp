@@ -240,8 +240,9 @@ namespace cytnx {
       cytnx::random::normal_(this->get_block_(), mean, std, seed);
     } else if (this->uten_type() == UTenType.Block ||
                this->uten_type() == UTenType.BlockFermionic) {
-      for (auto &blk : this->get_blocks_()) {
-        cytnx::random::normal_(blk, mean, std, seed);
+      auto &blocks = this->get_blocks_();
+      for (size_t i = 0; i < blocks.size(); ++i) {
+        cytnx::random::normal_(blocks[i], mean, std, seed + i);
       }
     } else {
       cytnx_error_msg(true,
@@ -257,8 +258,9 @@ namespace cytnx {
       cytnx::random::uniform_(this->get_block_(), low, high, seed);
     } else if (this->uten_type() == UTenType.Block ||
                this->uten_type() == UTenType.BlockFermionic) {
-      for (auto &blk : this->get_blocks_()) {
-        cytnx::random::uniform_(blk, low, high, seed);
+      auto &blocks = this->get_blocks_();
+      for (size_t i = 0; i < blocks.size(); ++i) {
+        cytnx::random::uniform_(blocks[i], low, high, seed + i);
       }
     } else {
       cytnx_error_msg(true,

@@ -274,14 +274,16 @@ TEST(Arnoldi_Gnd, Arnoldi_BK_test) {
 
   std::vector<UniTensor> exact_eigs = linalg::Eig(H.H);
   double lambda = -DBL_MAX;
-  for (auto& block : exact_eigs[0].get_blocks_()) {
+  for (const Tensor& block : exact_eigs[0].get_blocks_()) {
     lambda = std::max(lambda, double(linalg::Max(block).item().real()));
   }
-  std::vector<UniTensor> eigs = linalg::Arnoldi(&H, UT_init, "LM");
+  const cytnx_uint64 maxiter = 10000;
+  const cytnx_double cvg_crit = 1e-12;
+  std::vector<UniTensor> eigs = linalg::Arnoldi(&H, UT_init, "LM", maxiter, cvg_crit);
   cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
-  EXPECT_TRUE(std::abs(ev - lambda) < 1e-12);
+  EXPECT_NEAR(ev, lambda, 1e-12);
   auto err = (H.matvec(eigs[1]) - ev * eigs[1]).Norm().item();
-  EXPECT_TRUE(err < 1e-12);
+  EXPECT_LT(err, 1e-12);
 }
 
 // error test
