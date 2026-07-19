@@ -46,7 +46,7 @@ namespace cytnx {
           x += cytnx_uint64(tmp2 / shape2[j]) * shape1_acc[j];
           y += cytnx_uint64(tmp2 % shape2[j]) * shape2_acc[j];
         }
-        out[i] = Lin[x] * Rin[y];
+        out[i] = static_cast<TO>(Lin[x]) * static_cast<TO>(Rin[y]);
       }
     }
 

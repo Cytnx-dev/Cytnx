@@ -23,7 +23,6 @@
 #endif
 
 #include "Type.hpp"
-#include "utils/complex_arithmetic.hpp"
 #ifdef UNI_GPU
 #endif
 

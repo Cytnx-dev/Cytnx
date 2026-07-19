@@ -1,7 +1,6 @@
 #include "Outer_internal.hpp"
 #include "Ger_internal.hpp"
 #include "backend/utils_internal_interface.hpp"
-#include "utils/complex_arithmetic.hpp"
 #include "backend/lapack_wrapper.hpp"
 
 // change to *ger
@@ -20,7 +19,7 @@ namespace cytnx {
       T2 *_Rin = (T2 *)Rin->data();
 
       for (unsigned long long r = 0; r < j1 * j2; r++) {
-        _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
+        _out[r] = static_cast<TO>(_Lin[cytnx_uint64(r / j2)]) * static_cast<TO>(_Rin[(r % j2)]);
       }
     }
 
