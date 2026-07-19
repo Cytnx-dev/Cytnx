@@ -1,5 +1,18 @@
 #include "cuCpr_internal.hpp"
+
+#include <variant>
+
+#include "backend/Storage.hpp"
 #include "backend/utils_internal_interface.hpp"
+#include "cuTypeCvt.hpp"
+
+// Typed GPU dispatch for out-of-place comparison (==). Unlike the arithmetic ops
+// in cuArithmeticDispatch.cuh, the output storage type is always Bool while the
+// operands are compared in the promoted type TO, so Cpr keeps its own Bool-output
+// kernels. The *dispatch* still follows the #1013 design: std::visit over the
+// ordinary Cytnx value types (as_storage_variant() + type_promote_t) and map to
+// the CUDA-native representation only at the kernel boundary via to_cuda_t --
+// replacing the legacy type_promote_gpu_t / per-dtype switch dispatch.
 
 namespace cytnx {
 
@@ -8,12 +21,11 @@ namespace cytnx {
     namespace {
 
       // Compare two operands after promoting both to the common comparison type
-      // TO = type_promote_gpu(TL, TR). Casting to TO first avoids mixed-type
-      // operator issues (e.g. cuda::std::complex<float> == double is
-      // ill-formed) and matches the CPU Cpr semantics: an integer/real operand
-      // is compared against a complex operand by widening it to the complex
-      // type (imaginary part 0), exactly as the old make_cuDoubleComplex(v, 0)
-      // path did.
+      // TO. Casting to TO first avoids mixed-type operator issues (e.g.
+      // cuda::std::complex<float> == double is ill-formed) and matches the CPU Cpr
+      // semantics: an integer/real operand is compared against a complex operand by
+      // widening it to the complex type (imaginary part 0), exactly as the old
+      // make_cuDoubleComplex(v, 0) path did.
       template <typename TO, typename TL, typename TR>
       __device__ inline cytnx_bool CuCprDispatchOp(const TL &lhs, const TR &rhs) {
         return TO(lhs) == TO(rhs);
@@ -73,18 +85,17 @@ namespace cytnx {
         }
       }
 
-      template <typename TL, typename TR>
-      void cuCpr_dispatch_typed(boost::intrusive_ptr<Storage_base> &out,
-                                boost::intrusive_ptr<Storage_base> &Lin,
-                                boost::intrusive_ptr<Storage_base> &Rin,
-                                const unsigned long long &len,
-                                const std::vector<cytnx_uint64> &shape,
-                                const std::vector<cytnx_uint64> &invmapper_L,
-                                const std::vector<cytnx_uint64> &invmapper_R) {
-        // Comparison result is always Bool; TO is only the common type the two
-        // operands are compared in.
-        using TO = Type_class::type_promote_gpu_t<TL, TR>;
-
+      // Launch the Bool-output comparison kernels for one concrete (TO, TL, TR)
+      // instantiation. TO is the CUDA-native comparison (compute) type; the output
+      // storage is Bool. out/Lin/Rin are erased Storage_base holding CUDA-resident
+      // buffers; their raw data() pointers are reinterpret_cast to the kernel types.
+      template <typename TO, typename TL, typename TR>
+      void cpr_launch(boost::intrusive_ptr<Storage_base> &out,
+                      boost::intrusive_ptr<Storage_base> &Lin,
+                      boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 len,
+                      const std::vector<cytnx_uint64> &shape,
+                      const std::vector<cytnx_uint64> &invmapper_L,
+                      const std::vector<cytnx_uint64> &invmapper_R) {
         cytnx_bool *_out = reinterpret_cast<cytnx_bool *>(out->data());
         const TL *_Lin = reinterpret_cast<const TL *>(Lin->data());
         const TR *_Rin = reinterpret_cast<const TR *>(Rin->data());
@@ -146,64 +157,6 @@ namespace cytnx {
         }
       }
 
-      template <typename TL>
-      void cuCpr_dispatch_rhs(boost::intrusive_ptr<Storage_base> &out,
-                              boost::intrusive_ptr<Storage_base> &Lin,
-                              boost::intrusive_ptr<Storage_base> &Rin,
-                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
-                              const std::vector<cytnx_uint64> &invmapper_L,
-                              const std::vector<cytnx_uint64> &invmapper_R) {
-        switch (Rin->dtype()) {
-          case Type.ComplexDouble:
-            cuCpr_dispatch_typed<TL, cytnx_cuda_complex128>(out, Lin, Rin, len, shape, invmapper_L,
-                                                            invmapper_R);
-            break;
-          case Type.ComplexFloat:
-            cuCpr_dispatch_typed<TL, cytnx_cuda_complex64>(out, Lin, Rin, len, shape, invmapper_L,
-                                                           invmapper_R);
-            break;
-          case Type.Double:
-            cuCpr_dispatch_typed<TL, cytnx_double>(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
-            break;
-          case Type.Float:
-            cuCpr_dispatch_typed<TL, cytnx_float>(out, Lin, Rin, len, shape, invmapper_L,
-                                                  invmapper_R);
-            break;
-          case Type.Int64:
-            cuCpr_dispatch_typed<TL, cytnx_int64>(out, Lin, Rin, len, shape, invmapper_L,
-                                                  invmapper_R);
-            break;
-          case Type.Uint64:
-            cuCpr_dispatch_typed<TL, cytnx_uint64>(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
-            break;
-          case Type.Int32:
-            cuCpr_dispatch_typed<TL, cytnx_int32>(out, Lin, Rin, len, shape, invmapper_L,
-                                                  invmapper_R);
-            break;
-          case Type.Uint32:
-            cuCpr_dispatch_typed<TL, cytnx_uint32>(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
-            break;
-          case Type.Int16:
-            cuCpr_dispatch_typed<TL, cytnx_int16>(out, Lin, Rin, len, shape, invmapper_L,
-                                                  invmapper_R);
-            break;
-          case Type.Uint16:
-            cuCpr_dispatch_typed<TL, cytnx_uint16>(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
-            break;
-          case Type.Bool:
-            cuCpr_dispatch_typed<TL, cytnx_bool>(out, Lin, Rin, len, shape, invmapper_L,
-                                                 invmapper_R);
-            break;
-          default:
-            cytnx_error_msg(true, "[cuCpr_dispatch] unsupported rhs dtype: %d%s", Rin->dtype(),
-                            "\n");
-        }
-      }
-
     }  // namespace
 
     void cuCpr_dispatch(boost::intrusive_ptr<Storage_base> &out,
@@ -216,45 +169,15 @@ namespace cytnx {
                       "[cuCpr_dispatch] output dtype must be Bool, got=%d%s", out->dtype(), "\n");
       if (len == 0) return;
 
-      switch (Lin->dtype()) {
-        case Type.ComplexDouble:
-          cuCpr_dispatch_rhs<cytnx_cuda_complex128>(out, Lin, Rin, len, shape, invmapper_L,
-                                                    invmapper_R);
-          break;
-        case Type.ComplexFloat:
-          cuCpr_dispatch_rhs<cytnx_cuda_complex64>(out, Lin, Rin, len, shape, invmapper_L,
-                                                   invmapper_R);
-          break;
-        case Type.Double:
-          cuCpr_dispatch_rhs<cytnx_double>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Float:
-          cuCpr_dispatch_rhs<cytnx_float>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Int64:
-          cuCpr_dispatch_rhs<cytnx_int64>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Uint64:
-          cuCpr_dispatch_rhs<cytnx_uint64>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Int32:
-          cuCpr_dispatch_rhs<cytnx_int32>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Uint32:
-          cuCpr_dispatch_rhs<cytnx_uint32>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Int16:
-          cuCpr_dispatch_rhs<cytnx_int16>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Uint16:
-          cuCpr_dispatch_rhs<cytnx_uint16>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        case Type.Bool:
-          cuCpr_dispatch_rhs<cytnx_bool>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-          break;
-        default:
-          cytnx_error_msg(true, "[cuCpr_dispatch] unsupported lhs dtype: %d%s", Lin->dtype(), "\n");
-      }
+      std::visit(
+        [&](auto lhs_impl, auto rhs_impl) {
+          using TLc = storage_value_t<decltype(lhs_impl)>;
+          using TRc = storage_value_t<decltype(rhs_impl)>;
+          using TOc = Type_class::type_promote_t<TLc, TRc>;
+          cpr_launch<to_cuda_t<TOc>, to_cuda_t<TLc>, to_cuda_t<TRc>>(out, Lin, Rin, len, shape,
+                                                                     invmapper_L, invmapper_R);
+        },
+        as_storage_variant(Lin), as_storage_variant(Rin));
     }
 
   }  // namespace linalg_internal
