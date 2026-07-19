@@ -34,8 +34,8 @@ namespace cytnx {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         if (Type.is_complex(out.dtype()))
-          cytnx::linalg_internal::lii.cuConj_inplace_ii[out.dtype()](out._impl->storage()._impl,
-                                                                     out._impl->storage().size());
+          cytnx::linalg_internal::cuConj_inplace_dispatch(out._impl->storage()._impl,
+                                                          out._impl->storage().size());
         return out;
   #else
         cytnx_error_msg(true, "[Inv] fatal error,%s",
