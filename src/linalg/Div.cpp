@@ -1117,7 +1117,7 @@ namespace cytnx {
     return cytnx::linalg::Div(Lt, Rt);
   }
 
-  template <class T>
+  template <cytnx_scalar_like T>
   cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt) {
     return cytnx::linalg::Div(lc, Rt);
   }
@@ -1149,7 +1149,7 @@ namespace cytnx {
   template cytnx::UniTensor operator/<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
   template cytnx::UniTensor operator/<Scalar>(const Scalar &lc, const cytnx::UniTensor &Rt);
 
-  template <class T>
+  template <cytnx_scalar_like T>
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc) {
     return cytnx::linalg::Div(Lt, rc);
   }

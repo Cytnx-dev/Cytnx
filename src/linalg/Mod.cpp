@@ -1121,7 +1121,7 @@ namespace cytnx {
     return cytnx::linalg::Mod(Lt, Rt);
   }
 
-  template <class T>
+  template <cytnx_scalar_like T>
   cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt) {
     return cytnx::linalg::Mod(lc, Rt);
   }
@@ -1148,7 +1148,7 @@ namespace cytnx {
     <cytnx_uint16>(const cytnx_uint16 &lc, const cytnx::UniTensor &Rt);
   template cytnx::UniTensor operator%<cytnx_bool>(const cytnx_bool &lc, const cytnx::UniTensor &Rt);
 
-  template <class T>
+  template <cytnx_scalar_like T>
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc) {
     return cytnx::linalg::Mod(Lt, rc);
   }

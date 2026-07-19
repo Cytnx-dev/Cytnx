@@ -446,7 +446,7 @@ namespace cytnx {
     return cytnx::linalg::Add(Lt, Rt);
   }
 
-  template <class T>
+  template <cytnx_scalar_like T>
   cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt) {
     return cytnx::linalg::Add(lc, Rt);
   }
