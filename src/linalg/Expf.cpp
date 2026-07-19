@@ -31,9 +31,9 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(out.device()));
-        cytnx::linalg_internal::lii.cuExp_ii[out.dtype()](out._impl->storage()._impl,
-                                                          out._impl->storage()._impl,
-                                                          out._impl->storage()._impl->size());
+        cytnx::linalg_internal::cuExp_dispatch(out._impl->storage()._impl,
+                                               out._impl->storage()._impl,
+                                               out._impl->storage()._impl->size());
   #else
         cytnx_error_msg(true, "[Expf] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");

@@ -16,6 +16,7 @@ add_executable(
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
   linalg_test/Abs_test.cpp
+  linalg_test/UnaryExpPowConj_test.cpp
   linalg_test/Add_test.cpp
   linalg_test/Cpr_test.cpp
   linalg_test/Div_test.cpp
