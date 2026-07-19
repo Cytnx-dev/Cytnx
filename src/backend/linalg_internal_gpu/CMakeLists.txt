@@ -34,6 +34,7 @@ target_sources(cytnx
     # cudaMemcpyTruncation.hpp
 
     cuAbs_internal.cu
+    cuAbs_dispatch.cu
     cuAdd_internal.cu
     cuSub_dispatch.cu
     cuMul_dispatch.cu
