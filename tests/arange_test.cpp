@@ -85,6 +85,16 @@ namespace {
     EXPECT_DOUBLE_EQ(below.storage().at<cytnx::cytnx_double>(2), 2.0);
   }
 
+  TEST(Arange, EndpointMayBeIncludedUnderRounding) {
+    // The range is only NOMINALLY half-open: matching numpy, floating-point rounding can make
+    // the final element equal the endpoint. (0.8 - 0.5) / 0.1 == 3.0000000000000004 -> ceil 4,
+    // so 0.8 is included. This mirrors np.arange(0.5, 0.8, 0.1) == [0.5, 0.6, 0.7, 0.8].
+    auto t = cytnx::arange(0.5, 0.8, 0.1, Type.Double);
+    ASSERT_EQ(t.shape()[0], 4u);
+    EXPECT_DOUBLE_EQ(t.storage().at<cytnx::cytnx_double>(0), 0.5);
+    EXPECT_DOUBLE_EQ(t.storage().at<cytnx::cytnx_double>(3), 0.8);  // endpoint included
+  }
+
   TEST(Arange, StepZeroThrows) {
     EXPECT_THROW(cytnx::arange(0, 10, 0, Type.Double), std::logic_error);
   }
