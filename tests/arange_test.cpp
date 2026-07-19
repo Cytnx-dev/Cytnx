@@ -104,6 +104,15 @@ namespace {
     EXPECT_THROW(cytnx::arange(0.0, 10.0, NAN, Type.Double), std::logic_error);
   }
 
+  TEST(Arange, OverflowingCountThrows) {
+    // A count of exactly 2^64 is the first size that does not fit in uint64_t; casting that
+    // double to uint64_t is undefined behavior, so it must be rejected at the 2^64 boundary
+    // (2^64 - 1 is not representable as a double, so the guard cannot use UINT64_MAX). See #1083.
+    EXPECT_THROW(cytnx::arange(0.0, 0x1p64, 1.0, Type.Double), std::logic_error);
+    // A span/step whose count overflows to +inf is likewise rejected.
+    EXPECT_THROW(cytnx::arange(0.0, 1e308, 1e-300, Type.Double), std::logic_error);
+  }
+
   TEST(Arange, CountOverloadHalfOpen) {
     // arange(N) == arange(0, N, 1): [0, 1, ..., N-1], default dtype Double.
     auto t = cytnx::arange(6);
