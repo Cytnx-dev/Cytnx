@@ -4,7 +4,6 @@ target_sources(cytnx
     # cuAbs_internal.hpp
     # cuAdd_internal.hpp
     # cuGer_internal.hpp
-    # cuArithmetic_internal.hpp
     # cuConj_inplace_internal.hpp
     # cuCpr_internal.hpp
     # cuDiag_internal.hpp
@@ -40,7 +39,6 @@ target_sources(cytnx
     cuMul_dispatch.cu
     cuDiv_dispatch.cu
     cuGer_internal.cu
-    cuArithmetic_internal.cu
     cuConj_inplace_internal.cu
     cuCpr_dispatch.cu
     cuMod_dispatch.cu

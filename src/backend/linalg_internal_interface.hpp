@@ -44,7 +44,12 @@
 
 #ifdef UNI_GPU
   #include "linalg_internal_gpu/cuAbs_internal.hpp"
-  #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
+  #include "linalg_internal_gpu/cuAdd_internal.hpp"
+  #include "linalg_internal_gpu/cuSub_internal.hpp"
+  #include "linalg_internal_gpu/cuMul_internal.hpp"
+  #include "linalg_internal_gpu/cuDiv_internal.hpp"
+  #include "linalg_internal_gpu/cuCpr_internal.hpp"
+  #include "linalg_internal_gpu/cuMod_internal.hpp"
   #include "linalg_internal_gpu/cuConj_inplace_internal.hpp"
   #include "linalg_internal_gpu/cuDet_internal.hpp"
   #include "linalg_internal_gpu/cuDiag_internal.hpp"
@@ -84,12 +89,6 @@ namespace cytnx {
     typedef void (*Normfunc_oii)(void *, const boost::intrusive_ptr<Storage_base> &);
     typedef void (*Detfunc_oii)(void *, const boost::intrusive_ptr<Storage_base> &,
                                 const cytnx_uint64 &);
-    typedef void (*Arithmeticfunc_oii)(
-      boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,
-      boost::intrusive_ptr<Storage_base> &, const unsigned long long &len,
-      const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
-      const std::vector<cytnx_uint64> &invmapper_R, const char &type);
-
     typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &, const Scalar &);
@@ -226,7 +225,6 @@ namespace cytnx {
       std::vector<ger_oii> ger_ii;
 
 #ifdef UNI_GPU
-      std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
       std::vector<Svdfunc_oii> cuSvd_ii;
       std::vector<Svdfunc_oii> cuGeSvd_ii;
       std::vector<InvMinplacefunc_oii> cuInvM_inplace_ii;
