@@ -64,6 +64,14 @@ static_assert(cy_mulable<double, Tensor>);
 static_assert(cy_addable<Scalar, Tensor>);
 static_assert(cy_mulable<double, UniTensor>);
 
+// NOTE (Codex #1093): the scalar-on-the-RIGHT direction (`Tensor <op> non_scalar`) is NOT yet
+// rejected. Tensor.hpp still forward-declares the free operators unconstrained, so `Tensor +
+// NotScalar` binds that (undefined) overload and compiles. Those forward declarations are
+// load-bearing for Tensor's inline member templates (e.g. `Tensor Mul(const T&) { return *this *
+// rhs; }` -- operator* has no member form), and they cannot be constrained in place because
+// cytnx_scalar_like depends on the not-yet-complete Tensor::Tproxy at that point in the header.
+// Closing this gap needs a concept/header reorganization -- tracked as a follow-up.
+
 TEST(OperatorConstraint, scalar_operators_still_work) {
   Tensor a = arange(0, 4, 1, Type.Double);  // [0,1,2,3]
   Tensor b = a + 1.0;

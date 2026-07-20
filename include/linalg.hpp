@@ -12,6 +12,7 @@
 #else
 
   #include <functional>
+  #include <type_traits>
 
   #include "backend/Scalar.hpp"
   #include "backend/Storage.hpp"
