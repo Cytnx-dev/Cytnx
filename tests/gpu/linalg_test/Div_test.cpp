@@ -238,6 +238,47 @@ namespace cytnx {
 
       INSTANTIATE_TEST_SUITE_P(DivTests, DivTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
+      // Non-contiguous tensor(/)tensor on the GPU (#1003, #988): the GPU front end used to
+      // reject a non-contiguous operand ("must be contiguous"); it now feeds the layout to
+      // the shared dispatch kernel like Add/Sub. Both operands are permuted so both operand
+      // offsets are gathered through the inverse mappers. Div is true division (floating
+      // output). Nonzero denominators (arange from 1) avoid divide-by-zero. Compare against
+      // the independent CPU path across all dtypes.
+      TEST(DivNonContig, GpuNoncontiguousTensorTensorMatchesCpu) {
+        for (auto dtype : dtype_list) {
+          if (dtype == Type.Bool) continue;
+          SCOPED_TRACE("Div non-contiguous dtype=" + std::to_string(dtype));
+
+          Tensor gpu_l = arange(2, 8, 1, dtype).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          Tensor gpu_r = arange(1, 7, 1, dtype).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          ASSERT_FALSE(gpu_l.is_contiguous());
+          ASSERT_FALSE(gpu_r.is_contiguous());
+
+          Tensor gpu_out = linalg::Div(gpu_l, gpu_r);
+          Tensor cpu_out = linalg::Div(gpu_l.to(Device.cpu), gpu_r.to(Device.cpu));
+          EXPECT_EQ(gpu_out.dtype(), cpu_out.dtype());
+          EXPECT_TRUE(
+            AreNearlyEqTensor(gpu_out.to(Device.cpu), cpu_out, GetTolerance(gpu_out.dtype())));
+        }
+      }
+
+      // Independent hand-computed literal (NOT the CPU oracle) for the non-contiguous gather:
+      // l logical = [[2,4,6],[3,5,7]], r logical = [[1,3,5],[2,4,6]] (arange 3x2 permuted).
+      // Int64/Int64 is true division -> Double: l/r = [[2, 4/3, 6/5],[3/2, 5/4, 7/6]] --
+      // distinct per element, so a wrong multi-index decomposition is caught.
+      TEST(DivNonContig, GpuNoncontiguousLiteral) {
+        Tensor l = arange(2, 8, 1, Type.Int64).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+        Tensor r = arange(1, 7, 1, Type.Int64).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+        ASSERT_FALSE(l.is_contiguous());
+        Tensor got = linalg::Div(l, r).to(Device.cpu);
+        EXPECT_EQ(got.dtype(), Type.Double);
+        const cytnx_double expect[2][3] = {{2.0, 4.0 / 3.0, 6.0 / 5.0},
+                                           {3.0 / 2.0, 5.0 / 4.0, 7.0 / 6.0}};
+        for (cytnx_uint64 i = 0; i < 2; i++)
+          for (cytnx_uint64 j = 0; j < 3; j++)
+            EXPECT_NEAR(got.at<cytnx_double>({i, j}), expect[i][j], 1e-10);
+      }
+
     }  // namespace
   }  // namespace gpu_test
 }  // namespace cytnx
