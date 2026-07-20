@@ -13,7 +13,7 @@
 // non-contiguous operand at the front end (contiguous-ize first), so their
 // non-contiguous branches are unreachable. The out-of-place kernel these tests drive
 // (via Add/Sub) is the same shared tn_kernel_nonconti the whole cuArithmeticDispatch
-// family instantiates, and it shares MakeGpuNonContigLayout / ComputeGpuNonContigIndices
+// family instantiates, and it shares make_gpu_non_contig_layout / compute_gpu_non_contig_indices
 // with the in-place kernel (already covered by InplacePromote_test). Inputs are built
 // with CPU arange (then moved to the GPU) so the test data never depends on GPU kernels.
 namespace cytnx {
@@ -82,6 +82,39 @@ namespace cytnx {
           for (cytnx_uint64 i = 0; i < 2; i++)
             for (cytnx_uint64 j = 0; j < 3; j++)
               EXPECT_EQ(got.at<cytnx_int64>({i, j}), expect[i][j]);
+        }
+
+        // The gather math (Lidx/Ridx) is dtype-independent, but exercise it through a
+        // wider element (Double, 8 B) and a complex element (ComplexDouble, 16 B) so a
+        // typed-pointer/element-size bug in the gather cannot hide behind Int64 only.
+        // Double: Add -> [[11,33,55],[22,44,66]].
+        {
+          Tensor ld = arange(1, 7, 1, Type.Double).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          Tensor rd =
+            arange(10, 70, 10, Type.Double).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          Tensor got = linalg::Add(ld, rd).to(Device.cpu);
+          EXPECT_EQ(got.dtype(), Type.Double);
+          const cytnx_double expect[2][3] = {{11, 33, 55}, {22, 44, 66}};
+          for (cytnx_uint64 i = 0; i < 2; i++)
+            for (cytnx_uint64 j = 0; j < 3; j++)
+              EXPECT_DOUBLE_EQ(got.at<cytnx_double>({i, j}), expect[i][j]);
+        }
+        // ComplexDouble: arange is real, so the imaginary part stays 0. Add -> real
+        // [[11,33,55],[22,44,66]] + 0i.
+        {
+          Tensor lc =
+            arange(1, 7, 1, Type.ComplexDouble).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          Tensor rc =
+            arange(10, 70, 10, Type.ComplexDouble).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          Tensor got = linalg::Add(lc, rc).to(Device.cpu);
+          EXPECT_EQ(got.dtype(), Type.ComplexDouble);
+          const cytnx_double expect_re[2][3] = {{11, 33, 55}, {22, 44, 66}};
+          for (cytnx_uint64 i = 0; i < 2; i++)
+            for (cytnx_uint64 j = 0; j < 3; j++) {
+              const cytnx_complex128 v = got.at<cytnx_complex128>({i, j});
+              EXPECT_DOUBLE_EQ(v.real(), expect_re[i][j]);
+              EXPECT_DOUBLE_EQ(v.imag(), 0.0);
+            }
         }
 
         // Mixed dtype: Int32 (permuted) + Double (permuted) -> Double, same values as the
