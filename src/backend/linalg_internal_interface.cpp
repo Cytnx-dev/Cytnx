@@ -324,6 +324,47 @@ namespace cytnx {
       Outer_ii[Type.Uint32][Type.Int16] = Outer_internal_u32ti16;
       Outer_ii[Type.Uint32][Type.Bool] = Outer_internal_u32tb;
 
+      // The Int16/Uint16/Bool source rows were omitted from this table, so
+      // Outer_ii[Int16/Uint16/Bool][...] were null; linalg::Outer with such a
+      // left operand dereferenced a null function pointer and crashed. The
+      // Outer_internal_{i16,u16,b}t* implementations already exist -- register
+      // them here so every dtype pair dispatches. (cuOuter_ii already had them.)
+      Outer_ii[Type.Int16][Type.ComplexDouble] = Outer_internal_i16tcd;
+      Outer_ii[Type.Int16][Type.ComplexFloat] = Outer_internal_i16tcf;
+      Outer_ii[Type.Int16][Type.Double] = Outer_internal_i16td;
+      Outer_ii[Type.Int16][Type.Float] = Outer_internal_i16tf;
+      Outer_ii[Type.Int16][Type.Int64] = Outer_internal_i16ti64;
+      Outer_ii[Type.Int16][Type.Uint64] = Outer_internal_i16tu64;
+      Outer_ii[Type.Int16][Type.Int32] = Outer_internal_i16ti32;
+      Outer_ii[Type.Int16][Type.Uint32] = Outer_internal_i16tu32;
+      Outer_ii[Type.Int16][Type.Uint16] = Outer_internal_i16tu16;
+      Outer_ii[Type.Int16][Type.Int16] = Outer_internal_i16ti16;
+      Outer_ii[Type.Int16][Type.Bool] = Outer_internal_i16tb;
+
+      Outer_ii[Type.Uint16][Type.ComplexDouble] = Outer_internal_u16tcd;
+      Outer_ii[Type.Uint16][Type.ComplexFloat] = Outer_internal_u16tcf;
+      Outer_ii[Type.Uint16][Type.Double] = Outer_internal_u16td;
+      Outer_ii[Type.Uint16][Type.Float] = Outer_internal_u16tf;
+      Outer_ii[Type.Uint16][Type.Int64] = Outer_internal_u16ti64;
+      Outer_ii[Type.Uint16][Type.Uint64] = Outer_internal_u16tu64;
+      Outer_ii[Type.Uint16][Type.Int32] = Outer_internal_u16ti32;
+      Outer_ii[Type.Uint16][Type.Uint32] = Outer_internal_u16tu32;
+      Outer_ii[Type.Uint16][Type.Uint16] = Outer_internal_u16tu16;
+      Outer_ii[Type.Uint16][Type.Int16] = Outer_internal_u16ti16;
+      Outer_ii[Type.Uint16][Type.Bool] = Outer_internal_u16tb;
+
+      Outer_ii[Type.Bool][Type.ComplexDouble] = Outer_internal_btcd;
+      Outer_ii[Type.Bool][Type.ComplexFloat] = Outer_internal_btcf;
+      Outer_ii[Type.Bool][Type.Double] = Outer_internal_btd;
+      Outer_ii[Type.Bool][Type.Float] = Outer_internal_btf;
+      Outer_ii[Type.Bool][Type.Int64] = Outer_internal_bti64;
+      Outer_ii[Type.Bool][Type.Uint64] = Outer_internal_btu64;
+      Outer_ii[Type.Bool][Type.Int32] = Outer_internal_bti32;
+      Outer_ii[Type.Bool][Type.Uint32] = Outer_internal_btu32;
+      Outer_ii[Type.Bool][Type.Uint16] = Outer_internal_btu16;
+      Outer_ii[Type.Bool][Type.Int16] = Outer_internal_bti16;
+      Outer_ii[Type.Bool][Type.Bool] = Outer_internal_btb;
+
       //================
 
       Lstsq_ii = std::vector<Lstsqfunc_oii>(5);
