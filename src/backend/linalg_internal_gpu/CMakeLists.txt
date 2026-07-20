@@ -20,7 +20,6 @@ target_sources(cytnx
     # cuMatvec_internal.hpp
     # cuVectordot_internal.hpp
     # cuMul_internal.hpp
-    # cuOuter_internal.hpp
     # cuSub_internal.hpp
     # cuGeSvd_internal.hpp
     # cuSvd_internal.hpp
@@ -55,7 +54,6 @@ target_sources(cytnx
     cuMatmul_dg_internal.cu
     cuMatvec_internal.cu
     cuVectordot_internal.cu
-    cuOuter_internal.cu
     cuGeSvd_internal.cu
     cuSvd_internal.cu
     cuNorm_internal.cu
