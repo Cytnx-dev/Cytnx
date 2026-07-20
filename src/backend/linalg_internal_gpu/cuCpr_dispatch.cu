@@ -64,12 +64,10 @@ namespace cytnx {
       __global__ void cuCpr_dispatch_tn_kernel_nonconti(
         cytnx_bool *out, const TL *lhs, const cytnx_uint64 n, const TR *rhs,
         const gpu_layout::GpuNonContigLayout layout) {
-        extern __shared__ cytnx_uint64 tmpv[];
-
         const cytnx_uint64 idx = blockIdx.x * blockDim.x + threadIdx.x;
         if (idx < n) {
           cytnx_uint64 Lidx, Ridx;
-          gpu_layout::ComputeGpuNonContigIndices(idx, tmpv, layout, Lidx, Ridx);
+          gpu_layout::compute_gpu_non_contig_indices(idx, layout, Lidx, Ridx);
           out[idx] = CuCprDispatchOp<TO>(lhs[Lidx], rhs[Ridx]);
         }
       }
@@ -103,10 +101,8 @@ namespace cytnx {
             cuCpr_dispatch_tn_kernel<TO><<<NBlocks, 512>>>(_out, _Lin, len, _Rin);
           } else {
             const gpu_layout::GpuNonContigLayout layout =
-              gpu_layout::MakeGpuNonContigLayout(shape, invmapper_L, invmapper_R);
-            cuCpr_dispatch_tn_kernel_nonconti<TO>
-              <<<NBlocks, 512, 512 * shape.size() * sizeof(cytnx_uint64)>>>(_out, _Lin, len, _Rin,
-                                                                            layout);
+              gpu_layout::make_gpu_non_contig_layout(shape, invmapper_L, invmapper_R);
+            cuCpr_dispatch_tn_kernel_nonconti<TO><<<NBlocks, 512>>>(_out, _Lin, len, _Rin, layout);
           }
         }
       }
