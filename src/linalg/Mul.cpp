@@ -76,7 +76,7 @@ namespace cytnx {
           checkCudaErrors(cudaSetDevice(Rt.device()));
           linalg_internal::cuMul_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
                                           right._impl->storage()._impl,
-                                          left._impl->storage()._impl->size(), left._impl->shape(),
+                                          out._impl->storage()._impl->size(), left._impl->shape(),
                                           left._impl->invmapper(), right._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
