@@ -76,7 +76,7 @@ namespace cytnx {
           checkCudaErrors(cudaSetDevice(Rt.device()));
           cytnx::linalg_internal::cuCpr_dispatch(
             out._impl->storage()._impl, left._impl->storage()._impl, right._impl->storage()._impl,
-            left._impl->storage()._impl->size(), left._impl->shape(), left._impl->invmapper(),
+            out._impl->storage()._impl->size(), left._impl->shape(), left._impl->invmapper(),
             right._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Cpr] fatal error, the tensor is on GPU without CUDA support.%s",
