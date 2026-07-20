@@ -22,25 +22,23 @@ namespace cytnx {
 
       template <typename T>
       __global__ void cuExp_dispatch_kernel(T *out, const T *in, const cytnx_uint64 Nelem) {
-        const cytnx_uint64 idx = blockIdx.x * blockDim.x + threadIdx.x;
+        const cytnx_uint64 idx = static_cast<cytnx_uint64>(blockIdx.x) * blockDim.x + threadIdx.x;
         if (idx < Nelem) out[idx] = CuExpValue(in[idx]);
       }
 
       template <typename T>
       void cuExp_dispatch_typed(boost::intrusive_ptr<Storage_base> &out,
-                                const boost::intrusive_ptr<Storage_base> &in,
-                                const cytnx_uint64 &Nelem) {
+                                const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem) {
         T *_out = reinterpret_cast<T *>(out->data());
         const T *_in = reinterpret_cast<const T *>(in->data());
-        cytnx_uint32 NBlocks = Nelem / 512;
-        if (Nelem % 512) NBlocks += 1;
+        const cytnx_uint32 NBlocks = (Nelem + 511) / 512;
         cuExp_dispatch_kernel<<<NBlocks, 512>>>(_out, _in, Nelem);
       }
 
     }  // namespace
 
     void cuExp_dispatch(boost::intrusive_ptr<Storage_base> &out,
-                        const boost::intrusive_ptr<Storage_base> &in, const cytnx_uint64 &Nelem) {
+                        const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem) {
       if (Nelem == 0) return;
       switch (in->dtype()) {
         case Type.ComplexDouble:

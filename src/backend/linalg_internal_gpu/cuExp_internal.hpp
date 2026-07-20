@@ -10,7 +10,7 @@ namespace cytnx {
 
     /// cuExp: typed GPU dispatch (#1003). in/out share the (floating/complex) dispatch dtype.
     void cuExp_dispatch(boost::intrusive_ptr<Storage_base> &out,
-                        const boost::intrusive_ptr<Storage_base> &in, const cytnx_uint64 &Nelem);
+                        const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem);
 
   }  // namespace linalg_internal
 }  // namespace cytnx

@@ -11,7 +11,7 @@ namespace cytnx {
     /// cuAbs: typed GPU dispatch (#1003). `out` must be pre-allocated with the Abs output dtype
     /// (Abs(complex) -> real; every other dtype -> itself).
     void cuAbs_dispatch(boost::intrusive_ptr<Storage_base> &out,
-                        const boost::intrusive_ptr<Storage_base> &in, const cytnx_uint64 &Nelem);
+                        const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem);
 
   }  // namespace linalg_internal
 }  // namespace cytnx

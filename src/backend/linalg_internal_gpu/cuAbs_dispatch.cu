@@ -1,4 +1,6 @@
+#include <cuda/std/cmath>
 #include <cuda/std/complex>
+#include <cuda/std/cstdlib>
 #include <type_traits>
 
 #include "cuAbs_internal.hpp"
@@ -30,28 +32,28 @@ namespace cytnx {
         using type = cytnx_float;
       };
 
+      // Abs magnitude. cuda::std::abs is correct for every non-unsigned type: complex -> real
+      // magnitude, signed integer -> |x|, and floating -> |x| with the right sign for -0.0/NaN
+      // (unlike `x < 0 ? -x : x`, since -0.0 < 0 is false). Only the unsigned integer / bool
+      // types, for which abs is the identity, take the fallback.
       template <typename TIn>
-      __device__ inline auto CuAbsValue(const TIn &x) {
-        if constexpr (std::is_same_v<TIn, cytnx_cuda_complex128> ||
-                      std::is_same_v<TIn, cytnx_cuda_complex64>) {
-          return cuda::std::abs(x);  // magnitude: complex<T> -> T
-        } else if constexpr (std::is_signed_v<TIn>) {
-          return x < TIn(0) ? static_cast<TIn>(-x) : x;  // fabs / abs for signed real & integer
+      __device__ inline auto cu_abs_value(const TIn &x) {
+        if constexpr (std::is_unsigned_v<TIn>) {
+          return x;
         } else {
-          return x;  // unsigned / bool: abs is the identity
+          return cuda::std::abs(x);
         }
       }
 
       template <typename TOut, typename TIn>
       __global__ void cuAbs_dispatch_kernel(TOut *out, const TIn *in, const cytnx_uint64 Nelem) {
-        const cytnx_uint64 idx = blockIdx.x * blockDim.x + threadIdx.x;
-        if (idx < Nelem) out[idx] = static_cast<TOut>(CuAbsValue(in[idx]));
+        const cytnx_uint64 idx = static_cast<cytnx_uint64>(blockIdx.x) * blockDim.x + threadIdx.x;
+        if (idx < Nelem) out[idx] = static_cast<TOut>(cu_abs_value(in[idx]));
       }
 
       template <typename TIn>
       void cuAbs_dispatch_typed(boost::intrusive_ptr<Storage_base> &out,
-                                const boost::intrusive_ptr<Storage_base> &in,
-                                const cytnx_uint64 &Nelem) {
+                                const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem) {
         using TOut = typename AbsOutput<TIn>::type;
         cytnx_error_msg(out->dtype() != Type_class::cy_typeid_gpu_v<TOut>,
                         "[cuAbs_dispatch] output dtype mismatch. got=%d expected=%d%s",
@@ -60,15 +62,14 @@ namespace cytnx {
         TOut *_out = reinterpret_cast<TOut *>(out->data());
         const TIn *_in = reinterpret_cast<const TIn *>(in->data());
 
-        cytnx_uint32 NBlocks = Nelem / 512;
-        if (Nelem % 512) NBlocks += 1;
+        const cytnx_uint32 NBlocks = (Nelem + 511) / 512;
         cuAbs_dispatch_kernel<<<NBlocks, 512>>>(_out, _in, Nelem);
       }
 
     }  // namespace
 
     void cuAbs_dispatch(boost::intrusive_ptr<Storage_base> &out,
-                        const boost::intrusive_ptr<Storage_base> &in, const cytnx_uint64 &Nelem) {
+                        const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem) {
       if (Nelem == 0) return;
       switch (in->dtype()) {
         case Type.ComplexDouble:
