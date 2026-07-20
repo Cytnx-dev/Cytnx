@@ -15,7 +15,7 @@
 // translation unit stops compiling. The runtime assertions just pin the expected boolean results.
 using namespace cytnx;
 
-TEST(OverloadHygiene, vector_bool_reference_compares_with_bool) {
+TEST(OverloadHygiene, VectorBoolReferenceComparesWithBool) {
   std::vector<bool> values(2);
   values[0] = true;
   values[1] = false;
@@ -30,7 +30,7 @@ TEST(OverloadHygiene, vector_bool_reference_compares_with_bool) {
   EXPECT_FALSE(rhs == values[1]);
 }
 
-TEST(OverloadHygiene, builtin_equality_is_unambiguous) {
+TEST(OverloadHygiene, BuiltinEqualityIsUnambiguous) {
   // Plain builtin comparisons must not be hijacked by cytnx complex overloads either.
   int i = 3;
   double d = 3.0;
