@@ -18,17 +18,19 @@
 // five rank-sized arrays into one POD passed to the kernel BY VALUE, so it rides in
 // the kernel's constant/param space with no device allocation at all.
 //
-// The five arrays are bounded by kGpuNonContigMaxRank. This is never the binding
-// limit in practice: the non-contiguous kernels also stage a per-thread scratch of
-// 512 * rank cytnx_uint64 in dynamic shared memory, which exhausts the 48 KB default
-// block budget around rank 12 -- far below this cap. A rank above the cap now raises
-// a clear error instead of the previous cryptic kernel-launch failure.
+// The five arrays are bounded by kGpuNonContigMaxRank, which is the shared-memory
+// limit itself: each non-contiguous kernel stages a per-thread scratch of 512 * rank
+// cytnx_uint64 in dynamic shared memory, so 512 * rank * sizeof(cytnx_uint64) must fit
+// the 48 KB default per-block budget -> rank <= 12. Building a layout for a higher rank
+// now raises a clear error here instead of letting the kernel launch fail cryptically.
 
 namespace cytnx {
   namespace linalg_internal {
     namespace gpu_layout {
 
-      constexpr int kGpuNonContigMaxRank = 32;
+      // 512 (threads/block) * kGpuNonContigMaxRank * sizeof(cytnx_uint64) == 48 KB, the
+      // default dynamic-shared-memory budget the non-contiguous kernels stage tmpv in.
+      constexpr int kGpuNonContigMaxRank = 12;
 
       struct GpuNonContigLayout {
         cytnx_uint64 accu_shape[kGpuNonContigMaxRank];
@@ -52,6 +54,11 @@ namespace cytnx {
           rank > static_cast<cytnx_uint64>(kGpuNonContigMaxRank),
           "[GPU elementwise] non-contiguous tensor rank %d exceeds the supported maximum %d.%s",
           static_cast<int>(rank), kGpuNonContigMaxRank, "\n");
+        cytnx_error_msg(invmapper_L.size() != rank || invmapper_R.size() != rank,
+                        "[GPU elementwise] invmapper size mismatch: rank=%d, |invmapper_L|=%d, "
+                        "|invmapper_R|=%d.%s",
+                        static_cast<int>(rank), static_cast<int>(invmapper_L.size()),
+                        static_cast<int>(invmapper_R.size()), "\n");
 
         GpuNonContigLayout layout{};
         layout.shapesize = rank;
