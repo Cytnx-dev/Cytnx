@@ -85,6 +85,7 @@ namespace UnaryExpPowConjTest {
   // std::exp / std::pow / std::conj directly.
   TEST(GpuUnary, matches_std_library) {
     using cytnx::cytnx_complex128;
+    using cytnx::cytnx_complex64;
     using cytnx::cytnx_uint64;
 
     // real Double: Exp and Pow(., 3)
@@ -121,6 +122,43 @@ namespace UnaryExpPowConjTest {
         EXPECT_NEAR(ap.imag(), p.imag(), 1e-12);
         EXPECT_NEAR(ac.real(), c.real(), 1e-12);
         EXPECT_NEAR(ac.imag(), c.imag(), 1e-12);
+      }
+    }
+    // real Float: Exp and Pow(., 3), against std at float precision.
+    {
+      const std::vector<float> in = {-0.75f, -0.25f, 0.0f, 0.5f, 1.25f};
+      Tensor t = cytnx::zeros({static_cast<cytnx_uint64>(in.size())}, cytnx::Type.Float);
+      for (cytnx_uint64 i = 0; i < in.size(); ++i) t.at<float>({i}) = in[i];
+      Tensor ge = la::Exp(t.to(cytnx::Device.cuda)).to(cytnx::Device.cpu);
+      Tensor gp = la::Pow(t.to(cytnx::Device.cuda), 3.0).to(cytnx::Device.cpu);
+      for (cytnx_uint64 i = 0; i < in.size(); ++i) {
+        EXPECT_NEAR(ge.at<float>({i}), std::exp(in[i]), 1e-4);
+        EXPECT_NEAR(gp.at<float>({i}), std::pow(in[i], 3.0f), 1e-4);
+      }
+    }
+    // ComplexFloat: Exp, Pow(., 2), Conj against std at float precision.
+    {
+      const std::vector<std::complex<double>> in = {
+        {0.5, -0.3}, {-0.2, 0.7}, {1.0, 0.0}, {0.0, 1.0}};
+      Tensor t = cytnx::zeros({static_cast<cytnx_uint64>(in.size())}, cytnx::Type.ComplexFloat);
+      for (cytnx_uint64 i = 0; i < in.size(); ++i)
+        t.at<cytnx_complex64>({i}) =
+          cytnx_complex64(static_cast<float>(in[i].real()), static_cast<float>(in[i].imag()));
+      Tensor ge = la::Exp(t.to(cytnx::Device.cuda)).to(cytnx::Device.cpu);
+      Tensor gp = la::Pow(t.to(cytnx::Device.cuda), 2.0).to(cytnx::Device.cpu);
+      Tensor gc = la::Conj(t.to(cytnx::Device.cuda)).to(cytnx::Device.cpu);
+      for (cytnx_uint64 i = 0; i < in.size(); ++i) {
+        const std::complex<double> e = std::exp(in[i]), p = std::pow(in[i], 2.0),
+                                   c = std::conj(in[i]);
+        const cytnx_complex64 ae = ge.at<cytnx_complex64>({i});
+        const cytnx_complex64 ap = gp.at<cytnx_complex64>({i});
+        const cytnx_complex64 ac = gc.at<cytnx_complex64>({i});
+        EXPECT_NEAR(ae.real(), e.real(), 1e-4);
+        EXPECT_NEAR(ae.imag(), e.imag(), 1e-4);
+        EXPECT_NEAR(ap.real(), p.real(), 1e-4);
+        EXPECT_NEAR(ap.imag(), p.imag(), 1e-4);
+        EXPECT_NEAR(ac.real(), c.real(), 1e-6);
+        EXPECT_NEAR(ac.imag(), c.imag(), 1e-6);
       }
     }
   }
