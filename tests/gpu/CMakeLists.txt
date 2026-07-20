@@ -23,6 +23,7 @@ add_executable(
   linalg_test/Mul_test.cpp
   linalg_test/Sub_test.cpp
   linalg_test/InplacePromote_test.cpp
+  linalg_test/NonContigElementwise_test.cpp
   linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
