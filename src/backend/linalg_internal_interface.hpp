@@ -238,7 +238,6 @@ namespace cytnx {
       std::vector<Gemm_Batchfunc_oii> cuGemm_Batch_ii;
       std::vector<Matmul_dgfunc_oii> cuMatmul_dg_ii;
       std::vector<Matvecfunc_oii> cuMatvec_ii;
-      std::vector<std::vector<Outerfunc_oii>> cuOuter_ii;
       std::vector<Normfunc_oii> cuNorm_ii;
       std::vector<Vectordotfunc_oii> cuVd_ii;
       std::vector<Powfunc_oii> cuPow_ii;
