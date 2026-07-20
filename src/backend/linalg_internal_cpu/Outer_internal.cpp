@@ -1,7 +1,6 @@
 #include "Outer_internal.hpp"
 #include "Ger_internal.hpp"
 #include "backend/utils_internal_interface.hpp"
-#include "utils/complex_arithmetic.hpp"
 #include "backend/lapack_wrapper.hpp"
 
 // change to *ger
@@ -20,7 +19,17 @@ namespace cytnx {
       T2 *_Rin = (T2 *)Rin->data();
 
       for (unsigned long long r = 0; r < j1 * j2; r++) {
-        _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
+        // Multiply directly when the operands' native product casts to TO (e.g. real*real),
+        // avoiding a needless complex multiply; fall back to casting each operand to TO for mixed
+        // complex/real pairs whose native product is a cytnx::Scalar (not convertible to
+        // std::complex) or is ill-formed. The `static_cast<TO>` inside the requires is essential:
+        // Scalar's implicit conversions make a bare `l * r` well-formed for those pairs even though
+        // the result cannot become TO (Gemini review).
+        if constexpr (requires(T1 l, T2 r) { static_cast<TO>(l * r); }) {
+          _out[r] = static_cast<TO>(_Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)]);
+        } else {
+          _out[r] = static_cast<TO>(_Lin[cytnx_uint64(r / j2)]) * static_cast<TO>(_Rin[(r % j2)]);
+        }
       }
     }
 

@@ -46,7 +46,18 @@ namespace cytnx {
           x += cytnx_uint64(tmp2 / shape2[j]) * shape1_acc[j];
           y += cytnx_uint64(tmp2 % shape2[j]) * shape2_acc[j];
         }
-        out[i] = Lin[x] * Rin[y];
+        // Multiply directly when the operands' native product casts to TO (e.g. real*real -> a real
+        // product, then widened to a complex TO), avoiding a needless complex multiply. Fall back
+        // to casting each operand to TO for mixed complex/real pairs whose native product is a
+        // cytnx::Scalar (not convertible to std::complex) or is ill-formed. The `static_cast<TO>`
+        // inside the requires is essential: Scalar's implicit conversions make a bare `l * r`
+        // well-formed for those mixed pairs even though the result cannot become TO (Gemini
+        // review).
+        if constexpr (requires(TL l, TR r) { static_cast<TO>(l * r); }) {
+          out[i] = static_cast<TO>(Lin[x] * Rin[y]);
+        } else {
+          out[i] = static_cast<TO>(Lin[x]) * static_cast<TO>(Rin[y]);
+        }
       }
     }
 

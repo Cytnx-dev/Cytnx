@@ -46,6 +46,7 @@ add_executable(
   Type_test.cpp
   cytnx_error_test.cpp
   include_order_canary_test.cpp
+  overload_hygiene_test.cpp
   Tensor_strides_test.cpp
   Storage_test.cpp
   Scalar_test.cpp
