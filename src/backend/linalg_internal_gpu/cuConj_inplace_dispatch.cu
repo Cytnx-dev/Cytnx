@@ -16,23 +16,21 @@ namespace cytnx {
 
       template <typename T>
       __global__ void cuConj_inplace_dispatch_kernel(T *data, const cytnx_uint64 Nelem) {
-        const cytnx_uint64 idx = blockIdx.x * blockDim.x + threadIdx.x;
+        const cytnx_uint64 idx = static_cast<cytnx_uint64>(blockIdx.x) * blockDim.x + threadIdx.x;
         if (idx < Nelem) data[idx] = cuda::std::conj(data[idx]);
       }
 
       template <typename T>
       void cuConj_inplace_dispatch_typed(boost::intrusive_ptr<Storage_base> &inout,
-                                         const cytnx_uint64 &Nelem) {
+                                         cytnx_uint64 Nelem) {
         T *_data = reinterpret_cast<T *>(inout->data());
-        cytnx_uint32 NBlocks = Nelem / 512;
-        if (Nelem % 512) NBlocks += 1;
+        const cytnx_uint32 NBlocks = (Nelem + 511) / 512;
         cuConj_inplace_dispatch_kernel<<<NBlocks, 512>>>(_data, Nelem);
       }
 
     }  // namespace
 
-    void cuConj_inplace_dispatch(boost::intrusive_ptr<Storage_base> &inout,
-                                 const cytnx_uint64 &Nelem) {
+    void cuConj_inplace_dispatch(boost::intrusive_ptr<Storage_base> &inout, cytnx_uint64 Nelem) {
       if (Nelem == 0) return;
       switch (inout->dtype()) {
         case Type.ComplexDouble:

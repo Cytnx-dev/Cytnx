@@ -22,7 +22,10 @@ namespace cytnx {
         if constexpr (std::is_same_v<T, cytnx_cuda_complex128>) {
           return cuda::std::pow(x, p);
         } else if constexpr (std::is_same_v<T, cytnx_cuda_complex64>) {
-          return cuda::std::pow(x, static_cast<float>(p));
+          // Preserve the double exponent: compute in complex<double> then narrow, matching the CPU
+          // Pow_internal_cf path std::pow(complex<float>, double). Casting p to float first would
+          // drop precision for exponents not exactly representable as float.
+          return static_cast<T>(cuda::std::pow(static_cast<cytnx_cuda_complex128>(x), p));
         } else {
           return static_cast<T>(cuda::std::pow(x, static_cast<T>(p)));  // real double/float
         }
@@ -31,26 +34,25 @@ namespace cytnx {
       template <typename T>
       __global__ void cuPow_dispatch_kernel(T *out, const T *in, const cytnx_uint64 Nelem,
                                             const double p) {
-        const cytnx_uint64 idx = blockIdx.x * blockDim.x + threadIdx.x;
+        const cytnx_uint64 idx = static_cast<cytnx_uint64>(blockIdx.x) * blockDim.x + threadIdx.x;
         if (idx < Nelem) out[idx] = CuPowValue(in[idx], p);
       }
 
       template <typename T>
       void cuPow_dispatch_typed(boost::intrusive_ptr<Storage_base> &out,
-                                const boost::intrusive_ptr<Storage_base> &in,
-                                const cytnx_uint64 &Nelem, const double &p) {
+                                const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem,
+                                double p) {
         T *_out = reinterpret_cast<T *>(out->data());
         const T *_in = reinterpret_cast<const T *>(in->data());
-        cytnx_uint32 NBlocks = Nelem / 512;
-        if (Nelem % 512) NBlocks += 1;
+        const cytnx_uint32 NBlocks = (Nelem + 511) / 512;
         cuPow_dispatch_kernel<<<NBlocks, 512>>>(_out, _in, Nelem, p);
       }
 
     }  // namespace
 
     void cuPow_dispatch(boost::intrusive_ptr<Storage_base> &out,
-                        const boost::intrusive_ptr<Storage_base> &in, const cytnx_uint64 &Nelem,
-                        const double &p) {
+                        const boost::intrusive_ptr<Storage_base> &in, cytnx_uint64 Nelem,
+                        double p) {
       if (Nelem == 0) return;
       switch (in->dtype()) {
         case Type.ComplexDouble:
