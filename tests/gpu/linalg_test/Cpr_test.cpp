@@ -216,6 +216,52 @@ namespace cytnx {
 
       INSTANTIATE_TEST_SUITE_P(CprTests, CprTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
+      // Non-contiguous tensor(==)tensor on the GPU (#1003, #988): the GPU front end used to
+      // reject a non-contiguous operand ("must be contiguous"); it now feeds the layout to
+      // cuCpr_dispatch's non-contiguous kernel like the arithmetic ops. a[i][j]=3j+i (permuted)
+      // vs b[i][j]=3i+j (contiguous) are equal iff i==j, so the Bool result is the 3x3 identity
+      // -- a mix a wrong gather would break. Both operand orders are covered so each inverse
+      // mapper is exercised. Compared exactly against the independent CPU path.
+      TEST(CprNonContig, GpuNoncontiguousMatchesCpu) {
+        for (auto dtype : dtype_list) {
+          if (dtype == Type.Bool) continue;
+          SCOPED_TRACE("Cpr non-contiguous dtype=" + std::to_string(dtype));
+
+          Tensor permuted = arange(0, 9, 1, dtype).reshape({3, 3}).permute({1, 0}).to(Device.cuda);
+          Tensor contig = arange(0, 9, 1, dtype).reshape({3, 3}).to(Device.cuda);
+          ASSERT_FALSE(permuted.is_contiguous());
+
+          // permuted LHS (exercises invmapper_L), contiguous RHS
+          {
+            Tensor gpu_out = linalg::Cpr(permuted, contig);
+            Tensor cpu_out = linalg::Cpr(permuted.to(Device.cpu), contig.to(Device.cpu));
+            EXPECT_EQ(gpu_out.dtype(), Type.Bool);
+            EXPECT_TRUE(AreEqTensor(gpu_out.to(Device.cpu), cpu_out));
+          }
+          // contiguous LHS, permuted RHS (exercises invmapper_R)
+          {
+            Tensor gpu_out = linalg::Cpr(contig, permuted);
+            Tensor cpu_out = linalg::Cpr(contig.to(Device.cpu), permuted.to(Device.cpu));
+            EXPECT_EQ(gpu_out.dtype(), Type.Bool);
+            EXPECT_TRUE(AreEqTensor(gpu_out.to(Device.cpu), cpu_out));
+          }
+        }
+      }
+
+      // Independent hand-computed literal for the non-contiguous comparison gather:
+      // a[i][j]=3j+i (permuted) vs b[i][j]=3i+j (contiguous) -> equal iff i==j.
+      TEST(CprNonContig, GpuNoncontiguousLiteral) {
+        Tensor permuted =
+          arange(0, 9, 1, Type.Int64).reshape({3, 3}).permute({1, 0}).to(Device.cuda);
+        Tensor contig = arange(0, 9, 1, Type.Int64).reshape({3, 3}).to(Device.cuda);
+        ASSERT_FALSE(permuted.is_contiguous());
+        Tensor got = linalg::Cpr(permuted, contig).to(Device.cpu);
+        EXPECT_EQ(got.dtype(), Type.Bool);
+        for (cytnx_uint64 i = 0; i < 3; i++)
+          for (cytnx_uint64 j = 0; j < 3; j++)
+            EXPECT_EQ(got.at<cytnx_bool>({i, j}), (i == j)) << "at (" << i << "," << j << ")";
+      }
+
     }  // namespace
   }  // namespace gpu_test
 }  // namespace cytnx

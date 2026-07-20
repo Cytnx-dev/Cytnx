@@ -4,6 +4,7 @@
 
 #include "backend/Storage.hpp"
 #include "backend/utils_internal_interface.hpp"
+#include "cuNonContigLayout.cuh"
 #include "cuTypeCvt.hpp"
 
 // Typed GPU dispatch for out-of-place comparison (==). Unlike the arithmetic ops
@@ -62,25 +63,11 @@ namespace cytnx {
       template <typename TO, typename TL, typename TR>
       __global__ void cuCpr_dispatch_tn_kernel_nonconti(
         cytnx_bool *out, const TL *lhs, const cytnx_uint64 n, const TR *rhs,
-        const cytnx_uint64 *accu_shape, const cytnx_uint64 *old_accu_shapeL,
-        const cytnx_uint64 *old_accu_shapeR, const cytnx_uint64 *invmapper_L,
-        const cytnx_uint64 *invmapper_R, const cytnx_uint64 shapesize) {
-        extern __shared__ cytnx_uint64 tmpv[];
-
+        const gpu_layout::GpuNonContigLayout layout) {
         const cytnx_uint64 idx = blockIdx.x * blockDim.x + threadIdx.x;
         if (idx < n) {
-          cytnx_uint64 tmp = idx;
-          const cytnx_uint64 offset = threadIdx.x * shapesize;
-          cytnx_uint64 Lidx = 0, Ridx = 0;
-
-          for (cytnx_uint64 j = 0; j < shapesize; j++) {
-            tmpv[offset + j] = tmp / accu_shape[j];
-            tmp = tmp % accu_shape[j];
-          }
-          for (cytnx_uint64 j = 0; j < shapesize; j++) {
-            Lidx += tmpv[offset + invmapper_L[j]] * old_accu_shapeL[j];
-            Ridx += tmpv[offset + invmapper_R[j]] * old_accu_shapeR[j];
-          }
+          cytnx_uint64 Lidx, Ridx;
+          gpu_layout::compute_gpu_non_contig_indices(idx, layout, Lidx, Ridx);
           out[idx] = CuCprDispatchOp<TO>(lhs[Lidx], rhs[Ridx]);
         }
       }
@@ -113,46 +100,9 @@ namespace cytnx {
           if (shape.size() == 0) {
             cuCpr_dispatch_tn_kernel<TO><<<NBlocks, 512>>>(_out, _Lin, len, _Rin);
           } else {
-            cytnx_uint64 *m_accu_shape = reinterpret_cast<cytnx_uint64 *>(
-              utils_internal::cuCalloc_gpu(shape.size(), sizeof(cytnx_uint64)));
-            cytnx_uint64 *m_old_accu_shapeL = reinterpret_cast<cytnx_uint64 *>(
-              utils_internal::cuCalloc_gpu(shape.size(), sizeof(cytnx_uint64)));
-            cytnx_uint64 *m_old_accu_shapeR = reinterpret_cast<cytnx_uint64 *>(
-              utils_internal::cuCalloc_gpu(shape.size(), sizeof(cytnx_uint64)));
-            cytnx_uint64 *m_invmapper_L = reinterpret_cast<cytnx_uint64 *>(
-              utils_internal::cuMalloc_gpu(invmapper_L.size() * sizeof(cytnx_uint64)));
-            cytnx_uint64 *m_invmapper_R = reinterpret_cast<cytnx_uint64 *>(
-              utils_internal::cuMalloc_gpu(invmapper_R.size() * sizeof(cytnx_uint64)));
-
-            checkCudaErrors(cudaMemcpy(m_invmapper_L, &invmapper_L[0],
-                                       sizeof(cytnx_uint64) * invmapper_L.size(),
-                                       cudaMemcpyHostToDevice));
-            checkCudaErrors(cudaMemcpy(m_invmapper_R, &invmapper_R[0],
-                                       sizeof(cytnx_uint64) * invmapper_R.size(),
-                                       cudaMemcpyHostToDevice));
-
-            cytnx_uint64 tmp1 = 1, tmp2 = 1, tmp3 = 1;
-            for (cytnx_uint64 i = 0; i < shape.size(); i++) {
-              m_accu_shape[shape.size() - 1 - i] = tmp1;
-              tmp1 *= shape[shape.size() - 1 - i];
-
-              m_old_accu_shapeL[shape.size() - 1 - i] = tmp2;
-              tmp2 *= shape[invmapper_L[shape.size() - 1 - i]];
-
-              m_old_accu_shapeR[shape.size() - 1 - i] = tmp3;
-              tmp3 *= shape[invmapper_R[shape.size() - 1 - i]];
-            }
-
-            cuCpr_dispatch_tn_kernel_nonconti<TO>
-              <<<NBlocks, 512, 512 * shape.size() * sizeof(cytnx_uint64)>>>(
-                _out, _Lin, len, _Rin, m_accu_shape, m_old_accu_shapeL, m_old_accu_shapeR,
-                m_invmapper_L, m_invmapper_R, shape.size());
-
-            checkCudaErrors(cudaFree(m_accu_shape));
-            checkCudaErrors(cudaFree(m_old_accu_shapeL));
-            checkCudaErrors(cudaFree(m_old_accu_shapeR));
-            checkCudaErrors(cudaFree(m_invmapper_L));
-            checkCudaErrors(cudaFree(m_invmapper_R));
+            const gpu_layout::GpuNonContigLayout layout =
+              gpu_layout::make_gpu_non_contig_layout(shape, invmapper_L, invmapper_R);
+            cuCpr_dispatch_tn_kernel_nonconti<TO><<<NBlocks, 512>>>(_out, _Lin, len, _Rin, layout);
           }
         }
       }
