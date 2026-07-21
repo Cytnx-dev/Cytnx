@@ -17,6 +17,7 @@ add_executable(
   utils/getNconParameter.cpp
   linalg_test/Abs_test.cpp
   linalg_test/Add_test.cpp
+  linalg_test/Kron_test.cpp
   linalg_test/Cpr_test.cpp
   linalg_test/Div_test.cpp
   linalg_test/Mod_test.cpp

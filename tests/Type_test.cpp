@@ -41,12 +41,16 @@ namespace cytnx {
                     Type_class::ComplexFloat);
       static_assert(is_complex_v<cytnx_cuda_complex128>);
       static_assert(is_complex_v<cytnx_cuda_complex64>);
-      static_assert(
-        std::is_same_v<Type_class::type_promote_gpu_t<cytnx_cuda_complex64, cytnx_double>,
-                       cytnx_cuda_complex128>);
-      static_assert(
-        std::is_same_v<Type_class::type_promote_gpu_t<cytnx_double, cytnx_cuda_complex64>,
-                       cytnx_cuda_complex128>);
+      // GPU binary ops (e.g. Kron) promote via the shared, device-independent
+      // type_promote_t and map to the CUDA-native type with to_cuda_t at the launch
+      // boundary (#1013); the dedicated type_promote_gpu_t trait was retired. Since
+      // Type_list_gpu is Type_list with std::complex -> cuda::std::complex (index
+      // preserving, asserted above), the promotion is a host value-type property:
+      // ComplexFloat x Double -> ComplexDouble.
+      static_assert(std::is_same_v<Type_class::type_promote_t<cytnx_complex64, cytnx_double>,
+                                   cytnx_complex128>);
+      static_assert(std::is_same_v<Type_class::type_promote_t<cytnx_double, cytnx_complex64>,
+                                   cytnx_complex128>);
 #endif
 
       TEST(TypeTest, VariantContainsRecognizesSupportedTypes) {
