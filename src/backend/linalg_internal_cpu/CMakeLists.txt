@@ -19,7 +19,6 @@ target_sources(cytnx
     Matvec_internal.hpp
     Mul_internal.hpp
     Mod_internal.hpp
-    Outer_internal.hpp
     Kron_internal.hpp
     Sub_internal.hpp
     Sdd_internal.hpp
@@ -49,7 +48,6 @@ target_sources(cytnx
     Gemm_internal.cpp
     Matmul_dg_internal.cpp
     Matvec_internal.cpp
-    Outer_internal.cpp
     Trace_internal.cpp
     Tridiag_internal.cpp
     Sdd_internal.cpp
