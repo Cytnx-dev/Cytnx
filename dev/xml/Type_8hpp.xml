@@ -391,7 +391,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Type.hpp" line="555" column="24" bodyfile="include/Type.hpp" bodystart="555" bodyend="-1"/>
+        <location file="include/Type.hpp" line="532" column="24" bodyfile="include/Type.hpp" bodystart="532" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="Type_8hpp_1a7730a97d285d53e329a7b5e9d74ad05c" prot="public" static="no" extern="yes" mutable="no">
         <type>int</type>
@@ -404,7 +404,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Type.hpp" line="557" column="14" declfile="include/Type.hpp" declline="557" declcolumn="14"/>
+        <location file="include/Type.hpp" line="534" column="14" declfile="include/Type.hpp" declline="534" declcolumn="14"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -913,40 +913,17 @@
 <codeline lineno="499"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TL,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TR&gt;</highlight></codeline>
 <codeline lineno="500"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">type_promote_from_pointer_t<sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>type_promote_from_pointer&lt;TL,<sp/>TR&gt;::type;</highlight></codeline>
 <codeline lineno="501"><highlight class="normal"></highlight></codeline>
-<codeline lineno="502"><highlight class="normal"></highlight><highlight class="preprocessor">#ifdef<sp/>UNI_GPU</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="503"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>..<sp/>and<sp/>we<sp/>need<sp/>a<sp/>version<sp/>where<sp/>TL<sp/>and<sp/>TR<sp/>are<sp/>GPU<sp/>device<sp/>pointers</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="504"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TL,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TR&gt;</highlight></codeline>
-<codeline lineno="505"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">type_promote_gpu_t<sp/>=</highlight></codeline>
-<codeline lineno="506"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>std::variant_alternative_t&lt;Type_class::type_promote(variant_index_v&lt;TL,<sp/>Type_list_gpu&gt;,</highlight></codeline>
-<codeline lineno="507"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>variant_index_v&lt;TR,<sp/>Type_list_gpu&gt;),</highlight></codeline>
-<codeline lineno="508"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Type_list_gpu&gt;;</highlight></codeline>
-<codeline lineno="509"><highlight class="normal"></highlight></codeline>
-<codeline lineno="510"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TL,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TR&gt;</highlight></codeline>
-<codeline lineno="511"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">type_promote_from_gpu_pointer<sp/>{</highlight></codeline>
-<codeline lineno="512"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">type<sp/>=<sp/>void;</highlight></codeline>
-<codeline lineno="513"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
-<codeline lineno="514"><highlight class="normal"></highlight></codeline>
-<codeline lineno="515"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TL,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TR&gt;</highlight></codeline>
-<codeline lineno="516"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">type_promote_from_gpu_pointer&lt;TL*,<sp/>TR*&gt;<sp/>{</highlight></codeline>
-<codeline lineno="517"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">type<sp/>=<sp/>type_promote_gpu_t&lt;std::decay_t&lt;TL&gt;,<sp/>std::decay_t&lt;TR&gt;&gt;;</highlight></codeline>
-<codeline lineno="518"><highlight class="normal"><sp/><sp/><sp/><sp/>};</highlight></codeline>
-<codeline lineno="519"><highlight class="normal"></highlight></codeline>
-<codeline lineno="520"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>helper<sp/>typedef</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="521"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TL,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TR&gt;</highlight></codeline>
-<codeline lineno="522"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">type_promote_from_gpu_pointer_t<sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>type_promote_from_gpu_pointer&lt;TL,<sp/>TR&gt;::type;</highlight></codeline>
-<codeline lineno="523"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="524"><highlight class="normal"></highlight></codeline>
-<codeline lineno="525"><highlight class="normal"><sp/><sp/>};<sp/><sp/></highlight><highlight class="comment">//<sp/>Type_class</highlight></codeline>
-<codeline lineno="527"></codeline>
-<codeline lineno="555" refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>Type_class<sp/><ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>;</highlight></codeline>
-<codeline lineno="556"><highlight class="normal"></highlight></codeline>
-<codeline lineno="557"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="Type_8hpp_1a7730a97d285d53e329a7b5e9d74ad05c" kindref="member">__blasINTsize__</ref>;</highlight></codeline>
-<codeline lineno="558"><highlight class="normal"></highlight></codeline>
-<codeline lineno="559"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>User_debug<sp/>is<sp/>declared<sp/>in<sp/>cytnx_error.hpp<sp/>(included<sp/>above);<sp/>no<sp/>need<sp/>to<sp/>redeclare<sp/>it<sp/>here.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="560"><highlight class="normal"></highlight></codeline>
-<codeline lineno="561"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cytnx</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="562"><highlight class="normal"></highlight></codeline>
-<codeline lineno="563"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CYTNX_TYPE_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="502"><highlight class="normal"><sp/><sp/>};<sp/><sp/></highlight><highlight class="comment">//<sp/>Type_class</highlight></codeline>
+<codeline lineno="504"></codeline>
+<codeline lineno="532" refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>Type_class<sp/><ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>;</highlight></codeline>
+<codeline lineno="533"><highlight class="normal"></highlight></codeline>
+<codeline lineno="534"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="Type_8hpp_1a7730a97d285d53e329a7b5e9d74ad05c" kindref="member">__blasINTsize__</ref>;</highlight></codeline>
+<codeline lineno="535"><highlight class="normal"></highlight></codeline>
+<codeline lineno="536"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>User_debug<sp/>is<sp/>declared<sp/>in<sp/>cytnx_error.hpp<sp/>(included<sp/>above);<sp/>no<sp/>need<sp/>to<sp/>redeclare<sp/>it<sp/>here.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="537"><highlight class="normal"></highlight></codeline>
+<codeline lineno="538"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cytnx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="539"><highlight class="normal"></highlight></codeline>
+<codeline lineno="540"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CYTNX_TYPE_H_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/Type.hpp"/>
   </compounddef>
