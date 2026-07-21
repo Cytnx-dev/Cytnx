@@ -672,7 +672,6 @@ void tensor_binding(py::module &m) {
            dispatch_pyint(
              rc, [&](auto v) { f_Tensor_setitem_scal(self, locators, v); });
          })
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::Scalar>)
     .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_double>)
     .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_complex128>)
     // arithmetic >>
@@ -733,7 +732,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Add(v); });
          })
-    .def("__add__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Add(rhs); })
     .def("__add__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Add(rhs); })
     .def("__add__",
@@ -753,7 +751,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Add(v, self); });
          })
-    .def("__radd__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Add(lhs, self); })
     .def("__radd__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Add(lhs, self); })
     .def("__radd__",
@@ -816,11 +813,6 @@ void tensor_binding(py::module &m) {
            return self;
          })
     .def("__iadd__",
-         [](py::object self, const cytnx::Scalar &rhs) {
-           self.cast<cytnx::Tensor &>().Add_(rhs);
-           return self;
-         })
-    .def("__iadd__",
          [](py::object self, const cytnx::cytnx_double &rhs) {
            self.cast<cytnx::Tensor &>().Add_(rhs);
            return self;
@@ -873,7 +865,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Sub(v); });
          })
-    .def("__sub__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Sub(rhs); })
     .def("__sub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Sub(rhs); })
     .def("__sub__",
@@ -893,7 +884,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Sub(v, self); });
          })
-    .def("__rsub__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Sub(lhs, self); })
     .def("__rsub__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Sub(lhs, self); })
     .def("__rsub__",
@@ -956,11 +946,6 @@ void tensor_binding(py::module &m) {
            return self;
          })
     .def("__isub__",
-         [](py::object self, const cytnx::Scalar &rhs) {
-           self.cast<cytnx::Tensor &>().Sub_(rhs);
-           return self;
-         })
-    .def("__isub__",
          [](py::object self, const cytnx::cytnx_double &rhs) {
            self.cast<cytnx::Tensor &>().Sub_(rhs);
            return self;
@@ -1013,7 +998,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Mul(v); });
          })
-    .def("__mul__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mul(rhs); })
     .def("__mul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Mul(rhs); })
     .def("__mul__",
@@ -1033,7 +1017,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Mul(v, self); });
          })
-    .def("__rmul__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mul(lhs, self); })
     .def("__rmul__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Mul(lhs, self); })
     .def("__rmul__",
@@ -1096,11 +1079,6 @@ void tensor_binding(py::module &m) {
            return self;
          })
     .def("__imul__",
-         [](py::object self, const cytnx::Scalar &rhs) {
-           self.cast<cytnx::Tensor &>().Mul_(rhs);
-           return self;
-         })
-    .def("__imul__",
          [](py::object self, const cytnx::cytnx_double &rhs) {
            self.cast<cytnx::Tensor &>().Mul_(rhs);
            return self;
@@ -1153,7 +1131,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Div(v); });
          })
-    .def("__truediv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
     .def("__truediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Div(rhs); })
     .def("__truediv__",
@@ -1173,7 +1150,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Div(v, self); });
          })
-    .def("__rtruediv__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rtruediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Div(lhs, self); })
     .def("__rtruediv__",
@@ -1233,11 +1209,6 @@ void tensor_binding(py::module &m) {
     .def("__itruediv__",
          [](py::object self, const py::int_ &rhs) {
            dispatch_pyint(rhs, [&](auto v) { self.cast<cytnx::Tensor &>().Div_(v); });
-           return self;
-         })
-    .def("__itruediv__",
-         [](py::object self, const cytnx::Scalar &rhs) {
-           self.cast<cytnx::Tensor &>().Div_(rhs);
            return self;
          })
     .def("__itruediv__",
@@ -1301,7 +1272,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self.Mod(v); });
          })
-    .def("__mod__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Mod(rhs); })
     .def("__mod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self.Mod(rhs); })
     .def("__mod__",
@@ -1321,7 +1291,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &lhs) {
            return dispatch_pyint(lhs, [&](auto v) { return cytnx::linalg::Mod(v, self); });
          })
-    .def("__rmod__", [](cytnx::Tensor &self, const cytnx::Scalar &lhs) { return cytnx::linalg::Mod(lhs, self); })
     .def("__rmod__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &lhs) { return cytnx::linalg::Mod(lhs, self); })
     .def("__rmod__",
@@ -1369,7 +1338,6 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const py::int_ &rhs) {
            return dispatch_pyint(rhs, [&](auto v) { return self == v; });
          })
-    .def("__eq__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self == rhs; })
     .def("__eq__", [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) { return self == rhs; })
     .def("__eq__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &rhs) { return self == rhs; })
@@ -1390,9 +1358,8 @@ void tensor_binding(py::module &m) {
     // type-promotion path, and `.astype(Type.Bool)` casts it back to a
     // proper elementwise Bool Tensor with the negated values. Verified
     // empirically (both 1-D and 2-D, contiguous) to match numpy elementwise
-    // != semantics. Keep-set mirrors __eq__ (including the trailing Scalar
-    // overload); registration ORDER matters -- see "KEEP-SET ORDERING" in
-    // pybind/pyint_dispatch.hpp.
+    // != semantics. Keep-set mirrors __eq__; registration ORDER matters --
+    // see "KEEP-SET ORDERING" in pybind/pyint_dispatch.hpp.
     .def("__ne__",
          [](cytnx::Tensor &self, const cytnx::Tensor &rhs) {
            return (1 - self.Cpr(rhs)).astype(cytnx::Type.Bool);
@@ -1439,10 +1406,6 @@ void tensor_binding(py::module &m) {
            return dispatch_pyint(rhs, [&](auto v) {
              return (1 - self.Cpr(v)).astype(cytnx::Type.Bool);
            });
-         })
-    .def("__ne__",
-         [](cytnx::Tensor &self, const cytnx::Scalar &rhs) {
-           return (1 - (self == rhs)).astype(cytnx::Type.Bool);
          })
     .def("__ne__",
          [](cytnx::Tensor &self, const cytnx::cytnx_double &rhs) {
