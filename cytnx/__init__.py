@@ -1,4 +1,105 @@
+from importlib import metadata as importlib_metadata
 import os,sys,warnings
+
+
+def _distribution_directory(distribution_name, relative_path):
+    """Return a DLL directory owned by an installed runtime distribution."""
+    try:
+        distribution = importlib_metadata.distribution(distribution_name)
+    except importlib_metadata.PackageNotFoundError:
+        return None
+    directory = os.path.abspath(os.fspath(distribution.locate_file(relative_path)))
+    return directory if os.path.isdir(directory) else None
+
+
+def _has_distribution(distribution_name):
+    try:
+        importlib_metadata.distribution(distribution_name)
+    except importlib_metadata.PackageNotFoundError:
+        return False
+    return True
+
+
+def _register_windows_dll_directories():
+    """Keep dependency DLL search handles alive for the extension import."""
+    if sys.platform != "win32" or not hasattr(os, "add_dll_directory"):
+        return []
+
+    candidates = []
+
+    # A released cytnx-cuda wheel declares these distributions as hard runtime
+    # dependencies. Resolve their exact installed locations before considering
+    # developer environment variables, avoiding an incompatible system CUDA
+    # earlier in the process search order.
+    cuda_wheel_directory = _distribution_directory(
+        "nvidia-cuda-runtime", os.path.join("nvidia", "cu13", "bin", "x86_64")
+    )
+    cutensor_wheel_directory = _distribution_directory(
+        "cutensor-cu13", os.path.join("cutensor", "bin")
+    )
+    if cuda_wheel_directory:
+        candidates.append(cuda_wheel_directory)
+    if cutensor_wheel_directory:
+        candidates.append(cutensor_wheel_directory)
+
+    # A repaired cytnx-cuda release carries its non-CUDA DLLs beside the
+    # package and resolves CUDA through the exact declared distributions
+    # above. Do not also register a generic conda directory: Windows does not
+    # define ordering between AddDllDirectory entries, so another CUDA runtime
+    # in that prefix could otherwise win. Editable cytnx development builds
+    # still need the conda directories for BLAS/ARPACK and compiler runtimes.
+    is_released_cuda_wheel = (
+        _has_distribution("cytnx-cuda")
+        and cuda_wheel_directory is not None
+        and cutensor_wheel_directory is not None
+    )
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix and not is_released_cuda_wheel:
+        candidates.extend([
+            os.path.join(conda_prefix, "Library", "bin"),
+            os.path.join(conda_prefix, "Library", "mingw-w64", "bin"),
+        ])
+
+    cuda_root = os.environ.get("CUDA_PATH") or os.environ.get("CUDA_HOME")
+    if not cuda_wheel_directory and cuda_root:
+        candidates.extend([
+            os.path.join(cuda_root, "bin"),
+            os.path.join(cuda_root, "bin", "x86_64"),
+        ])
+
+    cutensor_root = os.environ.get("CUTENSOR_ROOT")
+    if not cutensor_wheel_directory and cutensor_root:
+        candidates.append(os.path.join(cutensor_root, "bin"))
+
+    # Also support this CUDA 13 wheel layout outside an activated Pixi shell.
+    # Do not register every installed CUDA major: AddDllDirectory does not
+    # define an ordering between them, so identically named dependency DLLs
+    # could otherwise come from an incompatible toolkit.
+    for search_root in sys.path:
+        if not cuda_wheel_directory and not cuda_root:
+            candidates.extend([
+                os.path.join(search_root, "nvidia", "cu13", "bin"),
+                os.path.join(search_root, "nvidia", "cu13", "bin", "x86_64"),
+            ])
+        if not cutensor_wheel_directory and not cutensor_root:
+            candidates.append(os.path.join(search_root, "cutensor", "bin"))
+
+    handles = []
+    seen = set()
+    for directory in candidates:
+        directory = os.path.abspath(directory)
+        key = os.path.normcase(directory)
+        if key not in seen and os.path.isdir(directory):
+            try:
+                handles.append(os.add_dll_directory(directory))
+            except OSError:
+                continue
+            else:
+                seen.add(key)
+    return handles
+
+
+_windows_dll_directory_handles = _register_windows_dll_directories()
 from . import cytnx
 from .cytnx import *
 from .cytnx import __version__
@@ -164,7 +265,8 @@ def _resolve_cpp_linkflags__():
         out+=" "
         if i == 0:
             lapack_ldir=os.path.dirname(line.split(' ')[0].strip())
-    out += "-Wl,-rpath,%s "%(lapack_ldir)
+    if sys.platform != "win32":
+        out += "-Wl,-rpath,%s "%(lapack_ldir)
 
     f.close()
     return out
