@@ -20,15 +20,15 @@ The script
      deliberately NOT depended on: it pulls in cudensitymat/cupauliprop/
      custabilizer, none of which cytnx links;
   3. switches `[tool.scikit-build].cmake.args` to the `openblas-cuda`
-     preset and sets `CMAKE_INSTALL_RPATH` to an $ORIGIN-relative RUNPATH
-     (see CUDA_INSTALL_RPATH) so the installed extension finds those
-     libraries in their sibling pip packages at runtime without
-     LD_LIBRARY_PATH;
-  4. overrides `[tool.cibuildwheel.linux].repair-wheel-command` to
+     preset. On Linux it also sets an $ORIGIN-relative RUNPATH (see
+     CUDA_INSTALL_RPATH); Windows instead disables unavailable cuQuantum
+     support and relies on the package's pre-import `os.add_dll_directory`
+     bootstrap;
+  4. on Linux, overrides `[tool.cibuildwheel.linux].repair-wheel-command` to
      exclude those same libraries from `auditwheel repair`'s vendoring,
      so the wheel stays small and relies on the pip dependencies (found
      via the RUNPATH from step 3) instead; and
-  5. chains tools/cibuildwheel_before_all_cuda.sh onto
+  5. on Linux, chains tools/cibuildwheel_before_all_cuda.sh onto
      `[tool.cibuildwheel.linux].before-all` and points CMAKE_CUDA_COMPILER/
      CUTENSOR_ROOT/CUQUANTUM_ROOT/PATH/CMAKE_PREFIX_PATH at the toolchain it
      installs, so the build step can compile CUDA/cuTENSOR/cuQuantum code
@@ -43,6 +43,7 @@ dependency-group) so the rewrite preserves comments and formatting on
 round-trip.
 """
 
+import argparse
 import pathlib
 import shlex
 
@@ -65,13 +66,19 @@ CUDA_TOOLCHAIN_ROOT = f"{CUDA_TOOLCHAIN_PREFIX}/nvidia/cu13"
 # same minor version are allowed to satisfy the dependency, anything
 # outside it is not (see the module docstring for why only these, not
 # their transitive NVIDIA/cuTENSOR dependencies, need listing).
+CUDA_COMMON_RUNTIME_SPECS = [
+    "nvidia-cuda-runtime ~=13.3.29",
+    "nvidia-cublas ~=13.6.0.2",
+    "nvidia-cusparse ~=12.8.2.51",
+    "nvidia-curand ~=10.4.3.29",
+    "nvidia-cusolver ~=12.2.6.9",
+    "cutensor-cu13 ~=2.7.0",
+]
 CUDA_RUNTIME_DEPENDENCIES = [
-    "nvidia-cuda-runtime ~=13.3.29 ; sys_platform == 'linux'",
-    "nvidia-cublas ~=13.6.0.2 ; sys_platform == 'linux'",
-    "nvidia-cusparse ~=12.8.2.51 ; sys_platform == 'linux'",
-    "nvidia-curand ~=10.4.3.29 ; sys_platform == 'linux'",
-    "nvidia-cusolver ~=12.2.6.9 ; sys_platform == 'linux'",
-    "cutensor-cu13 ~=2.7.0 ; sys_platform == 'linux'",
+    f"{spec} ; sys_platform == 'linux' or sys_platform == 'win32'"
+    for spec in CUDA_COMMON_RUNTIME_SPECS
+] + [
+    # NVIDIA does not publish these cuQuantum runtime wheels for Windows.
     "cutensornet-cu13 ~=2.13.0 ; sys_platform == 'linux'",
     "custatevec-cu13 ~=1.14.0 ; sys_platform == 'linux'",
 ]
@@ -131,7 +138,11 @@ EXCLUDED_SONAMES = [
 ]
 
 
-def rewrite_pyproject(doc: tomlkit.TOMLDocument) -> None:
+def rewrite_pyproject(
+    doc: tomlkit.TOMLDocument, *, target_platform: str = "linux"
+) -> None:
+    if target_platform not in {"linux", "windows"}:
+        raise ValueError(f"unsupported CUDA wheel platform: {target_platform}")
     project = doc["project"]
     project["name"] = "cytnx-cuda"
 
@@ -146,10 +157,30 @@ def rewrite_pyproject(doc: tomlkit.TOMLDocument) -> None:
             "--preset=openblas-cpu before this rewrite; pyproject.toml's "
             "structure may have changed"
         )
-    skb["cmake"]["args"] = [
-        "--preset=openblas-cuda",
-        f"-DCMAKE_INSTALL_RPATH={CUDA_INSTALL_RPATH}",
-    ]
+    if target_platform == "linux":
+        skb["cmake"]["args"] = [
+            "--preset=openblas-cuda",
+            f"-DCMAKE_INSTALL_RPATH={CUDA_INSTALL_RPATH}",
+        ]
+    else:
+        # The activated Pixi environment supplies Ninja, MSVC, OpenBLAS,
+        # ARPACK, CUDA, and cuTENSOR. cuQuantum remains Linux-only because its
+        # runtime PyPI wheels do not support Windows.
+        skb["cmake"]["args"] = [
+            "--preset=openblas-cuda",
+            "-DUSE_CUQUANTUM=OFF",
+            "-DUSE_HPTT=OFF",
+            "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON",
+        ]
+
+    if target_platform == "windows":
+        windows = doc["tool"]["cibuildwheel"].get("windows")
+        if not windows or "repair-wheel-command" not in windows:
+            raise SystemExit(
+                "expected [tool.cibuildwheel.windows].repair-wheel-command "
+                "for the Windows CUDA wheel"
+            )
+        return
 
     exclude_flags = " ".join(f"--exclude {name}" for name in EXCLUDED_SONAMES)
     linux = doc["tool"]["cibuildwheel"]["linux"]
@@ -187,13 +218,20 @@ def rewrite_pyproject(doc: tomlkit.TOMLDocument) -> None:
     env["CUQUANTUM_ROOT"] = f"{CUDA_TOOLCHAIN_PREFIX}/cuquantum"
     linux["environment"] = env
 
-    PYPROJECT.write_text(tomlkit.dumps(doc))
-
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--platform",
+        choices=("linux", "windows"),
+        default="linux",
+        help="target wheel platform (default: linux, preserving the existing CI path)",
+    )
+    args = parser.parse_args()
     doc = tomlkit.parse(PYPROJECT.read_text())
-    rewrite_pyproject(doc)
-    print("stamped pyproject.toml for cytnx-cuda")
+    rewrite_pyproject(doc, target_platform=args.platform)
+    PYPROJECT.write_text(tomlkit.dumps(doc))
+    print(f"stamped pyproject.toml for cytnx-cuda ({args.platform})")
 
 
 if __name__ == "__main__":
