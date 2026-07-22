@@ -4,20 +4,16 @@
 #include "linalg.hpp"
 #include "utils/is.hpp"
 #include "Type.hpp"
-using namespace std;
 
 namespace cytnx {
 
   //-----------------------------------------------
-  void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
-                         int device, const bool &init_zero) {
+  void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, unsigned int dtype, int device,
+                         bool init_zero) {
     // check:
     cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
-    cytnx_error_msg(shape.size() == 0, "%s",
-                    "[ERROR] invalid argument: shape. Must at least have one element.");
     cytnx_uint64 Nelem = 1;
     for (int i = 0; i < shape.size(); i++) {
-      cytnx_error_msg(shape[i] == 0, "%s", "[ERROR] shape cannot have 0 dimension in any rank.");
       Nelem *= shape[i];
     }
     // this->_storage = __SII.USIInit[dtype]();
@@ -154,12 +150,19 @@ namespace cytnx {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to getitem from an uninitialized Tensor%s", "\n");
+      return this->clone();
+    }
+
     std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
       acc.push_back(Accessor::all());
     }
 
     acc = vec_map(acc, this->_invmapper);  // contiguous.
+    const std::vector<cytnx::Accessor> full_acc = acc;
 
     //[1] curr_shape:
     auto curr_shape = vec_map(this->_shape, this->_invmapper);
@@ -193,27 +196,23 @@ namespace cytnx {
     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
     out->Init(get_shape, this->dtype(), this->device());
 
-    if (locators.size() == 0) {
-      locators.resize(1);
-      locators[0].push_back(0);
-    }
-
     // call storage
-    this->storage()._impl->GetElem_byShape_v2(out->storage()._impl, curr_shape, locators, Nunit);
+    if (out->storage().size() != 0) {
+      this->storage()._impl->GetElem_byShape_v2(out->storage()._impl, curr_shape, locators, Nunit);
+    }
 
     // permute back:
     std::vector<cytnx_int64> new_mapper(this->_mapper.begin(), this->_mapper.end());
     std::vector<cytnx_int64> new_shape;
     // std::vector<cytnx_int64> removed;
     for (unsigned int i = 0; i < out->_shape.size(); i++) {
-      if (out->shape()[i] == 1 && (acc[i].type() == Accessor::Singl))
+      if (out->shape()[i] == 1 && (full_acc[i].type() == Accessor::Singl))
         removed.push_back(this->_mapper[this->_invmapper[i]]);
       else
         new_shape.push_back(out->shape()[i]);
     }
 
-    if (new_shape.size()) {  // exclude the case where only single element exists!
-
+    if (new_shape.size()) {
       out->reshape_(new_shape);  // remove size-1 axis
 
       std::vector<cytnx_uint64> perm;
@@ -230,7 +229,7 @@ namespace cytnx {
       }
       out->permute_(perm);
     } else {
-      out->reshape_({1});  // if it is only one element.
+      out->reshape_({});
     }
 
     return out;
@@ -241,14 +240,20 @@ namespace cytnx {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to getitem from an uninitialized Tensor%s", "\n");
+      return this->clone();
+    }
+
     std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
       acc.push_back(Accessor::all());
     }
 
-    vector<cytnx_uint64> get_shape(acc.size());
+    std::vector<cytnx_uint64> get_shape(acc.size());
 
-    // vector<cytnx_uint64> new_shape;
+    // std::vector<cytnx_uint64> new_shape;
     std::vector<std::vector<cytnx_uint64>> locators(this->_shape.size());
     for (cytnx_uint32 i = 0; i < acc.size(); i++) {
       acc[i].get_len_pos(this->_shape[i], get_shape[i], locators[i]);
@@ -257,15 +262,17 @@ namespace cytnx {
     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
     out->Init(get_shape, this->dtype(), this->device());
 
-    this->storage()._impl->GetElem_byShape(out->storage()._impl, this->shape(), this->_mapper,
-                                           get_shape, locators);
+    if (out->storage().size() != 0) {
+      this->storage()._impl->GetElem_byShape(out->storage()._impl, this->shape(), this->_mapper,
+                                             get_shape, locators);
+    }
 
-    vector<cytnx_int64> new_shape;
+    std::vector<cytnx_int64> new_shape;
     for (cytnx_uint32 i = 0; i < acc.size(); i++)
       if (get_shape[i] != 1) new_shape.push_back(get_shape[i]);
 
     if (new_shape.size() == 0)
-      out->reshape_({1});
+      out->reshape_({});
     else
       out->reshape_(new_shape);
     return out;
@@ -276,13 +283,26 @@ namespace cytnx {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
-    vector<cytnx::Accessor> acc = accessors;
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+      cytnx_error_msg(rhs->storage().size() != 1, "[ERROR][Tensor.set_elems]%s",
+                      "inconsistent shape");
+      const std::vector<cytnx_uint64> scalar_shape = {1};
+      const std::vector<std::vector<cytnx_uint64>> scalar_locators = {{0}};
+      this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl, scalar_shape, scalar_locators,
+                                                1, true);
+      return;
+    }
+
+    std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
       acc.push_back(Accessor::all());
     }
 
-    // vector<cytnx_uint64> get_shape(acc.size());
+    // std::vector<cytnx_uint64> get_shape(acc.size());
     acc = vec_map(acc, this->_invmapper);  // contiguous.
+    const std::vector<cytnx::Accessor> full_acc = acc;
 
     //[1] curr_shape:
     auto curr_shape = vec_map(this->_shape, this->_invmapper);
@@ -308,8 +328,10 @@ namespace cytnx {
       acc[i].get_len_pos(curr_shape[i], get_shape[i], locators[i]);
     }
 
-    /// checking if its scalar assign!
+    // Any one-element Tensor can be broadcast for assignment. is_scalar() remains reserved for
+    // true rank-0 Tensors.
     if (rhs->storage().size() == 1) {
+      if (this->storage().size() == 0) return;
       this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl, curr_shape, locators, Nunit,
                                                 true);
     } else {
@@ -322,13 +344,11 @@ namespace cytnx {
       std::vector<cytnx_uint64> new_shape;
       std::vector<cytnx_int64> removed;
       for (unsigned int i = 0; i < get_shape.size(); i++) {
-        if (acc[i].type() == Accessor::Singl)
+        if (full_acc[i].type() == Accessor::Singl)
           removed.push_back(this->_mapper[this->_invmapper[i]]);
         else
           new_shape.push_back(get_shape[i]);
       }
-
-      if (new_shape.size() == 0) new_shape.push_back(1);
 
       // use current size to infer rhs permutation.
       std::vector<cytnx_uint64> perm;
@@ -345,13 +365,17 @@ namespace cytnx {
         }
       }
 
-      std::vector<cytnx_uint64> iperm(perm.size());
-      for (unsigned int i = 0; i < iperm.size(); i++) iperm[perm[i]] = i;
-
       boost::intrusive_ptr<Tensor_impl> tmp;
-      tmp = rhs->permute(iperm)->contiguous();
+      if (perm.empty()) {
+        tmp = rhs->contiguous();
+      } else {
+        std::vector<cytnx_uint64> iperm(perm.size());
+        for (unsigned int i = 0; i < iperm.size(); i++) iperm[perm[i]] = i;
+        tmp = rhs->permute(iperm)->contiguous();
+      }
       cytnx_error_msg(new_shape != tmp->shape(), "[ERROR][Tensor.set_elems]%s",
                       "inconsistent shape");
+      if (this->storage().size() == 0) return;
       this->storage()._impl->SetElem_byShape_v2(tmp->storage()._impl, curr_shape, locators, Nunit,
                                                 false);
     }
@@ -361,6 +385,19 @@ namespace cytnx {
   void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const T &rc) {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
+
+    if (this->_shape.empty()) {
+      cytnx_error_msg(this->dtype() == Type.Void,
+                      "[ERROR] try to setelem to an uninitialized Tensor%s", "\n");
+      Scalar c = rc;
+
+      Storage tmp(1, c.dtype(), this->device());
+      tmp.set_item(0, rc);
+      const std::vector<cytnx_uint64> scalar_shape = {1};
+      const std::vector<std::vector<cytnx_uint64>> scalar_locators = {{0}};
+      this->storage()._impl->SetElem_byShape_v2(tmp._impl, scalar_shape, scalar_locators, 1, true);
+      return;
+    }
 
     std::vector<cytnx::Accessor> acc = accessors;
     for (int i = 0; i < this->_shape.size() - accessors.size(); i++) {
@@ -394,6 +431,8 @@ namespace cytnx {
                       "[ERROR] Tensor cannot accept accessor with qnum list.%s", "\n");
       acc[i].get_len_pos(curr_shape[i], get_shape[i], locators[i]);
     }
+
+    if (this->storage().size() == 0) return;
 
     // call storage
     Scalar c = rc;

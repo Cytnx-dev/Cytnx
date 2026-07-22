@@ -108,7 +108,6 @@ See \link cytnx::linalg cytnx::linalg \endlink for further details
 	Matmul_dg | x |✓   | ✓   | x |\link cytnx::linalg::Matmul_dg(const cytnx::Tensor& TL, const cytnx::Tensor& TR) Matmul_dg \endlink|x
 	Tensordot_dg | x |✓   | x   | x |\link cytnx::linalg::Tensordot_dg(const cytnx::Tensor& Tl, const cytnx::Tensor& Tr, const std::vector<cytnx_uint64>& idxl, const std::vector<cytnx_uint64>& idxr, const bool& diag_L) Tensordot_dg \endlink|x
 	Lstsq | x |✓   | x   | x |\link cytnx::linalg::Lstsq(const cytnx::Tensor &A, const cytnx::Tensor &b, const float &rcond) Lstsq\endlink|x
-	Axpy | \link cytnx::linalg::Axpy_(const Scalar &a, const cytnx::Tensor &x, cytnx::Tensor &y) Axpy_ \endlink |✓   | x   | x |\link cytnx::linalg::Axpy(const Scalar &a, const cytnx::Tensor &x, const cytnx::Tensor &y) Axpy \endlink|x
 	Ger | x |✓   | ✓   | x |\link cytnx::linalg::Ger(const cytnx::Tensor &x, const cytnx::Tensor &y, const Scalar &a) Ger\endlink|x
 	Gemm | \link cytnx::linalg::Gemm_(const Scalar &a, const cytnx::Tensor &x, const cytnx::Tensor &y, const Scalar& b, cytnx::Tensor& c) Gemm_\endlink |✓   | ✓   | x |\link cytnx::linalg::Gemm(const Scalar &a, const cytnx::Tensor &x, const cytnx::Tensor &y) Gemm\endlink|x
 	Gemm_Batch | x |✓   | ✓   | x |\link cytnx::linalg::Gemm_Batch(const std::vector< cytnx_int64 >& m_array, const std::vector< cytnx_int64 >& n_array, const std::vector< cytnx_int64 >& k_array, const std::vector< Scalar >& 	alpha_array, const std::vector< cytnx::Tensor >& a_tensors, const std::vector< cytnx::Tensor >& b_tensors, const std::vector< Scalar >& beta_array, std::vector< cytnx::Tensor >& c_tensors, const cytnx_int64 group_count, const std::vector< cytnx_int64 >& group_size ) Gemm_Batch\endlink|x
@@ -201,10 +200,10 @@ See \link cytnx::linalg cytnx::linalg \endlink for further details
 
         Tensor A({3,4,5,2},Type.Double);
         A.permute_(0,3,1,2); // this will not change the memory, only the shape info is changed.
-        cout << A.is_contiguous() << endl; // false
+        std::cout << A.is_contiguous() << std::endl; // false
 
         A.contiguous_(); // call contiguous() to actually move the memory.
-        cout << A.is_contiguous() << endl; // this will be true!
+        std::cout << A.is_contiguous() << std::endl; // this will be true!
 
 ```
     * Access single element using `.at`

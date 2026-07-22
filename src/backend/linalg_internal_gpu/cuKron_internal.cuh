@@ -46,7 +46,7 @@ namespace cytnx {
           x += cytnx_uint64(tmp2 / info[offset2 + j]) * info[len_nsa + j];
           y += cytnx_uint64(tmp2 % info[offset2 + j]) * info[offset1 + j];
         }
-        out[blockIdx.x * blockDim.x + threadIdx.x] = Lin[x] * Rin[y];
+        out[blockIdx.x * blockDim.x + threadIdx.x] = TO(Lin[x]) * TO(Rin[y]);
       }
     }
 

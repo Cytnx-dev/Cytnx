@@ -1,1 +1,1 @@
-cout << B.same_data(A) << endl;
+std::cout << B.same_data(A) << std::endl;

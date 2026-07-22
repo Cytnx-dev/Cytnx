@@ -19,8 +19,6 @@
 
 #endif
 
-using namespace std;
-
 namespace cytnx {
   namespace utils_internal {
 
@@ -142,7 +140,7 @@ namespace cytnx {
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->capacity());
+      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->size());
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -172,7 +170,7 @@ namespace cytnx {
         return out;
 
       } else {
-        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
+        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->size());
         return out;
       }
     }
@@ -195,8 +193,7 @@ namespace cytnx {
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
     #endif
 
-      CudaType *dtmp =
-        reinterpret_cast<CudaType *>(cuMalloc_gpu(sizeof(CudaType) * in->capacity()));
+      CudaType *dtmp = reinterpret_cast<CudaType *>(cuMalloc_gpu(sizeof(CudaType) * in->size()));
       cytnx_uint64 Nelem = in->size();
 
       std::vector<int> perm(mapper.begin(), mapper.end());
@@ -242,12 +239,12 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, cutensor_data_type,
+                                                     nullptr /* stride */, cutensor_data_type,
                                                      defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */,
+                                                     new_size.data(), nullptr /* stride */,
                                                      cutensor_data_type, defaultAlignment));
       cutensorOperationDescriptor_t desc;
       checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
@@ -282,7 +279,7 @@ namespace cytnx {
         return out;
 
       } else {
-        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
+        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->size());
         return out;
       }
     }

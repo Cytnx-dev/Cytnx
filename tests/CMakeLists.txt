@@ -2,6 +2,25 @@
 if(BACKEND_TORCH)
 else()
 
+# GoogleTest (gtest + gmock) is a required prerequisite for the test suite and
+# must be provided by the toolchain / a config-mode install. It is deliberately
+# NOT fetched here so the CMake configuration stays free of network access
+# (see #944, which moved the other optional deps to submodules/finders).
+# find_package(GTest) can succeed with only gtest -- the GTest::gmock target
+# needs a config-mode install or CMake's FindGTest from 3.23+ -- so require the
+# gmock target explicitly and fail with actionable guidance when it is missing.
+find_package(GTest REQUIRED)
+if(NOT TARGET GTest::gmock)
+  message(FATAL_ERROR
+    "GoogleTest was found but the GTest::gmock target is missing, which the test "
+    "suite links against. Install a GoogleTest that also provides GMock (it is not "
+    "fetched automatically):\n"
+    "  macOS:         brew install googletest\n"
+    "  Ubuntu/Debian: apt install libgtest-dev libgmock-dev\n"
+    "  conda:         conda install -c conda-forge gtest gmock\n"
+    "or point CMake at such an install with -DCMAKE_PREFIX_PATH=<gtest-prefix>.")
+endif()
+
 # Define the path to the test data directory
 set(CYTNX_TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test_data_base")
 
@@ -12,6 +31,7 @@ add_executable(
   test_main
   test_tools.cpp
   common_data_generator.cpp
+  Symmetry_test.cpp
   Bond_test.cpp
   Network_test.cpp
   UniTensor_base_test.cpp
@@ -22,7 +42,13 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  arange_test.cpp
+  Type_test.cpp
+  cytnx_error_test.cpp
+  include_order_canary_test.cpp
+  Tensor_strides_test.cpp
   Storage_test.cpp
+  Scalar_test.cpp
   search_tree_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
@@ -41,11 +67,16 @@ add_executable(
   linalg_test/Svd_truncate_test.cpp
   linalg_test/Gesvd_truncate_test.cpp
   linalg_test/Rsvd_test.cpp
+  linalg_test/DtypePromotion_test.cpp
+  linalg_test/Outer_test.cpp
+  linalg_test/TypedArithmeticCoverage_test.cpp
   linalg_test/Gemm_Batch_test.cpp
+  linalg_test/Trace_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/stride_view_test.cpp
   linalg_test/sum_test.cpp
   linalg_test/Vectordot_test.cpp
+  linalg_test/Zero_extent_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp
@@ -68,9 +99,9 @@ target_include_directories(
 )
 target_link_libraries(
   test_main
-  gtest_main
-  gmock
-  gtest
+  GTest::gtest_main
+  GTest::gmock
+  GTest::gtest
 )
 target_link_libraries(test_main cytnx)
 
@@ -80,7 +111,24 @@ add_link_options(-fsanitize=address)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
 gtest_discover_tests(test_main
-                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                     # The test binary takes longer to enumerate than the
+                     # default 5s under MKL + ASAN on slower runners.
+                     DISCOVERY_TIMEOUT 120
+                     # PRE_TEST (rather than the default POST_BUILD) defers
+                     # running the binary to enumerate tests until ctest is
+                     # invoked, instead of doing it as part of the build
+                     # itself. Needed when this target links a CUDA-enabled
+                     # cytnx (USE_CUDA=ON) on a machine with no GPU driver:
+                     # POST_BUILD would abort the whole build the moment it
+                     # tries to list tests, even though the binary compiled
+                     # and linked correctly. No effect on non-CUDA builds
+                     # beyond moving discovery from build time to ctest time.
+                     DISCOVERY_MODE PRE_TEST
+                     # Lets `ctest -L '^cpu$'` scope a run to just this
+                     # binary's tests when a CUDA preset's shared build dir
+                     # also has gpu_test_main's tests registered.
+                     PROPERTIES LABELS cpu)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

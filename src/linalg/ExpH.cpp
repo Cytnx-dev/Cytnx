@@ -11,7 +11,6 @@
 #else
 
   #include "backend/linalg_internal_interface.hpp"
-using namespace std;
 namespace cytnx {
   namespace linalg {
 
@@ -32,7 +31,7 @@ namespace cytnx {
           return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device()) * exp(b);
       }
 
-      vector<Tensor> su = cytnx::linalg::Eigh(Tin, true);
+      std::vector<Tensor> su = cytnx::linalg::Eigh(Tin, true);
       Tensor s, u, ut;
 
       if (b == 0)
@@ -99,16 +98,6 @@ namespace cytnx {
       out.get_block_().reshape_(Tin.shape());
     }
 
-    template <typename T>
-    static void ExpH_Sparse_UT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
-                                        const T &b) {
-      std::vector<Tensor> &tmp = out.get_blocks_();
-
-      for (int i = 0; i < tmp.size(); i++) {
-        tmp[i] = cytnx::linalg::ExpH(tmp[i], a, b);
-      }
-    }
-
     // Block-wise matrix exponential of a Hermitian symmetric UniTensor. Handles both
     // BlockUniTensor (bosonic) and BlockFermionicUniTensor (fermionic), selected by the template
     // parameter BUT. For the fermionic case, sign-flipped blocks are negated to the physical
@@ -119,8 +108,7 @@ namespace cytnx {
     static void ExpH_BlockUT_internal(UniTensor &out, const UniTensor &Tin, const T &a,
                                       const T &b) {
       std::vector<bool> signflip;
-      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) signflip = Tin.signflip();
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
@@ -237,7 +225,7 @@ namespace cytnx {
       // the sign was already included when creating the per-qcharge blocks, so the resulting
       // signflip is all false.
       if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        ((BUT *)out._impl.get())->_signflip = std::vector<bool>(out_blocks_.size(), false);
+        ((BUT *)out._impl.get())->reset_signflip_();
     }
 
     template <typename T>
@@ -261,28 +249,26 @@ namespace cytnx {
         return out;
       } else if (Tin.uten_type() == UTenType.Block) {
         // copy everything except _blocks and _inner_to_outer_idx
-        BlockUniTensor *raw_out = ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
+        boost::intrusive_ptr<BlockUniTensor> raw_out =
+          ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
         UniTensor out;
-        out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
+        out._impl = raw_out;
         ExpH_BlockUT_internal<BlockUniTensor>(out, Tin, a, b);
         return out;
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
         // copy everything except _blocks and _inner_to_outer_idx
-        BlockFermionicUniTensor *raw_out =
+        boost::intrusive_ptr<BlockFermionicUniTensor> raw_out =
           ((BlockFermionicUniTensor *)Tin._impl.get())->clone_meta(false, true);
         UniTensor out;
-        out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
+        out._impl = raw_out;
         ExpH_BlockUT_internal<BlockFermionicUniTensor>(out, Tin, a, b);
         return out;
-      } else if (Tin.uten_type() == UTenType.Sparse) {
-        UniTensor out;
-        if (Tin.is_contiguous())
-          out = Tin.clone();
-        else
-          out = Tin.contiguous();
-        ExpH_Sparse_UT_internal(out, Tin, a, b);
-        return out;
       } else {
+        cytnx_error_msg(Tin.uten_type() == UTenType.Void,
+                        "[ERROR] UniTensor is not initialized and of type Void.%s", "\n");
+        cytnx_error_msg(
+          Tin.uten_type() == UTenType.Sparse,
+          "[ERROR] SparseUniTensor is deprecated. Use BlockUniTensor or LinOp instead.%s", "\n");
         cytnx_error_msg(true, "[ERROR][ExpH] UniTensor type '%s' not supported\n",
                         Tin.uten_type_str().c_str());
       }

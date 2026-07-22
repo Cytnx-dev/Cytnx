@@ -27,6 +27,20 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934
+   * (decision record 2026-07-06). This note is the canonical rationale for every
+   * UniTensor-vs-UniTensor elementwise arithmetic entry point: the free operators in
+   * this header ('+', '-', '*', '/') and the UniTensor::Add/Sub/Mul/Div member
+   * functions (in-place and out-of-place). The python UniTensor dunders raise
+   * TypeError for the UniTensor-vs-UniTensor case (see pybind/unitensor_py.cpp,
+   * raise_unitensor_elementwise_removed) while the C++ layer remains. operator+ and
+   * operator- are load-bearing: src/linalg/Lanczos_Gnd_Ut.cpp and
+   * src/linalg/Lanczos_Exp.cpp use them as genuine Krylov-subspace vector-space
+   * arithmetic (axpy) inside the solvers backing linalg::Lanczos(method="Gnd") and
+   * linalg::Lanczos_Exp(). operator* (elementwise/Hadamard product) and operator/
+   * (elementwise division) are basis-dependent, have no tensor-network meaning, and
+   * no in-tree C++ caller as of the audit; they are kept un-deprecated only because
+   * the removal task's scope was the python surface.
    */
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -63,6 +77,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -99,6 +116,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -135,6 +155,9 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
+   * @note internal/advanced: not a TN operation; python surface removed per #934;
+   * see operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) for the
+   * full rationale.
    */
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
@@ -753,10 +776,10 @@ namespace cytnx {
      * @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
      * @param[in] is_UvT if \em true, the left- and right- unitary UniTensors (isometries) are
      * returned.
-     * @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-     * the largest error will be pushed back to the vector (The smallest singular value in the
-     * return singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-     * full list of truncated singular values will be returned.
+     * @param[in] return_err selects the truncation information appended to the result: 0 appends
+     * nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero
+     * if none were discarded; >1 appends a rank-1 tensor containing all discarded singular values
+     * in descending order, empty if none were discarded.
      * @return
      * @parblock
      * [std::vector<Tensors>]
@@ -838,10 +861,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is > 1, then the full list of truncated
-    singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @param[in] mindim at least this many singular values are kept in total. For a per-block lower
     bound (which also acts as the per-block sampling floor of the randomized SVD), use the
     overload that takes a \p min_blockdim vector.
@@ -1210,8 +1233,12 @@ namespace cytnx {
      * Add(const T &lc, const Tensor &Rt),
      * Add(const Tensor &Lt, const T &rc),
      * operator+(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iAdd(Tensor &Lt, const Tensor &Rt);
+    void iAdd(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Sub:
     //==================================================
@@ -1310,8 +1337,12 @@ namespace cytnx {
      * Sub(const T &lc, const Tensor &Rt),
      * Sub(const Tensor &Lt, const T &rc),
      * operator-(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iSub(Tensor &Lt, const Tensor &Rt);
+    void iSub(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Mul:
     //==================================================
@@ -1410,8 +1441,12 @@ namespace cytnx {
      * Mul(const T &lc, const Tensor &Rt),
      * Mul(const Tensor &Lt, const T &rc),
      * operator*(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iMul(Tensor &Lt, const Tensor &Rt);
+    void iMul(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Div:
     //==================================================
@@ -1513,8 +1548,12 @@ namespace cytnx {
      * Div(const T &lc, const Tensor &Rt),
      * Div(const Tensor &Lt, const T &rc),
      * operator/(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iDiv(Tensor &Lt, const Tensor &Rt);
+    void iDiv(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Mod:
     //==================================================
@@ -1682,8 +1721,22 @@ namespace cytnx {
     and then calculate the frobenius norm.
     @param[in] Tl input Tensor
     @return Tensor
+    @deprecated Use norm(const Tensor&) instead, which returns a Scalar directly.
     */
-    Tensor Norm(const Tensor &Tl);
+    [[deprecated("use norm() (returns Scalar) instead")]] Tensor Norm(const Tensor &Tl);
+
+    // norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of a tensor.
+    @details Same as Norm(const Tensor&), but returns a Scalar instead of a
+    rank-0 (shape {1}) Tensor. The Scalar carries the tensor's own precision (Float for
+    Float/ComplexFloat input, Double otherwise), so `x /= x.norm()` stays dtype-preserving
+    rather than promoting a Float tensor to Double.
+    @param[in] Tl input Tensor
+    @return Scalar
+    */
+    Scalar norm(const Tensor &Tl);
 
     // Norm:
     //=================================================
@@ -1695,8 +1748,22 @@ namespace cytnx {
     then calculate the frobenius norm.
     @param[in] uTl input UniTensor
     @return Tensor
+    @deprecated Use norm(const UniTensor&) instead, which returns a Scalar directly.
     */
-    Tensor Norm(const cytnx::UniTensor &uTl);
+    [[deprecated("use norm() (returns Scalar) instead")]] Tensor Norm(const cytnx::UniTensor &uTl);
+
+    // norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of an UniTensor.
+    @details Same as Norm(const UniTensor&), but returns a Scalar instead of a
+    rank-0 (shape {1}) Tensor. The Scalar carries the UniTensor's own precision (Float for
+    Float/ComplexFloat input, Double otherwise), so `x /= x.norm()` stays dtype-preserving
+    rather than promoting a Float UniTensor to Double.
+    @param[in] uTl input UniTensor
+    @return Scalar
+    */
+    Scalar norm(const cytnx::UniTensor &uTl);
 
     // Det:
     //=================================================
@@ -1828,10 +1895,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err > 1, then the full list of truncated
-    singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1876,10 +1943,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @param[in] mindim at least this many singular values are kept in total.
     @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
     keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
@@ -1916,10 +1983,10 @@ namespace cytnx {
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
-    @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
-    the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded singular value, or zero if
+    none were discarded; >1 appends a rank-1 tensor containing all discarded singular values in
+    descending order, empty if none were discarded.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -2238,50 +2305,47 @@ namespace cytnx {
     \f[
         T_{o}[i] = e^{T_{i}[i]}
     \f]
-    Note that it will cast to Double type or ComplexDouble type.
+    The output preserves the input's floating precision (Float stays Float, Double stays Double,
+    ComplexFloat/ComplexDouble preserved); integer/bool inputs promote to Double.
     @param[in] Tin a Tensor
-    @return
-        [Double Tensor] or [ComplexDouble Tensor]
+    @return a Tensor with the same floating dtype as \p Tin (Double for integer/bool input)
 
     */
     Tensor Exp(const Tensor &Tin);
 
     /**
-    @brief Exponential all the element in Tensor.
-    @details This function will perform Exponential on all the elements in Tensor \p Tin.
-    That is, the output will be:
-    \f[
-        T_{o}[i] = e^{T_{i}[i]}
-    \f]
-    Note that it will cast to Float type or ComplexFloat type.
+    @brief Exponential all the element in Tensor (deprecated).
+    @details This function will perform Exponential on all the elements in Tensor \p Tin,
+    casting to Float type or ComplexFloat type.
     @param[in] Tin a Tensor
     @return
         [Float Tensor] or [ComplexFloat Tensor]
-
+    @deprecated Use Exp() instead, which is dtype-preserving (a Float input already yields a
+    Float result); for the old float-precision-forcing behavior use Exp(Tin.astype(Type.Float)).
     */
-    Tensor Expf(const Tensor &Tin);
+    [[deprecated("use Exp() (dtype-preserving) instead")]] Tensor Expf(const Tensor &Tin);
 
     /**
     @brief inplace perform Exponential on all the element in Tensor.
     @details This function will perform Exponential on all the elements in Tensor \p Tin.
     Furthermore,
         1. on return, the elements in Tin will be modified to it's exponetial value.
-        2. For Real, if the type is not Double, change the type of the input tensor to Double.
-        3. For Complex, if input is ComplexFloat, promote to ComplexDouble.
+        2. the floating precision is preserved (Float stays Float, Double stays Double); only
+           integer/bool inputs are promoted to Double.
+        3. Complex inputs keep their precision (ComplexFloat stays ComplexFloat).
     @param[in] Tin, the input Tensor.
     */
     void Exp_(Tensor &Tin);
 
     /**
-    @brief inplace perform Exponential on all the element in Tensor.
-    @details This function will perform Exponential on all the elements in Tensor \p Tin.
-    Furthermore,
-        1. on return, the elements in Tin will be modified to it's exponetial value.
-        2. For Real, if the type is not Float, change the type of the input tensor to Float.
-        3. For Complex, if input is ComplexDouble, promote to ComplexFloat.
+    @brief inplace perform Exponential on all the element in Tensor (deprecated).
+    @details This function will perform Exponential on all the elements in Tensor \p Tin,
+    casting the input to Float / ComplexFloat in place.
     @param[in] Tin, the input Tensor.
+    @deprecated Use Exp_() instead, which is dtype-preserving; for the old float-precision-forcing
+    behavior cast first (Tin.astype_(Type.Float)) then call Exp_().
     */
-    void Expf_(Tensor &Tin);
+    [[deprecated("use Exp_() (dtype-preserving) instead")]] void Expf_(Tensor &Tin);
 
     // Pow:
     //==================================================
@@ -2421,8 +2485,8 @@ namespace cytnx {
     @pre two tensor should on same device.
 
     */
-    Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left = false,
-                const bool &Tr_pad_left = false);
+    Tensor Kron(const Tensor &lhs, const Tensor &rhs, bool lhs_pad_left = false,
+                bool rhs_pad_left = false);
 
     // Directsum:
     //==================================================
@@ -2491,8 +2555,8 @@ namespace cytnx {
     @param[in] k: Return k lowest eigen vector if is_V=True
     @param[in] throw_excp: Whether to throw exception when error occurs in Tridiag internal function
     @return
-        [vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor is
-    eigenvector of shape [k,L].
+        [std::vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor
+    is eigenvector of shape [k,L].
 
     @pre
         two Tensors must be Rank-1, with length of Diag = L and Sub_diag length = L-1.
@@ -3006,45 +3070,6 @@ namespace cytnx {
     @author Ke
     */
     std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond = -1);
-
-    /**
-    @brief Blas Axpy, performing \f$ a\textbf{x} + \textbf{y} \f$, inplacely.
-    @details
-    This function performs
-    \f[
-    a\textbf{x} + \textbf{y},
-    \f]
-    where \f$ \textbf{x},\textbf{y} \f$ are Tensor and \f$ a \f$ is a Scalar. The dtype of return
-    Tensor will be the strongest among \p x, \p y and \p a.
-    @param[in] a Scalar.
-    @param[in] x Tensor, can be any rank
-    @param[in] y Tensor, can be any rank
-    @return
-    [Tensor]
-    If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
-    @note This will return a new tensor.
-    */
-    Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor());
-
-    /**
-     * @brief Blas Axpy, performing \f$ \textbf{y} = a\textbf{x} + \textbf{y} \f$, inplacely.
-     * @details
-     * This function performs
-     * \f[
-     * \textbf{y} = a\textbf{x} + \textbf{y},
-     * \f]
-     * where \f$ \textbf{x},\textbf{y} \f$ are Tensor and a is a Scalar. The dtype of return
-     * Tensor will be the strongest among \p x, \p y and \p a.
-     * @param[in ] a Scalar.
-     * @param[in ] x Tensor, can be any rank
-     * @param[in ] y Tensor, can be any rank
-     * @return
-     * [Tensor]
-     * If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
-     * @note Compared to Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor()), this
-     * function will perform inplacely.
-     */
-    void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
 
     /**
     @brief Blas Ger, performing return = a*vec(x)*vec(y)^T

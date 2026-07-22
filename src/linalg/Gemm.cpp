@@ -34,12 +34,11 @@ namespace cytnx {
       cytnx_error_msg(y.shape()[1] != c.shape()[1], "[Gemm_] error, y,c dimension not match.%s",
                       "\n");
 
-      // checking the largest dtype!
-      int fin_dtype = x.dtype();
-      if (y.dtype() < fin_dtype) fin_dtype = y.dtype();
-      if (a.dtype() < fin_dtype) fin_dtype = a.dtype();
-      if (b.dtype() < fin_dtype) fin_dtype = b.dtype();
-      if (c.dtype() < fin_dtype) fin_dtype = c.dtype();
+      // find the promoted dtype:
+      unsigned int fin_dtype = Type.type_promote(x.dtype(), y.dtype());
+      fin_dtype = Type.type_promote(fin_dtype, a.dtype());
+      fin_dtype = Type.type_promote(fin_dtype, b.dtype());
+      fin_dtype = Type.type_promote(fin_dtype, c.dtype());
 
       // check Void type
       cytnx_error_msg(x.dtype() == Type.Void,
@@ -53,41 +52,34 @@ namespace cytnx {
       cytnx_error_msg(b.dtype() == Type.Void,
                       "[Gemm_] error scalar b with Type.Void cannot perform arithmetic.%s", "\n");
 
-      // convert to double if dtype > 4
-      if (fin_dtype > 4) {
+      // the Gemm kernels only cover the four float types; floor integer/bool to Double
+      if (fin_dtype > Type.Float) {
         fin_dtype = Type.Double;
       }
 
-      // convert dtype:
-      Tensor px, py;
-      if (x.dtype() > fin_dtype)
-        px = x.astype(fin_dtype);
-      else
-        px = x;
+      // convert dtype (astype is a no-op when the dtype already matches):
+      Tensor px = x.astype(fin_dtype);
+      Tensor py = y.astype(fin_dtype);
 
-      if (y.dtype() > fin_dtype)
-        py = y.astype(fin_dtype);
-      else
-        py = y;
-
-      Scalar pa, pb;
-      if (a.dtype() > fin_dtype)
-        pa = a.astype(fin_dtype);
-      else
-        pa = a;
-
-      if (b.dtype() > fin_dtype)
-        pb = b.astype(fin_dtype);
-      else
-        pb = b;
+      Scalar pa = a.astype(fin_dtype);
+      Scalar pb = b.astype(fin_dtype);
 
       // output change type!
-      if (c.dtype() > fin_dtype) c = c.astype(fin_dtype);
+      if (c.dtype() != fin_dtype) c = c.astype(fin_dtype);
 
       // contiguous?
       if (!px.is_contiguous()) px = px.contiguous();
       if (!py.is_contiguous()) py = py.contiguous();
       if (!c.is_contiguous()) c = c.contiguous();
+
+      if (c.is_empty()) return;
+      if (px.shape()[1] == 0) {
+        if (pb == Scalar(0.0))
+          c.storage().set_zeros();
+        else
+          c *= pb;
+        return;
+      }
 
       if (x.device() == Device.cpu) {
         linalg_internal::lii.Gemm_ii[fin_dtype](c._impl->storage()._impl, px._impl->storage()._impl,
@@ -122,34 +114,27 @@ namespace cytnx {
       cytnx_error_msg(x.shape()[1] != y.shape()[0], "[Gemm_] error, x,y dimension not match.%s",
                       "\n");
 
-      // checking the largest dtype!
-      int fin_dtype = x.dtype();
-      if (y.dtype() < fin_dtype) fin_dtype = y.dtype();
-      if (a.dtype() < fin_dtype) fin_dtype = a.dtype();
+      // find the promoted dtype:
+      unsigned int fin_dtype = Type.type_promote(x.dtype(), y.dtype());
+      fin_dtype = Type.type_promote(fin_dtype, a.dtype());
 
-      // convert dtype:
-      Tensor px, py;
-      if (x.dtype() > fin_dtype)
-        px = x.astype(fin_dtype);
-      else
-        px = x;
+      // the Gemm kernels only cover the four float types; floor integer/bool to Double
+      if (fin_dtype > Type.Float) {
+        fin_dtype = Type.Double;
+      }
 
-      if (y.dtype() > fin_dtype)
-        py = y.astype(fin_dtype);
-      else
-        py = y;
+      // convert dtype (astype is a no-op when the dtype already matches):
+      Tensor px = x.astype(fin_dtype);
+      Tensor py = y.astype(fin_dtype);
 
-      Scalar pa;
-      if (a.dtype() > fin_dtype)
-        pa = a.astype(fin_dtype);
-      else
-        pa = a;
+      Scalar pa = a.astype(fin_dtype);
 
       // contiguous?
       if (!px.is_contiguous()) px = px.contiguous();
       if (!py.is_contiguous()) py = py.contiguous();
 
       Tensor out = zeros({px.shape()[0], py.shape()[1]}, fin_dtype, x.device());
+      if (out.is_empty() || px.shape()[1] == 0) return out;
 
       Scalar pb(1, fin_dtype);
 

@@ -12,7 +12,6 @@
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -97,11 +96,14 @@ void network_binding(py::module &m) {
     .def("getOrder", [](Network &self) { return self.getOrder(); })
 
     // .def("getOrder", &Network::getOrder)
-    .def("Launch", &Network::Launch, py::arg("network_type") = (int)NtType.Regular)
+    // GIL: see the guard discipline note in linalg_py.cpp
+    .def("Launch", &Network::Launch, py::arg("network_type") = (int)NtType.Regular,
+         py::call_guard<py::gil_scoped_release>())
 
     .def("construct", &Network::construct, py::arg("alias"), py::arg("labels"),
-         py::arg("outlabel") = std::vector<std::string>(), py::arg("outrk"), py::arg("order") = "",
-         py::arg("optim") = false, py::arg("network_type") = (int)NtType.Regular)
+         py::arg("outlabel") = std::vector<std::string>(), py::arg("outrk") = (cytnx_int64)0,
+         py::arg("order") = "", py::arg("optim") = false,
+         py::arg("network_type") = (int)NtType.Regular)
 
     .def("clear", &Network::clear)
     .def("clone", &Network::clone)

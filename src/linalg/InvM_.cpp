@@ -1,7 +1,6 @@
 #include "linalg.hpp"
 
 #include "Tensor.hpp"
-using namespace std;
 #ifdef BACKEND_TORCH
 #else
   #include "backend/linalg_internal_interface.hpp"
@@ -16,6 +15,7 @@ namespace cytnx {
                       "[InvM] error, the size of last two rank should be the same.%s", "\n");
 
       if (Tin.dtype() > 4) Tin = Tin.contiguous().astype(Type.Double);
+      if (Tin.is_empty()) return;
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.InvM_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,
@@ -44,10 +44,10 @@ namespace cytnx {
         tmp.contiguous_();
       }
 
-      vector<cytnx_uint64> tmps = tmp.shape();
-      vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+      std::vector<cytnx_uint64> tmps = tmp.shape();
+      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
       tmps.clear();
-      vector<string> oldlabel = Tin.labels();
+      std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
       cytnx_int64 rowdim = 1;

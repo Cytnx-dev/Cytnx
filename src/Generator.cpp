@@ -4,6 +4,8 @@
 
 #include "linalg.hpp"
 #include <cfloat>
+#include <cmath>
+#include <limits>
 #include <iostream>
 
 #ifdef BACKEND_TORCH
@@ -13,57 +15,62 @@
 
 namespace cytnx {
 
-  Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
-    Tensor out({Nelem}, dtype, device, true);  // init_zero
-    // out is already init as zeros
+  Tensor zeros(const std::vector<cytnx_uint64> &shape, unsigned int dtype, int device) {
+    Tensor out(shape, dtype, device, true);
     // out._impl->storage().set_zeros();
     return out;
   }
-  Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
-               const int &device) {
-    Tensor out(Nelem, dtype, device, true);
-    // out._impl->storage().set_zeros();
-    return out;
+  Tensor zeros(std::initializer_list<cytnx_uint64> shape, unsigned int dtype, int device) {
+    return zeros(std::vector<cytnx_uint64>(shape), dtype, device);
   }
   //-----------------
-  Tensor ones(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
-    Tensor out({Nelem}, dtype, device);  // the default
+  Tensor ones(const std::vector<cytnx_uint64> &shape, unsigned int dtype, int device) {
+    Tensor out(shape, dtype, device);
     out._impl->storage().fill(1);
     return out;
   }
-  Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
-              const int &device) {
-    Tensor out(Nelem, dtype, device);
-    out._impl->storage().fill(1);
-    return out;
+  Tensor ones(std::initializer_list<cytnx_uint64> shape, unsigned int dtype, int device) {
+    return ones(std::vector<cytnx_uint64>(shape), dtype, device);
   }
 
-  Tensor identity(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device) {
-    Tensor out = ones(Dim, dtype, device);
+  Tensor identity(cytnx_uint64 Dim, unsigned int dtype, int device) {
+    Tensor out = ones({Dim}, dtype, device);
     return linalg::Diag(out);
   }
-  Tensor eye(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device) {
+  Tensor eye(cytnx_uint64 Dim, unsigned int dtype, int device) {
     return identity(Dim, dtype, device);
   }
   //-----------------
-  Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step,
-                const unsigned int &dtype, const int &device) {
-    cytnx_error_msg((end - start) / step <= 0,
-                    "[ERROR] arange(start=%f,end=%f,step=%f) "
-                    "No values in the specified range.\n",
+  Tensor arange(cytnx_double start, cytnx_double end, cytnx_double step, unsigned int dtype,
+                int device) {
+    cytnx_error_msg(step == 0, "[ERROR] arange(start=%f,end=%f,step=%f): step cannot be zero.\n",
                     start, end, step);
-    cytnx_uint64 Nelem;
-    Tensor out;
-    if (start < end) {
-      Nelem = (end - start) / step;
-      if (fmod((end - start), step) > 1.0e-14) Nelem += 1;
-    } else {
-      Nelem = (start - end) / (-step);
-      if (fmod((start - end), (-step)) > 1.0e-14) Nelem += 1;
+    cytnx_error_msg(
+      !std::isfinite(start) || !std::isfinite(end) || !std::isfinite(step),
+      "[ERROR] arange(start=%f,end=%f,step=%f): start, end, and step must all be finite.\n", start,
+      end, step);
+
+    // The range is half-open [start, end): the element count is ceil((end - start) / step).
+    // A non-positive count is an empty or direction-mismatched range and yields a zero-extent
+    // tensor rather than an error (zero-extent tensors are supported). This replaces the old
+    // integer-truncation + `fmod(...) > 1e-14` test, which was neither a reliable ceil nor a
+    // stable half-open test -- it could include the endpoint (fmod(1.0, 0.1) ~= 0.1, not 0) and
+    // its fixed absolute threshold miscounted at small scales. See #1076.
+    const cytnx_double count = (end - start) / step;
+    cytnx_uint64 Nelem = 0;
+    if (count > 0) {
+      const cytnx_double nelem = std::ceil(count);
+      cytnx_error_msg(
+        nelem > static_cast<cytnx_double>(std::numeric_limits<cytnx_uint64>::max()),
+        "[ERROR] arange(start=%f,end=%f,step=%f): the requested number of elements exceeds the "
+        "maximum representable size.\n",
+        start, end, step);
+      Nelem = static_cast<cytnx_uint64>(nelem);
     }
-    cytnx_error_msg(Nelem == 0, "[ERROR] arange(start,end,step)%s",
-                    "Nelem cannot be zero! check the range!\n");
+
+    Tensor out;
     out.Init({Nelem}, dtype, device);
+    if (Nelem == 0) return out;  // zero-extent range: nothing to fill
 
     if (device == Device.cpu) {
       utils_internal::uii.SetArange_ii[dtype](out._impl->storage()._impl, start, end, step, Nelem);
@@ -74,19 +81,22 @@ namespace cytnx {
                                                 Nelem);
   #else
       cytnx_error_msg(true, "[ERROR] fatal internal, %s",
-                      " [arange] the container is on gpu without CUDA support!%s", "\n")
+                      " [arange] the container is on gpu without CUDA support!");
   #endif
     }
 
     return out;
   }
-  Tensor arange(const cytnx_int64 &Nelem) {
-    cytnx_error_msg(Nelem <= 0, "[ERROR] arange(Nelem) , %s", "Nelem must be integer > 0");
+  Tensor arange(cytnx_int64 Nelem) {
+    cytnx_error_msg(Nelem < 0, "[ERROR] arange(Nelem): Nelem must be a non-negative integer.%s",
+                    "\n");
+    // Nelem == 0 yields a zero-extent tensor (consistent with the empty-range case of the
+    // start/end/step overload).
     return arange(0, Nelem, 1);
   }
 
-  Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
-                  const bool &endpoint, const unsigned int &dtype, const int &device) {
+  Tensor linspace(cytnx_double start, cytnx_double end, cytnx_uint64 Nelem, bool endpoint,
+                  unsigned int dtype, int device) {
     Tensor out;
     cytnx_error_msg(Nelem == 0, "[ERROR] linspace(start,end,Nelem)%s", "Nelem cannot be zero!\n");
     out.Init({Nelem}, dtype, device);
@@ -109,7 +119,7 @@ namespace cytnx {
                                                 Nelem);
   #else
       cytnx_error_msg(true, "[ERROR] fatal internal, %s",
-                      " [arange] the container is on gpu without CUDA support!%s", "\n")
+                      " [arange] the container is on gpu without CUDA support!");
   #endif
     }
     return out;

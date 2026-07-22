@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include <utility>
 
 namespace cytnx {
 
@@ -10,6 +11,37 @@ namespace cytnx {
   std::ostream &operator<<(std::ostream &os, const Storage &in) {
     in.print();
     return os;
+  }
+
+  namespace internal {
+    // Fold over the non-void alternatives of Type_list (index 0 is void, so
+    // Is+1 skips it) looking for the one matching base->dtype(), and
+    // storage_cast<T> into that alternative of StorageVariant. Generated once
+    // from Type_list rather than hand-listing every dtype (#941).
+    template <std::size_t... Is>
+    StorageVariant as_storage_variant_impl(const boost::intrusive_ptr<Storage_base> &base,
+                                           unsigned int dtype, std::index_sequence<Is...>) {
+      StorageVariant out;
+      bool matched = (... || [&]() {
+        using T = std::variant_alternative_t<Is + 1, Type_list>;
+        if (dtype == Type_class::cy_typeid_v<T>) {
+          out = storage_cast<T>(base);
+          return true;
+        }
+        return false;
+      }());
+      cytnx_error_msg(!matched, "[Storage] as_storage_variant: unexpected dtype %d%s", dtype, "\n");
+      return out;
+    }
+  }  // namespace internal
+
+  StorageVariant as_storage_variant(const boost::intrusive_ptr<Storage_base> &base) {
+    cytnx_error_msg(base->dtype() == (int)Type.Void,
+                    "[Storage] as_storage_variant: Storage is Type.Void (empty/uninitialized).%s",
+                    "\n");
+    constexpr std::size_t n_non_void = std::variant_size_v<Type_list> - 1;
+    return internal::as_storage_variant_impl(base, base->dtype(),
+                                             std::make_index_sequence<n_non_void>());
   }
 
   bool Storage::operator==(const Storage &rhs) {
@@ -141,6 +173,7 @@ namespace cytnx {
     write_number(this->device());
 
     // data:
+    if (this->size() == 0) return;
     if (this->device() == Device.cpu) {
       f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
     } else {
@@ -164,6 +197,7 @@ namespace cytnx {
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
 
     // data:
+    if (this->size() == 0) return;
     if (this->device() == Device.cpu) {
       f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
     } else {
@@ -274,6 +308,7 @@ namespace cytnx {
 
     this->_impl = __SII.USIInit[dt]();
     this->_impl->Init(sz, dv);
+    if (sz == 0) return;
 
     // data:
     if (dv == Device.cpu) {
@@ -303,8 +338,7 @@ namespace cytnx {
 
     this->_impl = __SII.USIInit[dtype]();
     this->_impl->Init(Nelem, Device.cpu);
-
-    f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
+    if (Nelem != 0) f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
   }
 
   Scalar::Sproxy Storage::operator()(const cytnx_uint64 &idx) {
@@ -320,6 +354,7 @@ namespace cytnx {
                     "\n");
 
     std::vector<T> out(this->size());
+    if (out.empty()) return out;
     Storage S;
     if (this->device() != Device.cpu) {
       S = this->to(Device.cpu);

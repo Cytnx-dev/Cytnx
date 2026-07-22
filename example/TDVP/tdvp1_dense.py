@@ -7,7 +7,6 @@ Author: Hao-Ti Hung
 """
 
 def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
-
     class OneSiteOp(cytnx.LinOp):
         def __init__(self, L, M, R):
             self.anet = cytnx.Network()
@@ -170,7 +169,10 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
             psi = time_evolve_Lan_f(psi, (LR[p],M,LR[p+1]), dt)
 
             psi.set_rowrank_(1) # maintain rowrank to perform the svd
-            s,_,A[p] = cytnx.linalg.Svd_truncate(psi,new_dim)
+            # Remove numerically null Schmidt vectors. Keeping zero-weight sectors
+            # in the Schmidt basis makes the TDVP tangent-space projector incomplete
+            # and ill-conditioned.
+            s,_,A[p] = cytnx.linalg.Svd_truncate(psi,new_dim,1.0e-12)
             A[p].relabel_(lbls[p]) # set the label back to be consistent
             # update LR from right to left:
             anet = cytnx.Network()
@@ -185,7 +187,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
             old_LR = LR[p].clone()
             if p != 0:
                 LR[p] = anet.Launch()
-                s = s/s.Norm().item() # normalize s
+                s = s/s.norm() # normalize s
                 C = cytnx.Contract(_, s)
                 #C = time_evolve_b(C, (old_LR, LR[p]), dt)
                 C = time_evolve_Lan_b(C, (old_LR, LR[p]), dt)
@@ -211,7 +213,10 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
             psi = time_evolve_Lan_f(psi, (LR[p],M,LR[p+1]), dt)
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
-            s,A[p],_ = cytnx.linalg.Svd_truncate(psi,new_dim)
+            # Remove numerically null Schmidt vectors. Keeping zero-weight sectors
+            # in the Schmidt basis makes the TDVP tangent-space projector incomplete
+            # and ill-conditioned.
+            s,A[p],_ = cytnx.linalg.Svd_truncate(psi,new_dim,1.0e-12)
             A[p].relabel_(lbls[p]) #set the label back to be consistent
             # update LR from left to right:
             anet = cytnx.Network()
@@ -228,7 +233,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
             if p != Nsites - 1:
                 LR[p+1] = anet.Launch()
-                s = s/s.Norm().item() # normalize s
+                s = s/s.norm() # normalize s
                 C = cytnx.Contract(s, _)
                 C = time_evolve_Lan_b(C, (LR[p+1],old_LR), dt)
                 A[p+1] = cytnx.Contract(A[p+1], C)

@@ -45,6 +45,12 @@ namespace cytnx {
         V.Init(in.shape(), in.dtype(), in.device()); /*V.storage().set_zeros();*/
       }
 
+      if (in.is_empty()) {
+        std::vector<Tensor> out{S};
+        if (is_V) out.push_back(V);
+        return out;
+      }
+
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Eig_ii[in.dtype()](in._impl->storage()._impl,
                                                        S._impl->storage()._impl,
@@ -160,8 +166,7 @@ namespace cytnx {
         "\n");
 
       std::vector<bool> signflip;
-      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) signflip = Tin.signflip();
 
       std::vector<cytnx_uint64> strides;
       strides.reserve(Tin.rank());
@@ -314,8 +319,7 @@ namespace cytnx {
         v_ptr->_is_braket_form = v_ptr->_update_braket();
         v_ptr->_inner_to_outer_idx = v_itoi;
         v_ptr->_blocks = v_blocks;
-        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-          v_ptr->_signflip = std::vector<bool>(v_blocks.size(), false);
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) v_ptr->reset_signflip_();
         UniTensor V;
         V._impl = boost::intrusive_ptr<UniTensor_base>(v_ptr);
         outCyT.push_back(V);

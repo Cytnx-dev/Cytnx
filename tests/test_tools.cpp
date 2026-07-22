@@ -10,12 +10,12 @@
 #include "random.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-
 #define RAND_MAX_VAL 1000
 #define RAND_MIN_VAL ((-1) * RAND_MAX_VAL)
 
 namespace cytnx {
-  namespace TestTools {
+  namespace test {
+
     void TestFailMsg::AppendMsg(const std::string& fail_msg, const std::string& func_name,
                                 const int line) {
       std::string full_msg;
@@ -178,7 +178,8 @@ namespace cytnx {
 
     // Tensor
     // random initialize
-    void GetRandRange(const unsigned int dtype, cytnx_double* low_bd, cytnx_double* high_bd) {
+    static void GetRandRange(const unsigned int dtype, cytnx_double* low_bd,
+                             cytnx_double* high_bd) {
       if (dtype == Type.Void) return;
       switch (dtype) {
         case Type.Void:  // return directly
@@ -456,9 +457,6 @@ namespace cytnx {
           if (ind2 < 0) {
             std::cout << "Qnum " << Ut1ptr->_inner_to_outer_idx[i]
                       << " not found in second tensor:" << std::endl;
-            // for  (int j = 0; j < blocks_num; j++) {
-            //   std::cout << "Qnum[" << j << "]: " << Ut2ptr->_inner_to_outer_idx[j] << std::endl;
-            // }
             return false;
           }
           // check blocks
@@ -495,9 +493,6 @@ namespace cytnx {
           if (ind2 < 0) {
             std::cout << "Qnum " << Ut1ptr->_inner_to_outer_idx[i] << " not found in second tensor."
                       << std::endl;
-            // for  (int j = 0; j < blocks_num; j++) {
-            //   std::cout << "Qnum[" << j << "]: " << Ut2ptr->_inner_to_outer_idx[j] << std::endl;
-            // }
             return false;
           }
           // check blocks
@@ -584,18 +579,22 @@ namespace cytnx {
       const Tensor terr_d = out.back().astype(Type.Double).contiguous();
 
       if (!truncated) {
-        // no truncation -> terr is a 1-element zero regardless of return_err
-        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>({1}))
-          << prefix << "terr shape (no truncation)";
-        EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
-          << prefix << "terr value (no truncation)";
+        // No truncation -> return_err=1 is a scalar zero; return_err>1 is an empty vector.
+        if (return_err == 1) {
+          ASSERT_TRUE(out.back().is_scalar()) << prefix << "terr shape (no truncation)";
+          EXPECT_NEAR(terr_d.storage().at<double>(0), 0.0, rtol)
+            << prefix << "terr value (no truncation)";
+        } else {
+          ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>{0})
+            << prefix << "terr shape (no truncation)";
+          EXPECT_TRUE(out.back().is_empty()) << prefix << "terr value (no truncation)";
+        }
         return;
       }
 
       if (return_err == 1) {
-        // 1 element: the first discarded singular value, full_sv[k]
-        ASSERT_EQ(out.back().shape(), std::vector<cytnx_uint64>({1}))
-          << prefix << "terr shape (return_err=1)";
+        // scalar: the first discarded singular value, full_sv[k]
+        ASSERT_TRUE(out.back().is_scalar()) << prefix << "terr shape (return_err=1)";
         const double got = terr_d.storage().at<double>(0);
         const double exp = ref.storage().at<double>(k);
         EXPECT_NEAR(got, exp, rtol * (1.0 + std::abs(exp))) << prefix << "terr (return_err=1)";
@@ -613,5 +612,5 @@ namespace cytnx {
       }
     }
 
-  }  // namespace TestTools
+  }  // namespace test
 }  // namespace cytnx

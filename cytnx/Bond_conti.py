@@ -1,29 +1,8 @@
 from .utils import *
 from cytnx import *
-from .Symmetry_conti import Qs
-# from typing import List
-# Use beartype to check the type of arguments
-from beartype.typing import List
 
-@add_method(Bond)
-def redirect_(self):
-    self.c_redirect_();
-    return self;
-
-@add_method(Bond)
-def getDegeneracy(self, qnum: List[int], return_indices:bool):
-    inds = []
-    out = self.c_getDegeneracy_refarg(qnum,inds);
-    return out, inds;
-
-@add_method(Bond)
-def getDegeneracy(self, qnum, return_indices:bool):
-    inds = []
-    out = self.c_getDegeneracy_refarg(lqnum,inds);
-    return out, inds;
-
-@add_method(Bond)
-def group_duplicates(self):
-    mapper = []
-    out = self.c_group_duplicates_refarg(mapper);
-    return out, mapper;
+# All of Bond's Python-side helpers (redirect_, getDegeneracy, group_duplicates)
+# have been folded directly into the C++ bindings in pybind/bond_py.cpp; this
+# module intentionally has no remaining delegation wrappers. The `List` import
+# that used to support type-hinted wrapper signatures here is gone now that
+# there is nothing left to type-hint against.

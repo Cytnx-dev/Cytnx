@@ -5,14 +5,18 @@
 
 #include "linalg.hpp"
 #include "utils/is.hpp"
+#include "utils/checked_cast.hpp"
 #include "Type.hpp"
-
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
 
 namespace cytnx {
+  namespace {
+    constexpr unsigned int kLegacyTensorMagic = 888;
+    constexpr unsigned int kVersionedTensorMagic = 889;
+    constexpr unsigned int kCurrentTensorFileVersion = 1;
+  }  // namespace
 
   //----------------------------------------------
   // Tproxy
@@ -440,7 +444,7 @@ namespace cytnx {
       this->_impl->_storage.Tofile(fname);
     }
   }
-  void Tensor::Tofile(fstream &f) const {
+  void Tensor::Tofile(std::fstream &f) const {
     if (!this->is_contiguous()) {
       auto A = this->contiguous();
       A.storage().Tofile(f);
@@ -449,17 +453,17 @@ namespace cytnx {
     }
   }
   void Tensor::Save(const std::string &fname) const {
-    fstream f;
+    std::fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
+      f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
     } else {
       // add filename extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cytn'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cytn"), ios::out | ios::trunc | ios::binary);
+      f.open((fname + ".cytn"), std::ios::out | std::ios::trunc | std::ios::binary);
     }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
@@ -467,22 +471,27 @@ namespace cytnx {
     this->_Save(f);
     f.close();
   }
-  void Tensor::Save(const char *fname) const { this->Save(string(fname)); }
-  void Tensor::_Save(fstream &f) const {
+  void Tensor::Save(const char *fname) const { this->Save(std::string(fname)); }
+  void Tensor::_Save(std::fstream &f) const {
     // header
     // check:
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
 
-    unsigned int IDDs = 888;
+    unsigned int IDDs = kVersionedTensorMagic;
     f.write((char *)&IDDs, sizeof(unsigned int));
+    unsigned int version = kCurrentTensorFileVersion;
+    f.write((char *)&version, sizeof(unsigned int));
+
     cytnx_uint64 shp = this->shape().size();
     cytnx_uint64 Conti = this->is_contiguous();
     f.write((char *)&shp, sizeof(cytnx_uint64));
 
     f.write((char *)&Conti, sizeof(cytnx_uint64));
-    f.write((char *)&this->_impl->_shape[0], sizeof(cytnx_uint64) * shp);
-    f.write((char *)&this->_impl->_mapper[0], sizeof(cytnx_uint64) * shp);
-    f.write((char *)&this->_impl->_invmapper[0], sizeof(cytnx_uint64) * shp);
+    if (shp != 0) {
+      f.write((char *)this->_impl->_shape.data(), sizeof(cytnx_uint64) * shp);
+      f.write((char *)this->_impl->_mapper.data(), sizeof(cytnx_uint64) * shp);
+      f.write((char *)this->_impl->_invmapper.data(), sizeof(cytnx_uint64) * shp);
+    }
 
     // pass to storage for save:
     this->_impl->_storage._Save(f);
@@ -497,8 +506,8 @@ namespace cytnx {
   }
   Tensor Tensor::Load(const std::string &fname) {
     Tensor out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
+    std::fstream f;
+    f.open(fname, std::ios::in | std::ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
@@ -506,15 +515,24 @@ namespace cytnx {
     f.close();
     return out;
   }
-  Tensor Tensor::Load(const char *fname) { return Tensor::Load(string(fname)); }
-  void Tensor::_Load(fstream &f) {
+  Tensor Tensor::Load(const char *fname) { return Tensor::Load(std::string(fname)); }
+  void Tensor::_Load(std::fstream &f) {
     // header
     // check:
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
 
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
-    cytnx_error_msg(tmpIDDs != 888, "[ERROR] the object is not a cytnx tensor!%s", "\n");
+    if (tmpIDDs == kVersionedTensorMagic) {
+      unsigned int version;
+      f.read((char *)&version, sizeof(unsigned int));
+      cytnx_error_msg(version != kCurrentTensorFileVersion,
+                      "[ERROR][Tensor::_Load] Unsupported Tensor file format version '%u'.%s",
+                      version, "\n");
+    } else {
+      cytnx_error_msg(tmpIDDs != kLegacyTensorMagic, "[ERROR] the object is not a cytnx tensor!%s",
+                      "\n");
+    }
 
     cytnx_uint64 shp;
     cytnx_uint64 Conti;
@@ -525,9 +543,11 @@ namespace cytnx {
     this->_impl->_shape.resize(shp);
     this->_impl->_mapper.resize(shp);
     this->_impl->_invmapper.resize(shp);
-    f.read((char *)&this->_impl->_shape[0], sizeof(cytnx_uint64) * shp);
-    f.read((char *)&this->_impl->_mapper[0], sizeof(cytnx_uint64) * shp);
-    f.read((char *)&this->_impl->_invmapper[0], sizeof(cytnx_uint64) * shp);
+    if (shp != 0) {
+      f.read((char *)this->_impl->_shape.data(), sizeof(cytnx_uint64) * shp);
+      f.read((char *)this->_impl->_mapper.data(), sizeof(cytnx_uint64) * shp);
+      f.read((char *)this->_impl->_invmapper.data(), sizeof(cytnx_uint64) * shp);
+    }
 
     // pass to storage for save:
     this->_impl->_storage._Load(f);
@@ -547,6 +567,24 @@ namespace cytnx {
     return out;
   }
 
+  namespace {
+    // Wrap a scalar as a host-resident rank-0 Tensor so scalar in-place arithmetic reuses the
+    // iAdd/iSub/iMul/iDiv kernels. The wrapper deliberately stays on the CPU even when the LHS is
+    // on a GPU: scalar RHS kernels read it with a host-side dereference and pass it in by value, so
+    // keeping it on the host avoids a per-call H2D copy. See #988.
+    template <class T>
+    Tensor scalar_as_rank0_tensor(const T &rc) {
+      Tensor s({}, Type.cy_typeid(rc), Device.cpu);
+      s.storage().at<T>(0) = rc;
+      return s;
+    }
+    Tensor scalar_as_rank0_tensor(const Scalar &rc) {
+      Tensor s({}, rc.dtype(), Device.cpu);
+      s.item() = rc;  // Sproxy assignment
+      return s;
+    }
+  }  // namespace
+
   ///@cond
   // +=
   template <>
@@ -561,62 +599,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_double>(const cytnx_double &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_float>(const cytnx_float &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_int64>(const cytnx_int64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_int32>(const cytnx_int32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_int16>(const cytnx_int16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<cytnx_bool>(const cytnx_bool &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator+=<Scalar>(const Scalar &rc) {
-    this->_impl->storage() = cytnx::linalg::Add(*this, rc)._impl->storage();
+    cytnx::linalg::iAdd(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
@@ -636,62 +674,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_double>(const cytnx_double &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_float>(const cytnx_float &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_int64>(const cytnx_int64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_int32>(const cytnx_int32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_int16>(const cytnx_int16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<cytnx_bool>(const cytnx_bool &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator-=<Scalar>(const Scalar &rc) {
-    this->_impl->storage() = cytnx::linalg::Sub(*this, rc)._impl->storage();
+    cytnx::linalg::iSub(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
@@ -711,62 +749,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_double>(const cytnx_double &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_float>(const cytnx_float &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_int64>(const cytnx_int64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_int32>(const cytnx_int32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_int16>(const cytnx_int16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<cytnx_bool>(const cytnx_bool &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator*=<Scalar>(const Scalar &rc) {
-    this->_impl->storage() = cytnx::linalg::Mul(*this, rc)._impl->storage();
+    cytnx::linalg::iMul(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
@@ -787,62 +825,62 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_complex128>(const cytnx_complex128 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_complex64>(const cytnx_complex64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_double>(const cytnx_double &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_float>(const cytnx_float &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_int64>(const cytnx_int64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_uint64>(const cytnx_uint64 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_int32>(const cytnx_int32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_uint32>(const cytnx_uint32 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_int16>(const cytnx_int16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_uint16>(const cytnx_uint16 &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_bool>(const cytnx_bool &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
   Tensor &Tensor::operator/=<Scalar>(const Scalar &rc) {
-    this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
+    cytnx::linalg::iDiv(*this, scalar_as_rank0_tensor(rc), /*rhs_is_weak_scalar=*/true);
     return *this;
   }
   template <>
@@ -883,6 +921,8 @@ namespace cytnx {
   Tensor Tensor::Exp() const { return linalg::Exp(*this); }
   Tensor Tensor::Norm() const { return linalg::Norm(*this); }
 
+  Scalar Tensor::norm() const { return linalg::norm(*this); }
+
   Tensor Tensor::Pow(const cytnx_double &p) const { return linalg::Pow(*this, p); }
 
   Tensor &Tensor::Pow_(const cytnx_double &p) {
@@ -905,6 +945,22 @@ namespace cytnx {
 
   bool Tensor::same_data(const Tensor &rhs) const {
     return is(this->_impl->storage(), rhs.storage());
+  }
+
+  std::vector<cytnx_int64> Tensor::strides() const {
+    // The storage is laid out contiguously in memory order; _invmapper[i] gives
+    // the logical axis sitting at memory position i (innermost last). The stride
+    // of a logical axis is the product of the memory-order extents inside it.
+    const std::vector<cytnx_uint64> &shape = this->_impl->shape();
+    const std::vector<cytnx_uint64> &invmapper = this->_impl->invmapper();
+    const cytnx_uint64 rank = shape.size();
+    std::vector<cytnx_int64> out(rank);
+    cytnx_uint64 step = 1;
+    for (cytnx_int64 i = static_cast<cytnx_int64>(rank) - 1; i >= 0; i--) {
+      out[invmapper[i]] = cytnx::internal::CheckedCastToInt64(step, "stride");
+      step *= shape[invmapper[i]];
+    }
+    return out;
   }
 
   //===========================

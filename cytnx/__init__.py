@@ -137,32 +137,7 @@ else:
 
 
 
-if(os.path.exists(os.path.join(os.path.dirname(__file__),"include"))):
-    # this only set if using anaconda install.
-    __cpp_include__=os.path.join(os.path.dirname(__file__),"include")
-    __cpp_lib__=os.path.join(os.path.dirname(__file__),"lib")
-    if not os.path.isdir(__cpp_lib__):
-        __cpp_lib__=os.path.join(os.path.dirname(__file__),"lib64")
-
-else:
-    __cpp_include__=os.path.join(os.path.dirname(os.path.dirname(__file__)),"include")
-    __cpp_lib__=os.path.join(os.path.dirname(os.path.dirname(__file__)),"lib")
-    if not os.path.isdir(__cpp_lib__):
-        __cpp_lib__=os.path.join(os.path.dirname(os.path.dirname(__file__)),"lib64")
-
-
 __blasINTsize__ = cytnx.__blasINTsize__
-
-
-
-def _find_hptt__():
-    hptt_path = None
-    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)),"hptt")):
-        hptt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"hptt")
-    elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"hptt")):
-        hptt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"hptt")
-
-    return hptt_path
 
 
 
@@ -190,13 +165,6 @@ def _resolve_cpp_linkflags__():
         if i == 0:
             lapack_ldir=os.path.dirname(line.split(' ')[0].strip())
     out += "-Wl,-rpath,%s "%(lapack_ldir)
-
-    hptt_path = _find_hptt__()
-    if not hptt_path is None:
-        out += os.path.join(hptt_path,"lib/libhptt.a")
-
-
-
 
     f.close()
     return out

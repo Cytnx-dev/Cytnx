@@ -1,117 +1,123 @@
-#ifndef _H_BlockFermionicUniTensor_test
-#define _H_BlockFermionicUniTensor_test
+#ifndef CYTNX_TESTS_BLOCKFERMIONICUNITENSOR_TEST_H_
+#define CYTNX_TESTS_BLOCKFERMIONICUNITENSOR_TEST_H_
+
+#include <gtest/gtest.h>
 
 #include "cytnx.hpp"
-#include <gtest/gtest.h>
 #include "test_tools.h"
 
-using namespace cytnx;
-using namespace TestTools;
-class BlockFermionicUniTensorTest : public ::testing::Test {
- public:
-  std::string data_dir = CYTNX_TEST_DATA_DIR "/common/BlockFermionicUniTensor/";
-  const std::string temp_file_path = std::string(std::tmpnam(nullptr)) + ".cytnx";
+namespace cytnx {
+  namespace test {
 
-  Bond B1 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
-  Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1}, {Symmetry::FermionParity()});
-  Bond B12 = B1.combineBond(B2).redirect_();
-  Bond B3 = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
-  Bond B4 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
-  Bond B1g = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
-  Bond B2g = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
-  Bond B3g = Bond(BD_OUT, {Qs(1) >> 1, Qs(0) >> 1, Qs(0) >> 1}, {Symmetry::FermionParity()});
-  UniTensor BFUT1 = UniTensor({B1, B2, B12}, {"a", "b", "c"}).set_name("BFUT1");
-  UniTensor BFUT2;
-  UniTensor BFUT3 = UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"}).set_name("BFUT3");
-  UniTensor BFUT3INV =
-    UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"}).set_name("BFUT3INV");
-  ;
-  UniTensor BFUT3PERM = UniTensor({B3, B2, B4, B12, B1}, {"d", "b", "e", "c", "a"})
-                          .set_name("BFUT3PERM");  // permutation {3, 1, 4, 2, 0}
-  UniTensor BFUT4 = UniTensor({B1g, B2g, B3g}, {"a", "b", "c"}).set_name("BFUT4");
-  // BFUT5 has mixed in/out legs on both row and column spaces, and degeneracies.
-  Bond B5Li = Bond(BD_IN, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
-  Bond B5Lo = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
-  Bond B5Ri = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
-  Bond B5Ro = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
-  UniTensor BFUT5 = UniTensor({B5Li, B5Lo, B5Ri, B5Ro}, {"li", "lo", "ri", "ro"}).set_name("BFUT5");
-  // UniTensor BFUTfparfnum; // fpar x fnum symmetries
+    class BlockFermionicUniTensorTest : public ::testing::Test {
+     public:
+      std::string data_dir = CYTNX_TEST_DATA_DIR "/common/BlockFermionicUniTensor/";
+      const std::string temp_file_path = std::string(std::tmpnam(nullptr)) + ".cytnx";
 
- protected:
-  void SetUp() override {
-    BFUT1.at({0, 0, 0}) = 1.;
-    BFUT1.at({0, 0, 1}) = 2.;
-    BFUT1.at({0, 1, 2}) = 3.;
-    BFUT1.at({0, 1, 3}) = 4.;
-    BFUT1.at({1, 0, 2}) = 5.;
-    BFUT1.at({1, 0, 3}) = 6.;
-    BFUT1.at({1, 1, 0}) = 7.;
-    BFUT1.at({1, 1, 1}) = 8.;
+      Bond B1 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+      Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1}, {Symmetry::FermionParity()});
+      Bond B12 = B1.combineBond(B2).redirect();
+      Bond B3 = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+      Bond B4 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+      Bond B1g = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+      Bond B2g = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
+      Bond B3g = Bond(BD_OUT, {Qs(1) >> 1, Qs(0) >> 1, Qs(0) >> 1}, {Symmetry::FermionParity()});
+      UniTensor BFUT1 = UniTensor({B1, B2, B12}, {"a", "b", "c"}).set_name("BFUT1");
+      UniTensor BFUT2;
+      UniTensor BFUT3 =
+        UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"}).set_name("BFUT3");
+      UniTensor BFUT3INV =
+        UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"}).set_name("BFUT3INV");
+      ;
+      UniTensor BFUT3PERM = UniTensor({B3, B2, B4, B12, B1}, {"d", "b", "e", "c", "a"})
+                              .set_name("BFUT3PERM");  // permutation {3, 1, 4, 2, 0}
+      UniTensor BFUT4 = UniTensor({B1g, B2g, B3g}, {"a", "b", "c"}).set_name("BFUT4");
+      // BFUT5 has mixed in/out legs on both row and column spaces, and degeneracies.
+      Bond B5Li = Bond(BD_IN, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
+      Bond B5Lo = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
+      Bond B5Ri = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
+      Bond B5Ro = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
+      UniTensor BFUT5 =
+        UniTensor({B5Li, B5Lo, B5Ri, B5Ro}, {"li", "lo", "ri", "ro"}).set_name("BFUT5");
+      // UniTensor BFUTfparfnum; // fpar x fnum symmetries
 
-    BFUT2 = BFUT1.clone();
-    // BFUT2.permute_nosignflip_({2, 1, 0});
-    BFUT2.Transpose_();
-    BFUT2.set_rowrank_(1);
-    BFUT2.set_name("BFUT2");
+     protected:
+      void SetUp() override {
+        BFUT1.at({0, 0, 0}) = 1.;
+        BFUT1.at({0, 0, 1}) = 2.;
+        BFUT1.at({0, 1, 2}) = 3.;
+        BFUT1.at({0, 1, 3}) = 4.;
+        BFUT1.at({1, 0, 2}) = 5.;
+        BFUT1.at({1, 0, 3}) = 6.;
+        BFUT1.at({1, 1, 0}) = 7.;
+        BFUT1.at({1, 1, 1}) = 8.;
 
-    BFUT3.at({0, 0, 0, 0, 0}) = 1.;
-    BFUT3.at({0, 0, 1, 0, 0}) = 2.;
-    BFUT3.at({0, 1, 2, 0, 0}) = 3.;
-    BFUT3.at({0, 1, 3, 0, 0}) = 4.;
-    BFUT3.at({1, 0, 2, 0, 0}) = 5.;
-    BFUT3.at({1, 0, 3, 0, 0}) = 6.;
-    BFUT3.at({1, 1, 0, 0, 0}) = 7.;
-    BFUT3.at({1, 1, 1, 0, 0}) = 8.;
+        BFUT2 = BFUT1.clone();
+        // BFUT2.permute_nosignflip_({2, 1, 0});
+        BFUT2.Transpose_();
+        BFUT2.set_rowrank_(1);
+        BFUT2.set_name("BFUT2");
 
-    BFUT3INV.at({0, 0, 0, 0, 0}) = 1. / 1.;
-    BFUT3INV.at({0, 0, 1, 0, 0}) = 1. / 2.;
-    BFUT3INV.at({0, 1, 2, 0, 0}) = 1. / 3.;
-    BFUT3INV.at({0, 1, 3, 0, 0}) = 1. / 4.;
-    BFUT3INV.at({1, 0, 2, 0, 0}) = 1. / 5.;
-    BFUT3INV.at({1, 0, 3, 0, 0}) = 1. / 6.;
-    BFUT3INV.at({1, 1, 0, 0, 0}) = 1. / 7.;
-    BFUT3INV.at({1, 1, 1, 0, 0}) = 1. / 8.;
+        BFUT3.at({0, 0, 0, 0, 0}) = 1.;
+        BFUT3.at({0, 0, 1, 0, 0}) = 2.;
+        BFUT3.at({0, 1, 2, 0, 0}) = 3.;
+        BFUT3.at({0, 1, 3, 0, 0}) = 4.;
+        BFUT3.at({1, 0, 2, 0, 0}) = 5.;
+        BFUT3.at({1, 0, 3, 0, 0}) = 6.;
+        BFUT3.at({1, 1, 0, 0, 0}) = 7.;
+        BFUT3.at({1, 1, 1, 0, 0}) = 8.;
 
-    BFUT3PERM.at({0, 0, 0, 0, 0}) = 1.;
-    BFUT3PERM.at({0, 0, 0, 1, 0}) = 2.;
-    BFUT3PERM.at({0, 1, 0, 2, 0}) = 3.;
-    BFUT3PERM.at({0, 1, 0, 3, 0}) = 4.;
-    BFUT3PERM.at({0, 0, 0, 2, 1}) = -5.;
-    BFUT3PERM.at({0, 0, 0, 3, 1}) = -6.;
-    BFUT3PERM.at({0, 1, 0, 0, 1}) = -7.;
-    BFUT3PERM.at({0, 1, 0, 1, 1}) = -8.;
+        BFUT3INV.at({0, 0, 0, 0, 0}) = 1. / 1.;
+        BFUT3INV.at({0, 0, 1, 0, 0}) = 1. / 2.;
+        BFUT3INV.at({0, 1, 2, 0, 0}) = 1. / 3.;
+        BFUT3INV.at({0, 1, 3, 0, 0}) = 1. / 4.;
+        BFUT3INV.at({1, 0, 2, 0, 0}) = 1. / 5.;
+        BFUT3INV.at({1, 0, 3, 0, 0}) = 1. / 6.;
+        BFUT3INV.at({1, 1, 0, 0, 0}) = 1. / 7.;
+        BFUT3INV.at({1, 1, 1, 0, 0}) = 1. / 8.;
 
-    // BFUTfparfnum = UniTensor::Load(data_dir + "ferm_fpar_fnum_F64.cytnx");
+        BFUT3PERM.at({0, 0, 0, 0, 0}) = 1.;
+        BFUT3PERM.at({0, 0, 0, 1, 0}) = 2.;
+        BFUT3PERM.at({0, 1, 0, 2, 0}) = 3.;
+        BFUT3PERM.at({0, 1, 0, 3, 0}) = 4.;
+        BFUT3PERM.at({0, 0, 0, 2, 1}) = -5.;
+        BFUT3PERM.at({0, 0, 0, 3, 1}) = -6.;
+        BFUT3PERM.at({0, 1, 0, 0, 1}) = -7.;
+        BFUT3PERM.at({0, 1, 0, 1, 1}) = -8.;
 
-    // BFUT:
-    // 1st bond: e,o,o
-    // 2nd bond: e,o
-    // 3rd bond: o,e,e
-    BFUT4.at({0, 0, 1}) = 1;
-    BFUT4.at({0, 0, 2}) = 2;
-    BFUT4.at({0, 1, 0}) = 3;
-    BFUT4.at({1, 0, 0}) = 4;
-    BFUT4.at({2, 0, 0}) = 5;
-    BFUT4.at({1, 1, 1}) = 6;
-    BFUT4.at({2, 1, 1}) = 7;
-    BFUT4.at({1, 1, 2}) = 8;
-    BFUT4.at({2, 1, 2}) = 9;
+        // BFUTfparfnum = UniTensor::Load(data_dir + "ferm_fpar_fnum_F64.cytnx");
 
-    BFUT5.set_rowrank_(2);
-    cytnx_double val = 1.0;
-    auto sh = BFUT5.shape();
-    for (cytnx_uint64 i = 0; i < sh[0]; i++)
-      for (cytnx_uint64 j = 0; j < sh[1]; j++)
-        for (cytnx_uint64 k = 0; k < sh[2]; k++)
-          for (cytnx_uint64 l = 0; l < sh[3]; l++) {
-            auto proxy = BFUT5.at({i, j, k, l});
-            if (proxy.exists()) {
-              proxy = val;
-              val += 1.0;
-            }
-          }
-  }
-  void TearDown() override {}
-};
+        // BFUT:
+        // 1st bond: e,o,o
+        // 2nd bond: e,o
+        // 3rd bond: o,e,e
+        BFUT4.at({0, 0, 1}) = 1;
+        BFUT4.at({0, 0, 2}) = 2;
+        BFUT4.at({0, 1, 0}) = 3;
+        BFUT4.at({1, 0, 0}) = 4;
+        BFUT4.at({2, 0, 0}) = 5;
+        BFUT4.at({1, 1, 1}) = 6;
+        BFUT4.at({2, 1, 1}) = 7;
+        BFUT4.at({1, 1, 2}) = 8;
+        BFUT4.at({2, 1, 2}) = 9;
 
-#endif
+        BFUT5.set_rowrank_(2);
+        cytnx_double val = 1.0;
+        auto sh = BFUT5.shape();
+        for (cytnx_uint64 i = 0; i < sh[0]; i++)
+          for (cytnx_uint64 j = 0; j < sh[1]; j++)
+            for (cytnx_uint64 k = 0; k < sh[2]; k++)
+              for (cytnx_uint64 l = 0; l < sh[3]; l++) {
+                auto proxy = BFUT5.at({i, j, k, l});
+                if (proxy.exists()) {
+                  proxy = val;
+                  val += 1.0;
+                }
+              }
+      }
+      void TearDown() override {}
+    };
+
+  }  // namespace test
+}  // namespace cytnx
+#endif  // CYTNX_TESTS_BLOCKFERMIONICUNITENSOR_TEST_H_

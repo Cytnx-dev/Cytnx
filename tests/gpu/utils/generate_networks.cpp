@@ -1,5 +1,11 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <random>
+#include <string>
+#include <utility>
+#include <vector>
 #define rep(i, a, n) for (int i = a; i < n; i++)
 #define per(i, a, n) for (int i = n - 1; i >= a; i--)
 #define pb push_back
@@ -10,11 +16,11 @@ using namespace std;
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define abs(x) (((x) < 0) ? (-(x)) : (x))
-typedef vector<int> VI;
+typedef std::vector<int> VI;
 typedef long long ll;
-typedef pair<int, int> PII;
+typedef std::pair<int, int> PII;
 typedef double db;
-mt19937 mrand(random_device{}());
+std::mt19937 mrand(std::random_device{}());
 int rnd(int x) { return mrand() % x; }
 // head
 /*
@@ -26,11 +32,11 @@ int rnd(int x) { return mrand() % x; }
 const int _n = 20, _d = 5, _num = 10;
 int t, n, tot_bond_cnt = 0;
 VI flatlink, flatbonds;
-vector<VI> bonds;
+std::vector<VI> bonds;
 int main(void) {
-  ofstream cout("output.txt");
+  std::ofstream os("output.txt");
   n = rnd(_n) + 1;
-  cout << n << '\n';
+  os << n << '\n';
   rep(_, 0, n) {
     int d = rnd(_d) + 1;
     int dd = 0;
@@ -49,7 +55,7 @@ int main(void) {
   int cont_cnt = max(tmp, tot_bond_cnt / 2 - 3), neg_bond_cnt = tot_bond_cnt - 2 * cont_cnt;
   rep(i, 1, cont_cnt + 1) rep(__, 0, 2) flatlink.pb(i);
   rep(i, 1, neg_bond_cnt + 1) flatlink.pb(-i);
-  shuffle(all(flatlink), mrand);
+  std::shuffle(all(flatlink), mrand);
 
   VI last_cont_idx(cont_cnt + 1, -1);
   per(i, 0, tot_bond_cnt) if (flatlink[i] > 0 and last_cont_idx[flatlink[i]] == -1)
@@ -67,20 +73,20 @@ int main(void) {
 
     idx0 += SZ(bonds[i]);
 
-    cout << SZ(bonds[i]) << '\n';
+    os << SZ(bonds[i]) << '\n';
     rep(j, 0, SZ(bonds[i])) {
-      cout << bonds[i][j];
-      if (j != SZ(bonds[i]) - 1) cout << ' ';
+      os << bonds[i][j];
+      if (j != SZ(bonds[i]) - 1) os << ' ';
     }
-    cout << '\n';
+    os << '\n';
     rep(j, 0, ele_cnt) {
-      cout << rnd(_num) + 1;  // Do not generate zero
-      if (j != ele_cnt - 1) cout << ' ';
+      os << rnd(_num) + 1;  // Do not generate zero
+      if (j != ele_cnt - 1) os << ' ';
     }
-    cout << '\n';
+    os << '\n';
   }
 
-  vector<VI> links;
+  std::vector<VI> links;
   int idx = 0;
   rep(i, 0, SZ(bonds)) {
     VI link;
@@ -99,16 +105,16 @@ int main(void) {
       } else if (links[i][j] > 0 and pos[links[i][j]] == -1)
         pos[links[i][j]] = j;
     }
-    fill(all(pos), -1);
+    std::fill(all(pos), -1);
   }
 
   rep(i, 0, SZ(links)) {
     rep(j, 0, SZ(links[i])) {
-      cout << links[i][j];
-      if (j != SZ(links[i]) - 1) cout << ' ';
+      os << links[i][j];
+      if (j != SZ(links[i]) - 1) os << ' ';
     }
-    cout << '\n';
+    os << '\n';
   }
-  cout << 0 << '\n';  // cont_order count
+  os << 0 << '\n';  // cont_order count
   return 0;
 }

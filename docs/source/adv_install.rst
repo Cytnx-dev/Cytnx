@@ -37,7 +37,7 @@ In addition, you might want to install the following optional dependencies if yo
 
 [Python API]
 
-* python >= 3.9
+* python >= 3.10
 * pybind11 >= 3.0.0
 * python-graphviz
 * graphviz
@@ -69,7 +69,7 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.9 _openmp_mutex=*=*_llvm
+    $conda create --name cytnx _openmp_mutex=*=*_llvm
     $conda activate cytnx
     $conda upgrade --all
 
@@ -79,14 +79,13 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.9 llvm-openmp
+    $conda create --name cytnx llvm-openmp
     $conda activate cytnx
     $conda upgrade --all
 
 .. Note::
 
-    1. The python=3.9 indicates the Python version you want to use. Generally, Cytnx is tested with 3.9+. You can replace this with the version you want to use.
-    2. The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
+    The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
 
 
 2. Install the following dependencies:
@@ -229,6 +228,8 @@ if you choose the ``openblas-cpu`` preset, use the following command to build:
    running CMake presets directly from the editor.
 
 
+.. _option-b-cmake-install:
+
 **Option B. Using cmake install**
 
 .. note::
@@ -302,6 +303,8 @@ Additional options for HPTT if -DUSE_HPTT=on:
     $make install
 
 
+.. _option-c-pip-install:
+
 **Option C. Install the Python API via pip (recommended for Python users)**
 
 If you only need to use Cytnx from Python, the simplest path is to let
@@ -363,20 +366,16 @@ Output>>
     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
 
 
-Using C++ API after self-build install
-------------------------------------------
-In the case that Cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling variables:
+Using the C++ API after a self-build install
+------------------------------------------------
+Cytnx no longer exposes ``__cpp_include__``/``__cpp_lib__`` Python attributes to introspect the C++ headers and library paths -- pip and conda installs don't carry those files at all (see :ref:`Option C <option-c-pip-install>` above). To compile your own C++ code against Cytnx, use :ref:`Option B (bare CMake install) <option-b-cmake-install>` and consume the installed package the standard CMake way:
 
-.. code-block:: shell
+.. code-block:: cmake
 
-    CYTNX_INC := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_include__)\")")
-    CYTNX_LDFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\")")
-    CYTNX_LIB := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_lib__)\")")/libcytnx.a
-    CYTNX_CXXFLAGS := $(shell python -c "exec(\"import sys\nsys.path.append(\'$(CYTNX_ROOT)\')\nimport cytnx\nprint(cytnx.__cpp_flags__)\")")
+    find_package(Cytnx CONFIG REQUIRED PATHS ${CYTNX_ROOT})
+    target_link_libraries(your_target PRIVATE Cytnx::cytnx)
 
-.. Note::
-
-    CYTNX_ROOT is the path where Cytnx is installed from binary build.
+where ``CYTNX_ROOT`` is the ``-DCMAKE_INSTALL_PREFIX`` used for the :ref:`Option B <option-b-cmake-install>` install. ``tests/downstream_find_package/`` in the Cytnx repository is a minimal example of a project consuming Cytnx this way.
 
 
 Build troubleshooting

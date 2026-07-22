@@ -126,7 +126,7 @@ Implementation
 
         // let's overload this with custom operation:
         Tensor matvec(const Tensor &v) override{
-            auto out = zeros(v.shape()[0],v.dtype(),v.device());
+            auto out = zeros({v.shape()[0]},v.dtype(),v.device());
             cytnx_uint32 oid;
             double amp;
 
@@ -180,7 +180,7 @@ The class constructor takes three arguments: **L**, the size of ising chain; **J
     double J = -1;
     double Hx = 0.3;
     auto H = Hising(L,J,Hx);
-    cout << cy::linalg::Lanczos_ER(&H,3) << endl;
+    std::cout << cy::linalg::Lanczos_ER(&H,3) << std::endl;
 
 
 Output>>

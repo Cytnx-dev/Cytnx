@@ -18,13 +18,13 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Svd] error, Svd can only operate on rank-2 Tensor.%s", "\n");
 
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      const cytnx_uint64 n_singlu = std::min(Tin.shape()[0], Tin.shape()[1]);
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
       Tensor U, S, vT;
-      S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+      S.Init({n_singlu}, Type.to_real(in.dtype()),
              in.device());  // if type is complex, S should be real
       // S.storage().set_zeros();
       if (is_UvT) {
@@ -34,6 +34,15 @@ namespace cytnx {
       if (is_UvT) {
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         // vT.storage().set_zeros();
+      }
+
+      if (in.is_empty()) {
+        std::vector<Tensor> out{S};
+        if (is_UvT) {
+          out.push_back(U);
+          out.push_back(vT);
+        }
+        return out;
       }
 
       if (Tin.device() == Device.cpu) {
@@ -150,24 +159,25 @@ namespace cytnx {
       }
       // if tag, then update  the tagging informations
       if (Tin.is_tag()) {
-        Cy_S.tag();
+        Cy_S.tag_();
         t = 1;
         if (compute_uv) {
           cytnx::UniTensor &Cy_U = outCyT[t];
           Cy_U._impl->_is_tag = true;
           for (int i = 0; i < Cy_U.rowrank(); i++) {
-            Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
+            Cy_U._impl->_bonds[i] = Cy_U._impl->_bonds[i].retype(Tin.bonds()[i].type());
           }
-          Cy_U.bonds().back().set_type(cytnx::BD_BRA);
+          Cy_U._impl->_bonds.back() = Cy_U._impl->_bonds.back().retype(cytnx::BD_BRA);
           Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
           t++;
         }
         if (compute_uv) {
           cytnx::UniTensor &Cy_vT = outCyT[t];
           Cy_vT._impl->_is_tag = true;
-          Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
+          Cy_vT._impl->_bonds[0] = Cy_vT._impl->_bonds[0].retype(cytnx::BD_KET);
           for (int i = 1; i < Cy_vT.rank(); i++) {
-            Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+            Cy_vT._impl->_bonds[i] =
+              Cy_vT._impl->_bonds[i].retype(Tin.bonds()[Tin.rowrank() + i - 1].type());
           }
           Cy_vT._impl->_is_braket_form = Cy_vT._impl->_update_braket();
           t++;
@@ -186,8 +196,7 @@ namespace cytnx {
                                      const cytnx::UniTensor &Tin, const bool &compute_uv) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
       std::vector<bool> signflip;
-      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-        signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+      if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) signflip = Tin.signflip();
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
@@ -380,8 +389,7 @@ namespace cytnx {
         U_ptr->_is_braket_form = U_ptr->_update_braket();
         U_ptr->_inner_to_outer_idx = U_itoi;
         U_ptr->_blocks = U_blocks;
-        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-          U_ptr->_signflip = std::vector<bool>(U_blocks.size(), false);
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) U_ptr->reset_signflip_();
         UniTensor U;
         U._impl = boost::intrusive_ptr<UniTensor_base>(U_ptr);
         outCyT.push_back(U);
@@ -401,8 +409,7 @@ namespace cytnx {
         vT_ptr->_is_braket_form = vT_ptr->_update_braket();
         vT_ptr->_inner_to_outer_idx = vT_itoi;
         vT_ptr->_blocks = vT_blocks;
-        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-          vT_ptr->_signflip = std::vector<bool>(vT_blocks.size(), false);
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) vT_ptr->reset_signflip_();
         UniTensor vT;
         vT._impl = boost::intrusive_ptr<UniTensor_base>(vT_ptr);
         outCyT.push_back(vT);

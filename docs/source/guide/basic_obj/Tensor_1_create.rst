@@ -43,6 +43,35 @@ Tensors can also be created and initialized with **arange()** (similar as np.ara
 
 :Tips: In C++, you can make use of *auto* to simplify your code!
 
+Rank-zero and empty Tensors
+****************************
+A Tensor with an empty shape is a rank-zero scalar Tensor. It has one element:
+
+.. code-block:: python
+
+    scalar = cytnx.zeros([])
+    assert scalar.shape() == []
+    assert scalar.rank() == 0
+    assert scalar.size() == 1
+    assert scalar.is_scalar()
+
+.. code-block:: c++
+
+    auto scalar = cytnx::zeros({});
+    assert(scalar.shape().empty());
+    assert(scalar.rank() == 0);
+    assert(scalar.size() == 1);
+    assert(scalar.is_scalar());
+
+A zero extent instead creates an empty Tensor. For example, a Tensor with shape
+``[2, 0, 3]`` has rank 3 and size 0. Use **is_empty()** to test for this case.
+An empty Tensor is distinct from a default-constructed, uninitialized Tensor,
+which has ``Type.Void`` dtype and for which **is_void()** returns true.
+
+The **is_scalar()** predicate is intentionally strict: it is true only for an
+initialized rank-zero Tensor. A Tensor with shape ``[1]`` or ``[1, 1]`` also
+contains one element, but retains its tensor axes and is not rank zero.
+
 Random Tensor
 ************************
 Often, Tensors shall be initialized with random values. This can be achieved with **random.normal** (normal or Gaussian distribution) and **random.uniform** (uniform distribution):

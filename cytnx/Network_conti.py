@@ -1,28 +1,42 @@
 from .utils import *
 from cytnx import *
 
-# import imp
-# try:
-#     imp.find_module('graphviz')
-#     from .NetGraph import *
-# except ImportError:
-#     from .NetGraph_empty import *
-
-import importlib
-spec = importlib.util.find_spec("graphviz")
-if spec is None:
-    # print("Can't find the graphviz module.")
-    from .NetGraph_empty import *
-else:
-    # If you chose to perform the actual import ...
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    # Adding the module to sys.modules is optional.
-    #sys.modules["graphviz"] = module
-    from .NetGraph import *
+try:
+    from graphviz import Graph
+except ImportError:
+    Graph = None
 
 import numpy as np
+
+
+def Drawnet_notag(opt_name,tn_names, edges_info,dangling_infos,figsize=[6,5],engine='circo',format="pdf"):
+    if Graph is None:
+        raise ModuleNotFoundError("[ERROR] graphviz is not installed!")
+    ## edges_info[i] = (tn1_name,tn2_name,common_label)
+
+    g = Graph(opt_name,filename=opt_name+".gv",engine=engine,format=format)
+    #g = Graph(engine=engine,format=format)
+    g.attr(size='%d,%d'%(figsize[0],figsize[1]))
+    ## insert node!
+    g.attr('node',shape='circle')
+    for i in tn_names:
+        g.node(i)
+
+
+    g.attr('node',shape='plaintext')
+    for i in dangling_infos:
+        g.node(i[0])
+    #print(edges_info)
+    ## edges! contracted:
+    for i in edges_info:
+        g.edge(i[0],i[1],label="%s"%(i[2]))
+
+
+    ## edges! non-contracted:
+    for i in dangling_infos:
+        g.edge(i[0],i[1])
+
+    g.view()
 
 
 @add_method(Network)
@@ -72,6 +86,6 @@ def Diagram(self,outname=None,figsize=[6,5],engine="circo"):
     dangling_edges = []
     for i in range(len(rtnl)):
         for j in range(len(rtnl[i])):
-            dangling_edges.append(("%d"%(rtnl[i][j]),tn_names[i]))
+            dangling_edges.append(("%s"%(rtnl[i][j]),tn_names[i]))
 
     return Drawnet_notag(OUT_fn,tn_names,edge_info,dangling_edges,figsize,engine=engine)

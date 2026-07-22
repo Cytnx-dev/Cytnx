@@ -8,6 +8,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "block_truncation_helpers.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -80,7 +81,7 @@ namespace cytnx {
         cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(shape[0], shape[1]));
 
         Tensor U, S, vT;
-        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+        S.Init({n_singlu}, Type.to_real(in.dtype()),
                in.device());  // if type is complex, S should be real
         if (is_U) {
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
@@ -169,8 +170,7 @@ namespace cytnx {
         // outCyT must be empty and Tin must be checked with proper rowrank!
 
         std::vector<bool> signflip;
-        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-          signflip = static_cast<BlockFermionicUniTensor *>(Tin._impl.get())->_signflip;
+        if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) signflip = Tin.signflip();
 
         // 1) getting the combineBond L and combineBond R for qnum list without grouping:
         //
@@ -391,8 +391,7 @@ namespace cytnx {
           U_ptr->_is_braket_form = U_ptr->_update_braket();
           U_ptr->_inner_to_outer_idx = U_itoi;
           U_ptr->_blocks = U_blocks;
-          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-            U_ptr->_signflip = std::vector<bool>(U_blocks.size(), false);
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) U_ptr->reset_signflip_();
           UniTensor U;
           U._impl = boost::intrusive_ptr<UniTensor_base>(U_ptr);
           outCyT.push_back(U);
@@ -412,8 +411,7 @@ namespace cytnx {
           vT_ptr->_is_braket_form = vT_ptr->_update_braket();
           vT_ptr->_inner_to_outer_idx = vT_itoi;
           vT_ptr->_blocks = vT_blocks;
-          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>)
-            vT_ptr->_signflip = std::vector<bool>(vT_blocks.size(), false);
+          if constexpr (std::is_same_v<BUT, BlockFermionicUniTensor>) vT_ptr->reset_signflip_();
           UniTensor vT;
           vT._impl = boost::intrusive_ptr<UniTensor_base>(vT_ptr);
           outCyT.push_back(vT);
@@ -435,10 +433,19 @@ namespace cytnx {
       cytnx_error_msg(return_err < 0, "[ERROR][Rsvd] return_err cannot be negative%s", "\n");
       //
       cytnx_error_msg(Tin.shape().size() != 2, "[Rsvd] can only operate on rank-2 Tensor.%s", "\n");
+      if (Tin.is_empty()) {
+        std::vector<Tensor> out = Gesvd(Tin, is_U, is_vT);
+        if (return_err == 1) {
+          out.push_back(zeros({}, out[0].dtype(), out[0].device()));
+        } else if (return_err) {
+          out.push_back(zeros({0}, out[0].dtype(), out[0].device()));
+        }
+        return out;
+      }
       cytnx_uint64 samplenum =
         (cytnx_uint64)((std::max(0., oversampling_factor) + 1.) * (double)keepdim) +
         oversampling_summand;
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      cytnx_uint64 n_singlu = std::min(Tin.shape()[0], Tin.shape()[1]);
       Tensor Q;
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> outT;
@@ -500,7 +507,7 @@ namespace cytnx {
         }
         // prepare U, S, vT
         Tensor U, S, vT, terr;
-        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+        S.Init({n_singlu}, Type.to_real(in.dtype()),
                in.device());  // if type is complex, S should be real
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
@@ -515,7 +522,7 @@ namespace cytnx {
           // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
           // output tensor descriptors from the passed buffer shapes, so the buffers must be
           // re-initialized to the full size before restarting.
-          S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(), in.device());
+          S.Init({n_singlu}, Type.to_real(in.dtype()), in.device());
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
           terr.Init({1}, in.dtype(), in.device());
@@ -659,24 +666,25 @@ namespace cytnx {
 
         // if tag, then update  the tagging informations
         if (Tin.is_tag()) {
-          Cy_S.tag();
+          Cy_S.tag_();
           t = 1;
           if (is_U) {
             cytnx::UniTensor &Cy_U = outCyT[t];
             Cy_U._impl->_is_tag = true;
             for (int i = 0; i < Cy_U.rowrank(); i++) {
-              Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
+              Cy_U._impl->_bonds[i] = Cy_U._impl->_bonds[i].retype(Tin.bonds()[i].type());
             }
-            Cy_U.bonds().back().set_type(cytnx::BD_BRA);
+            Cy_U._impl->_bonds.back() = Cy_U._impl->_bonds.back().retype(cytnx::BD_BRA);
             Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
             t++;
           }
           if (is_vT) {
             cytnx::UniTensor &Cy_vT = outCyT[t];
             Cy_vT._impl->_is_tag = true;
-            Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
+            Cy_vT._impl->_bonds[0] = Cy_vT._impl->_bonds[0].retype(cytnx::BD_KET);
             for (int i = 1; i < Cy_vT.rank(); i++) {
-              Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+              Cy_vT._impl->_bonds[i] =
+                Cy_vT._impl->_bonds[i].retype(Tin.bonds()[Tin.rowrank() + i - 1].type());
             }
             Cy_vT._impl->_is_braket_form = Cy_vT._impl->_update_braket();
             t++;
@@ -737,6 +745,7 @@ namespace cytnx {
           smidx++;
           Smin = Sall.storage()(smidx);
         }
+        smidx = CountDroppedSingularValues(Sall, smidx, Smin);
 
         // traversal each block and truncate!
         UniTensor &S = outCyT[0];
@@ -780,20 +789,20 @@ namespace cytnx {
         S.get_itoi() = new_itoi;
         if (!to_be_removed.empty()) {
           vec_erase_(S.get_blocks_(), to_be_removed);
-          vec_erase_(S.bonds()[0].qnums(), to_be_removed);
+          vec_erase_(S._impl->_bonds[0]._impl->_qnums, to_be_removed);
           if (Tin.uten_type() == UTenType.BlockFermionic) {
-            vec_erase_(S.signflip_(), to_be_removed);
+            static_cast<BlockFermionicUniTensor *>(S._impl.get())->erase_signflip_(to_be_removed);
           }
         }
-        S.bonds()[0]._impl->_degs = new_dims;
-        S.bonds()[0]._impl->_dim = tot_dim;
-        S.bonds()[1] = S.bonds()[0].redirect();
+        S._impl->_bonds[0]._impl->_degs = new_dims;
+        S._impl->_bonds[0]._impl->_dim = tot_dim;
+        S._impl->_bonds[1] = S._impl->_bonds[0].redirect();
 
         int t = 1;
         if (is_U) {
           UniTensor &U = outCyT[t];
           to_be_removed.clear();
-          U.bonds().back() = S.bonds()[1].clone();
+          U._impl->_bonds.back() = S._impl->_bonds[1].clone();
           std::vector<Accessor> acs(U.rank());
           for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
 
@@ -815,7 +824,7 @@ namespace cytnx {
             vec_erase_(U.get_itoi(), to_be_removed);
             vec_erase_(U.get_blocks_(), to_be_removed);
             if (Tin.uten_type() == UTenType.BlockFermionic) {
-              vec_erase_(U.signflip_(), to_be_removed);
+              static_cast<BlockFermionicUniTensor *>(U._impl.get())->erase_signflip_(to_be_removed);
             }
           }
 
@@ -825,7 +834,7 @@ namespace cytnx {
         if (is_vT) {
           UniTensor &vT = outCyT[t];
           to_be_removed.clear();
-          vT.bonds().front() = S.bonds()[0].clone();
+          vT._impl->_bonds.front() = S._impl->_bonds[0].clone();
           std::vector<Accessor> acs(vT.rank());
           for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
 
@@ -846,7 +855,8 @@ namespace cytnx {
             vec_erase_(vT.get_itoi(), to_be_removed);
             vec_erase_(vT.get_blocks_(), to_be_removed);
             if (Tin.uten_type() == UTenType.BlockFermionic) {
-              vec_erase_(vT.signflip_(), to_be_removed);
+              static_cast<BlockFermionicUniTensor *>(vT._impl.get())
+                ->erase_signflip_(to_be_removed);
             }
           }
 
@@ -854,11 +864,8 @@ namespace cytnx {
         }
 
         // handle return_err!
-        if (return_err == 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-          outCyT.back().get_block_().storage().at(0) = Smin;
-        } else if (return_err) {
-          outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+        if (return_err) {
+          outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
         }
       }  // Rsvd_Block_UT_internal no minblockdim
 
@@ -927,9 +934,9 @@ namespace cytnx {
           }
         }
         if (!anySall) {
-          // no truncation; return_err is tensor with one element, set to 0
           if (return_err >= 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+            outCyT.push_back(
+              BuildNoDiscardedSingularValues(outCyT[0].dtype(), return_err, outCyT[0].device()));
           }
         } else {
           Scalar Smin;
@@ -959,21 +966,22 @@ namespace cytnx {
               smidx++;
               Smin = Sall.storage()(smidx);
             }
+            if (keep_dim == 0) {
+              smidx = Sshape;
+            } else {
+              smidx = CountDroppedSingularValues(Sall, smidx, Smin);
+            }
             // handle return_err!
-            if (return_err == 1) {
-              outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-              outCyT.back().get_block_().storage().at(0) = Smin;
-            } else if (return_err) {
-              outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+            if (return_err) {
+              outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
             }
           } else {
             // keep_dim < 1: per-block min_blockdim guarantees already cover the global cap, so
             // every value in Sall is dropped.
-            if (return_err == 1) {
-              // largest dropped singular value
-              outCyT.push_back(UniTensor(linalg::Max(Sall)));
-            } else if (return_err) {
-              outCyT.push_back(UniTensor(Sall));
+            if (return_err) {
+              Sall = algo::Sort(Sall);  // ascending; BuildBlockDiscardedSingularValues expects this
+              outCyT.push_back(
+                BuildBlockDiscardedSingularValues(Sall, Sall.shape()[0], return_err));
             }
           }
 
@@ -1025,20 +1033,20 @@ namespace cytnx {
           S.get_itoi() = new_itoi;
           if (!to_be_removed.empty()) {
             vec_erase_(S.get_blocks_(), to_be_removed);
-            vec_erase_(S.bonds()[0].qnums(), to_be_removed);
+            vec_erase_(S._impl->_bonds[0]._impl->_qnums, to_be_removed);
             if (Tin.uten_type() == UTenType.BlockFermionic) {
-              vec_erase_(S.signflip_(), to_be_removed);
+              static_cast<BlockFermionicUniTensor *>(S._impl.get())->erase_signflip_(to_be_removed);
             }
           }
-          S.bonds()[0]._impl->_degs = new_dims;
-          S.bonds()[0]._impl->_dim = tot_dim;
-          S.bonds()[1] = S.bonds()[0].redirect();
+          S._impl->_bonds[0]._impl->_degs = new_dims;
+          S._impl->_bonds[0]._impl->_dim = tot_dim;
+          S._impl->_bonds[1] = S._impl->_bonds[0].redirect();
 
           int t = 1;
           if (is_U) {
             UniTensor &U = outCyT[t];
             to_be_removed.clear();
-            U.bonds().back() = S.bonds()[1].clone();
+            U._impl->_bonds.back() = S._impl->_bonds[1].clone();
             std::vector<Accessor> acs(U.rank());
             for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
 
@@ -1060,7 +1068,8 @@ namespace cytnx {
               vec_erase_(U.get_itoi(), to_be_removed);
               vec_erase_(U.get_blocks_(), to_be_removed);
               if (Tin.uten_type() == UTenType.BlockFermionic) {
-                vec_erase_(U.signflip_(), to_be_removed);
+                static_cast<BlockFermionicUniTensor *>(U._impl.get())
+                  ->erase_signflip_(to_be_removed);
               }
             }
 
@@ -1070,7 +1079,7 @@ namespace cytnx {
           if (is_vT) {
             UniTensor &vT = outCyT[t];
             to_be_removed.clear();
-            vT.bonds().front() = S.bonds()[0].clone();
+            vT._impl->_bonds.front() = S._impl->_bonds[0].clone();
             std::vector<Accessor> acs(vT.rank());
             for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
 
@@ -1091,7 +1100,8 @@ namespace cytnx {
               vec_erase_(vT.get_itoi(), to_be_removed);
               vec_erase_(vT.get_blocks_(), to_be_removed);
               if (Tin.uten_type() == UTenType.BlockFermionic) {
-                vec_erase_(vT.signflip_(), to_be_removed);
+                static_cast<BlockFermionicUniTensor *>(vT._impl.get())
+                  ->erase_signflip_(to_be_removed);
               }
             }
 

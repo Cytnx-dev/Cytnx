@@ -1,10 +1,10 @@
 auto A = cytnx::arange(24).reshape(2, 3, 4);
-cout << A.is_contiguous() << endl;
-cout << A << endl;
+std::cout << A.is_contiguous() << std::endl;
+std::cout << A << std::endl;
 
 A.permute_(1, 0, 2);
-cout << A.is_contiguous() << endl;
-cout << A << endl;
+std::cout << A.is_contiguous() << std::endl;
+std::cout << A << std::endl;
 
 A.contiguous_();
-cout << A.is_contiguous() << endl;
+std::cout << A.is_contiguous() << std::endl;

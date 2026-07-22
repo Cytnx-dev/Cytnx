@@ -27,8 +27,6 @@ target_sources(cytnx
 if(USE_CUDA)
   target_sources(cytnx
     PRIVATE
-    #cucomplex_arithmetic.hpp
-    cucomplex_arithmetic.cu
   )
 
   if(USE_CUQUANTUM)

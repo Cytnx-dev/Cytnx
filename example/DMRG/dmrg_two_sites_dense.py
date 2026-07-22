@@ -37,7 +37,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
         H = Hxx(anet, psi.shape()[0]*psi.shape()[1]*psi.shape()[2]*psi.shape()[3])
         energy, psivec = cytnx.linalg.Lanczos(Hop = H, method = "Gnd", Maxiter = 4, CvgCrit = 9999999999, Tin = psi)
 
-        return psivec, energy[0].item()
+        return psivec, energy.item()
 
     d = 2 #physical dimension
     s = 0.5 #spin-half
@@ -52,16 +52,16 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
     M[0,0] = M[3,3] = eye
     M[0,1] = M[2,3] = 2**0.5*sp.real()
     M[0,2] = M[1,3] = 2**0.5*sm.real()
-    M = cytnx.UniTensor(M,0).set_name("MPO")
+    M = cytnx.UniTensor(M,0).set_name_("MPO")
 
-    L0 = cytnx.UniTensor.zeros([4,1,1]).set_rowrank_(0).set_name("L0") #Left boundary
-    R0 = cytnx.UniTensor.zeros([4,1,1]).set_rowrank_(0).set_name("R0") #Right boundary
+    L0 = cytnx.UniTensor.zeros([4,1,1]).set_rowrank_(0).set_name_("L0") #Left boundary
+    R0 = cytnx.UniTensor.zeros([4,1,1]).set_rowrank_(0).set_name_("R0") #Right boundary
     L0[0,0,0] = 1.
     R0[3,0,0] = 1.
 
     A = [None for i in range(Nsites)]
     A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1.).set_rowrank_(2)
-    A[0].relabel_(["0","1","2"]).set_name("A0")
+    A[0].relabel_(["0","1","2"]).set_name_("A0")
 
     lbls = [] # List for storing the MPS labels
     lbls.append(["0","1","2"]) # store the labels for later convenience.
@@ -70,7 +70,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
         dim1 = A[k-1].shape()[2]; dim2 = d
         dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1))
         A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3],0.,1.) \
-                                      .set_rowrank_(2).set_name(f"A{k}")
+                                      .set_rowrank_(2).set_name_(f"A{k}")
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
         A[k].relabel_(lbl)
@@ -87,8 +87,8 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
         s, A[p] ,vt = cytnx.linalg.Gesvd(A[p])
         A[p+1] = cytnx.Contract(cytnx.Contract(s,vt),A[p+1])
 
-        A[p].set_name(f"A{p}")
-        A[p+1].set_name(f"A{p+1}")
+        A[p].set_name_(f"A{p}")
+        A[p+1].set_name_(f"A{p+1}")
 
         ## Calculate environments:
         anet = cytnx.Network()
@@ -102,14 +102,14 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
         anet.PutUniTensors(["L","A","A_Conj","M"], \
                            [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
         LR[p+1] = anet.Launch()
-        LR[p+1].set_name(f"LR{p+1}")
+        LR[p+1].set_name_(f"LR{p+1}")
 
         # Recover the original MPS labels
         A[p].relabel_(lbls[p])
         A[p+1].relabel_(lbls[p+1])
 
     _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-    A[-1].set_name(f"A{Nsites-1}") \
+    A[-1].set_name_(f"A{Nsites-1}") \
          .relabel_(lbls[-1]) # Recover the original MPS labels
 
     Ekeep = []
@@ -126,13 +126,13 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p+1].set_name(f"A{p+1}") \
+            A[p+1].set_name_(f"A{p+1}") \
                   .relabel_(lbls[p+1]); # set the label back to be consistent
 
-            s = s/s.Norm().item() # normalize s
+            s = s/s.norm() # normalize s
 
             A[p] = cytnx.Contract(A[p],s) # absorb s into next neighbor
-            A[p].set_name(f"A{p}") \
+            A[p].set_name_(f"A{p}") \
                 .relabel_(lbls[p]); # set the label back to be consistent
 
             # update LR from right to left:
@@ -146,13 +146,13 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
             anet.PutUniTensors(["R","B","M","B_Conj"], \
                                [LR[p+2],A[p+1],M,A[p+1].Dagger().permute_(A[p+1].labels())])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
-            LR[p+1].set_name(f"LR{p+1}")
+            LR[p+1].set_name_(f"LR{p+1}")
 
             print('Sweep[r->l]: %d/%d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
 
         A[0].set_rowrank_(1)
         _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-        A[0].set_name("A0") \
+        A[0].set_name_("A0") \
             .relabel_(lbls[0]); #set the label back to be consistent
 
         for p in range(Nsites-1):
@@ -166,13 +166,13 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].set_name(f"A{p}") \
+            A[p].set_name_(f"A{p}") \
                 .relabel_(lbls[p]); #set the label back to be consistent
 
-            s = s/s.Norm().item() # normalize s
+            s = s/s.norm() # normalize s
 
             A[p+1] = cytnx.Contract(s,A[p+1]) ## absorb s into next neighbor.
-            A[p+1].set_name(f"A{p+1}") \
+            A[p+1].set_name_(f"A{p+1}") \
                   .relabel_(lbls[p+1]); #set the label back to be consistent
 
             # update LR from left to right:
@@ -187,13 +187,13 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
             anet.PutUniTensors(["L","A","A_Conj","M"], \
                                [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
-            LR[p+1].set_name(f"LR{p+1}")
+            LR[p+1].set_name_(f"LR{p+1}")
 
             print('Sweep[l->r]: %d/%d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
 
         A[-1].set_rowrank_(2)
         _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-        A[-1].set_name(f"A{Nsites-1}") \
+        A[-1].set_name_(f"A{Nsites-1}") \
              .relabel_(lbls[-1]); #set the label back to be consistent
     return Ekeep
 

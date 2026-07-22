@@ -26,6 +26,12 @@ namespace cytnx {
     bool is_assigned;
     cytnx_uint64 tensorIndex;
 
+    // Row into OptimalTreeSolver::solve's adjacency matrix. Solver-internal
+    // bookkeeping only, reassigned by solve() for every node it creates
+    // (leaf or merged); callers constructing a PseudoUniTensor directly
+    // should not rely on its value.
+    std::size_t adj_index = 0;
+
     // Internal node data
     std::unique_ptr<PseudoUniTensor> left;
     std::unique_ptr<PseudoUniTensor> right;

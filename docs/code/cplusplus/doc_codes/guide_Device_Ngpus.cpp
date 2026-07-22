@@ -1,1 +1,1 @@
-cout << Device.Ngpus;
+std::cout << Device.Ngpus;

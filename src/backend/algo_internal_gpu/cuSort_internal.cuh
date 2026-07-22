@@ -20,7 +20,7 @@ namespace cytnx {
     template <typename T>
     __host__ __device__ bool cuSortCompare(const T& a, const T& b) {
       if constexpr (is_complex_v<T>) {
-        return (real(a) == real(b)) ? (imag(a) < imag(b)) : (real(a) < real(b));
+        return (a.real() == b.real()) ? (a.imag() < b.imag()) : (a.real() < b.real());
       } else if constexpr (Vec2Like<T>) {
         return (a.x == b.x) ? (a.y < b.y) : (a.x < b.x);
       } else {

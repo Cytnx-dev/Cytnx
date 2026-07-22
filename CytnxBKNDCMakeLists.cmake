@@ -1,5 +1,15 @@
 
 
+#ARPACK
+# Found ahead of the BLAS/LAPACK resolution below (regardless of USE_MKL)
+# so the OpenBLAS branch's runtime-dependency check can inspect ARPACK_LIB's
+# own dependencies, and so it's available for the target_link_libraries(cytnx
+# PRIVATE ${ARPACK_LIB}) call in the main CMakeLists.txt after this file is
+# included. This file is only included for the non-BACKEND_TORCH build, so
+# ARPACK_LIB is not defined here when BACKEND_TORCH is on.
+find_library(ARPACK_LIB arpack REQUIRED)
+message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
+
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
@@ -42,6 +52,109 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
     find_package( LAPACKE REQUIRED)
+
+    # Some OpenBLAS packagings (e.g. Fedora/RHEL's "openblas-devel", used by
+    # the manylinux_2_28 image) install a serial and a pthread-threaded
+    # build side by side, and the system's prebuilt "arpack" package (found
+    # as ARPACK_LIB above) can end up needing a different one than
+    # find_package(BLAS) above resolved (the generic "-lopenblas" name), so
+    # both variants get linked and both are vendored into the wheel. Rather
+    # than guess a vendor-specific naming convention for the "other" build,
+    # ask the loader what arpack actually needs, and switch to that OpenBLAS
+    # build if it differs, so only one variant is linked overall.
+    # find_package(LAPACKE) above already resolved LAPACKE_INCLUDE_DIRS
+    # through morse_cmake's hardened, cross-platform header search (see the
+    # "Vendor FindLAPACKE via Inria morse_cmake submodule" commit for why
+    # cytnx moved off a homegrown find_path(lapacke.h)); only the library
+    # selection is revisited here, since the header itself is agnostic to
+    # which OpenBLAS build backs it.
+    #
+    # This project only ships Linux and macOS wheels (see the
+    # [tool.cibuildwheel.*] sections in pyproject.toml), so `ldd`/`otool -L`
+    # cover every platform that needs this check; CMake's own
+    # file(GET_RUNTIME_DEPENDENCIES) would also work here, but its own docs
+    # (see Help/command/file.rst) say it "is not intended to be used in
+    # project mode" -- it's meant for install(CODE)/install(SCRIPT), which
+    # run too late to influence target_link_libraries below -- and we only
+    # need arpack's one direct OpenBLAS dependency, not the full recursive
+    # dependency graph that command computes, so a single ldd/otool call is
+    # enough.
+    set(CYTNX_ARPACK_OPENBLAS "")
+    if(APPLE)
+      execute_process(
+        COMMAND otool -L "${ARPACK_LIB}"
+        OUTPUT_VARIABLE CYTNX_ARPACK_DEPS_OUTPUT
+        RESULT_VARIABLE CYTNX_ARPACK_DEPS_RESULT
+        ERROR_QUIET
+      )
+      if(CYTNX_ARPACK_DEPS_RESULT EQUAL 0)
+        string(REPLACE "\n" ";" CYTNX_ARPACK_DEPS_LINES "${CYTNX_ARPACK_DEPS_OUTPUT}")
+        foreach(_cytnx_line ${CYTNX_ARPACK_DEPS_LINES})
+          if(_cytnx_line MATCHES "([^ \t]*libopenblas[^ \t]*)")
+            set(CYTNX_ARPACK_OPENBLAS "${CMAKE_MATCH_1}")
+            break()
+          endif()
+        endforeach()
+      endif()
+    elseif(UNIX)
+      execute_process(
+        COMMAND ldd "${ARPACK_LIB}"
+        OUTPUT_VARIABLE CYTNX_ARPACK_DEPS_OUTPUT
+        RESULT_VARIABLE CYTNX_ARPACK_DEPS_RESULT
+        ERROR_QUIET
+      )
+      if(CYTNX_ARPACK_DEPS_RESULT EQUAL 0)
+        string(REPLACE "\n" ";" CYTNX_ARPACK_DEPS_LINES "${CYTNX_ARPACK_DEPS_OUTPUT}")
+        foreach(_cytnx_line ${CYTNX_ARPACK_DEPS_LINES})
+          if(_cytnx_line MATCHES "libopenblas[^ \t]* => ([^ \t]+)")
+            set(CYTNX_ARPACK_OPENBLAS "${CMAKE_MATCH_1}")
+            break()
+          endif()
+        endforeach()
+      endif()
+    endif()
+
+    if(CYTNX_ARPACK_OPENBLAS)
+      # find_package(BLAS BLA_VENDOR OpenBLAS) can resolve BLAS_LIBRARIES to a
+      # bare linker flag (e.g. "-lopenblas") rather than an absolute path on
+      # some platforms; REALPATH on that yields a bogus path resolved against
+      # the current working directory, which never matches
+      # CYTNX_ARPACK_OPENBLAS_REAL. That's harmless here -- it just means the
+      # "already matches, no switch needed" fast-path below only ever fires
+      # when find_package returned a real path, and falls through to the
+      # switch (the correct, dedup-preserving direction) otherwise.
+      get_filename_component(CYTNX_ARPACK_OPENBLAS_REAL "${CYTNX_ARPACK_OPENBLAS}" REALPATH)
+      set(CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK FALSE)
+      foreach(_cytnx_found_lib ${BLAS_LIBRARIES})
+        get_filename_component(_cytnx_found_lib_real "${_cytnx_found_lib}" REALPATH)
+        if(_cytnx_found_lib_real STREQUAL CYTNX_ARPACK_OPENBLAS_REAL)
+          set(CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK TRUE)
+        endif()
+      endforeach()
+
+      if(NOT CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK)
+        # arpack needs a different OpenBLAS build than find_package(BLAS)
+        # picked. Only switch to it if it itself exposes LAPACKE symbols
+        # directly (cytnx's own C++ code calls the LAPACKE C API, unlike
+        # arpack's Fortran BLAS/LAPACK calls, so this isn't guaranteed just
+        # because arpack is happy with it); otherwise leave the
+        # find_package() result as-is and accept both variants being linked.
+        include(CheckLibraryExists)
+        # check_library_exists() only runs its try_compile when the result
+        # variable is NOT DEFINED (see CheckLibraryExists.cmake); unset the
+        # cache entry first so a reconfigure against a different
+        # arpack/OpenBLAS pairing in the same build tree re-checks instead of
+        # reusing a stale cached result from a previous CYTNX_ARPACK_OPENBLAS.
+        unset(CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE CACHE)
+        check_library_exists("${CYTNX_ARPACK_OPENBLAS}" LAPACKE_dgesdd "" CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE)
+        if(CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE)
+          set(BLAS_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
+          set(LAPACK_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
+          set(LAPACKE_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
+          message(STATUS "Switching to arpack's own OpenBLAS build to avoid linking two copies: ${CYTNX_ARPACK_OPENBLAS}")
+        endif()
+      endif()
+    endif()
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
     target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
@@ -162,30 +275,23 @@ if(USE_CUDA)
     #      -gencode=arch=compute_75,code=compute_75 ")
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
-    # CUDA 12+/13 may place Thrust/CUB headers under include/cccl.
-    set(_cytnx_cccl_candidates)
-    if(DEFINED CUDAToolkit_TARGET_DIR AND NOT "${CUDAToolkit_TARGET_DIR}" STREQUAL "")
-      list(APPEND _cytnx_cccl_candidates "${CUDAToolkit_TARGET_DIR}/include/cccl")
-    endif()
-    foreach(_cuda_inc IN LISTS CUDAToolkit_INCLUDE_DIRS)
-      list(APPEND _cytnx_cccl_candidates
-        "${_cuda_inc}/cccl"
-        "${_cuda_inc}/../include/cccl"
-        "${_cuda_inc}/../../include/cccl"
-        "${_cuda_inc}/../../../include/cccl")
-    endforeach()
-    list(REMOVE_DUPLICATES _cytnx_cccl_candidates)
-
-    set(_cytnx_cccl_dir "")
-    foreach(_cccl_candidate IN LISTS _cytnx_cccl_candidates)
-      get_filename_component(_cccl_candidate_abs "${_cccl_candidate}" ABSOLUTE)
-      if(EXISTS "${_cccl_candidate_abs}")
-        set(_cytnx_cccl_dir "${_cccl_candidate_abs}")
-        break()
-      endif()
-    endforeach()
+    # CUDA 12+/13 may place Thrust/CUB headers (incl. <cuda/std/complex>) under
+    # include/cccl. Detection is shared with the installed CytnxConfig.cmake so
+    # both use identical logic; see cmake/CytnxDetectCCCL.cmake.
+    include(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake)
+    cytnx_detect_cccl_include_dir(_cytnx_cccl_dir)
     if(NOT "${_cytnx_cccl_dir}" STREQUAL "")
-      target_include_directories(cytnx PRIVATE "${_cytnx_cccl_dir}")
+      # UNI_GPU is PUBLIC and makes the public header Type.hpp include
+      # <cuda/std/complex>, which CUDA 12+/13 relocate under the cccl/ subdir.
+      # That subdir is not part of any CUDA:: imported target's INTERFACE, so it
+      # must propagate to in-tree consumers (gpu_test_main, benchmarks_main,
+      # test_doc_cplusplus) that inherit the PUBLIC UNI_GPU macro; otherwise their
+      # host .cpp compilation fails with "cuda/std/complex: No such file". Wrap in
+      # BUILD_INTERFACE so the absolute build-machine path is not baked into the
+      # installed/exported target; the installed package re-detects cccl against
+      # the consumer's own toolkit in CytnxConfig.cmake (keeps find_package(Cytnx)
+      # relocatable).
+      target_include_directories(cytnx PUBLIC $<BUILD_INTERFACE:${_cytnx_cccl_dir}>)
       message(STATUS "Detected CCCL headers at: ${_cytnx_cccl_dir}")
     endif()
 
@@ -305,5 +411,6 @@ if(USE_HPTT)
     # `find_package(hptt)`; otherwise `install(EXPORT cytnx_targets)` fails
     # with "target hptt_static is not in any export set".
     install(TARGETS hptt_static EXPORT cytnx_targets
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT Development)
 endif()

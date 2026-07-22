@@ -15,7 +15,6 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    using namespace std;
 
     void _Lanczos_Gnd_general(std::vector<Tensor> &out, LinOp *Hop, const Tensor &Tin,
                               const bool &is_V, const double &CvgCrit, const unsigned int &Maxiter,
@@ -23,7 +22,7 @@ namespace cytnx {
       out.clear();
       //[require] Tin should be provided!
 
-      Tensor psi_1 = Tin.clone() / Tin.Norm();
+      Tensor psi_1 = Tin.clone() / double(Tin.norm());
 
       Tensor psi_0;  // = cytnx::zeros({psi_1.shape()[0]},psi_1.dtype(),Tin.device());
       Tensor new_psi;
@@ -45,7 +44,7 @@ namespace cytnx {
       As(0) = linalg::Vectordot(new_psi, psi_1, true).item();
       new_psi -= As(0) * psi_1;
 
-      Bs(0) = new_psi.Norm();
+      Bs(0) = double(new_psi.norm());
 
       psi_0 = psi_1;
       new_psi /= Bs(0);
@@ -76,7 +75,7 @@ namespace cytnx {
           std::cout << "Lanczos continues automatically." << std::endl;
           break;
         }
-        auto tmp = new_psi.Norm().item();
+        double tmp = double(new_psi.norm());
         Bs.append(tmp);
         if (tmp == 0) {
           cvg_fin = true;
@@ -117,7 +116,7 @@ namespace cytnx {
         tmpEsVs.pop_back();
 
         // restarted again, and evaluate the vectors on the fly:
-        psi_1 = Tin.clone() / Tin.Norm();
+        psi_1 = Tin.clone() / double(Tin.norm());
         eV = kryVg(0) * psi_1;
         new_psi = Hop->matvec(psi_1) - As(0) * psi_1;
 

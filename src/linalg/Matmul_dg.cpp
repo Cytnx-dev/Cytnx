@@ -8,18 +8,23 @@
 namespace cytnx {
   namespace linalg {
     Tensor Matmul_dg(const Tensor &Tl, const Tensor &Tr) {
-      cytnx_error_msg(Tl.shape().size() > 2,
+      const cytnx_uint64 rank_l = Tl.rank();
+      const cytnx_uint64 rank_r = Tr.rank();
+      cytnx_error_msg(rank_l > 2,
                       "[Matmul_dg] error, tensor Tl ,Matmul_dg can only operate on rank-2 x rank-1 "
                       "(rank-1 x rank-2) Tensor.%s",
                       "\n");
-      cytnx_error_msg(Tr.shape().size() > 2,
+      cytnx_error_msg(rank_r > 2,
                       "[Matmul_dg] error, tensor Tr ,Matmul_dg can only operate on rank-2 x rank-1 "
                       "(rank-1 x rank-2) Tensor.%s",
                       "\n");
-      cytnx_error_msg(Tl.shape().size() == Tr.shape().size(),
+      cytnx_error_msg(rank_l == 0 || rank_r == 0,
+                      "[Matmul_dg] error, Matmul_dg does not support rank-0 Tensor operands.%s",
+                      "\n");
+      cytnx_error_msg(rank_l == rank_r,
                       "[Matmul_dg] error, tensor Tr:rank[%d] Tl:rank[%d] ,Matmul_dg can only "
                       "operate on rank-2 x rank-1 (rank-1 x rank-2) Tensor.\n",
-                      Tl.shape().size(), Tr.shape().size());
+                      static_cast<int>(rank_l), static_cast<int>(rank_r));
 
       // check device:
       cytnx_error_msg(Tl.device() != Tr.device(),
@@ -30,32 +35,26 @@ namespace cytnx {
                       "[Matmul_dg] error, dimension not match.%s", "\n");
 
       int diag_L;
-      if (Tl.shape().size() == 1)
+      if (rank_l == 1)
         diag_L = 1;
       else
         diag_L = 0;
 
-      // check type:
-      Tensor _tl = Tl.contiguous(), _tr = Tr.contiguous();
+      // check type: promote to a common dtype. The promoted dtype can differ
+      // from both inputs (e.g. ComplexFloat x Double -> ComplexDouble), so
+      // cast both operands; astype is a no-op when the dtype already matches.
+      const unsigned int out_dtype = Type.type_promote(Tl.dtype(), Tr.dtype());
       Tensor out;
-      if (Tl.dtype() != Tr.dtype()) {
-        // do conversion:
-        if (Tl.dtype() < Tr.dtype()) {
-          _tr = _tr.astype(Tl.dtype());
-          out.Init({Tl.shape()[0], Tr.shape().back()}, Tl.dtype(), Tl.device());
-        } else {
-          _tl = _tl.astype(Tr.dtype());
-          out.Init({Tl.shape()[0], Tr.shape().back()}, Tr.dtype(), Tr.device());
-        }
-      } else {
-        out.Init({Tl.shape()[0], Tr.shape().back()}, Tr.dtype(), Tr.device());
-      }
-      // out.storage().set_zeros();
+      out.Init({Tl.shape()[0], Tr.shape().back()}, out_dtype, Tl.device());
+      if (out.is_empty()) return out;
+
+      Tensor tl = Tl.contiguous().astype(out_dtype);
+      Tensor tr = Tr.contiguous().astype(out_dtype);
 
       if (Tl.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Matmul_dg_ii[_tl.dtype()](
-          out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
-          _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
+        cytnx::linalg_internal::lii.Matmul_dg_ii[out.dtype()](
+          out._impl->storage()._impl, tl._impl->storage()._impl, tr._impl->storage()._impl,
+          tl.shape()[0], tl.shape().back(), tr.shape().back(), diag_L);
 
         // cytnx_error_msg(true,"[Developing][Matmul_dg][CPU]%s","\n");
 
@@ -64,9 +63,9 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
-        cytnx::linalg_internal::lii.cuMatmul_dg_ii[_tl.dtype()](
-          out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
-          _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
+        cytnx::linalg_internal::lii.cuMatmul_dg_ii[out.dtype()](
+          out._impl->storage()._impl, tl._impl->storage()._impl, tr._impl->storage()._impl,
+          tl.shape()[0], tl.shape().back(), tr.shape().back(), diag_L);
         return out;
   #else
         cytnx_error_msg(true, "[Matmul] fatal error,%s",

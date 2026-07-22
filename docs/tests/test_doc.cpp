@@ -3,34 +3,33 @@
 
 // redirect standard output: if you need to output to another file, you can use these
 //     macro to redirect the standart output
-#define OUT_REDIRECT_BASE \
-  coutbuf = cout.rdbuf(); \
-  cout.rdbuf(output_file_o.rdbuf());  // redirect std::cout to file
+#define OUT_REDIRECT_BASE      \
+  coutbuf = std::cout.rdbuf(); \
+  std::cout.rdbuf(output_file_o.rdbuf());  // redirect std::cout to file
 
-#define OUT_REDIRECT                                                                 \
-  string suite_name = testing::UnitTest::GetInstance()->current_test_info()->name(); \
-                                                                                     \
-  output_file_o.open(output_dir + suite_name + ".out");                              \
+#define OUT_REDIRECT                                                                      \
+  std::string suite_name = testing::UnitTest::GetInstance()->current_test_info()->name(); \
+                                                                                          \
+  output_file_o.open(output_dir + suite_name + ".out");                                   \
   OUT_REDIRECT_BASE
 
 #define OUT_REDIRECT_FILE(OUT_FILE)                   \
   output_file_o.open(output_dir + OUT_FILE + ".out"); \
   OUT_REDIRECT_BASE
 
-#define OUT_RESET      \
-  cout.rdbuf(coutbuf); \
+#define OUT_RESET           \
+  std::cout.rdbuf(coutbuf); \
   output_file_o.close();
 
 using namespace cytnx;
-using namespace std;
 using namespace testing;
 
 namespace DocTest {
-  const string output_dir = "../../code/cplusplus/outputs/";
+  const std::string output_dir = "../../code/cplusplus/outputs/";
 
   // output redirect
-  streambuf *coutbuf = nullptr;
-  ofstream output_file_o;
+  std::streambuf *coutbuf = nullptr;
+  std::ofstream output_file_o;
 
   // 1. Objects behavior
   // 1.1. Everyting is reference

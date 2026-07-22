@@ -1,5 +1,18 @@
 [build-system]
-requires = ["scikit-build-core >=0.11", "pybind11 >=3.0"]
+requires = [
+    "scikit-build-core >=0.11",
+    # Pinned exactly: pybind11 controls the type annotations baked into the
+    # extension, which tools/generate_stubs.py reads to produce the committed
+    # cytnx/cytnx/*.pyi stubs. A floating version silently rewrites those
+    # annotations (e.g. 3.0.1 -> 3.0.4 added `typing.SupportsIndex` to integer
+    # arguments), so the committed stubs only stay reproducible when the
+    # pybind11 version is fixed. When bumping this pin, regenerate the committed
+    # stubs in the same PR (see CONTRIBUTING.md, "Regenerating the Python type
+    # stubs"), and update the pybind11 version string in CMakeLists.txt's
+    # find_package(pybind11 ...) and the pybind11 pin in the `dev` extra to
+    # match.
+    "pybind11 ==3.0.4",
+]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -15,7 +28,13 @@ description = "A tensor network library"
 readme = "Readme.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-requires-python = ">=3.9"
+# The committed cytnx/cytnx/*.pyi stubs are generated with the lowest
+# supported interpreter (this floor) so their syntax stays parseable on every
+# version the package supports. When raising this minimum, regenerate the
+# stubs with the new floor in the same PR (see CONTRIBUTING.md, "Regenerating
+# the Python type stubs"). See also CONTRIBUTING.md for the other places the
+# minimum version is declared.
+requires-python = ">=3.10"
 keywords = ["tensor", "network", "physics"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -25,9 +44,15 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
 ]
 
-dependencies = ["numpy >=1.18", "graphviz", "beartype"]
+dependencies = ["numpy >=1.18", "beartype"]
 
 [project.optional-dependencies]
+# Renders Network diagrams via Network.Diagram(); only imported by
+# `cytnx/Network_conti.py`, which degrades to a ModuleNotFoundError raised
+# at call time (not import time) when this extra isn't installed.
+viz = [
+    "graphviz",
+]
 # Runtime test runner used by `pytests/`.
 test = [
     "pytest",
@@ -40,12 +65,29 @@ coverage = [
 ]
 # Convenience aggregate for contributors and CI:
 #     pip install --editable .[dev]
-# pulls everything needed to build, run the test suite, and collect
-# both Python and C++ coverage. Build-time deps (scikit-build-core,
-# pybind11) come from `[build-system].requires` automatically.
+# pulls everything needed to build, run the test suite, collect both
+# Python and C++ coverage, and regenerate the committed PEP 561 type
+# stubs with `tools/generate_stubs.py`. The isolated wheel build gets
+# scikit-build-core and pybind11 from `[build-system].requires`; pybind11 is
+# also listed below so it is present for CMake builds run outside that
+# isolation.
 dev = [
+    "cytnx[viz]",
     "cytnx[test]",
     "cytnx[coverage]",
+    # Must match the pybind11 version pinned in [build-system].requires above.
+    "pybind11 ==3.0.4",
+    # Pinned exactly, alongside pybind11 above: pybind11-stubgen is the tool
+    # that walks the built extension and renders cytnx/cytnx/*.pyi, so a
+    # floating version can reformat the committed stubs on an unrelated
+    # regen (new enum handling, changed overload ordering, etc.). When bumping
+    # this pin, regenerate the committed stubs in the same PR (see
+    # CONTRIBUTING.md, "Regenerating the Python type stubs").
+    "pybind11-stubgen ==2.5.5",
+    # Validates the committed stubs against the runtime module (see
+    # CONTRIBUTING.md's stub regeneration section); not itself version-locked
+    # since it only reads/reports and does not affect the stubs' content.
+    "mypy",
 ]
 docs = [
     "sphinx>=7.4.7",
@@ -78,6 +120,15 @@ cmake.args = [
     # Use the default preset defined in CMakePresets.json
     "--preset=openblas-cpu",
 ]
+# Only install the "libraries" CMake COMPONENT (the compiled pycytnx
+# extension module and the small runtime .tmp files cytnx/__init__.py reads)
+# into the wheel. This skips the "Development"/"headers" components - the
+# static libraries, C++ headers, and CMake export files - none of which
+# the installed Python package uses. Those C++-consumer artifacts remain
+# available through a plain `cmake --install` (see
+# ci-downstream-find-package.yml), which performs an unfiltered install
+# of every component.
+install.components = ["libraries"]
 
 [tool.scikit-build.metadata.version]
 provider = "scikit_build_core.metadata.regex"

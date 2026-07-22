@@ -4,7 +4,6 @@
 #include <vector>
 #include "UniTensor.hpp"
 #include "algo.hpp"
-using namespace std;
 typedef cytnx::Accessor ac;
 
 #ifdef BACKEND_TORCH
@@ -18,7 +17,7 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Qdr] error, Qdr can only operate on rank-2 Tensor.%s", "\n");
 
-      cytnx_uint64 n_tau = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+      const cytnx_uint64 n_tau = std::min(Tin.shape()[0], Tin.shape()[1]);
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
@@ -31,6 +30,13 @@ namespace cytnx {
       R.Init({n_tau, Tin.shape()[1]}, in.dtype(), in.device());
       R.storage().set_zeros();
       D = tau.clone();
+
+      if (in.is_empty()) {
+        Q.Init({Tin.shape()[0], n_tau}, in.dtype(), in.device());
+        std::vector<Tensor> out{Q, D, R};
+        if (is_tau) out.push_back(tau);
+        return out;
+      }
 
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.QR_ii[in.dtype()](
@@ -109,27 +115,27 @@ namespace cytnx {
           tmp.contiguous_();
         }
 
-        vector<cytnx_uint64> tmps = tmp.shape();
-        vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+        std::vector<cytnx_uint64> tmps = tmp.shape();
+        std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
         tmps.clear();
-        vector<string> oldlabel = Tin.labels();
+        std::vector<std::string> oldlabel = Tin.labels();
 
         // collapse as Matrix:
         cytnx_int64 rowdim = 1;
         for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
         tmp.reshape_({rowdim, -1});
 
-        vector<Tensor> outT = cytnx::linalg::Qdr(tmp, is_tau);
+        std::vector<Tensor> outT = cytnx::linalg::Qdr(tmp, is_tau);
         if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
         int t = 0;
-        vector<cytnx::UniTensor> outCyT(outT.size());
+        std::vector<cytnx::UniTensor> outCyT(outT.size());
 
-        string newlbl = "_aux_L";
+        std::string newlbl = "_aux_L";
 
         // Q
-        vector<cytnx_int64> Qshape;
-        vector<string> Qlbl;
+        std::vector<cytnx_int64> Qshape;
+        std::vector<std::string> Qlbl;
         for (int i = 0; i < Tin.rowrank(); i++) {
           Qshape.push_back(oldshape[i]);
           Qlbl.push_back(oldlabel[i]);
@@ -144,7 +150,7 @@ namespace cytnx {
         outCyT[1] = UniTensor(outT[1], true, 1);
         // outCyT[1].relabel_({newlbl, newlbl - 1});
         // newlbl -= 1;
-        outCyT[1].relabel_({newlbl, string("_aux_R")});
+        outCyT[1].relabel_({newlbl, std::string("_aux_R")});
         newlbl = outCyT[1].labels().back();
 
         // R
@@ -166,22 +172,23 @@ namespace cytnx {
         }
 
         if (Tin.is_tag()) {
-          outCyT[0].tag();
-          outCyT[1].tag();
-          outCyT[2].tag();
+          outCyT[0].tag_();
+          outCyT[1].tag_();
+          outCyT[2].tag_();
           for (int i = 0; i < Tin.rowrank(); i++) {
-            outCyT[0].bonds()[i].set_type(Tin.bonds()[i].type());
+            outCyT[0]._impl->_bonds[i] = outCyT[0]._impl->_bonds[i].retype(Tin.bonds()[i].type());
           }
-          outCyT[0].bonds().back().set_type(cytnx::BD_BRA);
+          outCyT[0]._impl->_bonds.back() = outCyT[0]._impl->_bonds.back().retype(cytnx::BD_BRA);
           outCyT[0]._impl->_is_braket_form = outCyT[0]._impl->_update_braket();
 
-          outCyT[1].bonds()[0].set_type(cytnx::BD_KET);
-          outCyT[1].bonds()[1].set_type(cytnx::BD_BRA);
+          outCyT[1]._impl->_bonds[0] = outCyT[1]._impl->_bonds[0].retype(cytnx::BD_KET);
+          outCyT[1]._impl->_bonds[1] = outCyT[1]._impl->_bonds[1].retype(cytnx::BD_BRA);
           outCyT[1]._impl->_is_braket_form = outCyT[1]._impl->_update_braket();
 
-          outCyT[2].bonds()[0].set_type(cytnx::BD_KET);
+          outCyT[2]._impl->_bonds[0] = outCyT[2]._impl->_bonds[0].retype(cytnx::BD_KET);
           for (int i = 1; i < outCyT[2].rank(); i++) {
-            outCyT[2].bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+            outCyT[2]._impl->_bonds[i] =
+              outCyT[2]._impl->_bonds[i].retype(Tin.bonds()[Tin.rowrank() + i - 1].type());
           }
           outCyT[2]._impl->_is_braket_form = outCyT[2]._impl->_update_braket();
         }

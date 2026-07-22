@@ -3,7 +3,6 @@
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include <numeric>
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -20,6 +19,10 @@ namespace cytnx {
                       "\n");
       cytnx_error_msg(T1.device() != T2.device(), "[ERROR] Two tensors must be on same devices.%s",
                       "\n");
+      cytnx_error_msg(T1.is_void() || T2.is_void(),
+                      "[ERROR] input tensors cannot have dtype Type.Void.%s", "\n");
+      cytnx_error_msg(T1.is_scalar() || T2.is_scalar(),
+                      "[ERROR] Directsum does not support rank-0 scalar tensors.%s", "\n");
 
       // checking duplication in shared_axes:
       auto tmp = vec_unique(shared_axes);
@@ -27,6 +30,7 @@ namespace cytnx {
                       "[ERROR] shared_axes cannot contain duplicate elements!%s", "\n");
 
       std::vector<cytnx_uint64> new_shape(T1.rank());
+      std::vector<bool> is_shared_axis(T1.rank(), false);
       // checking dimension in shared_axes:
       for (int i = 0; i < shared_axes.size(); i++) {
         cytnx_error_msg(shared_axes[i] >= T1.shape().size(),
@@ -37,27 +41,24 @@ namespace cytnx {
           "[ERROR] T1 and T2 at axis %d which specified to share does not have same dimension!\n",
           shared_axes[i]);
         new_shape[shared_axes[i]] = T1.shape()[shared_axes[i]];
+        is_shared_axis[shared_axes[i]] = true;
       }
 
       std::vector<cytnx_uint64> non_shared_axes;
       for (int i = 0; i < new_shape.size(); i++) {
-        if (new_shape[i] == 0) {
+        if (!is_shared_axis[i]) {
           new_shape[i] = T1.shape()[i] + T2.shape()[i];
           non_shared_axes.push_back(i);
         }
       }
 
-      Tensor _t1 = T1.contiguous(), _t2 = T2.contiguous();
-      if (T1.dtype() != T2.dtype()) {
-        // do conversion:
-        if (T1.dtype() < T2.dtype()) {
-          _t2 = _t2.astype(T1.dtype());
-        } else {
-          _t1 = _t1.astype(T2.dtype());
-        }
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat + Double -> ComplexDouble)
+      // rather than keeping the lower-enum operand type; astype is a no-op when it already matches.
+      const unsigned int out_dtype = Type.type_promote(T1.dtype(), T2.dtype());
+      Tensor _t1 = T1.contiguous().astype(out_dtype);
+      Tensor _t2 = T2.contiguous().astype(out_dtype);
 
-      Tensor out(new_shape, _t1.dtype(), _t1.device());
+      Tensor out(new_shape, out_dtype, _t1.device());
 
       std::vector<Accessor> accs(out.rank());
       for (int i = 0; i < shared_axes.size(); i++) {

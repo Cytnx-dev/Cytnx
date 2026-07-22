@@ -16,6 +16,8 @@ namespace cytnx {
         Tin = Tin.astype(Type.Double);
       }
 
+      if (Tin.is_empty()) return;
+
       if (Tin.device() == Device.cpu) {
         cytnx::linalg_internal::lii.Inv_inplace_ii[Tin.dtype()](
           Tin._impl->storage()._impl, Tin._impl->storage()._impl->size(), clip);
@@ -43,7 +45,8 @@ namespace cytnx {
           true, "[ERROR][Inv_] fatal internal, cannot call on an un-initialized UniTensor_base%s",
           "\n");
       } else {
-        cytnx_error_msg(true, "[Inv_]Unknown UniTensor type%s", "\n");
+        cytnx_error_msg(true, "[ERROR][Inv_] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }  // uten types
     }
 

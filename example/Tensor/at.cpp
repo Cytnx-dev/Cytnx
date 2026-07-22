@@ -2,18 +2,17 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   Tensor A = arange(30).reshape(2, 3, 5);
-  cout << A << endl;
+  std::cout << A << std::endl;
 
   // note that type resolver should be consist with the dtype
-  cout << A.at<cytnx_double>(0, 0, 2) << endl;
+  std::cout << A.at<cytnx_double>(0, 0, 2) << std::endl;
 
   // the return is a ref., can be modify directly.
   A.at<cytnx_double>(0, 0, 2) = 999;
 
-  cout << A.at<cytnx_double>(0, 0, 2) << endl;
+  std::cout << A.at<cytnx_double>(0, 0, 2) << std::endl;
 
   // [Note] there are two way to give argument:
   // Method 1: more like 'c++' way:

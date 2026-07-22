@@ -34,6 +34,15 @@ namespace cytnx {
       const cytnx_uint64 nums = tens[0].storage().size();
       cytnx_uint64 trunc_dim = (nums < keepdim) ? nums : keepdim;
 
+      if (nums == 0) {
+        if (return_err == 1) {
+          tens.push_back(zeros({}, tens[0].dtype(), tens[0].device()));
+        } else if (return_err) {
+          tens.push_back(zeros({0}, tens[0].dtype(), tens[0].device()));
+        }
+        return;
+      }
+
       // --- determine the truncation dimension from a HOST copy of the (real) singular values S ---
       Tensor S_host = tens[0].to(Device.cpu).contiguous();
       std::visit(
@@ -59,7 +68,11 @@ namespace cytnx {
 
       if (trunc_dim == nums) {
         // nothing to truncate; no discarded values, so the truncation error is zero.
-        if (return_err) tens.push_back(zeros(1, tens[0].dtype(), tens[0].device()));
+        if (return_err == 1) {
+          tens.push_back(zeros({}, tens[0].dtype(), tens[0].device()));
+        } else if (return_err) {
+          tens.push_back(zeros({0}, tens[0].dtype(), tens[0].device()));
+        }
         return;
       }
 
@@ -74,7 +87,7 @@ namespace cytnx {
             HANDLE_CUDA_ERROR(cudaMemcpy(newS.gpu_ptr_as<T>(), sptr, trunc_dim * sizeof(T),
                                          cudaMemcpyDeviceToDevice));
             if (return_err == 1) {
-              terr = Tensor({1}, S.dtype(), S.device());
+              terr = Tensor({}, S.dtype(), S.device());
               HANDLE_CUDA_ERROR(cudaMemcpy(terr.gpu_ptr_as<T>(), sptr + trunc_dim, sizeof(T),
                                            cudaMemcpyDeviceToDevice));
             } else if (return_err) {

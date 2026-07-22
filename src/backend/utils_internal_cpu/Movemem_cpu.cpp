@@ -11,7 +11,6 @@
   #include "hptt.h"
 #endif
 
-using namespace std;
 namespace cytnx {
 
   namespace utils_internal {
@@ -43,7 +42,7 @@ namespace cytnx {
         accu_new *= newshape[i];
       }
 
-      T *des = (T *)malloc(in->capacity() * sizeof(T));
+      T *des = (T *)malloc(in->size() * sizeof(T));
       T *src = static_cast<T *>(in->data());
 
       std::vector<cytnx_uint64> old_inds(old_shape.size());
@@ -82,7 +81,7 @@ namespace cytnx {
         free(des);
         return out;
       } else {
-        out->_Init_byptr(des, accu_old, in->device(), true, in->capacity());
+        out->_Init_byptr(des, accu_old, in->device(), true, in->size());
         return out;
       }
     }
@@ -100,7 +99,7 @@ namespace cytnx {
         in->dtype_str().c_str(), Type.getname(Type.cy_typeid(T())));
 #endif
 
-      T *des = (T *)malloc(in->capacity() * sizeof(T));
+      T *des = (T *)malloc(in->size() * sizeof(T));
       T *src = static_cast<T *>(in->data());
       cytnx_uint64 accu_old = 1, accu_new = 1;
 
@@ -108,8 +107,8 @@ namespace cytnx {
       if (in->size() > 64) {
         std::vector<int> perm(mapper.begin(), mapper.end());
         std::vector<int> size(old_shape.begin(), old_shape.end());
-        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], NULL, 0, des, NULL,
-                                      hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
+        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des,
+                                      nullptr, hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
         plan->execute();
         accu_old = in->size();
       } else {
@@ -206,7 +205,7 @@ namespace cytnx {
         free(des);
         return out;
       } else {
-        out->_Init_byptr(des, accu_old, in->device(), true, in->capacity());
+        out->_Init_byptr(des, accu_old, in->device(), true, in->size());
         return out;
       }
     }

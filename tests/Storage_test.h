@@ -1,16 +1,20 @@
-#ifndef _H_STORAGE_TEST
-#define _H_STORAGE_TEST
+#ifndef CYTNX_TESTS_STORAGE_TEST_H_
+#define CYTNX_TESTS_STORAGE_TEST_H_
 
-#include "cytnx.hpp"
 #include <gtest/gtest.h>
 
-using namespace cytnx;
-using namespace std;
-class StorageTest : public ::testing::Test {
- public:
- protected:
-  void SetUp() override {}
-  void TearDown() override {}
-};
+#include "cytnx.hpp"
 
-#endif
+namespace cytnx {
+  namespace test {
+
+    class StorageTest : public ::testing::Test {
+     public:
+     protected:
+      void SetUp() override {}
+      void TearDown() override {}
+    };
+
+  }  // namespace test
+}  // namespace cytnx
+#endif  // CYTNX_TESTS_STORAGE_TEST_H_

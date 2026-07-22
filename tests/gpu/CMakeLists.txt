@@ -11,16 +11,21 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  arange_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
   linalg_test/Abs_test.cpp
   linalg_test/Add_test.cpp
+  linalg_test/Kron_test.cpp
   linalg_test/Cpr_test.cpp
   linalg_test/Div_test.cpp
   linalg_test/Mod_test.cpp
   linalg_test/Mul_test.cpp
   linalg_test/Sub_test.cpp
+  linalg_test/InplacePromote_test.cpp
+  linalg_test/NonContigElementwise_test.cpp
+  linalg_test/Outer_test.cpp
   linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
@@ -33,8 +38,10 @@ add_executable(
   linalg_test/GeSvd_test.cpp
   linalg_test/Rsvd_test.cpp
   linalg_test/truncate_test.cpp
+  linalg_test/Trace_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/sum_test.cpp
+  linalg_test/Zero_extent_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Sort_test.cpp
@@ -50,16 +57,24 @@ target_include_directories(
 )
 target_link_libraries(
   gpu_test_main
-  gtest_main
-  gmock
-  gtest
+  GTest::gtest_main
+  GTest::gmock
+  GTest::gtest
 )
 target_link_libraries(gpu_test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
 cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR ".." OUTPUT_VARIABLE test_dir)
 gtest_discover_tests(gpu_test_main
-                     WORKING_DIRECTORY ${test_dir})
+                     WORKING_DIRECTORY ${test_dir}
+                     # See tests/CMakeLists.txt's DISCOVERY_MODE comment:
+                     # avoids requiring a GPU driver merely to compile/link
+                     # this target.
+                     DISCOVERY_MODE PRE_TEST
+                     # Lets `ctest -L '^gpu$'` scope a run to just this
+                     # binary's tests when a CUDA preset's shared build dir
+                     # also has test_main's tests registered.
+                     PROPERTIES LABELS gpu)
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

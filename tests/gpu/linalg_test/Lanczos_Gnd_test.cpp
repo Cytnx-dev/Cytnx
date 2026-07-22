@@ -1,103 +1,109 @@
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
+
 #include "cytnx.hpp"
 #include "gpu_test_tools.h"
 #include "linalg_test.h"
 
-using namespace cytnx;
-using namespace testing;
+namespace cytnx {
+  namespace gpu_test {
+    namespace {
+      using gpu_test::ferm_dense_lowest;
+      using gpu_test::FermiAdaOp;
+      using gpu_test::make_ferm_ada_ket;
 
-class MyOp : public LinOp {
- public:
-  MyOp() : LinOp("mv", 27) {}
+      class MyOp : public LinOp {
+       public:
+        MyOp() : LinOp("mv", 27) {}
 
-  UniTensor matvec(const UniTensor& v) override {
-    Tensor tA = arange(27 * 27).reshape(27, 27).to(cytnx::Device.cuda);
-    UniTensor A = UniTensor(tA).to(cytnx::Device.cuda);
-    A = A + A.Transpose();
-    return UniTensor(linalg::Dot(A.get_block_(), v.get_block_())).to(cytnx::Device.cuda);
-    // return UniTensor(linalg::Tensordot(A.get_block_(), v.get_block_(), {1}, {0}))
-    //   .to(cytnx::Device.cuda);
-  }
-};
+        UniTensor matvec(const UniTensor& v) override {
+          Tensor tA = arange(0, 27 * 27, 1, Type.Double, Device.cuda).reshape(27, 27);
+          UniTensor A = UniTensor(tA).to(Device.cuda);
+          A = A + A.Transpose();
+          return UniTensor(linalg::Dot(A.get_block_(), v.get_block_())).to(Device.cuda);
+          // return UniTensor(linalg::Tensordot(A.get_block_(), v.get_block_(), {1}, {0}))
+          //   .to(Device.cuda);
+        }
+      };
 
-class MyOp2 : public LinOp {
- public:
-  UniTensor H;
-  MyOp2(int dim) : LinOp("mv", dim) {
-    Tensor A = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_A.cytn");
-    Tensor B = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_B.cytn");
-    Tensor C = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_C.cytn");
-    Bond lan_I = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
-    Bond lan_J = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
-    H = UniTensor({lan_I, lan_J});
-    H.put_block(A, 0);
-    H.put_block(B, 1);
-    H.put_block(C, 2);
-    H.relabel_({"a", "b"});
-    H.to_(cytnx::Device.cuda);
-    // H.print_diagram();
-    // H.print_blocks();
-  }
-  UniTensor matvec(const UniTensor& psi) override {
-    auto out = H.contract(psi);
-    out.relabel_({"b", "c"});
-    return out;
-  }
-};
+      class MyOp2 : public LinOp {
+       public:
+        UniTensor H;
+        MyOp2(int dim) : LinOp("mv", dim) {
+          Tensor A = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_A.cytn");
+          Tensor B = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_B.cytn");
+          Tensor C = Tensor::Load(CYTNX_TEST_DATA_DIR "/linalg/Lanczos_Gnd/lan_block_C.cytn");
+          Bond lan_I = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
+          Bond lan_J = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
+          H = UniTensor({lan_I, lan_J});
+          H.put_block(A, 0);
+          H.put_block(B, 1);
+          H.put_block(C, 2);
+          H.relabel_({"a", "b"});
+          H.to_(Device.cuda);
+          // H.print_diagram();
+          // H.print_blocks();
+        }
+        UniTensor matvec(const UniTensor& psi) override {
+          auto out = H.contract(psi);
+          out.relabel_({"b", "c"});
+          return out;
+        }
+      };
 
-TEST(Lanczos_Gnd, gpu_Lanczos_Gnd_test) {
-  // CompareWithScipy
-  // cytnx_double evans = -0.6524758424985271;
-  cytnx_double evans = -1628.9964650426593;
+      TEST(LanczosGnd, GpuLanczosGndTest) {
+        // CompareWithScipy
+        // cytnx_double evans = -0.6524758424985271;
+        cytnx_double evans = -1628.9964650426593;
 
-  // Tensor testtmp = arange(16).reshape(4, 4);
-  // std::cout<<testtmp<<std::endl;
-  MyOp H = MyOp();
-  Tensor tv = arange(27).to(cytnx::Device.cuda);
-  UniTensor v = UniTensor(tv).to(cytnx::Device.cuda);
-  std::vector<UniTensor> eigs =
-    linalg::Lanczos(&H, v, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, false);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
-  std::cout << ev << ' ' << evans << std::endl;
-  EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
-  // EXPECT_DOUBLE_EQ(ev, evans);
-}
+        MyOp H = MyOp();
+        Tensor tv = arange(0, 27, 1, Type.Double, Device.cuda);
+        UniTensor v = UniTensor(tv).to(Device.cuda);
+        std::vector<UniTensor> eigs =
+          linalg::Lanczos(&H, v, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, false);
+        cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
+        std::cout << ev << ' ' << evans << std::endl;
+        EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
+        // EXPECT_DOUBLE_EQ(ev, evans);
+      }
 
-// GPU fermionic Krylov: O = A^dag A (sign-flip-active 4-leg A); eigenpairs computed on the GPU and
-// checked against an independent CPU dense diagonalization.
-TEST(Lanczos_Gnd, fermionic_Lanczos) {  // naive Lanczos 'Gnd', ground state
-  const double tol = 1e-7;
-  UniTensor A = make_ferm_A();
-  UniTensor v0 = make_ferm_ada_ket(A);
-  auto low = ferm_dense_lowest(A, 1);
-  FermiAdaOp op(A.to(Device.cuda), ferm_ket_nx(v0));
-  auto eigs = to_cpu(linalg::Lanczos(&op, v0.to(Device.cuda), "Gnd", 1e-12, 1000, 1, true));
-  expect_lowest_states(A, eigs, low, tol);
-}
+      // GPU fermionic Krylov: O = A^dag A (sign-flip-active 4-leg A); eigenpairs computed on the
+      // GPU and checked against an independent CPU dense diagonalization.
+      TEST(LanczosGnd, GpuFermionicLanczos) {  // naive Lanczos 'Gnd', ground state
+        const double tol = 1e-7;
+        UniTensor A = make_ferm_A();
+        UniTensor v0 = make_ferm_ada_ket(A);
+        auto low = ferm_dense_lowest(A, 1);
+        FermiAdaOp op(A.to(Device.cuda), ferm_ket_nx(v0));
+        auto eigs = to_cpu(linalg::Lanczos(&op, v0.to(Device.cuda), "Gnd", 1e-12, 1000, 1, true));
+        expect_lowest_states(A, eigs, low, tol);
+      }
 
-TEST(Lanczos_Gnd, gpu_Bk_Lanczos_Gnd_test) {
-  // CompareWithScipy
-  cytnx_double evans = -2.31950925;
+      TEST(LanczosGnd, GpuBkLanczosGndTest) {
+        // CompareWithScipy
+        cytnx_double evans = -2.31950925;
 
-  Bond lan_I_v = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
-  Bond lan_J_v = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {1, 1, 1});
-  UniTensor lan_guess = UniTensor({lan_I_v, lan_J_v});
+        Bond lan_I_v = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
+        Bond lan_J_v = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {1, 1, 1});
+        UniTensor lan_guess = UniTensor({lan_I_v, lan_J_v});
 
-  lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 0);
-  lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
-  lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
-  lan_guess.relabel_({"b", "c"});
-  lan_guess.to_(cytnx::Device.cuda);
-  // lan_guess.print_diagram();
-  // lan_guess.print_blocks();
+        lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 0);
+        lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
+        lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
+        lan_guess.relabel_({"b", "c"});
+        lan_guess.to_(Device.cuda);
+        // lan_guess.print_diagram();
+        // lan_guess.print_blocks();
 
-  MyOp2 H = MyOp2(27);
+        MyOp2 H = MyOp2(27);
 
-  std::vector<UniTensor> eigs =
-    linalg::Lanczos(&H, lan_guess, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, true);
-  cytnx_double ev = (cytnx_double)eigs[0].get_block_()(0).item().real();
-  std::cout << ev << ' ' << evans << std::endl;
-  EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
-  // EXPECT_DOUBLE_EQ(ev, evans);
-}
+        std::vector<UniTensor> eigs = linalg::Lanczos(
+          &H, lan_guess, "Gnd", 9.999999999999999988e-15, 10000, 1, false, true, 0, true);
+        cytnx_double ev = (cytnx_double)eigs[0].get_block_().item().real();
+        std::cout << ev << ' ' << evans << std::endl;
+        EXPECT_TRUE(std::fabs(ev - evans) < 1e-5);
+        // EXPECT_DOUBLE_EQ(ev, evans);
+      }
+
+    }  // namespace
+  }  // namespace gpu_test
+}  // namespace cytnx

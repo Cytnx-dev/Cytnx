@@ -9,6 +9,10 @@ on:
       - master
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   BuildAndTest:
     name: BuildAndTest-${{ matrix.os }}
@@ -30,9 +34,13 @@ jobs:
     # When re-running a PR job, GitHub Actions uses the merge commit created at
     # the time of the original run, not a fresh merge with the latest target branch.
     # This step ensures we always test against the most recent target branch.
+    # A committer identity is required because a non-fast-forward merge creates
+    # a merge commit.
     - name: Merge with latest target branch (pull_request only)
       if: github.event_name == 'pull_request'
       run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git fetch origin ${{ github.event.pull_request.base.ref }}
         git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
         # Refresh submodules in case the merge moved any gitlinks (e.g. cmake_modules/morse_cmake).
@@ -59,9 +67,9 @@ jobs:
       with:
         path: |
           ~/.ccache
-        key: ccache-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+        key: ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-${{ github.sha }}
         restore-keys: |
-          ccache-${{ runner.os }}-${{ github.ref_name }}-
+          ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-
 
     - name: Cache Ccache Directory (pull_request)
       if: ${{ github.event_name == 'pull_request' }}
@@ -69,10 +77,10 @@ jobs:
       with:
         path: |
           ~/.ccache
-        key: ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
+        key: ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
         restore-keys: |
-          ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
-          ccache-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
+          ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.event.pull_request.head.ref }}-
+          ccache-${{ runner.os }}-${{ runner.arch }}-${{ github.event.pull_request.base.ref }}-
 
     - name: start building
       # TODO: Consider to replace conda-build with rattler-build to speed up

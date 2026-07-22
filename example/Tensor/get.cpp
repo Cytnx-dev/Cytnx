@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace cytnx;
-using namespace std;
 int main() {
   typedef Accessor ac;
 
@@ -16,12 +15,12 @@ int main() {
   */
 
   Tensor A = arange(60).reshape({3, 4, 5});
-  cout << A << endl;
+  std::cout << A << std::endl;
 
   // Method 1, Using operator():
   //-----------------------------------------
   Tensor B = A(2, ":", "2:5:1");
-  cout << B << endl;
+  std::cout << B << std::endl;
 
   /* [Note]
       This is equivalent as:
@@ -33,7 +32,7 @@ int main() {
   // Method 2, Using operator[] or low-level API get():
   //----------------------------------------
   Tensor B2 = A[{ac(2), ac::all(), ac::range(2, 5, 1)}];  // remember the {}braket
-  cout << B2 << endl;
+  std::cout << B2 << std::endl;
 
   /* [Note]
       You can also use the low-level API get() as

@@ -12,7 +12,6 @@
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -92,11 +91,8 @@ void bond_binding(py::module &m) {
     .def("Nsym", &Bond::Nsym)
     .def("syms", [](Bond &self) { return self.syms(); })
     .def("syms_clone", [](Bond &self) { return self.syms_clone(); })
-    .def("set_type", &Bond::set_type)
     .def("retype", &Bond::retype)
-    .def("clear_type", &Bond::clear_type)
     .def("redirect", &Bond::redirect)
-    .def("c_redirect_", &Bond::redirect_)
     .def("clone", &Bond::clone)
     .def("__copy__", &Bond::clone)
     .def("__deepcopy__", &Bond::clone)
@@ -110,70 +106,38 @@ void bond_binding(py::module &m) {
         return self.combineBonds(bds, is_grp);
       },
       py::arg("bds"), py::arg("is_grp") = true)
-    .def(
-      "combineBond_",
-      [](Bond &self, const Bond &bd, bool is_grp) { return self.combineBond_(bd, is_grp); },
-      py::arg("bd"), py::arg("is_grp") = true)
-    .def(
-      "combineBond_",
-      [](Bond &self, const std::vector<Bond> &bds, bool is_grp) {
-        return self.combineBonds_(bds, is_grp);
-      },
-      py::arg("bds"), py::arg("is_grp") = true)
     // .def("combineBond", &Bond::combineBond, py::arg("bd"), py::arg("is_grp") = true)
-    // .def("combineBond_", &Bond::combineBond_, py::arg("bd"), py::arg("is_grp") = true)
     .def("combineBonds", &Bond::combineBonds, py::arg("bds"), py::arg("is_grp") = true)
-    .def("combineBonds_", &Bond::combineBonds_, py::arg("bds"), py::arg("is_grp") = true)
     .def("getDegeneracies", [](Bond &self) { return self.getDegeneracies(); })
 
     .def(
       "getDegeneracy",
-      [](Bond &self, const std::vector<cytnx_int64> &qnum) { return self.getDegeneracy(qnum); },
-      py::arg("qnum"))
-    .def(
-      "getDegeneracy",
-      [](Bond &self, const cytnx::Qs &qnum) {
-        return self.getDegeneracy(std::vector<cytnx_int64>(qnum));
-      },
-      py::arg("qnum"))
-
-    .def(
-      "c_getDegeneracy_refarg",
-      [](Bond &self, const std::vector<cytnx_int64> &qnum, py::list &indices) {
+      [](Bond &self, const std::vector<cytnx_int64> &qnum, bool return_indices) -> py::object {
+        if (!return_indices) return py::cast(self.getDegeneracy(qnum));
         std::vector<cytnx_uint64> inds;
         auto out = self.getDegeneracy(qnum, inds);
-        for (int i = 0; i < inds.size(); i++) {
-          indices.append(inds[i]);
-        }
-        return out;
+        return py::make_tuple(out, inds);
       },
-      py::arg("qnum"), py::arg("indices"))
+      py::arg("qnum"), py::arg("return_indices") = false)
     .def(
-      "c_getDegeneracy_refarg",
-      [](Bond &self, const cytnx::Qs &qnum, py::list &indices) {
+      "getDegeneracy",
+      [](Bond &self, const cytnx::Qs &qnum, bool return_indices) -> py::object {
+        std::vector<cytnx_int64> qvec(qnum);
+        if (!return_indices) return py::cast(self.getDegeneracy(qvec));
         std::vector<cytnx_uint64> inds;
-        auto out = self.getDegeneracy(std::vector<cytnx_int64>(qnum), inds);
-        for (int i = 0; i < inds.size(); i++) {
-          indices.append(inds[i]);
-        }
-        return out;
+        auto out = self.getDegeneracy(qvec, inds);
+        return py::make_tuple(out, inds);
       },
-      py::arg("qnum"), py::arg("indices"))
+      py::arg("qnum"), py::arg("return_indices") = false)
 
     .def("get_fermion_parity", &Bond::get_fermion_parity, py::arg("qnum"))
 
-    .def("group_duplicates_", &Bond::group_duplicates)
-    .def(
-      "c_group_duplicates_refarg",
-      [](Bond &self, py::list &mapper) {
-        std::vector<cytnx_uint64> mprs;
-        Bond out = self.group_duplicates(mprs);
-        for (int i = 0; i < mprs.size(); i++) {
-          mapper.append(mprs[i]);
-        }
-        return out;
-      },
-      py::arg("mapper"))
+    .def("group_duplicates",
+         [](Bond &self) {
+           std::vector<cytnx_uint64> mprs;
+           Bond out = self.group_duplicates(mprs);
+           return py::make_tuple(out, mprs);
+         })
 
     .def("has_duplicate_qnums", &Bond::has_duplicate_qnums)
     .def("calc_reverse_qnums", &Bond::calc_reverse_qnums)

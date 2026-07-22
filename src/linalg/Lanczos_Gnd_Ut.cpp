@@ -17,7 +17,6 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    using namespace std;
 
     // <A|B>
     static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
@@ -39,7 +38,7 @@ namespace cytnx {
 
       // Frobenius norm is sign-flip independent, so it is the correct vector norm for fermionic
       // tensors too (and equals sqrt(<Tin|Tin>) for bosonic).
-      double Norm = double(Tin.Norm().item().real());
+      double Norm = double(Tin.norm());
 
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
@@ -55,7 +54,7 @@ namespace cytnx {
       bool cvg_fin = false;
 
       // declare variables, A,B should be real if LinOp is hermitian!
-      Tensor As = zeros({1}, Hop->dtype() < 3 ? Hop->dtype() + 2 : Hop->dtype(), Tin.device());
+      Tensor As = zeros({1}, Type.to_real(Hop->dtype()), Tin.device());
       Tensor Bs = As.clone();
       Scalar E;
 
@@ -82,7 +81,7 @@ namespace cytnx {
       auto alpha = _Dot(new_psi, psi_1).real();
       As(0) = alpha;
       new_psi -= alpha * psi_1;
-      auto beta = new_psi.Norm().item();
+      double beta = double(new_psi.norm());
       Bs(0) = beta;
       psi_0 = psi_1;
       new_psi /= beta;
@@ -115,7 +114,7 @@ namespace cytnx {
           break;
         }
 
-        beta = new_psi.Norm().item();
+        beta = double(new_psi.norm());
         Bs.append(beta);
 
         if (beta == 0) {

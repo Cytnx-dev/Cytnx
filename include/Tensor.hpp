@@ -443,11 +443,15 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/Init.py.out
     */
-    void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              const int &device = -1, const bool &init_zero = true) {
+    void Init(const std::vector<cytnx_uint64> &shape, unsigned int dtype = Type.Double,
+              int device = -1, bool init_zero = true) {
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       this->_impl = tmp;
       this->_impl->Init(shape, dtype, device, init_zero);
+    }
+    void Init(std::initializer_list<cytnx_uint64> shape, unsigned int dtype = Type.Double,
+              int device = -1, bool init_zero = true) {
+      this->Init(std::vector<cytnx_uint64>(shape), dtype, device, init_zero);
     }
     // void Init(const Storage& storage) {
     //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
@@ -473,8 +477,13 @@ namespace cytnx {
      *   the content of Tensor will be un-initialized.
      * @see cytnx::Tensor::Init
      */
-    Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-           const int &device = -1, const bool &init_zero = 1)
+    Tensor(const std::vector<cytnx_uint64> &shape, unsigned int dtype = Type.Double,
+           int device = -1, bool init_zero = true)
+        : _impl(new Tensor_impl()) {
+      this->Init(shape, dtype, device, init_zero);
+    }
+    Tensor(std::initializer_list<cytnx_uint64> shape, unsigned int dtype = Type.Double,
+           int device = -1, bool init_zero = true)
         : _impl(new Tensor_impl()) {
       this->Init(shape, dtype, device, init_zero);
     }
@@ -514,9 +523,10 @@ namespace cytnx {
 
     // Convert storage to the logical Cytnx element pointer type.
     //
-    // Use ptr_as<T>() for host code and raw memory copies, including cudaMemcpy. For complex
-    // tensors, T is std::complex<...>. Use gpu_ptr_as<T>() only for CUDA APIs that require CUDA
-    // ABI element types such as cuDoubleComplex or cuComplex.
+    // Use ptr_as<T>() for host code and raw memory copies. For complex tensors, T is
+    // std::complex<...>. Use gpu_ptr_as<T>() for CUDA kernel code; for complex tensors, T is
+    // cuda::std::complex<...>. CUDA library APIs that require cuComplex ABI pointers should cast
+    // explicitly at the library-call boundary.
     template <typename T>
     T *ptr_as() const {
       cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
@@ -535,10 +545,11 @@ namespace cytnx {
     // convert this->_impl->_storage->Mem to a typed variant of pointers, excluding void*
     gpu_pointer_types gpu_ptr() const;
 
-    // Convert storage to the CUDA ABI element pointer type.
+    // Convert storage to the CUDA kernel element pointer type.
     //
-    // This is for CUDA/cuBLAS/cuSOLVER/kernel interfaces. Generic host code and cudaMemcpy byte
-    // copies should use ptr_as<T>() so the logical Cytnx dtype mapping is checked.
+    // This is for CUDA kernel interfaces. Generic host code should use ptr_as<T>() so the logical
+    // Cytnx dtype mapping is checked. CUDA library APIs that require cuComplex ABI pointers should
+    // cast explicitly at the library-call boundary.
     template <typename T>
     T *gpu_ptr_as() const {
       cytnx_error_msg(
@@ -598,10 +609,45 @@ namespace cytnx {
     const std::vector<cytnx_uint64> &shape() const { return this->_impl->shape(); }
 
     /**
+    @brief the storage strides of the Tensor
+    @return [std::vector<cytnx_int64>] for each logical axis, the distance in the
+    underlying storage between consecutive elements along that axis
+    @details cytnx tensors store a dense permutation of their logical axes, so the
+    stride of every axis is well defined (this is the layout Tensor::at indexes
+    through). For a contiguous tensor these are the row-major strides; for a
+    permuted (non-contiguous) view they reflect the permuted memory order.
+    */
+    std::vector<cytnx_int64> strides() const;
+
+    /**
         @brief the rank of the Tensor
         @return [cytnx_uint64] the rank of the Tensor
     */
-    cytnx_uint64 rank() const { return this->_impl->shape().size(); }
+    cytnx_uint64 rank() const { return this->_impl->rank(); }
+
+    /**
+    @brief Return the total number of logical elements in the Tensor.
+    @return [cytnx_uint64] 1 for a rank-0 scalar and 0 for a Tensor with any zero extent.
+    */
+    cytnx_uint64 size() const { return this->_impl->storage().size(); }
+
+    /**
+    @brief whether the Tensor is uninitialized.
+    @return [bool] true if the Tensor has Type.Void dtype.
+    */
+    bool is_void() const { return this->_impl->is_void(); }
+
+    /**
+    @brief whether the Tensor is an initialized rank-0 scalar Tensor
+    @return [bool] true if the Tensor has rank 0 and a non-void dtype
+    */
+    bool is_scalar() const { return this->_impl->is_scalar(); }
+
+    /**
+    @brief whether the Tensor is initialized and has no elements
+    @return [bool] true if the Tensor has a non-void dtype and size() == 0
+    */
+    bool is_empty() const { return !this->is_void() && this->size() == 0; }
 
     /**
     @brief return a clone of the current Tensor.
@@ -768,7 +814,6 @@ namespace cytnx {
     @param[in] new_shape the new shape of the Tensor.
     @pre
         1. The size of input and output Tensor should be the same.
-        2. \p new_shape cannot be empty.
     @see \link Tensor::reshape Tensor::reshape() \endlink
     @note
         Compare to reshape(), this function will not create a new Tensor,
@@ -813,7 +858,6 @@ namespace cytnx {
     @return [Tensor]
     @pre
         1. The size of input and output Tensor should be the same.
-        2. \p new_shape cannot be empty.
     @note
         1. This function will not change the original Tensor.
         2. You can use Tensor::reshape_() to reshape the Tensor inplacely.
@@ -841,8 +885,7 @@ namespace cytnx {
      * @see reshape(const std::vector<cytnx_int64> &new_shape) const
      */
     Tensor reshape(const std::vector<cytnx_uint64> &new_shape) const {
-      std::vector<cytnx_int64> tmp(new_shape.size());
-      memcpy(&tmp[0], &new_shape[0], sizeof(cytnx_uint64) * new_shape.size());
+      std::vector<cytnx_int64> tmp(new_shape.begin(), new_shape.end());
       Tensor out;
       out._impl = this->_impl->reshape(tmp);
       return out;
@@ -931,6 +974,14 @@ namespace cytnx {
       return this->_impl->at<T>(locator);
     }
     /// @cond
+    template <class T>
+    T &at(const std::initializer_list<cytnx_uint64> &locator) {
+      return this->at<T>(std::vector<cytnx_uint64>(locator));
+    }
+    template <class T>
+    const T &at(const std::initializer_list<cytnx_uint64> &locator) const {
+      return this->at<T>(std::vector<cytnx_uint64>(locator));
+    }
     template <class T, class... Ts>
     const T &at(const cytnx_uint64 &e1, const Ts &...elems) const {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
@@ -947,6 +998,12 @@ namespace cytnx {
     }
 
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) { return this->_impl->at(locator); }
+    const Scalar::Sproxy at(const std::initializer_list<cytnx_uint64> &locator) const {
+      return this->at(std::vector<cytnx_uint64>(locator));
+    }
+    Scalar::Sproxy at(const std::initializer_list<cytnx_uint64> &locator) {
+      return this->at(std::vector<cytnx_uint64>(locator));
+    }
     /// @endcond
 
     /**
@@ -990,11 +1047,15 @@ namespace cytnx {
     }
 
     const Scalar::Sproxy item() const {
+      cytnx_error_msg(this->_impl->storage().size() != 1, "[ERROR][Tensor.item]%s",
+                      "item can only be called from a Tensor with only one element\n");
       Scalar::Sproxy out(this->storage()._impl, 0);
       return out;
     }
 
     Scalar::Sproxy item() {
+      cytnx_error_msg(this->_impl->storage().size() != 1, "[ERROR][Tensor.item]%s",
+                      "item can only be called from a Tensor with only one element\n");
       Scalar::Sproxy out(this->storage()._impl, 0);
       return out;
     }
@@ -1449,12 +1510,13 @@ namespace cytnx {
      */
     void append(const Tensor &rhs) {
       // Tensor in;
+      // check Tensor in shape:
+      cytnx_error_msg(rhs.is_void() || this->is_void(), "[ERROR] try to append a null Tensor.%s",
+                      "\n");
+      cytnx_error_msg(this->is_scalar(), "[ERROR] try to append to a rank-0 Tensor.%s", "\n");
       if (!this->is_contiguous()) this->contiguous_();
 
-      // check Tensor in shape:
-      cytnx_error_msg(rhs.shape().size() == 0 || this->shape().size() == 0,
-                      "[ERROR] try to append a null Tensor.%s", "\n");
-      cytnx_error_msg(rhs.shape().size() != (this->shape().size() - 1),
+      cytnx_error_msg(rhs.rank() != this->rank() - 1,
                       "[ERROR] try to append a Tensor with rank not match.%s", "\n");
       cytnx_uint64 Nelem = 1;
       for (unsigned int i = 0; i < rhs.shape().size(); i++) {
@@ -1470,7 +1532,7 @@ namespace cytnx {
         in = rhs.astype(this->dtype());
         if (!in.is_contiguous()) in.contiguous_();
       } else {
-        if (!in.is_contiguous())
+        if (!rhs.is_contiguous())
           in = rhs.contiguous();
         else
           in = rhs;
@@ -1510,13 +1572,13 @@ namespace cytnx {
      * @see append(const Tensor &rhs)
      */
     void append(const Storage &srhs) {
+      // check Tensor in shape:
+      cytnx_error_msg(this->is_void(), "[ERROR] try to append to an uninitialized Tensor.%s", "\n");
+      cytnx_error_msg(srhs.size() == 0, "[ERROR] try to append an empty Storage.%s", "\n");
+      cytnx_error_msg(this->rank() != 2,
+                      "[ERROR] append a storage to Tensor can only accept rank-2 Tensor.%s", "\n");
       if (!this->is_contiguous()) this->contiguous_();
 
-      // check Tensor in shape:
-      cytnx_error_msg(srhs.size() == 0 || this->shape().size() == 0,
-                      "[ERROR] try to append a null Tensor.%s", "\n");
-      cytnx_error_msg((this->shape().size() - 1) != 1,
-                      "[ERROR] append a storage to Tensor can only accept rank-2 Tensor.%s", "\n");
       cytnx_error_msg(this->shape().back() != srhs.size(), "[ERROR] Tensor dmension mismatch!%s",
                       "\n");
 
@@ -1573,7 +1635,8 @@ namespace cytnx {
      */
     template <class T>
     void append(const T &rhs) {
-      cytnx_error_msg(this->shape().size() != 1,
+      cytnx_error_msg(this->is_void(), "[ERROR] try to append to an uninitialized Tensor.%s", "\n");
+      cytnx_error_msg(this->rank() != 1,
                       "[ERROR] trying to append a scalar into multidimentional Tensor is not "
                       "allow.\n Only rank-1 Tensor can accept scalar append.%s",
                       "\n");
@@ -1669,8 +1732,17 @@ namespace cytnx {
     /**
      * @brief the Norm member function. Same as linalg::Norm(const Tensor &Tin), where \p Tin is
      * the current Tensor.
+     * @deprecated Use norm() instead, which returns a Scalar directly.
      */
-    Tensor Norm() const;
+    [[deprecated("use norm() (returns Scalar) instead")]] Tensor Norm() const;
+
+    /**
+     * @brief the norm member function. Same as linalg::norm(const Tensor &Tin), where \p Tin is
+     * the current Tensor. Returns the 2-norm as a Scalar carrying the tensor's own precision
+     * (Float for Float/ComplexFloat input, Double otherwise), so `x /= x.norm()` stays
+     * dtype-preserving rather than promoting a Float tensor to Double.
+     */
+    Scalar norm() const;
 
     /**
      * @brief the Pow member function. Same as linalg::Pow(const Tensor &Tin, const cytnx_double

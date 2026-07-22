@@ -1,50 +1,50 @@
-#ifndef _H_TENSOR_TEST
-#define _H_TENSOR_TEST
+#ifndef CYTNX_TESTS_GPU_TENSOR_TEST_H_
+#define CYTNX_TESTS_GPU_TENSOR_TEST_H_
 
-#include "cytnx.hpp"
 #include <gtest/gtest.h>
 
-using namespace cytnx;
-using namespace std;
-class TensorTest : public ::testing::Test {
- public:
-  std::string data_dir = CYTNX_TEST_DATA_DIR "/common/Tensor/";
+#include "cytnx.hpp"
 
-  Tensor tzero345;
-  Tensor tone345;
-  Tensor tar345;
-  Tensor tzero3456;
-  Tensor tone3456;
-  Tensor tar3456;
-  Tensor tarcomplex345;
-  Tensor tarcomplex3456;
+namespace cytnx {
+  namespace gpu_test {
 
-  Tensor tslice1;
+    class TensorTest : public ::testing::Test {
+     public:
+      std::string data_dir = CYTNX_TEST_DATA_DIR "/common/Tensor/";
 
- protected:
-  void SetUp() override {
-    tzero345 =
-      zeros(3 * 4 * 5).reshape({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    tone345 = ones(3 * 4 * 5).reshape({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    tar345 = arange(3 * 4 * 5).reshape({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    tzero3456 =
-      zeros(3 * 4 * 5 * 6).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    tone3456 =
-      ones(3 * 4 * 5 * 6).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    tar3456 =
-      arange(3 * 4 * 5 * 6).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    tarcomplex345 = arange(3 * 4 * 5).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    for (size_t i = 0; i < 3 * 4 * 5; i++) tarcomplex345.at({i}) = cytnx_complex128(i, i);
-    tarcomplex345 =
-      tarcomplex345.reshape({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    tarcomplex3456 = arange(3 * 4 * 5 * 6).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
-    for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) tarcomplex3456.at({i}) = cytnx_complex128(i, i);
-    tarcomplex3456 =
-      tarcomplex3456.reshape({3, 4, 5, 6}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
+      Tensor tzero345;
+      Tensor tone345;
+      Tensor tar345;
+      Tensor tzero3456;
+      Tensor tone3456;
+      Tensor tar3456;
+      Tensor tarcomplex345;
+      Tensor tarcomplex3456;
 
-    tslice1 = Tensor::Load(data_dir + "tensorslice1.cytn").to(cytnx::Device.cuda);
-  }
-  void TearDown() override {}
-};
+      Tensor tslice1;
 
-#endif
+     protected:
+      void SetUp() override {
+        using std::complex_literals::operator""i;
+
+        tzero345 = zeros({3, 4, 5}, Type.ComplexDouble, Device.cuda);
+        tone345 = ones({3, 4, 5}, Type.ComplexDouble, Device.cuda);
+        tar345 = arange(0, 3 * 4 * 5, 1, Type.ComplexDouble, Device.cuda).reshape({3, 4, 5});
+        tzero3456 = zeros({3, 4, 5, 6}, Type.ComplexDouble, Device.cuda);
+        tone3456 = ones({3, 4, 5, 6}, Type.ComplexDouble, Device.cuda);
+        tar3456 =
+          arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble, Device.cuda).reshape({3, 4, 5, 6});
+        tarcomplex345 = ((1.0 + 1.0i) * arange(0, 3 * 4 * 5, 1, Type.ComplexDouble, Device.cuda))
+                          .reshape({3, 4, 5});
+        tarcomplex3456 =
+          ((1.0 + 1.0i) * arange(0, 3 * 4 * 5 * 6, 1, Type.ComplexDouble, Device.cuda))
+            .reshape({3, 4, 5, 6});
+
+        tslice1 = Tensor::Load(data_dir + "tensorslice1.cytn").to(Device.cuda);
+      }
+      void TearDown() override {}
+    };
+
+  }  // namespace gpu_test
+}  // namespace cytnx
+#endif  // CYTNX_TESTS_GPU_TENSOR_TEST_H_

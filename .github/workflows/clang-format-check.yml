@@ -2,6 +2,11 @@ name: clang-format Check
 on:
   pull_request:
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   formatting-check:
     name: Formatting Check
@@ -14,9 +19,13 @@ jobs:
     # When re-running a PR job, GitHub Actions uses the merge commit created at
     # the time of the original run, not a fresh merge with the latest target branch.
     # This step ensures we always test against the most recent target branch.
+    # A committer identity is required because a non-fast-forward merge creates
+    # a merge commit.
     - name: Merge with latest target branch (pull_request only)
       if: github.event_name == 'pull_request'
       run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git fetch origin ${{ github.event.pull_request.base.ref }}
         git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
 

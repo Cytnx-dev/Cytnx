@@ -1,5 +1,5 @@
-#ifndef TEST_TOOLS_H_
-#define TEST_TOOLS_H_
+#ifndef CYTNX_TESTS_TEST_TOOLS_H_
+#define CYTNX_TESTS_TEST_TOOLS_H_
 
 #include <complex>
 #include <string>
@@ -12,11 +12,10 @@
 #include "Tensor.hpp"
 #include "Type.hpp"
 #include "UniTensor.hpp"
-
 // This file contains some functions that we usually use in unit tests, such as data initialization
 // and comparison.
 namespace cytnx {
-  namespace TestTools {
+  namespace test {
 
     // test error message trace
     class TestFailMsg {
@@ -151,7 +150,7 @@ namespace cytnx {
 
     template <typename... TypesInTuple>
     constexpr auto TupleToTestTypesHelper(std::tuple<TypesInTuple...>)
-      -> testing::Types<TypesInTuple...>;
+      -> ::testing::Types<TypesInTuple...>;
 
     /**
      * @brief Generate pairs of all combinations of the types in the given tuples.
@@ -167,7 +166,7 @@ namespace cytnx {
      *     std::is_same_v<
      *         TypeCombinations<std::tuple<int, std::string>,
      *                          std::tuple<int, double, std::string>>,
-     *         testing::Types<std::pair<int, int>,
+     *         ::testing::Types<std::pair<int, int>,
      *                        std::pair<int, double>,
      *                        std::p<air<int, std::string>,
      *                        std::pair<std::string, int>,
@@ -193,7 +192,8 @@ namespace cytnx {
      *   - the trailing terr (if `return_err != 0`) holds the discarded singular values:
      *       * `return_err == 1` &rarr; a single element equal to `full_sv[keep]`,
      *       * `return_err >= 2` &rarr; `full_sv[keep .. full_size]`,
-     *       * if nothing was truncated, terr is a 1-element zero regardless of `return_err`.
+     *       * if nothing was truncated, `return_err == 1` is a scalar zero and
+     *         `return_err >= 2` is an empty rank-1 vector.
      *
      * `U` and `vT` are not validated (they depend on the basis chosen by the SVD backend,
      * especially in the presence of degenerate singular values).
@@ -211,7 +211,21 @@ namespace cytnx {
                                  cytnx_uint64 keep, bool is_U, bool is_vT, int return_err,
                                  double rtol = 1e-12, const std::string& label = "");
 
-  }  // namespace TestTools
+  }  // namespace test
+
+  using test::AreElemSame;
+  using test::AreEqTensor;
+  using test::AreEqUniTensor;
+  using test::AreEqUniTensorMeta;
+  using test::AreNearlyEqTensor;
+  using test::AreNearlyEqUniTensor;
+  using test::CheckTruncatedSvdResult;
+  using test::dtype_list;
+  using test::InitTensorUniform;
+  using test::InitUniTensorUniform;
+  using test::TestFailMsg;
+  using test::TestTypeCombinations;
+  using test::TypeCombinations;
 }  // namespace cytnx
 
 /**
@@ -220,6 +234,6 @@ namespace cytnx {
  * compares floating-point numbers based on their ULP (Units in Last Place) distance.
  */
 #define EXPECT_NUMBER_EQ(value1, value2) \
-  EXPECT_PRED_FORMAT2(cytnx::TestTools::AreEqNumber, value1, value2)
+  EXPECT_PRED_FORMAT2(cytnx::test::AreEqNumber, value1, value2)
 
-#endif  // TEST_TOOLS_H_
+#endif  // CYTNX_TESTS_TEST_TOOLS_H_

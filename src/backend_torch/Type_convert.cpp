@@ -2,11 +2,10 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 
-using namespace std;
 namespace cytnx {
 
   TypeCvrt_class::TypeCvrt_class() {
-    //_t2c = vector<Tor2Cy_io>(N_Type);
+    // t2c = std::vector<Tor2Cy_io>(N_Type);
   }
 
   torch::TensorOptions TypeCvrt_class::Cy2Tor(const unsigned int &dtype, const int &device) {

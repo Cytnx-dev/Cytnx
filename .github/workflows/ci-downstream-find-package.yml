@@ -28,6 +28,10 @@ on:
       - master
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   DownstreamFindPackage:
     runs-on: ubuntu-latest
@@ -61,9 +65,13 @@ jobs:
 
       # Match ci-cmake_tests.yml: re-runs of a PR job use the original merge
       # commit, so merge the latest target branch to test against current tip.
+      # A committer identity is required because a non-fast-forward merge creates
+      # a merge commit.
       - name: Merge with latest target branch (pull_request only)
         if: github.event_name == 'pull_request'
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin ${{ github.event.pull_request.base.ref }}
           git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
           # Refresh submodules in case the merge moved any gitlinks.

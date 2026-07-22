@@ -16,8 +16,6 @@ namespace cytnx {
       return std::string("Void (un-initialize UniTensor)");
     } else if (ut_type == this->Dense) {
       return std::string("Dense");
-    } else if (ut_type == this->Sparse) {
-      return std::string("Sparse");
     } else if (ut_type == this->Block) {
       return std::string("Block");
     } else if (ut_type == this->BlockFermionic) {
@@ -68,15 +66,6 @@ namespace cytnx {
                     "not for bosonic UniTensors.%s",
                     "\n");
     return std::vector<bool>();
-  }
-
-  std::vector<bool> &UniTensor_base::signflip_() {
-    cytnx_error_msg(true,
-                    "[ERROR] fatal internal, signflip is only defined for BlockFermionicUniTensor, "
-                    "not for bosonic UniTensors. Cannot use signflip_().%s",
-                    "\n");
-    std::vector<bool> t;
-    return t;
   }
 
   void UniTensor_base::set_rowrank_(const cytnx_uint64 &new_rowrank) {
@@ -572,7 +561,7 @@ namespace cytnx {
     return nullptr;
   }
 
-  void UniTensor_base::tag() {
+  void UniTensor_base::tag_() {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
@@ -697,7 +686,7 @@ namespace cytnx {
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
 
-  void UniTensor_base::_load_dispatch(std::fstream &f) {
+  void UniTensor_base::_load_dispatch(std::fstream &f, unsigned int version) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }

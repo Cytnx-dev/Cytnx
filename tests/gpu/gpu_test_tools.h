@@ -1,9 +1,9 @@
-#ifndef GPU_TEST_TOOLS_H_
-#define GPU_TEST_TOOLS_H_
+#ifndef CYTNX_TESTS_GPU_GPU_TEST_TOOLS_H_
+#define CYTNX_TESTS_GPU_GPU_TEST_TOOLS_H_
 
+#include <random>
 #include <string>
 #include <vector>
-#include <random>
 
 #include "gtest/gtest.h"
 
@@ -11,11 +11,10 @@
 #include "Tensor.hpp"
 #include "Type.hpp"
 #include "UniTensor.hpp"
-
 // This file contains some function we may usually use in the unit test
 // such as the data initialization and comparison.
 namespace cytnx {
-  namespace TestTools {
+  namespace gpu_test {
 
     // test error message trace
     class TestFailMsg {
@@ -116,7 +115,8 @@ namespace cytnx {
       cytnx_uint64 dim, cytnx_uint64 min_size = 1, cytnx_uint64 max_size = 1024,
       cytnx_uint64 num_shapes = 10, cytnx_bool include_edge_case = true, cytnx_uint32 seed = 0);
 
-  }  // namespace TestTools
+  }  // namespace gpu_test
+
 }  // namespace cytnx
 
 /**
@@ -125,6 +125,6 @@ namespace cytnx {
  * compares floating-point numbers based on their ULP (Units in Last Place) distance.
  */
 #define EXPECT_NUMBER_EQ(value1, value2) \
-  EXPECT_PRED_FORMAT2(cytnx::TestTools::AreEqNumber, value1, value2)
+  EXPECT_PRED_FORMAT2(cytnx::gpu_test::AreEqNumber, value1, value2)
 
-#endif  // GPU_TEST_TOOLS_H_
+#endif  // CYTNX_TESTS_GPU_GPU_TEST_TOOLS_H_

@@ -5,6 +5,7 @@
 #ifdef BACKEND_TORCH
 #else
 
+  #include "Arithmetic_shape.hpp"
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
@@ -17,6 +18,7 @@ namespace cytnx {
 
       template <typename TL>
       Tensor AddScalarTensorImpl(const TL &lc, const Tensor &Rt) {
+        check_tensor_initialized(Rt, "Add");
         const unsigned int lhs_dtype = Type.cy_typeid_v<TL>;
         Storage Cnst(1, lhs_dtype);
         Cnst.at<TL>(0) = lc;
@@ -26,16 +28,18 @@ namespace cytnx {
         out._impl->storage() =
           Storage(Rt._impl->storage().size(),
                   SelectAddOutputType(lhs_dtype, Rt.dtype(), Rt.device()), Rt.device());
+        if (out.storage().size() == 0) return out;
 
         if (Rt.device() == Device.cpu) {
           std::visit(
-            [&](auto *rptr) {
-              using TR = std::remove_pointer_t<decltype(rptr)>;
-              cytnx::linalg_internal::AddInternalImpl<TL, TR>(
-                out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-                Rt._impl->storage()._impl->size(), {}, {}, {});
+            [&](auto rhs_impl) {
+              using TR = storage_value_t<decltype(rhs_impl)>;
+              using TO = Type_class::type_promote_t<TL, TR>;
+              cytnx::linalg_internal::AddInternalImpl<TO, TL, TR>(
+                storage_cast<TO>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+                rhs_impl, out._impl->storage().size(), {}, {}, {});
             },
-            Rt.ptr());
+            Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -53,6 +57,7 @@ namespace cytnx {
     }  // namespace detail
 
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
+      detail::check_binary_tensor_inputs(Lt, Rt, "Add");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Add] The two tensors cannot be on different devices.%s", "\n");
 
@@ -62,16 +67,8 @@ namespace cytnx {
       Tensor out;
       bool icnst = false;
 
-      if (Lt.shape().size() == 1 && Lt.shape()[0] == 1) {
-        out._impl = Rt._impl->_clone_meta_only();
-        out._impl->storage() = Storage(Rt.storage().size(), out_dtype, Rt.device());
+      if (detail::init_broadcast_binary_output(out, Lt, Rt, out_dtype)) {
         icnst = true;
-
-      } else if (Rt.shape().size() == 1 && Rt.shape()[0] == 1) {
-        out._impl = Lt._impl->_clone_meta_only();
-        out._impl->storage() = Storage(Lt.storage().size(), out_dtype, Lt.device());
-        icnst = true;
-
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
                         "[Add] The two tensors do not have the same shape. Lt rank: [%d] "
@@ -80,28 +77,30 @@ namespace cytnx {
         out.Init(Lt.shape(), out_dtype, Lt.device());
       }
 
+      if (out.storage().size() == 0) return out;
+
+      const Tensor left = detail::host_singleton_for_gpu_broadcast(Lt, Lt.device());
+      const Tensor right = detail::host_singleton_for_gpu_broadcast(Rt, Lt.device());
+
       // if contiguous, then no need to calculate the mappers
       if ((Lt.is_contiguous() && Rt.is_contiguous()) || icnst) {
         // contiguous section.
         if (Lt.device() == Device.cpu) {
           std::visit(
-            [&](auto *lptr) {
-              using TL = std::remove_pointer_t<decltype(lptr)>;
-              std::visit(
-                [&](auto *rptr) {
-                  using TR = std::remove_pointer_t<decltype(rptr)>;
-                  cytnx::linalg_internal::AddInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
-                },
-                Rt.ptr());
+            [&](auto lhs_impl, auto rhs_impl) {
+              using TL = storage_value_t<decltype(lhs_impl)>;
+              using TR = storage_value_t<decltype(rhs_impl)>;
+              using TO = Type_class::type_promote_t<TL, TR>;
+              cytnx::linalg_internal::AddInternalImpl<TO, TL, TR>(
+                storage_cast<TO>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+                out._impl->storage().size(), {}, {}, {});
             },
-            Lt.ptr());
+            Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
-                                          Rt._impl->storage()._impl,
+          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
+                                          right._impl->storage()._impl,
                                           out._impl->storage()._impl->size(), {}, {}, {});
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -112,26 +111,23 @@ namespace cytnx {
         // non-contiguous section
         if (Lt.device() == Device.cpu) {
           std::visit(
-            [&](auto *lptr) {
-              using TL = std::remove_pointer_t<decltype(lptr)>;
-              std::visit(
-                [&](auto *rptr) {
-                  using TR = std::remove_pointer_t<decltype(rptr)>;
-                  cytnx::linalg_internal::AddInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, Lt._impl->storage()._impl,
-                    Rt._impl->storage()._impl, Lt._impl->storage()._impl->size(), Lt._impl->shape(),
-                    Lt._impl->invmapper(), Rt._impl->invmapper());
-                },
-                Rt.ptr());
+            [&](auto lhs_impl, auto rhs_impl) {
+              using TL = storage_value_t<decltype(lhs_impl)>;
+              using TR = storage_value_t<decltype(rhs_impl)>;
+              using TO = Type_class::type_promote_t<TL, TR>;
+              cytnx::linalg_internal::AddInternalImpl<TO, TL, TR>(
+                storage_cast<TO>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+                out._impl->storage().size(), Lt._impl->shape(), Lt._impl->invmapper(),
+                Rt._impl->invmapper());
             },
-            Lt.ptr());
+            Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
-          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, Lt._impl->storage()._impl,
-                                          Rt._impl->storage()._impl,
-                                          Lt._impl->storage()._impl->size(), Lt._impl->shape(),
-                                          Lt._impl->invmapper(), Rt._impl->invmapper());
+          linalg_internal::cuAdd_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
+                                          right._impl->storage()._impl,
+                                          left._impl->storage()._impl->size(), left._impl->shape(),
+                                          left._impl->invmapper(), right._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -151,6 +147,7 @@ namespace cytnx {
 
     template <>
     Tensor Add<Scalar>(const Scalar &lc, const Tensor &Rt) {
+      detail::check_tensor_initialized(Rt, "Add");
       Storage Cnst(1, lc.dtype());
       Cnst.set_item(0, lc);
 
@@ -162,18 +159,15 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            std::visit(
-              [&](auto *rptr) {
-                using TR = std::remove_pointer_t<decltype(rptr)>;
-                cytnx::linalg_internal::AddInternalImpl<TL, TR>(
-                  out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-                  Rt._impl->storage()._impl->size(), {}, {}, {});
-              },
-              Rt.ptr());
+          [&](auto lhs_impl, auto rhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TO = Type_class::type_promote_t<TL, TR>;
+            cytnx::linalg_internal::AddInternalImpl<TO, TL, TR>(
+              storage_cast<TO>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Tensor::from_storage(Cnst).ptr());
+          Cnst.as_storage_variant(), Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -343,16 +337,14 @@ namespace cytnx {
     //============================================
 
     cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) {
-      UniTensor out;
-      if (Lt.dtype() > Rt.dtype()) {
-        out = Rt.clone();
-        out.Add_(Lt);
-      } else {
-        out = Lt.clone();
-        out.Add_(Rt);
-      }
+      // promote across the real/complex boundary (e.g. ComplexFloat + Double -> ComplexDouble)
+      // rather than adopting the lower-enum operand dtype.
+      UniTensor out = Lt.clone();
+      const unsigned int out_dtype = Type.type_promote(Lt.dtype(), Rt.dtype());
+      if (out.dtype() != out_dtype) out = out.astype(out_dtype);
+      out.Add_(Rt);
       out.relabel_(vec_range<std::string>(Lt.rank()));
-      out.set_name("");
+      out.set_name_("");
 
       return out;
     }
@@ -364,15 +356,11 @@ namespace cytnx {
       // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
-      UniTensor out;
-      if (Scalar(lc).dtype() < Rt.dtype()) {
-        out = Rt.astype(Scalar(lc).dtype());
-        out.Add_(lc);
-      } else {
-        out = Rt.clone();
-        out.Add_(lc);
-      }
-      out.set_name("");
+      UniTensor out = Rt.clone();
+      const unsigned int out_dtype = Type.type_promote(Scalar(lc).dtype(), Rt.dtype());
+      if (out.dtype() != out_dtype) out = out.astype(out_dtype);
+      out.Add_(lc);
+      out.set_name_("");
 
       return out;
     }

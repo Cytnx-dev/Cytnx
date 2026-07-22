@@ -22,10 +22,10 @@ namespace cytnx {
      * @param[in] return_err selects the error tensor (terr) appended to tens; terr is real and has
      *   the same dtype as S:
      *   - 0: nothing is appended.
-     *   - 1: a 1-element tensor holding the first (largest) discarded singular value.
-     *   - 2: a tensor holding all discarded singular values (in descending order).
-     *   If no truncation occurs there are no discarded values, so a 1-element zero tensor is
-     *   appended (the truncation error is zero).
+     *   - 1: a scalar tensor holding the first (largest) discarded singular value, or zero if no
+     *        truncation occurs.
+     *   - >1: a vector tensor holding all discarded singular values (in descending order), empty if
+     *         no truncation occurs.
      * @param[in] mindim minimum number of singular values to keep.
      * @pre S is a non-empty real floating-point vector (float or double);
      */
