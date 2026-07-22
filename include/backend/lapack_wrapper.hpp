@@ -12,11 +12,13 @@
   #ifdef UNI_MKL
     #include <mkl.h>
   #else
-    // Use the C++ complex-number interface from LAPACKE. Without this,
-    // lapacke.h defaults to C99 _Complex types, which MSVC cannot compile.
+    // Use the C++ complex-number interface from LAPACKE. LAPACK 3.11's
+    // lapacke.h includes lapack.h directly, so load the configuration that
+    // handles LAPACK_COMPLEX_CPP before the public interface.
     #ifndef LAPACK_COMPLEX_CPP
       #define LAPACK_COMPLEX_CPP
     #endif
+    #include <lapacke_config.h>
     #include <lapacke.h>
     #include <cblas.h>
 extern "C" {
