@@ -43,7 +43,6 @@ void linalg_binding(py::module &m);
 void algo_binding(py::module &m);
 void physics_related_binding(py::module &m);
 void random_binding(py::module &m);
-void scalar_binding(py::module &m);
 
 void ncon_binding(py::module &m);
 #endif
@@ -125,7 +124,6 @@ PYBIND11_MODULE(cytnx, m) {
   //   py::arg("cont_order") = std::vector<cytnx_int64>(),
   //   py::arg("out_labels") = std::vector<std::string>());
 
-  scalar_binding(m);
   storage_binding(m);
   tensor_binding(m);
   // generator_binding defines the module-level Tensor factories (zeros, ones,

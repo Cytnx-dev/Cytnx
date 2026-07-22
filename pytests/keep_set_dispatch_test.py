@@ -140,55 +140,6 @@ def test_storage_from_pylist_empty_list_defaults_to_double():
 
 
 # ---------------------------------------------------------------------------
-# Scalar's plain-int constructor: adopts dispatch_pyint's int64-preferred
-# convention (matching every other keep-set in the codebase) instead of
-# uint64 winning purely from being registered first.
-# ---------------------------------------------------------------------------
-
-
-def test_scalar_plain_int_prefers_int64():
-    assert cytnx.Scalar(5).dtype() == Type.Int64
-    assert cytnx.Scalar(-5).dtype() == Type.Int64
-    assert int(cytnx.Scalar(-5)) == -5
-
-
-def test_scalar_plain_int_overflow_uses_uint64():
-    big = 2**63 + 5
-    s = cytnx.Scalar(big)
-    assert s.dtype() == Type.Uint64
-    # float(), not int(): Scalar.__int__ has a separate, pre-existing signed-
-    # reinterpretation bug for Uint64 values above int64 max, out of scope
-    # here -- this only checks the constructor picked the right dtype.
-    assert float(s) == pytest.approx(float(big))
-
-
-# ---------------------------------------------------------------------------
-# Scalar's constructor: cytnx has no Int8/Uint8 dtype, so np.int8/np.uint8
-# have no numpy_scalar overload of their own -- without one ahead of the
-# raw cytnx_double constructor, they fell through to it and silently
-# produced a floating-point Scalar from an integer input (e.g.
-# Scalar(np.int8(5)).dtype() became Double). Widened to Int16/Uint16, the
-# narrowest integer dtype cytnx does support, instead.
-# ---------------------------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    "np_dtype,dtype",
-    [(np.int8, Type.Int16), (np.uint8, Type.Uint16)],
-)
-def test_scalar_numpy_8bit_int_widens_to_16bit_not_double(np_dtype, dtype):
-    s = cytnx.Scalar(np_dtype(5))
-    assert s.dtype() == dtype
-    assert int(s) == 5
-
-
-def test_scalar_numpy_int8_preserves_sign():
-    s = cytnx.Scalar(np.int8(-5))
-    assert s.dtype() == Type.Int16
-    assert int(s) == -5
-
-
-# ---------------------------------------------------------------------------
 # UniTensor.get_block/get_block_: despite the pybind-level py::arg("qnum")
 # name (pre-existing, unrelated to this PR, not renamed here), the vector
 # argument is the per-leg quantum-number SECTOR INDEX -- BlockUniTensor's
@@ -297,13 +248,12 @@ def test_linop_set_elem_numpy_scalar_dtypes_are_accepted():
 # on-the-left case is intentionally not pinned by a test here -- #692 tracks
 # it, and a test asserting it still fails would need updating (and could be
 # forgotten) the moment #692 is fixed. The regression coverage that matters
-# for this PR is that the *kept* overloads (int/Scalar/double/complex128)
+# for this PR is that the *kept* overloads (int/double/complex128)
 # still work, below.
 # ---------------------------------------------------------------------------
 
 
-def test_tensor_plain_python_and_scalar_reverse_ops_still_work():
+def test_tensor_plain_python_reverse_ops_still_work():
     t = cytnx.ones([2], dtype=Type.Double)
     assert (5 + t)[0].item() == pytest.approx(6.0)
     assert (3.5 + t)[0].item() == pytest.approx(4.5)
-    assert (cytnx.Scalar(2.0) + t)[0].item() == pytest.approx(3.0)

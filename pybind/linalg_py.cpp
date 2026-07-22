@@ -561,17 +561,55 @@ void linalg_binding(py::module &m) {
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"),
                py::call_guard<py::gil_scoped_release>());
 
+  // Ger's scaling coefficient `a` was formerly a cytnx.Scalar; the Python
+  // surface no longer exposes Scalar, so split it into native real/complex
+  // overloads plus a no-`a` form. The no-`a` form calls the C++ default
+  // (Scalar()), whose Void dtype keeps `a` out of the output-dtype promotion
+  // (see src/linalg/Ger.cpp) -- passing 1.0 explicitly would not reproduce it.
+  m_linalg.def(
+    "Ger", [](const Tensor &x, const Tensor &y) { return cytnx::linalg::Ger(x, y); }, py::arg("x"),
+    py::arg("y"));
   m_linalg.def(
     "Ger",
-    [](const Tensor &x, const Tensor &y, const Scalar &a) { return cytnx::linalg::Ger(x, y, a); },
-    py::arg("x"), py::arg("y"), py::arg("a") = Scalar());
+    [](const Tensor &x, const Tensor &y, cytnx_double a) { return cytnx::linalg::Ger(x, y, a); },
+    py::arg("x"), py::arg("y"), py::arg("a"));
+  m_linalg.def(
+    "Ger",
+    [](const Tensor &x, const Tensor &y, pybind_cytnx::ComplexArg a) {
+      return cytnx::linalg::Ger(x, y, cytnx_complex128(a));
+    },
+    py::arg("x"), py::arg("y"), py::arg("a"));
 
-  m_linalg.def("Gemm_", &cytnx::linalg::Gemm_, py::arg("a"), py::arg("x"), py::arg("y"),
-               py::arg("b"), py::arg("c"), py::call_guard<py::gil_scoped_release>());
+  // Gemm_ (in-place c = a*(x@y) + b*c): native real/complex overloads for the
+  // scaling coefficients a and b, replacing the former cytnx.Scalar arguments.
+  // A mixed real/complex (a, b) call resolves to the complex overload; that
+  // only widens the real coefficient's internal dtype and does not change the
+  // result, since the complex coefficient already forces a complex output.
+  m_linalg.def(
+    "Gemm_",
+    [](cytnx_double a, const Tensor &x, const Tensor &y, cytnx_double b, Tensor &c) {
+      cytnx::linalg::Gemm_(a, x, y, b, c);
+    },
+    py::arg("a"), py::arg("x"), py::arg("y"), py::arg("b"), py::arg("c"),
+    py::call_guard<py::gil_scoped_release>());
+  m_linalg.def(
+    "Gemm_",
+    [](pybind_cytnx::ComplexArg a, const Tensor &x, const Tensor &y, pybind_cytnx::ComplexArg b,
+       Tensor &c) { cytnx::linalg::Gemm_(cytnx_complex128(a), x, y, cytnx_complex128(b), c); },
+    py::arg("a"), py::arg("x"), py::arg("y"), py::arg("b"), py::arg("c"),
+    py::call_guard<py::gil_scoped_release>());
 
+  // Gemm's scaling coefficient `a`: native real/complex overloads in place of
+  // the former cytnx.Scalar argument.
   m_linalg.def(
     "Gemm",
-    [](const Scalar &a, const Tensor &x, const Tensor &y) { return cytnx::linalg::Gemm(a, x, y); },
+    [](cytnx_double a, const Tensor &x, const Tensor &y) { return cytnx::linalg::Gemm(a, x, y); },
+    py::arg("a"), py::arg("x"), py::arg("y"), py::call_guard<py::gil_scoped_release>());
+  m_linalg.def(
+    "Gemm",
+    [](pybind_cytnx::ComplexArg a, const Tensor &x, const Tensor &y) {
+      return cytnx::linalg::Gemm(cytnx_complex128(a), x, y);
+    },
     py::arg("a"), py::arg("x"), py::arg("y"), py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
@@ -706,11 +744,22 @@ void linalg_binding(py::module &m) {
     py::arg("CvgCrit") = 0, py::arg("k") = 1, py::arg("is_V") = true, py::arg("ncv") = 0,
     py::arg("verbose") = false, py::call_guard<py::gil_scoped_release>());
 
+  // Lanczos_Exp's time step `tau` was formerly a cytnx.Scalar; expose native
+  // real and complex overloads (complex tau drives real-time evolution).
   m_linalg.def(
     "Lanczos_Exp",
-    [](LinOp *Hop, const UniTensor &v, const Scalar &tau, const double &CvgCrit,
+    [](LinOp *Hop, const UniTensor &v, cytnx_double tau, const double &CvgCrit,
        const unsigned int &Maxiter, const bool &verbose) {
       return cytnx::linalg::Lanczos_Exp(Hop, v, tau, CvgCrit, Maxiter, verbose);
+    },
+    py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-14,
+    py::arg("Maxiter") = 10000, py::arg("verbose") = false,
+    py::call_guard<py::gil_scoped_release>());
+  m_linalg.def(
+    "Lanczos_Exp",
+    [](LinOp *Hop, const UniTensor &v, pybind_cytnx::ComplexArg tau, const double &CvgCrit,
+       const unsigned int &Maxiter, const bool &verbose) {
+      return cytnx::linalg::Lanczos_Exp(Hop, v, cytnx_complex128(tau), CvgCrit, Maxiter, verbose);
     },
     py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-14,
     py::arg("Maxiter") = 10000, py::arg("verbose") = false,
