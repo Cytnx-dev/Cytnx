@@ -90,3 +90,17 @@ pixi run --environment cuda install-python-cuda
 
 Use `pixi shell --environment cuda` when you want an interactive shell with
 the CUDA DLL directories already on `PATH`.
+
+## Released PyPI wheels
+
+The release workflows build both `cytnx` and `cytnx-cuda` Windows wheels with
+the locked `wheel-cpu` and `wheel-cuda` Pixi environments. `cytnx-cuda`
+declares the NVIDIA and cuTENSOR Windows wheels as runtime dependencies, so an
+end user does not set `CUDA_PATH`, `CUTENSOR_ROOT`, or `CONDA_PREFIX`.
+
+Windows PE files do not have an ELF-style `$ORIGIN` RUNPATH. Before importing
+the extension, the package locates the installed `nvidia-cuda-runtime` and
+`cutensor-cu13` distributions and registers their DLL directories with
+Python's `os.add_dll_directory`. Delvewheel bundles only the OpenBLAS, ARPACK,
+and compiler runtime DLLs; CUDA and cuTENSOR remain in their versioned PyPI
+packages.

@@ -25,6 +25,7 @@ rem vcvars64 prepends MSVC; keep it while restoring Pixi's managed tools and
 rem dependency DLLs ahead of the ambient user PATH.
 set "PATH=%CONDA_PREFIX%;%CONDA_PREFIX%\Library\mingw-w64\bin;%CONDA_PREFIX%\Library\usr\bin;%CONDA_PREFIX%\Library\bin;%CONDA_PREFIX%\Scripts;%CONDA_PREFIX%\bin;%PATH%"
 set "CMAKE_PREFIX_PATH=%CONDA_PREFIX%;%CONDA_PREFIX%\Library"
+if exist "%CONDA_PREFIX%\Library\include\openblas\lapacke.h" set "CMAKE_INCLUDE_PATH=%CONDA_PREFIX%\Library\include\openblas;%CMAKE_INCLUDE_PATH%"
 set "MKLROOT=%CONDA_PREFIX%\Library"
 
 set "CYTNX_CUDA_PREFIX=%CONDA_PREFIX%\Lib\site-packages\nvidia\cu13"

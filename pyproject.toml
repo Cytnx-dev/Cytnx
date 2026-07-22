@@ -41,6 +41,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Scientific/Engineering :: Mathematics",
     "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
 ]
 
@@ -157,3 +158,13 @@ before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
 # `.cibw_macos_deployment_target.txt` is generated in tools/cibuildwheel_before_all_macos.sh.
 # Keep compiler selection stable across Python versions for reproducible builds and better ccache reuse.
 environment = { CC = "clang", CXX = "clang++", CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deployment_target.txt\"); print(p.read_text().strip() if p.exists() else \"10.9\")')", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }
+
+[tool.cibuildwheel.windows]
+# cibuildwheel 3.3 has no default Windows repair command. Install a pinned
+# delvewheel into each build environment, then bundle the OpenBLAS/ARPACK and
+# compiler runtimes found in the activated Pixi prefix. The repair helper keeps
+# CUDA/cuTENSOR DLLs external for cytnx-cuda wheels because those are supplied
+# by the wheel's declared NVIDIA PyPI dependencies.
+before-build = "python -m pip install delvewheel==1.13.0 && python ./tools/cibuildwheel_before_build.py"
+repair-wheel-command = "python {project}/tools/repair_windows_wheel.py --wheel {wheel} --dest-dir {dest_dir}"
+test-command = "python {project}/tools/validate_windows_wheel.py"
