@@ -280,9 +280,14 @@ if(USE_CUDA)
   # This workaround helps VSCode's cpptools extension correctly locate CUDA
   # include files.
   # Refer to: https://discourse.cmake.org/t/cmake-target-include-directories-doesnt-export-to-compile-commands-json-when-using-cuda/10072/10
-  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
-  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
-  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
+  # Keep response files on Windows: MSVC and nvcc otherwise exceed the
+  # platform command-line limit on this template-heavy, multi-architecture
+  # build. The cpptools workaround is only safe on non-Windows generators.
+  if(NOT WIN32)
+    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
+    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
+    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
+  endif()
 endif()
 
 
@@ -323,19 +328,33 @@ target_include_directories(cytnx
 )
 
 target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
-target_include_directories(cytnx SYSTEM
-  PUBLIC
-  ${Boost_INCLUDE_DIRS}
-)
-
-target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
+if(MSVC)
+  target_compile_options(cytnx
+    PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/w>
+    PUBLIC
+      $<$<COMPILE_LANGUAGE:CXX>:/Zc:preprocessor>
+      $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/Zc:preprocessor>
+  )
+else()
+  target_compile_options(cytnx PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-Wformat=0>
+    $<$<COMPILE_LANGUAGE:CXX>:-w>
+    $<$<COMPILE_LANGUAGE:CXX>:-fsized-deallocation>
+  )
+endif()
 add_subdirectory(src)
 
 if(USE_DEBUG)
   target_compile_definitions(cytnx PUBLIC UNI_DEBUG)
 
   # Remember to add export ASAN_OPTIONS=protect_shadow_gap=0 in Install.sh
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+  if(MSVC)
+    target_compile_options(cytnx PUBLIC
+      $<BUILD_INTERFACE:$<$<COMPILE_LANGUAGE:CXX>:/fsanitize=address>>)
+  else()
+    target_compile_options(cytnx PUBLIC $<BUILD_INTERFACE:-fsanitize=address>)
+    target_link_options(cytnx PUBLIC $<BUILD_INTERFACE:-fsanitize=address>)
+  endif()
 endif()
 
 include(GNUInstallDirs)
@@ -343,12 +362,19 @@ include(GNUInstallDirs)
 # #####################################################################
 
 # ## Boost
-find_package(Boost REQUIRED)
-target_include_directories(cytnx SYSTEM
-  PUBLIC
-  ${Boost_INCLUDE_DIRS}
-)
-target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
+if(WIN32)
+  find_package(Boost CONFIG REQUIRED)
+else()
+  find_package(Boost REQUIRED)
+endif()
+if(WIN32 AND NOT BACKEND_TORCH)
+  # Re-find LAPACK in the installed package's consumer environment instead of
+  # exporting an absolute path into this Pixi checkout. The MKL backend adds
+  # the build-tree LAPACK libraries after selecting the backend below.
+  target_link_libraries(cytnx PUBLIC Boost::boost)
+else()
+  target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
+endif()
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 
 # ###
@@ -384,7 +410,11 @@ else()
 endif() # Backend torch
 
 #ARPACK
-target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
+if(WIN32)
+  target_link_libraries(cytnx PRIVATE "$<BUILD_INTERFACE:${ARPACK_LIB}>")
+else()
+  target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
+endif()
 
 
 # #####################################################################
@@ -450,7 +480,7 @@ endif()
 # ## Python wrapper
 # #######
 IF(BUILD_PYTHON)
-  find_package (Python COMPONENTS Interpreter Development)
+  find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
   # Require a compatible pybind11 to be installed. The committed
   # cytnx/cytnx/*.pyi stubs are regenerated only via the `pip` path, which
   # provisions the pybind11 pinned in [build-system].requires (==3.0.4).
@@ -458,7 +488,21 @@ IF(BUILD_PYTHON)
   # pyproject.toml pin once pybind11 3.0.4 is available on conda-forge. It
   # currently ships 3.0.3, which a 3.0.4 requirement would reject and break the
   # conda build.
-  find_package(pybind11 3.0.0 REQUIRED)
+  find_package(pybind11 3.0.0 QUIET)
+  if(NOT pybind11_FOUND)
+    execute_process(
+      COMMAND "${Python_EXECUTABLE}" -m pybind11 --cmakedir
+      OUTPUT_VARIABLE pybind11_cmake_dir
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      RESULT_VARIABLE pybind11_cmake_dir_result
+    )
+    if(NOT pybind11_cmake_dir_result EQUAL 0 OR pybind11_cmake_dir STREQUAL "")
+      message(FATAL_ERROR
+        "pybind11 >= 3.0.0 was not found by CMake or by ${Python_EXECUTABLE}. "
+        "Install it in the selected Python environment.")
+    endif()
+    find_package(pybind11 3.0.0 REQUIRED CONFIG PATHS "${pybind11_cmake_dir}" NO_DEFAULT_PATH)
+  endif()
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
     pybind/generator_py.cpp
@@ -484,6 +528,12 @@ IF(BUILD_PYTHON)
     target_link_options(pycytnx PRIVATE "-undefined" "dynamic_lookup")
   endif()
   set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
+  if(WIN32)
+    # The static core already produces cytnx.lib. Keep the Python module named
+    # cytnx.pyd while giving its otherwise-unused import library a distinct
+    # name so link.exe does not treat its output as the static library input.
+    set_target_properties(pycytnx PROPERTIES ARCHIVE_OUTPUT_NAME pycytnx)
+  endif()
   message(STATUS "pybind11 include dir: ${CUTENSOR_LIBRARY_DIRS}")
   message(STATUS "pybind11 include dir: ${CUQUANTUM_LIBRARY_DIRS}")
   message(STATUS "pybind11 include dir: ${LAPACK_LIBRARY_DIRS}")
@@ -504,9 +554,9 @@ IF(BUILD_PYTHON)
   endif()
 
   message(STATUS " Build Python Wrapper: YES")
-  message(STATUS "  - Python Excutable  : ${PYTHON_EXECUTABLE}")
-  message(STATUS "  - Python Headers    : ${PYTHON_INCLUDE_DIR}")
-  message(STATUS "  - Python Library    : ${PYTHON_LIBRARY}")
+  message(STATUS "  - Python Excutable  : ${Python_EXECUTABLE}")
+  message(STATUS "  - Python Headers    : ${Python_INCLUDE_DIRS}")
+  message(STATUS "  - Python Library    : ${Python_LIBRARIES}")
 
 ELSE()
   message(STATUS " Build Python Wrapper: NO")
@@ -555,9 +605,9 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion
 )
 
-# CytnxConfig.cmake.in references @USE_CUDA@ / @USE_HPTT@ / @BACKEND_TORCH@
-# directly so the installed Config re-finds the imported-target deps that
-# match the options of the cytnx build. See the template for the gating logic.
+# CytnxConfig.cmake.in references the build options directly so the installed
+# Config re-finds the imported-target deps that match the Cytnx build. See the
+# template for the gating logic.
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
@@ -569,6 +619,10 @@ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.
 # configs can include() it.
 configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxDetectCCCL.cmake COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUTENSOR.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/FindCUTENSOR.cmake COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUQUANTUM.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/FindCUQUANTUM.cmake COPYONLY)
 
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
@@ -576,6 +630,8 @@ install(FILES
   # CytnxConfig.cmake includes this to re-detect the CUDA cccl include dir
   # against the consumer's toolkit, so it must ship next to the config.
   ${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUTENSOR.cmake
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUQUANTUM.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
   COMPONENT Development
 )

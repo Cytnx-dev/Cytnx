@@ -57,9 +57,7 @@ target_include_directories(
 )
 target_link_libraries(
   gpu_test_main
-  GTest::gtest_main
-  GTest::gmock
-  GTest::gtest
+  GTest::gmock_main
 )
 target_link_libraries(gpu_test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")

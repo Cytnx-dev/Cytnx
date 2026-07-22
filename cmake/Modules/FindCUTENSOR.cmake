@@ -9,10 +9,7 @@
 #   CUTENSOR_INCLUDE_DIRS        ... cutensor include directory
 #   CUTENSOR_LIBRARIES           ... cutensor libraries
 #
-#   MAGMA_ROOT                this is required to set!
-#
-
-#If environment variable MAGMA_ROOT is specified, it has same effect as MAGMA_ROOT
+#   CUTENSOR_ROOT              root of the cuTENSOR installation
 
 if(NOT DEFINED ENV{CUTENSOR_ROOT} AND NOT DEFINED CUTENSOR_ROOT)
   message(FATAL_ERROR "CUTENSOR_ROOT not set!")
@@ -26,7 +23,7 @@ else()
   endif()
 endif()
 
-message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}" )
+message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}")
 # Search every cuTENSOR library layout: 2.x tarballs place the libraries
 # directly under lib/, while older tarballs and apt use a per-CUDA-major subdir
 # (lib/<cuda-major>, e.g. lib/11, lib/12, lib/13). The older minor-specific
@@ -41,14 +38,24 @@ message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}" )
 # lib/${CUDAToolkit_VERSION_MAJOR} therefore misses valid installs, so glob for
 # the per-major directories this install actually has and append them, highest
 # first. lib/ and the host major stay at the front so an exact match still wins.
-set(CUTNLIB_DIR lib lib/${CUDAToolkit_VERSION_MAJOR})
+set(CUTENSOR_LIBRARY_SUFFIXES lib lib/${CUDAToolkit_VERSION_MAJOR})
 file(GLOB _cutensor_major_dirs RELATIVE "${CUTENSOR_ROOT}" "${CUTENSOR_ROOT}/lib/[0-9]*")
 list(SORT _cutensor_major_dirs COMPARE NATURAL ORDER DESCENDING)
-list(APPEND CUTNLIB_DIR ${_cutensor_major_dirs})
-list(REMOVE_DUPLICATES CUTNLIB_DIR)
-message(STATUS "cuTENSOR library search suffixes: ${CUTNLIB_DIR}")
+list(APPEND CUTENSOR_LIBRARY_SUFFIXES ${_cutensor_major_dirs})
+if(WIN32)
+  list(PREPEND CUTENSOR_LIBRARY_SUFFIXES "lib/x64")
+endif()
+list(REMOVE_DUPLICATES CUTENSOR_LIBRARY_SUFFIXES)
+message(STATUS "cuTENSOR library search suffixes: ${CUTENSOR_LIBRARY_SUFFIXES}")
 
-set(CUTENSOR_INCLUDE_DIRS ${CUTENSOR_ROOT}/include)
+find_path(
+    CUTENSOR_INCLUDE_DIR
+    NAMES "cutensor.h" "cutensor/types.h"
+    PATHS ${CUTENSOR_ROOT}
+    PATH_SUFFIXES "include"
+    NO_DEFAULT_PATH
+)
+set(CUTENSOR_INCLUDE_DIRS "${CUTENSOR_INCLUDE_DIR}")
 
 # Require cuTENSOR >= 2.0. The version macros (CUTENSOR_MAJOR/MINOR/PATCH) live
 # in cutensor.h (older releases) or cutensor/types.h (newer ones); read whichever
@@ -97,14 +104,14 @@ find_library(
     CUTENSOR_LIB
     NAMES "cutensor"
     PATHS ${CUTENSOR_ROOT}
-    PATH_SUFFIXES ${CUTNLIB_DIR} "lib"
+    PATH_SUFFIXES ${CUTENSOR_LIBRARY_SUFFIXES}
     NO_DEFAULT_PATH
 )
 find_library(
     CUTENSORMg_LIB
     NAMES "cutensorMg"
     PATHS ${CUTENSOR_ROOT}
-    PATH_SUFFIXES ${CUTNLIB_DIR} "lib"
+    PATH_SUFFIXES ${CUTENSOR_LIBRARY_SUFFIXES}
     NO_DEFAULT_PATH
 )
 message(STATUS "CUTENSOR_LIB: ${CUTENSOR_LIB}")
@@ -123,10 +130,22 @@ if(CUTENSORMg_LIB)
     list(APPEND CUTENSOR_LIBRARIES "${CUTENSORMg_LIB}")
 endif()
 
-# CUTENSOR_FOUND must reflect whether the core library was actually located:
-# the main cutensor lib is mandatory, cutensorMg is optional. Setting it
-# unconditionally would let a NOTFOUND silently pass the caller's REQUIRED check.
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CUTENSOR
-  REQUIRED_VARS CUTENSOR_LIB CUTENSOR_INCLUDE_DIRS
-  VERSION_VAR CUTENSOR_VERSION)
+  REQUIRED_VARS CUTENSOR_INCLUDE_DIR CUTENSOR_LIB
+  VERSION_VAR CUTENSOR_VERSION
+)
+
+if(CUTENSOR_FOUND)
+  set(CUTENSOR_INCLUDE_DIRS "${CUTENSOR_INCLUDE_DIR}")
+  get_filename_component(CUTENSOR_LIBRARY_DIRS "${CUTENSOR_LIB}" DIRECTORY)
+  if(NOT TARGET CUTENSOR::CUTENSOR)
+    add_library(CUTENSOR::CUTENSOR INTERFACE IMPORTED GLOBAL)
+    set_target_properties(CUTENSOR::CUTENSOR PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${CUTENSOR_INCLUDE_DIRS}"
+      INTERFACE_LINK_LIBRARIES "${CUTENSOR_LIBRARIES}"
+    )
+  endif()
+endif()
+
+mark_as_advanced(CUTENSOR_INCLUDE_DIR CUTENSOR_LIB CUTENSORMg_LIB)
