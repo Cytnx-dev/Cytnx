@@ -67,6 +67,7 @@ python = "3.11.*"
 [feature.wheel.pypi-dependencies]
 cibuildwheel = "==3.3.0"
 delvewheel = "==1.13.0"
+tomlkit = ">=0.13,<1"
 
 [target.win-64.activation]
 scripts = ["tools/activate_windows.bat"]
@@ -75,7 +76,7 @@ scripts = ["tools/activate_windows.bat"]
 CMAKE_GENERATOR = "Ninja"
 CMAKE_GENERATOR_PLATFORM = ""
 CMAKE_GENERATOR_TOOLSET = ""
-CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF"
 
 [tasks]
 setup = "git submodule update --init --recursive"
@@ -111,7 +112,7 @@ cutensor-cu13 = "~=2.7.0"
 
 [feature.cuda.activation.env]
 CMAKE_BUILD_PARALLEL_LEVEL = "2"
-CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DUSE_CUQUANTUM=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DUSE_CUQUANTUM=OFF"
 
 [feature.cuda.tasks]
 check-cuda-layout = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --cuda --check"
