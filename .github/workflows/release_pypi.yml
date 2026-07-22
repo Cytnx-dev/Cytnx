@@ -60,6 +60,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+permissions:
+  contents: read
+
 jobs:
   DetermineChannel:
     # Resolves a single source of truth for the rest of the workflow:
@@ -126,7 +129,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # We intentionally pin specific macOS runners; do not blindly move to
+        # Linux/macOS legs live in this matrix. Windows uses the separate
+        # Pixi-backed BuildWheelWindows job below. We intentionally pin macOS
+        # runners; do not blindly move to
         # newer images because Homebrew dylib minos can force a higher wheel
         # deployment target and break delocate compatibility for lower targets.
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel]
@@ -243,9 +248,75 @@ jobs:
         name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
         path: ./wheelhouse/*.whl
 
+  BuildWheelWindows:
+    name: BuildWheel-windows-2022
+    needs: DetermineChannel
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Merge with latest target branch (pull_request only)
+      if: github.event_name == 'pull_request'
+      shell: pwsh
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+        git submodule update --init --recursive
+
+    - name: Install locked Pixi wheel environment
+      uses: prefix-dev/setup-pixi@5185adfbffb4bd703da3010310260805d89ebb11  # v0.9.6
+      with:
+        pixi-version: v0.69.0
+        environments: wheel-cpu
+        frozen: true
+        cache: true
+        cache-write: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+
+    - name: Stamp pyproject.toml for nightly release
+      if: needs.DetermineChannel.outputs.channel == 'nightly'
+      env:
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+      run: pixi run -e wheel-cpu python tools/prepare_nightly_release.py
+
+    - name: Cache Windows ccache directory
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
+      with:
+        path: .ccache-windows
+        key: ccache-wheel-windows-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ccache-wheel-windows-${{ github.ref_name }}-
+          ccache-wheel-windows-
+
+    - name: Prepare MSVC import libraries
+      run: pixi run -e wheel-cpu prepare-windows
+
+    - name: Build and test Windows wheels
+      env:
+        CIBW_BUILD: "cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64"
+        CMAKE_C_COMPILER_LAUNCHER: ccache
+        CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        CCACHE_COMPILERCHECK: content
+        CCACHE_DIR: ${{ github.workspace }}\.ccache-windows
+        CCACHE_MAXSIZE: 1G
+        CYTNX_EXPECT_NO_GPU: "1"
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+      run: pixi run -e wheel-cpu python -m cibuildwheel --platform windows --output-dir wheelhouse
+
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+      with:
+        # Keep the Windows artifact outside the cibw-wheels-* nightly glob:
+        # Windows wheels are released to PyPI only for now.
+        name: pypi-wheels-windows
+        path: ./wheelhouse/*.whl
+
   ReleasePyPI:
     name: ReleasePyPI
-    needs: [DetermineChannel, BuildWheel]
+    needs: [DetermineChannel, BuildWheel, BuildWheelWindows]
     if: needs.DetermineChannel.outputs.channel == 'stable' && needs.DetermineChannel.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     permissions:
@@ -256,6 +327,11 @@ jobs:
         pattern: cibw-wheels-*
         path: dist
         merge-multiple: true
+
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+      with:
+        name: pypi-wheels-windows
+        path: dist
 
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
