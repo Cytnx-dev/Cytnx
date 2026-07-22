@@ -14,7 +14,13 @@ namespace cytnx {
   int __blasINTsize__ = sizeof(MKL_INT);
 }
   #else
-    #include <lapacke.h>
+    // Type.cpp needs only lapack_int. Load it from the configuration header
+    // directly so LAPACK 3.11 never exposes its C99 `_Complex` declarations
+    // to MSVC through lapacke.h.
+    #ifndef LAPACK_COMPLEX_CPP
+      #define LAPACK_COMPLEX_CPP
+    #endif
+    #include <lapacke_config.h>
 namespace cytnx {
   int __blasINTsize__ = sizeof(lapack_int);
 }
