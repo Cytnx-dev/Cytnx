@@ -38,8 +38,8 @@ void storage_binding(py::module &m) {
 
            // calculate stride:
            std::size_t type_size = Type.typeSize(tmpIN.dtype());
-           std::vector<py::ssize_t> stride(1, type_size);
-           std::vector<py::ssize_t> shape(1, tmpIN.size());
+           std::vector<ssize_t> stride(1, type_size);
+           std::vector<ssize_t> shape(1, tmpIN.size());
 
            std::string chr_dtype;
            if (tmpIN.dtype() == Type.ComplexDouble) {

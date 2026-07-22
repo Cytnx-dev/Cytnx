@@ -47,7 +47,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
     return;
   }
 
-  py::ssize_t start, stop, step, slicelength;
+  ssize_t start, stop, step, slicelength;
   std::vector<cytnx::Accessor> accessors;
   if (py::isinstance<py::tuple>(locators)) {
     py::tuple Args = locators.cast<py::tuple>();
@@ -59,7 +59,7 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
       // check type:
       if (py::isinstance<py::slice>(Args[axis])) {
         py::slice sls = Args[axis].cast<py::slice>();
-        if (!sls.compute(static_cast<py::ssize_t>(self.shape()[axis]), &start, &stop, &step,
+        if (!sls.compute(static_cast<ssize_t>(self.shape()[axis]), &start, &stop, &step,
                          &slicelength))
           throw py::error_already_set();
         accessors.push_back(cytnx::Accessor::range(
@@ -140,9 +140,9 @@ void tensor_binding(py::module &m) {
         }
 
         // calculate stride:
-        std::vector<py::ssize_t> stride(tmpIN.shape().size());
-        std::vector<py::ssize_t> shape(tmpIN.shape().begin(), tmpIN.shape().end());
-        py::ssize_t accu = 1;
+        std::vector<ssize_t> stride(tmpIN.shape().size());
+        std::vector<ssize_t> shape(tmpIN.shape().begin(), tmpIN.shape().end());
+        ssize_t accu = 1;
         for (auto i = shape.size(); i-- > 0;) {
           stride[i] = accu * cytnx::Type.typeSize(tmpIN.dtype());
           accu *= shape[i];
@@ -520,7 +520,7 @@ void tensor_binding(py::module &m) {
              return self.get({});
            }
 
-           py::ssize_t start, stop, step, slicelength;
+           ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
@@ -532,7 +532,7 @@ void tensor_binding(py::module &m) {
                // check type:
                if (py::isinstance<py::slice>(Args[axis])) {
                  py::slice sls = Args[axis].cast<py::slice>();
-                 if (!sls.compute(static_cast<py::ssize_t>(self.shape()[axis]), &start, &stop,
+                 if (!sls.compute(static_cast<ssize_t>(self.shape()[axis]), &start, &stop,
                                   &step, &slicelength))
                    throw py::error_already_set();
                  accessors.push_back(cytnx::Accessor::range(
@@ -547,7 +547,7 @@ void tensor_binding(py::module &m) {
              }
            } else if (py::isinstance<py::slice>(locators)) {
              py::slice sls = locators.cast<py::slice>();
-             if (!sls.compute(static_cast<py::ssize_t>(self.shape()[0]), &start, &stop, &step,
+             if (!sls.compute(static_cast<ssize_t>(self.shape()[0]), &start, &stop, &step,
                               &slicelength))
                throw py::error_already_set();
              // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
@@ -580,7 +580,7 @@ void tensor_binding(py::module &m) {
              return;
            }
 
-           py::ssize_t start, stop, step, slicelength;
+           ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
@@ -592,7 +592,7 @@ void tensor_binding(py::module &m) {
                // check type:
                if (py::isinstance<py::slice>(Args[axis])) {
                  py::slice sls = Args[axis].cast<py::slice>();
-                 if (!sls.compute(static_cast<py::ssize_t>(self.shape()[axis]), &start, &stop,
+                 if (!sls.compute(static_cast<ssize_t>(self.shape()[axis]), &start, &stop,
                                   &step, &slicelength))
                    throw py::error_already_set();
                  accessors.push_back(cytnx::Accessor::range(
@@ -607,7 +607,7 @@ void tensor_binding(py::module &m) {
              }
            } else if (py::isinstance<py::slice>(locators)) {
              py::slice sls = locators.cast<py::slice>();
-             if (!sls.compute(static_cast<py::ssize_t>(self.shape()[0]), &start, &stop, &step,
+             if (!sls.compute(static_cast<ssize_t>(self.shape()[0]), &start, &stop, &step,
                               &slicelength))
                throw py::error_already_set();
              // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());

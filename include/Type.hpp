@@ -2,6 +2,7 @@
 #define CYTNX_TYPE_H_
 
 #include <complex>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <type_traits>
@@ -15,6 +16,13 @@
 
 #ifdef UNI_GPU
   #include <cuda/std/complex>
+#endif
+
+// MSVC does not provide the POSIX signed-size type used by the Python
+// bindings. Match ssize_t to the signed counterpart of size_t without
+// redefining the native type on POSIX or MinGW toolchains.
+#if defined(_MSC_VER)
+using ssize_t = std::make_signed_t<std::size_t>;
 #endif
 
 #define MKL_Complex8 std::complex<float>
