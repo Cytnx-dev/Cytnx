@@ -69,6 +69,16 @@ if(_cutensor_version_header)
       "cuTENSOR >= 2.0 is required, but found ${CUTENSOR_VERSION} in "
       "${CUTENSOR_ROOT}. Install cuTENSOR 2.x and point CUTENSOR_ROOT at it.")
   endif()
+  # CUDA 13 support was added in cuTENSOR 2.3.0 (NVIDIA cuTENSOR release notes).
+  # cuTENSOR 2.0-2.2 are CUDA-12 builds: their major version passes the >= 2.0
+  # check above, but they can fail at link/load time against a CUDA 13 toolkit,
+  # so require >= 2.3 in that case.
+  if(CUDAToolkit_VERSION_MAJOR GREATER_EQUAL 13 AND CUTENSOR_VERSION VERSION_LESS 2.3)
+    message(FATAL_ERROR
+      "CUDA ${CUDAToolkit_VERSION_MAJOR} requires cuTENSOR >= 2.3 (CUDA 13 support "
+      "was added in cuTENSOR 2.3.0), but found ${CUTENSOR_VERSION} in "
+      "${CUTENSOR_ROOT}. Install cuTENSOR >= 2.3 and point CUTENSOR_ROOT at it.")
+  endif()
 else()
   message(WARNING
     "Could not determine the cuTENSOR version from headers under "

@@ -31,7 +31,7 @@ In addition, you might want to install the following optional dependencies if yo
 
 * Nvidia CUDA toolkit >= 12.0 (12.x and 13.x supported)
 * Nvidia cuDNN library
-* Nvidia cuTENSOR library >= 2.0
+* Nvidia cuTENSOR library >= 2.0 (>= 2.3 with CUDA 13, which cuTENSOR 2.3.0 added support for)
 * Nvidia cuQuantum library
 
 
