@@ -88,7 +88,7 @@ void generator_binding(py::module &m) {
     // check type:
     int dtype;
     std::vector<cytnx_uint64> shape(info.shape.begin(), info.shape.end());
-    const ssize_t total_bytes = info.size * info.itemsize;
+    const py::ssize_t total_bytes = info.size * info.itemsize;
 
     if (info.format == py::format_descriptor<cytnx_complex128>::format()) {
       dtype = Type.ComplexDouble;
