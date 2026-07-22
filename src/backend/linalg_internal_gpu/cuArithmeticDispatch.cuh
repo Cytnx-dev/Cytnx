@@ -11,9 +11,9 @@
 #include "cuTypeCvt.hpp"
 
 // Shared typed GPU dispatch for elementwise binary arithmetic (Add/Sub/Mul/Div),
-// mirroring the CPU design in src/linalg/iArithmetic_visit.hpp: dispatch with
-// std::visit over the ordinary Cytnx value types (as_storage_variant() +
-// type_promote_t -- the dtype indices are device-independent) and confine the
+// mirroring the CPU design in src/linalg/iArithmetic_visit.hpp: dispatch over
+// the ordinary Cytnx value types (type_promote_t -- the dtype indices are
+// device-independent) and confine the
 // CUDA-native complex representation to the kernel-launch boundary via to_cuda_t.
 // This replaces the legacy per-dtype-pair function tables and the parallel
 // type_promote_gpu_t / cy_typeid_gpu_v promotion hierarchy (#1013).
@@ -145,10 +145,56 @@ namespace cytnx {
         return op_code == 3 ? Type_class::make_floating_point_dtype(promoted) : promoted;
       }
 
+      // CUDA's Windows front end crashes while lowering the two-variant std::visit
+      // previously used here (11 x 11 alternatives plus five kernels per pair).
+      // Dispatching directly from the dtype ids preserves the same exhaustive
+      // Type_list-derived instantiations without forcing cudafe++ through MSVC's
+      // large std::visit dispatch table.
+      template <char op_code, typename TLc, std::size_t RIndex = 1>
+      void dispatch_rhs(boost::intrusive_ptr<Storage_base> &out,
+                        boost::intrusive_ptr<Storage_base> &Lin,
+                        boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 len,
+                        const std::vector<cytnx_uint64> &shape,
+                        const std::vector<cytnx_uint64> &invmapper_L,
+                        const std::vector<cytnx_uint64> &invmapper_R) {
+        using TRc = std::variant_alternative_t<RIndex, Type_list>;
+        if (Rin->dtype() == static_cast<int>(RIndex)) {
+          (void)storage_cast<TLc>(Lin);
+          (void)storage_cast<TRc>(Rin);
+          using TOc = OutputType_t<op_code, TLc, TRc>;
+          launch<op_code, to_cuda_t<TOc>, to_cuda_t<TLc>, to_cuda_t<TRc>>(out, Lin, Rin, len, shape,
+                                                                          invmapper_L, invmapper_R);
+        } else if constexpr (RIndex + 1 < std::variant_size_v<Type_list>) {
+          dispatch_rhs<op_code, TLc, RIndex + 1>(out, Lin, Rin, len, shape, invmapper_L,
+                                                 invmapper_R);
+        } else {
+          cytnx_error_msg(true, "[cuArithmeticDispatchGPU] invalid RHS dtype %d%s", Rin->dtype(),
+                          "\n");
+        }
+      }
+
+      template <char op_code, std::size_t LIndex = 1>
+      void dispatch_lhs(boost::intrusive_ptr<Storage_base> &out,
+                        boost::intrusive_ptr<Storage_base> &Lin,
+                        boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 len,
+                        const std::vector<cytnx_uint64> &shape,
+                        const std::vector<cytnx_uint64> &invmapper_L,
+                        const std::vector<cytnx_uint64> &invmapper_R) {
+        using TLc = std::variant_alternative_t<LIndex, Type_list>;
+        if (Lin->dtype() == static_cast<int>(LIndex)) {
+          dispatch_rhs<op_code, TLc>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
+        } else if constexpr (LIndex + 1 < std::variant_size_v<Type_list>) {
+          dispatch_lhs<op_code, LIndex + 1>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
+        } else {
+          cytnx_error_msg(true, "[cuArithmeticDispatchGPU] invalid LHS dtype %d%s", Lin->dtype(),
+                          "\n");
+        }
+      }
+
     }  // namespace gpu_arith
 
     // Out-of-place typed GPU dispatch: `out` is pre-allocated by the caller with the
-    // dtype gpu_arith::output_dtype(op_code, Lin, Rin). Validates that, then visits.
+    // dtype gpu_arith::output_dtype(op_code, Lin, Rin). Validates that, then dispatches.
     template <char op_code>
     void cuArithmeticDispatchGPU(boost::intrusive_ptr<Storage_base> &out,
                                  boost::intrusive_ptr<Storage_base> &Lin,
@@ -163,15 +209,7 @@ namespace cytnx {
                       out->dtype(), expected_dtype, "\n");
       if (len == 0) return;
 
-      std::visit(
-        [&](auto lhs_impl, auto rhs_impl) {
-          using TLc = storage_value_t<decltype(lhs_impl)>;
-          using TRc = storage_value_t<decltype(rhs_impl)>;
-          using TOc = gpu_arith::OutputType_t<op_code, TLc, TRc>;
-          gpu_arith::launch<op_code, to_cuda_t<TOc>, to_cuda_t<TLc>, to_cuda_t<TRc>>(
-            out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
-        },
-        as_storage_variant(Lin), as_storage_variant(Rin));
+      gpu_arith::dispatch_lhs<op_code>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
     }
 
   }  // namespace linalg_internal
