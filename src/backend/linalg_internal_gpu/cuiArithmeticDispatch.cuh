@@ -19,8 +19,8 @@
 // preserves the LHS dtype, #980), then run the op writing into that (possibly
 // aliased) buffer at Lt's PHYSICAL layout. The output dtype rule matches the
 // out-of-place path: Div (3) is true division, others use type_promote (#941).
-// std::visit over the ordinary Cytnx value types (as_storage_variant() +
-// type_promote_t) with the CUDA-native representation confined to the kernel
+// Dispatch over the ordinary Cytnx value types (type_promote_t) with the
+// CUDA-native representation confined to the kernel
 // boundary via to_cuda_t (#1013).
 //
 // op_code: 0=Add, 1=Mul, 2=Sub, 3=Div (true division).
@@ -127,6 +127,84 @@ namespace cytnx {
         }
       }
 
+      template <char op_code, typename TL, typename TR>
+      void dispatch_types(Tensor &Lt, const boost::intrusive_ptr<Storage_base> &lhs_storage,
+                          const boost::intrusive_ptr<Storage_base> &rhs_storage,
+                          const cytnx_uint64 len, const int device, bool rhs_is_weak_scalar,
+                          bool rhs_is_scalar, const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R) {
+        (void)storage_cast<TL>(lhs_storage);
+        (void)storage_cast<TR>(rhs_storage);
+        // Weak scalar: treat the RHS dtype as TL so Add/Sub/Mul keep TL (#980)
+        // while Div still follows #941 true division (make_floating_point(TL)).
+        // storage_as_type_or_replace<TO> may replace Lt's storage; lhs_storage
+        // owns the original allocation until the kernel has consumed it.
+        if (rhs_is_weak_scalar) {
+          using TO = InplaceOutputType_t<op_code, TL, TL>;
+          auto out_impl = storage_as_type_or_replace<TO>(Lt._impl->storage(), len, device);
+          inplace_launch<op_code, to_cuda_t<TO>, to_cuda_t<TL>, to_cuda_t<TR>>(
+            reinterpret_cast<to_cuda_t<TO> *>(out_impl->data()),
+            reinterpret_cast<const to_cuda_t<TL> *>(lhs_storage->data()),
+            reinterpret_cast<const to_cuda_t<TR> *>(rhs_storage->data()), len,
+            /*rhs_is_scalar=*/true, shape, invmapper_L, invmapper_R);
+        } else {
+          using TO = InplaceOutputType_t<op_code, TL, TR>;
+          auto out_impl = storage_as_type_or_replace<TO>(Lt._impl->storage(), len, device);
+          inplace_launch<op_code, to_cuda_t<TO>, to_cuda_t<TL>, to_cuda_t<TR>>(
+            reinterpret_cast<to_cuda_t<TO> *>(out_impl->data()),
+            reinterpret_cast<const to_cuda_t<TL> *>(lhs_storage->data()),
+            reinterpret_cast<const to_cuda_t<TR> *>(rhs_storage->data()), len, rhs_is_scalar, shape,
+            invmapper_L, invmapper_R);
+        }
+      }
+
+      // Avoid the two-variant std::visit on CUDA/Windows. With 11 alternatives
+      // and two output policies it creates enough MSVC STL machinery to crash
+      // cudafe++, even though all that machinery is host-only.
+      template <char op_code, typename TL, std::size_t RIndex = 1>
+      void dispatch_rhs(Tensor &Lt, const boost::intrusive_ptr<Storage_base> &lhs_storage,
+                        const boost::intrusive_ptr<Storage_base> &rhs_storage,
+                        const cytnx_uint64 len, const int device, bool rhs_is_weak_scalar,
+                        bool rhs_is_scalar, const std::vector<cytnx_uint64> &shape,
+                        const std::vector<cytnx_uint64> &invmapper_L,
+                        const std::vector<cytnx_uint64> &invmapper_R) {
+        using TR = std::variant_alternative_t<RIndex, Type_list>;
+        if (rhs_storage->dtype() == static_cast<int>(RIndex)) {
+          dispatch_types<op_code, TL, TR>(Lt, lhs_storage, rhs_storage, len, device,
+                                          rhs_is_weak_scalar, rhs_is_scalar, shape, invmapper_L,
+                                          invmapper_R);
+        } else if constexpr (RIndex + 1 < std::variant_size_v<Type_list>) {
+          dispatch_rhs<op_code, TL, RIndex + 1>(Lt, lhs_storage, rhs_storage, len, device,
+                                                rhs_is_weak_scalar, rhs_is_scalar, shape,
+                                                invmapper_L, invmapper_R);
+        } else {
+          cytnx_error_msg(true, "[DispatchInplaceArithmeticGPU] invalid RHS dtype %d%s",
+                          rhs_storage->dtype(), "\n");
+        }
+      }
+
+      template <char op_code, std::size_t LIndex = 1>
+      void dispatch_lhs(Tensor &Lt, const boost::intrusive_ptr<Storage_base> &lhs_storage,
+                        const boost::intrusive_ptr<Storage_base> &rhs_storage,
+                        const cytnx_uint64 len, const int device, bool rhs_is_weak_scalar,
+                        bool rhs_is_scalar, const std::vector<cytnx_uint64> &shape,
+                        const std::vector<cytnx_uint64> &invmapper_L,
+                        const std::vector<cytnx_uint64> &invmapper_R) {
+        using TL = std::variant_alternative_t<LIndex, Type_list>;
+        if (lhs_storage->dtype() == static_cast<int>(LIndex)) {
+          dispatch_rhs<op_code, TL>(Lt, lhs_storage, rhs_storage, len, device, rhs_is_weak_scalar,
+                                    rhs_is_scalar, shape, invmapper_L, invmapper_R);
+        } else if constexpr (LIndex + 1 < std::variant_size_v<Type_list>) {
+          dispatch_lhs<op_code, LIndex + 1>(Lt, lhs_storage, rhs_storage, len, device,
+                                            rhs_is_weak_scalar, rhs_is_scalar, shape, invmapper_L,
+                                            invmapper_R);
+        } else {
+          cytnx_error_msg(true, "[DispatchInplaceArithmeticGPU] invalid LHS dtype %d%s",
+                          lhs_storage->dtype(), "\n");
+        }
+      }
+
     }  // namespace gpu_iarith
 
     // In-place typed GPU dispatch. Promotes Lt's storage to the output dtype and
@@ -144,35 +222,11 @@ namespace cytnx {
       const bool rhs_is_scalar = (Rt.size() == 1);
       const int device = Lt.device();
       checkCudaErrors(cudaSetDevice(device));
-
-      std::visit(
-        [&](auto lhs_impl, auto rhs_impl) {
-          using TL = storage_value_t<decltype(lhs_impl)>;
-          using TR = storage_value_t<decltype(rhs_impl)>;
-          // Weak scalar: treat the RHS dtype as TL so Add/Sub/Mul keep TL (#980)
-          // while Div still follows #941 true division (make_floating_point(TL)).
-          // storage_as_type_or_replace<TO> may replace Lt's storage; lhs_impl was
-          // captured by value above as an owning pointer to the ORIGINAL buffer, so
-          // lhs_impl->data() stays valid for the kernel below.
-          if (rhs_is_weak_scalar) {
-            using TO = gpu_iarith::InplaceOutputType_t<op_code, TL, TL>;
-            auto out_impl = storage_as_type_or_replace<TO>(Lt._impl->storage(), len, device);
-            gpu_iarith::inplace_launch<op_code, to_cuda_t<TO>, to_cuda_t<TL>, to_cuda_t<TR>>(
-              reinterpret_cast<to_cuda_t<TO> *>(out_impl->data()),
-              reinterpret_cast<const to_cuda_t<TL> *>(lhs_impl->data()),
-              reinterpret_cast<const to_cuda_t<TR> *>(rhs_impl->data()), len,
-              /*rhs_is_scalar=*/true, shape, invmapper_L, invmapper_R);
-          } else {
-            using TO = gpu_iarith::InplaceOutputType_t<op_code, TL, TR>;
-            auto out_impl = storage_as_type_or_replace<TO>(Lt._impl->storage(), len, device);
-            gpu_iarith::inplace_launch<op_code, to_cuda_t<TO>, to_cuda_t<TL>, to_cuda_t<TR>>(
-              reinterpret_cast<to_cuda_t<TO> *>(out_impl->data()),
-              reinterpret_cast<const to_cuda_t<TL> *>(lhs_impl->data()),
-              reinterpret_cast<const to_cuda_t<TR> *>(rhs_impl->data()), len, rhs_is_scalar, shape,
-              invmapper_L, invmapper_R);
-          }
-        },
-        Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
+      const boost::intrusive_ptr<Storage_base> lhs_storage = Lt._impl->storage()._impl;
+      const boost::intrusive_ptr<Storage_base> rhs_storage = Rt._impl->storage()._impl;
+      gpu_iarith::dispatch_lhs<op_code>(Lt, lhs_storage, rhs_storage, len, device,
+                                        rhs_is_weak_scalar, rhs_is_scalar, shape, invmapper_L,
+                                        invmapper_R);
     }
 
   }  // namespace linalg_internal

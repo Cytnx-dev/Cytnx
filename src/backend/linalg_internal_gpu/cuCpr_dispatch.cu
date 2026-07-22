@@ -10,8 +10,8 @@
 // Typed GPU dispatch for out-of-place comparison (==). Unlike the arithmetic ops
 // in cuArithmeticDispatch.cuh, the output storage type is always Bool while the
 // operands are compared in the promoted type TO, so Cpr keeps its own Bool-output
-// kernels. The *dispatch* still follows the #1013 design: std::visit over the
-// ordinary Cytnx value types (as_storage_variant() + type_promote_t) and map to
+// kernels. The *dispatch* still follows the #1013 design: dispatch over the
+// ordinary Cytnx value types (type_promote_t) and map to
 // the CUDA-native representation only at the kernel boundary via to_cuda_t --
 // replacing the legacy type_promote_gpu_t / per-dtype switch dispatch.
 
@@ -107,6 +107,48 @@ namespace cytnx {
         }
       }
 
+      // The two-variant std::visit previously used here crashes cudafe++ on
+      // Windows for the same reason as the arithmetic dispatcher: 11 x 11
+      // alternatives, each with five kernel instantiations. Walk Type_list by
+      // dtype id instead, retaining the checked erased-to-typed boundary.
+      template <typename TLc, std::size_t RIndex = 1>
+      void cpr_dispatch_rhs(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R) {
+        using TRc = std::variant_alternative_t<RIndex, Type_list>;
+        if (Rin->dtype() == static_cast<int>(RIndex)) {
+          (void)storage_cast<TLc>(Lin);
+          (void)storage_cast<TRc>(Rin);
+          using TOc = Type_class::type_promote_t<TLc, TRc>;
+          cpr_launch<to_cuda_t<TOc>, to_cuda_t<TLc>, to_cuda_t<TRc>>(out, Lin, Rin, len, shape,
+                                                                     invmapper_L, invmapper_R);
+        } else if constexpr (RIndex + 1 < std::variant_size_v<Type_list>) {
+          cpr_dispatch_rhs<TLc, RIndex + 1>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
+        } else {
+          cytnx_error_msg(true, "[cuCpr_dispatch] invalid RHS dtype %d%s", Rin->dtype(), "\n");
+        }
+      }
+
+      template <std::size_t LIndex = 1>
+      void cpr_dispatch_lhs(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R) {
+        using TLc = std::variant_alternative_t<LIndex, Type_list>;
+        if (Lin->dtype() == static_cast<int>(LIndex)) {
+          cpr_dispatch_rhs<TLc>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
+        } else if constexpr (LIndex + 1 < std::variant_size_v<Type_list>) {
+          cpr_dispatch_lhs<LIndex + 1>(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
+        } else {
+          cytnx_error_msg(true, "[cuCpr_dispatch] invalid LHS dtype %d%s", Lin->dtype(), "\n");
+        }
+      }
+
     }  // namespace
 
     void cuCpr_dispatch(boost::intrusive_ptr<Storage_base> &out,
@@ -119,15 +161,7 @@ namespace cytnx {
                       "[cuCpr_dispatch] output dtype must be Bool, got=%d%s", out->dtype(), "\n");
       if (len == 0) return;
 
-      std::visit(
-        [&](auto lhs_impl, auto rhs_impl) {
-          using TLc = storage_value_t<decltype(lhs_impl)>;
-          using TRc = storage_value_t<decltype(rhs_impl)>;
-          using TOc = Type_class::type_promote_t<TLc, TRc>;
-          cpr_launch<to_cuda_t<TOc>, to_cuda_t<TLc>, to_cuda_t<TRc>>(out, Lin, Rin, len, shape,
-                                                                     invmapper_L, invmapper_R);
-        },
-        as_storage_variant(Lin), as_storage_variant(Rin));
+      cpr_dispatch_lhs(out, Lin, Rin, len, shape, invmapper_L, invmapper_R);
     }
 
   }  // namespace linalg_internal
