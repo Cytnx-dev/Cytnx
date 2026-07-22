@@ -12,6 +12,7 @@ CMakeUserPresets.json
 build/
 Testing/
 .ccache/
+.pixi/
 
 # need to be cleaned up
 .cache/
@@ -21,6 +22,7 @@ dev_test
 *.e
 *.o
 *.so
+*.pyd
 
 # Personal AI/coding-agent notes & local config (per-user, not shared)
 # Claude Code

@@ -1,0 +1,107 @@
+[workspace]
+name = "cytnx-dev"
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[dependencies]
+pip = "*"
+scikit-build-core = ">=0.11,<1"
+
+# Build tools. c-compiler/cxx-compiler activate an existing Visual Studio
+# 2022 installation; Pixi manages the activation glue, CMake, and Ninja.
+cmake = ">=3.31,<4"
+ninja = ">=1.11"
+git = "*"
+c-compiler = ">=1.11,<2"
+cxx-compiler = ">=1.11,<2"
+clang-format = "14.*"
+pre-commit = "*"
+
+# Native dependencies shared by the development environments.
+arpack = { version = ">=3.9,<4", build = "nompi_*" }
+libboost-devel = "*"
+gtest = "*"
+gmock = "*"
+
+# Python runtime and contributor tooling.
+numpy = "*"
+beartype = "*"
+graphviz = "*"
+pytest = "*"
+pytest-cov = "*"
+mypy = "*"
+
+[pypi-dependencies]
+# These exact versions must match pyproject.toml so direct CMake builds and
+# editable builds produce the same bindings and committed stubs.
+pybind11 = "==3.0.4"
+pybind11-stubgen = "==2.5.5"
+pefile = ">=2024.8.26"
+
+# Contributor environments stay fixed at the oldest supported interpreter.
+[feature.python310.dependencies]
+python = "3.10.*"
+
+[feature.mkl.dependencies]
+mkl-devel = "*"
+libblas = { version = ">=3.9,<4", build = "*mkl" }
+liblapack = { version = ">=3.9,<4", build = "*mkl" }
+
+[target.win-64.activation]
+scripts = ["tools/activate_windows.bat"]
+
+[target.win-64.activation.env]
+CMAKE_GENERATOR = "Ninja"
+CMAKE_GENERATOR_PLATFORM = ""
+CMAKE_GENERATOR_TOOLSET = ""
+CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+
+[tasks]
+setup = "git submodule update --init --recursive"
+check-windows-layout = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --check"
+prepare-windows = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py"
+doctor = "tools\\activate_windows.bat --doctor"
+
+configure = { cmd = "tools\\activate_windows.bat cmake --preset mkl-cpu -B build/windows-mkl-cpu -DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DRUN_TESTS=ON -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF", depends-on = ["setup", "prepare-windows"] }
+build = { cmd = "tools\\activate_windows.bat cmake --build build/windows-mkl-cpu --parallel", depends-on = ["configure"] }
+# CTest's per-case GoogleTest discovery launches 1854 short-lived processes on
+# Windows. Run the same complete suite once in the native GoogleTest executable
+# to retain one initialized native runtime and keep local test runs practical.
+test-cpp = { cmd = "..\\tools\\activate_windows.bat ..\\build\\windows-mkl-cpu\\tests\\test_main.exe", cwd = "tests", depends-on = ["build"] }
+
+install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/windows-mkl-cpu-editable --config-settings=cmake.args=--preset=mkl-cpu", depends-on = ["setup", "prepare-windows"] }
+test-python = { cmd = "tools\\activate_windows.bat python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
+format = "tools\\activate_windows.bat pre-commit run --all-files"
+
+# CUDA is intentionally optional. Its compiler, headers, import libraries,
+# and runtime DLLs come from NVIDIA's PyPI wheels, following the layout used
+# by PR #1023. No CUDA packages are added to pyproject.toml's base runtime.
+[feature.cuda.pypi-dependencies]
+cuda-toolkit = { version = "~=13.3.0", extras = [
+  "nvcc",
+  "cccl",
+  "cudart",
+  "cublas",
+  "cusolver",
+  "cusparse",
+  "curand",
+] }
+cutensor-cu13 = "~=2.7.0"
+
+[feature.cuda.activation.env]
+CMAKE_BUILD_PARALLEL_LEVEL = "2"
+CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DUSE_CUQUANTUM=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+
+[feature.cuda.tasks]
+check-cuda-layout = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --cuda --check"
+prepare-cuda = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --cuda"
+cuda-doctor = { cmd = "tools\\activate_windows.bat --cuda-doctor", depends-on = ["prepare-cuda"] }
+
+configure-cuda = { cmd = "tools\\activate_windows.bat cmake --preset mkl-cuda -B build/windows-mkl-cuda -DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DUSE_CUQUANTUM=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF", depends-on = ["setup", "prepare-cuda"] }
+build-cuda = { cmd = "tools\\activate_windows.bat cmake --build build/windows-mkl-cuda --parallel 2", depends-on = ["configure-cuda"] }
+
+install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/windows-mkl-cuda-editable --config-settings=cmake.args=--preset=mkl-cuda", depends-on = ["setup", "prepare-cuda"] }
+
+[environments]
+default = { features = ["python310", "mkl"], solve-group = "windows-mkl" }
+cuda = { features = ["python310", "mkl", "cuda"], solve-group = "windows-mkl" }
