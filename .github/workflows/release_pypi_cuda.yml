@@ -21,13 +21,12 @@ name: Release CUDA wheels
 # the PR is merged with its target branch and the wheel is built, but no
 # upload happens. Only push/tag/dispatch runs publish.
 #
-# Single leg only: Linux x86_64, manylinux_2_28, built on a plain
-# ubuntu-24.04 (no GPU) runner -- cibuildwheel's manylinux container has
-# no system CUDA, so tools/cibuildwheel_before_all_cuda.sh (chained via
-# tools/prepare_cuda_release.py) provisions nvcc and the CUDA/cuTENSOR/
-# cuQuantum dev headers from the same pip packages the wheel depends on
-# at runtime. musllinux is skipped: NVIDIA does not publish musllinux
-# CUDA wheels for tools/cibuildwheel_before_all_cuda.sh to install.
+# Linux x86_64 uses manylinux_2_28 on a plain ubuntu-24.04 runner;
+# cibuildwheel's container has no system CUDA, so
+# tools/cibuildwheel_before_all_cuda.sh provisions its PyPI toolchain.
+# Windows x86_64 uses a separate Pixi-backed windows-2022 job with MSVC and
+# the Windows CUDA/cuTENSOR PyPI wheels. cuQuantum remains Linux-only because
+# its runtime packages do not publish Windows wheels. musllinux is skipped.
 #
 # Scope note: without a GPU, this workflow can only prove the extension
 # builds, links, and imports cleanly (CIBW_TEST_COMMAND asserts
@@ -62,6 +61,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
 
 jobs:
   DetermineChannel:
@@ -121,9 +123,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Single leg today; kept as a matrix (like release_pypi.yml's) so
-        # adding manylinux_aarch64 later is a one-line change, not a
-        # restructure.
+        # Linux leg only; Windows uses the separate BuildWheelWindows job.
+        # Keep this as a matrix so adding manylinux_aarch64 remains simple.
         os: [ubuntu-24.04]
 
     steps:
@@ -212,9 +213,80 @@ jobs:
         name: cibw-wheels-cuda-${{ matrix.os }}-${{ strategy.job-index }}
         path: ./wheelhouse/*.whl
 
+  BuildWheelWindows:
+    name: BuildWheel-windows-2022
+    needs: DetermineChannel
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Merge with latest target branch (pull_request only)
+      if: github.event_name == 'pull_request'
+      shell: pwsh
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+        git submodule update --init --recursive
+
+    - name: Install locked Pixi CUDA wheel environment
+      uses: prefix-dev/setup-pixi@5185adfbffb4bd703da3010310260805d89ebb11  # v0.9.6
+      with:
+        pixi-version: v0.69.0
+        environments: wheel-cuda
+        frozen: true
+        cache: true
+        cache-write: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+
+    - name: Stamp pyproject.toml for the Windows CUDA wheel
+      run: pixi run -e wheel-cuda python tools/prepare_cuda_release.py --platform windows
+
+    - name: Stamp pyproject.toml for nightly release
+      if: needs.DetermineChannel.outputs.channel == 'nightly'
+      env:
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+      run: pixi run -e wheel-cuda python tools/prepare_nightly_release.py
+
+    - name: Cache Windows CUDA ccache directory
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
+      with:
+        path: .ccache-windows-cuda
+        key: ccache-wheel-cuda-windows-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ccache-wheel-cuda-windows-${{ github.ref_name }}-
+          ccache-wheel-cuda-windows-
+
+    - name: Prepare MSVC CUDA import libraries
+      run: pixi run -e wheel-cuda prepare-cuda
+
+    - name: Build and test Windows CUDA wheels
+      env:
+        CIBW_BUILD: "cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64 cp314-win_amd64"
+        CMAKE_BUILD_PARALLEL_LEVEL: "2"
+        CMAKE_C_COMPILER_LAUNCHER: ccache
+        CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        CMAKE_CUDA_COMPILER_LAUNCHER: ccache
+        CCACHE_COMPILERCHECK: content
+        CCACHE_DIR: ${{ github.workspace }}\.ccache-windows-cuda
+        CCACHE_MAXSIZE: 1G
+        CYTNX_EXPECT_NO_GPU: "1"
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+      run: pixi run -e wheel-cuda python -m cibuildwheel --platform windows --output-dir wheelhouse
+
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+      with:
+        # Keep the Windows artifact outside the cibw-wheels-cuda-* nightly
+        # glob: Windows wheels are released to PyPI only for now.
+        name: pypi-wheels-cuda-windows
+        path: ./wheelhouse/*.whl
+
   ReleasePyPI:
     name: ReleasePyPI
-    needs: [DetermineChannel, BuildWheel]
+    needs: [DetermineChannel, BuildWheel, BuildWheelWindows]
     if: needs.DetermineChannel.outputs.channel == 'stable' && needs.DetermineChannel.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     permissions:
@@ -225,6 +297,11 @@ jobs:
         pattern: cibw-wheels-cuda-*
         path: dist
         merge-multiple: true
+
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+      with:
+        name: pypi-wheels-cuda-windows
+        path: dist
 
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
