@@ -183,6 +183,23 @@ namespace cytnx {
     std::variant<void, cytnx_cuda_complex128, cytnx_cuda_complex64, cytnx_double, cytnx_float,
                  cytnx_int64, cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16,
                  cytnx_bool>;
+
+  namespace internal {
+    template <typename T>
+    struct gpu_element_type {
+      using type = T;
+    };
+    template <>
+    struct gpu_element_type<cytnx_complex128> {
+      using type = cytnx_cuda_complex128;
+    };
+    template <>
+    struct gpu_element_type<cytnx_complex64> {
+      using type = cytnx_cuda_complex64;
+    };
+    template <typename T>
+    using gpu_element_type_t = typename gpu_element_type<T>::type;
+  }  // namespace internal
 #endif
 
   // CytnxType<T> is satisfied by the element types that have a cytnx dtype (the members of
@@ -289,7 +306,8 @@ namespace cytnx {
   struct Type_struct_t {
     static constexpr unsigned int cy_typeid = variant_index_v<T, Type_list>;
 #ifdef UNI_GPU
-    static constexpr unsigned int cy_typeid_gpu = variant_index_v<T, Type_list_gpu>;
+    static constexpr unsigned int cy_typeid_gpu =
+      variant_index_v<internal::gpu_element_type_t<T>, Type_list_gpu>;
 #endif
     static constexpr const char* name = Type_names<T>;
     static constexpr const char* enum_name = Type_enum_name<T>;
@@ -328,7 +346,8 @@ namespace cytnx {
 
 #ifdef UNI_GPU
     template <typename T>
-    static constexpr unsigned int cy_typeid_gpu_v = variant_index_v<T, Type_list_gpu>;
+    static constexpr unsigned int cy_typeid_gpu_v =
+      variant_index_v<internal::gpu_element_type_t<T>, Type_list_gpu>;
 #endif
 
     enum Type : unsigned int {
