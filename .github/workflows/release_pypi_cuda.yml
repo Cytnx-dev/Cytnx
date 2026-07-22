@@ -1,0 +1,269 @@
+name: Release CUDA wheels
+
+# Release pipeline for cytnx-cuda, mirroring release_pypi.yml's
+# DetermineChannel/BuildWheel/publish structure but for the GPU package:
+#
+#   - **stable** — a `v*` tag push (or a dispatch resolving to stable)
+#     publishes `cytnx-cuda X.Y.Z` to production PyPI via OIDC trusted
+#     publishing. Requires a maintainer to have configured trusted
+#     publishing on the `cytnx-cuda` PyPI project for this workflow file,
+#     the same one-time setup release_pypi.yml's `cytnx` project already
+#     has.
+#
+#   - **nightly** — a push to `master` (or a dispatch resolving to
+#     nightly) stamps the same PEP 440 dev version release_pypi.yml uses
+#     and uploads to the `cytnx-nightly-wheels` anaconda.org channel
+#     alongside the CPU nightly wheels (no filename collision: the
+#     package name is `cytnx-cuda`, not `cytnx`).
+#
+# Pull requests build the CUDA wheel as a build-health check (the nvcc
+# build path is validated) but never publish, mirroring release_pypi.yml:
+# the PR is merged with its target branch and the wheel is built, but no
+# upload happens. Only push/tag/dispatch runs publish.
+#
+# Single leg only: Linux x86_64, manylinux_2_28, built on a plain
+# ubuntu-24.04 (no GPU) runner -- cibuildwheel's manylinux container has
+# no system CUDA, so tools/cibuildwheel_before_all_cuda.sh (chained via
+# tools/prepare_cuda_release.py) provisions nvcc and the CUDA/cuTENSOR/
+# cuQuantum dev headers from the same pip packages the wheel depends on
+# at runtime. musllinux is skipped: NVIDIA does not publish musllinux
+# CUDA wheels for tools/cibuildwheel_before_all_cuda.sh to install.
+#
+# Scope note: without a GPU, this workflow can only prove the extension
+# builds, links, and imports cleanly (CIBW_TEST_COMMAND asserts
+# cytnx.Device.Ngpus == 0 on this GPU-less builder). It is not a
+# substitute for running the `gpu`-labeled ctest suite on real hardware.
+#
+# Install commands:
+#   stable:   pip install cytnx-cuda
+#   nightly:  pip install --pre \
+#               --extra-index-url \
+#                 https://pypi.anaconda.org/cytnx-nightly-wheels/simple \
+#               cytnx-cuda
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: "Release channel"
+        type: choice
+        options:
+          - auto
+          - stable
+          - nightly
+        default: auto
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  DetermineChannel:
+    # See release_pypi.yml's DetermineChannel for the full rationale. Same
+    # resolution logic: pull requests resolve to nightly with publish=false
+    # (build-validated, never uploaded); push/tag/dispatch set publish=true.
+    name: DetermineChannel
+    runs-on: ubuntu-24.04
+    outputs:
+      channel: ${{ steps.pick.outputs.channel }}
+      publish: ${{ steps.pick.outputs.publish }}
+      dev_tag: ${{ steps.pick.outputs.dev_tag }}
+    steps:
+    - id: pick
+      run: |
+        event="${{ github.event_name }}"
+        ref="${{ github.ref }}"
+        if [[ "$event" == "pull_request" ]]; then
+          # PRs validate the CUDA build path but never upload.
+          channel=nightly
+          publish=false
+        elif [[ "$event" == "push" ]]; then
+          if [[ "$ref" == refs/tags/v* ]]; then
+            channel=stable
+          else
+            channel=nightly
+          fi
+          publish=true
+        else
+          # workflow_dispatch
+          requested="${{ inputs.channel }}"
+          if [[ "$requested" == "auto" ]]; then
+            if [[ "$ref" == refs/tags/v* ]]; then
+              channel=stable
+            else
+              channel=nightly
+            fi
+          else
+            channel="$requested"
+          fi
+          publish=true
+        fi
+        if [[ "$channel" == "nightly" ]]; then
+          dev_tag=".dev$(date -u +%Y%m%d%H%M)"
+        else
+          dev_tag=""
+        fi
+        echo "channel=$channel" >> "$GITHUB_OUTPUT"
+        echo "publish=$publish" >> "$GITHUB_OUTPUT"
+        echo "dev_tag=$dev_tag" >> "$GITHUB_OUTPUT"
+        echo "event=$event ref=$ref -> channel=$channel publish=$publish dev_tag=$dev_tag"
+
+  BuildWheel:
+    name: BuildWheel-${{ matrix.os }}
+    needs: DetermineChannel
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Single leg today; kept as a matrix (like release_pypi.yml's) so
+        # adding manylinux_aarch64 later is a one-line change, not a
+        # restructure.
+        os: [ubuntu-24.04]
+
+    steps:
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Merge with latest target branch (pull_request only)
+      if: github.event_name == 'pull_request'
+      # When re-running a PR job, GitHub Actions reuses the merge commit
+      # created at the time of the original run, not a fresh merge with the
+      # latest target branch. Re-merging here validates the release build
+      # against the current target branch. A committer identity is required
+      # because a non-fast-forward merge creates a merge commit.
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+        # Refresh submodules in case the merge moved any gitlinks
+        # (e.g. cmake_modules/morse_cmake).
+        git submodule update --init --recursive
+
+    - name: Install release stamping helpers
+      # `release-tools` (tomlkit) backs both scripts below. See
+      # release_pypi.yml's equivalent step for why --group over
+      # .[release-tools] and the pip upgrade.
+      run: |
+        python -m pip install --upgrade pip
+        pip install --group release-tools
+
+    - name: Stamp pyproject.toml for cytnx-cuda
+      # Always runs (unlike release_pypi.yml's nightly-only stamping
+      # step): this workflow only ever builds the CUDA variant.
+      run: python tools/prepare_cuda_release.py
+
+    - name: Stamp pyproject.toml for nightly release
+      if: needs.DetermineChannel.outputs.channel == 'nightly'
+      # Order doesn't matter relative to the CUDA stamping step above (see
+      # tools/prepare_cuda_release.py's module docstring) -- both mutate
+      # disjoint parts of pyproject.toml.
+      env:
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+      run: python tools/prepare_nightly_release.py
+
+    - name: Cache Ccache Directory
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
+      with:
+        path: |
+          ~/.ccache
+        key: ccache-wheel-cuda-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ccache-wheel-cuda-${{ runner.os }}-${{ runner.arch }}-${{ github.ref_name }}-
+          ccache-wheel-cuda-${{ runner.os }}-${{ runner.arch }}-
+
+    - name: Set Ccache Directory
+      run: |
+        echo "HOST_CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
+        mkdir -p "${HOME}/.ccache"
+        rm -f "${HOME}/.ccache/.cytnx_first_wheel_build_done"
+
+    - name: Build Wheels
+      uses: pypa/cibuildwheel@63fd63b352a9a8bdcc24791c9dbee952ee9a8abc  # v3.3.0
+      env:
+        CMAKE_C_COMPILER_LAUNCHER: ccache
+        CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        CMAKE_CUDA_COMPILER_LAUNCHER: ccache
+        CCACHE_COMPILERCHECK: content
+        CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
+        # See release_pypi.yml's equivalent env block for the bind-mount
+        # rationale; this workflow only ever runs the Linux/docker path.
+        CCACHE_DIR: /host_ccache
+        CCACHE_BASEDIR: /project/build
+        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
+        # NVIDIA does not publish musllinux CUDA wheels for
+        # tools/cibuildwheel_before_all_cuda.sh to install from.
+        CIBW_SKIP: "*-musllinux*"
+        CIBW_TEST_COMMAND: >-
+          python {project}/tools/validate_ccache_stats.py &&
+          python -c "import cytnx; assert cytnx.Device.Ngpus == 0, cytnx.Device.Ngpus"
+        CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+      with:
+        name: cibw-wheels-cuda-${{ matrix.os }}-${{ strategy.job-index }}
+        path: ./wheelhouse/*.whl
+
+  ReleasePyPI:
+    name: ReleasePyPI
+    needs: [DetermineChannel, BuildWheel]
+    if: needs.DetermineChannel.outputs.channel == 'stable' && needs.DetermineChannel.outputs.publish == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+    steps:
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+      with:
+        pattern: cibw-wheels-cuda-*
+        path: dist
+        merge-multiple: true
+
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
+      with:
+        packages-dir: dist
+
+  PublishNightlyAnaconda:
+    name: PublishNightlyAnaconda
+    needs: [DetermineChannel, BuildWheel]
+    if: needs.DetermineChannel.outputs.channel == 'nightly' && needs.DetermineChannel.outputs.publish == 'true'
+    runs-on: ubuntu-24.04
+    concurrency:
+      # Shares release_pypi.yml's serialization group: both workflows
+      # prune+upload into the same cytnx-nightly-wheels channel, so a
+      # CPU and a CUDA nightly landing close together must not race.
+      group: publish-nightly-anaconda
+      cancel-in-progress: false
+    steps:
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+      with:
+        sparse-checkout: tools
+
+    - name: Prune old nightly releases
+      # Prunes cytnx-cuda specifically; the CPU cytnx nightlies are
+      # pruned by release_pypi.yml's own PublishNightlyAnaconda job.
+      env:
+        ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_ORG_UPLOAD_TOKEN }}
+      run: python3 tools/prune_nightly_wheels.py --keep 4 --package cytnx-cuda
+
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
+      with:
+        pattern: cibw-wheels-cuda-*
+        path: dist
+        merge-multiple: true
+
+    - name: Upload nightly wheels to anaconda.org
+      uses: scientific-python/upload-nightly-action@e76cfec8a4611fd02808a801b0ff5a7d7c1b2d99  # 0.6.4
+      with:
+        artifacts_path: dist
+        anaconda_nightly_upload_token: ${{ secrets.ANACONDA_ORG_UPLOAD_TOKEN }}
+        anaconda_nightly_upload_organization: cytnx-nightly-wheels
+        anaconda_nightly_upload_labels: main

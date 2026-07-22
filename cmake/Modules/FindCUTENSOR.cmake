@@ -44,18 +44,22 @@ set(CUTENSOR_LIBRARY_DIRS ${CUTENSOR_ROOT}/${CUTNLIB_DIR})
 set(CUTENSOR_INCLUDE_DIRS ${CUTENSOR_ROOT}/include)
 
 # set libs:
+# Try the CUDA-major-versioned subdirectory first (the layout of NVIDIA's
+# standalone cuTENSOR tarball releases, e.g. lib/12/libcutensor.so), then
+# fall back to a flat lib/ directory: the cutensor-cuXX PyPI wheels ship
+# libcutensor.so.N directly under lib/, with no CUDA-version subdirectory.
 find_library(
     CUTENSOR_LIB
     NAMES "cutensor"
     PATHS ${CUTENSOR_ROOT}
-    PATH_SUFFIXES ${CUTNLIB_DIR}
+    PATH_SUFFIXES ${CUTNLIB_DIR} "lib"
     NO_DEFAULT_PATH
 )
 find_library(
     CUTENSORMg_LIB
     NAMES "cutensorMg"
     PATHS ${CUTENSOR_ROOT}
-    PATH_SUFFIXES ${CUTNLIB_DIR}
+    PATH_SUFFIXES ${CUTNLIB_DIR} "lib"
     NO_DEFAULT_PATH
 )
 message(STATUS "CUTENSOR_LIB: ${CUTENSOR_LIB}")

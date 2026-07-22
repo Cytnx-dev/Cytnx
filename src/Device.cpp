@@ -9,8 +9,21 @@ namespace cytnx {
   Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
 #ifdef UNI_GPU
 
-    // get all available gpus
-    checkCudaErrors(cudaGetDeviceCount(&Ngpus));
+    // get all available gpus. A machine with no CUDA-capable device or no
+    // NVIDIA driver installed legitimately returns cudaErrorNoDevice or
+    // cudaErrorInsufficientDriver here -- the CUDA Runtime API is designed
+    // to let a caller probe for GPU absence this way -- so treat those two
+    // as Ngpus == 0 instead of routing them through checkCudaErrors' fatal
+    // exit(), which would otherwise kill the process at import time on any
+    // GPU-less machine running a CUDA-enabled build. Any other,
+    // genuinely unexpected error still goes through checkCudaErrors.
+    cudaError_t device_count_status = cudaGetDeviceCount(&Ngpus);
+    if (device_count_status == cudaErrorNoDevice ||
+        device_count_status == cudaErrorInsufficientDriver) {
+      Ngpus = 0;
+    } else {
+      checkCudaErrors(device_count_status);
+    }
 
     CanAccessPeer = std::vector<std::vector<bool>>(Ngpus, std::vector<bool>(Ngpus));
     // check can Peer Access, if can, open PCIE access to increase bandwidth
