@@ -580,10 +580,7 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
 
 if(BUILD_PYTHON)
   INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
-    LIBRARY
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
-    COMPONENT libraries
-  )
+    LIBRARY DESTINATION cytnx COMPONENT libraries)
 endif()
 
 install(EXPORT cytnx_targets
@@ -710,9 +707,9 @@ message(STATUS "")
 message(STATUS "")
 message(STATUS "")
 
-install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
-install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
-install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION cytnx COMPONENT libraries)
 
 if(BUILD_PACKAGES)
   include("Package.cmake")
