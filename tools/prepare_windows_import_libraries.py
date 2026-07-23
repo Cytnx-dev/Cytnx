@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Create MSVC import libraries omitted by Windows dependency packages.
+"""Prepare Windows CUDA layout and omitted MSVC import libraries.
 
 The conda-forge ARPACK package provides a MinGW DLL and GNU import archive.
 NVIDIA's CUDA 13 PyPI runtime wheels provide DLLs and headers, but several
-math-library wheels omit their MSVC import libraries. CMake needs MSVC import
-libraries in both cases.
+math-library wheels omit their MSVC import libraries. The NVVM wheel also puts
+its DLL below ``bin/x86_64`` while CUDA 13's nvlink searches ``bin/x64``.
+CMake needs the import libraries, and device LTO needs the canonical NVVM path.
 
 This script reads each installed DLL's PE export table and invokes MSVC's
 ``lib.exe`` to create a local import library inside the disposable Pixi
@@ -128,6 +129,38 @@ def _prepare_one(
     print(f"{output.name}: generated from {dll.name}")
 
 
+def _prepare_nvvm_layout(cuda_root: Path, *, check_only: bool) -> None:
+    source = _find_one(cuda_root / "bin" / "x86_64", "nvvm64_*.dll")
+    canonical_directory = cuda_root / "bin" / "x64"
+    destination = canonical_directory / source.name
+    if check_only:
+        state = "present" if destination.is_file() else "will generate"
+        print(f"{destination}: canonical alias for {source.name} ({state})")
+        return
+
+    canonical_directory.mkdir(parents=True, exist_ok=True)
+    if destination.exists():
+        if not destination.is_file():
+            raise RuntimeError(f"NVVM alias is not a regular file: {destination}")
+        source_stat = source.stat()
+        destination_stat = destination.stat()
+        if os.path.samefile(source, destination) or (
+            source_stat.st_size == destination_stat.st_size
+            and source_stat.st_mtime_ns == destination_stat.st_mtime_ns
+        ):
+            print(f"{destination.name}: canonical NVVM alias already present")
+            return
+        destination.unlink()
+
+    try:
+        os.link(source, destination)
+        action = "hard-linked"
+    except OSError:
+        shutil.copy2(source, destination)
+        action = "copied"
+    print(f"{destination.name}: {action} from {source}")
+
+
 def prepare(*, include_cuda: bool, check_only: bool) -> None:
     conda_prefix_value = os.environ.get("CONDA_PREFIX")
     if not conda_prefix_value:
@@ -167,6 +200,7 @@ def prepare(*, include_cuda: bool, check_only: bool) -> None:
         if not dll_directory.is_dir() or not library_directory.is_dir():
             raise RuntimeError(f"incomplete CUDA PyPI layout below {cuda_root}")
 
+        _prepare_nvvm_layout(cuda_root, check_only=check_only)
         for import_name, dll_pattern in CUDA_IMPORT_LIBRARIES.items():
             _prepare_one(
                 _find_one(dll_directory, dll_pattern),
