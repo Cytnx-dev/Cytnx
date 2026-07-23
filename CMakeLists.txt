@@ -579,13 +579,8 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
 )
 
 if(BUILD_PYTHON)
-  if(WIN32)
-    INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
-      RUNTIME DESTINATION cytnx COMPONENT libraries)
-  else()
-    INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
-      LIBRARY DESTINATION cytnx COMPONENT libraries)
-  endif()
+  INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
+    LIBRARY DESTINATION cytnx COMPONENT libraries)
 endif()
 
 install(EXPORT cytnx_targets
