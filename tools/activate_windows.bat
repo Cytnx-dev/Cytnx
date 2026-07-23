@@ -34,7 +34,7 @@ if exist "%CYTNX_CUDA_PREFIX%\bin\nvcc.exe" (
   set "CUDAToolkit_ROOT=%CYTNX_CUDA_PREFIX%"
   set "CUDACXX=%CYTNX_CUDA_PREFIX%\bin\nvcc.exe"
   set "CUTENSOR_ROOT=%CONDA_PREFIX%\Lib\site-packages\cutensor"
-  set "PATH=%CYTNX_CUDA_PREFIX%\bin;%CYTNX_CUDA_PREFIX%\bin\x86_64;%CONDA_PREFIX%\Lib\site-packages\cutensor\bin;%CONDA_PREFIX%\Lib\site-packages\cutensor\lib;%PATH%"
+  set "PATH=%CYTNX_CUDA_PREFIX%\bin;%CYTNX_CUDA_PREFIX%\bin\x64;%CYTNX_CUDA_PREFIX%\bin\x86_64;%CONDA_PREFIX%\Lib\site-packages\cutensor\bin;%CONDA_PREFIX%\Lib\site-packages\cutensor\lib;%PATH%"
 )
 set "CYTNX_CUDA_PREFIX="
 set "CYTNX_WINDOWS_ACTIVATED_PREFIX=%CONDA_PREFIX%"
