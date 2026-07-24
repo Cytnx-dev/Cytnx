@@ -32,7 +32,7 @@ target_sources(cytnx
     # cuQuantumQr_internal.hpp
     # cudaMemcpyTruncation.hpp
 
-    cuAbs_internal.cu
+    cuAbs_dispatch.cu
     cuAdd_internal.cu
     cuSub_dispatch.cu
     cuMul_dispatch.cu
@@ -40,12 +40,13 @@ target_sources(cytnx
     cuiArithmetic_dispatch.cu
     cuGer_internal.cu
     cuConj_inplace_internal.cu
+    cuConj_inplace_dispatch.cu
     cuCpr_dispatch.cu
     cuMod_dispatch.cu
     cuDiag_internal.cu
-    cuPow_internal.cu
+    cuPow_dispatch.cu
     cuEigh_internal.cu
-    cuExp_internal.cu
+    cuExp_dispatch.cu
     cuInvM_inplace_internal.cu
     cuInv_inplace_internal.cu
     cuGemm_internal.cu

@@ -222,8 +222,6 @@ namespace cytnx {
       std::vector<Svdfunc_oii> cuGeSvd_ii;
       std::vector<InvMinplacefunc_oii> cuInvM_inplace_ii;
       std::vector<Invinplacefunc_oii> cuInv_inplace_ii;
-      std::vector<Conjinplacefunc_oii> cuConj_inplace_ii;
-      std::vector<Expfunc_oii> cuExp_ii;
       std::vector<Diagfunc_oii> cuDiag_ii;
       std::vector<Eighfunc_oii> cuEigh_ii;
       std::vector<Matmulfunc_oii> cuMatmul_ii;
@@ -233,8 +231,6 @@ namespace cytnx {
       std::vector<Matvecfunc_oii> cuMatvec_ii;
       std::vector<Normfunc_oii> cuNorm_ii;
       std::vector<Vectordotfunc_oii> cuVd_ii;
-      std::vector<Powfunc_oii> cuPow_ii;
-      std::vector<Absfunc_oii> cuAbs_ii;
       std::vector<ger_oii> cuGer_ii;
       std::vector<Detfunc_oii> cuDet_ii;
       std::vector<MaxMinfunc_oii> cuMM_ii;

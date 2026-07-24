@@ -11,6 +11,9 @@
 namespace cytnx {
   namespace linalg_internal {
 
+    /// cuConj (in place): typed GPU dispatch (#1003). Complex dtypes only (real Conj is a no-op).
+    void cuConj_inplace_dispatch(boost::intrusive_ptr<Storage_base> &inout, cytnx_uint64 Nelem);
+
     void cuConj_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten,
                                     const cytnx_uint64 &Nelem);
 
