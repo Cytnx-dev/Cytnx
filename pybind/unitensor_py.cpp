@@ -209,7 +209,8 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
         // check type:
         if (py::isinstance<py::slice>(Args[axis])) {
           py::slice sls = Args[axis].cast<py::slice>();
-          if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+          if (!sls.compute(static_cast<ssize_t>(self.shape()[axis]), &start, &stop, &step,
+                           &slicelength))
             throw py::error_already_set();
           accessors.push_back(
             cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop), cytnx_int64(step)));
@@ -219,7 +220,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
       }
     } else if (py::isinstance<py::slice>(locators)) {
       py::slice sls = locators.cast<py::slice>();
-      if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+      if (!sls.compute(static_cast<ssize_t>(self.shape()[0]), &start, &stop, &step, &slicelength))
         throw py::error_already_set();
       accessors.push_back(cytnx::Accessor::range(start, stop, step));
     } else {
@@ -236,7 +237,8 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
         // check type:
         if (py::isinstance<py::slice>(Args[axis])) {
           py::slice sls = Args[axis].cast<py::slice>();
-          if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+          if (!sls.compute(static_cast<ssize_t>(self.shape()[axis]), &start, &stop, &step,
+                           &slicelength))
             throw py::error_already_set();
           // if(slicelength == self.shape()[axis])
           // accessors.push_back(cytnx::Accessor::all());
@@ -252,7 +254,7 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
       }
     } else if (py::isinstance<py::slice>(locators)) {
       py::slice sls = locators.cast<py::slice>();
-      if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+      if (!sls.compute(static_cast<ssize_t>(self.shape()[0]), &start, &stop, &step, &slicelength))
         throw py::error_already_set();
       // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
       accessors.push_back(cytnx::Accessor::range(start, stop, step));
