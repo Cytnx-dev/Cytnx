@@ -851,7 +851,7 @@ namespace cytnx {
   //-------------------------------------------
   UniTensor operator*(const UniTensor &Lt, const UniTensor &Rt) { return linalg::Mul(Lt, Rt); }
 
-  template <class T>
+  template <cytnx_scalar_like T>
   UniTensor operator*(const T &lc, const UniTensor &Rt) {
     return linalg::Mul(lc, Rt);
   }
