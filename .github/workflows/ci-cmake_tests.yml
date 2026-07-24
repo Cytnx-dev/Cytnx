@@ -77,8 +77,21 @@ jobs:
         # `pip install --editable .[dev]` step below. That keeps
         # pyproject.toml as the single source of truth for everything
         # Python.
+        #
+        # blas=*=openblas *openmp* pins the OpenMP-threaded OpenBLAS build,
+        # matching the wheel build (tools/cibuildwheel_before_all.sh): HPTT
+        # and cytnx's own code use OpenMP (-fopenmp), and an OpenBLAS build
+        # with its own independent (pthreads) thread pool oversubscribes the
+        # CPU when a BLAS call originates from inside an OpenMP region.
+        # conda-forge's openmp OpenBLAS build hard-requires
+        # _openmp_mutex=*_llvm (an explicit _gnu pin is unsolvable against
+        # it), so libopenblas=*=*openmp* already forces the whole
+        # environment onto the single llvm OpenMP runtime -- no separate
+        # _openmp_mutex pin is needed. (libgomp is still present, symlinked
+        # to libomp by _kmp_llvm, so GCC's -fopenmp -lgomp and OpenBLAS
+        # resolve to that one runtime.)
         run: |
-          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest graphviz
+          mamba install cmake make boost git compilers "blas=*=openblas" "libopenblas=*=*openmp*" liblapacke arpack gtest graphviz
 
       - name: CPU info
         run: lscpu
