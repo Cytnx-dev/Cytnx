@@ -236,6 +236,44 @@ namespace cytnx {
         return tolerance;
       }
 
+      // Non-contiguous tensor(x)tensor on the GPU (#1003, #988): the GPU front end used to
+      // reject a non-contiguous operand ("must be contiguous"); it now feeds the layout to
+      // the shared dispatch kernel like Add/Sub. Both operands are permuted so both operand
+      // offsets are gathered through the inverse mappers. Compare against the independent CPU
+      // path across all dtypes. Inputs are built with CPU arange then moved to the GPU.
+      TEST(MulNonContig, GpuNoncontiguousTensorTensorMatchesCpu) {
+        for (auto dtype : dtype_list) {
+          if (dtype == Type.Bool) continue;
+          SCOPED_TRACE("Mul non-contiguous dtype=" + std::to_string(dtype));
+
+          Tensor gpu_l = arange(1, 7, 1, dtype).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          Tensor gpu_r = arange(2, 8, 1, dtype).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          ASSERT_FALSE(gpu_l.is_contiguous());
+          ASSERT_FALSE(gpu_r.is_contiguous());
+
+          Tensor gpu_out = linalg::Mul(gpu_l, gpu_r);
+          Tensor cpu_out = linalg::Mul(gpu_l.to(Device.cpu), gpu_r.to(Device.cpu));
+          EXPECT_EQ(gpu_out.dtype(), cpu_out.dtype());
+          EXPECT_TRUE(
+            AreNearlyEqTensor(gpu_out.to(Device.cpu), cpu_out, GetTolerance(gpu_out.dtype())));
+        }
+      }
+
+      // Independent hand-computed literal (NOT the CPU oracle) for the non-contiguous gather:
+      // l logical = [[1,3,5],[2,4,6]], r logical = [[10,30,50],[20,40,60]] (arange 3x2
+      // permuted), so l*r = [[10,90,250],[40,160,360]] -- distinct per element, so a wrong
+      // multi-index decomposition (not just a wrong L/R pairing) is caught.
+      TEST(MulNonContig, GpuNoncontiguousLiteral) {
+        Tensor l = arange(1, 7, 1, Type.Int64).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+        Tensor r = arange(10, 70, 10, Type.Int64).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+        ASSERT_FALSE(l.is_contiguous());
+        Tensor got = linalg::Mul(l, r).to(Device.cpu);
+        EXPECT_EQ(got.dtype(), Type.Int64);
+        const cytnx_int64 expect[2][3] = {{10, 90, 250}, {40, 160, 360}};
+        for (cytnx_uint64 i = 0; i < 2; i++)
+          for (cytnx_uint64 j = 0; j < 3; j++) EXPECT_EQ(got.at<cytnx_int64>({i, j}), expect[i][j]);
+      }
+
     }  // namespace
   }  // namespace gpu_test
 }  // namespace cytnx
