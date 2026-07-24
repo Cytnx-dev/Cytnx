@@ -164,13 +164,16 @@ def rewrite_pyproject(doc: tomlkit.TOMLDocument) -> None:
         f"{CUDA_TOOLCHAIN_PREFIX} {toolchain_args}"
     )
 
-    # CMAKE_PREFIX_PATH may not be set yet on a checkout that predates the
-    # conda-forge dependency migration (#1057) -- append rather than assume
-    # it's there, so this keeps working regardless of merge order between
-    # that PR and this one.
+    # linux["environment"] may or may not already carry CMAKE_PREFIX_PATH --
+    # append to it if present, otherwise set it fresh.
+    #
+    # This table becomes environment variables inside the cibuildwheel
+    # container, where CMake reads CMAKE_PREFIX_PATH as a POSIX env-var path
+    # list: entries are ':'-separated. (';' only separates entries in a
+    # -DCMAKE_PREFIX_PATH= cache argument, not the env var.)
     existing_prefix_path = linux["environment"].get("CMAKE_PREFIX_PATH", "")
     new_prefix_path = (
-        f"{existing_prefix_path};{CUDA_TOOLCHAIN_ROOT}"
+        f"{existing_prefix_path}:{CUDA_TOOLCHAIN_ROOT}"
         if existing_prefix_path
         else CUDA_TOOLCHAIN_ROOT
     )
