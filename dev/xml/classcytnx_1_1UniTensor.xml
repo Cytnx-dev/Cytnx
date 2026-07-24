@@ -2879,14 +2879,14 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
         </inbodydescription>
         <location file="include/UniTensor.hpp" line="3869" column="15" bodyfile="include/UniTensor.hpp" bodystart="3869" bodyend="3874"/>
       </memberdef>
-      <memberdef kind="function" id="classcytnx_1_1UniTensor_1a9a17d6c17a0bd5f63d0ec85562a0f288" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classcytnx_1_1UniTensor_1a995484b1462e5477ef2194c6511dbd28" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
         <definition>UniTensor cytnx::UniTensor::permute_nosignflip</definition>
-        <argsstring>(const std::initializer_list&lt; char * &gt; &amp;mapper, const cytnx_int64 &amp;rowrank=-1) const</argsstring>
+        <argsstring>(const std::initializer_list&lt; const char * &gt; &amp;mapper, const cytnx_int64 &amp;rowrank=-1) const</argsstring>
         <name>permute_nosignflip</name>
         <qualifiedname>cytnx::UniTensor::permute_nosignflip</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> std::initializer_list&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">char</ref> * &gt; &amp;</type>
+          <type><ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> std::initializer_list&lt; <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">const</ref> <ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">char</ref> * &gt; &amp;</type>
           <declname>mapper</declname>
         </param>
         <param>
@@ -8812,7 +8812,7 @@ Generate a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</re
       <member refid="classcytnx_1_1UniTensor_1ac32ef9d113b470bbbab92f9566f6b4a5" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>permute_</name></member>
       <member refid="classcytnx_1_1UniTensor_1a6ec88d6c44efad569cc8a334eb4f5b71" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>permute_nosignflip</name></member>
       <member refid="classcytnx_1_1UniTensor_1a22bcc9498a3cc022c5b30085abf3d3b2" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>permute_nosignflip</name></member>
-      <member refid="classcytnx_1_1UniTensor_1a9a17d6c17a0bd5f63d0ec85562a0f288" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>permute_nosignflip</name></member>
+      <member refid="classcytnx_1_1UniTensor_1a995484b1462e5477ef2194c6511dbd28" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>permute_nosignflip</name></member>
       <member refid="classcytnx_1_1UniTensor_1a2e4fbeb81522f5307918677295410c84" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>permute_nosignflip_</name></member>
       <member refid="classcytnx_1_1UniTensor_1a87ecd1df0ac84d722200edc813026061" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>permute_nosignflip_</name></member>
       <member refid="classcytnx_1_1UniTensor_1aa6605e1634684f737bf1cc80d9b0d129" prot="public" virt="non-virtual"><scope>cytnx::UniTensor</scope><name>Pow</name></member>
