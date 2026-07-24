@@ -10,9 +10,9 @@ else()
 # needs a config-mode install or CMake's FindGTest from 3.23+ -- so require the
 # gmock target explicitly and fail with actionable guidance when it is missing.
 find_package(GTest REQUIRED)
-if(NOT TARGET GTest::gmock)
+if(NOT TARGET GTest::gmock_main)
   message(FATAL_ERROR
-    "GoogleTest was found but the GTest::gmock target is missing, which the test "
+    "GoogleTest was found but the GTest::gmock_main target is missing, which the test "
     "suite links against. Install a GoogleTest that also provides GMock (it is not "
     "fetched automatically):\n"
     "  macOS:         brew install googletest\n"
@@ -99,14 +99,18 @@ target_include_directories(
 )
 target_link_libraries(
   test_main
-  GTest::gtest_main
-  GTest::gmock
-  GTest::gtest
+  GTest::gmock_main
 )
 target_link_libraries(test_main cytnx)
 
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
+if(USE_DEBUG)
+  if(MSVC)
+    target_compile_options(test_main PRIVATE /fsanitize=address)
+  else()
+    target_compile_options(test_main PRIVATE -fsanitize=address)
+    target_link_options(test_main PRIVATE -fsanitize=address)
+  endif()
+endif()
 
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)

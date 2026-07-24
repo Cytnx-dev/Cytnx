@@ -4,14 +4,33 @@ include(CMakeFindDependencyMacro)
 
 find_dependency(Boost CONFIG REQUIRED)
 
-# Conditional re-find of build-time PUBLIC imported-target deps.
-# Plain absolute-path link entries (e.g. ${LAPACK_LIBRARIES}, ${ARPACK_LIB})
-# do not need this — they were baked into INTERFACE_LINK_LIBRARIES as paths.
-# Imported targets (CUDA::*, OpenMP::*, Torch targets) only exist after the
-# corresponding find_package runs in the consumer's project, so we recreate
-# them here when cytnx was built with the matching flag. The @VAR@ tokens
-# are expanded to the build-time value of each option by
-# configure_package_config_file when CytnxConfig.cmake is emitted.
+# Keep native Windows installs independent of the checkout/Pixi environment
+# that produced them. The build target uses its resolved LAPACK/ARPACK paths,
+# while the installed target resolves those libraries in the consumer's active
+# toolchain environment.
+if(WIN32 AND NOT @BACKEND_TORCH@)
+  if(DEFINED BLA_VENDOR)
+    set(_cytnx_had_bla_vendor TRUE)
+    set(_cytnx_saved_bla_vendor "${BLA_VENDOR}")
+  else()
+    set(_cytnx_had_bla_vendor FALSE)
+  endif()
+  set(BLA_VENDOR "@BLA_VENDOR@")
+  find_dependency(LAPACK REQUIRED)
+  if(_cytnx_had_bla_vendor)
+    set(BLA_VENDOR "${_cytnx_saved_bla_vendor}")
+  else()
+    unset(BLA_VENDOR)
+  endif()
+  unset(_cytnx_had_bla_vendor)
+  unset(_cytnx_saved_bla_vendor)
+
+  find_library(_cytnx_arpack_library NAMES arpack REQUIRED)
+endif()
+
+# Conditional re-find of build-time PUBLIC imported-target deps. The @VAR@
+# tokens are expanded to the build-time value of each option when this package
+# configuration is emitted.
 if(@USE_CUDA@)
   find_dependency(CUDAToolkit REQUIRED)
 endif()
@@ -28,8 +47,26 @@ if(@BACKEND_TORCH@)
   find_dependency(Torch REQUIRED)
 endif()
 
+if(@USE_CUTENSOR@ OR @USE_CUQUANTUM@)
+  set(_cytnx_saved_module_path "${CMAKE_MODULE_PATH}")
+  list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+  if(@USE_CUTENSOR@)
+    find_dependency(CUTENSOR REQUIRED)
+  endif()
+  if(@USE_CUQUANTUM@)
+    find_dependency(CUQUANTUM REQUIRED)
+  endif()
+  set(CMAKE_MODULE_PATH "${_cytnx_saved_module_path}")
+  unset(_cytnx_saved_module_path)
+endif()
+
 if(NOT TARGET Cytnx::cytnx)
     include("${CMAKE_CURRENT_LIST_DIR}/CytnxTargets.cmake")
+endif()
+
+if(WIN32 AND NOT @BACKEND_TORCH@)
+  set_property(TARGET Cytnx::cytnx APPEND PROPERTY
+    INTERFACE_LINK_LIBRARIES LAPACK::LAPACK "${_cytnx_arpack_library}")
 endif()
 
 if(@USE_CUDA@)
@@ -46,6 +83,19 @@ if(@USE_CUDA@)
   if(_cytnx_cccl_dir)
     set_property(TARGET Cytnx::cytnx APPEND PROPERTY
       INTERFACE_INCLUDE_DIRECTORIES "${_cytnx_cccl_dir}")
+  endif()
+  if(NOT TARGET CUDA::cudadevrt)
+    find_library(_cytnx_cudadevrt_library
+      NAMES cudadevrt
+      HINTS "${CUDAToolkit_LIBRARY_DIR}" "${CUDAToolkit_ROOT}"
+      PATH_SUFFIXES lib/x64 lib64 lib
+    )
+    if(NOT _cytnx_cudadevrt_library)
+      message(FATAL_ERROR "Cytnx requires the CUDA device-runtime library (cudadevrt)")
+    endif()
+    set_property(TARGET Cytnx::cytnx APPEND PROPERTY
+      INTERFACE_LINK_LIBRARIES "${_cytnx_cudadevrt_library}")
+    unset(_cytnx_cudadevrt_library CACHE)
   endif()
 endif()
 
