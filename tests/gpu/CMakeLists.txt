@@ -69,7 +69,9 @@ target_link_libraries(gpu_test_main cytnx)
 # and CCCL include dirs PRIVATEly, so they do not propagate here through
 # linking; add them explicitly, otherwise the host compile fails with
 # "fatal error: cuda/std/complex: No such file or directory".
-target_include_directories(gpu_test_main PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+if(CUDAToolkit_INCLUDE_DIRS)
+  target_include_directories(gpu_test_main PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+endif()
 if(CYTNX_CCCL_INCLUDE_DIR)
   target_include_directories(gpu_test_main PRIVATE ${CYTNX_CCCL_INCLUDE_DIR})
 endif()

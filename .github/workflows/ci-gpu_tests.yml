@@ -6,11 +6,17 @@ name: GPU Tests
 # gtest system-wide, so unlike a GitHub-hosted runner there is no conda/PyPI
 # toolchain install step.
 #
-# Runs on manual dispatch and on same-repo pull requests. Fork pull requests
-# are NOT executed on the self-hosted runner: on a public repo that would let a
-# fork run arbitrary code on our hardware. The job-level `if` enforces this.
+# Runs on manual dispatch, on same-repo pull requests, and on push to master.
+# The push trigger covers code merged from a fork PR (which the pull_request
+# run deliberately skips), exercising the trusted merged revision on master.
+# Fork pull requests are NOT executed on the self-hosted runner: on a public
+# repo that would let a fork run arbitrary code on our hardware. The job-level
+# `if` enforces this (a push event is never a fork, so it always runs).
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
   pull_request:
     branches:
       - master
