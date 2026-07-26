@@ -187,6 +187,23 @@ namespace cytnx {
                         "[ERROR] try to move from cpu(Host) to gpu without CUDA support.");
 #endif
       }
+      // An empty storage owns no elements, but start_ may still hold a
+      // device-specific empty buffer (e.g. host malloc(0) on CPU). Switching
+      // device_ alone would leave the destructor freeing that buffer with the
+      // wrong deallocator -- cudaFree on a host pointer -> cudaErrorInvalidValue
+      // (#1089). Release it with the current device's deallocator and represent
+      // the empty storage as null, which the destructor's null guard skips.
+      if (this->device_ != device && this->start_ != nullptr) {
+#ifdef UNI_GPU
+        if (this->device_ == Device.cpu)
+          free(this->start_);
+        else
+          checkCudaErrors(cudaFree(this->start_));
+#else
+        free(this->start_);
+#endif
+        this->start_ = nullptr;
+      }
       this->device_ = device;
       return;
     }
