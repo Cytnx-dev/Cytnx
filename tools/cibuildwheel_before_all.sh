@@ -22,11 +22,18 @@ if command -v dnf >/dev/null 2>&1; then
       conda_subdir="linux-64"
     fi
     curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj -C /usr/local bin/micromamba
+    # Boost >= 1.89 marks boost::intrusive_ptr's members constexpr. Every CUDA
+    # translation unit that reaches cytnx::intrusive_ptr_base through
+    # backend/Storage.hpp then crashes nvcc's cudafe++ frontend with
+    # "internal error: check_for_and_take_source_seq_entry: wrong entry"
+    # (issues #1124, #1063). g++ and clang++ accept the same code, and no nvcc
+    # flag avoids it, so the Boost version is the only lever here.
+    # TODO: lift this pin once a CUDA toolkit ships a fixed cudafe++.
     MAMBA_ROOT_PREFIX=/opt/micromamba /usr/local/bin/micromamba create -y -p "${CYTNX_DEPS_PREFIX}" -c conda-forge \
       "openblas=*=*openmp*" \
       liblapacke \
       "arpack=*=nompi*" \
-      libboost-headers
+      "libboost-headers<1.89"
 
 # musllinux_1_2 images are Alpine-based, so use apk there. conda-forge
 # publishes no musl builds, so arpack/boost still come from Alpine's own
