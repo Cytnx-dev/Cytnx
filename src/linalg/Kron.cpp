@@ -84,16 +84,21 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
         // checkCudaErrors(cudaSetDevice(lhs_contiguous.device()));
-        // Dispatch to the kernel based on the types of lhs and rhs.
+        // Cast both operands to the promoted output dtype up front (a no-op when
+        // the dtype already matches) so the kernel runs in one uniform type.
+        // This is numerically identical to the kernel's per-element TO(Lin)*TO(Rin)
+        // cast, lets us dispatch on the single output type, and retires the
+        // bespoke type_promote_from_gpu_pointer_t trait.
+        Tensor lhs_cast = lhs_contiguous.astype(out.dtype());
+        Tensor rhs_cast = rhs_contiguous.astype(out.dtype());
         std::visit(
-          [&](auto lhs_ptr, auto rhs_ptr) {
-            using out_type =
-              Type_class::type_promote_from_gpu_pointer_t<decltype(lhs_ptr), decltype(rhs_ptr)>;
-            static_assert(!std::is_same_v<out_type, void>);
-            cytnx::linalg_internal::cuKron_general(out.gpu_ptr_as<out_type>(), lhs_ptr, rhs_ptr,
-                                                   lhs_padded_shape, rhs_padded_shape);
+          [&](auto out_ptr) {
+            using out_type = std::remove_pointer_t<decltype(out_ptr)>;
+            cytnx::linalg_internal::cuKron_general<out_type, out_type, out_type>(
+              out_ptr, lhs_cast.gpu_ptr_as<out_type>(), rhs_cast.gpu_ptr_as<out_type>(),
+              lhs_padded_shape, rhs_padded_shape);
           },
-          lhs_contiguous.gpu_ptr(), rhs_contiguous.gpu_ptr());
+          out.gpu_ptr());
   #else
         cytnx_error_msg(true, "[Kron] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");

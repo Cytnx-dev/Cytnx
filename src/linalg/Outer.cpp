@@ -54,9 +54,9 @@ namespace cytnx {
         // fix.%s",
         //                 "\n");
         checkCudaErrors(cudaSetDevice(Tl.device()));
-        cytnx::linalg_internal::lii.cuOuter_ii[out_dtype][out_dtype](
-          out._impl->storage()._impl, _Tl._impl->storage()._impl, _Tr._impl->storage()._impl, j1,
-          j2);
+        cytnx::linalg_internal::cuOuter_dispatch(out._impl->storage()._impl,
+                                                 _Tl._impl->storage()._impl,
+                                                 _Tr._impl->storage()._impl, j1, j2);
   #else
         cytnx_error_msg(true, "[Outer] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");

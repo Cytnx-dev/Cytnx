@@ -328,7 +328,8 @@ namespace cytnx {
       // Outer_ii[Int16/Uint16/Bool][...] were null; linalg::Outer with such a
       // left operand dereferenced a null function pointer and crashed. The
       // Outer_internal_{i16,u16,b}t* implementations already exist -- register
-      // them here so every dtype pair dispatches. (cuOuter_ii already had them.)
+      // them here so every dtype pair dispatches. (The GPU path uses typed
+      // std::variant dispatch, so it cannot have this missing-row gap.)
       Outer_ii[Type.Int16][Type.ComplexDouble] = Outer_internal_i16tcd;
       Outer_ii[Type.Int16][Type.ComplexFloat] = Outer_internal_i16tcf;
       Outer_ii[Type.Int16][Type.Double] = Outer_internal_i16td;
@@ -618,141 +619,6 @@ namespace cytnx {
       cuTrace_ii[Type.Int16] = cuTrace_internal_i16;
       cuTrace_ii[Type.Bool] = cuTrace_internal_b;
       //================
-
-      cuOuter_ii = std::vector<std::vector<Outerfunc_oii>>(
-        N_Type, std::vector<Outerfunc_oii>(N_Type, nullptr));
-
-      cuOuter_ii[Type.ComplexDouble][Type.ComplexDouble] = cuOuter_internal_cdtcd;
-      cuOuter_ii[Type.ComplexDouble][Type.ComplexFloat] = cuOuter_internal_cdtcf;
-      cuOuter_ii[Type.ComplexDouble][Type.Double] = cuOuter_internal_cdtd;
-      cuOuter_ii[Type.ComplexDouble][Type.Float] = cuOuter_internal_cdtf;
-      cuOuter_ii[Type.ComplexDouble][Type.Int64] = cuOuter_internal_cdti64;
-      cuOuter_ii[Type.ComplexDouble][Type.Uint64] = cuOuter_internal_cdtu64;
-      cuOuter_ii[Type.ComplexDouble][Type.Int32] = cuOuter_internal_cdti32;
-      cuOuter_ii[Type.ComplexDouble][Type.Uint32] = cuOuter_internal_cdtu32;
-      cuOuter_ii[Type.ComplexDouble][Type.Uint16] = cuOuter_internal_cdtu16;
-      cuOuter_ii[Type.ComplexDouble][Type.Int16] = cuOuter_internal_cdti16;
-      cuOuter_ii[Type.ComplexDouble][Type.Bool] = cuOuter_internal_cdtb;
-
-      cuOuter_ii[Type.ComplexFloat][Type.ComplexDouble] = cuOuter_internal_cftcd;
-      cuOuter_ii[Type.ComplexFloat][Type.ComplexFloat] = cuOuter_internal_cftcf;
-      cuOuter_ii[Type.ComplexFloat][Type.Double] = cuOuter_internal_cftd;
-      cuOuter_ii[Type.ComplexFloat][Type.Float] = cuOuter_internal_cftf;
-      cuOuter_ii[Type.ComplexFloat][Type.Int64] = cuOuter_internal_cfti64;
-      cuOuter_ii[Type.ComplexFloat][Type.Uint64] = cuOuter_internal_cftu64;
-      cuOuter_ii[Type.ComplexFloat][Type.Int32] = cuOuter_internal_cfti32;
-      cuOuter_ii[Type.ComplexFloat][Type.Uint32] = cuOuter_internal_cftu32;
-      cuOuter_ii[Type.ComplexFloat][Type.Uint16] = cuOuter_internal_cftu16;
-      cuOuter_ii[Type.ComplexFloat][Type.Int16] = cuOuter_internal_cfti16;
-      cuOuter_ii[Type.ComplexFloat][Type.Bool] = cuOuter_internal_cftb;
-
-      cuOuter_ii[Type.Double][Type.ComplexDouble] = cuOuter_internal_dtcd;
-      cuOuter_ii[Type.Double][Type.ComplexFloat] = cuOuter_internal_dtcf;
-      cuOuter_ii[Type.Double][Type.Double] = cuOuter_internal_dtd;
-      cuOuter_ii[Type.Double][Type.Float] = cuOuter_internal_dtf;
-      cuOuter_ii[Type.Double][Type.Int64] = cuOuter_internal_dti64;
-      cuOuter_ii[Type.Double][Type.Uint64] = cuOuter_internal_dtu64;
-      cuOuter_ii[Type.Double][Type.Int32] = cuOuter_internal_dti32;
-      cuOuter_ii[Type.Double][Type.Uint32] = cuOuter_internal_dtu32;
-      cuOuter_ii[Type.Double][Type.Uint16] = cuOuter_internal_dtu16;
-      cuOuter_ii[Type.Double][Type.Int16] = cuOuter_internal_dti16;
-      cuOuter_ii[Type.Double][Type.Bool] = cuOuter_internal_dtb;
-
-      cuOuter_ii[Type.Float][Type.ComplexDouble] = cuOuter_internal_ftcd;
-      cuOuter_ii[Type.Float][Type.ComplexFloat] = cuOuter_internal_ftcf;
-      cuOuter_ii[Type.Float][Type.Double] = cuOuter_internal_ftd;
-      cuOuter_ii[Type.Float][Type.Float] = cuOuter_internal_ftf;
-      cuOuter_ii[Type.Float][Type.Int64] = cuOuter_internal_fti64;
-      cuOuter_ii[Type.Float][Type.Uint64] = cuOuter_internal_ftu64;
-      cuOuter_ii[Type.Float][Type.Int32] = cuOuter_internal_fti32;
-      cuOuter_ii[Type.Float][Type.Uint32] = cuOuter_internal_ftu32;
-      cuOuter_ii[Type.Float][Type.Uint16] = cuOuter_internal_ftu16;
-      cuOuter_ii[Type.Float][Type.Int16] = cuOuter_internal_fti16;
-      cuOuter_ii[Type.Float][Type.Bool] = cuOuter_internal_ftb;
-
-      cuOuter_ii[Type.Int64][Type.ComplexDouble] = cuOuter_internal_i64tcd;
-      cuOuter_ii[Type.Int64][Type.ComplexFloat] = cuOuter_internal_i64tcf;
-      cuOuter_ii[Type.Int64][Type.Double] = cuOuter_internal_i64td;
-      cuOuter_ii[Type.Int64][Type.Float] = cuOuter_internal_i64tf;
-      cuOuter_ii[Type.Int64][Type.Int64] = cuOuter_internal_i64ti64;
-      cuOuter_ii[Type.Int64][Type.Uint64] = cuOuter_internal_i64tu64;
-      cuOuter_ii[Type.Int64][Type.Int32] = cuOuter_internal_i64ti32;
-      cuOuter_ii[Type.Int64][Type.Uint32] = cuOuter_internal_i64tu32;
-      cuOuter_ii[Type.Int64][Type.Uint16] = cuOuter_internal_i64tu16;
-      cuOuter_ii[Type.Int64][Type.Int16] = cuOuter_internal_i64ti16;
-      cuOuter_ii[Type.Int64][Type.Bool] = cuOuter_internal_i64tb;
-
-      cuOuter_ii[Type.Uint64][Type.ComplexDouble] = cuOuter_internal_u64tcd;
-      cuOuter_ii[Type.Uint64][Type.ComplexFloat] = cuOuter_internal_u64tcf;
-      cuOuter_ii[Type.Uint64][Type.Double] = cuOuter_internal_u64td;
-      cuOuter_ii[Type.Uint64][Type.Float] = cuOuter_internal_u64tf;
-      cuOuter_ii[Type.Uint64][Type.Int64] = cuOuter_internal_u64ti64;
-      cuOuter_ii[Type.Uint64][Type.Uint64] = cuOuter_internal_u64tu64;
-      cuOuter_ii[Type.Uint64][Type.Int32] = cuOuter_internal_u64ti32;
-      cuOuter_ii[Type.Uint64][Type.Uint32] = cuOuter_internal_u64tu32;
-      cuOuter_ii[Type.Uint64][Type.Uint16] = cuOuter_internal_u64tu16;
-      cuOuter_ii[Type.Uint64][Type.Int16] = cuOuter_internal_u64ti16;
-      cuOuter_ii[Type.Uint64][Type.Bool] = cuOuter_internal_u64tb;
-
-      cuOuter_ii[Type.Int32][Type.ComplexDouble] = cuOuter_internal_i32tcd;
-      cuOuter_ii[Type.Int32][Type.ComplexFloat] = cuOuter_internal_i32tcf;
-      cuOuter_ii[Type.Int32][Type.Double] = cuOuter_internal_i32td;
-      cuOuter_ii[Type.Int32][Type.Float] = cuOuter_internal_i32tf;
-      cuOuter_ii[Type.Int32][Type.Int64] = cuOuter_internal_i32ti64;
-      cuOuter_ii[Type.Int32][Type.Uint64] = cuOuter_internal_i32tu64;
-      cuOuter_ii[Type.Int32][Type.Int32] = cuOuter_internal_i32ti32;
-      cuOuter_ii[Type.Int32][Type.Uint32] = cuOuter_internal_i32tu32;
-      cuOuter_ii[Type.Int32][Type.Uint16] = cuOuter_internal_i32tu16;
-      cuOuter_ii[Type.Int32][Type.Int16] = cuOuter_internal_i32ti16;
-      cuOuter_ii[Type.Int32][Type.Bool] = cuOuter_internal_i32tb;
-
-      cuOuter_ii[Type.Uint32][Type.ComplexDouble] = cuOuter_internal_u32tcd;
-      cuOuter_ii[Type.Uint32][Type.ComplexFloat] = cuOuter_internal_u32tcf;
-      cuOuter_ii[Type.Uint32][Type.Double] = cuOuter_internal_u32td;
-      cuOuter_ii[Type.Uint32][Type.Float] = cuOuter_internal_u32tf;
-      cuOuter_ii[Type.Uint32][Type.Int64] = cuOuter_internal_u32ti64;
-      cuOuter_ii[Type.Uint32][Type.Uint64] = cuOuter_internal_u32tu64;
-      cuOuter_ii[Type.Uint32][Type.Int32] = cuOuter_internal_u32ti32;
-      cuOuter_ii[Type.Uint32][Type.Uint32] = cuOuter_internal_u32tu32;
-      cuOuter_ii[Type.Uint32][Type.Uint16] = cuOuter_internal_u32tu16;
-      cuOuter_ii[Type.Uint32][Type.Int16] = cuOuter_internal_u32ti16;
-      cuOuter_ii[Type.Uint32][Type.Bool] = cuOuter_internal_u32tb;
-
-      cuOuter_ii[Type.Int16][Type.ComplexDouble] = cuOuter_internal_i16tcd;
-      cuOuter_ii[Type.Int16][Type.ComplexFloat] = cuOuter_internal_i16tcf;
-      cuOuter_ii[Type.Int16][Type.Double] = cuOuter_internal_i16td;
-      cuOuter_ii[Type.Int16][Type.Float] = cuOuter_internal_i16tf;
-      cuOuter_ii[Type.Int16][Type.Int64] = cuOuter_internal_i16ti64;
-      cuOuter_ii[Type.Int16][Type.Uint64] = cuOuter_internal_i16tu64;
-      cuOuter_ii[Type.Int16][Type.Int32] = cuOuter_internal_i16ti32;
-      cuOuter_ii[Type.Int16][Type.Uint32] = cuOuter_internal_i16tu32;
-      cuOuter_ii[Type.Int16][Type.Uint16] = cuOuter_internal_i16tu16;
-      cuOuter_ii[Type.Int16][Type.Int16] = cuOuter_internal_i16ti16;
-      cuOuter_ii[Type.Int16][Type.Bool] = cuOuter_internal_i16tb;
-
-      cuOuter_ii[Type.Uint16][Type.ComplexDouble] = cuOuter_internal_u16tcd;
-      cuOuter_ii[Type.Uint16][Type.ComplexFloat] = cuOuter_internal_u16tcf;
-      cuOuter_ii[Type.Uint16][Type.Double] = cuOuter_internal_u16td;
-      cuOuter_ii[Type.Uint16][Type.Float] = cuOuter_internal_u16tf;
-      cuOuter_ii[Type.Uint16][Type.Int64] = cuOuter_internal_u16ti64;
-      cuOuter_ii[Type.Uint16][Type.Uint64] = cuOuter_internal_u16tu64;
-      cuOuter_ii[Type.Uint16][Type.Int32] = cuOuter_internal_u16ti32;
-      cuOuter_ii[Type.Uint16][Type.Uint32] = cuOuter_internal_u16tu32;
-      cuOuter_ii[Type.Uint16][Type.Uint16] = cuOuter_internal_u16tu16;
-      cuOuter_ii[Type.Uint16][Type.Int16] = cuOuter_internal_u16ti16;
-      cuOuter_ii[Type.Uint16][Type.Bool] = cuOuter_internal_u16tb;
-
-      cuOuter_ii[Type.Bool][Type.ComplexDouble] = cuOuter_internal_btcd;
-      cuOuter_ii[Type.Bool][Type.ComplexFloat] = cuOuter_internal_btcf;
-      cuOuter_ii[Type.Bool][Type.Double] = cuOuter_internal_btd;
-      cuOuter_ii[Type.Bool][Type.Float] = cuOuter_internal_btf;
-      cuOuter_ii[Type.Bool][Type.Int64] = cuOuter_internal_bti64;
-      cuOuter_ii[Type.Bool][Type.Uint64] = cuOuter_internal_btu64;
-      cuOuter_ii[Type.Bool][Type.Int32] = cuOuter_internal_bti32;
-      cuOuter_ii[Type.Bool][Type.Uint32] = cuOuter_internal_btu32;
-      cuOuter_ii[Type.Bool][Type.Uint16] = cuOuter_internal_btu16;
-      cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
-      cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
 
   #ifdef UNI_CUQUANTUM
       cuQuantumGeSvd_ii = std::vector<cuQuantumGeSvd_oii>(N_Type);
