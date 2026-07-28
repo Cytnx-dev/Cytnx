@@ -409,6 +409,9 @@ namespace cytnx {
       }
 
       TEST_F(linalg_Test, GpuBkFUtQr) {
+#ifndef UNI_CUQUANTUM
+        GTEST_SKIP() << "QR decomposition is currently only supported if cuQuantum is available.";
+#else
         const double tol = 1e-10;
         UniTensor M = permute_with_signflips(make_rank4_hermitian());
         auto qr_gpu = linalg::Qr(M.to(Device.cuda));
@@ -416,6 +419,7 @@ namespace cytnx {
         expect_unitary(Q, "_aux_", tol);  // Q is an isometry
         UniTensor recon = Contract(Q, R).permute(M.labels());
         EXPECT_TRUE((recon.apply() - M.apply()).Norm().item() < tol);  // Q R == M
+#endif
       }
 
       TEST_F(linalg_Test, GpuBkFUtExpH) {
