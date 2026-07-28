@@ -579,18 +579,33 @@ This is the simplest way as conda automatically resolves the whole path of each 
 </div></blockquote>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:</p></li>
+<li><p>In addition, if you want to have GPU support (compile with <code class="docutils literal notranslate"><span class="pre">-DUSE_CUDA=ON</span></code>), then additional packages need to be installed:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda<span class="w"> </span>cutensor<span class="w"> </span>cuquantum
 </pre></div>
 </div>
-<p>If cutensor shall be used as well (compile option -DUSE_CUTENSOR=ON), then further install the following:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cutensor
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>A CUDA build needs cuTENSOR and cuQuantum as well, not just the CUDA toolkit.</strong>
+Every CUDA configuration Cytnx ships enables all three: the <code class="docutils literal notranslate"><span class="pre">openblas-cuda</span></code> preset
+(and <code class="docutils literal notranslate"><span class="pre">mkl-cuda</span></code> / <code class="docutils literal notranslate"><span class="pre">debug-openblas-cuda</span></code> / <code class="docutils literal notranslate"><span class="pre">debug-mkl-cuda</span></code>, which inherit it)
+sets <code class="docutils literal notranslate"><span class="pre">USE_CUDA</span></code>, <code class="docutils literal notranslate"><span class="pre">USE_CUTENSOR</span></code> and <code class="docutils literal notranslate"><span class="pre">USE_CUQUANTUM</span></code> to <code class="docutils literal notranslate"><span class="pre">ON</span></code>, and so do the
+GPU CI job and the published <code class="docutils literal notranslate"><span class="pre">cytnx-cuda</span></code> wheels.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-DUSE_CUTENSOR=ON</span></code> and <code class="docutils literal notranslate"><span class="pre">-DUSE_CUQUANTUM=ON</span></code> each additionally <strong>require</strong> the
+corresponding install root to be set, either in the environment or on the command
+line. Configuring without them fails with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Error</span><span class="p">:</span> <span class="n">Cache</span> <span class="n">variable</span> <span class="s1">&#39;CUTENSOR_ROOT&#39;</span> <span class="ow">is</span> <span class="n">required</span> <span class="n">under</span> <span class="n">dependency</span> <span class="n">conditions</span>
+<span class="p">(</span><span class="n">USE_CUTENSOR</span><span class="p">)</span> <span class="n">but</span> <span class="n">its</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">empty</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>Similarly, cuqauantum (compile option -DUSE_CUTENSOR=ON), requires:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuquantum
+<p>With the conda packages above, both roots are your conda prefix:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$export</span><span class="w"> </span><span class="nv">CUTENSOR_ROOT</span><span class="o">=</span><span class="nv">$CONDA_PREFIX</span>
+<span class="nv">$export</span><span class="w"> </span><span class="nv">CUQUANTUM_ROOT</span><span class="o">=</span><span class="nv">$CONDA_PREFIX</span>
 </pre></div>
+</div>
+<p>Each root is expected to contain <code class="docutils literal notranslate"><span class="pre">include/</span></code> and <code class="docutils literal notranslate"><span class="pre">lib/</span></code> subdirectories. cuTENSOR
+2.x is required; <code class="docutils literal notranslate"><span class="pre">lib/</span></code> may either hold the libraries directly or use a
+per-CUDA-major subdirectory (<code class="docutils literal notranslate"><span class="pre">lib/12</span></code>, <code class="docutils literal notranslate"><span class="pre">lib/13</span></code>) — both layouts are searched.</p>
 </div>
 <p><strong>Option B. Install dependencies via system package manager</strong></p>
 <p>You can also choose to install dependencies directly from the system package manager, but one needs to carefully resolve the dependency path for cmake to capture them successfully.</p>
@@ -652,7 +667,7 @@ copies of the package.</p>
 <td><p>description</p></td>
 </tr>
 <tr class="row-even"><td><p>-DCMAKE_INSTALL_PREFIX</p></td>
-<td><p>/usr/local/cytnx</p></td>
+<td><p>~/.local/cytnx</p></td>
 <td><p>Install destination of the library</p></td>
 </tr>
 <tr class="row-odd"><td><p>-DBUILD_PYTHON</p></td>
@@ -678,8 +693,71 @@ If USE_MKL=on, USE_OMP is forced=on</p></td>
 <td><p>Accelerate tensor transpose with
 hptt</p></td>
 </tr>
+<tr class="row-even"><td><p>-DBACKEND_TORCH</p></td>
+<td><p>OFF</p></td>
+<td><p>Use PyTorch as the tensor backend
+instead of the native backend.
+Forces USE_MKL/USE_HPTT/USE_CUDA
+off.</p></td>
+</tr>
 </tbody>
 </table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The defaults above are what plain <code class="docutils literal notranslate"><span class="pre">cmake</span></code> uses. Building through a preset
+(<code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">--preset</span> <span class="pre">openblas-cuda</span></code>, see <code class="docutils literal notranslate"><span class="pre">CMakePresets.json</span></code>) overrides several of
+them — in particular the CUDA presets turn <code class="docutils literal notranslate"><span class="pre">USE_CUTENSOR</span></code> and <code class="docutils literal notranslate"><span class="pre">USE_CUQUANTUM</span></code>
+on. <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-L</span> <span class="pre">&lt;build</span> <span class="pre">dir&gt;</span></code> shows the values actually in effect.</p>
+</div>
+<p>Additional options for CUDA if -DUSE_CUDA=on:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>options</p></td>
+<td><p>default</p></td>
+<td><p>description</p></td>
+</tr>
+<tr class="row-even"><td><p>-DUSE_CUTENSOR</p></td>
+<td><p>OFF</p></td>
+<td><p>Accelerate tensor contraction with
+cuTENSOR (&gt;= 2.0). Requires
+CUTENSOR_ROOT. ON in every CUDA
+preset.</p></td>
+</tr>
+<tr class="row-odd"><td><p>-DUSE_CUQUANTUM</p></td>
+<td><p>OFF</p></td>
+<td><p>Enable cuQuantum (cuTensorNet /
+cuStateVec). Requires
+CUQUANTUM_ROOT. ON in every CUDA
+preset. GPU QR is only available
+with this on; Gesvd_truncate also
+routes through cuTensorNet rather
+than cuSOLVER.</p></td>
+</tr>
+<tr class="row-even"><td><p>-DCUTENSOR_ROOT</p></td>
+<td><p>(unset)</p></td>
+<td><p>Install root of cuTENSOR. Required
+when USE_CUTENSOR=ON. May also be
+given as an environment variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p>-DCUQUANTUM_ROOT</p></td>
+<td><p>(unset)</p></td>
+<td><p>Install root of cuQuantum.
+Required when USE_CUQUANTUM=ON.
+May also be given as an
+environment variable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">CUTENSOR_ROOT</span></code> or <code class="docutils literal notranslate"><span class="pre">CUQUANTUM_ROOT</span></code> is exported in your environment, that
+value currently takes precedence over the <code class="docutils literal notranslate"><span class="pre">-D</span></code> flag on the command line, so an
+explicit <code class="docutils literal notranslate"><span class="pre">-DCUTENSOR_ROOT=...</span></code> is silently ignored. Conda environments export
+<code class="docutils literal notranslate"><span class="pre">CUQUANTUM_ROOT</span></code> by default. Until this is fixed (see issue #1129), either unset
+the environment variable or set it to the path you intend to use.</p>
 </div>
 <p>Additional options for HPTT if -DUSE_HPTT=on:</p>
 <div class="table-wrapper docutils container">
