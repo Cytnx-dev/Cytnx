@@ -70,10 +70,14 @@ namespace cytnx {
             Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
-          cytnx_error_msg(true,
-                          "[Mul][on GPU/CUDA] error two tensors must be contiguous. Call "
-                          "Contiguous_() or Contiguous() first%s",
-                          "\n");
+          // Non-contiguous tensor(x)tensor on the GPU: the shared cuArithmeticDispatchGPU
+          // kernel applies the layout mappers (as Add/Sub already do), so pass the layout
+          // instead of forcing the caller to contiguous-ize first (#1003, #988).
+          checkCudaErrors(cudaSetDevice(Rt.device()));
+          linalg_internal::cuMul_dispatch(out._impl->storage()._impl, left._impl->storage()._impl,
+                                          right._impl->storage()._impl,
+                                          out._impl->storage()._impl->size(), left._impl->shape(),
+                                          left._impl->invmapper(), right._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
