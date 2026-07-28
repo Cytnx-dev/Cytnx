@@ -19,16 +19,12 @@
 
 namespace cytnx {
 
-  // A scalar-like operand for the free Tensor / UniTensor arithmetic and comparison operators
-  // (`+ - * / % ==`). It admits exactly the types those operators are specialized for: the cytnx
-  // dtype scalars (CytnxType), cytnx::Scalar, and the Tensor / Scalar element proxies. Constraining
-  // the operators keeps arbitrary std / user-defined types from silently becoming viable Cytnx
-  // arithmetic operands through implicit conversion (#1003, operator hygiene -- Ian's note).
-  template <class T>
-  concept cytnx_scalar_like =
-    CytnxType<std::remove_cvref_t<T>> || std::is_same_v<std::remove_cvref_t<T>, Scalar> ||
-    std::is_same_v<std::remove_cvref_t<T>, Tensor::Tproxy> ||
-    std::is_same_v<std::remove_cvref_t<T>, Scalar::Sproxy>;
+  // The scalar-like operand concepts (cytnx_scalar_value, cytnx_scalar_like,
+  // cytnx_unitensor_scalar_like) are defined in Tensor.hpp, which this header includes. They must
+  // be declared there because cytnx_scalar_like names Tensor::Tproxy, and because Tensor.hpp
+  // forward-declares the constrained `Tensor <op> T` operators -- those forward declarations have
+  // to carry the identical constraint or they form a distinct, unconstrained overload set
+  // (#1003, operator hygiene -- Ian's note).
 
   /**
    * @brief The addition operator between two UniTensor.
@@ -65,7 +61,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -77,7 +73,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -104,7 +100,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -116,7 +112,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -143,7 +139,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -155,7 +151,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -182,7 +178,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -194,7 +190,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -218,7 +214,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_scalar_value T>
   cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -230,7 +226,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_scalar_value T>
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -3340,7 +3336,7 @@ namespace cytnx {
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const T &lc, const Tensor &Rt)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_scalar_value T>
   Tensor operator%(const T &lc, const Tensor &Rt);
 
   /**
@@ -3352,7 +3348,7 @@ namespace cytnx {
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const Tensor &Lt, const T &rc)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_scalar_value T>
   Tensor operator%(const Tensor &Lt, const T &rc);
 
   //----------------------------------
@@ -3376,7 +3372,7 @@ namespace cytnx {
    * @return [Tensor] the result of comparison.
    * @see linalg::Cpr(const T &lc, const Tensor &Rt)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_scalar_value T>
   Tensor operator==(const T &lc, const Tensor &Rt);
 
   /**
@@ -3388,7 +3384,7 @@ namespace cytnx {
    * @return [Tensor] the result of comparison.
    * @see linalg::Cpr(const Tensor &Lt, const T &rc)
    */
-  template <cytnx_scalar_like T>
+  template <cytnx_scalar_value T>
   Tensor operator==(const Tensor &Lt, const T &rc);
 
 }  // namespace cytnx
