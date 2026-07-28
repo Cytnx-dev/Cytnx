@@ -27,15 +27,26 @@ else()
 endif()
 
 message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}" )
-# Search both cuTENSOR library layouts: 2.x tarballs place the libraries
-# directly under lib/, while older tarballs and apt use a per-CUDA-major
-# subdir (lib/<cuda-major>, e.g. lib/11, lib/12, lib/13). Listing both as
-# find_library PATH_SUFFIXES resolves either layout for any CUDA major. The
-# older minor-specific lib/10.2 and lib/11.0 special-cases were removed; the
-# generic lib/<major> covers them (apt multiarch paths remain, issue #946).
-# The CUDA-version floor is a separate policy decision (issue #962), enforced
-# in CMakeLists.txt rather than gated here, so this finder stays policy-free.
+# Search every cuTENSOR library layout: 2.x tarballs place the libraries
+# directly under lib/, while older tarballs and apt use a per-CUDA-major subdir
+# (lib/<cuda-major>, e.g. lib/11, lib/12, lib/13). The older minor-specific
+# lib/10.2 and lib/11.0 special-cases were removed; the generic lib/<major>
+# covers them (apt multiarch paths remain, issue #946). The CUDA-version floor
+# is a separate policy decision (issue #962), enforced in CMakeLists.txt rather
+# than gated here, so this finder stays policy-free.
+#
+# The per-major directory records which CUDA major the libraries were *built*
+# for, which need not equal the host toolkit's major: a cuTENSOR built for CUDA
+# 12 ships lib/12 and is usable from a CUDA 13 host. Searching only
+# lib/${CUDAToolkit_VERSION_MAJOR} therefore misses valid installs, so glob for
+# the per-major directories this install actually has and append them, highest
+# first. lib/ and the host major stay at the front so an exact match still wins.
 set(CUTNLIB_DIR lib lib/${CUDAToolkit_VERSION_MAJOR})
+file(GLOB _cutensor_major_dirs RELATIVE "${CUTENSOR_ROOT}" "${CUTENSOR_ROOT}/lib/[0-9]*")
+list(SORT _cutensor_major_dirs COMPARE NATURAL ORDER DESCENDING)
+list(APPEND CUTNLIB_DIR ${_cutensor_major_dirs})
+list(REMOVE_DUPLICATES CUTNLIB_DIR)
+message(STATUS "cuTENSOR library search suffixes: ${CUTNLIB_DIR}")
 
 set(CUTENSOR_INCLUDE_DIRS ${CUTENSOR_ROOT}/include)
 
