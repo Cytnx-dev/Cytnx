@@ -83,9 +83,11 @@ def repair(wheel: Path, destination: Path) -> None:
         "--add-path",
         ";".join(str(path) for path in search_paths),
         # conda-forge's libblas.dll and liblapack.dll export symbols through
-        # literal openblas.dll forwarders. delvewheel rewrites import tables,
-        # but not PE export-forwarder strings, so this basename must remain
-        # stable in the repaired wheel.
+        # literal openblas.dll forwarders. delvewheel cannot discover that
+        # dependency from PE import tables, so force its inclusion and keep
+        # the basename stable in the repaired wheel.
+        "--include",
+        "openblas.dll",
         "--no-mangle",
         "openblas.dll",
     ]
