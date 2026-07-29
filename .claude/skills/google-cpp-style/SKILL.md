@@ -54,7 +54,7 @@ existing tree predates the convention.
   `Storage`, `UniTensor`, `std::vector`, `std::string`, containers.
 - **C++20 / CUDA 20 are available and expected** (`CMAKE_CXX_STANDARD 20`,
   `CMAKE_CUDA_STANDARD 20`). Use them; never add C++17 back-compat guards or
-  workarounds (see `GEMINI.md`).
+  workarounds (see `AGENTS.md`).
 
 ## Google naming reference (baseline)
 

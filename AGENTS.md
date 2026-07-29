@@ -2,11 +2,8 @@
 
 Cytnx is a C++ tensor-network library with CUDA acceleration and pybind11 Python
 bindings. This file is the canonical operational contract for anyone — human or
-agent — working in Cytnx; edit only this file. `CLAUDE.md` pulls it in with
-`@AGENTS.md`, so Claude Code picks it up automatically. The Gemini review bot
-reads `GEMINI.md` (review-specific reminders); keep it in sync when review
-guidance changes. For *what* to work on, see issue #759; this file is only about
-working *correctly*.
+agent — working in Cytnx. For *what* to work on, see issue #759; this file is
+only about working *correctly*.
 
 ## Skills
 
@@ -81,8 +78,13 @@ The rules agents most often get wrong:
   `complex<double>` are never faster by reference in Cytnx (a value rides in
   registers; `const&` forces a stack spill + indirection). Reserve `const&` for
   large objects (`Tensor`, `Storage`, `UniTensor`, containers).
-- **C++20 / CUDA 20 are the standard** — use them; never add C++17-compat
-  workarounds.
+- **C++20 / CUDA 20 are the standard** (`CMAKE_CXX_STANDARD` and
+  `CMAKE_CUDA_STANDARD` are both `20`). Concepts, `<bit>`, designated
+  initializers, `constexpr` algorithms, and `cuda::std::*` are all fair game;
+  never add C++17-compat workarounds or `#if __cplusplus` guards.
+- **Complex scalars in device code are `cuda::std::complex<T>`** — not
+  `cuComplex` / `cuDoubleComplex`, not host `std::complex`, not
+  `thrust::complex`.
 
 ### Robust C++ in touched code
 
@@ -179,7 +181,8 @@ Green locally before opening a PR. CI enforces:
   scalar RHS must stay CPU-resident (#988).
 - **Raise errors via `cytnx_error_msg(cond, "fmt", …)`** (throws `cytnx::error`,
   surfaced in Python as `cytnx.CytnxError`); the function name comes from
-  `CYTNX_FUNC_NAME`.
+  `CYTNX_FUNC_NAME`. House style is `if (cond) cytnx_error_msg(…)` with a
+  trailing `"\n"` in the message — not a bare `throw` or `assert`.
 - **Dispatch direction:** the codebase is migrating from function-lookup tables to
   `std::variant`-based dispatch (#650, #938). Follow that pattern for new dispatch;
   do not add lookup tables.
