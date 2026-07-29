@@ -15,7 +15,7 @@ description: >-
 ## `scripts/build_preset.sh` — the one entry point
 
 ```sh
-S=.claude/skills/build-test-workflow/scripts/build_preset.sh
+S=.agents/skills/build-test-workflow/scripts/build_preset.sh
 "$S" <preset> [--target <target>] [--test [args...]]
 ```
 

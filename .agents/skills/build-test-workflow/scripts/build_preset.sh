@@ -115,7 +115,12 @@ cd "${repo_root}"
 # predating this script) would otherwise point CMake at a
 # strip-coverage-launcher.sh that doesn't exist next to the copy -- the
 # real repo checkout always has it at this fixed path.
-coverage_launcher="${repo_root}/.claude/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
+coverage_launcher="${repo_root}/.agents/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
+# Revisions whose skills sit under .claude/skills/ rather than .agents/skills/
+# are still valid benchmark columns, so fall back to that layout.
+if [[ ! -f "${coverage_launcher}" ]]; then
+  coverage_launcher="${repo_root}/.claude/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
+fi
 
 build_dir="build/${preset}"
 venv_dir="build/${preset}-venv"

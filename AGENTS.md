@@ -7,17 +7,18 @@ only about working *correctly*.
 
 ## Skills
 
-Task-specific playbooks live in [`.claude/skills/`](.claude/skills/), one
-directory per skill. Claude Code loads them by name; every other agent reads the
-linked `SKILL.md` directly. Use them instead of re-deriving commands or rules:
+Task-specific playbooks live in [`.agents/skills/`](.agents/skills/), one
+directory per skill, in the interoperable Agent Skills layout that Codex, Gemini
+CLI, and Claude Code all discover. Use them instead of re-deriving commands or
+rules:
 
-- [`build-test-workflow`](.claude/skills/build-test-workflow/SKILL.md) — before
+- [`build-test-workflow`](.agents/skills/build-test-workflow/SKILL.md) — before
   any build or test run (any preset, C++ or Python, with or without a GPU).
-- [`cross-revision-benchmark`](.claude/skills/cross-revision-benchmark/SKILL.md)
+- [`cross-revision-benchmark`](.agents/skills/cross-revision-benchmark/SKILL.md)
   — before making or checking any performance claim.
-- [`google-cpp-style`](.claude/skills/google-cpp-style/SKILL.md) — writing or
+- [`google-cpp-style`](.agents/skills/google-cpp-style/SKILL.md) — writing or
   reviewing C++/CUDA (`.cpp`/`.hpp`/`.cu`).
-- [`google-python-style`](.claude/skills/google-python-style/SKILL.md) — writing
+- [`google-python-style`](.agents/skills/google-python-style/SKILL.md) — writing
   or reviewing Python (`cytnx/`, `pytests/`, `tools/`).
 
 ## Build
@@ -196,7 +197,7 @@ Green locally before opening a PR. CI enforces:
 - `cytnx/` — Python package wrapping the compiled `.so`.
 - `tests/` — C++ gtest (`tests/gpu/` = CUDA suite); `pytests/` — Python tests.
 - `CMakePresets.json` — every build configuration.
-- `.claude/skills/` — the shared agent skills listed above.
+- `.agents/skills/` — the shared agent skills listed above.
 
 ## See also
 
