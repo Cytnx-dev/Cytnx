@@ -132,7 +132,7 @@ There are two methods how you can set-up all the dependencies before starting th
         3. Make sure libblas=mkl (you can check using *$conda list | grep libblas*)
 
 
-3. In addition, if you want to have GPU support (compile with ``-DUSE_CUDA=ON``), then additional packages need to be installed:
+3. In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:
 
 .. .. code-block:: shell
 
@@ -140,33 +140,19 @@ There are two methods how you can set-up all the dependencies before starting th
 
 .. code-block:: shell
 
-    $conda install -c nvidia cuda cutensor cuquantum
+    $conda install -c nvidia cuda
 
-.. note::
+If cutensor shall be used as well (compile option -DUSE_CUTENSOR=ON), then further install the following:
 
-    **A CUDA build needs cuTENSOR and cuQuantum as well, not just the CUDA toolkit.**
-    Every CUDA configuration Cytnx ships enables all three: the ``openblas-cuda`` preset
-    (and ``mkl-cuda`` / ``debug-openblas-cuda`` / ``debug-mkl-cuda``, which inherit it)
-    sets ``USE_CUDA``, ``USE_CUTENSOR`` and ``USE_CUQUANTUM`` to ``ON``, and so do the
-    GPU CI job and the published ``cytnx-cuda`` wheels.
+.. code-block:: shell
 
-    ``-DUSE_CUTENSOR=ON`` and ``-DUSE_CUQUANTUM=ON`` each additionally **require** the
-    corresponding install root to be set, either in the environment or on the command
-    line. Configuring without them fails with::
+    $conda install -c nvidia cutensor
 
-        Error: Cache variable 'CUTENSOR_ROOT' is required under dependency conditions
-        (USE_CUTENSOR) but its value is empty.
+Similarly, cuqauantum (compile option -DUSE_CUTENSOR=ON), requires:
 
-    With the conda packages above, both roots are your conda prefix:
+.. code-block:: shell
 
-    .. code-block:: shell
-
-        $export CUTENSOR_ROOT=$CONDA_PREFIX
-        $export CUQUANTUM_ROOT=$CONDA_PREFIX
-
-    Each root is expected to contain ``include/`` and ``lib/`` subdirectories. cuTENSOR
-    2.x is required; ``lib/`` may either hold the libraries directly or use a
-    per-CUDA-major subdirectory (``lib/12``, ``lib/13``) — both layouts are searched.
+    $conda install -c nvidia cuquantum
 
 **Option B. Install dependencies via system package manager**
 
@@ -240,7 +226,7 @@ The following are the available compiling option flags that you can specify in *
 +------------------------+-------------------+------------------------------------+
 |       options          | default           |          description               |
 +------------------------+-------------------+------------------------------------+
-| -DCMAKE_INSTALL_PREFIX | ~/.local/cytnx    | Install destination of the library |
+| -DCMAKE_INSTALL_PREFIX | /usr/local/cytnx  | Install destination of the library |
 +------------------------+-------------------+------------------------------------+
 | -DBUILD_PYTHON         |   ON              | Compile and install Python API     |
 +------------------------+-------------------+------------------------------------+
@@ -255,54 +241,6 @@ The following are the available compiling option flags that you can specify in *
 | -DUSE_HPTT             |   OFF             | Accelerate tensor transpose with   |
 |                        |                   | hptt                               |
 +------------------------+-------------------+------------------------------------+
-| -DBACKEND_TORCH        |   OFF             | Use PyTorch as the tensor backend  |
-|                        |                   | instead of the native backend.     |
-|                        |                   | Forces USE_MKL/USE_HPTT/USE_CUDA   |
-|                        |                   | off.                               |
-+------------------------+-------------------+------------------------------------+
-
-.. note::
-
-    The defaults above are what plain ``cmake`` uses. Building through a preset
-    (``cmake --preset openblas-cuda``, see ``CMakePresets.json``) overrides several of
-    them — in particular the CUDA presets turn ``USE_CUTENSOR`` and ``USE_CUQUANTUM``
-    on. ``cmake -L <build dir>`` shows the values actually in effect.
-
-Additional options for CUDA if -DUSE_CUDA=on:
-
-+-------------------------+-------------------+------------------------------------+
-|       options           | default           |          description               |
-+-------------------------+-------------------+------------------------------------+
-| -DUSE_CUTENSOR          |  OFF              | Accelerate tensor contraction with |
-|                         |                   | cuTENSOR (>= 2.0). Requires        |
-|                         |                   | CUTENSOR_ROOT. ON in every CUDA    |
-|                         |                   | preset.                            |
-+-------------------------+-------------------+------------------------------------+
-| -DUSE_CUQUANTUM         |  OFF              | Enable cuQuantum (cuTensorNet /    |
-|                         |                   | cuStateVec). Requires              |
-|                         |                   | CUQUANTUM_ROOT. ON in every CUDA   |
-|                         |                   | preset. GPU QR is only available   |
-|                         |                   | with this on; Gesvd_truncate also  |
-|                         |                   | routes through cuTensorNet rather  |
-|                         |                   | than cuSOLVER.                     |
-+-------------------------+-------------------+------------------------------------+
-| -DCUTENSOR_ROOT         |  (unset)          | Install root of cuTENSOR. Required |
-|                         |                   | when USE_CUTENSOR=ON. May also be  |
-|                         |                   | given as an environment variable.  |
-+-------------------------+-------------------+------------------------------------+
-| -DCUQUANTUM_ROOT        |  (unset)          | Install root of cuQuantum.         |
-|                         |                   | Required when USE_CUQUANTUM=ON.    |
-|                         |                   | May also be given as an            |
-|                         |                   | environment variable.              |
-+-------------------------+-------------------+------------------------------------+
-
-.. warning::
-
-    If ``CUTENSOR_ROOT`` or ``CUQUANTUM_ROOT`` is exported in your environment, that
-    value currently takes precedence over the ``-D`` flag on the command line, so an
-    explicit ``-DCUTENSOR_ROOT=...`` is silently ignored. Conda environments export
-    ``CUQUANTUM_ROOT`` by default. Until this is fixed (see issue #1129), either unset
-    the environment variable or set it to the path you intend to use.
 
 Additional options for HPTT if -DUSE_HPTT=on:
 
