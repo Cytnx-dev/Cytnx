@@ -2,10 +2,10 @@
 
 Guidance for Gemini Code Assist reviews of this repository.
 
-`CLAUDE.md` (symlinked as `AGENTS.md`) is the canonical guide for anyone — human
-or agent — working in Cytnx. Read it first. This file is a short, focused list of
-review-specific reminders: the recurring false positives to **stop raising**, and
-the things actually worth flagging.
+`AGENTS.md` is the canonical guide for anyone — human or agent — working in
+Cytnx (`CLAUDE.md` imports it with `@AGENTS.md`). Read it first. This file is a
+short, focused list of review-specific reminders: the recurring false positives
+to **stop raising**, and the things actually worth flagging.
 
 ## Hard project constraints — do not suggest changing these
 

@@ -83,7 +83,7 @@ target:
 ## How much to run, when
 
 - **While iterating:** only the affected gtest suite / pytest file.
-- **Before push / PR:** the full gates in `CLAUDE.md` — ctest for both CPU
+- **Before push / PR:** the full gates in `AGENTS.md` — ctest for both CPU
   debug presets, `pytest pytests/` when Python-facing code changed, the
   CUDA compile check when GPU code changed, and the GPU suite when a GPU is
   present.
