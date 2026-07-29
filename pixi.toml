@@ -91,7 +91,7 @@ build = { cmd = "tools\\activate_windows.bat cmake --build build/windows-mkl-cpu
 # to retain one initialized native runtime and keep local test runs practical.
 test-cpp = { cmd = "..\\tools\\activate_windows.bat ..\\build\\windows-mkl-cpu\\tests\\test_main.exe", cwd = "tests", depends-on = ["build"] }
 
-install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/windows-mkl-cpu-editable --config-settings=cmake.args=--preset=mkl-cpu", depends-on = ["setup", "prepare-windows"] }
+install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/windows-mkl-cpu-editable --config-settings=cmake.args=--preset=mkl-cpu --config-settings=cmake.args=-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF", depends-on = ["setup", "prepare-windows"] }
 test-python = { cmd = "tools\\activate_windows.bat python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
 format = "tools\\activate_windows.bat pre-commit run --all-files"
 
@@ -122,7 +122,7 @@ cuda-doctor = { cmd = "tools\\activate_windows.bat --cuda-doctor", depends-on = 
 configure-cuda = { cmd = "tools\\activate_windows.bat cmake --preset mkl-cuda -B build/windows-mkl-cuda -DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DUSE_CUQUANTUM=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF", depends-on = ["setup", "prepare-cuda"] }
 build-cuda = { cmd = "tools\\activate_windows.bat cmake --build build/windows-mkl-cuda --parallel 2", depends-on = ["configure-cuda"] }
 
-install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/windows-mkl-cuda-editable --config-settings=cmake.args=--preset=mkl-cuda", depends-on = ["setup", "prepare-cuda"] }
+install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/windows-mkl-cuda-editable --config-settings=cmake.args=--preset=mkl-cuda --config-settings=cmake.args=-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF", depends-on = ["setup", "prepare-cuda"] }
 
 [environments]
 default = { features = ["python310", "mkl"], solve-group = "windows-mkl" }
