@@ -1,5 +1,6 @@
 #include "cuGeSvd_internal.hpp"
 #include "cuConj_inplace_internal.hpp"
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
 
 namespace cytnx {
 
@@ -22,54 +23,59 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
+      // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
+      // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
+      utils_internal::CusolverDnHandle cusolverH;
 
-      cuDoubleComplex *Mij;
-      checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
+      utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
-        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
+      // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
+      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
+      // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
+      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_UMem.get();
+        }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vTMem.get();
+        }
       }
-      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
-      checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));
+      utils_internal::GesvdjInfo gesvdj_params;
       // checkCudaErrors(cusolverDnXgesvdjSetTolerance(gesvdj_params, tol));
       // checkCudaErrors(cusolverDnXgesvdjSetMaxSweeps(gesvdj_params, max_sweeps));
 
       cytnx_int32 lwork = 0;
-      void *d_work = nullptr;
       checkCudaErrors(cusolverDnZgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA, (cytnx_double *)S->data(),
-        (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params));
+        cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(), ldA, (cytnx_double *)S->data(),
+        (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
-      checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
+      utils_internal::DeviceBuffer<data_type> d_work(lwork);
 
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
+      checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnZgesvdj(cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA,
-                                        (cytnx_double *)S->data(), (d_data_type *)vTMem, ldu,
-                                        (d_data_type *)UMem, ldvT, (d_data_type *)d_work, lwork,
-                                        devinfo, gesvdj_params));
+      checkCudaErrors(cusolverDnZgesvdj(cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(),
+                                        ldA, (cytnx_double *)S->data(), (d_data_type *)vTMem, ldu,
+                                        (d_data_type *)UMem, ldvT, (d_data_type *)d_work.get(),
+                                        lwork, devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cd(U, M * min);
@@ -77,22 +83,12 @@ namespace cytnx {
 
       cytnx_int32 info;
       // get info
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(
         info != 0, "%s %d %s", "Error in cuBlas function 'cusolverDnZgesvdj': cuBlas INFO = ", info,
         "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
-
-      checkCudaErrors(cudaFree(d_work));
-      checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(UMem));
-      }
-      if (vTMem != nullptr and vT->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(vTMem));
-      }
-      checkCudaErrors(cudaFree(devinfo));
-      checkCudaErrors(cusolverDnDestroy(cusolverH));
     }
     void cuGeSvd_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
                              boost::intrusive_ptr<Storage_base> &U,
@@ -110,54 +106,59 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
+      // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
+      // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
+      utils_internal::CusolverDnHandle cusolverH;
 
-      cuDoubleComplex *Mij;
-      checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
+      utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
-        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
+      // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
+      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
+      // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
+      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_UMem.get();
+        }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vTMem.get();
+        }
       }
-      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
-      checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));
+      utils_internal::GesvdjInfo gesvdj_params;
       // checkCudaErrors(cusolverDnXgesvdjSetTolerance(gesvdj_params, tol));
       // checkCudaErrors(cusolverDnXgesvdjSetMaxSweeps(gesvdj_params, max_sweeps));
 
       cytnx_int32 lwork = 0;
-      void *d_work = nullptr;
       checkCudaErrors(cusolverDnCgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA, (cytnx_float *)S->data(),
-        (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params));
+        cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(), ldA, (cytnx_float *)S->data(),
+        (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
-      checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
+      utils_internal::DeviceBuffer<data_type> d_work(lwork);
 
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
+      checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnCgesvdj(cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA,
-                                        (cytnx_float *)S->data(), (d_data_type *)vTMem, ldu,
-                                        (d_data_type *)UMem, ldvT, (d_data_type *)d_work, lwork,
-                                        devinfo, gesvdj_params));
+      checkCudaErrors(cusolverDnCgesvdj(cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(),
+                                        ldA, (cytnx_float *)S->data(), (d_data_type *)vTMem, ldu,
+                                        (d_data_type *)UMem, ldvT, (d_data_type *)d_work.get(),
+                                        lwork, devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cf(U, M * min);
@@ -165,22 +166,12 @@ namespace cytnx {
 
       cytnx_int32 info;
       // get info
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(
         info != 0, "%s %d %s", "Error in cuBlas function 'cusolverDnCgesvdj': cuBlas INFO = ", info,
         "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
-
-      checkCudaErrors(cudaFree(d_work));
-      checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(UMem));
-      }
-      if (vTMem != nullptr and vT->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(vTMem));
-      }
-      checkCudaErrors(cudaFree(devinfo));
-      checkCudaErrors(cusolverDnDestroy(cusolverH));
     }
     void cuGeSvd_internal_d(const boost::intrusive_ptr<Storage_base> &in,
                             boost::intrusive_ptr<Storage_base> &U,
@@ -197,76 +188,71 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
+      // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
+      // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
+      utils_internal::CusolverDnHandle cusolverH;
 
-      cuDoubleComplex *Mij;
-      checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
+      utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
-        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
+      // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
+      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
+      // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
+      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_UMem.get();
+        }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vTMem.get();
+        }
       }
-      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
-      checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));
+      utils_internal::GesvdjInfo gesvdj_params;
       // checkCudaErrors(cusolverDnXgesvdjSetTolerance(gesvdj_params, tol));
       // checkCudaErrors(cusolverDnXgesvdjSetMaxSweeps(gesvdj_params, max_sweeps));
 
       cytnx_int32 lwork = 0;
-      void *d_work = nullptr;
       checkCudaErrors(cusolverDnDgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->data(),
-        (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params));
+        cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(), ldA, (data_type *)S->data(),
+        (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
-      checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
+      utils_internal::DeviceBuffer<data_type> d_work(lwork);
 
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
+      checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnDgesvdj(cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA,
-                                        (data_type *)S->data(), (data_type *)vTMem, ldu,
-                                        (data_type *)UMem, ldvT, (data_type *)d_work, lwork,
-                                        devinfo, gesvdj_params));
+      checkCudaErrors(cusolverDnDgesvdj(cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(),
+                                        ldA, (data_type *)S->data(), (data_type *)vTMem, ldu,
+                                        (data_type *)UMem, ldvT, (data_type *)d_work.get(), lwork,
+                                        devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
       }
 
       cytnx_int32 info;
       // get info
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(
         info != 0, "%s %d %s", "Error in cuBlas function 'cusolverDnDgesvdj': cuBlas INFO = ", info,
         "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
-
-      checkCudaErrors(cudaFree(d_work));
-      checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(UMem));
-      }
-      if (vTMem != nullptr and vT->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(vTMem));
-      }
-      checkCudaErrors(cudaFree(devinfo));
-      checkCudaErrors(cusolverDnDestroy(cusolverH));
     }
     void cuGeSvd_internal_f(const boost::intrusive_ptr<Storage_base> &in,
                             boost::intrusive_ptr<Storage_base> &U,
@@ -283,76 +269,71 @@ namespace cytnx {
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
 
       // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
+      // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
+      // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
+      utils_internal::CusolverDnHandle cusolverH;
 
-      cuDoubleComplex *Mij;
-      checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
+      utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
-        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
+      // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
+      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
+      // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
+      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_UMem.get();
+        }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
-          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vTMem.get();
+        }
       }
-      gesvdjInfo_t gesvdj_params = nullptr;
       // const double tol = 1.e-14;
       // const int max_sweeps = 100;
-      checkCudaErrors(cusolverDnCreateGesvdjInfo(&gesvdj_params));
+      utils_internal::GesvdjInfo gesvdj_params;
       // checkCudaErrors(cusolverDnXgesvdjSetTolerance(gesvdj_params, tol));
       // checkCudaErrors(cusolverDnXgesvdjSetMaxSweeps(gesvdj_params, max_sweeps));
 
       cytnx_int32 lwork = 0;
-      void *d_work = nullptr;
       checkCudaErrors(cusolverDnSgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->data(),
-        (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params));
+        cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(), ldA, (data_type *)S->data(),
+        (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
-      checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
+      utils_internal::DeviceBuffer<data_type> d_work(lwork);
 
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
+      checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnSgesvdj(cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA,
-                                        (data_type *)S->data(), (data_type *)vTMem, ldu,
-                                        (data_type *)UMem, ldvT, (data_type *)d_work, lwork,
-                                        devinfo, gesvdj_params));
+      checkCudaErrors(cusolverDnSgesvdj(cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(),
+                                        ldA, (data_type *)S->data(), (data_type *)vTMem, ldu,
+                                        (data_type *)UMem, ldvT, (data_type *)d_work.get(), lwork,
+                                        devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
       }
 
       cytnx_int32 info;
       // get info
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(
         info != 0, "%s %d %s", "Error in cuBlas function 'cusolverDnSgesvdj': cuBlas INFO = ", info,
         "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
-
-      checkCudaErrors(cudaFree(d_work));
-      checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(UMem));
-      }
-      if (vTMem != nullptr and vT->dtype() == Type.Void) {
-        checkCudaErrors(cudaFree(vTMem));
-      }
-      checkCudaErrors(cudaFree(devinfo));
-      checkCudaErrors(cusolverDnDestroy(cusolverH));
     }
 
   }  // namespace linalg_internal
