@@ -58,6 +58,9 @@ viz = [
 test = [
     "pytest",
     "pytest-cov",
+    # Exercises the release-manifest rewrite tests without making tomlkit a
+    # runtime dependency of either cytnx distribution.
+    "tomlkit",
 ]
 # Tooling for collecting C++ coverage from the build directory. Pure
 # Python and works against any GCC/Clang-produced .gcno/.gcda pair.
