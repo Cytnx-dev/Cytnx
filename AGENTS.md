@@ -126,7 +126,12 @@ Green locally before opening a PR. CI enforces:
 - Small, single-purpose commits following the
   [Conventional Commits](https://www.conventionalcommits.org) standard:
   `fix(linalg): …`, `refactor(Storage): …`, `test(Type): …`.
-- Attribute agent-authored commits with a `Co-Authored-By:` trailer naming the agent.
+- Attribute agent-authored commits with a `Co-Authored-By:` trailer naming the
+  agent. This is a commit-time convention, applied by whoever writes the commit,
+  and it is **not a reviewable property of a pull request**: a squashed or
+  synthetic revision constructed during review carries no trailer of its own, and
+  a squash-merge's trailer is composed at merge time. Automated reviewers must
+  not verify, flag, or request this trailer.
 - PR body: **problem → fix → testing**, and link the issue it closes.
 
 ## Guardrails (per #759)
