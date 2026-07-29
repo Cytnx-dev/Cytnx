@@ -104,7 +104,7 @@ namespace cytnx {
 
       // Shared per-device handle (#1132): cutensorCreate costs ~3.4 ms
       // per call and its plan cache dies with the handle.
-      cutensorHandle_t handle = utils_internal::GetCutensorHandle();
+      cutensorHandle_t handle = utils_internal::get_cutensor_handle();
 
       /**********************
        * Create Tensor Descriptors

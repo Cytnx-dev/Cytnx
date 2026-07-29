@@ -44,7 +44,7 @@ namespace cytnx {
      * torn down the context that owns them, making `cutensorDestroy` undefined behaviour. The
      * cost is bounded -- one handle per device actually used.
      */
-    cutensorHandle_t GetCutensorHandle();
+    cutensorHandle_t get_cutensor_handle();
 
 #endif
 

@@ -234,7 +234,7 @@ namespace cytnx {
 
       // Shared per-device handle (#1132): cutensorCreate costs ~3.4 ms
       // per call and its plan cache dies with the handle.
-      cutensorHandle_t handle = GetCutensorHandle();
+      cutensorHandle_t handle = get_cutensor_handle();
 
       // This is the default alignment of cudaMalloc() and may also be the default alignment of
       // cudaMallocManaged()

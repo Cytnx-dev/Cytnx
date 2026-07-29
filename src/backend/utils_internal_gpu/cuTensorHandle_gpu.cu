@@ -10,7 +10,7 @@
 namespace cytnx {
   namespace utils_internal {
 
-    cutensorHandle_t GetCutensorHandle() {
+    cutensorHandle_t get_cutensor_handle() {
       int device = -1;
       checkCudaErrors(cudaGetDevice(&device));
 
