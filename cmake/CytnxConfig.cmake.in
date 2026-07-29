@@ -9,30 +9,51 @@ find_dependency(Boost CONFIG REQUIRED)
 # while the installed target resolves those libraries in the consumer's active
 # toolchain environment.
 if(WIN32 AND NOT @BACKEND_TORCH@)
-  if(DEFINED BLA_VENDOR)
-    set(_cytnx_had_bla_vendor TRUE)
-    set(_cytnx_saved_bla_vendor "${BLA_VENDOR}")
-  else()
-    set(_cytnx_had_bla_vendor FALSE)
-  endif()
-  set(BLA_VENDOR "@BLA_VENDOR@")
-  find_dependency(LAPACK REQUIRED)
-  if(_cytnx_had_bla_vendor)
-    set(BLA_VENDOR "${_cytnx_saved_bla_vendor}")
-  else()
-    unset(BLA_VENDOR)
-  endif()
-  unset(_cytnx_had_bla_vendor)
-  unset(_cytnx_saved_bla_vendor)
+  block(SCOPE_FOR VARIABLES)
+    set(BLA_VENDOR "@BLA_VENDOR@")
+    find_dependency(LAPACK REQUIRED)
+  endblock()
 
-  find_library(_cytnx_arpack_library NAMES arpack REQUIRED)
+  find_library(cytnx_arpack_library NAMES arpack REQUIRED NO_CACHE)
+  if(NOT TARGET Cytnx::ARPACK)
+    add_library(Cytnx::ARPACK UNKNOWN IMPORTED)
+    set_target_properties(Cytnx::ARPACK PROPERTIES
+      IMPORTED_LOCATION "${cytnx_arpack_library}")
+  endif()
+
+  # MKL exposes LAPACKE through the LAPACK libraries. OpenBLAS installations
+  # may expose it through either a separate lapacke library or openblas itself.
+  if(NOT @USE_MKL@)
+    find_library(cytnx_lapacke_library NAMES lapacke openblas REQUIRED NO_CACHE)
+    if(NOT TARGET Cytnx::LAPACKE)
+      add_library(Cytnx::LAPACKE UNKNOWN IMPORTED)
+      set_target_properties(Cytnx::LAPACKE PROPERTIES
+        IMPORTED_LOCATION "${cytnx_lapacke_library}")
+    endif()
+  endif()
+  unset(cytnx_arpack_library)
+  unset(cytnx_lapacke_library)
 endif()
 
 # Conditional re-find of build-time PUBLIC imported-target deps. The @VAR@
 # tokens are expanded to the build-time value of each option when this package
 # configuration is emitted.
 if(@USE_CUDA@)
-  find_dependency(CUDAToolkit REQUIRED)
+  # A newer minor toolkit in the same major is compatible, but changing CUDA
+  # major can change the runtime ABI. Require at least the build toolkit's
+  # major/minor and reject a different major instead of silently binding an
+  # installed Cytnx archive to an incompatible CUDA runtime.
+  find_dependency(CUDAToolkit
+    @CYTNX_CUDA_TOOLKIT_VERSION_MAJOR@.@CYTNX_CUDA_TOOLKIT_VERSION_MINOR@ REQUIRED)
+  if(NOT CUDAToolkit_VERSION_MAJOR EQUAL @CYTNX_CUDA_TOOLKIT_VERSION_MAJOR@)
+    set(Cytnx_FOUND FALSE)
+    set(Cytnx_NOT_FOUND_MESSAGE
+      "Cytnx was built with CUDA "
+      "@CYTNX_CUDA_TOOLKIT_VERSION_MAJOR@.@CYTNX_CUDA_TOOLKIT_VERSION_MINOR@ "
+      "and requires that CUDA major, but CMake found ${CUDAToolkit_VERSION}. "
+      "Set CUDAToolkit_ROOT to a compatible toolkit.")
+    return()
+  endif()
 endif()
 
 if(@USE_HPTT@)
@@ -48,7 +69,7 @@ if(@BACKEND_TORCH@)
 endif()
 
 if(@USE_CUTENSOR@ OR @USE_CUQUANTUM@)
-  set(_cytnx_saved_module_path "${CMAKE_MODULE_PATH}")
+  set(cytnx_saved_module_path "${CMAKE_MODULE_PATH}")
   list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
   if(@USE_CUTENSOR@)
     find_dependency(CUTENSOR REQUIRED)
@@ -56,8 +77,8 @@ if(@USE_CUTENSOR@ OR @USE_CUQUANTUM@)
   if(@USE_CUQUANTUM@)
     find_dependency(CUQUANTUM REQUIRED)
   endif()
-  set(CMAKE_MODULE_PATH "${_cytnx_saved_module_path}")
-  unset(_cytnx_saved_module_path)
+  set(CMAKE_MODULE_PATH "${cytnx_saved_module_path}")
+  unset(cytnx_saved_module_path)
 endif()
 
 if(NOT TARGET Cytnx::cytnx)
@@ -65,8 +86,13 @@ if(NOT TARGET Cytnx::cytnx)
 endif()
 
 if(WIN32 AND NOT @BACKEND_TORCH@)
+  set(cytnx_windows_link_dependencies LAPACK::LAPACK Cytnx::ARPACK)
+  if(NOT @USE_MKL@)
+    list(APPEND cytnx_windows_link_dependencies Cytnx::LAPACKE)
+  endif()
   set_property(TARGET Cytnx::cytnx APPEND PROPERTY
-    INTERFACE_LINK_LIBRARIES LAPACK::LAPACK "${_cytnx_arpack_library}")
+    INTERFACE_LINK_LIBRARIES ${cytnx_windows_link_dependencies})
+  unset(cytnx_windows_link_dependencies)
 endif()
 
 if(@USE_CUDA@)
@@ -79,23 +105,25 @@ if(@USE_CUDA@)
   # includes — this stays relocatable because the path comes from the consumer's
   # toolkit, not the build machine. Detection is shared with the in-tree build.
   include("${CMAKE_CURRENT_LIST_DIR}/CytnxDetectCCCL.cmake")
-  cytnx_detect_cccl_include_dir(_cytnx_cccl_dir)
-  if(_cytnx_cccl_dir)
+  cytnx_detect_cccl_include_dir(cytnx_cccl_dir)
+  if(cytnx_cccl_dir)
     set_property(TARGET Cytnx::cytnx APPEND PROPERTY
-      INTERFACE_INCLUDE_DIRECTORIES "${_cytnx_cccl_dir}")
+      INTERFACE_INCLUDE_DIRECTORIES "${cytnx_cccl_dir}")
   endif()
+  unset(cytnx_cccl_dir)
   if(NOT TARGET CUDA::cudadevrt)
-    find_library(_cytnx_cudadevrt_library
+    find_library(cytnx_cudadevrt_library
       NAMES cudadevrt
       HINTS "${CUDAToolkit_LIBRARY_DIR}" "${CUDAToolkit_ROOT}"
       PATH_SUFFIXES lib/x64 lib64 lib
+      NO_CACHE
     )
-    if(NOT _cytnx_cudadevrt_library)
+    if(NOT cytnx_cudadevrt_library)
       message(FATAL_ERROR "Cytnx requires the CUDA device-runtime library (cudadevrt)")
     endif()
     set_property(TARGET Cytnx::cytnx APPEND PROPERTY
-      INTERFACE_LINK_LIBRARIES "${_cytnx_cudadevrt_library}")
-    unset(_cytnx_cudadevrt_library CACHE)
+      INTERFACE_LINK_LIBRARIES "${cytnx_cudadevrt_library}")
+    unset(cytnx_cudadevrt_library)
   endif()
 endif()
 

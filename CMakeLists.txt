@@ -276,17 +276,14 @@ if(USE_CUDA)
     endif()
   endif()
   unset(_cytnx_user_set_cuda_architectures)
-  # Disable generation of "--option-file" flag in compile_commands.json.
-  # This workaround helps VSCode's cpptools extension correctly locate CUDA
-  # include files.
+  # Keep CUDA include flags visible in compile_commands.json so tools such as
+  # VSCode cpptools can locate them without expanding nvcc --options-file
+  # arguments. Leave CMake's object/library response-file decisions untouched,
+  # and keep all response-file defaults on Windows hosts where command-line
+  # limits apply regardless of the selected host compiler.
   # Refer to: https://discourse.cmake.org/t/cmake-target-include-directories-doesnt-export-to-compile-commands-json-when-using-cuda/10072/10
-  # Keep response files on Windows: MSVC and nvcc otherwise exceed the
-  # platform command-line limit on this template-heavy, multi-architecture
-  # build. The cpptools workaround is only safe on non-Windows generators.
-  if(NOT WIN32)
+  if(NOT CMAKE_HOST_WIN32)
     set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
-    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
-    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
   endif()
 endif()
 
@@ -608,6 +605,12 @@ write_basic_package_version_file(
 # CytnxConfig.cmake.in references the build options directly so the installed
 # Config re-finds the imported-target deps that match the Cytnx build. See the
 # template for the gating logic.
+set(CYTNX_CUDA_TOOLKIT_VERSION_MAJOR 0)
+set(CYTNX_CUDA_TOOLKIT_VERSION_MINOR 0)
+if(USE_CUDA)
+  set(CYTNX_CUDA_TOOLKIT_VERSION_MAJOR "${CUDAToolkit_VERSION_MAJOR}")
+  set(CYTNX_CUDA_TOOLKIT_VERSION_MINOR "${CUDAToolkit_VERSION_MINOR}")
+endif()
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
