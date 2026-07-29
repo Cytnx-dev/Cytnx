@@ -118,15 +118,11 @@ cd "${repo_root}"
 # cross-revision benchmark performs -- an in-tree path would vanish the moment
 # a revision without that layout, or without this skill at all, is checked out.
 coverage_launcher="${repo_root}/build/.agent-tools/strip-coverage-launcher.sh"
-for launcher_src in \
-  "${repo_root}/.agents/skills/build-test-workflow/scripts/strip-coverage-launcher.sh" \
-  "${repo_root}/.claude/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"; do
-  if [[ -f "${launcher_src}" ]]; then
-    mkdir -p "$(dirname "${coverage_launcher}")"
-    cp "${launcher_src}" "${coverage_launcher}"
-    break
-  fi
-done
+launcher_src="${repo_root}/.agents/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
+if [[ -f "${launcher_src}" ]]; then
+  mkdir -p "$(dirname "${coverage_launcher}")"
+  cp "${launcher_src}" "${coverage_launcher}"
+fi
 # A revision carrying no copy of its own reuses the one staged by an earlier
 # run; only a first run against such a revision has nothing to fall back on.
 if [[ ! -f "${coverage_launcher}" ]]; then
