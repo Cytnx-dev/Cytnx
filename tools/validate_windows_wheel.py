@@ -37,7 +37,7 @@ CUDA_DISTRIBUTIONS = (
 )
 
 
-def _installed_distribution() -> tuple[str, metadata.Distribution]:
+def installed_distribution() -> tuple[str, metadata.Distribution]:
     installed = []
     for name in ("cytnx-cuda", "cytnx"):
         try:
@@ -49,7 +49,7 @@ def _installed_distribution() -> tuple[str, metadata.Distribution]:
     return installed[0]
 
 
-def _clear_development_roots() -> None:
+def clear_development_roots() -> None:
     prefixes = []
     for key in (
         "CONDA_PREFIX",
@@ -78,7 +78,7 @@ def main() -> None:
     if sys.platform != "win32":
         raise SystemExit("this validation is only meaningful on Windows")
     subprocess.run([sys.executable, "-m", "pip", "check"], check=True)
-    distribution_name, distribution = _installed_distribution()
+    distribution_name, distribution = installed_distribution()
     is_cuda = distribution_name == "cytnx-cuda"
 
     if is_cuda:
@@ -96,7 +96,7 @@ def main() -> None:
                 f"{unexpectedly_bundled}"
             )
 
-    _clear_development_roots()
+    clear_development_roots()
     import cytnx
 
     tensor = cytnx.ones([2, 3])

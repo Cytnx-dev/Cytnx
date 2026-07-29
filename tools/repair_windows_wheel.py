@@ -30,7 +30,7 @@ CUDA_DLL_PATTERNS = (
 )
 
 
-def _wheel_distribution_name(wheel: Path) -> str:
+def wheel_distribution_name(wheel: Path) -> str:
     with zipfile.ZipFile(wheel) as archive:
         metadata_files = [
             name for name in archive.namelist() if name.endswith(".dist-info/METADATA")
@@ -58,7 +58,7 @@ def repair(wheel: Path, destination: Path) -> None:
         prefix / "Library" / "bin",
         prefix / "Library" / "mingw-w64" / "bin",
     ]
-    is_cuda = _wheel_distribution_name(wheel) == "cytnx-cuda"
+    is_cuda = wheel_distribution_name(wheel) == "cytnx-cuda"
     if is_cuda:
         site_packages = prefix / "Lib" / "site-packages"
         search_paths.extend(

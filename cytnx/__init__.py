@@ -2,7 +2,7 @@ from importlib import metadata as importlib_metadata
 import os,sys,warnings
 
 
-def _distribution_directory(distribution_name, relative_path):
+def distribution_directory(distribution_name, relative_path):
     """Return a DLL directory owned by an installed runtime distribution."""
     try:
         distribution = importlib_metadata.distribution(distribution_name)
@@ -12,7 +12,7 @@ def _distribution_directory(distribution_name, relative_path):
     return directory if os.path.isdir(directory) else None
 
 
-def _has_distribution(distribution_name):
+def has_distribution(distribution_name):
     try:
         importlib_metadata.distribution(distribution_name)
     except importlib_metadata.PackageNotFoundError:
@@ -20,7 +20,7 @@ def _has_distribution(distribution_name):
     return True
 
 
-def _register_windows_dll_directories():
+def register_windows_dll_directories():
     """Keep dependency DLL search handles alive for the extension import."""
     if sys.platform != "win32" or not hasattr(os, "add_dll_directory"):
         return []
@@ -31,10 +31,10 @@ def _register_windows_dll_directories():
     # dependencies. Resolve their exact installed locations before considering
     # developer environment variables, avoiding an incompatible system CUDA
     # earlier in the process search order.
-    cuda_wheel_directory = _distribution_directory(
+    cuda_wheel_directory = distribution_directory(
         "nvidia-cuda-runtime", os.path.join("nvidia", "cu13", "bin", "x86_64")
     )
-    cutensor_wheel_directory = _distribution_directory(
+    cutensor_wheel_directory = distribution_directory(
         "cutensor-cu13", os.path.join("cutensor", "bin")
     )
     if cuda_wheel_directory:
@@ -49,7 +49,7 @@ def _register_windows_dll_directories():
     # in that prefix could otherwise win. Editable cytnx development builds
     # still need the conda directories for BLAS/ARPACK and compiler runtimes.
     is_released_cuda_wheel = (
-        _has_distribution("cytnx-cuda")
+        has_distribution("cytnx-cuda")
         and cuda_wheel_directory is not None
         and cutensor_wheel_directory is not None
     )
@@ -99,7 +99,7 @@ def _register_windows_dll_directories():
     return handles
 
 
-_windows_dll_directory_handles = _register_windows_dll_directories()
+windows_dll_directory_handles = register_windows_dll_directories()
 from . import cytnx
 from .cytnx import *
 from .cytnx import __version__
