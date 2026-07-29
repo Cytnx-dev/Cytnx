@@ -35,11 +35,22 @@ reuse for benchmarks.
 Switch revisions in place in the main tree (`git checkout <rev>`) — never a
 fresh worktree, which starts with an empty build dir and forces a full
 rebuild; in-place checkout keeps `build/<preset>` incremental. Stash
-uncommitted work first and return to the original ref at the end. Per
-revision:
+uncommitted work first and return to the original ref at the end.
+
+Copy the launcher out of the tree **before the first checkout**. A revision
+being measured need not carry the script at all, and `git checkout` rewrites
+or deletes the in-tree copy underneath the run. The script locates the
+repository from the caller's cwd, not from its own path, so a copy anywhere
+works:
 
 ```sh
-S=.agents/skills/build-test-workflow/scripts/build_preset.sh
+S="$(mktemp -d)/build_preset.sh"
+cp .agents/skills/build-test-workflow/scripts/build_preset.sh "$S"
+```
+
+Then, per revision:
+
+```sh
 "$S" openblas-cpu --target benchmarks_main --test \
   --benchmark_repetitions=5 --benchmark_report_aggregates_only=true \
   --benchmark_filter='<pattern>' > /tmp/bm-<label>.txt
