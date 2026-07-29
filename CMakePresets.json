@@ -195,6 +195,16 @@
       "description": "Run tests for builds with CUDA support.",
       "configurePreset": "debug-openblas-cuda",
       "inherits": "cpu-only"
+    },
+    {
+      "name": "gpu-only",
+      "description": "Run only the GPU-labeled tests (tests/gpu/gpu_test_main) for builds with CUDA support.",
+      "inherits": "cpu-and-cuda",
+      "filter": {
+        "include": {
+          "label": "gpu"
+        }
+      }
     }
   ]
 }

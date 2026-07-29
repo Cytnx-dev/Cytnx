@@ -3878,12 +3878,12 @@ namespace cytnx {
         @warning It is recommended to use \ref permute_nosignflip(const std::vector<std::string>
        &mapper, const cytnx_int64 &rowrank) instead
         */
-    UniTensor permute_nosignflip(const std::initializer_list<char *> &mapper,
+    UniTensor permute_nosignflip(const std::initializer_list<const char *> &mapper,
                                  const cytnx_int64 &rowrank = -1) const {
-      std::vector<char *> mprs = mapper;
+      std::vector<const char *> mprs = mapper;
       std::vector<std::string> vs(mprs.size());
       transform(mprs.begin(), mprs.end(), vs.begin(),
-                [](char *x) -> std::string { return std::string(x); });
+                [](const char *x) -> std::string { return std::string(x); });
 
       return this->permute_nosignflip(vs, rowrank);
     }

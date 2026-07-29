@@ -6,8 +6,8 @@
   #define __Cpt_dbl cytnx_complex128 *
   #define __Cpt_flt cytnx_complex64 *
 #else
-  #define __Cpt_dbl __complex__ double *
-  #define __Cpt_flt __complex__ float *
+  #define __Cpt_dbl lapack_complex_double *
+  #define __Cpt_flt lapack_complex_float *
 #endif
 
 namespace cytnx {

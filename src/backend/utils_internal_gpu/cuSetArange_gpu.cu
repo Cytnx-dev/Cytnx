@@ -3,26 +3,30 @@
 namespace cytnx {
   namespace utils_internal {
 
+    // The linear index is computed once in 64-bit: `blockIdx.x * blockDim.x` is 32-bit and
+    // overflows past 2^32 elements. The value is `start + step * idx` -- the earlier generic
+    // kernel dropped the parentheses (`start + step * blk * dim + thread`), so the intra-block
+    // offset was added un-scaled by step and non-unit steps were ignored (#1070/#1076).
     template <class T>
     __global__ void cuSetArange_kernel(T *in, cytnx_double start, cytnx_double step,
                                        cytnx_uint64 Nelem) {
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        in[blockIdx.x * blockDim.x + threadIdx.x] =
-          start + step * blockIdx.x * blockDim.x + threadIdx.x;
+      const uint64_t idx = static_cast<uint64_t>(blockIdx.x) * blockDim.x + threadIdx.x;
+      if (idx < Nelem) {
+        in[idx] = start + step * idx;
       }
     }
     __global__ void cuSetArange_kernel(cuDoubleComplex *in, cytnx_double start, cytnx_double step,
                                        cytnx_uint64 Nelem) {
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        in[blockIdx.x * blockDim.x + threadIdx.x] =
-          make_cuDoubleComplex(start + step * (blockIdx.x * blockDim.x + threadIdx.x), 0);
+      const uint64_t idx = static_cast<uint64_t>(blockIdx.x) * blockDim.x + threadIdx.x;
+      if (idx < Nelem) {
+        in[idx] = make_cuDoubleComplex(start + step * idx, 0);
       }
     }
     __global__ void cuSetArange_kernel(cuFloatComplex *in, cytnx_double start, cytnx_double step,
                                        cytnx_uint64 Nelem) {
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        in[blockIdx.x * blockDim.x + threadIdx.x] =
-          make_cuFloatComplex(start + step * (blockIdx.x * blockDim.x + threadIdx.x), 0);
+      const uint64_t idx = static_cast<uint64_t>(blockIdx.x) * blockDim.x + threadIdx.x;
+      if (idx < Nelem) {
+        in[idx] = make_cuFloatComplex(start + step * idx, 0);
       }
     }
 

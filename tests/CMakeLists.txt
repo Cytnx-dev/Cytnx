@@ -42,6 +42,7 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  arange_test.cpp
   Type_test.cpp
   cytnx_error_test.cpp
   include_order_canary_test.cpp
@@ -67,6 +68,7 @@ add_executable(
   linalg_test/Gesvd_truncate_test.cpp
   linalg_test/Rsvd_test.cpp
   linalg_test/DtypePromotion_test.cpp
+  linalg_test/Outer_test.cpp
   linalg_test/TypedArithmeticCoverage_test.cpp
   linalg_test/Gemm_Batch_test.cpp
   linalg_test/Trace_test.cpp

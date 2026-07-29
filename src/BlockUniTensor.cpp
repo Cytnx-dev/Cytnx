@@ -1961,10 +1961,7 @@ namespace cytnx {
 
     // reshape each blocks, and update_inner_to_outer_idx:
     // process stride:
-    memcpy(&cb_stride[0], &cb_stride[1], sizeof(cytnx_uint64) * (cb_stride.size() - 1));
-    // for(int i=cb_stride.size()-2;i>=0;i--){
-    //     cb_stride[i] = cb_stride[i+1];
-    // }
+    std::copy(cb_stride.begin() + 1, cb_stride.end(), cb_stride.begin());
     cb_stride.back() = 1;
     for (int i = cb_stride.size() - 2; i >= 0; i--) {
       cb_stride[i] *= cb_stride[i + 1];
@@ -1992,13 +1989,8 @@ namespace cytnx {
       for (int i = idor + 1; i < idor + indicators.size(); i++) {
         this->_inner_to_outer_idx[b][idor] += this->_inner_to_outer_idx[b][i] * cb_stride[i - idor];
       }
-      if (idor + indicators.size() < this->_inner_to_outer_idx[b].size()) {
-        memcpy(
-          &this->_inner_to_outer_idx[b][idor + 1],
-          &this->_inner_to_outer_idx[b][idor + indicators.size()],
-          sizeof(cytnx_uint64) * (this->_inner_to_outer_idx[b].size() - idor - indicators.size()));
-      }
-      this->_inner_to_outer_idx[b].resize(this->rank());
+      auto &itoi = this->_inner_to_outer_idx[b];
+      itoi.erase(itoi.begin() + idor + 1, itoi.begin() + idor + indicators.size());
     }
 
     // change rowrank:

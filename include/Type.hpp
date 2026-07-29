@@ -2,6 +2,7 @@
 #define CYTNX_TYPE_H_
 
 #include <complex>
+#include <cstddef>
 #include <cstdint>
 #include <string>
 #include <type_traits>
@@ -15,6 +16,13 @@
 
 #ifdef UNI_GPU
   #include <cuda/std/complex>
+#endif
+
+// MSVC does not provide the POSIX signed-size type used by the Python
+// bindings. Match ssize_t to the signed counterpart of size_t without
+// redefining the native type on POSIX or MinGW toolchains.
+#if defined(_MSC_VER)
+using ssize_t = std::make_signed_t<std::size_t>;
 #endif
 
 #define MKL_Complex8 std::complex<float>
@@ -498,29 +506,6 @@ namespace cytnx {
     // helper typedef
     template <typename TL, typename TR>
     using type_promote_from_pointer_t = typename type_promote_from_pointer<TL, TR>::type;
-
-#ifdef UNI_GPU
-    // .. and we need a version where TL and TR are GPU device pointers
-    template <typename TL, typename TR>
-    using type_promote_gpu_t =
-      std::variant_alternative_t<Type_class::type_promote(variant_index_v<TL, Type_list_gpu>,
-                                                          variant_index_v<TR, Type_list_gpu>),
-                                 Type_list_gpu>;
-
-    template <typename TL, typename TR>
-    struct type_promote_from_gpu_pointer {
-      using type = void;
-    };
-
-    template <typename TL, typename TR>
-    struct type_promote_from_gpu_pointer<TL*, TR*> {
-      using type = type_promote_gpu_t<std::decay_t<TL>, std::decay_t<TR>>;
-    };
-
-    // helper typedef
-    template <typename TL, typename TR>
-    using type_promote_from_gpu_pointer_t = typename type_promote_from_gpu_pointer<TL, TR>::type;
-#endif
 
   };  // Type_class
   /// @endcond
