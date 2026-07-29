@@ -3,6 +3,7 @@
 #include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
 
 #include <vector>
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
 
@@ -30,7 +31,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1146): the info check below throws, so ownership -- not the cleanup
       // block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -67,7 +70,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH.get(), nullptr, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -94,7 +97,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH.get(), nullptr, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */
@@ -139,7 +142,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1146): the info check below throws, so ownership -- not the cleanup
       // block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -177,7 +182,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH.get(), nullptr, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -204,7 +209,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH.get(), nullptr, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */
@@ -248,7 +253,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1146): the info check below throws, so ownership -- not the cleanup
       // block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -286,7 +293,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH.get(), nullptr, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -313,7 +320,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH.get(), nullptr, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */
@@ -356,7 +363,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1146): the info check below throws, so ownership -- not the cleanup
       // block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -394,7 +403,7 @@ namespace cytnx {
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH.get(), nullptr, /* params */
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, nullptr, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                                                    S->data(), cuda_data_type, /* dataTypeU */
@@ -421,7 +430,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH.get(), nullptr, /* params */
+      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
                         S->data(), cuda_data_type, /* dataTypeU */

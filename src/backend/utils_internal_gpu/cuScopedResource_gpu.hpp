@@ -95,23 +95,11 @@ namespace cytnx {
       T *ptr = nullptr;
     };
 
-    /// Owns a cuSOLVER dense handle and destroys it on scope exit.
-    class CusolverDnHandle {
-     public:
-      CusolverDnHandle() { checkCudaErrors(cusolverDnCreate(&handle)); }
-
-      ~CusolverDnHandle() {
-        if (handle) cusolverDnDestroy(handle);
-      }
-
-      CusolverDnHandle(const CusolverDnHandle &) = delete;
-      CusolverDnHandle &operator=(const CusolverDnHandle &) = delete;
-
-      cusolverDnHandle_t get() const { return handle; }
-
-     private:
-      cusolverDnHandle_t handle = nullptr;
-    };
+    // [Note] There is no scoped cuSOLVER handle type here. #1146 originally gave the handle
+    // scope-bound ownership so a throwing `info` check could not leak it; #1144 then made handles
+    // shared per device and process-lifetime, which removes them from the set of leakable
+    // resources entirely rather than freeing them correctly. See
+    // `cuLibraryHandle_gpu.hpp::get_cusolverdn_handle`.
 
     /**
      * @brief Owns a `gesvdjInfo_t` (Jacobi SVD parameters) and destroys it on scope exit.
