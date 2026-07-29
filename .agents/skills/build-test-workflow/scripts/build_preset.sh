@@ -110,26 +110,12 @@ done
 repo_root="$(git rev-parse --show-toplevel)"
 cd "${repo_root}"
 
-# Staged under build/ rather than used in place. CMake bakes this absolute
-# path into the build dir's launcher properties at configure time, and every
-# later run of this script skips configuration when CMakeCache.txt exists, so
-# the generated build files keep invoking whatever path was stored. git never
-# touches build/, so a path under it stays valid across the checkouts a
-# cross-revision benchmark performs -- an in-tree path would vanish the moment
-# a revision without that layout, or without this skill at all, is checked out.
-coverage_launcher="${repo_root}/build/.agent-tools/strip-coverage-launcher.sh"
-launcher_src="${repo_root}/.agents/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
-if [[ -f "${launcher_src}" ]]; then
-  mkdir -p "$(dirname "${coverage_launcher}")"
-  cp "${launcher_src}" "${coverage_launcher}"
-fi
-# A revision carrying no copy of its own reuses the one staged by an earlier
-# run; only a first run against such a revision has nothing to fall back on.
-if [[ ! -f "${coverage_launcher}" ]]; then
-  echo "error: strip-coverage-launcher.sh is neither in this checkout nor staged" \
-    "at ${coverage_launcher}; run this script once from a revision that has it." >&2
-  exit 1
-fi
+# Resolved from repo_root, not the script's own location: a copy of this
+# script (e.g. cross-revision-benchmark's edge-case note for a revision
+# predating this script) would otherwise point CMake at a
+# strip-coverage-launcher.sh that doesn't exist next to the copy -- the
+# real repo checkout always has it at this fixed path.
+coverage_launcher="${repo_root}/.agents/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
 
 build_dir="build/${preset}"
 venv_dir="build/${preset}-venv"
