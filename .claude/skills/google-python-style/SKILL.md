@@ -27,7 +27,9 @@ below to new files and new code. Do not reformat unrelated code as churn.
 - **Module-level constants**: `CONSTANT_CASE` (`MAX_BOND_DIM`).
 - **Internal names**: a **single leading underscore** (`_helper`) marks module-
   or class-internal API; `__double_leading` only for genuine name mangling. Use a
-  trailing underscore solely to dodge a keyword clash (`class_`, `id_`).
+  trailing underscore solely to dodge a keyword clash (`class_`, `id_`). Cytnx's
+  ban on leading underscores (`AGENTS.md`, `google-cpp-style`) covers C++/CUDA
+  only — `_helper` stays correct in Python.
 - Avoid single-character names except loop counters/iterators; never `l`, `O`,
   `I`.
 

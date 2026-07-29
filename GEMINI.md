@@ -52,7 +52,9 @@ agent skills encode. For *review*, apply Google naming/design guidance to **new*
 code only:
 
 - New identifiers use snake_case; a **leading underscore is prohibited** in new
-  code (it was the old private-member convention and is being retired, #836).
+  C++ code (it was the old private-member convention and is being retired,
+  #836). This applies to C++/CUDA only — in Python, `_helper` is Google style's
+  marker for a module- or class-internal name, so do not flag it there.
 - Do **not** ask contributors to rename to match a file that is already
   inconsistent — much of the existing tree predates the convention. Flag Google
   deviations in *new* files, not churn in old ones.

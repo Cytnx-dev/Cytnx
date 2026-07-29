@@ -67,9 +67,11 @@ overrides; read them when writing or reviewing code.
 
 The rules agents most often get wrong:
 
-- **No leading underscore in new code** (strict). `_foo` was the old
-  private-member convention and is being retired (#836); new members/locals must
-  not start with `_`.
+- **No leading underscore in new C++ code** (strict). `_foo` is the retired
+  private-member convention (#836); new C++/CUDA members, helpers, and locals
+  must not start with `_`. **The ban is C++-only.** In Python a single leading
+  underscore is Google style's marker for a module- or class-internal name
+  (`_helper`) and is correct there — see `google-python-style`.
 - **snake_case for new identifiers**; type names stay `PascalCase`. Existing code
   is mixed — match a file's convention when it is consistent, don't propagate
   messy naming, and don't reformat old files as churn.
