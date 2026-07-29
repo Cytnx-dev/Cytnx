@@ -170,7 +170,10 @@ def rewrite_pyproject(
             "--preset=openblas-cuda",
             "-DUSE_CUQUANTUM=OFF",
             "-DUSE_HPTT=OFF",
-            "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON",
+            # Device LTO reaches nvlink but cannot load the LTO backend from
+            # NVIDIA's Windows PyPI layout. Keep IPO disabled on Windows;
+            # Linux retains its existing release/LTO pipeline above.
+            "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF",
         ]
 
     if target_platform == "windows":

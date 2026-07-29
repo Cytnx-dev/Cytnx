@@ -63,7 +63,7 @@ def test_windows_cuda_release_rewrite_uses_external_pypi_dlls():
         "--preset=openblas-cuda",
         "-DUSE_CUQUANTUM=OFF",
         "-DUSE_HPTT=OFF",
-        "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON",
+        "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF",
     ]
     assert (
         document["tool"]["cibuildwheel"]["windows"]["repair-wheel-command"]
