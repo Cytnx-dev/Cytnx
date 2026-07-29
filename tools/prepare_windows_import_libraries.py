@@ -34,7 +34,7 @@ CUDA_IMPORT_LIBRARIES = {
 }
 
 
-def _find_one(directory: Path, pattern: str) -> Path:
+def find_one(directory: Path, pattern: str) -> Path:
     matches = sorted(directory.glob(pattern))
     if len(matches) != 1:
         raise RuntimeError(
@@ -43,7 +43,7 @@ def _find_one(directory: Path, pattern: str) -> Path:
     return matches[0]
 
 
-def _exports(dll: Path) -> list[str]:
+def read_exports(dll: Path) -> list[str]:
     image = pefile.PE(str(dll), fast_load=True)
     try:
         image.parse_data_directories(
@@ -75,13 +75,13 @@ def _exports(dll: Path) -> list[str]:
     return names
 
 
-def _write_definition(path: Path, dll: Path, exports: list[str]) -> None:
+def write_definition(path: Path, dll: Path, exports: list[str]) -> None:
     contents = [f'LIBRARY "{dll.name}"', "EXPORTS"]
     contents.extend(f"  {name}" for name in exports)
     path.write_text("\n".join(contents) + "\n", encoding="ascii")
 
 
-def _prepare_one(
+def prepare_one(
     dll: Path,
     output: Path,
     *,
@@ -91,7 +91,7 @@ def _prepare_one(
 ) -> None:
     if not dll.is_file():
         raise RuntimeError(f"dependency DLL not found: {dll}")
-    exports = _exports(dll)
+    exports = read_exports(dll)
     if check_only:
         state = "present" if output.is_file() else "will generate"
         print(f"{output.name}: {len(exports)} exports from {dll.name} ({state})")
@@ -114,7 +114,7 @@ def _prepare_one(
 
     output.parent.mkdir(parents=True, exist_ok=True)
     definition = temporary_directory / f"{output.stem}.def"
-    _write_definition(definition, dll, exports)
+    write_definition(definition, dll, exports)
     subprocess.run(
         [
             librarian,
@@ -129,8 +129,8 @@ def _prepare_one(
     print(f"{output.name}: generated from {dll.name}")
 
 
-def _prepare_nvvm_layout(cuda_root: Path, *, check_only: bool) -> None:
-    source = _find_one(cuda_root / "bin" / "x86_64", "nvvm64_*.dll")
+def prepare_nvvm_layout(cuda_root: Path, *, check_only: bool) -> None:
+    source = find_one(cuda_root / "bin" / "x86_64", "nvvm64_*.dll")
     canonical_directory = cuda_root / "bin" / "x64"
     destination = canonical_directory / source.name
     if check_only:
@@ -177,7 +177,7 @@ def prepare(*, include_cuda: bool, check_only: bool) -> None:
 
     with tempfile.TemporaryDirectory(prefix="cytnx-import-") as temporary:
         temporary_directory = Path(temporary)
-        _prepare_one(
+        prepare_one(
             conda_prefix / "Library" / "mingw-w64" / "bin" / "libarpack.dll",
             conda_prefix / "Library" / "lib" / "arpack.lib",
             check_only=check_only,
@@ -200,10 +200,10 @@ def prepare(*, include_cuda: bool, check_only: bool) -> None:
         if not dll_directory.is_dir() or not library_directory.is_dir():
             raise RuntimeError(f"incomplete CUDA PyPI layout below {cuda_root}")
 
-        _prepare_nvvm_layout(cuda_root, check_only=check_only)
+        prepare_nvvm_layout(cuda_root, check_only=check_only)
         for import_name, dll_pattern in CUDA_IMPORT_LIBRARIES.items():
-            _prepare_one(
-                _find_one(dll_directory, dll_pattern),
+            prepare_one(
+                find_one(dll_directory, dll_pattern),
                 library_directory / import_name,
                 check_only=check_only,
                 librarian=librarian,
