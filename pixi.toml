@@ -17,7 +17,7 @@ cxx-compiler = ">=1.11,<2"
 clang-format = "14.*"
 pre-commit = "*"
 
-# Native dependencies shared by the development environments.
+# Native dependencies shared by the development and wheel environments.
 arpack = { version = ">=3.9,<4", build = "nompi_*" }
 libboost-devel = "*"
 gtest = "*"
@@ -39,6 +39,8 @@ pybind11-stubgen = "==2.5.5"
 pefile = ">=2024.8.26"
 
 # Contributor environments stay fixed at the oldest supported interpreter.
+# Wheel orchestration uses a newer host Python only because cibuildwheel 3.3
+# requires Python >=3.11; it still produces CPython 3.10 through 3.14 wheels.
 [feature.python310.dependencies]
 python = "3.10.*"
 
@@ -46,6 +48,25 @@ python = "3.10.*"
 mkl-devel = "*"
 libblas = { version = ">=3.9,<4", build = "*mkl" }
 liblapack = { version = ">=3.9,<4", build = "*mkl" }
+
+# PyPI wheels use OpenBLAS so delvewheel can discover and bundle the complete
+# non-CUDA runtime graph. MKL dispatch DLLs are loaded dynamically and are not
+# reliably discoverable from the extension's PE import table. The `openblas`
+# development package supplies the MSVC import library and LAPACKE headers;
+# `libopenblas` contains only the runtime DLL on Windows.
+[feature.openblas.dependencies]
+libblas = { version = ">=3.9,<4", build = "*openblas" }
+liblapack = { version = ">=3.9,<4", build = "*openblas" }
+liblapacke = "*"
+openblas = "*"
+
+[feature.wheel.dependencies]
+ccache = "*"
+python = "3.11.*"
+
+[feature.wheel.pypi-dependencies]
+cibuildwheel = "==3.3.0"
+delvewheel = "==1.13.0"
 
 [target.win-64.activation]
 scripts = ["tools/activate_windows.bat"]
@@ -105,3 +126,5 @@ install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install
 [environments]
 default = { features = ["python310", "mkl"], solve-group = "windows-mkl" }
 cuda = { features = ["python310", "mkl", "cuda"], solve-group = "windows-mkl" }
+wheel-cpu = { features = ["openblas", "wheel"], solve-group = "windows-wheel" }
+wheel-cuda = { features = ["openblas", "cuda", "wheel"], solve-group = "windows-wheel" }
