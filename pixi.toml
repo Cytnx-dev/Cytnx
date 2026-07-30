@@ -107,17 +107,23 @@ CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
 # macOS and fail for want of a make program.
 [activation.env]
 CMAKE_GENERATOR = "Ninja"
-CYTNX_PRESET = "debug-openblas-cpu"
-CYTNX_RELEASE_PRESET = "openblas-cpu"
+CYTNX_PRESET = "openblas-cpu"
 
 [feature.mkl.activation.env]
-CYTNX_PRESET = "debug-mkl-cpu"
-CYTNX_RELEASE_PRESET = "mkl-cpu"
+CYTNX_PRESET = "mkl-cpu"
 
 # Every task works in the one build tree the selected preset names,
 # build/$CYTNX_PRESET, so the C++ suite and the Python tests share a single
 # set of object files and an incremental rebuild serves both. The editable
 # install is pointed at that same directory rather than one of its own.
+#
+# CYTNX_PRESET names a release preset, with RUN_TESTS turned on so the tree
+# still carries the GoogleTest binary. It cannot be a debug-* preset: those
+# set USE_DEBUG, which instruments the extension with AddressSanitizer and
+# exports the sanitizer link option, and importing that into this
+# environment's ordinary Python aborts unless the ASan runtime is preloaded
+# first. ci-cmake_tests.yml keeps USE_DEBUG off for the same reason. Run
+# `cmake --preset debug-openblas-cpu` directly when the sanitizer is wanted.
 #
 # pybind11_DIR is passed because pybind11 is a PyPI package: its CMake package
 # config lives under site-packages, where find_package() does not search.
@@ -130,15 +136,16 @@ CYTNX_RELEASE_PRESET = "mkl-cpu"
 setup = "git submodule update --init --recursive"
 doctor = "cmake --version && ninja --version && python --version && $CXX --version"
 
-configure = { cmd = "cmake --preset $CYTNX_PRESET -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup"] }
+configure = { cmd = "cmake --preset $CYTNX_PRESET -DRUN_TESTS=ON -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup"] }
 build = { cmd = "cmake --build --preset $CYTNX_PRESET --target test_main", depends-on = ["configure"] }
 test-cpp = { cmd = "ctest --test-dir build/$CYTNX_PRESET --output-on-failure", depends-on = ["build"] }
 
 # .[dev] brings in the runtime, test and stub-generation packages pyproject.toml
 # declares. --no-build-isolation makes the build use this environment's pinned
 # pybind11, the same one the configure task resolved, instead of provisioning a
-# second copy.
-install-python = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET", depends-on = ["setup"] }
+# second copy. RUN_TESTS goes through cmake.define, which is additive, so it
+# does not displace the preset in cmake.args.
+install-python = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET --config-settings=cmake.define.RUN_TESTS=ON", depends-on = ["setup"] }
 test-python = { cmd = "python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
 format = "pre-commit run --all-files"
 
@@ -147,19 +154,16 @@ check-windows-layout = "tools\\activate_windows.bat python tools/prepare_windows
 prepare-windows = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py"
 doctor = "tools\\activate_windows.bat --doctor"
 
-# The release preset rather than CYTNX_PRESET: the debug presets turn on
-# USE_DEBUG, whose address sanitizer is outside the MSVC toolchain validated
-# here. RUN_TESTS is added back so the GoogleTest binary is still built, and
-# interprocedural optimization off because MSVC's /GL rejects the mixed
+# Interprocedural optimization is off because MSVC's /GL rejects the mixed
 # static-archive link cytnx produces.
-configure = { cmd = "tools\\activate_windows.bat cmake --preset $CYTNX_RELEASE_PRESET -DRUN_TESTS=ON -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup", "prepare-windows"] }
-build = { cmd = "tools\\activate_windows.bat cmake --build --preset $CYTNX_RELEASE_PRESET", depends-on = ["configure"] }
+configure = { cmd = "tools\\activate_windows.bat cmake --preset $CYTNX_PRESET -DRUN_TESTS=ON -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup", "prepare-windows"] }
+build = { cmd = "tools\\activate_windows.bat cmake --build --preset $CYTNX_PRESET", depends-on = ["configure"] }
 # CTest's per-case GoogleTest discovery launches 1854 short-lived processes on
 # Windows. Run the same complete suite once in the native GoogleTest executable
 # to retain one initialized native runtime and keep local test runs practical.
-test-cpp = { cmd = "..\\tools\\activate_windows.bat ..\\build\\$CYTNX_RELEASE_PRESET\\tests\\test_main.exe", cwd = "tests", depends-on = ["build"] }
+test-cpp = { cmd = "..\\tools\\activate_windows.bat ..\\build\\$CYTNX_PRESET\\tests\\test_main.exe", cwd = "tests", depends-on = ["build"] }
 
-install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_RELEASE_PRESET --config-settings=cmake.args=--preset=$CYTNX_RELEASE_PRESET", depends-on = ["setup", "prepare-windows"] }
+install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET", depends-on = ["setup", "prepare-windows"] }
 test-python = { cmd = "tools\\activate_windows.bat python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
 format = "tools\\activate_windows.bat pre-commit run --all-files"
 
