@@ -95,13 +95,6 @@ CMAKE_GENERATOR_TOOLSET = ""
 # pass the same -D on their command line, because plain cmake ignores this
 # variable.
 CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
-# Windows takes the release presets where the other platforms take debug-*
-# ones. USE_DEBUG's sanitizer is a GCC arrangement here --
-# tools/run_with_asan_preload.py handles the Linux side and deliberately does
-# nothing elsewhere -- and MSVC's own /fsanitize=address is not part of the
-# toolchain validated for cytnx. The Windows tasks pass RUN_TESTS themselves,
-# since only the debug presets set it.
-CYTNX_PRESET = "openblas-cpu"
 
 # Which presets from CMakePresets.json the tasks drive. They live here rather
 # than being written into the tasks so that each task is defined exactly once:
@@ -114,26 +107,34 @@ CYTNX_PRESET = "openblas-cpu"
 # macOS and fail for want of a make program.
 [activation.env]
 CMAKE_GENERATOR = "Ninja"
-CYTNX_PRESET = "debug-openblas-cpu"
+CYTNX_PRESET = "openblas-cpu"
 
 [feature.mkl.activation.env]
-CYTNX_PRESET = "debug-mkl-cpu"
-
-[feature.mkl.target.win-64.activation.env]
 CYTNX_PRESET = "mkl-cpu"
+
+# Linux takes the debug-* presets instead, so USE_DEBUG puts AddressSanitizer
+# over both suites -- the configuration CONTRIBUTING.md gates a pull request
+# on. It is the exception rather than the default because importing an
+# instrumented extension into an ordinary interpreter needs the sanitizer
+# runtime preloaded first, and how to do that is platform-specific:
+# test-python below uses LD_PRELOAD, which is Linux's. macOS would need
+# DYLD_INSERT_LIBRARIES pointed at Clang's ASan dylib, and MSVC has its own
+# arrangement again; neither is part of the toolchain validated for cytnx, so
+# those platforms build release and leave the sanitizer to a direct
+# `cmake --preset debug-openblas-cpu`.
+[target.linux.activation.env]
+CYTNX_PRESET = "debug-openblas-cpu"
+
+[feature.mkl.target.linux.activation.env]
+CYTNX_PRESET = "debug-mkl-cpu"
 
 # Every task works in the one build tree the selected preset names,
 # build/$CYTNX_PRESET, so the C++ suite and the Python tests share a single
 # set of object files and an incremental rebuild serves both. The editable
 # install is pointed at that same directory rather than one of its own.
 #
-# On Linux and macOS CYTNX_PRESET is a debug-* preset, which is the
-# configuration CONTRIBUTING.md gates a pull request on: USE_DEBUG on, so
-# AddressSanitizer covers both the GoogleTest suite and whatever the Python
-# tests reach. Importing an ASan-instrumented extension into an ordinary
-# interpreter needs the sanitizer runtime preloaded ahead of it, which is what
-# test-python goes through tools/run_with_asan_preload.py for; test-cpp does
-# not, so ctest keeps leak detection on, where a real cytnx leak would show.
+# RUN_TESTS is passed rather than left to the preset, because only the
+# debug-* presets set it and CYTNX_PRESET is a release preset off Linux.
 #
 # pybind11_DIR is passed because pybind11 is a PyPI package: its CMake package
 # config lives under site-packages, where find_package() does not search.
@@ -146,7 +147,7 @@ CYTNX_PRESET = "mkl-cpu"
 setup = "git submodule update --init --recursive"
 doctor = "cmake --version && ninja --version && python --version && $CXX --version"
 
-configure = { cmd = "cmake --preset $CYTNX_PRESET -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup"] }
+configure = { cmd = "cmake --preset $CYTNX_PRESET -DRUN_TESTS=ON -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup"] }
 build = { cmd = "cmake --build --preset $CYTNX_PRESET --target test_main", depends-on = ["configure"] }
 test-cpp = { cmd = "ctest --test-dir build/$CYTNX_PRESET --output-on-failure", depends-on = ["build"] }
 
@@ -155,8 +156,25 @@ test-cpp = { cmd = "ctest --test-dir build/$CYTNX_PRESET --output-on-failure", d
 # pybind11, the same one the configure task resolved, instead of provisioning a
 # second copy. RUN_TESTS goes through cmake.define, which is additive, so it
 # does not displace the preset in cmake.args.
-install-python = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET", depends-on = ["setup"] }
-test-python = { cmd = "python tools/run_with_asan_preload.py build/$CYTNX_PRESET python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
+install-python = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET --config-settings=cmake.define.RUN_TESTS=ON", depends-on = ["setup"] }
+# The debug presets instrument the extension with AddressSanitizer, which an
+# ordinary interpreter cannot simply import: ASan's __cxa_throw interceptor
+# resolves the real __cxa_throw from libstdc++, which python never links, so
+# the first C++ exception thrown inside the extension -- cytnx_error_msg
+# surfacing as cytnx.CytnxError, which error-path tests hit constantly --
+# kills the process with no traceback under pytest's captured file
+# descriptors. Preloading both libraries fixes that. detect_leaks=0 is for
+# this interpreter-hosted run only, because LeakSanitizer reports CPython's
+# deliberate non-cleanup at shutdown as hundreds of leaks; test-cpp keeps leak
+# detection on, which is where a real cytnx leak would surface.
+#
+# $CONDA_PREFIX/lib is where the libraries this environment actually loads
+# live, which is not the same as what the compiler's own -print-file-name
+# reports: conda-forge points RPATH at the prefix, so the prefix carries
+# libstdc++.so.6.0.35 while the compiler's private directory still has
+# 6.0.33. Preloading the compiler's copy would satisfy the libstdc++.so.6
+# soname with a library missing the newer GLIBCXX_3.4 symbol versions.
+test-python = { cmd = "LD_PRELOAD=\"$CONDA_PREFIX/lib/libasan.so $CONDA_PREFIX/lib/libstdc++.so\" ASAN_OPTIONS=detect_leaks=0 python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
 format = "pre-commit run --all-files"
 
 [target.win-64.tasks]

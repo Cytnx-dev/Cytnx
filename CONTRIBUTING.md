@@ -26,11 +26,12 @@ pixi run test-cpp     # configure, build test_main, run the C++ suite
 one build tree its preset names, `build/<preset>/`, so the C++ suite and the
 Python tests share a single set of object files and an incremental rebuild
 serves both — and a Pixi build and a manual `cmake --preset` build are the same
-tree. On Linux and macOS the tasks drive the `debug-*` presets, so both suites
-run under AddressSanitizer; `test-python` goes through
-`tools/run_with_asan_preload.py`, which preloads the sanitizer runtime the
-instrumented extension needs before an ordinary interpreter can import it.
-Windows uses the release presets instead, since that arrangement is GCC's.
+tree. On Linux the tasks drive the `debug-*` presets, so both suites run under
+AddressSanitizer; `test-python` preloads the sanitizer runtime the instrumented
+extension needs before an ordinary interpreter can import it. macOS and Windows
+build release instead — the preload is a Linux mechanism, and neither Clang's
+macOS ASan dylib nor MSVC's `/fsanitize=address` is part of the toolchain
+validated for cytnx. Run `cmake --preset debug-openblas-cpu` directly there.
 
 | task | what it does |
 |---|---|
@@ -53,8 +54,10 @@ Windows uses the release presets instead, since that arrangement is GCC's.
 | `cuda` | Intel MKL, plus CUDA and cuTENSOR | `linux-64`, `win-64` |
 
 Select one with `-e`, for example `pixi run -e mkl test-cpp`. Before opening a
-pull request, run the C++ suite under both `default` and `mkl`, which is what
-CI gates on.
+pull request, run the C++ suite under both `default` and `mkl` on an x86
+machine, which is what CI gates on. On `linux-aarch64` and `osx-arm64` there is
+no `mkl` environment to select, so `pixi run test-cpp` under `default` is the
+whole local gate and CI covers the MKL half.
 
 The `cuda` environment needs no system CUDA toolkit on either platform, and a
 driver and GPU only to *run* GPU code, not to compile it. It takes the toolkit
