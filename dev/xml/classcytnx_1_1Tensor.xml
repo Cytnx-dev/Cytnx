@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="517" column="5" bodyfile="include/Tensor.hpp" bodystart="519" bodyend="-1"/>
+        <location file="include/Tensor.hpp" line="512" column="5" bodyfile="include/Tensor.hpp" bodystart="514" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -49,7 +49,7 @@ save the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> to fi
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="328" column="10"/>
+        <location file="include/Tensor.hpp" line="323" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a7465b1ca730e16718c220dfca046412c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -70,7 +70,7 @@ save the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> to fi
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="332" column="10"/>
+        <location file="include/Tensor.hpp" line="327" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a55d945916b1e3771f100523a5e1de319" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -103,7 +103,7 @@ save the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> to fi
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="342" column="10"/>
+        <location file="include/Tensor.hpp" line="337" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a65f8d6a498df94116ed294c10033ac8c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -124,7 +124,7 @@ save the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> to fi
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="347" column="10"/>
+        <location file="include/Tensor.hpp" line="342" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ad6ca11678a82d78dfa5bd4d62760f75c" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -145,7 +145,7 @@ save the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> to fi
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="352" column="10"/>
+        <location file="include/Tensor.hpp" line="347" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a9b4644ac4257508defe563bb41221a7b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -391,7 +391,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="446" column="10" bodyfile="include/Tensor.hpp" bodystart="446" bodyend="451"/>
+        <location file="include/Tensor.hpp" line="441" column="10" bodyfile="include/Tensor.hpp" bodystart="441" bodyend="446"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1acf0773457c7202603d2c15a191c782d6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -424,7 +424,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="452" column="10" bodyfile="include/Tensor.hpp" bodystart="452" bodyend="455"/>
+        <location file="include/Tensor.hpp" line="447" column="10" bodyfile="include/Tensor.hpp" bodystart="447" bodyend="450"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a5e7775febb6bbd828e2a4c134f8943f5" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -494,7 +494,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="480" column="5" bodyfile="include/Tensor.hpp" bodystart="480" bodyend="484"/>
+        <location file="include/Tensor.hpp" line="475" column="5" bodyfile="include/Tensor.hpp" bodystart="475" bodyend="479"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ab7d9bb0be7a16e3ba2ec67fb66508072" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -527,7 +527,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="485" column="5" bodyfile="include/Tensor.hpp" bodystart="485" bodyend="489"/>
+        <location file="include/Tensor.hpp" line="480" column="5" bodyfile="include/Tensor.hpp" bodystart="480" bodyend="484"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a7eea4022389527d198177cb9c1b914c9" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1a7e664bb4844ddff8d032f50579d7c73e" kindref="member">pointer_types</ref></type>
@@ -541,7 +541,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="522" column="19"/>
+        <location file="include/Tensor.hpp" line="517" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1abc93d724ebbd66306585c9ab558736d8" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -560,7 +560,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="531" column="7" bodyfile="include/Tensor.hpp" bodystart="531" bodyend="537"/>
+        <location file="include/Tensor.hpp" line="526" column="7" bodyfile="include/Tensor.hpp" bodystart="526" bodyend="532"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a4472af6f8e825a13440e832bf82fb627" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">unsigned</ref> <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">int</ref></type>
@@ -580,7 +580,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="582" column="18" bodyfile="include/Tensor.hpp" bodystart="582" bodyend="582"/>
+        <location file="include/Tensor.hpp" line="577" column="18" bodyfile="include/Tensor.hpp" bodystart="577" bodyend="577"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>int</type>
@@ -600,7 +600,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="589" column="9" bodyfile="include/Tensor.hpp" bodystart="589" bodyend="589"/>
+        <location file="include/Tensor.hpp" line="584" column="9" bodyfile="include/Tensor.hpp" bodystart="584" bodyend="584"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a9e09106c7529e8be90caa52e1541e498" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -620,7 +620,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="596" column="17" bodyfile="include/Tensor.hpp" bodystart="596" bodyend="596"/>
+        <location file="include/Tensor.hpp" line="591" column="17" bodyfile="include/Tensor.hpp" bodystart="591" bodyend="591"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a335f7625fa01784f49b2223238d0c14e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -640,7 +640,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="603" column="17" bodyfile="include/Tensor.hpp" bodystart="603" bodyend="603"/>
+        <location file="include/Tensor.hpp" line="598" column="17" bodyfile="include/Tensor.hpp" bodystart="598" bodyend="598"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1af36ef858677f13dcda8512fd9b5ae475" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">const</ref> std::vector&lt; <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">cytnx_uint64</ref> &gt; &amp;</type>
@@ -658,7 +658,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="609" column="23" bodyfile="include/Tensor.hpp" bodystart="609" bodyend="609"/>
+        <location file="include/Tensor.hpp" line="604" column="23" bodyfile="include/Tensor.hpp" bodystart="604" bodyend="604"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a292b58b739db2324f443c0817f99d654" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">cytnx_int64</ref> &gt;</type>
@@ -676,7 +676,7 @@ cytnx tensors store a dense permutation of their logical axes, so the stride of 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="620" column="17"/>
+        <location file="include/Tensor.hpp" line="615" column="17"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aa3ee5ed793cacd43d3fadbd92d7920a4" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">cytnx_uint64</ref></type>
@@ -694,7 +694,7 @@ cytnx tensors store a dense permutation of their logical axes, so the stride of 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="626" column="18" bodyfile="include/Tensor.hpp" bodystart="626" bodyend="626"/>
+        <location file="include/Tensor.hpp" line="621" column="18" bodyfile="include/Tensor.hpp" bodystart="621" bodyend="621"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a83c9d6256da2f4b286e15485bc79dcf0" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">cytnx_uint64</ref></type>
@@ -712,7 +712,7 @@ cytnx tensors store a dense permutation of their logical axes, so the stride of 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="632" column="18" bodyfile="include/Tensor.hpp" bodystart="632" bodyend="632"/>
+        <location file="include/Tensor.hpp" line="627" column="18" bodyfile="include/Tensor.hpp" bodystart="627" bodyend="627"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a03a7559b5904da8f2402d1101a50bd08" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">bool</ref></type>
@@ -730,7 +730,7 @@ cytnx tensors store a dense permutation of their logical axes, so the stride of 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="638" column="10" bodyfile="include/Tensor.hpp" bodystart="638" bodyend="638"/>
+        <location file="include/Tensor.hpp" line="633" column="10" bodyfile="include/Tensor.hpp" bodystart="633" bodyend="633"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a15a44044ca516c53b9e3bb4c3146d745" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">bool</ref></type>
@@ -748,7 +748,7 @@ cytnx tensors store a dense permutation of their logical axes, so the stride of 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="644" column="10" bodyfile="include/Tensor.hpp" bodystart="644" bodyend="644"/>
+        <location file="include/Tensor.hpp" line="639" column="10" bodyfile="include/Tensor.hpp" bodystart="639" bodyend="639"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a8e922395bf6f618770b49ab51e68e649" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">bool</ref></type>
@@ -766,7 +766,7 @@ cytnx tensors store a dense permutation of their logical axes, so the stride of 
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="650" column="10" bodyfile="include/Tensor.hpp" bodystart="650" bodyend="650"/>
+        <location file="include/Tensor.hpp" line="645" column="10" bodyfile="include/Tensor.hpp" bodystart="645" bodyend="645"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a5e2248e9babdb786167ed349df9084ae" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -829,7 +829,7 @@ False
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="669" column="12" bodyfile="include/Tensor.hpp" bodystart="669" bodyend="673"/>
+        <location file="include/Tensor.hpp" line="664" column="12" bodyfile="include/Tensor.hpp" bodystart="664" bodyend="668"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1acf7f697a9434f9bc98a7d00a555ee982" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -902,7 +902,7 @@ cytnx device: CPU
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="695" column="12" bodyfile="include/Tensor.hpp" bodystart="695" bodyend="699"/>
+        <location file="include/Tensor.hpp" line="690" column="12" bodyfile="include/Tensor.hpp" bodystart="690" bodyend="694"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a114a31fbb8bf4a90f150b6a67e42183a" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -968,7 +968,7 @@ description:<linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="718" column="10" bodyfile="include/Tensor.hpp" bodystart="718" bodyend="718"/>
+        <location file="include/Tensor.hpp" line="713" column="10" bodyfile="include/Tensor.hpp" bodystart="713" bodyend="713"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aa66028524d53c79d62714b96cd274ccd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">const</ref> <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">bool</ref> &amp;</type>
@@ -986,7 +986,7 @@ description:<linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="724" column="16" bodyfile="include/Tensor.hpp" bodystart="724" bodyend="724"/>
+        <location file="include/Tensor.hpp" line="719" column="16" bodyfile="include/Tensor.hpp" bodystart="719" bodyend="719"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a1226777ccd4ac139bdefd6761c2f17aa" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -1004,7 +1004,7 @@ description:<linebreak/>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="726" column="12" bodyfile="include/Tensor.hpp" bodystart="726" bodyend="729"/>
+        <location file="include/Tensor.hpp" line="721" column="12" bodyfile="include/Tensor.hpp" bodystart="721" bodyend="724"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1adbdc402a8c4d6d738523a888bcf9c0c2" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1098,7 +1098,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="757" column="12" bodyfile="include/Tensor.hpp" bodystart="757" bodyend="761"/>
+        <location file="include/Tensor.hpp" line="752" column="12" bodyfile="include/Tensor.hpp" bodystart="752" bodyend="756"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a4d7da181303c588f2ab84bffda435525" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1191,7 +1191,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="787" column="12" bodyfile="include/Tensor.hpp" bodystart="787" bodyend="791"/>
+        <location file="include/Tensor.hpp" line="782" column="12" bodyfile="include/Tensor.hpp" bodystart="782" bodyend="786"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a3d4342299e6951dae13b6136b89f1d53" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1268,7 +1268,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="807" column="12" bodyfile="include/Tensor.hpp" bodystart="807" bodyend="810"/>
+        <location file="include/Tensor.hpp" line="802" column="12" bodyfile="include/Tensor.hpp" bodystart="802" bodyend="805"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ad55b5e50d414b35cbe77091a82389f8b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -1410,7 +1410,7 @@ Shape : (5,12)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="832" column="12" bodyfile="include/Tensor.hpp" bodystart="832" bodyend="835"/>
+        <location file="include/Tensor.hpp" line="827" column="12" bodyfile="include/Tensor.hpp" bodystart="827" bodyend="830"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a57aea99887adf41da14fd7578ef9bf13" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1532,7 +1532,7 @@ Shape : (5,12)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="878" column="12" bodyfile="include/Tensor.hpp" bodystart="878" bodyend="882"/>
+        <location file="include/Tensor.hpp" line="873" column="12" bodyfile="include/Tensor.hpp" bodystart="873" bodyend="877"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a15e7c245ee923c77e02209dc5cfe5198" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1553,7 +1553,7 @@ Shape : (5,12)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="887" column="12" bodyfile="include/Tensor.hpp" bodystart="887" bodyend="892"/>
+        <location file="include/Tensor.hpp" line="882" column="12" bodyfile="include/Tensor.hpp" bodystart="882" bodyend="887"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a32e42ecf5755144b071de1be9d13c692" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1574,7 +1574,7 @@ Shape : (5,12)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="897" column="12" bodyfile="include/Tensor.hpp" bodystart="897" bodyend="899"/>
+        <location file="include/Tensor.hpp" line="892" column="12" bodyfile="include/Tensor.hpp" bodystart="892" bodyend="894"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a7b996d3281e7375b29a7cfe4273b299f" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1728,7 +1728,7 @@ True
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="930" column="12" bodyfile="include/Tensor.hpp" bodystart="930" bodyend="934"/>
+        <location file="include/Tensor.hpp" line="925" column="12" bodyfile="include/Tensor.hpp" bodystart="925" bodyend="929"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a55f6e4c4106c0964f23fb06ac63d75ec" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -1817,7 +1817,7 @@ Shape : (2,3,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="965" column="7" bodyfile="include/Tensor.hpp" bodystart="965" bodyend="967"/>
+        <location file="include/Tensor.hpp" line="960" column="7" bodyfile="include/Tensor.hpp" bodystart="960" bodyend="962"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1af7a99f7f160be535a5ac7ac9bcdba730" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -1843,7 +1843,7 @@ Shape : (2,3,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="973" column="13" bodyfile="include/Tensor.hpp" bodystart="973" bodyend="975"/>
+        <location file="include/Tensor.hpp" line="968" column="13" bodyfile="include/Tensor.hpp" bodystart="968" bodyend="970"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a59bb8b7cf3d142d49c51d694e58ace68" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -1925,7 +1925,7 @@ Shape : (1)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1035" column="7" bodyfile="include/Tensor.hpp" bodystart="1035" bodyend="1039"/>
+        <location file="include/Tensor.hpp" line="1030" column="7" bodyfile="include/Tensor.hpp" bodystart="1030" bodyend="1034"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aa54246c4e3769043d084d6fcbc20beef" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2106,7 +2106,7 @@ Shape : (4,3)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1089" column="12" bodyfile="include/Tensor.hpp" bodystart="1089" bodyend="1094"/>
+        <location file="include/Tensor.hpp" line="1084" column="12" bodyfile="include/Tensor.hpp" bodystart="1084" bodyend="1089"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ad7b928e4cb89d40cbd99aefab9aa0075" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2124,7 +2124,7 @@ Shape : (4,3)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1095" column="12" bodyfile="include/Tensor.hpp" bodystart="1095" bodyend="1100"/>
+        <location file="include/Tensor.hpp" line="1090" column="12" bodyfile="include/Tensor.hpp" bodystart="1090" bodyend="1095"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a771f1f5b51f89abd8df4166e602214ac" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -2404,7 +2404,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1128" column="10" bodyfile="include/Tensor.hpp" bodystart="1128" bodyend="1130"/>
+        <location file="include/Tensor.hpp" line="1123" column="10" bodyfile="include/Tensor.hpp" bodystart="1123" bodyend="1125"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ad93d654b978add6b2f0dfb9f91490209" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -2689,7 +2689,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1151" column="10" bodyfile="include/Tensor.hpp" bodystart="1151" bodyend="1153"/>
+        <location file="include/Tensor.hpp" line="1146" column="10" bodyfile="include/Tensor.hpp" bodystart="1146" bodyend="1148"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1afaa4a4eba4bd98b371fc101fbcfef743" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Storage</ref> &amp;</type>
@@ -2709,7 +2709,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1171" column="13" bodyfile="include/Tensor.hpp" bodystart="1171" bodyend="1171"/>
+        <location file="include/Tensor.hpp" line="1166" column="13" bodyfile="include/Tensor.hpp" bodystart="1166" bodyend="1166"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a0c7f2bac2a03be7d22769c7cb896afbe" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -2850,7 +2850,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1188" column="10" bodyfile="include/Tensor.hpp" bodystart="1188" bodyend="1190"/>
+        <location file="include/Tensor.hpp" line="1183" column="10" bodyfile="include/Tensor.hpp" bodystart="1183" bodyend="1185"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a90688357652b47e13224c4bbf008c7ce" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">bool</ref></type>
@@ -2879,7 +2879,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1196" column="10" bodyfile="include/Tensor.hpp" bodystart="1196" bodyend="1199"/>
+        <location file="include/Tensor.hpp" line="1191" column="10" bodyfile="include/Tensor.hpp" bodystart="1191" bodyend="1194"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ac863dbd316a4771a95810a2e9b922c4e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2901,7 +2901,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1208" column="12"/>
+        <location file="include/Tensor.hpp" line="1203" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1accd77970630990baca3a18638b23fe95" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2923,7 +2923,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1217" column="12"/>
+        <location file="include/Tensor.hpp" line="1212" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a84d7c47ea4cdb206a8ad70b8b3783876" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2959,7 +2959,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1237" column="12"/>
+        <location file="include/Tensor.hpp" line="1232" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a22b227a075c948ca2f8ac2aad8974190" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2995,7 +2995,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1256" column="12"/>
+        <location file="include/Tensor.hpp" line="1251" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a0409dea9e50793f689eba740638b86a1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -3031,7 +3031,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1275" column="12"/>
+        <location file="include/Tensor.hpp" line="1270" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a09164f6960b922ee005a6039a64a773b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -3071,7 +3071,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1295" column="12"/>
+        <location file="include/Tensor.hpp" line="1290" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aafd7446e798d34427d4e6a9571861111" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3105,7 +3105,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1321" column="12" bodyfile="include/Tensor.hpp" bodystart="1321" bodyend="1323"/>
+        <location file="include/Tensor.hpp" line="1316" column="12" bodyfile="include/Tensor.hpp" bodystart="1316" bodyend="1318"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a2744949ae1bbbef4a852b11153617b5d" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3139,7 +3139,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1331" column="12" bodyfile="include/Tensor.hpp" bodystart="1331" bodyend="1333"/>
+        <location file="include/Tensor.hpp" line="1326" column="12" bodyfile="include/Tensor.hpp" bodystart="1326" bodyend="1328"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a4648eef7874bad42d6d7b15fb1598644" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3173,7 +3173,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1341" column="12" bodyfile="include/Tensor.hpp" bodystart="1341" bodyend="1343"/>
+        <location file="include/Tensor.hpp" line="1336" column="12" bodyfile="include/Tensor.hpp" bodystart="1336" bodyend="1338"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aff0275bf4752791ebc51b3f02b456115" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3207,7 +3207,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1351" column="12" bodyfile="include/Tensor.hpp" bodystart="1351" bodyend="1353"/>
+        <location file="include/Tensor.hpp" line="1346" column="12" bodyfile="include/Tensor.hpp" bodystart="1346" bodyend="1348"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a443885c8f02ab5352d81255e4650cf32" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3241,7 +3241,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1361" column="12" bodyfile="include/Tensor.hpp" bodystart="1361" bodyend="1363"/>
+        <location file="include/Tensor.hpp" line="1356" column="12" bodyfile="include/Tensor.hpp" bodystart="1356" bodyend="1358"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a9eb8827f29f8932c24d8315017b7c7e2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3275,7 +3275,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1371" column="12" bodyfile="include/Tensor.hpp" bodystart="1371" bodyend="1373"/>
+        <location file="include/Tensor.hpp" line="1366" column="12" bodyfile="include/Tensor.hpp" bodystart="1366" bodyend="1368"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1add04fc004ccab102743f3e392f6bb482" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3309,7 +3309,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1382" column="12" bodyfile="include/Tensor.hpp" bodystart="1382" bodyend="1384"/>
+        <location file="include/Tensor.hpp" line="1377" column="12" bodyfile="include/Tensor.hpp" bodystart="1377" bodyend="1379"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a7e079fdaf9bb56c21e1300dbf08e7223" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3343,7 +3343,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1393" column="12" bodyfile="include/Tensor.hpp" bodystart="1393" bodyend="1395"/>
+        <location file="include/Tensor.hpp" line="1388" column="12" bodyfile="include/Tensor.hpp" bodystart="1388" bodyend="1390"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aeee6153da17147b82857e342e2a35c52" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3377,7 +3377,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1404" column="12" bodyfile="include/Tensor.hpp" bodystart="1404" bodyend="1406"/>
+        <location file="include/Tensor.hpp" line="1399" column="12" bodyfile="include/Tensor.hpp" bodystart="1399" bodyend="1401"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ae41aecc16a039a59e2902a31e8eea243" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3400,7 +3400,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1447" column="12" bodyfile="include/Tensor.hpp" bodystart="1447" bodyend="1449"/>
+        <location file="include/Tensor.hpp" line="1442" column="12" bodyfile="include/Tensor.hpp" bodystart="1442" bodyend="1444"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a0bb7ebda69ea886804cec7d23249b5e9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3418,7 +3418,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1457" column="12" bodyfile="include/Tensor.hpp" bodystart="1457" bodyend="1457"/>
+        <location file="include/Tensor.hpp" line="1452" column="12" bodyfile="include/Tensor.hpp" bodystart="1452" bodyend="1452"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ab6679015cd4b8d0c33207a28986a0b75" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3436,7 +3436,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1466" column="12" bodyfile="include/Tensor.hpp" bodystart="1466" bodyend="1471"/>
+        <location file="include/Tensor.hpp" line="1461" column="12" bodyfile="include/Tensor.hpp" bodystart="1461" bodyend="1466"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ab026b0d58ba0bfbaaa20d5b4ac420c2e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -3454,7 +3454,7 @@ Shape : (3,4,5)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1480" column="10" bodyfile="include/Tensor.hpp" bodystart="1480" bodyend="1483"/>
+        <location file="include/Tensor.hpp" line="1475" column="10" bodyfile="include/Tensor.hpp" bodystart="1475" bodyend="1478"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a68a91d1554a4550eac7d339240fa9d02" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -3500,7 +3500,7 @@ B(j,k) &amp; \text{if } i = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1511" column="10" bodyfile="include/Tensor.hpp" bodystart="1511" bodyend="1546"/>
+        <location file="include/Tensor.hpp" line="1506" column="10" bodyfile="include/Tensor.hpp" bodystart="1506" bodyend="1541"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a01b8ab0509a7685a84dfed745a7f1596" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">void</ref></type>
@@ -3548,7 +3548,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1574" column="10" bodyfile="include/Tensor.hpp" bodystart="1574" bodyend="1598"/>
+        <location file="include/Tensor.hpp" line="1569" column="10" bodyfile="include/Tensor.hpp" bodystart="1569" bodyend="1593"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a1fb350e321d7228a1970da4d3f4dfa31" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -3591,7 +3591,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1637" column="10" bodyfile="include/Tensor.hpp" bodystart="1637" bodyend="1649"/>
+        <location file="include/Tensor.hpp" line="1632" column="10" bodyfile="include/Tensor.hpp" bodystart="1632" bodyend="1644"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a0eca35d876d22d96d1aef9f959a946fe" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">bool</ref></type>
@@ -3620,7 +3620,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1659" column="10"/>
+        <location file="include/Tensor.hpp" line="1654" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a984552dc556723647a7aa26789504388" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3640,7 +3640,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1667" column="17"/>
+        <location file="include/Tensor.hpp" line="1662" column="17"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a5eaf4c8f99f9776e4461a1f676345ae5" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3665,7 +3665,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1674" column="17"/>
+        <location file="include/Tensor.hpp" line="1669" column="17"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1af099f62bda6ff3b15f89d7d33f2786ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3680,7 +3680,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1680" column="12"/>
+        <location file="include/Tensor.hpp" line="1675" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a0cd186f9e001ee836ef4712eca40f049" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3695,7 +3695,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1686" column="12"/>
+        <location file="include/Tensor.hpp" line="1681" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aef59ec68b04de4ffc2d7977208cf2c2d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3731,7 +3731,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1696" column="12"/>
+        <location file="include/Tensor.hpp" line="1691" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a42984fbfc14c73716c88b871161cf490" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3767,7 +3767,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1706" column="12"/>
+        <location file="include/Tensor.hpp" line="1701" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ab87b5428c5fb510da02fd3bbe316bbfa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3782,7 +3782,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1712" column="12"/>
+        <location file="include/Tensor.hpp" line="1707" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a89af177fad9c00c3d09d2c587de2d77a" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3797,7 +3797,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1718" column="12"/>
+        <location file="include/Tensor.hpp" line="1713" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aefdef16a685cea5b47b682a3c7837da2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3812,7 +3812,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1724" column="12"/>
+        <location file="include/Tensor.hpp" line="1719" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aa85b2277ea048c00bef949fc2e7091db" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3827,7 +3827,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1730" column="12"/>
+        <location file="include/Tensor.hpp" line="1725" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a7889abcab99ca9800c0cbccbd6767819" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3844,7 +3844,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1737" column="13"/>
+        <location file="include/Tensor.hpp" line="1732" column="13"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ad83b459aa87307866e41d537e30fc05e" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Scalar</ref></type>
@@ -3859,7 +3859,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1745" column="12"/>
+        <location file="include/Tensor.hpp" line="1740" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1ac5bd2525bacc3713694a063074538e20" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3879,7 +3879,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1751" column="12"/>
+        <location file="include/Tensor.hpp" line="1746" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a977738a47390feeab721a599fc21ec28" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3899,7 +3899,7 @@ B(i) &amp; \text{if } j = N
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1757" column="12"/>
+        <location file="include/Tensor.hpp" line="1752" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a8d2f499d0c79e4c46909d2341c374723" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3925,7 +3925,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1763" column="12"/>
+        <location file="include/Tensor.hpp" line="1758" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a312a8b7b963199a98e59d9f6a97c32e6" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3940,7 +3940,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1769" column="12"/>
+        <location file="include/Tensor.hpp" line="1764" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1aa8e04d45e4c5b8e6f334e2be38433e07" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
@@ -3955,7 +3955,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1775" column="12"/>
+        <location file="include/Tensor.hpp" line="1770" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1adb752367adea78b251e5a584276c1f40" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3970,7 +3970,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1781" column="12"/>
+        <location file="include/Tensor.hpp" line="1776" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1af540bb4dc6887bf29289722101899a57" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3985,7 +3985,7 @@ cytnx_uint64 &amp;a, const cytnx_uint64 &amp;b)</ref>, where <computeroutput>Tin
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1787" column="12"/>
+        <location file="include/Tensor.hpp" line="1782" column="12"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -4018,7 +4018,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="362" column="19"/>
+        <location file="include/Tensor.hpp" line="357" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a6ed25c45b7553652101d4ed99614aa40" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4039,7 +4039,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="366" column="19"/>
+        <location file="include/Tensor.hpp" line="361" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a57fd4080e30ce3883ef345845ba9f979" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4105,7 +4105,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="388" column="19"/>
+        <location file="include/Tensor.hpp" line="383" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1a775b1810707d0e30a2cc79973c421b54" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4132,7 +4132,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="390" column="19"/>
+        <location file="include/Tensor.hpp" line="385" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Tensor_1afd3a86c7edd3af568060dfb6bfa5aecb" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4163,7 +4163,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="569" column="19" bodyfile="include/Tensor.hpp" bodystart="569" bodyend="575"/>
+        <location file="include/Tensor.hpp" line="564" column="19" bodyfile="include/Tensor.hpp" bodystart="564" bodyend="570"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -4171,7 +4171,7 @@ load the Storage from file with file path specify with input param &apos;fname&a
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/Tensor.hpp" line="41" column="3" bodyfile="include/Tensor.hpp" bodystart="41" bodyend="1789"/>
+    <location file="include/Tensor.hpp" line="36" column="3" bodyfile="include/Tensor.hpp" bodystart="36" bodyend="1784"/>
     <listofallmembers>
       <member refid="classcytnx_1_1Tensor_1a312a8b7b963199a98e59d9f6a97c32e6" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>Abs</name></member>
       <member refid="classcytnx_1_1Tensor_1aa8e04d45e4c5b8e6f334e2be38433e07" prot="public" virt="non-virtual"><scope>cytnx::Tensor</scope><name>Abs_</name></member>
