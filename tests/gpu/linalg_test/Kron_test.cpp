@@ -32,7 +32,7 @@ namespace cytnx {
       //   [ 6  7  12 14 ]
       //   [ 0 15   0 20 ]
       //   [18 21  24 28 ]
-      TEST(GpuKron, DoubleMatchesHandComputed) {
+      TEST(Kron, GpuDoubleMatchesHandComputed) {
         Tensor a = zeros({2, 2}, Type.Double);
         a.at<cytnx_double>({0, 0}) = 1;
         a.at<cytnx_double>({0, 1}) = 2;
@@ -58,7 +58,7 @@ namespace cytnx {
 
       // Fractional and negative values, recomputed per-element from the raw
       // inputs (independent of Kron's own layout).
-      TEST(GpuKron, DoubleFractionalNegative) {
+      TEST(Kron, GpuDoubleFractionalNegative) {
         Tensor a = zeros({3, 2}, Type.Double);
         a.at<cytnx_double>({0, 0}) = -1.5;
         a.at<cytnx_double>({0, 1}) = 0.25;
@@ -89,7 +89,7 @@ namespace cytnx {
       }
 
       // Complex x complex, hand-computed. A = [[1+1i, 2-1i]], B = [[0+1i],[3+0i]].
-      TEST(GpuKron, ComplexDoubleMatchesHandComputed) {
+      TEST(Kron, GpuComplexDoubleMatchesHandComputed) {
         Tensor a = zeros({1, 2}, Type.ComplexDouble);
         a.at<cytnx_complex128>({0, 0}) = cytnx_complex128(1, 1);
         a.at<cytnx_complex128>({0, 1}) = cytnx_complex128(2, -1);
@@ -104,21 +104,18 @@ namespace cytnx {
         // out[i,j] = a[0, j] * b[i, 0]
         // (1+1i)*(0+1i) = -1+1i ; (2-1i)*(0+1i) = 1+2i
         // (1+1i)*(3+0i) =  3+3i ; (2-1i)*(3+0i) = 6-3i
-        auto near = [&](cytnx_uint64 i, cytnx_uint64 j, double re, double im) {
-          auto v = out.at<cytnx_complex128>({i, j});
-          EXPECT_NEAR(v.real(), re, 1e-12) << "real at (" << i << "," << j << ")";
-          EXPECT_NEAR(v.imag(), im, 1e-12) << "imag at (" << i << "," << j << ")";
-        };
-        near(0, 0, -1, 1);
-        near(0, 1, 1, 2);
-        near(1, 0, 3, 3);
-        near(1, 1, 6, -3);
+        Tensor expected = zeros({2, 2}, Type.ComplexDouble);
+        expected.at<cytnx_complex128>({0, 0}) = cytnx_complex128(-1, 1);
+        expected.at<cytnx_complex128>({0, 1}) = cytnx_complex128(1, 2);
+        expected.at<cytnx_complex128>({1, 0}) = cytnx_complex128(3, 3);
+        expected.at<cytnx_complex128>({1, 1}) = cytnx_complex128(6, -3);
+        EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
       }
 
       // The #984/#999 promotion discriminator: ComplexFloat (x) Double must
       // produce ComplexDouble output (the higher-precision complex), with the
       // product computed and stored through that output type.
-      TEST(GpuKron, MixedComplexFloatDoublePromotesToComplexDouble) {
+      TEST(Kron, GpuMixedComplexFloatDoublePromotesToComplexDouble) {
         Tensor a = zeros({2, 1}, Type.ComplexFloat);
         a.at<cytnx_complex64>({0, 0}) = cytnx_complex64(1.5f, -2.5f);
         a.at<cytnx_complex64>({1, 0}) = cytnx_complex64(0.0f, 4.0f);
@@ -131,20 +128,17 @@ namespace cytnx {
         ASSERT_EQ(out.dtype(), Type.ComplexDouble);
         ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{2, 2}));
         // out[i,j] = a[i,0] * b[0,j]
-        auto near = [&](cytnx_uint64 i, cytnx_uint64 j, double re, double im) {
-          auto v = out.at<cytnx_complex128>({i, j});
-          EXPECT_NEAR(v.real(), re, 1e-6) << "real at (" << i << "," << j << ")";
-          EXPECT_NEAR(v.imag(), im, 1e-6) << "imag at (" << i << "," << j << ")";
-        };
-        near(0, 0, 3.0, -5.0);  // (1.5-2.5i)*2
-        near(0, 1, -0.75, 1.25);  // (1.5-2.5i)*-0.5
-        near(1, 0, 0.0, 8.0);  // (0+4i)*2
-        near(1, 1, 0.0, -2.0);  // (0+4i)*-0.5
+        Tensor expected = zeros({2, 2}, Type.ComplexDouble);
+        expected.at<cytnx_complex128>({0, 0}) = cytnx_complex128(3.0, -5.0);  // (1.5-2.5i)*2
+        expected.at<cytnx_complex128>({0, 1}) = cytnx_complex128(-0.75, 1.25);  // (1.5-2.5i)*-0.5
+        expected.at<cytnx_complex128>({1, 0}) = cytnx_complex128(0.0, 8.0);  // (0+4i)*2
+        expected.at<cytnx_complex128>({1, 1}) = cytnx_complex128(0.0, -2.0);  // (0+4i)*-0.5
+        EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-6));
       }
 
       // Integer Kron with negative values, hand-computed (independent expected
       // values, not a CPU comparison). Rank-1: element (i*n + j) = a_i * b_j.
-      TEST(GpuKron, Int16HandComputed) {
+      TEST(Kron, GpuInt16HandComputed) {
         Tensor a = zeros({2}, Type.Int16);
         a.at<cytnx_int16>({0}) = 3;
         a.at<cytnx_int16>({1}) = -2;
@@ -160,7 +154,7 @@ namespace cytnx {
 
       // Broad cross-check: GPU Kron vs CPU Kron over every real/complex dtype
       // and a few shapes. Secondary to the independent-value tests above.
-      TEST(GpuKron, GpuMatchesCpuAllDtypes) {
+      TEST(Kron, GpuMatchesCpuAllDtypes) {
         const std::vector<std::pair<std::vector<cytnx_uint64>, std::vector<cytnx_uint64>>> shapes =
           {{{2, 3}, {3, 2}}, {{4, 1}, {2, 5}}, {{1, 1}, {3, 3}}};
         for (auto dtype : dtype_list) {

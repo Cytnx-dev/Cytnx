@@ -20,7 +20,7 @@ namespace cytnx {
   namespace gpu_test {
     namespace {
 
-      TEST(GpuOuter, DoubleMatchesHandComputed) {
+      TEST(Outer, GpuDoubleMatchesHandComputed) {
         Tensor a = zeros({3}, Type.Double);
         a.at<cytnx_double>({0}) = -1.5;
         a.at<cytnx_double>({1}) = 0.0;
@@ -40,7 +40,7 @@ namespace cytnx {
               << "at (" << i << "," << j << ")";
       }
 
-      TEST(GpuOuter, ComplexDoubleMatchesHandComputed) {
+      TEST(Outer, GpuComplexDoubleMatchesHandComputed) {
         Tensor a = zeros({2}, Type.ComplexDouble);
         a.at<cytnx_complex128>({0}) = cytnx_complex128(1, 2);
         a.at<cytnx_complex128>({1}) = cytnx_complex128(-3, 1);
@@ -54,20 +54,17 @@ namespace cytnx {
         ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{2, 2}));
         // (1+2i)*(0-1i) = 2-1i ; (1+2i)*(2+2i) = -2+6i
         // (-3+1i)*(0-1i)= 1+3i ; (-3+1i)*(2+2i)= -8-4i
-        auto near = [&](cytnx_uint64 i, cytnx_uint64 j, double re, double im) {
-          auto v = out.at<cytnx_complex128>({i, j});
-          EXPECT_NEAR(v.real(), re, 1e-12) << "real at (" << i << "," << j << ")";
-          EXPECT_NEAR(v.imag(), im, 1e-12) << "imag at (" << i << "," << j << ")";
-        };
-        near(0, 0, 2, -1);
-        near(0, 1, -2, 6);
-        near(1, 0, 1, 3);
-        near(1, 1, -8, -4);
+        Tensor expected = zeros({2, 2}, Type.ComplexDouble);
+        expected.at<cytnx_complex128>({0, 0}) = cytnx_complex128(2, -1);
+        expected.at<cytnx_complex128>({0, 1}) = cytnx_complex128(-2, 6);
+        expected.at<cytnx_complex128>({1, 0}) = cytnx_complex128(1, 3);
+        expected.at<cytnx_complex128>({1, 1}) = cytnx_complex128(-8, -4);
+        EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
       }
 
       // The promotion discriminator (mirrors CPU DtypePromotion.OuterComplexfloatDouble):
       // ComplexFloat (x) Double -> ComplexDouble, full double precision.
-      TEST(GpuOuter, MixedComplexFloatDoublePromotesToComplexDouble) {
+      TEST(Outer, GpuMixedComplexFloatDoublePromotesToComplexDouble) {
         Tensor a = zeros({2}, Type.ComplexFloat);
         a.at<cytnx_complex64>({0}) = cytnx_complex64(1, 1);
         a.at<cytnx_complex64>({1}) = cytnx_complex64(2, 0);
@@ -79,21 +76,18 @@ namespace cytnx {
 
         ASSERT_EQ(out.dtype(), Type.ComplexDouble);
         ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{2, 2}));
-        auto near = [&](cytnx_uint64 i, cytnx_uint64 j, double re, double im) {
-          auto v = out.at<cytnx_complex128>({i, j});
-          EXPECT_NEAR(v.real(), re, 1e-6) << "real at (" << i << "," << j << ")";
-          EXPECT_NEAR(v.imag(), im, 1e-6) << "imag at (" << i << "," << j << ")";
-        };
-        near(0, 0, 3, 3);  // (1+1i)*3
-        near(0, 1, 0.5, 0.5);  // (1+1i)*0.5
-        near(1, 0, 6, 0);  // 2*3
-        near(1, 1, 1, 0);  // 2*0.5
+        Tensor expected = zeros({2, 2}, Type.ComplexDouble);
+        expected.at<cytnx_complex128>({0, 0}) = cytnx_complex128(3, 3);  // (1+1i)*3
+        expected.at<cytnx_complex128>({0, 1}) = cytnx_complex128(0.5, 0.5);  // (1+1i)*0.5
+        expected.at<cytnx_complex128>({1, 0}) = cytnx_complex128(6, 0);  // 2*3
+        expected.at<cytnx_complex128>({1, 1}) = cytnx_complex128(1, 0);  // 2*0.5
+        EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-6));
       }
 
       // Regression for #1099: Int16 (x) Int16 Outer used to hit a null dispatch
       // row and segfault; it now routes through cuKron. Hand-computed, negative
       // values included.
-      TEST(GpuOuter, Int16DiagonalNoLongerSegfaults) {
+      TEST(Outer, GpuInt16DiagonalNoLongerSegfaults) {
         Tensor a = zeros({2}, Type.Int16);
         a.at<cytnx_int16>({0}) = 3;
         a.at<cytnx_int16>({1}) = -2;
@@ -114,7 +108,7 @@ namespace cytnx {
       // that magnitude a complex-float multiply diverges from the CPU one at the
       // float32 ULP (~0.06), hence the looser ComplexFloat tolerance (matches
       // Mul_test's convention). A single real multiply is bit-identical.
-      TEST(GpuOuter, GpuMatchesCpuAllDtypes) {
+      TEST(Outer, GpuMatchesCpuAllDtypes) {
         for (auto dtype : dtype_list) {
           if (dtype == Type.Bool) continue;  // Outer has no Bool kernel
           SCOPED_TRACE("dtype " + std::to_string(dtype));
