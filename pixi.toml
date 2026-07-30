@@ -90,8 +90,11 @@ scripts = ["tools/activate_windows.bat"]
 CMAKE_GENERATOR_PLATFORM = ""
 CMAKE_GENERATOR_TOOLSET = ""
 # Interprocedural optimization is off because MSVC's /GL rejects the mixed
-# static-archive link cytnx produces; CMakeLists.txt otherwise turns it on
-# for every non-Apple platform.
+# static-archive link cytnx produces; CMakeLists.txt otherwise turns it on for
+# every non-Apple platform. CMAKE_ARGS is read by scikit-build-core, so this
+# covers the install-python tasks only -- the tasks that invoke cmake directly
+# pass the same -D on their command line, because plain cmake ignores this
+# variable.
 CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
 
 # Which presets from CMakePresets.json the tasks drive. They live here rather
@@ -145,7 +148,7 @@ doctor = "tools\\activate_windows.bat --doctor"
 # USE_DEBUG, whose address sanitizer is not part of the validated MSVC
 # toolchain here. RUN_TESTS is added back so the GoogleTest binary is still
 # built.
-configure = { cmd = "tools\\activate_windows.bat cmake --preset $CYTNX_RELEASE_PRESET -DBUILD_PYTHON=OFF -DRUN_TESTS=ON", depends-on = ["setup", "prepare-windows"] }
+configure = { cmd = "tools\\activate_windows.bat cmake --preset $CYTNX_RELEASE_PRESET -DBUILD_PYTHON=OFF -DRUN_TESTS=ON -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF", depends-on = ["setup", "prepare-windows"] }
 build = { cmd = "tools\\activate_windows.bat cmake --build --preset $CYTNX_RELEASE_PRESET", depends-on = ["configure"] }
 # CTest's per-case GoogleTest discovery launches 1854 short-lived processes on
 # Windows. Run the same complete suite once in the native GoogleTest executable
@@ -178,7 +181,9 @@ cutensor-cu13 = "~=2.7.0"
 
 [feature.cuda.activation.env]
 # cudafe++ can use substantial memory on this template-heavy codebase, so cap
-# the parallelism CUDA builds inherit.
+# the parallelism CUDA builds inherit. This reaches scikit-build-core's build
+# in install-python-cuda; build-cuda passes -j 2 on its command line instead,
+# because the build preset's own `jobs` field would otherwise win.
 CMAKE_BUILD_PARALLEL_LEVEL = "2"
 CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
 
@@ -190,8 +195,8 @@ cuda-doctor = { cmd = "tools\\activate_windows.bat --cuda-doctor", depends-on = 
 # mkl-cuda-windows is the CUDA preset with USE_CUQUANTUM off, which is what
 # Windows needs: NVIDIA publishes no Windows build of cuTensorNet or
 # cuStateVec, while cuTENSOR does ship one and stays enabled.
-configure-cuda = { cmd = "tools\\activate_windows.bat cmake --preset mkl-cuda-windows", depends-on = ["setup", "prepare-cuda"] }
-build-cuda = { cmd = "tools\\activate_windows.bat cmake --build --preset mkl-cuda-windows", depends-on = ["configure-cuda"] }
+configure-cuda = { cmd = "tools\\activate_windows.bat cmake --preset mkl-cuda-windows -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF", depends-on = ["setup", "prepare-cuda"] }
+build-cuda = { cmd = "tools\\activate_windows.bat cmake --build --preset mkl-cuda-windows -j 2", depends-on = ["configure-cuda"] }
 
 install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/python-mkl-cuda --config-settings=cmake.args=--preset=mkl-cuda-windows", depends-on = ["setup", "prepare-cuda"] }
 
