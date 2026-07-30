@@ -26,7 +26,10 @@ pixi run test-cpp     # configure, build test_main, run the C++ suite
 one build tree its preset names, `build/<preset>/`, so the C++ suite and the
 Python tests share a single set of object files and an incremental rebuild
 serves both — and a Pixi build and a manual `cmake --preset` build are the same
-tree.
+tree. The tasks drive the release presets with `RUN_TESTS` on, not the `debug-*`
+ones: those enable AddressSanitizer, which the Python tests cannot import
+without preloading the sanitizer runtime. Run `cmake --preset debug-openblas-cpu`
+directly when you want it.
 
 | task | what it does |
 |---|---|
@@ -53,12 +56,14 @@ pull request, run the C++ suite under both `default` and `mkl`, which is what
 CI gates on.
 
 The `cuda` environment needs no system CUDA toolkit on either platform, and a
-driver and GPU only to *run* GPU code, not to compile it. The two platforms
-differ in what is available: on Linux conda-forge carries the whole stack
-including cuQuantum, so `build-cuda` uses the ordinary `mkl-cuda` preset; on
-Windows NVIDIA publishes no cuTensorNet or cuStateVec (#1111), so the toolkit
-and cuTENSOR come from NVIDIA's PyPI wheels and `build-cuda` uses
-`mkl-cuda-windows`, which has `USE_CUQUANTUM` off. macOS has no CUDA at all.
+driver and GPU only to *run* GPU code, not to compile it. It takes the toolkit
+from NVIDIA's PyPI wheels, the same ones the release build installs — the
+version ranges live in `tools/prepare_cuda_release.py` and `pixi.toml` follows
+them — so a local CUDA build and a released `cytnx-cuda` wheel compile against
+one toolchain. What differs is how much of it exists: Linux gets cuTensorNet
+and so builds the ordinary `mkl-cuda` preset with `USE_CUQUANTUM` on, while
+NVIDIA publishes no cuTensorNet or cuStateVec for Windows (#1111), where
+`build-cuda` uses `mkl-cuda-windows` instead. macOS has no CUDA at all.
 
 ### On Windows
 
