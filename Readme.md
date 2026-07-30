@@ -232,7 +232,7 @@ See the examples in the folder `example`
 ## How to contribute & get in contact
 If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
 
-[CONTRIBUTING.md](CONTRIBUTING.md) sets up a Pixi development environment on Linux, macOS, and Windows; native Windows contributors should also read the [Windows notes](docs/dev/windows.md).
+[CONTRIBUTING.md](CONTRIBUTING.md) sets up a Pixi development environment on Linux, macOS, and Windows.
 Also, if you have any questions or suggestions, feel free to reach out to us.
 
 Maintainers cutting a tagged release should follow [RELEASING.md](RELEASING.md).
