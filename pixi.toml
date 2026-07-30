@@ -173,32 +173,23 @@ format = "tools\\activate_windows.bat pre-commit run --all-files"
 # tasks are split per platform below.
 platforms = ["linux-64", "win-64"]
 
-[feature.cuda.target.linux-64.dependencies]
-# conda-forge carries the whole stack for linux-64, cuQuantum included, so a
-# Linux CUDA build needs no system CUDA toolkit and gives up nothing: it uses
-# the ordinary openblas-cuda / mkl-cuda presets with USE_CUQUANTUM on.
-cuda-toolkit = "~=13.3"
-cuda-nvcc = "~=13.3"
-cutensor = "~=2.7"
-cuquantum = "*"
-custatevec = "*"
-cutensornet = { version = "*", build = "nompi_*" }
-
-[feature.cuda.target.win-64.pypi-dependencies]
-# conda-forge publishes no cuTensorNet or cuStateVec for win-64 -- NVIDIA does
-# not build them for Windows (#1111) -- so Windows takes the CUDA toolkit and
-# cuTENSOR from NVIDIA's PyPI wheels instead, the direction #1023 established,
-# and builds the mkl-cuda-windows preset with USE_CUQUANTUM off.
-cuda-toolkit = { version = "~=13.3.0", extras = [
-  "nvcc",
-  "cccl",
-  "cudart",
-  "cublas",
-  "cusolver",
-  "cusparse",
-  "curand",
-] }
+[feature.cuda.target.linux-64.pypi-dependencies]
+# The same NVIDIA wheels the release build installs, so a local CUDA build and
+# a released cytnx-cuda wheel are compiled against one toolchain. The version
+# ranges must match CUDA_BUILD_TOOLCHAIN and CUDA_RUNTIME_DEPENDENCIES in
+# tools/prepare_cuda_release.py, which stays the source of truth for the
+# release path. cutensornet-cu13 pulls cutensor-cu13 and custatevec-cu13
+# through pip's own resolver, and all three install under the cuquantum/ and
+# cutensor/ namespace packages that CUQUANTUM_ROOT and CUTENSOR_ROOT name.
+nvidia-cuda-nvcc = "~=13.3.73"
+nvidia-cuda-cccl = "~=13.3.3.4.1"
+nvidia-cuda-runtime = "~=13.3.29"
+nvidia-cublas = "~=13.6.0.2"
+nvidia-cusparse = "~=12.8.2.51"
+nvidia-curand = "~=10.4.3.29"
+nvidia-cusolver = "~=12.2.6.9"
 cutensor-cu13 = "~=2.7.0"
+cutensornet-cu13 = "~=2.13.0"
 
 [feature.cuda.activation.env]
 # cudafe++ can use substantial memory on this template-heavy codebase, so cap
@@ -208,19 +199,30 @@ cutensor-cu13 = "~=2.7.0"
 CMAKE_BUILD_PARALLEL_LEVEL = "2"
 
 [feature.cuda.target.linux-64.activation.env]
-# The finders in CMakeLists.txt require these roots explicitly; on Linux they
-# are the Pixi environment itself. The cuda environment carries the mkl
-# feature, so the preset is the MKL one on both platforms.
-CUTENSOR_ROOT = "$CONDA_PREFIX"
-CUQUANTUM_ROOT = "$CONDA_PREFIX"
+# The finders in CMakeLists.txt require these roots explicitly. The wheels
+# unpack into this environment's site-packages; the interpreter version in the
+# path is the one the python310 feature pins. The cuda environment carries the
+# mkl feature, so the preset is the MKL one -- and unlike Windows it keeps
+# USE_CUQUANTUM on, because cuTensorNet and cuStateVec do publish Linux wheels.
+CUDA_HOME = "$CONDA_PREFIX/lib/python3.10/site-packages/nvidia/cu13"
+CUDAToolkit_ROOT = "$CONDA_PREFIX/lib/python3.10/site-packages/nvidia/cu13"
+CUDACXX = "$CONDA_PREFIX/lib/python3.10/site-packages/nvidia/cu13/bin/nvcc"
+CUTENSOR_ROOT = "$CONDA_PREFIX/lib/python3.10/site-packages/cutensor"
+CUQUANTUM_ROOT = "$CONDA_PREFIX/lib/python3.10/site-packages/cuquantum"
 CYTNX_CUDA_PRESET = "mkl-cuda"
 
 [feature.cuda.target.win-64.activation.env]
 CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
 CYTNX_CUDA_PRESET = "mkl-cuda-windows"
 
+[feature.cuda.target.linux-64.tasks]
+# NVIDIA's wheels ship only versioned sonames and relocate libnvvm, neither of
+# which CMake and nvlink can use as-is; the release build repairs the same two
+# things through the same script.
+prepare-cuda = "bash tools/prepare_cuda_layout.sh $CONDA_PREFIX/lib/python3.10/site-packages"
+
 [feature.cuda.tasks]
-configure-cuda = { cmd = "cmake --preset $CYTNX_CUDA_PRESET -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup"] }
+configure-cuda = { cmd = "cmake --preset $CYTNX_CUDA_PRESET -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup", "prepare-cuda"] }
 build-cuda = { cmd = "cmake --build --preset $CYTNX_CUDA_PRESET -j 2", depends-on = ["configure-cuda"] }
 install-python-cuda = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_CUDA_PRESET --config-settings=cmake.args=--preset=$CYTNX_CUDA_PRESET", depends-on = ["setup"] }
 
