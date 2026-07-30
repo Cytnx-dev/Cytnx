@@ -95,6 +95,13 @@ CMAKE_GENERATOR_TOOLSET = ""
 # pass the same -D on their command line, because plain cmake ignores this
 # variable.
 CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+# Windows takes the release presets where the other platforms take debug-*
+# ones. USE_DEBUG's sanitizer is a GCC arrangement here --
+# tools/run_with_asan_preload.py handles the Linux side and deliberately does
+# nothing elsewhere -- and MSVC's own /fsanitize=address is not part of the
+# toolchain validated for cytnx. The Windows tasks pass RUN_TESTS themselves,
+# since only the debug presets set it.
+CYTNX_PRESET = "openblas-cpu"
 
 # Which presets from CMakePresets.json the tasks drive. They live here rather
 # than being written into the tasks so that each task is defined exactly once:
@@ -107,9 +114,12 @@ CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
 # macOS and fail for want of a make program.
 [activation.env]
 CMAKE_GENERATOR = "Ninja"
-CYTNX_PRESET = "openblas-cpu"
+CYTNX_PRESET = "debug-openblas-cpu"
 
 [feature.mkl.activation.env]
+CYTNX_PRESET = "debug-mkl-cpu"
+
+[feature.mkl.target.win-64.activation.env]
 CYTNX_PRESET = "mkl-cpu"
 
 # Every task works in the one build tree the selected preset names,
@@ -117,13 +127,13 @@ CYTNX_PRESET = "mkl-cpu"
 # set of object files and an incremental rebuild serves both. The editable
 # install is pointed at that same directory rather than one of its own.
 #
-# CYTNX_PRESET names a release preset, with RUN_TESTS turned on so the tree
-# still carries the GoogleTest binary. It cannot be a debug-* preset: those
-# set USE_DEBUG, which instruments the extension with AddressSanitizer and
-# exports the sanitizer link option, and importing that into this
-# environment's ordinary Python aborts unless the ASan runtime is preloaded
-# first. ci-cmake_tests.yml keeps USE_DEBUG off for the same reason. Run
-# `cmake --preset debug-openblas-cpu` directly when the sanitizer is wanted.
+# On Linux and macOS CYTNX_PRESET is a debug-* preset, which is the
+# configuration CONTRIBUTING.md gates a pull request on: USE_DEBUG on, so
+# AddressSanitizer covers both the GoogleTest suite and whatever the Python
+# tests reach. Importing an ASan-instrumented extension into an ordinary
+# interpreter needs the sanitizer runtime preloaded ahead of it, which is what
+# test-python goes through tools/run_with_asan_preload.py for; test-cpp does
+# not, so ctest keeps leak detection on, where a real cytnx leak would show.
 #
 # pybind11_DIR is passed because pybind11 is a PyPI package: its CMake package
 # config lives under site-packages, where find_package() does not search.
@@ -136,7 +146,7 @@ CYTNX_PRESET = "mkl-cpu"
 setup = "git submodule update --init --recursive"
 doctor = "cmake --version && ninja --version && python --version && $CXX --version"
 
-configure = { cmd = "cmake --preset $CYTNX_PRESET -DRUN_TESTS=ON -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup"] }
+configure = { cmd = "cmake --preset $CYTNX_PRESET -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup"] }
 build = { cmd = "cmake --build --preset $CYTNX_PRESET --target test_main", depends-on = ["configure"] }
 test-cpp = { cmd = "ctest --test-dir build/$CYTNX_PRESET --output-on-failure", depends-on = ["build"] }
 
@@ -145,8 +155,8 @@ test-cpp = { cmd = "ctest --test-dir build/$CYTNX_PRESET --output-on-failure", d
 # pybind11, the same one the configure task resolved, instead of provisioning a
 # second copy. RUN_TESTS goes through cmake.define, which is additive, so it
 # does not displace the preset in cmake.args.
-install-python = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET --config-settings=cmake.define.RUN_TESTS=ON", depends-on = ["setup"] }
-test-python = { cmd = "python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
+install-python = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET", depends-on = ["setup"] }
+test-python = { cmd = "python tools/run_with_asan_preload.py build/$CYTNX_PRESET python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
 format = "pre-commit run --all-files"
 
 [target.win-64.tasks]
