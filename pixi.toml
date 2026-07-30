@@ -1,0 +1,192 @@
+[workspace]
+name = "cytnx-dev"
+channels = ["conda-forge"]
+# Every platform cytnx is developed on. The lock file resolves all of them,
+# so a contributor on any one of them gets the same dependency versions.
+platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
+
+[dependencies]
+pip = "*"
+scikit-build-core = ">=0.11,<1"
+
+# Build tools. c-compiler/cxx-compiler resolve to the platform's toolchain:
+# GCC on Linux and Clang on macOS come from conda-forge, while on Windows the
+# packages are activation glue for an existing Visual Studio 2022 install and
+# do not contain MSVC itself.
+cmake = ">=3.31,<4"
+ninja = ">=1.11"
+git = "*"
+c-compiler = ">=1.11,<2"
+cxx-compiler = ">=1.11,<2"
+# Must match the clang-format revision pinned in .pre-commit-config.yaml;
+# a different major version reflows code and fails the format CI job.
+clang-format = "14.*"
+pre-commit = "*"
+
+# Native dependencies shared by the development environments. BLAS, LAPACK and
+# LAPACKE are not listed here: each of the two vendor features below pins the
+# whole stack to one vendor's builds, so an environment cannot end up with a
+# half-OpenBLAS, half-netlib mixture.
+arpack = { version = ">=3.9,<4", build = "nompi_*" }
+libboost-devel = "*"
+gtest = "*"
+gmock = "*"
+
+# Python runtime and contributor tooling.
+numpy = "*"
+beartype = "*"
+graphviz = "*"
+pytest = "*"
+pytest-cov = "*"
+mypy = "*"
+
+[pypi-dependencies]
+# These exact versions must match pyproject.toml so direct CMake builds and
+# editable builds produce the same bindings and committed stubs.
+pybind11 = "==3.0.4"
+pybind11-stubgen = "==2.5.5"
+
+[target.win-64.pypi-dependencies]
+# Reads PE export tables in tools/prepare_windows_import_libraries.py, which
+# only ever runs on Windows.
+pefile = ">=2024.8.26"
+
+# Contributor environments stay fixed at the oldest supported interpreter.
+[feature.python310.dependencies]
+python = "3.10.*"
+
+[feature.openblas.dependencies]
+# `openblas` is the development split: it is what provides the libopenblas.so
+# symlink and the lapacke.h header that CMake's FindBLAS and morse_cmake's
+# FindLAPACKE look for. The runtime-only libopenblas package has neither.
+#
+# The OpenMP-threaded build matches the pin in ci-cmake_tests.yml: the pthreads
+# build runs a thread pool of its own, which oversubscribes the CPU whenever a
+# BLAS call originates inside one of cytnx's or HPTT's OpenMP regions.
+openblas = { build = "openmp*" }
+libopenblas = { build = "openmp*" }
+libblas = { version = ">=3.9,<4", build = "*openblas" }
+liblapack = { version = ">=3.9,<4", build = "*openblas" }
+liblapacke = { version = ">=3.9,<4", build = "*openblas" }
+
+[feature.mkl]
+# Intel MKL is x86-only, so the mkl environment does not exist for the two
+# ARM platforms; they build against the default OpenBLAS environment.
+platforms = ["linux-64", "osx-64", "win-64"]
+
+[feature.mkl.dependencies]
+mkl-devel = "*"
+libblas = { version = ">=3.9,<4", build = "*mkl" }
+liblapack = { version = ">=3.9,<4", build = "*mkl" }
+liblapacke = { version = ">=3.9,<4", build = "*mkl" }
+
+[target.win-64.activation]
+scripts = ["tools/activate_windows.bat"]
+
+[target.win-64.activation.env]
+CMAKE_GENERATOR = "Ninja"
+CMAKE_GENERATOR_PLATFORM = ""
+CMAKE_GENERATOR_TOOLSET = ""
+# Interprocedural optimization is off because MSVC's /GL rejects the mixed
+# static-archive link cytnx produces; CMakeLists.txt otherwise turns it on
+# for every non-Apple platform.
+CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+
+# Which presets from CMakePresets.json the Linux and macOS tasks drive. They
+# live here rather than being written into the tasks so that each task is
+# defined exactly once: a task defined by two features at the same time makes
+# `pixi run <task>` ambiguous and forces every invocation to carry -e.
+[activation.env]
+CYTNX_PRESET = "debug-openblas-cpu"
+CYTNX_WHEEL_PRESET = "openblas-cpu"
+
+[feature.mkl.activation.env]
+CYTNX_PRESET = "debug-mkl-cpu"
+CYTNX_WHEEL_PRESET = "mkl-cpu"
+
+# Windows overrides every task below, because there the commands have to run
+# inside tools/activate_windows.bat.
+#
+# The C++ tasks configure with BUILD_PYTHON=OFF. pybind11 comes from PyPI, so
+# its CMake package config sits under site-packages where find_package() does
+# not look; scikit-build-core puts it on CMAKE_PREFIX_PATH itself, which is why
+# install-python needs no such override while a bare cmake invocation would
+# fail. Splitting the two also keeps `pixi run test-cpp` from building the
+# Python extension it never uses.
+[tasks]
+setup = "git submodule update --init --recursive"
+doctor = "cmake --version && ninja --version && python --version && $CXX --version"
+
+configure = { cmd = "cmake --preset $CYTNX_PRESET -DBUILD_PYTHON=OFF", depends-on = ["setup"] }
+build = { cmd = "cmake --build --preset $CYTNX_PRESET --target test_main", depends-on = ["configure"] }
+# ctest is pointed at the preset's build directory rather than at the cpu-only
+# test preset, which is bound to debug-openblas-cpu and so cannot follow
+# CYTNX_PRESET.
+test-cpp = { cmd = "ctest --test-dir build/$CYTNX_PRESET --output-on-failure", depends-on = ["build"] }
+
+install-python = { cmd = "python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/python-$CYTNX_WHEEL_PRESET --config-settings=cmake.args=--preset=$CYTNX_WHEEL_PRESET", depends-on = ["setup"] }
+test-python = { cmd = "python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
+format = "pre-commit run --all-files"
+
+[target.win-64.tasks]
+check-windows-layout = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --check"
+prepare-windows = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py"
+doctor = "tools\\activate_windows.bat --doctor"
+
+configure = { cmd = "tools\\activate_windows.bat cmake --preset mkl-cpu -DBUILD_PYTHON=OFF -DRUN_TESTS=ON", depends-on = ["setup", "prepare-windows"] }
+build = { cmd = "tools\\activate_windows.bat cmake --build --preset mkl-cpu", depends-on = ["configure"] }
+# CTest's per-case GoogleTest discovery launches 1854 short-lived processes on
+# Windows. Run the same complete suite once in the native GoogleTest executable
+# to retain one initialized native runtime and keep local test runs practical.
+test-cpp = { cmd = "..\\tools\\activate_windows.bat ..\\build\\mkl-cpu\\tests\\test_main.exe", cwd = "tests", depends-on = ["build"] }
+
+install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/python-mkl --config-settings=cmake.args=--preset=mkl-cpu", depends-on = ["setup", "prepare-windows"] }
+test-python = { cmd = "tools\\activate_windows.bat python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
+format = "tools\\activate_windows.bat pre-commit run --all-files"
+
+[feature.cuda]
+# Windows only. This feature's compiler, headers, import libraries, and
+# runtime DLLs come from NVIDIA's PyPI wheels together with the import-library
+# generation in tools/prepare_windows_import_libraries.py, none of which
+# applies elsewhere: Linux CUDA development uses a system CUDA toolkit and
+# macOS has no CUDA at all.
+platforms = ["win-64"]
+
+[feature.cuda.pypi-dependencies]
+cuda-toolkit = { version = "~=13.3.0", extras = [
+  "nvcc",
+  "cccl",
+  "cudart",
+  "cublas",
+  "cusolver",
+  "cusparse",
+  "curand",
+] }
+cutensor-cu13 = "~=2.7.0"
+
+[feature.cuda.activation.env]
+# cudafe++ can use substantial memory on this template-heavy codebase, so cap
+# the parallelism CUDA builds inherit.
+CMAKE_BUILD_PARALLEL_LEVEL = "2"
+CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+
+[feature.cuda.tasks]
+check-cuda-layout = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --cuda --check"
+prepare-cuda = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --cuda"
+cuda-doctor = { cmd = "tools\\activate_windows.bat --cuda-doctor", depends-on = ["prepare-cuda"] }
+
+# mkl-cuda-windows is the CUDA preset with USE_CUQUANTUM off, which is what
+# Windows needs: NVIDIA publishes no Windows build of cuTensorNet or
+# cuStateVec, while cuTENSOR does ship one and stays enabled.
+configure-cuda = { cmd = "tools\\activate_windows.bat cmake --preset mkl-cuda-windows", depends-on = ["setup", "prepare-cuda"] }
+build-cuda = { cmd = "tools\\activate_windows.bat cmake --build --preset mkl-cuda-windows", depends-on = ["configure-cuda"] }
+
+install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install --editable . --no-deps --no-build-isolation --verbose --config-settings=build-dir=build/python-mkl-cuda --config-settings=cmake.args=--preset=mkl-cuda-windows", depends-on = ["setup", "prepare-cuda"] }
+
+[environments]
+# default is OpenBLAS on every platform, matching the openblas-cpu preset the
+# wheels are built with. mkl and cuda exist only on the platforms their
+# features declare.
+default = { features = ["python310", "openblas"], solve-group = "openblas" }
+mkl = { features = ["python310", "mkl"], solve-group = "mkl" }
+cuda = { features = ["python310", "mkl", "cuda"], solve-group = "mkl" }
