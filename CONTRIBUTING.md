@@ -1,10 +1,78 @@
 # Contributing to Cytnx
 
-Thanks for considering a contribution. This guide covers the housekeeping
-that is easy to miss when a change touches metadata shared across the
-build, packaging, and docs. For build/test instructions, see
-[Readme.md](Readme.md). Maintainers cutting a tagged release should follow
-[RELEASING.md](RELEASING.md) instead.
+Thanks for considering a contribution. This guide covers the development
+environment and the housekeeping that is easy to miss when a change touches
+metadata shared across the build, packaging, and docs. Maintainers cutting a
+tagged release should follow [RELEASING.md](RELEASING.md) instead.
+
+## Development environment
+
+[Pixi](https://pixi.sh) provisions every dependency cytnx builds against —
+compilers, CMake, Ninja, BLAS/LAPACK, Boost, ARPACK, GoogleTest, Python, and
+the contributor tooling — from conda-forge, locked to identical versions on
+Linux, macOS, and Windows. Nothing else needs to be installed system-wide,
+with one exception: on Windows, MSVC itself must already be present (see
+[docs/dev/windows.md](docs/dev/windows.md)).
+
+Install Pixi, then from the repository root:
+
+```sh
+pixi config set --local detached-environments true   # see the note below
+pixi install          # materialize the default environment from pixi.lock
+pixi run doctor       # report the toolchain versions Pixi resolved
+pixi run test-cpp     # configure, build test_main, run the C++ suite
+```
+
+`pixi run` handles the git submodules on first use. The tasks drive the
+presets in `CMakePresets.json` directly, so a Pixi build and a manual
+`cmake --preset` build land in the same `build/<preset>/` tree.
+
+The first line is a workaround, not a preference. Pixi's default layout puts
+the environment in `.pixi/` inside the checkout, and cytnx adds its LAPACKE
+(and, in CUDA builds, cuTENSOR) include directory to `cytnx`'s `PUBLIC`
+usage requirements. CMake refuses to generate when an exported include
+directory lies inside the source tree, since that path would be baked into
+`CytnxTargets.cmake`:
+
+```
+Target "cytnx" INTERFACE_INCLUDE_DIRECTORIES property contains path:
+  ".../\.pixi/envs/default/include" which is prefixed in the source directory.
+```
+
+`detached-environments` moves the environment outside the checkout and the
+generate step succeeds. #1120 tracks the export contract itself; once cytnx
+stops exporting dependency include directories as build-tree paths, the
+setting is no longer needed.
+
+| task | what it does |
+|---|---|
+| `setup` | initialize the git submodules |
+| `doctor` | print the resolved compiler, CMake, Ninja, and Python versions |
+| `configure` / `build` / `test-cpp` | the C++ build and GoogleTest suite |
+| `install-python` / `test-python` | editable install of the extension, then pytest |
+| `format` | run the pre-commit hooks over the whole tree |
+
+### Environments
+
+| environment | BLAS vendor | platforms |
+|---|---|---|
+| `default` | OpenBLAS — matches the `openblas-cpu` preset the wheels are built with | all five |
+| `mkl` | Intel MKL | `linux-64`, `osx-64`, `win-64` (MKL is x86-only) |
+| `cuda` | Intel MKL, plus CUDA and cuTENSOR from NVIDIA's PyPI wheels | `win-64` |
+
+Select one with `-e`, for example `pixi run -e mkl test-cpp`. Before opening a
+pull request, run the C++ suite under both `default` and `mkl`, which is what
+CI gates on.
+
+The `cuda` environment is Windows-only; see
+[docs/dev/windows.md](docs/dev/windows.md). On Linux, CUDA builds use a system
+CUDA toolkit together with the `openblas-cuda` or `mkl-cuda` presets, and macOS
+has no CUDA at all.
+
+Adding or changing a dependency means editing `pixi.toml` and committing the
+regenerated `pixi.lock` alongside it; `pixi lock` resolves every platform in
+the workspace at once, so the lock has to be regenerated even for a change that
+only affects one of them.
 
 ## Updating the minimum supported Python version
 
