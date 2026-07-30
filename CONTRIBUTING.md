@@ -26,10 +26,11 @@ pixi run test-cpp     # configure, build test_main, run the C++ suite
 one build tree its preset names, `build/<preset>/`, so the C++ suite and the
 Python tests share a single set of object files and an incremental rebuild
 serves both — and a Pixi build and a manual `cmake --preset` build are the same
-tree. The tasks drive the release presets with `RUN_TESTS` on, not the `debug-*`
-ones: those enable AddressSanitizer, which the Python tests cannot import
-without preloading the sanitizer runtime. Run `cmake --preset debug-openblas-cpu`
-directly when you want it.
+tree. On Linux and macOS the tasks drive the `debug-*` presets, so both suites
+run under AddressSanitizer; `test-python` goes through
+`tools/run_with_asan_preload.py`, which preloads the sanitizer runtime the
+instrumented extension needs before an ordinary interpreter can import it.
+Windows uses the release presets instead, since that arrangement is GCC's.
 
 | task | what it does |
 |---|---|
