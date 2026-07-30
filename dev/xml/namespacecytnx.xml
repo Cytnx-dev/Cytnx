@@ -220,7 +220,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cytnx_error.hpp" line="30" column="15" declfile="include/cytnx_error.hpp" declline="30" declcolumn="15"/>
+        <location file="include/cytnx_error.hpp" line="33" column="15" declfile="include/cytnx_error.hpp" declline="33" declcolumn="15"/>
       </memberdef>
       <memberdef kind="variable" id="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" prot="public" static="no" extern="yes" mutable="no">
         <type>Device_class</type>

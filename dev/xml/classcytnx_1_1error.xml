@@ -30,7 +30,7 @@
         <label>std::logic_error</label>
       </node>
     </collaborationgraph>
-    <location file="include/cytnx_error.hpp" line="34" column="3" bodyfile="include/cytnx_error.hpp" bodystart="34" bodyend="37"/>
+    <location file="include/cytnx_error.hpp" line="37" column="3" bodyfile="include/cytnx_error.hpp" bodystart="37" bodyend="40"/>
     <listofallmembers>
     </listofallmembers>
   </compounddef>

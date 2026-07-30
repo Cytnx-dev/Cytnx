@@ -23,7 +23,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cytnx_error.hpp" line="41" column="24" bodyfile="include/cytnx_error.hpp" bodystart="41" bodyend="51"/>
+        <location file="include/cytnx_error.hpp" line="44" column="24" bodyfile="include/cytnx_error.hpp" bodystart="44" bodyend="54"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1internal_1ad619737cc981416c5751c54dc3a59ec9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -57,7 +57,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cytnx_error.hpp" line="53" column="24" bodyfile="include/cytnx_error.hpp" bodystart="53" bodyend="74"/>
+        <location file="include/cytnx_error.hpp" line="56" column="24" bodyfile="include/cytnx_error.hpp" bodystart="56" bodyend="77"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1internal_1ab9e4e066d9c0a7008768e68a0d791b89" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -71,7 +71,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cytnx_error.hpp" line="76" column="17" bodyfile="include/cytnx_error.hpp" bodystart="76" bodyend="90"/>
+        <location file="include/cytnx_error.hpp" line="79" column="17" bodyfile="include/cytnx_error.hpp" bodystart="79" bodyend="93"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1internal_1aa7801d0d3ad5adb083645ab42c03f0c2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -104,7 +104,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cytnx_error.hpp" line="92" column="18" bodyfile="include/cytnx_error.hpp" bodystart="92" bodyend="101"/>
+        <location file="include/cytnx_error.hpp" line="95" column="18" bodyfile="include/cytnx_error.hpp" bodystart="95" bodyend="104"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1internal_1a28700253924d13c0c358dc9ae93ff5f0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -137,13 +137,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cytnx_error.hpp" line="103" column="17" bodyfile="include/cytnx_error.hpp" bodystart="103" bodyend="110"/>
+        <location file="include/cytnx_error.hpp" line="106" column="17" bodyfile="include/cytnx_error.hpp" bodystart="106" bodyend="113"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cytnx_error.hpp" line="39" column="3"/>
+    <location file="include/cytnx_error.hpp" line="42" column="3"/>
   </compounddef>
 </doxygen>
