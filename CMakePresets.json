@@ -64,9 +64,10 @@
     {
       "name": "windows-cuda",
       "hidden": true,
-      "description": "A base preset overriding the CUDA variables NVIDIA does not ship for Windows.",
+      "description": "A base preset overriding the variables a Windows build cannot satisfy.",
       "cacheVariables": {
-        "USE_CUQUANTUM": "OFF"
+        "USE_CUQUANTUM": "OFF",
+        "USE_HPTT": "OFF"
       }
     },
     {
