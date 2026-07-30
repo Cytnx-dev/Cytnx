@@ -22,6 +22,23 @@ namespace cytnx {
   namespace gpu_test {
     namespace {
 
+      // See Kron_test's copy: GetRandRange draws Uint16 from the full [0, 65535], and two such
+      // values promote to int before multiplying -- 65535 * 65535 overflows INT_MAX, which is
+      // undefined behaviour in the GPU kernel and the CPU oracle alike and makes a comparison
+      // between them compiler-dependent. Bound Uint16 to the [0, 1000] the wider unsigned dtypes
+      // already use. Int16 is safe: 32768 * 32768 fits in int.
+      Tensor MakeSweepOperand(const std::vector<cytnx_uint64>& shape, unsigned int dtype,
+                              unsigned int seed) {
+        if (dtype == Type.Uint16) {
+          Tensor bounded(shape, Type.Double);
+          random::uniform_(bounded, 0, 1000, seed);
+          return bounded.astype(Type.Uint16);
+        }
+        Tensor t(shape, dtype);
+        InitTensorUniform(t, seed);
+        return t;
+      }
+
       TEST(Outer, GpuDoubleMatchesHandComputed) {
         Tensor a = zeros({3}, Type.Double);
         a.at<cytnx_double>({0}) = -1.5;
@@ -144,10 +161,8 @@ namespace cytnx {
         for (auto dtype : dtype_list) {
           SCOPED_TRACE("dtype " + std::to_string(dtype));
           const cytnx_double tol = (dtype == Type.ComplexFloat) ? 0.1 : 1e-6;
-          Tensor a({5}, dtype);
-          Tensor b({7}, dtype);
-          InitTensorUniform(a, /*seed=*/3);
-          InitTensorUniform(b, /*seed=*/4);
+          Tensor a = MakeSweepOperand({5}, dtype, /*seed=*/3);
+          Tensor b = MakeSweepOperand({7}, dtype, /*seed=*/4);
           Tensor expected = linalg::Outer(a, b);
           Tensor gpu = linalg::Outer(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
           EXPECT_EQ(gpu.dtype(), expected.dtype());

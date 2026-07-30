@@ -29,6 +29,29 @@ namespace cytnx {
   namespace gpu_test {
     namespace {
 
+      // Builds a sweep operand, bounding Uint16 away from signed-overflow UB.
+      //
+      // GetRandRange gives the narrow types their full numeric_limits range, so Uint16 draws
+      // from [0, 65535] -- unlike Uint32/Uint64, which use [0, 1000]. Two uint16_t operands
+      // undergo integral promotion to int before multiplying, and 65535 * 65535 is 4.29e9,
+      // past INT_MAX. That is undefined behaviour in the CPU oracle and the GPU kernel alike,
+      // before the product is narrowed back to uint16, which makes any comparison between them
+      // compiler-dependent rather than a real check. Int16 is safe: 32768 * 32768 fits in int.
+      //
+      // Bounding here rather than in GetRandRange keeps the change to this PR's tests; the
+      // promotion hazard in the kernels themselves is a separate matter.
+      Tensor MakeSweepOperand(const std::vector<cytnx_uint64>& shape, unsigned int dtype,
+                              unsigned int seed) {
+        if (dtype == Type.Uint16) {
+          Tensor bounded(shape, Type.Double);
+          random::uniform_(bounded, 0, 1000, seed);
+          return bounded.astype(Type.Uint16);
+        }
+        Tensor t(shape, dtype);
+        InitTensorUniform(t, seed);
+        return t;
+      }
+
       // 2x2 Kron 2x2 -> 4x4, real. A = [[1,2],[3,4]], B = [[0,5],[6,7]].
       // Kron(A,B) laid out by hand:
       //   [ 0  5   0 10 ]
@@ -169,6 +192,59 @@ namespace cytnx {
         for (std::size_t k = 0; k < 4; ++k) EXPECT_EQ(out.at<cytnx_int16>({k}), expect[k]);
       }
 
+      // Kron short-circuits on a rank-0 operand -- `if (lhs.is_scalar() || rhs.is_scalar())
+      // return lhs * rhs` (Kron.cpp) -- which is a scalar broadcast, not the Kronecker kernel.
+      // Shape {1, 1} does not reach it: that is still rank 2. Both operand orders are covered,
+      // and a mixed-dtype pair, because promotion on this path goes through Mul rather than
+      // through Kron's own output-type selection.
+      TEST(Kron, GpuRankZeroOperandTakesScalarPath) {
+        Tensor s = zeros({}, Type.Double);
+        s.item<cytnx_double>() = -1.5;
+        ASSERT_TRUE(s.is_scalar());
+        ASSERT_EQ(s.shape().size(), 0u);
+
+        Tensor v = zeros({3}, Type.Double);
+        v.at<cytnx_double>({0}) = 2.0;
+        v.at<cytnx_double>({1}) = -4.0;
+        v.at<cytnx_double>({2}) = 0.5;
+        const double expect[3] = {-3.0, 6.0, -0.75};  // -1.5 * each element
+
+        {
+          SCOPED_TRACE("rank-0 on the left");
+          Tensor out = linalg::Kron(s.to(Device.cuda), v.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.Double);
+          ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+          for (std::size_t k = 0; k < 3; ++k)
+            EXPECT_DOUBLE_EQ(out.at<cytnx_double>({k}), expect[k]) << "element " << k;
+        }
+        {
+          SCOPED_TRACE("rank-0 on the right");
+          Tensor out = linalg::Kron(v.to(Device.cuda), s.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.Double);
+          ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{3}));
+          for (std::size_t k = 0; k < 3; ++k)
+            EXPECT_DOUBLE_EQ(out.at<cytnx_double>({k}), expect[k]) << "element " << k;
+        }
+        {
+          // Same float32-inexact operands as the kernel-path discriminator above, so a narrowed
+          // scalar multiply is caught here too rather than only in the Kronecker path.
+          SCOPED_TRACE("ComplexFloat rank-0 x Double vector -> ComplexDouble");
+          Tensor cs = zeros({}, Type.ComplexFloat);
+          cs.item<cytnx_complex64>() = cytnx_complex64(1.5f, -2.5f);
+          Tensor d = zeros({2}, Type.Double);
+          d.at<cytnx_double>({0}) = 0.1;
+          d.at<cytnx_double>({1}) = 3.3;
+
+          Tensor out = linalg::Kron(cs.to(Device.cuda), d.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+          ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{2}));
+          Tensor expected = zeros({2}, Type.ComplexDouble);
+          expected.at<cytnx_complex128>({0}) = cytnx_complex128(1.5 * 0.1, -2.5 * 0.1);
+          expected.at<cytnx_complex128>({1}) = cytnx_complex128(1.5 * 3.3, -2.5 * 3.3);
+          EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
+        }
+      }
+
       // Mixed signed/unsigned dtype pairs, hand-computed. The broad sweep below
       // builds both operands from a single dtype, so every off-diagonal
       // promotion row would otherwise be untested. Type_class::type_promote
@@ -221,10 +297,8 @@ namespace cytnx {
           const cytnx_double tol = (dtype == Type.ComplexFloat) ? 0.1 : 1e-6;
           for (const auto& s : shapes) {
             SCOPED_TRACE("dtype " + std::to_string(dtype));
-            Tensor a(s.first, dtype);
-            Tensor b(s.second, dtype);
-            InitTensorUniform(a, /*seed=*/1);
-            InitTensorUniform(b, /*seed=*/2);
+            Tensor a = MakeSweepOperand(s.first, dtype, /*seed=*/1);
+            Tensor b = MakeSweepOperand(s.second, dtype, /*seed=*/2);
             Tensor expected = linalg::Kron(a, b);
             Tensor gpu = linalg::Kron(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
             EXPECT_EQ(gpu.dtype(), expected.dtype());
