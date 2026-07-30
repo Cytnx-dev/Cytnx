@@ -62,7 +62,7 @@
       "inherits": ["mkl", "openblas-cuda"]
     },
     {
-      "name": "windows-cuda",
+      "name": "cuda-windows",
       "hidden": true,
       "description": "A base preset overriding the CUDA variables NVIDIA does not ship for Windows.",
       "cacheVariables": {
@@ -72,12 +72,12 @@
     {
       "name": "openblas-cuda-windows",
       "description": "Windows build: OpenBLAS as the BLAS vendor with CUDA support, without cuQuantum.",
-      "inherits": ["windows-cuda", "openblas-cuda"]
+      "inherits": ["cuda-windows", "openblas-cuda"]
     },
     {
       "name": "mkl-cuda-windows",
       "description": "Windows build: Intel MKL as the BLAS vendor with CUDA support, without cuQuantum.",
-      "inherits": ["windows-cuda", "mkl-cuda"]
+      "inherits": ["cuda-windows", "mkl-cuda"]
     },
     {
       "name": "openblas-apple",
