@@ -1,3 +1,5 @@
+#include <cstddef>
+
 #include "gtest/gtest.h"
 
 #include "cytnx.hpp"
@@ -34,8 +36,8 @@ namespace cytnx {
         ASSERT_EQ(out.dtype(), Type.Double);
         ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{3, 2}));
         const double expected[3][2] = {{-6.0, 0.75}, {0.0, -0.0}, {9.0, -1.125}};
-        for (cytnx_uint64 i = 0; i < 3; i++)
-          for (cytnx_uint64 j = 0; j < 2; j++)
+        for (std::size_t i = 0; i < 3; i++)
+          for (std::size_t j = 0; j < 2; j++)
             EXPECT_DOUBLE_EQ(out.at<cytnx_double>({i, j}), expected[i][j])
               << "at (" << i << "," << j << ")";
       }
@@ -64,24 +66,31 @@ namespace cytnx {
 
       // The promotion discriminator (mirrors CPU DtypePromotion.OuterComplexfloatDouble):
       // ComplexFloat (x) Double -> ComplexDouble, full double precision.
+      //
+      // As in Kron_test's counterpart, the Double operands are values float32
+      // cannot represent (0.1, 3.3). Computing through ComplexFloat would round
+      // them and miss the double product by 1.5e-9 to 9.5e-8 -- far outside the
+      // tolerance below. Float-exact operands (3, 0.5) would let a narrowed
+      // computation pass unnoticed.
       TEST(Outer, GpuMixedComplexFloatDoublePromotesToComplexDouble) {
         Tensor a = zeros({2}, Type.ComplexFloat);
         a.at<cytnx_complex64>({0}) = cytnx_complex64(1, 1);
         a.at<cytnx_complex64>({1}) = cytnx_complex64(2, 0);
         Tensor b = zeros({2}, Type.Double);
-        b.at<cytnx_double>({0}) = 3;
-        b.at<cytnx_double>({1}) = 0.5;
+        b.at<cytnx_double>({0}) = 0.1;
+        b.at<cytnx_double>({1}) = 3.3;
 
         Tensor out = linalg::Outer(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
 
         ASSERT_EQ(out.dtype(), Type.ComplexDouble);
         ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{2, 2}));
+        // Evaluated in host double arithmetic, not written as decimal literals.
         Tensor expected = zeros({2, 2}, Type.ComplexDouble);
-        expected.at<cytnx_complex128>({0, 0}) = cytnx_complex128(3, 3);  // (1+1i)*3
-        expected.at<cytnx_complex128>({0, 1}) = cytnx_complex128(0.5, 0.5);  // (1+1i)*0.5
-        expected.at<cytnx_complex128>({1, 0}) = cytnx_complex128(6, 0);  // 2*3
-        expected.at<cytnx_complex128>({1, 1}) = cytnx_complex128(1, 0);  // 2*0.5
-        EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-6));
+        expected.at<cytnx_complex128>({0, 0}) = cytnx_complex128(1.0 * 0.1, 1.0 * 0.1);
+        expected.at<cytnx_complex128>({0, 1}) = cytnx_complex128(1.0 * 3.3, 1.0 * 3.3);
+        expected.at<cytnx_complex128>({1, 0}) = cytnx_complex128(2.0 * 0.1, 0.0);
+        expected.at<cytnx_complex128>({1, 1}) = cytnx_complex128(2.0 * 3.3, 0.0);
+        EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
       }
 
       // Regression for #1099: Int16 (x) Int16 Outer used to hit a null dispatch
@@ -103,14 +112,36 @@ namespace cytnx {
         EXPECT_EQ(out.at<cytnx_int16>({1, 1}), -10);
       }
 
-      // Broad cross-check: GPU Outer vs CPU Outer over every real/complex dtype.
+      // Mixed signed/unsigned dtype pair, hand-computed: the sweep below uses a
+      // single dtype for both operands. Uint32 (x) Int16 promotes to Int32, so
+      // the negative products must survive rather than wrap.
+      TEST(Outer, GpuMixedSignedUnsignedPromotion) {
+        Tensor a = zeros({2}, Type.Uint32);
+        a.at<cytnx_uint32>({0}) = 5;
+        a.at<cytnx_uint32>({1}) = 1;
+        Tensor b = zeros({2}, Type.Int16);
+        b.at<cytnx_int16>({0}) = -2;
+        b.at<cytnx_int16>({1}) = 3;
+
+        Tensor out = linalg::Outer(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
+
+        ASSERT_EQ(out.dtype(), Type.Int32);
+        ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{2, 2}));
+        const cytnx_int32 expect[2][2] = {{-10, 15}, {-2, 3}};
+        for (std::size_t i = 0; i < 2; ++i)
+          for (std::size_t j = 0; j < 2; ++j)
+            EXPECT_EQ(out.at<cytnx_int32>({i, j}), expect[i][j]) << "at (" << i << "," << j << ")";
+      }
+
+      // Broad cross-check: GPU Outer vs CPU Outer over every dtype. Deliberately
+      // a GPU-vs-CPU consistency check rather than an independent oracle; the
+      // hand-computed tests above carry the correctness burden.
       // InitTensorUniform draws from [-1000, 1000], so products reach ~1e6; at
       // that magnitude a complex-float multiply diverges from the CPU one at the
       // float32 ULP (~0.06), hence the looser ComplexFloat tolerance (matches
       // Mul_test's convention). A single real multiply is bit-identical.
       TEST(Outer, GpuMatchesCpuAllDtypes) {
         for (auto dtype : dtype_list) {
-          if (dtype == Type.Bool) continue;  // Outer has no Bool kernel
           SCOPED_TRACE("dtype " + std::to_string(dtype));
           const cytnx_double tol = (dtype == Type.ComplexFloat) ? 0.1 : 1e-6;
           Tensor a({5}, dtype);
