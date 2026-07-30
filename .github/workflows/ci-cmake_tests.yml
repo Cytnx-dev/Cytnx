@@ -129,11 +129,19 @@ jobs:
         # build-dir=build pins scikit-build-core's build tree (it defaults
         # to a temp dir) so the subsequent ctest and gcovr steps have a
         # stable path to point at.
+        #
+        #   HPTT_ENABLE_AVX=ON
+        #     Compiles HPTT's AVX micro-kernels, which is what the released
+        #     x86_64 wheels ship (see release_pypi.yml). This runner is
+        #     ubuntu-latest, i.e. always x86_64; HPTT fails the configure
+        #     outright if this option ever reaches a non-x86 target, so the
+        #     hardcoded choice cannot silently go wrong.
         run: |
           pip install --editable '.[dev]' --verbose \
             --config-settings=build-dir=build \
             --config-settings=cmake.define.CMAKE_BUILD_TYPE=Debug \
-            --config-settings=cmake.define.RUN_TESTS=ON
+            --config-settings=cmake.define.RUN_TESTS=ON \
+            --config-settings=cmake.define.HPTT_ENABLE_AVX=ON
 
       - name: Sanity-check the install
         run: python -c "import cytnx; print('cytnx', cytnx.__version__)"

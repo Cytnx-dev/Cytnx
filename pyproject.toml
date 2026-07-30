@@ -157,7 +157,10 @@ before-all = "bash ./tools/cibuildwheel_before_all.sh"
 # own openblas-dev headers were never confirmed to need it, but removing it
 # is unverified and this is a no-op wherever it isn't needed.
 environment = { CMAKE_PREFIX_PATH = "/opt/cytnx-deps", LD_LIBRARY_PATH = "/opt/cytnx-deps/lib", CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DEBUG = "true", CCACHE_DEBUGLEVEL = "1", CCACHE_LOGFILE = "/tmp/cytnx-ccache.log" }
-environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR", "CCACHE_DEBUG", "CCACHE_DEBUGLEVEL", "CCACHE_LOGFILE", "CYTNX_VERSION_TAG"]
+# SKBUILD_CMAKE_DEFINE carries the per-architecture HPTT ISA option the
+# release workflows set (see release_pypi.yml); it has to cross into the
+# manylinux/musllinux container, where the wheel is actually configured.
+environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR", "CCACHE_DEBUG", "CCACHE_DEBUGLEVEL", "CCACHE_LOGFILE", "CYTNX_VERSION_TAG", "SKBUILD_CMAKE_DEFINE"]
 
 [tool.cibuildwheel.macos]
 before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"

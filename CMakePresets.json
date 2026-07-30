@@ -18,7 +18,7 @@
         "BUILD_PYTHON": "ON",
         "BACKEND_TORCH": "OFF",
         "USE_HPTT": "ON",
-        "HPTT_ENABLE_FINE_TUNE": "ON",
+        "HPTT_ENABLE_FINE_TUNE": "OFF",
         "USE_CUDA": "OFF",
         "RUN_TESTS": "OFF",
         "RUN_BENCHMARKS": "OFF",
