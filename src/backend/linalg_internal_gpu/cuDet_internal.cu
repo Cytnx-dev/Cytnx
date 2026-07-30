@@ -17,9 +17,8 @@ namespace cytnx {
       cytnx_complex128* od = (cytnx_complex128*)out;  // result on cpu!
       // Scoped resources (#1146): the info check below throws, so ownership -- not a cleanup block
       // at the tail of the function -- is what keeps these from leaking.
-      auto _in = utils_internal::DeviceBuffer<cuDoubleComplex>::adopt(
-        (cuDoubleComplex*)utils_internal::cuMalloc_gpu(in->size() *
-                                                       sizeof(cuDoubleComplex)));  // unify mem.
+      // Managed (unified) memory: the diagonal is read from the host below.
+      auto _in = utils_internal::DeviceBuffer<cuDoubleComplex>::managed(in->size());
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_complex128) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 
@@ -57,9 +56,8 @@ namespace cytnx {
     void cuDet_internal_cf(void* out, const boost::intrusive_ptr<Storage_base>& in,
                            const cytnx_uint64& L) {
       cytnx_complex64* od = (cytnx_complex64*)out;  // result on cpu!
-      auto _in = utils_internal::DeviceBuffer<cuFloatComplex>::adopt(
-        (cuFloatComplex*)utils_internal::cuMalloc_gpu(in->size() *
-                                                      sizeof(cuFloatComplex)));  // unify mem.
+      // Managed (unified) memory: the diagonal is read from the host below.
+      auto _in = utils_internal::DeviceBuffer<cuFloatComplex>::managed(in->size());
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_complex64) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 
@@ -97,9 +95,8 @@ namespace cytnx {
     void cuDet_internal_d(void* out, const boost::intrusive_ptr<Storage_base>& in,
                           const cytnx_uint64& L) {
       cytnx_double* od = (cytnx_double*)out;  // result on cpu!
-      auto _in = utils_internal::DeviceBuffer<cytnx_double>::adopt(
-        (cytnx_double*)utils_internal::cuMalloc_gpu(in->size() *
-                                                    sizeof(cytnx_double)));  // unify mem.
+      // Managed (unified) memory: the diagonal is read from the host below.
+      auto _in = utils_internal::DeviceBuffer<cytnx_double>::managed(in->size());
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_double) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 
@@ -137,8 +134,8 @@ namespace cytnx {
     void cuDet_internal_f(void* out, const boost::intrusive_ptr<Storage_base>& in,
                           const cytnx_uint64& L) {
       cytnx_float* od = (cytnx_float*)out;  // result on cpu!
-      auto _in = utils_internal::DeviceBuffer<cytnx_float>::adopt((
-        cytnx_float*)utils_internal::cuMalloc_gpu(in->size() * sizeof(cytnx_float)));  // unify mem.
+      // Managed (unified) memory: the diagonal is read from the host below.
+      auto _in = utils_internal::DeviceBuffer<cytnx_float>::managed(in->size());
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_float) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 

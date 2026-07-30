@@ -1,24 +1,35 @@
 #ifndef CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSCOPEDRESOURCE_GPU_H_
 #define CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSCOPEDRESOURCE_GPU_H_
 
+// backend/utils_internal_gpu and backend/linalg_internal_gpu are added by CMake only under
+// USE_CUDA, so this header can never legitimately be compiled without UNI_GPU. Fail loudly rather
+// than expanding to nothing: an accidental include from a CPU translation unit would otherwise
+// surface as "DeviceBuffer is not a member of cytnx::utils_internal", pointing at the use site
+// instead of the include.
+#if !defined(UNI_GPU)
+  #error "cuScopedResource_gpu.hpp is CUDA-only; include it from a .cu under backend/*_gpu."
+#endif
+
 #include <cstddef>
 #include <utility>
 
+#include <cuda_runtime.h>
+#include <cusolverDn.h>
+
 #include "cytnx_error.hpp"
 #include "Type.hpp"
-
-#if defined(UNI_GPU)
-  #include <cuda_runtime.h>
-  #include <cusolverDn.h>
-#endif
+#include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
 
 namespace cytnx {
   namespace utils_internal {
 
-#if defined(UNI_GPU)
-
     /**
      * @brief Owns a `cudaMalloc`ed device buffer and frees it on scope exit.
+     *
+     * `T` is the element type only: it fixes `sizeof(T)` for the allocation and the pointer type
+     * `get()` hands back. It carries no CUDA-specific requirement -- these buffers hold `int`,
+     * `cytnx_double` and `cuDoubleComplex` alike, and nothing here is ever dereferenced on the
+     * host unless the storage came from `managed()`.
      *
      * The cuSOLVER wrappers in `linalg_internal_gpu/` raise their LAPACK-`info` error *before*
      * their cleanup block, so an unconverged factorization used to leak every device allocation
@@ -61,16 +72,20 @@ namespace cytnx {
       }
 
       /**
-       * @brief Takes ownership of a pointer allocated elsewhere, e.g. by `cuMalloc_gpu`.
+       * @brief Allocates `count` elements of CUDA *managed* memory and owns them.
        *
-       * Needed where the buffer must be *managed* memory rather than plain device memory --
-       * `cuDet_internal` reads the factorized diagonal from the host, which only works because
-       * `cuMalloc_gpu` returns `cudaMallocManaged` memory. `cudaFree` releases both kinds, so
-       * ownership is uniform even though allocation is not.
+       * The constructor uses `cudaMalloc`, whose memory is device-only. This factory uses
+       * `cuMalloc_gpu` (`cudaMallocManaged`), which is also host-accessible -- `cuDet_internal`
+       * needs that, because it reads the factorized diagonal directly from the host after the
+       * cuSOLVER call.
+       *
+       * Only the allocation differs: `cudaFree` releases both kinds, so teardown, move semantics
+       * and the zero-element case are identical to the constructor's.
        */
-      static DeviceBuffer adopt(T *p) {
+      static DeviceBuffer managed(std::size_t count) {
         DeviceBuffer buffer;
-        buffer.ptr = p;
+        if (count == 0) return buffer;
+        buffer.ptr = reinterpret_cast<T *>(cuMalloc_gpu(count * sizeof(T)));
         return buffer;
       }
 
@@ -121,8 +136,6 @@ namespace cytnx {
      private:
       gesvdjInfo_t info = nullptr;
     };
-
-#endif  // UNI_GPU
 
   }  // namespace utils_internal
 }  // namespace cytnx
