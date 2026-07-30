@@ -28,14 +28,14 @@ namespace cytnx {
         EXPECT_EQ(host.storage().template at<T>(2), static_cast<T>(30));
       }
 
-      TEST(GpuArange, GpuNonUnitStepRealDtypes) {
+      TEST(Arange, GpuNonUnitStepRealDtypes) {
         ExpectNonUnitStep<cytnx::cytnx_int64>(Type.Int64);
         ExpectNonUnitStep<cytnx::cytnx_int32>(Type.Int32);
         ExpectNonUnitStep<cytnx::cytnx_double>(Type.Double);
         ExpectNonUnitStep<cytnx::cytnx_float>(Type.Float);
       }
 
-      TEST(GpuArange, GpuMultiBlockStepScaling) {
+      TEST(Arange, GpuMultiBlockStepScaling) {
         // 1000 elements span more than one 512-thread block, so the block-boundary indices
         // (511 -> 512) exercise the full linear index. value[i] == 3*i (hand-computed).
         const cytnx::cytnx_uint64 n = 1000;
@@ -47,7 +47,7 @@ namespace cytnx {
         EXPECT_EQ(host.storage().at<cytnx::cytnx_int64>(999), 2997);
       }
 
-      TEST(GpuArange, GpuFractionalStepDouble) {
+      TEST(Arange, GpuFractionalStepDouble) {
         auto host = cytnx::arange(0, 1, 0.25, Type.Double, Device.cuda).to(Device.cpu);
         ASSERT_EQ(host.shape()[0], 4u);
         EXPECT_DOUBLE_EQ(host.storage().at<cytnx::cytnx_double>(0), 0.0);
@@ -56,7 +56,7 @@ namespace cytnx {
         EXPECT_DOUBLE_EQ(host.storage().at<cytnx::cytnx_double>(3), 0.75);
       }
 
-      TEST(GpuArange, GpuEmptyRangeZeroExtent) {
+      TEST(Arange, GpuEmptyRangeZeroExtent) {
         auto g = cytnx::arange(5, 5, 1, Type.Int64, Device.cuda);
         ASSERT_EQ(g.shape().size(), 1u);
         EXPECT_EQ(g.shape()[0], 0u);
