@@ -17,21 +17,46 @@ Install Pixi, then from the repository root:
 
 ```sh
 pixi config set --local detached-environments true   # see the note below
-pixi install          # materialize the default environment from pixi.lock
+pixi install          # materialize the environment from pixi.lock
 pixi run doctor       # report the toolchain versions Pixi resolved
 pixi run test-cpp     # configure, build test_main, run the C++ suite
 ```
 
-`pixi run` initializes the git submodules on first use. Every task works in the
-one build tree its preset names, `build/<preset>/`, so the C++ suite and the
-Python tests share a single set of object files and an incremental rebuild
-serves both — and a Pixi build and a manual `cmake --preset` build are the same
-tree. On Linux the tasks drive the `debug-*` presets, so both suites run under
-AddressSanitizer; `test-python` preloads the sanitizer runtime the instrumented
-extension needs before an ordinary interpreter can import it. macOS and Windows
-build release instead — the preload is a Linux mechanism, and neither Clang's
-macOS ASan dylib nor MSVC's `/fsanitize=address` is part of the toolchain
-validated for cytnx. Run `cmake --preset debug-openblas-cpu` directly there.
+`pixi run` initializes the git submodules on first use.
+
+### Choosing a preset
+
+There is one environment, and every task takes the name of a preset from
+`CMakePresets.json` as its first argument. Nothing about the environment fixes
+which preset is used, so consecutive commands can build different ones:
+
+```sh
+pixi run test-cpp                     # openblas-cpu
+pixi run test-cpp debug-mkl-cpu       # ASan + MKL, no environment switch
+pixi run build openblas-cuda          # compile-check CUDA; no GPU required
+pixi run bench mkl-cpu Contract       # one benchmark filter
+```
+
+The default is `openblas-cpu` — the preset `pyproject.toml` pins for the PyPI
+wheel — so the everyday build matches what is released. On Windows the default
+is `mkl-cpu` instead, because that is what the conda package is built with on
+x86 and there is no Windows wheel. Both BLAS vendors are installed on x86, so
+switching between `openblas-*` and `mkl-*` costs nothing; `linux-aarch64` and
+`osx-arm64` have no MKL and so no `mkl-*` build.
+
+The CUDA toolkit comes from NVIDIA's PyPI wheels, the same ones the release
+build installs — the version ranges live in `tools/prepare_cuda_release.py` and
+`pixi.toml` follows them — so a local CUDA build and a released `cytnx-cuda`
+wheel compile against one toolchain. It is installed on every platform NVIDIA
+publishes for, because compiling a CUDA preset needs no GPU; only *running* GPU
+code does. Linux gets cuTensorNet and cuStateVec and so builds the ordinary
+`*-cuda` presets, while NVIDIA publishes neither for Windows (#1111), where the
+`*-cuda-windows` presets turn `USE_CUQUANTUM` off. macOS has no CUDA at all.
+
+Every task works in the one build tree its preset names, `build/<preset>/`, so
+the C++ suite and the Python tests share a single set of object files, an
+incremental rebuild serves both, and a Pixi build is the same tree as a manual
+`cmake --preset` build. `clean` reclaims one tree without touching the others.
 
 | task | what it does |
 |---|---|
@@ -39,48 +64,41 @@ validated for cytnx. Run `cmake --preset debug-openblas-cpu` directly there.
 | `doctor` | print the resolved compiler, CMake, Ninja, and Python versions |
 | `configure` / `build` / `test-cpp` | the C++ build and GoogleTest suite |
 | `install-python` / `test-python` | editable install of the extension, then pytest |
+| `gate` | the pre-pull-request run: `test-cpp` under both `debug-*` CPU presets |
+| `bench` | build and run `benchmarks_main`, optionally filtered |
+| `stubs` / `stubtest` | regenerate the committed type stubs, and check them |
+| `clean` | remove one preset's build tree |
 | `format` | run the pre-commit hooks over the whole tree |
-| `configure-cuda` / `build-cuda` / `install-python-cuda` | the same, for a CUDA build |
 
 `install-python` installs `.[dev]`, so the Python packages come from
-`pyproject.toml` rather than being declared a second time in `pixi.toml`.
+`pyproject.toml` rather than being declared a second time in `pixi.toml`. Only
+one preset's extension is importable at a time; re-running the task for another
+preset is cheap, because that preset's build tree is already there.
 
-### Environments
-
-| environment | BLAS vendor | platforms |
-|---|---|---|
-| `default` | OpenBLAS — matches the `openblas-cpu` preset the wheels are built with | all five |
-| `mkl` | Intel MKL | `linux-64`, `osx-64`, `win-64` (MKL is x86-only) |
-| `cuda` | Intel MKL, plus CUDA and cuTENSOR | `linux-64`, `win-64` |
-
-Select one with `-e`, for example `pixi run -e mkl test-cpp`. Before opening a
-pull request, run the C++ suite under both `default` and `mkl` on an x86
-machine, which is what CI gates on. On `linux-aarch64` and `osx-arm64` there is
-no `mkl` environment to select, so `pixi run test-cpp` under `default` is the
+Before opening a pull request, run `pixi run gate` on an x86 machine: it builds
+and runs the C++ suite under `debug-openblas-cpu` and `debug-mkl-cpu`, both
+with AddressSanitizer, which is what CI gates on. On `linux-aarch64` and
+`osx-arm64` there is no MKL, so `pixi run test-cpp debug-openblas-cpu` is the
 whole local gate and CI covers the MKL half.
 
-The `cuda` environment needs no system CUDA toolkit on either platform, and a
-driver and GPU only to *run* GPU code, not to compile it. It takes the toolkit
-from NVIDIA's PyPI wheels, the same ones the release build installs — the
-version ranges live in `tools/prepare_cuda_release.py` and `pixi.toml` follows
-them — so a local CUDA build and a released `cytnx-cuda` wheel compile against
-one toolchain. What differs is how much of it exists: Linux gets cuTensorNet
-and so builds the ordinary `mkl-cuda` preset with `USE_CUQUANTUM` on, while
-NVIDIA publishes no cuTensorNet or cuStateVec for Windows (#1111), where
-`build-cuda` uses `mkl-cuda-windows` instead. macOS has no CUDA at all.
+`test-python` against a `debug-*` preset works on Linux only:
+`tools/run_pytest.py` preloads the sanitizer runtime that an instrumented
+extension needs before an ordinary interpreter can import it, and `LD_PRELOAD`
+is a Linux mechanism. macOS would need `DYLD_INSERT_LIBRARIES` aimed at Clang's
+ASan dylib, which cytnx does not wire up; run the Python tests against a
+release preset there.
 
 ### On Windows
 
 Install Visual Studio 2022 or Visual Studio 2022 Build Tools with the "Desktop
 development with C++" workload, MSVC v143 x64/x86 build tools, and a Windows 10
 or 11 SDK; Pixi cannot supply the compiler itself. Run the tasks from an x64
-PowerShell prompt at the repository root. The tasks use the MKL environment, so
-the CPU build is `pixi run -e mkl test-cpp`.
+PowerShell prompt at the repository root.
 
 Two dependencies ship layouts MSVC cannot consume directly, so
 `tools/prepare_windows_import_libraries.py` derives what is missing from the
 installed files — it vendors nothing and is idempotent. The configure tasks
-depend on it; `pixi run -e mkl check-windows-layout` inspects without changing
+depend on it; `pixi run check-windows-layout` inspects without changing
 anything. The remaining Windows-specific settings are commented where they are
 declared, in `pixi.toml`.
 
