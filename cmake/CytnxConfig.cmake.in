@@ -47,10 +47,37 @@ endif()
 block(SCOPE_FOR VARIABLES)
   list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/morse" "${CMAKE_CURRENT_LIST_DIR}/Modules")
 
-  # Rediscover the BLAS/LAPACK vendor cytnx was actually built against, so the
-  # consumer does not silently bind to a different implementation or integer
-  # ABI (MKL LP64 vs ILP64, OpenBLAS vs reference LAPACK).
+  # Ask for the BLAS/LAPACK vendor cytnx was built against. This steers a lookup
+  # that has not happened yet; it cannot redirect one that has, because neither
+  # finder replaces a target that already exists: FindLAPACK creates
+  # LAPACK::LAPACK only when no target of that name exists, and FindBLAS does the
+  # same for BLAS::BLAS. A pre-existing BLAS::BLAS reaches cytnx's link line even
+  # when no LAPACK target existed, because FindLAPACK drops BLAS_LIBRARIES from
+  # the LAPACK::LAPACK it creates and links that BLAS target in their place.
+  #
+  # Warn rather than bind silently: an OpenBLAS/reference or MKL LP64/ILP64
+  # mismatch miscomputes instead of failing loudly. Warn rather than fail,
+  # because a consumer that deliberately resolved the matching implementation
+  # first is a legitimate ordering, and telling the two apart from here would
+  # mean comparing against the build machine's library paths.
   set(BLA_VENDOR "@BLA_VENDOR@")
+  set(_cytnx_preexisting_blas "")
+  if(TARGET LAPACK::LAPACK)
+    list(APPEND _cytnx_preexisting_blas "LAPACK::LAPACK")
+  endif()
+  if(TARGET BLAS::BLAS)
+    list(APPEND _cytnx_preexisting_blas "BLAS::BLAS")
+  endif()
+  if(_cytnx_preexisting_blas AND NOT "@BLA_VENDOR@" STREQUAL "")
+    list(JOIN _cytnx_preexisting_blas " and " _cytnx_preexisting_blas_names)
+    message(WARNING
+      "Cytnx was built against BLA_VENDOR=@BLA_VENDOR@, but this project "
+      "already defines ${_cytnx_preexisting_blas_names}, which the lookup below "
+      "will reuse rather than recreate -- so Cytnx will link whatever those "
+      "targets name. Check that they are the same BLAS/LAPACK implementation "
+      "and integer ABI: resolve BLAS and LAPACK with BLA_VENDOR=@BLA_VENDOR@ "
+      "before find_package(Cytnx), or find Cytnx first.")
+  endif()
 
   # cytnx's BLAS/LAPACK requirement is PUBLIC: the installed header
   # backend/lapack_wrapper.hpp includes <lapacke.h> (or <mkl.h> under UNI_MKL),
