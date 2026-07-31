@@ -266,7 +266,14 @@ CUDAToolkit_ROOT = "$CONDA_PREFIX/lib/python3.10/site-packages/nvidia/cu13"
 CUDACXX = "$CONDA_PREFIX/lib/python3.10/site-packages/nvidia/cu13/bin/nvcc"
 CUTENSOR_ROOT = "$CONDA_PREFIX/lib/python3.10/site-packages/cutensor"
 CUQUANTUM_ROOT = "$CONDA_PREFIX/lib/python3.10/site-packages/cuquantum"
-CYTNX_CUDA_PRESET = "mkl-cuda"
+CYTNX_CUDA_PRESET = "debug-mkl-cuda"
+# ASan needs more help under CUDA than it does on the CPU presets:
+# protect_shadow_gap=0 because the CUDA runtime maps into ASan's shadow gap,
+# and replace_intrin=0 because its intrinsic replacements break CUDA's own
+# memory routines. Mirrors what
+# .claude/skills/build-test-workflow/scripts/build_preset.sh exports for a
+# debug-*-cuda preset, and applies to the build as well as any run.
+ASAN_OPTIONS = "protect_shadow_gap=0:replace_intrin=0:detect_leaks=0"
 
 [feature.cuda.target.win-64.activation.env]
 CMAKE_ARGS = "-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
