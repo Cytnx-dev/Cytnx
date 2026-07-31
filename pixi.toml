@@ -201,6 +201,15 @@ ASAN_OPTIONS = "protect_shadow_gap=0:replace_intrin=0"
 # preset asks for, so one build tree can build test_main and benchmarks_main
 # later with no reconfigure.
 #
+# RUN_TESTS also makes CMakeLists.txt add --coverage to every cytnx
+# translation unit, which costs compile time, test time and disk on a tree
+# nobody is collecting coverage from -- Codecov collects it in CI.
+# tools/strip_coverage_launcher.sh drops the flag before it reaches the
+# compiler and the linker; --coverage is a driver shorthand that
+# -fno-profile-arcs/-fno-test-coverage do not cancel, so removing the token is
+# what works. Windows needs none of this: CMakeLists.txt applies coverage only
+# for GNU and Clang, and the launcher is a shell script MSVC could not run.
+#
 # pybind11_DIR is passed because pybind11 is a PyPI package: its CMake package
 # config lives under site-packages, where find_package() does not search.
 # scikit-build-core adds that directory itself, so only the direct cmake call
@@ -215,7 +224,7 @@ format = "pre-commit run --all-files"
 
 [tasks.configure]
 args = [{ arg = "preset", default = "openblas-cpu" }]
-cmd = "cmake --preset {{ preset }} -DRUN_TESTS=ON -DRUN_BENCHMARKS=ON -Dpybind11_DIR=$(python -m pybind11 --cmakedir)"
+cmd = "cmake --preset {{ preset }} -DRUN_TESTS=ON -DRUN_BENCHMARKS=ON -DCMAKE_CXX_COMPILER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh -DCMAKE_CXX_LINKER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh -Dpybind11_DIR=$(python -m pybind11 --cmakedir)"
 depends-on = ["setup"]
 
 # `jobs` defaults to what the build presets themselves specify. A CUDA build is
@@ -257,7 +266,7 @@ depends-on = [{ task = "build", args = ["{{ preset }}", "benchmarks_main"] }]
 # nothing to rebuild and the step reduces to a relink and a copy.
 [tasks.install-python]
 args = [{ arg = "preset", default = "openblas-cpu" }]
-cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/{{ preset }} --config-settings=cmake.args=--preset={{ preset }} --config-settings=cmake.define.RUN_TESTS=ON"
+cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/{{ preset }} --config-settings=cmake.args=--preset={{ preset }} --config-settings=cmake.define.RUN_TESTS=ON --config-settings=cmake.define.CMAKE_CXX_COMPILER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh --config-settings=cmake.define.CMAKE_CXX_LINKER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh"
 depends-on = ["setup"]
 
 # tools/run_pytest.py arranges whatever the preset needs before importing the
@@ -308,7 +317,7 @@ prepare-cuda = "bash tools/prepare_cuda_layout.sh $CONDA_PREFIX/lib/python3.10/s
 
 [target.linux-64.tasks.configure]
 args = [{ arg = "preset", default = "openblas-cpu" }]
-cmd = "cmake --preset {{ preset }} -DRUN_TESTS=ON -DRUN_BENCHMARKS=ON -Dpybind11_DIR=$(python -m pybind11 --cmakedir)"
+cmd = "cmake --preset {{ preset }} -DRUN_TESTS=ON -DRUN_BENCHMARKS=ON -DCMAKE_CXX_COMPILER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh -DCMAKE_CXX_LINKER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh -Dpybind11_DIR=$(python -m pybind11 --cmakedir)"
 depends-on = ["setup", "prepare-cuda"]
 
 # The editable install runs `cmake --install`, which swaps the build tree's
@@ -322,7 +331,7 @@ depends-on = ["setup", "prepare-cuda"]
 # the task shell leaves $ORIGIN and the CMake list separators alone.
 [target.linux-64.tasks.install-python]
 args = [{ arg = "preset", default = "openblas-cpu" }]
-cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/{{ preset }} --config-settings=cmake.args=--preset={{ preset }} --config-settings=cmake.define.RUN_TESTS=ON --config-settings='cmake.define.CMAKE_INSTALL_RPATH=$ORIGIN/../nvidia/cu13/lib;$ORIGIN/../cutensor/lib;$ORIGIN/../cuquantum/lib'"
+cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/{{ preset }} --config-settings=cmake.args=--preset={{ preset }} --config-settings=cmake.define.RUN_TESTS=ON --config-settings=cmake.define.CMAKE_CXX_COMPILER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh --config-settings=cmake.define.CMAKE_CXX_LINKER_LAUNCHER=$PIXI_PROJECT_ROOT/tools/strip_coverage_launcher.sh --config-settings='cmake.define.CMAKE_INSTALL_RPATH=$ORIGIN/../nvidia/cu13/lib;$ORIGIN/../cutensor/lib;$ORIGIN/../cuquantum/lib'"
 depends-on = ["setup", "prepare-cuda"]
 
 [target.win-64.tasks]
