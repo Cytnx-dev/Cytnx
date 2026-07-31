@@ -197,7 +197,11 @@ build = { cmd = "tools\\activate_windows.bat cmake --build --preset $CYTNX_PRESE
 test-cpp = { cmd = "..\\tools\\activate_windows.bat ..\\build\\$CYTNX_PRESET\\tests\\test_main.exe", cwd = "tests", depends-on = ["build"] }
 
 install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET", depends-on = ["setup", "prepare-windows"] }
-test-python = { cmd = "tools\\activate_windows.bat python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
+# Python's extension loader ignores PATH and searches only registered DLL
+# directories, so the interpreter goes through the launcher that registers
+# them -- see tools/run_with_dll_dirs.py. test-cpp needs nothing of the sort,
+# because a plain .exe does resolve its imports through PATH.
+test-python = { cmd = "tools\\activate_windows.bat python tools/run_with_dll_dirs.py -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
 format = "tools\\activate_windows.bat pre-commit run --all-files"
 
 [feature.cuda]

@@ -27,6 +27,13 @@ set "PATH=%CONDA_PREFIX%;%CONDA_PREFIX%\Library\mingw-w64\bin;%CONDA_PREFIX%\Lib
 set "CMAKE_PREFIX_PATH=%CONDA_PREFIX%;%CONDA_PREFIX%\Library"
 set "MKLROOT=%CONDA_PREFIX%\Library"
 
+rem The subset of the above that holds dependency DLLs rather than executables.
+rem PATH reaches a plain .exe, but Python's extension loader ignores it and
+rem searches only registered DLL directories, so tools/run_with_dll_dirs.py
+rem registers these before importing cytnx. Library\mingw-w64\bin carries
+rem libarpack.dll and the mingw runtime; Library\bin carries MKL.
+set "CYTNX_WINDOWS_DLL_DIRS=%CONDA_PREFIX%;%CONDA_PREFIX%\Library\mingw-w64\bin;%CONDA_PREFIX%\Library\bin"
+
 set "CYTNX_CUDA_PREFIX=%CONDA_PREFIX%\Lib\site-packages\nvidia\cu13"
 if exist "%CYTNX_CUDA_PREFIX%\bin\nvcc.exe" (
   set "CUDA_PATH=%CYTNX_CUDA_PREFIX%"
@@ -35,6 +42,7 @@ if exist "%CYTNX_CUDA_PREFIX%\bin\nvcc.exe" (
   set "CUDACXX=%CYTNX_CUDA_PREFIX%\bin\nvcc.exe"
   set "CUTENSOR_ROOT=%CONDA_PREFIX%\Lib\site-packages\cutensor"
   set "PATH=%CYTNX_CUDA_PREFIX%\bin;%CYTNX_CUDA_PREFIX%\bin\x64;%CYTNX_CUDA_PREFIX%\bin\x86_64;%CONDA_PREFIX%\Lib\site-packages\cutensor\bin;%CONDA_PREFIX%\Lib\site-packages\cutensor\lib;%PATH%"
+  set "CYTNX_WINDOWS_DLL_DIRS=%CYTNX_CUDA_PREFIX%\bin;%CYTNX_CUDA_PREFIX%\bin\x64;%CYTNX_CUDA_PREFIX%\bin\x86_64;%CONDA_PREFIX%\Lib\site-packages\cutensor\bin;%CONDA_PREFIX%\Lib\site-packages\cutensor\lib;%CYTNX_WINDOWS_DLL_DIRS%"
 )
 set "CYTNX_CUDA_PREFIX="
 set "CYTNX_WINDOWS_ACTIVATED_PREFIX=%CONDA_PREFIX%"
