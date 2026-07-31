@@ -38,14 +38,14 @@ endif()
 # result variables those set, and this block would swallow them.
 #
 # Morse's FindLAPACKE and its helper closure, plus cytnx's own FindCUTENSOR
-# and FindCUQUANTUM: the source tree for a build-tree consumer, the
-# copies inside the package for an installed one. Load them by module path
+# and FindCUQUANTUM: the source tree for a build-tree consumer, the copies
+# inside the package for an installed one. Load them by module path
 # rather than including Morse's top-level MorseInit.cmake, which would rewrite
 # project-wide options, CMAKE_BUILD_TYPE, CMAKE_INCLUDE_PATH and
 # CMAKE_LIBRARY_PATH in the consumer. FindLAPACKE includes FindMorseInit itself,
 # which is the finder-only subset of those macros.
 block(SCOPE_FOR VARIABLES)
-  list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/morse" "${CMAKE_CURRENT_LIST_DIR}/Modules")
+  list(PREPEND CMAKE_MODULE_PATH @CYTNX_MORSE_MODULE_DIRS@ @CYTNX_FIND_MODULE_DIRS@)
 
   # Ask for the BLAS/LAPACK vendor cytnx was built against. This steers a lookup
   # that has not happened yet; it cannot redirect one that has, because neither

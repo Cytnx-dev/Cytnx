@@ -600,11 +600,44 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion
 )
 
-# CytnxConfig.cmake.in references @USE_CUDA@ / @USE_HPTT@
-# directly so the installed Config re-finds the imported-target deps that
-# match the options of the cytnx build. See the template for the gating logic.
+# cytnx exports its LAPACKE / cuTENSOR / cuQuantum usage requirements by
+# imported-target name, and an imported target only exists once the finder that
+# creates it has run. CytnxConfig.cmake therefore re-runs those finders in the
+# consumer's own environment, which means it has to be able to find the finder
+# modules. Serializing the already-detected imported targets instead (Morse
+# offers morse_export_imported_target() for that) would write this machine's
+# absolute include and library paths into the package and reintroduce exactly
+# the non-relocatability this arrangement avoids.
+#
+# cytnx ships two consumable packages -- the install tree, and the build tree via
+# export(PACKAGE Cytnx) below -- and they locate those modules differently. One
+# template is configured twice, differing only in the module search paths: the
+# build-tree config reads the finders straight out of the source tree, so no
+# copy of any Morse or Cytnx finder is staged into the build directory, while the
+# installed config reads the copies placed inside the package. Everything else in
+# CytnxConfig.cmake.in is shared between the two.
+#
+# CytnxConfig.cmake.in also references @USE_CUDA@ / @USE_HPTT@ / @USE_MKL@
+# directly so the Config re-finds the imported-target deps that match the options
+# of the cytnx build. See the template for the gating logic.
+
+# Build-tree config: point straight at the source tree. FindMorseInit.cmake
+# includes ParseArguments by bare name, and that one lives a directory above
+# find/, so both directories are needed here; the installed bundle is flat.
+set(CYTNX_MORSE_MODULE_DIRS "\"${_morse_modules_dir}/find\" \"${_morse_modules_dir}\"")
+set(CYTNX_FIND_MODULE_DIRS "\"${CMAKE_CURRENT_LIST_DIR}/cmake/Modules\"")
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
+  INSTALL_DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+# Install-tree config: resolve the modules relative to the installed config
+# itself. The backslashes keep ${CMAKE_CURRENT_LIST_DIR} literal in the
+# generated file so it expands when the consumer loads it, not now.
+set(CYTNX_MORSE_MODULE_DIRS "\"\${CMAKE_CURRENT_LIST_DIR}/morse\"")
+set(CYTNX_FIND_MODULE_DIRS "\"\${CMAKE_CURRENT_LIST_DIR}/Modules\"")
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/install/CytnxConfig.cmake
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
 )
 
@@ -616,20 +649,11 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxDetectCCCL.cmake COPYONLY)
 
 # #############################################
-# # Finder modules CytnxConfig.cmake re-runs
+# # Finder modules the installed config re-runs
 # #############################################
-# cytnx exports its LAPACKE / cuTENSOR / cuQuantum usage requirements by
-# imported-target name, and an imported target only exists once the finder that
-# creates it has run. CytnxConfig.cmake therefore re-runs those finders in the
-# consumer's own environment (see cmake/CytnxConfig.cmake.in), so the finder
-# modules have to ship with the package -- for the install tree and for the
-# build tree alike, since cytnx exports a consumable build-tree package too
-# (export(PACKAGE Cytnx) below).
-#
-# Serializing the already-detected imported targets instead (Morse offers
-# morse_export_imported_target() for that) would write this machine's absolute
-# include and library paths into the package and reintroduce exactly the
-# non-relocatability this arrangement avoids.
+# Only the install tree needs its own copies; the build-tree config reads these
+# finders from the source tree (see the two configure_package_config_file calls
+# above).
 
 # Morse's FindLAPACKE plus its finder dependency closure: morse_install_finds()
 # adds the shared Morse helper modules and MORSE-Copyright.txt to whatever is
@@ -639,49 +663,24 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
 set(CYTNX_MORSE_FINDS LAPACKE LAPACKEXT)
 block(SCOPE_FOR VARIABLES)
   # morse_install_finds() emits install(FILES) without a COMPONENT; put its
-  # files in the same component as the rest of the CMake package config. Both
-  # the install rules it registers and the file(COPY) below outlive this block —
-  # only the variables do not, which is the point: the component override and
-  # Morse's own bookkeeping stay local.
+  # files in the same component as the rest of the CMake package config. The
+  # install rules it registers are directory-scoped and outlive this block; the
+  # component override and Morse's own bookkeeping variables stay local.
   set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME Development)
   morse_install_finds(CYTNX_MORSE_FINDS "${INSTALL_CONFIGDIR}/morse")
-
-  # The build-tree package needs that same bundle under the same relative path,
-  # but morse_install_finds() only emits install rules. Stage exactly the files
-  # it just installed -- the finders named above, plus the shared helper modules
-  # and copyright notice it appends, which the macro leaves in morse_find_core.
-  if(NOT DEFINED morse_find_core)
-    message(FATAL_ERROR
-      "morse_install_finds() no longer exposes its helper-module list as "
-      "morse_find_core, so the build-tree CMake package cannot be given the "
-      "same Morse finder bundle as the install tree. Update this block against "
-      "the current cmake_modules/morse_cmake/modules/find/FindMorseCommon.cmake.")
-  endif()
-  foreach(cytnx_morse_find IN LISTS CYTNX_MORSE_FINDS)
-    list(APPEND cytnx_morse_bundle "Find${cytnx_morse_find}.cmake")
-  endforeach()
-  list(APPEND cytnx_morse_bundle ${morse_find_core})
-  foreach(cytnx_morse_file IN LISTS cytnx_morse_bundle)
-    file(COPY "${MORSE_CMAKE_MODULE_PATH}/find/${cytnx_morse_file}"
-      DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/morse")
-  endforeach()
 endblock()
 
 # cytnx's own finders for the optional CUDA SDKs, which create
 # CUTENSOR::CUTENSOR / CUQUANTUM::CUQUANTUM.
-set(CYTNX_PACKAGE_FIND_MODULES
+install(FILES
   ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUTENSOR.cmake
   ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUQUANTUM.cmake
-)
-file(COPY ${CYTNX_PACKAGE_FIND_MODULES}
-  DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/Modules")
-install(FILES ${CYTNX_PACKAGE_FIND_MODULES}
   DESTINATION ${INSTALL_CONFIGDIR}/Modules
   COMPONENT Development
 )
 
 install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/install/CytnxConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfigVersion.cmake
   # CytnxConfig.cmake includes this to re-detect the CUDA cccl include dir
   # against the consumer's toolkit, so it must ship next to the config.
