@@ -285,10 +285,17 @@ CYTNX_CUDA_PRESET = "mkl-cuda-windows"
 # things through the same script.
 prepare-cuda = "bash tools/prepare_cuda_layout.sh $CONDA_PREFIX/lib/python3.10/site-packages"
 
-[feature.cuda.tasks]
 configure-cuda = { cmd = "cmake --preset $CYTNX_CUDA_PRESET -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup", "prepare-cuda"] }
 build-cuda = { cmd = "cmake --build --preset $CYTNX_CUDA_PRESET -j 2", depends-on = ["configure-cuda"] }
-install-python-cuda = { cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/$CYTNX_CUDA_PRESET --config-settings=cmake.args=--preset=$CYTNX_CUDA_PRESET", depends-on = ["setup", "prepare-cuda"] }
+# The editable install runs `cmake --install`, which swaps the build tree's
+# RPATH for INSTALL_RPATH, so the extension needs one that reaches the CUDA
+# libraries. CMakeLists.txt installs pycytnx into ${CMAKE_INSTALL_PREFIX}/cytnx
+# and scikit-build-core maps that prefix onto the wheel's platlib root, so the
+# extension sits at site-packages/cytnx/ with the CUDA wheels one level up --
+# the same layout a released cytnx-cuda wheel sees. Must match
+# CUDA_INSTALL_RPATH in tools/prepare_cuda_release.py. Single-quoted so the
+# task shell leaves $ORIGIN and the CMake list separators alone.
+install-python-cuda = { cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/$CYTNX_CUDA_PRESET --config-settings=cmake.args=--preset=$CYTNX_CUDA_PRESET --config-settings='cmake.define.CMAKE_INSTALL_RPATH=$ORIGIN/../nvidia/cu13/lib;$ORIGIN/../cutensor/lib;$ORIGIN/../cuquantum/lib'", depends-on = ["setup", "prepare-cuda"] }
 
 [feature.cuda.target.win-64.tasks]
 # Windows needs a different repair from Linux's: the wheels omit the MSVC
