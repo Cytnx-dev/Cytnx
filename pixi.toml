@@ -7,7 +7,6 @@ platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
 
 [dependencies]
 pip = "*"
-scikit-build-core = ">=0.11,<1"
 
 # Build tools. c-compiler/cxx-compiler resolve to the platform's toolchain:
 # GCC on Linux and Clang on macOS come from conda-forge, while on Windows the
@@ -28,7 +27,12 @@ pre-commit = "*"
 # whole stack to one vendor's builds, so an environment cannot end up with a
 # half-OpenBLAS, half-netlib mixture.
 arpack = { version = ">=3.9,<4", build = "nompi_*" }
-libboost-devel = "*"
+# Must match the libboost-headers constraint in
+# tools/cibuildwheel_before_all.sh. Boost 1.89 marks boost::intrusive_ptr's
+# members constexpr, which crashes nvcc's cudafe++ frontend in every CUDA
+# translation unit reaching cytnx::intrusive_ptr_base through
+# backend/Storage.hpp.
+libboost-devel = "<1.89"
 gtest = "*"
 gmock = "*"
 
@@ -152,11 +156,12 @@ build = { cmd = "cmake --build --preset $CYTNX_PRESET --target test_main", depen
 test-cpp = { cmd = "ctest --test-dir build/$CYTNX_PRESET --output-on-failure", depends-on = ["build"] }
 
 # .[dev] brings in the runtime, test and stub-generation packages pyproject.toml
-# declares. --no-build-isolation makes the build use this environment's pinned
-# pybind11, the same one the configure task resolved, instead of provisioning a
-# second copy. RUN_TESTS goes through cmake.define, which is additive, so it
-# does not displace the preset in cmake.args.
-install-python = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET --config-settings=cmake.define.RUN_TESTS=ON", depends-on = ["setup"] }
+# declares, and PEP 517 build isolation provisions scikit-build-core and
+# pybind11 from that file's [build-system].requires -- neither is declared here
+# a second time. This is the same invocation ci-cmake_tests.yml uses.
+# RUN_TESTS goes through cmake.define, which is additive, so it does not
+# displace the preset in cmake.args.
+install-python = { cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET --config-settings=cmake.define.RUN_TESTS=ON", depends-on = ["setup"] }
 # The debug presets instrument the extension with AddressSanitizer, which an
 # ordinary interpreter cannot simply import: ASan's __cxa_throw interceptor
 # resolves the real __cxa_throw from libstdc++, which python never links, so
@@ -191,7 +196,7 @@ build = { cmd = "tools\\activate_windows.bat cmake --build --preset $CYTNX_PRESE
 # to retain one initialized native runtime and keep local test runs practical.
 test-cpp = { cmd = "..\\tools\\activate_windows.bat ..\\build\\$CYTNX_PRESET\\tests\\test_main.exe", cwd = "tests", depends-on = ["build"] }
 
-install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET", depends-on = ["setup", "prepare-windows"] }
+install-python = { cmd = "tools\\activate_windows.bat python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/$CYTNX_PRESET --config-settings=cmake.args=--preset=$CYTNX_PRESET", depends-on = ["setup", "prepare-windows"] }
 test-python = { cmd = "tools\\activate_windows.bat python -m pytest pytests --doctest-modules", depends-on = ["install-python"] }
 format = "tools\\activate_windows.bat pre-commit run --all-files"
 
@@ -207,9 +212,12 @@ platforms = ["linux-64", "win-64"]
 # a released cytnx-cuda wheel are compiled against one toolchain. The version
 # ranges must match CUDA_BUILD_TOOLCHAIN and CUDA_RUNTIME_DEPENDENCIES in
 # tools/prepare_cuda_release.py, which stays the source of truth for the
-# release path. cutensornet-cu13 pulls cutensor-cu13 and custatevec-cu13
-# through pip's own resolver, and all three install under the cuquantum/ and
-# cutensor/ namespace packages that CUQUANTUM_ROOT and CUTENSOR_ROOT name.
+# release path. cutensornet-cu13 and custatevec-cu13 are both named because
+# FindCUQUANTUM.cmake lists CUQUANTUM_TENSORNET_LIB and
+# CUQUANTUM_CUSTATEVEC_LIB in its REQUIRED_VARS, and they install under the
+# cuquantum/ namespace package that CUQUANTUM_ROOT names. cuquantum-cu13
+# itself is deliberately absent, as it is from the release list: it drags in
+# cudensitymat, cupauliprop and custabilizer, none of which cytnx links.
 nvidia-cuda-nvcc = "~=13.3.73"
 nvidia-cuda-cccl = "~=13.3.3.4.1"
 nvidia-cuda-runtime = "~=13.3.29"
@@ -219,6 +227,7 @@ nvidia-curand = "~=10.4.3.29"
 nvidia-cusolver = "~=12.2.6.9"
 cutensor-cu13 = "~=2.7.0"
 cutensornet-cu13 = "~=2.13.0"
+custatevec-cu13 = "~=1.14.0"
 
 [feature.cuda.target.win-64.pypi-dependencies]
 # Windows takes the CUDA toolkit and cuTENSOR from NVIDIA's PyPI wheels too,
@@ -272,7 +281,7 @@ prepare-cuda = "bash tools/prepare_cuda_layout.sh $CONDA_PREFIX/lib/python3.10/s
 [feature.cuda.tasks]
 configure-cuda = { cmd = "cmake --preset $CYTNX_CUDA_PRESET -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup", "prepare-cuda"] }
 build-cuda = { cmd = "cmake --build --preset $CYTNX_CUDA_PRESET -j 2", depends-on = ["configure-cuda"] }
-install-python-cuda = { cmd = "python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_CUDA_PRESET --config-settings=cmake.args=--preset=$CYTNX_CUDA_PRESET", depends-on = ["setup", "prepare-cuda"] }
+install-python-cuda = { cmd = "python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/$CYTNX_CUDA_PRESET --config-settings=cmake.args=--preset=$CYTNX_CUDA_PRESET", depends-on = ["setup", "prepare-cuda"] }
 
 [feature.cuda.target.win-64.tasks]
 # Windows needs a different repair from Linux's: the wheels omit the MSVC
@@ -285,7 +294,7 @@ cuda-doctor = { cmd = "tools\\activate_windows.bat --cuda-doctor", depends-on = 
 
 configure-cuda = { cmd = "tools\\activate_windows.bat cmake --preset $CYTNX_CUDA_PRESET -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF -Dpybind11_DIR=$(python -m pybind11 --cmakedir)", depends-on = ["setup", "prepare-cuda"] }
 build-cuda = { cmd = "tools\\activate_windows.bat cmake --build --preset $CYTNX_CUDA_PRESET -j 2", depends-on = ["configure-cuda"] }
-install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install --editable .[dev] --no-build-isolation --verbose --config-settings=build-dir=build/$CYTNX_CUDA_PRESET --config-settings=cmake.args=--preset=$CYTNX_CUDA_PRESET", depends-on = ["setup", "prepare-cuda"] }
+install-python-cuda = { cmd = "tools\\activate_windows.bat python -m pip install --editable .[dev] --verbose --config-settings=build-dir=build/$CYTNX_CUDA_PRESET --config-settings=cmake.args=--preset=$CYTNX_CUDA_PRESET", depends-on = ["setup", "prepare-cuda"] }
 
 [environments]
 # default is OpenBLAS on every platform, matching the openblas-cpu preset the
