@@ -172,11 +172,16 @@ option(BUILD_PYTHON "Build Python API. Requires Python and pybind11 installed." 
 option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
 cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
 cmake_dependent_option(USE_HPTT "Use HPTT library to accelerate tensor transpose." OFF "NOT BACKEND_TORCH" OFF)
-cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Enable fine-tune HPTT for the native hardware." OFF "USE_HPTT" OFF)
+cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Tune HPTT for the CPU running the build (-march=native and friends). The objects then require whatever that CPU supports, so leave it OFF for any build that will be redistributed." OFF "USE_HPTT" OFF)
 # TODO: use variable instead of option to handle HPTT variant.
-cmake_dependent_option(HPTT_ENABLE_ARM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
-cmake_dependent_option(HPTT_ENABLE_AVX "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
-cmake_dependent_option(HPTT_ENABLE_IBM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
+# Each variant compiles HPTT's hand-vectorized micro-kernels for one
+# architecture and assumes that architecture's ISA floor: ARM needs ARMv8-A
+# arm64, AVX needs x86-64-v3 (AVX, AVX2, FMA), IBM needs POWER with AltiVec.
+# HPTT raises a FATAL_ERROR when the one that is ON cannot be served by the
+# build's target architecture, so a wrong choice fails during configure.
+cmake_dependent_option(HPTT_ENABLE_ARM "Compile HPTT's Neon kernels; requires an ARMv8-A arm64 target." OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_AVX "Compile HPTT's AVX kernels; requires an x86-64-v3 target." OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_IBM "Compile HPTT's AltiVec kernels; requires a POWER target." OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
 cmake_dependent_option(USE_CUDA "Enable CUDA support." OFF "NOT BACKEND_TORCH" OFF)
 # cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
 # cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)

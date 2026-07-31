@@ -205,6 +205,10 @@ jobs:
         CIBW_TEST_COMMAND: >-
           python {project}/tools/validate_ccache_stats.py &&
           python -c "import cytnx; assert cytnx.Device.Ngpus == 0, cytnx.Device.Ngpus"
+        # Compile HPTT's hand-vectorized kernels for the architecture this
+        # wheel targets; see release_pypi.yml's equivalent for why runner.arch
+        # names the target and how the value reaches the container.
+        SKBUILD_CMAKE_DEFINE: HPTT_ENABLE_${{ runner.arch == 'ARM64' && 'ARM' || 'AVX' }}=ON
         CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
