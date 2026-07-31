@@ -115,11 +115,16 @@ block(SCOPE_FOR VARIABLES)
   # from the consumer's own CUTENSOR_ROOT / CUQUANTUM_ROOT. Both finders read
   # CUDAToolkit variables, so they must run after the find_dependency
   # (CUDAToolkit) above.
-  if(@USE_CUTENSOR@)
+  #
+  # Skip the lookup when the consuming project already supplies the target: it
+  # already satisfies the exported cytnx target, and these finders raise a fatal
+  # error when their *_ROOT is unset, so running one anyway would fail
+  # find_package(Cytnx) over a dependency that is in fact present.
+  if(@USE_CUTENSOR@ AND NOT TARGET CUTENSOR::CUTENSOR)
     find_dependency(CUTENSOR MODULE REQUIRED)
   endif()
 
-  if(@USE_CUQUANTUM@)
+  if(@USE_CUQUANTUM@ AND NOT TARGET CUQUANTUM::CUQUANTUM)
     find_dependency(CUQUANTUM MODULE REQUIRED)
   endif()
 endblock()
