@@ -1,19 +1,111 @@
 @PACKAGE_INIT@
 
+# The dependency lookups below are wrapped in block(SCOPE_FOR VARIABLES), which
+# needs CMake >= 3.25 — the same floor cytnx itself is built with. Report that
+# as a package-not-found reason instead of letting CMake fail on an unknown
+# command. cmake_minimum_required() is deliberately not used here: it would
+# apply cytnx's policy settings to the consuming project's scope.
+if(CMAKE_VERSION VERSION_LESS 3.25)
+  set(Cytnx_NOT_FOUND_MESSAGE
+    "Cytnx requires CMake 3.25 or newer to be consumed; this is CMake ${CMAKE_VERSION}.")
+  set(Cytnx_FOUND FALSE)
+  return()
+endif()
+
 include(CMakeFindDependencyMacro)
 
 find_dependency(Boost CONFIG REQUIRED)
 
 # Conditional re-find of build-time PUBLIC imported-target deps.
-# Plain absolute-path link entries (e.g. ${LAPACK_LIBRARIES}, ${ARPACK_LIB})
-# do not need this — they were baked into INTERFACE_LINK_LIBRARIES as paths.
-# Imported targets (CUDA::*, OpenMP::*) only exist after the
-# corresponding find_package runs in the consumer's project, so we recreate
-# them here when cytnx was built with the matching flag. The @VAR@ tokens
-# are expanded to the build-time value of each option by
-# configure_package_config_file when CytnxConfig.cmake is emitted.
+# Plain absolute-path link entries (e.g. ${ARPACK_LIB}) do not need this — they
+# were baked into INTERFACE_LINK_LIBRARIES as paths. Imported targets (CUDA::*,
+# OpenMP::*, MORSE::LAPACKE) only exist after the corresponding
+# find_package runs in the consumer's project, so we recreate them here when
+# cytnx was built with the matching flag. Each token below wrapped in at signs
+# is substituted with that option's build-time value by
+# configure_package_config_file when CytnxConfig.cmake is emitted — including
+# @USE_MKL@, which selects the same BLAS/LAPACK branch the build took.
 if(@USE_CUDA@)
   find_dependency(CUDAToolkit REQUIRED)
+endif()
+
+# The lookups below share one block(SCOPE_FOR VARIABLES): they all need
+# CMAKE_MODULE_PATH pointed at the finders shipped with cytnx, and the BLAS
+# vendor cytnx was built against, without either escaping into the consuming
+# project. The imported targets they create are directory-scoped, not
+# block-scoped, so they stay visible afterwards -- which is the whole point.
+# Boost, CUDAToolkit and OpenMP stay outside: a consumer legitimately reads the
+# result variables those set, and this block would swallow them.
+#
+# Morse's FindLAPACKE and its helper closure, plus cytnx's own FindCUTENSOR
+# and FindCUQUANTUM: the source tree for a build-tree consumer, the
+# copies inside the package for an installed one. Load them by module path
+# rather than including Morse's top-level MorseInit.cmake, which would rewrite
+# project-wide options, CMAKE_BUILD_TYPE, CMAKE_INCLUDE_PATH and
+# CMAKE_LIBRARY_PATH in the consumer. FindLAPACKE includes FindMorseInit itself,
+# which is the finder-only subset of those macros.
+block(SCOPE_FOR VARIABLES)
+  list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/morse" "${CMAKE_CURRENT_LIST_DIR}/Modules")
+
+  # Rediscover the BLAS/LAPACK vendor cytnx was actually built against, so the
+  # consumer does not silently bind to a different implementation or integer
+  # ABI (MKL LP64 vs ILP64, OpenBLAS vs reference LAPACK).
+  set(BLA_VENDOR "@BLA_VENDOR@")
+
+  # cytnx's BLAS/LAPACK requirement is PUBLIC: the installed header
+  # backend/lapack_wrapper.hpp includes <lapacke.h> (or <mkl.h> under UNI_MKL),
+  # so a consumer compiling it needs those headers, and a consumer linking the
+  # static libcytnx.a needs those libraries. CytnxTargets.cmake names only the
+  # imported target, so rerun the finder that creates it here -- against the
+  # consumer's own installation, which is what keeps the package relocatable.
+  #
+  # LAPACK first, matching the order cytnx itself uses. cytnx links
+  # LAPACK::LAPACK directly, and FindLAPACKE below needs LAPACK anyway
+  # ("LAPACKE requires LAPACK but LAPACK has not been found"), so this adds no
+  # requirement a LAPACKE lookup would not already impose.
+  find_dependency(LAPACK REQUIRED)
+  if(NOT @USE_MKL@)
+    # A standalone LAPACKE is a separate library from the LAPACK under it, so
+    # LAPACK::LAPACK alone does not resolve the LAPACKE_* entry points (nor
+    # provide <lapacke.h>). Recreate MORSE::LAPACKE for those.
+    #
+    # find_package rather than find_dependency, because find_dependency skips a
+    # call whose arguments match one another package config already made in this
+    # directory. That heuristic cannot see that this block just put cytnx's own
+    # FindLAPACKE on CMAKE_MODULE_PATH, so a project that resolved LAPACKE
+    # through a different finder first would leave MORSE::LAPACKE uncreated and
+    # the exported cytnx target naming a target that does not exist. MODULE for
+    # the same reason as the build: under CMAKE_FIND_PACKAGE_PREFER_CONFIG the
+    # basic signature would prefer a LAPACKEConfig.cmake, which defines no such
+    # target. The target is checked after the block, where reporting a
+    # package-not-found reason is in scope.
+    find_package(LAPACKE MODULE)
+  endif()
+
+  # cytnx applies UNI_CUTENSOR / UNI_CUQUANTUM PUBLIC, which makes the installed
+  # headers cytnx_error.hpp and Network.hpp include <cutensor.h> /
+  # <cutensornet.h>. Recreate the imported targets carrying those include dirs
+  # from the consumer's own CUTENSOR_ROOT / CUQUANTUM_ROOT. Both finders read
+  # CUDAToolkit variables, so they must run after the find_dependency
+  # (CUDAToolkit) above.
+  if(@USE_CUTENSOR@)
+    find_dependency(CUTENSOR MODULE REQUIRED)
+  endif()
+
+  if(@USE_CUQUANTUM@)
+    find_dependency(CUQUANTUM MODULE REQUIRED)
+  endif()
+endblock()
+
+# The LAPACKE lookup above is not REQUIRED, so report a missing MORSE::LAPACKE
+# here -- outside the block, where the result variables reach find_package.
+# Without it, CytnxTargets.cmake would name a target that does not exist and the
+# consumer would fail at generate time instead of at find_package(Cytnx).
+if(NOT @USE_MKL@ AND NOT TARGET MORSE::LAPACKE)
+  set(Cytnx_NOT_FOUND_MESSAGE
+    "Cytnx requires LAPACKE, but MORSE::LAPACKE was not created by the FindLAPACKE shipped with Cytnx. Check that LAPACKE is installed where CMake can find it.")
+  set(Cytnx_FOUND FALSE)
+  return()
 endif()
 
 if(@USE_HPTT@)

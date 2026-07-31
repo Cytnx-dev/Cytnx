@@ -9,6 +9,13 @@ message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
+
+# cytnx exports its BLAS/LAPACK usage requirement by *imported target name*
+# (MORSE::LAPACKE or LAPACK::LAPACK) so CytnxTargets.cmake stays free of this
+# machine's absolute library and include paths. Those targets only exist after
+# their finder has run, so CytnxConfig.cmake must rerun the matching finder in
+# the consumer's environment; it selects which one from USE_MKL, the same knob
+# that picks the branch below.
 if (USE_MKL)
   #message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
   # Set MKL interface to LP64 by default, but allow ILP64
@@ -36,7 +43,12 @@ if (USE_MKL)
 #  target_include_directories(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
 #  target_link_libraries(cytnx PUBLIC  $<LINK_ONLY:MKL::MKL>)
 #  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
-  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+  # LAPACK::LAPACK (CMake's own FindLAPACK) already carries ${LAPACK_LIBRARIES}
+  # plus the BLAS libraries it depends on. Linking the target instead of the raw
+  # path list keeps the exported cytnx target relocatable: the installed
+  # CytnxTargets.cmake records the target name, and CytnxConfig.cmake re-runs
+  # find_package(LAPACK) with the same BLA_VENDOR to recreate it.
+  target_link_libraries(cytnx PUBLIC LAPACK::LAPACK)
   target_compile_definitions(cytnx PUBLIC UNI_MKL)
 
 
@@ -46,9 +58,24 @@ else()
   message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
   find_package( BLAS REQUIRED)
   find_package( LAPACK REQUIRED)
-  find_package( LAPACKE REQUIRED)
-  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
-  target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
+  # MODULE, not the basic signature: cytnx links MORSE::LAPACKE, which only
+  # morse_cmake's finder defines. The basic signature searches config mode ahead
+  # of module mode under CMAKE_FIND_PACKAGE_PREFER_CONFIG, so a LAPACKEConfig.cmake
+  # that sets the usual variables would satisfy the lookup without creating that
+  # target and the link below would fail at generate time.
+  find_package(LAPACKE MODULE REQUIRED)
+  # MORSE::LAPACKE owns the LAPACKE headers and the LAPACKE library, and
+  # LAPACK::LAPACK owns the LAPACK/BLAS libraries under it. Both are needed:
+  # when LAPACKE is a standalone library rather than one embedded in LAPACK
+  # (reference liblapacke.so against OpenBLAS, say), MORSE::LAPACKE carries
+  # liblapacke alone, and cytnx calls plain BLAS/LAPACK entry points too, so
+  # dropping LAPACK::LAPACK leaves the consumer's final link short of them.
+  #
+  # Propagating ${LAPACKE_INCLUDE_DIRS} or the raw library lists instead would
+  # bake build-machine paths into the exported target. lapack_wrapper.hpp is an
+  # installed public header that includes <lapacke.h>, so install-tree consumers
+  # get the include dir by re-running FindLAPACKE from CytnxConfig.cmake.
+  target_link_libraries(cytnx PUBLIC MORSE::LAPACKE LAPACK::LAPACK)
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
   message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
   message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
@@ -184,9 +211,14 @@ if(USE_CUDA)
     if(USE_CUTENSOR)
         find_package(CUTENSOR REQUIRED)
         if(CUTENSOR_FOUND)
+            # UNI_CUTENSOR is PUBLIC and makes the installed header
+            # cytnx_error.hpp include <cutensor.h>, so the include dir is a real
+            # public usage requirement. Carry it (and the libraries) on the
+            # imported target rather than on cytnx itself, so the exported target
+            # names CUTENSOR::CUTENSOR instead of this machine's CUTENSOR_ROOT;
+            # CytnxConfig.cmake re-runs FindCUTENSOR to recreate it.
             target_compile_definitions(cytnx PUBLIC UNI_CUTENSOR)
-            target_include_directories(cytnx PUBLIC ${CUTENSOR_INCLUDE_DIRS})
-            target_link_libraries(cytnx PUBLIC ${CUTENSOR_LIBRARIES})
+            target_link_libraries(cytnx PUBLIC CUTENSOR::CUTENSOR)
         else()
             message(FATAL_ERROR "cannot find cutensor! please specify cutensor root with -DCUTENSOR_ROOT")
         endif()
@@ -220,9 +252,12 @@ if(USE_CUDA)
     if(USE_CUQUANTUM)
         find_package(CUQUANTUM REQUIRED)
         if(CUQUANTUM_FOUND)
+            # Same reasoning as cuTENSOR above: UNI_CUQUANTUM is PUBLIC and makes
+            # the installed header Network.hpp include <cutensornet.h>, so the
+            # include dir must reach consumers -- through the imported target, not
+            # as a build-machine path baked into CytnxTargets.cmake.
             target_compile_definitions(cytnx PUBLIC UNI_CUQUANTUM)
-            target_include_directories(cytnx PUBLIC ${CUQUANTUM_INCLUDE_DIRS})
-            target_link_libraries(cytnx PUBLIC ${CUQUANTUM_LIBRARIES})
+            target_link_libraries(cytnx PUBLIC CUQUANTUM::CUQUANTUM)
         else()
             message(FATAL_ERROR "cannot find cuquantum! please specify cuquantum root with -DCUQUANTUM_ROOT")
         endif()
