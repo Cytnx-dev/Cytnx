@@ -43,21 +43,21 @@ namespace cytnx {
       // owned_* buffers are non-empty only in the temporary case, matching the old conditional
       // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
-      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
+      utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_UMem.get();
+          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_u_mem.get();
         }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vTMem.get();
+          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vt_mem.get();
         }
       }
 
@@ -153,21 +153,21 @@ namespace cytnx {
       // owned_* buffers are non-empty only in the temporary case, matching the old conditional
       // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
-      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
+      utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_UMem.get();
+          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_u_mem.get();
         }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vTMem.get();
+          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vt_mem.get();
         }
       }
 
@@ -262,21 +262,21 @@ namespace cytnx {
       // owned_* buffers are non-empty only in the temporary case, matching the old conditional
       // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
-      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
+      utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_UMem.get();
+          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_u_mem.get();
         }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vTMem.get();
+          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vt_mem.get();
         }
       }
 
@@ -370,21 +370,21 @@ namespace cytnx {
       // owned_* buffers are non-empty only in the temporary case, matching the old conditional
       // cudaFree on `dtype() == Type.Void`.
       void *UMem = nullptr, *vTMem = nullptr;
-      utils_internal::DeviceBuffer<data_type> owned_UMem, owned_vTMem;
+      utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_UMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_UMem.get();
+          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          UMem = owned_u_mem.get();
         }
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vTMem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vTMem.get();
+          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+          vTMem = owned_vt_mem.get();
         }
       }
 

@@ -21,17 +21,17 @@ namespace cytnx {
       utils_internal::CusolverDnHandle cusolverH;
 
       // `tA` aliases v's storage when eigenvectors are wanted and is a temporary otherwise;
-      // `owned_tA` is non-empty only in the second case, matching the old conditional cudaFree.
+      // `owned_ta` is non-empty only in the second case, matching the old conditional cudaFree.
       cytnx_complex128 *tA;
-      utils_internal::DeviceBuffer<cytnx_complex128> owned_tA;
+      utils_internal::DeviceBuffer<cytnx_complex128> owned_ta;
       if (v->dtype() != Type.Void) {
         tA = (cytnx_complex128 *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(),
                                    sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
-        owned_tA = utils_internal::DeviceBuffer<cytnx_complex128>(cytnx_uint64(L) * L);
-        tA = owned_tA.get();
+        owned_ta = utils_internal::DeviceBuffer<cytnx_complex128>(cytnx_uint64(L) * L);
+        tA = owned_ta.get();
         checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
@@ -70,15 +70,15 @@ namespace cytnx {
       utils_internal::CusolverDnHandle cusolverH;
 
       cytnx_complex64 *tA;
-      utils_internal::DeviceBuffer<cytnx_complex64> owned_tA;
+      utils_internal::DeviceBuffer<cytnx_complex64> owned_ta;
       if (v->dtype() != Type.Void) {
         tA = (cytnx_complex64 *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(),
                                    sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
-        owned_tA = utils_internal::DeviceBuffer<cytnx_complex64>(cytnx_uint64(L) * L);
-        tA = owned_tA.get();
+        owned_ta = utils_internal::DeviceBuffer<cytnx_complex64>(cytnx_uint64(L) * L);
+        tA = owned_ta.get();
         checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
@@ -117,15 +117,15 @@ namespace cytnx {
       utils_internal::CusolverDnHandle cusolverH;
 
       cytnx_double *tA;
-      utils_internal::DeviceBuffer<cytnx_double> owned_tA;
+      utils_internal::DeviceBuffer<cytnx_double> owned_ta;
       if (v->dtype() != Type.Void) {
         tA = (cytnx_double *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(),
                                    sizeof(cytnx_double) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
-        owned_tA = utils_internal::DeviceBuffer<cytnx_double>(cytnx_uint64(L) * L);
-        tA = owned_tA.get();
+        owned_ta = utils_internal::DeviceBuffer<cytnx_double>(cytnx_uint64(L) * L);
+        tA = owned_ta.get();
         checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_double) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
@@ -164,14 +164,14 @@ namespace cytnx {
       utils_internal::CusolverDnHandle cusolverH;
 
       cytnx_float *tA;
-      utils_internal::DeviceBuffer<cytnx_float> owned_tA;
+      utils_internal::DeviceBuffer<cytnx_float> owned_ta;
       if (v->dtype() != Type.Void) {
         tA = (cytnx_float *)v->data();
         checkCudaErrors(cudaMemcpy(v->data(), in->data(), sizeof(cytnx_float) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
-        owned_tA = utils_internal::DeviceBuffer<cytnx_float>(cytnx_uint64(L) * L);
-        tA = owned_tA.get();
+        owned_ta = utils_internal::DeviceBuffer<cytnx_float>(cytnx_uint64(L) * L);
+        tA = owned_ta.get();
         checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_float) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
