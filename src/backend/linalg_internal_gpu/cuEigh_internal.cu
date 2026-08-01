@@ -3,6 +3,7 @@
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
 #include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
 
@@ -18,7 +19,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1146): the info check below throws, so ownership -- not the cleanup
       // block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       // `tA` aliases v's storage when eigenvectors are wanted and is a temporary otherwise;
       // `owned_ta` is non-empty only in the second case, matching the old conditional cudaFree.
@@ -39,8 +42,8 @@ namespace cytnx {
       // query buffer:
       cytnx_int32 lwork = 0;
       cytnx_int32 b32L = L;
-      checkCudaErrors(cusolverDnZheevd_bufferSize(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER,
-                                                  b32L, (cuDoubleComplex *)tA, b32L,
+      checkCudaErrors(cusolverDnZheevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
+                                                  (cuDoubleComplex *)tA, b32L,
                                                   (cytnx_double *)e->data(), &lwork));
 
       // allocate working space:
@@ -49,7 +52,7 @@ namespace cytnx {
       // call :
       cytnx_int32 info;
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
-      checkCudaErrors(cusolverDnZheevd(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER, b32L,
+      checkCudaErrors(cusolverDnZheevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
                                        (cuDoubleComplex *)tA, b32L, (cytnx_double *)e->data(),
                                        (cuDoubleComplex *)work.get(), lwork, devinfo.get()));
 
@@ -67,7 +70,9 @@ namespace cytnx {
       if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       cytnx_complex64 *tA;
       utils_internal::DeviceBuffer<cytnx_complex64> owned_ta;
@@ -86,8 +91,8 @@ namespace cytnx {
       // query buffer:
       cytnx_int32 lwork = 0;
       cytnx_int32 b32L = L;
-      checkCudaErrors(cusolverDnCheevd_bufferSize(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER,
-                                                  b32L, (cuFloatComplex *)tA, b32L,
+      checkCudaErrors(cusolverDnCheevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
+                                                  (cuFloatComplex *)tA, b32L,
                                                   (cytnx_float *)e->data(), &lwork));
 
       // allocate working space:
@@ -96,7 +101,7 @@ namespace cytnx {
       // call :
       cytnx_int32 info;
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
-      checkCudaErrors(cusolverDnCheevd(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER, b32L,
+      checkCudaErrors(cusolverDnCheevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
                                        (cuFloatComplex *)tA, b32L, (cytnx_float *)e->data(),
                                        (cuFloatComplex *)work.get(), lwork, devinfo.get()));
 
@@ -114,7 +119,9 @@ namespace cytnx {
       if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       cytnx_double *tA;
       utils_internal::DeviceBuffer<cytnx_double> owned_ta;
@@ -133,9 +140,8 @@ namespace cytnx {
       // query buffer:
       cytnx_int32 lwork = 0;
       cytnx_int32 b32L = L;
-      checkCudaErrors(cusolverDnDsyevd_bufferSize(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER,
-                                                  b32L, tA, b32L, (cytnx_double *)e->data(),
-                                                  &lwork));
+      checkCudaErrors(cusolverDnDsyevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA,
+                                                  b32L, (cytnx_double *)e->data(), &lwork));
 
       // allocate working space:
       utils_internal::DeviceBuffer<cytnx_double> work(lwork);
@@ -143,8 +149,8 @@ namespace cytnx {
       // call :
       cytnx_int32 info;
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
-      checkCudaErrors(cusolverDnDsyevd(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA,
-                                       b32L, (cytnx_double *)e->data(), work.get(), lwork,
+      checkCudaErrors(cusolverDnDsyevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA, b32L,
+                                       (cytnx_double *)e->data(), work.get(), lwork,
                                        devinfo.get()));
 
       // get info
@@ -161,7 +167,9 @@ namespace cytnx {
       if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       cytnx_float *tA;
       utils_internal::DeviceBuffer<cytnx_float> owned_ta;
@@ -179,9 +187,8 @@ namespace cytnx {
       // query buffer:
       cytnx_int32 lwork = 0;
       cytnx_int32 b32L = L;
-      checkCudaErrors(cusolverDnSsyevd_bufferSize(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER,
-                                                  b32L, tA, b32L, (cytnx_float *)e->data(),
-                                                  &lwork));
+      checkCudaErrors(cusolverDnSsyevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA,
+                                                  b32L, (cytnx_float *)e->data(), &lwork));
 
       // allocate working space:
       utils_internal::DeviceBuffer<cytnx_float> work(lwork);
@@ -189,9 +196,8 @@ namespace cytnx {
       // call :
       cytnx_int32 info;
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
-      checkCudaErrors(cusolverDnSsyevd(cusolverH.get(), jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA,
-                                       b32L, (cytnx_float *)e->data(), work.get(), lwork,
-                                       devinfo.get()));
+      checkCudaErrors(cusolverDnSsyevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA, b32L,
+                                       (cytnx_float *)e->data(), work.get(), lwork, devinfo.get()));
 
       // get info
       checkCudaErrors(

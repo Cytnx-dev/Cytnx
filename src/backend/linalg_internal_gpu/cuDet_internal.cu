@@ -7,6 +7,7 @@
 #include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
 
 #include <vector>
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
 
@@ -22,16 +23,18 @@ namespace cytnx {
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_complex128) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<int> devIpiv(L);
       utils_internal::DeviceBuffer<int> devInfo(1);
 
       int workspace_size = 0;
-      cusolverDnZgetrf_bufferSize(cusolverH.get(), L, L, _in.get(), L, &workspace_size);
+      cusolverDnZgetrf_bufferSize(cusolverH, L, L, _in.get(), L, &workspace_size);
       utils_internal::DeviceBuffer<cuDoubleComplex> workspace(workspace_size);
 
-      cusolverDnZgetrf(cusolverH.get(), L, L, _in.get(), L, workspace.get(), devIpiv.get(),
+      cusolverDnZgetrf(cusolverH, L, L, _in.get(), L, workspace.get(), devIpiv.get(),
                        devInfo.get());
 
       int info;
@@ -61,16 +64,18 @@ namespace cytnx {
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_complex64) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<int> devIpiv(L);
       utils_internal::DeviceBuffer<int> devInfo(1);
 
       int workspace_size = 0;
-      cusolverDnCgetrf_bufferSize(cusolverH.get(), L, L, _in.get(), L, &workspace_size);
+      cusolverDnCgetrf_bufferSize(cusolverH, L, L, _in.get(), L, &workspace_size);
       utils_internal::DeviceBuffer<cuFloatComplex> workspace(workspace_size);
 
-      cusolverDnCgetrf(cusolverH.get(), L, L, _in.get(), L, workspace.get(), devIpiv.get(),
+      cusolverDnCgetrf(cusolverH, L, L, _in.get(), L, workspace.get(), devIpiv.get(),
                        devInfo.get());
 
       int info;
@@ -100,16 +105,18 @@ namespace cytnx {
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_double) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<int> devIpiv(L);
       utils_internal::DeviceBuffer<int> devInfo(1);
 
       int workspace_size = 0;
-      cusolverDnDgetrf_bufferSize(cusolverH.get(), L, L, _in.get(), L, &workspace_size);
+      cusolverDnDgetrf_bufferSize(cusolverH, L, L, _in.get(), L, &workspace_size);
       utils_internal::DeviceBuffer<cytnx_double> workspace(workspace_size);
 
-      cusolverDnDgetrf(cusolverH.get(), L, L, _in.get(), L, workspace.get(), devIpiv.get(),
+      cusolverDnDgetrf(cusolverH, L, L, _in.get(), L, workspace.get(), devIpiv.get(),
                        devInfo.get());
 
       int info;
@@ -139,16 +146,18 @@ namespace cytnx {
       checkCudaErrors(cudaMemcpy(_in.get(), in->data(), sizeof(cytnx_float) * in->size(),
                                  cudaMemcpyDeviceToDevice));
 
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<int> devIpiv(L);
       utils_internal::DeviceBuffer<int> devInfo(1);
 
       int workspace_size = 0;
-      cusolverDnSgetrf_bufferSize(cusolverH.get(), L, L, _in.get(), L, &workspace_size);
+      cusolverDnSgetrf_bufferSize(cusolverH, L, L, _in.get(), L, &workspace_size);
       utils_internal::DeviceBuffer<cytnx_float> workspace(workspace_size);
 
-      cusolverDnSgetrf(cusolverH.get(), L, L, _in.get(), L, workspace.get(), devIpiv.get(),
+      cusolverDnSgetrf(cusolverH, L, L, _in.get(), L, workspace.get(), devIpiv.get(),
                        devInfo.get());
 
       int info;

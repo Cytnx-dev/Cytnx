@@ -1,6 +1,7 @@
 #include "cuGeSvd_internal.hpp"
 #include "cuConj_inplace_internal.hpp"
 #include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
 
@@ -25,7 +26,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
       // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -64,7 +67,7 @@ namespace cytnx {
 
       cytnx_int32 lwork = 0;
       checkCudaErrors(cusolverDnZgesvdj_bufferSize(
-        cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(), ldA, (cytnx_double *)S->data(),
+        cusolverH, jobz, econ, N, M, (d_data_type *)Mij.get(), ldA, (cytnx_double *)S->data(),
         (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
       utils_internal::DeviceBuffer<data_type> d_work(lwork);
@@ -72,8 +75,8 @@ namespace cytnx {
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnZgesvdj(cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(),
-                                        ldA, (cytnx_double *)S->data(), (d_data_type *)vTMem, ldu,
+      checkCudaErrors(cusolverDnZgesvdj(cusolverH, jobz, econ, N, M, (d_data_type *)Mij.get(), ldA,
+                                        (cytnx_double *)S->data(), (d_data_type *)vTMem, ldu,
                                         (d_data_type *)UMem, ldvT, (d_data_type *)d_work.get(),
                                         lwork, devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
@@ -108,7 +111,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
       // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -147,7 +152,7 @@ namespace cytnx {
 
       cytnx_int32 lwork = 0;
       checkCudaErrors(cusolverDnCgesvdj_bufferSize(
-        cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(), ldA, (cytnx_float *)S->data(),
+        cusolverH, jobz, econ, N, M, (d_data_type *)Mij.get(), ldA, (cytnx_float *)S->data(),
         (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
       utils_internal::DeviceBuffer<data_type> d_work(lwork);
@@ -155,8 +160,8 @@ namespace cytnx {
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnCgesvdj(cusolverH.get(), jobz, econ, N, M, (d_data_type *)Mij.get(),
-                                        ldA, (cytnx_float *)S->data(), (d_data_type *)vTMem, ldu,
+      checkCudaErrors(cusolverDnCgesvdj(cusolverH, jobz, econ, N, M, (d_data_type *)Mij.get(), ldA,
+                                        (cytnx_float *)S->data(), (d_data_type *)vTMem, ldu,
                                         (d_data_type *)UMem, ldvT, (d_data_type *)d_work.get(),
                                         lwork, devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
@@ -190,7 +195,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
       // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -229,7 +236,7 @@ namespace cytnx {
 
       cytnx_int32 lwork = 0;
       checkCudaErrors(cusolverDnDgesvdj_bufferSize(
-        cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(), ldA, (data_type *)S->data(),
+        cusolverH, jobz, econ, N, M, (data_type *)Mij.get(), ldA, (data_type *)S->data(),
         (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
       utils_internal::DeviceBuffer<data_type> d_work(lwork);
@@ -237,8 +244,8 @@ namespace cytnx {
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnDgesvdj(cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(),
-                                        ldA, (data_type *)S->data(), (data_type *)vTMem, ldu,
+      checkCudaErrors(cusolverDnDgesvdj(cusolverH, jobz, econ, N, M, (data_type *)Mij.get(), ldA,
+                                        (data_type *)S->data(), (data_type *)vTMem, ldu,
                                         (data_type *)UMem, ldvT, (data_type *)d_work.get(), lwork,
                                         devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
@@ -271,7 +278,9 @@ namespace cytnx {
       // create handles:
       // Scoped resources (#1145, #1146): the info check below throws, so ownership -- not the
       // cleanup block that used to sit at the tail of this function -- is what prevents a leak.
-      utils_internal::CusolverDnHandle cusolverH;
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
       utils_internal::DeviceBuffer<data_type> Mij(M * N);
       checkCudaErrors(
@@ -310,7 +319,7 @@ namespace cytnx {
 
       cytnx_int32 lwork = 0;
       checkCudaErrors(cusolverDnSgesvdj_bufferSize(
-        cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(), ldA, (data_type *)S->data(),
+        cusolverH, jobz, econ, N, M, (data_type *)Mij.get(), ldA, (data_type *)S->data(),
         (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params.get()));
 
       utils_internal::DeviceBuffer<data_type> d_work(lwork);
@@ -318,8 +327,8 @@ namespace cytnx {
       utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       checkCudaErrors(cudaMemset(devinfo.get(), 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnSgesvdj(cusolverH.get(), jobz, econ, N, M, (data_type *)Mij.get(),
-                                        ldA, (data_type *)S->data(), (data_type *)vTMem, ldu,
+      checkCudaErrors(cusolverDnSgesvdj(cusolverH, jobz, econ, N, M, (data_type *)Mij.get(), ldA,
+                                        (data_type *)S->data(), (data_type *)vTMem, ldu,
                                         (data_type *)UMem, ldvT, (data_type *)d_work.get(), lwork,
                                         devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
