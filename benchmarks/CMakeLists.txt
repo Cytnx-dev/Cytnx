@@ -7,6 +7,7 @@ add_executable(
   Tensor_bm.cpp
   UniTensor_bm.cpp
   cublas_handle_bm.cpp
+  cutensor_handle_bm.cpp
   search_tree_bm.cpp
   algo/Vsplit_bm.cpp
   algo/Vstack_bm.cpp

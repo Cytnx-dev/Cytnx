@@ -9,6 +9,7 @@
 
 #include "backend/Storage.hpp"
 #include "cuAlloc_gpu.hpp"
+#include "cuTensorHandle_gpu.hpp"
 #include "Type.hpp"
 
 #ifdef UNI_GPU
@@ -231,8 +232,9 @@ namespace cytnx {
         one = 1;
       }
 
-      cutensorHandle_t handle;
-      checkCudaErrors(cutensorCreate(&handle));
+      // Shared per-device handle (#1132): cutensorCreate costs ~3.4 ms
+      // per call and its plan cache dies with the handle.
+      cutensorHandle_t handle = get_cutensor_handle();
 
       // This is the default alignment of cudaMalloc() and may also be the default alignment of
       // cudaMallocManaged()
@@ -268,7 +270,6 @@ namespace cytnx {
       checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
       checkCudaErrors(cutensorDestroyPlanPreference(planPref));
       checkCudaErrors(cutensorDestroyPlan(plan));
-      checkCudaErrors(cutensorDestroy(handle));
 
       boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
       if (is_inplace) {
