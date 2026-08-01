@@ -12,11 +12,19 @@
 #else
 
   #include <functional>
+  #include <type_traits>
 
   #include "backend/Scalar.hpp"
   #include "backend/Storage.hpp"
 
 namespace cytnx {
+
+  // The scalar-like operand concepts (cytnx_scalar_value, cytnx_scalar_like,
+  // cytnx_unitensor_scalar_like) are defined in Tensor.hpp, which this header includes. They must
+  // be declared there because cytnx_scalar_like names Tensor::Tproxy, and because Tensor.hpp
+  // forward-declares the constrained `Tensor <op> T` operators -- those forward declarations have
+  // to carry the identical constraint or they form a distinct, unconstrained overload set
+  // (#1003, operator hygiene -- Ian's note).
 
   /**
    * @brief The addition operator between two UniTensor.
@@ -53,7 +61,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -65,7 +73,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -92,7 +100,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -104,7 +112,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -131,7 +139,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -143,7 +151,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -170,7 +178,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -182,7 +190,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -206,7 +214,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -218,7 +226,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -1233,8 +1241,12 @@ namespace cytnx {
      * Add(const T &lc, const Tensor &Rt),
      * Add(const Tensor &Lt, const T &rc),
      * operator+(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iAdd(Tensor &Lt, const Tensor &Rt);
+    void iAdd(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Sub:
     //==================================================
@@ -1333,8 +1345,12 @@ namespace cytnx {
      * Sub(const T &lc, const Tensor &Rt),
      * Sub(const Tensor &Lt, const T &rc),
      * operator-(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iSub(Tensor &Lt, const Tensor &Rt);
+    void iSub(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Mul:
     //==================================================
@@ -1433,8 +1449,12 @@ namespace cytnx {
      * Mul(const T &lc, const Tensor &Rt),
      * Mul(const Tensor &Lt, const T &rc),
      * operator*(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iMul(Tensor &Lt, const Tensor &Rt);
+    void iMul(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Div:
     //==================================================
@@ -1536,8 +1556,12 @@ namespace cytnx {
      * Div(const T &lc, const Tensor &Rt),
      * Div(const Tensor &Lt, const T &rc),
      * operator/(const Tensor &Lt, const Tensor &Rt)
+     * @param[in] rhs_is_weak_scalar Internal flag set by the scalar in-place
+     * operators (`t op= scalar`) so the RHS follows numpy weak-scalar semantics
+     * (preserve \p Lt's dtype) instead of promoting; leave false for a
+     * genuine-tensor RHS, including a rank-0 tensor.
      */
-    void iDiv(Tensor &Lt, const Tensor &Rt);
+    void iDiv(Tensor &Lt, const Tensor &Rt, bool rhs_is_weak_scalar = false);
 
     // Mod:
     //==================================================
@@ -3160,7 +3184,7 @@ namespace cytnx {
    * @return [Tensor] the result of addition.
    * @see linalg::Add(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator+(const T &lc, const Tensor &Rt);
 
   /**
@@ -3172,7 +3196,7 @@ namespace cytnx {
    * @return [Tensor] the result of addition.
    * @see linalg::Add(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator+(const Tensor &Lt, const T &rc);
 
   //------------------------------------
@@ -3197,7 +3221,7 @@ namespace cytnx {
    * @return [Tensor] the result of subtraction.
    * @see linalg::Sub(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator-(const T &lc, const Tensor &Rt);
 
   /**
@@ -3209,7 +3233,7 @@ namespace cytnx {
    * @return [Tensor] the result of subtraction.
    * @see linalg::Sub(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator-(const Tensor &Lt, const T &rc);
 
   //-----------------------------------
@@ -3234,7 +3258,7 @@ namespace cytnx {
    * @return [Tensor] the result of multiplication.
    * @see linalg::Mul(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator*(const T &lc, const Tensor &Rt);
 
   /**
@@ -3246,7 +3270,7 @@ namespace cytnx {
    * @return [Tensor] the result of multiplication.
    * @see linalg::Mul(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator*(const Tensor &Lt, const T &rc);
 
   //----------------------------------
@@ -3274,7 +3298,7 @@ namespace cytnx {
    * @see linalg::Div(const T &lc, const Tensor &Rt)
    * @pre The divisor cannot be zero.
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator/(const T &lc, const Tensor &Rt);
 
   /**
@@ -3287,7 +3311,7 @@ namespace cytnx {
    * @see linalg::Div(const Tensor &Lt, const T &rc)
    * @pre The divisor cannot be zero.
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator/(const Tensor &Lt, const T &rc);
 
   //----------------------------------
@@ -3312,7 +3336,7 @@ namespace cytnx {
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator%(const T &lc, const Tensor &Rt);
 
   /**
@@ -3324,7 +3348,7 @@ namespace cytnx {
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator%(const Tensor &Lt, const T &rc);
 
   //----------------------------------
@@ -3348,7 +3372,7 @@ namespace cytnx {
    * @return [Tensor] the result of comparison.
    * @see linalg::Cpr(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator==(const T &lc, const Tensor &Rt);
 
   /**
@@ -3360,7 +3384,7 @@ namespace cytnx {
    * @return [Tensor] the result of comparison.
    * @see linalg::Cpr(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator==(const Tensor &Lt, const T &rc);
 
 }  // namespace cytnx

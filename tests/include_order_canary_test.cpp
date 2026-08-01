@@ -13,4 +13,12 @@
 
 #include "gtest/gtest.h"
 
-TEST(IncludeOrderCanary, HeadersSurviveComplexHMacroI) { SUCCEED(); }
+namespace cytnx {
+  namespace test {
+    namespace {
+
+      TEST(IncludeOrderCanary, HeadersSurviveComplexHMacroI) { SUCCEED(); }
+
+    }  // namespace
+  }  // namespace test
+}  // namespace cytnx

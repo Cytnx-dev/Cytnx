@@ -31,7 +31,6 @@
 #include "linalg_internal_cpu/Mod_internal.hpp"
 #include "linalg_internal_cpu/Mul_internal.hpp"
 #include "linalg_internal_cpu/Norm_internal.hpp"
-#include "linalg_internal_cpu/Outer_internal.hpp"
 #include "linalg_internal_cpu/Pow_internal.hpp"
 #include "linalg_internal_cpu/QR_internal.hpp"
 #include "linalg_internal_cpu/Sdd_internal.hpp"
@@ -44,7 +43,12 @@
 
 #ifdef UNI_GPU
   #include "linalg_internal_gpu/cuAbs_internal.hpp"
-  #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
+  #include "linalg_internal_gpu/cuAdd_internal.hpp"
+  #include "linalg_internal_gpu/cuSub_internal.hpp"
+  #include "linalg_internal_gpu/cuMul_internal.hpp"
+  #include "linalg_internal_gpu/cuDiv_internal.hpp"
+  #include "linalg_internal_gpu/cuMod_internal.hpp"
+  #include "linalg_internal_gpu/cuCpr_internal.hpp"
   #include "linalg_internal_gpu/cuConj_inplace_internal.hpp"
   #include "linalg_internal_gpu/cuDet_internal.hpp"
   #include "linalg_internal_gpu/cuDiag_internal.hpp"
@@ -61,7 +65,6 @@
   #include "linalg_internal_gpu/cuMatvec_internal.hpp"
   #include "linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg_internal_gpu/cuNorm_internal.hpp"
-  #include "linalg_internal_gpu/cuOuter_internal.hpp"
   #include "linalg_internal_gpu/cuPow_internal.hpp"
   #include "linalg_internal_gpu/cuSum_internal.hpp"
   #include "linalg_internal_gpu/cuTrace_internal.hpp"
@@ -84,12 +87,6 @@ namespace cytnx {
     typedef void (*Normfunc_oii)(void *, const boost::intrusive_ptr<Storage_base> &);
     typedef void (*Detfunc_oii)(void *, const boost::intrusive_ptr<Storage_base> &,
                                 const cytnx_uint64 &);
-    typedef void (*Arithmeticfunc_oii)(
-      boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,
-      boost::intrusive_ptr<Storage_base> &, const unsigned long long &len,
-      const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
-      const std::vector<cytnx_uint64> &invmapper_R, const char &type);
-
     typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &, const Scalar &);
@@ -141,10 +138,6 @@ namespace cytnx {
                                    const boost::intrusive_ptr<Storage_base> &,
                                    const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
                                    const cytnx_int64 &);
-    typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                  const boost::intrusive_ptr<Storage_base> &,
-                                  const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
-                                  const cytnx_uint64 &);
     typedef void (*Vectordotfunc_oii)(boost::intrusive_ptr<Storage_base> &,
                                       const boost::intrusive_ptr<Storage_base> &,
                                       const boost::intrusive_ptr<Storage_base> &,
@@ -211,7 +204,6 @@ namespace cytnx {
       std::vector<Gemmfunc_oii> Gemm_ii;
       std::vector<Matmul_dgfunc_oii> Matmul_dg_ii;
       std::vector<Matvecfunc_oii> Matvec_ii;
-      std::vector<std::vector<Outerfunc_oii>> Outer_ii;
       std::vector<Vectordotfunc_oii> Vd_ii;
       std::vector<Tdfunc_oii> Td_ii;
       std::vector<Normfunc_oii> Norm_ii;
@@ -226,7 +218,6 @@ namespace cytnx {
       std::vector<ger_oii> ger_ii;
 
 #ifdef UNI_GPU
-      std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
       std::vector<Svdfunc_oii> cuSvd_ii;
       std::vector<Svdfunc_oii> cuGeSvd_ii;
       std::vector<InvMinplacefunc_oii> cuInvM_inplace_ii;
@@ -240,7 +231,6 @@ namespace cytnx {
       std::vector<Gemm_Batchfunc_oii> cuGemm_Batch_ii;
       std::vector<Matmul_dgfunc_oii> cuMatmul_dg_ii;
       std::vector<Matvecfunc_oii> cuMatvec_ii;
-      std::vector<std::vector<Outerfunc_oii>> cuOuter_ii;
       std::vector<Normfunc_oii> cuNorm_ii;
       std::vector<Vectordotfunc_oii> cuVd_ii;
       std::vector<Powfunc_oii> cuPow_ii;

@@ -36,18 +36,14 @@ namespace cytnx {
         // contiguous section.
         if (Lt.device() == Device.cpu) {
           std::visit(
-            [&](auto *lptr) {
-              using TL = std::remove_pointer_t<decltype(lptr)>;
-              std::visit(
-                [&](auto *rptr) {
-                  using TR = std::remove_pointer_t<decltype(rptr)>;
-                  cytnx::linalg_internal::CprInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, left._impl->storage()._impl,
-                    right._impl->storage()._impl, out._impl->storage()._impl->size(), {}, {}, {});
-                },
-                right.ptr());
+            [&](auto lhs_impl, auto rhs_impl) {
+              using TL = storage_value_t<decltype(lhs_impl)>;
+              using TR = storage_value_t<decltype(rhs_impl)>;
+              cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+                storage_cast<cytnx_bool>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+                out._impl->storage().size(), {}, {}, {});
             },
-            left.ptr());
+            Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -63,25 +59,25 @@ namespace cytnx {
         // non-contiguous section
         if (Lt.device() == Device.cpu) {
           std::visit(
-            [&](auto *lptr) {
-              using TL = std::remove_pointer_t<decltype(lptr)>;
-              std::visit(
-                [&](auto *rptr) {
-                  using TR = std::remove_pointer_t<decltype(rptr)>;
-                  cytnx::linalg_internal::CprInternalImpl<TL, TR>(
-                    out._impl->storage()._impl, left._impl->storage()._impl,
-                    right._impl->storage()._impl, left._impl->storage()._impl->size(),
-                    left._impl->shape(), left._impl->invmapper(), right._impl->invmapper());
-                },
-                right.ptr());
+            [&](auto lhs_impl, auto rhs_impl) {
+              using TL = storage_value_t<decltype(lhs_impl)>;
+              using TR = storage_value_t<decltype(rhs_impl)>;
+              cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+                storage_cast<cytnx_bool>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+                out._impl->storage().size(), Lt._impl->shape(), Lt._impl->invmapper(),
+                Rt._impl->invmapper());
             },
-            left.ptr());
+            Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
   #ifdef UNI_GPU
-          cytnx_error_msg(true,
-                          "[Cpr][on GPU/CUDA] error two tensors must be contiguous. Call "
-                          "Contiguous_() or Contiguous() first%s",
-                          "\n");
+          // Non-contiguous tensor(==)tensor on the GPU: cuCpr_dispatch's non-contiguous kernel
+          // applies the layout mappers (as Add/Sub/Mul/Div already do), so pass the layout
+          // instead of forcing the caller to contiguous-ize first (#1003, #988).
+          checkCudaErrors(cudaSetDevice(Rt.device()));
+          cytnx::linalg_internal::cuCpr_dispatch(
+            out._impl->storage()._impl, left._impl->storage()._impl, right._impl->storage()._impl,
+            out._impl->storage()._impl->size(), left._impl->shape(), left._impl->invmapper(),
+            right._impl->invmapper());
   #else
           cytnx_error_msg(true, "[Cpr] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
@@ -101,13 +97,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_complex128, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_complex128;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -132,13 +129,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_complex64, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_complex64;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -163,13 +161,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_double, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_double;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -194,13 +193,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_float, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_float;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -225,13 +225,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_int64, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_int64;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -256,13 +257,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_uint64, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_uint64;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -287,13 +289,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_int32, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_int32;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -318,13 +321,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_uint32, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_uint32;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -349,13 +353,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_int16, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_int16;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -380,13 +385,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_uint16, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_uint16;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -411,13 +417,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *rptr) {
-            using TR = std::remove_pointer_t<decltype(rptr)>;
-            cytnx::linalg_internal::CprInternalImpl<cytnx_bool, TR>(
-              out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-              Rt._impl->storage()._impl->size(), {}, {}, {});
+          [&](auto rhs_impl) {
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            using TL = cytnx_bool;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), storage_cast<TL>(Cnst._impl),
+              rhs_impl, out._impl->storage().size(), {}, {}, {});
           },
-          Rt.ptr());
+          Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
@@ -442,18 +449,14 @@ namespace cytnx {
 
       if (Rt.device() == Device.cpu) {
         std::visit(
-          [&](auto *lptr) {
-            using TL = std::remove_pointer_t<decltype(lptr)>;
-            std::visit(
-              [&](auto *rptr) {
-                using TR = std::remove_pointer_t<decltype(rptr)>;
-                cytnx::linalg_internal::CprInternalImpl<TL, TR>(
-                  out._impl->storage()._impl, Cnst._impl, Rt._impl->storage()._impl,
-                  Rt._impl->storage()._impl->size(), {}, {}, {});
-              },
-              Rt.ptr());
+          [&](auto lhs_impl, auto rhs_impl) {
+            using TL = storage_value_t<decltype(lhs_impl)>;
+            using TR = storage_value_t<decltype(rhs_impl)>;
+            cytnx::linalg_internal::CprInternalImpl<TL, TR>(
+              storage_cast<cytnx_bool>(out._impl->storage()._impl), lhs_impl, rhs_impl,
+              out._impl->storage().size(), {}, {}, {});
           },
-          Tensor::from_storage(Cnst).ptr());
+          Cnst.as_storage_variant(), Rt._impl->storage().as_storage_variant());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));

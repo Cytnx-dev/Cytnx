@@ -249,10 +249,6 @@ if(USE_CUDA)
 
     enable_language(CUDA)
     find_package(CUDAToolkit REQUIRED)
-    if(NOT DEFINED CMAKE_CUDA_STANDARD)
-        set(CMAKE_CUDA_STANDARD 20)
-        set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-    endif()
 
     set_target_properties(cytnx PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON
@@ -272,36 +268,34 @@ if(USE_CUDA)
     #      -gencode=arch=compute_75,code=compute_75 ")
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
-    # CUDA 12+/13 may place Thrust/CUB headers under include/cccl.
-    set(_cytnx_cccl_candidates)
-    if(DEFINED CUDAToolkit_TARGET_DIR AND NOT "${CUDAToolkit_TARGET_DIR}" STREQUAL "")
-      list(APPEND _cytnx_cccl_candidates "${CUDAToolkit_TARGET_DIR}/include/cccl")
-    endif()
-    foreach(_cuda_inc IN LISTS CUDAToolkit_INCLUDE_DIRS)
-      list(APPEND _cytnx_cccl_candidates
-        "${_cuda_inc}/cccl"
-        "${_cuda_inc}/../include/cccl"
-        "${_cuda_inc}/../../include/cccl"
-        "${_cuda_inc}/../../../include/cccl")
-    endforeach()
-    list(REMOVE_DUPLICATES _cytnx_cccl_candidates)
-
-    set(_cytnx_cccl_dir "")
-    foreach(_cccl_candidate IN LISTS _cytnx_cccl_candidates)
-      get_filename_component(_cccl_candidate_abs "${_cccl_candidate}" ABSOLUTE)
-      if(EXISTS "${_cccl_candidate_abs}")
-        set(_cytnx_cccl_dir "${_cccl_candidate_abs}")
-        break()
-      endif()
-    endforeach()
+    # CUDA 12+/13 may place Thrust/CUB headers (incl. <cuda/std/complex>) under
+    # include/cccl. Detection is shared with the installed CytnxConfig.cmake so
+    # both use identical logic; see cmake/CytnxDetectCCCL.cmake.
+    include(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake)
+    cytnx_detect_cccl_include_dir(_cytnx_cccl_dir)
     if(NOT "${_cytnx_cccl_dir}" STREQUAL "")
-      target_include_directories(cytnx PRIVATE "${_cytnx_cccl_dir}")
+      # UNI_GPU is PUBLIC and makes the public header Type.hpp include
+      # <cuda/std/complex>, which CUDA 12+/13 relocate under the cccl/ subdir.
+      # That subdir is not part of any CUDA:: imported target's INTERFACE, so it
+      # must propagate to in-tree consumers (gpu_test_main, benchmarks_main,
+      # test_doc_cplusplus) that inherit the PUBLIC UNI_GPU macro; otherwise their
+      # host .cpp compilation fails with "cuda/std/complex: No such file". Wrap in
+      # BUILD_INTERFACE so the absolute build-machine path is not baked into the
+      # installed/exported target; the installed package re-detects cccl against
+      # the consumer's own toolkit in CytnxConfig.cmake (keeps find_package(Cytnx)
+      # relocatable).
+      target_include_directories(cytnx PUBLIC $<BUILD_INTERFACE:${_cytnx_cccl_dir}>)
       message(STATUS "Detected CCCL headers at: ${_cytnx_cccl_dir}")
     endif()
+    # Expose the detected CCCL dir so host-compiled consumers that include a
+    # public cytnx header pulling <cuda/std/complex> (e.g. gpu_test_main, whose
+    # .cpp TUs include Type.hpp) can add the same include path. cytnx adds it
+    # PRIVATE above, so it does not propagate through target_link_libraries.
+    set(CYTNX_CCCL_INCLUDE_DIR "${_cytnx_cccl_dir}" CACHE INTERNAL
+        "CCCL (libcu++) include dir for host-compiled consumers of cytnx public headers")
 
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
     target_link_libraries(cytnx PUBLIC CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
-    target_link_libraries(cytnx PUBLIC -lcudadevrt)
 
     if(USE_CUTENSOR)
         find_package(CUTENSOR REQUIRED)
@@ -314,9 +308,27 @@ if(USE_CUDA)
         endif()
 
         message( STATUS "Build with CuTensor: YES")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTENSOR\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUTENSOR_INCLUDE_DIRS}\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
+        if(MSVC)
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/DUNI_CUTENSOR\n" "")
+            foreach(CUTENSOR_INCLUDE_DIR IN LISTS CUTENSOR_INCLUDE_DIRS)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/I${CUTENSOR_INCLUDE_DIR}\n" "")
+            endforeach()
+            foreach(CUTENSOR_LIBRARY IN LISTS CUTENSOR_LIBRARIES)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARY}\n" "")
+            endforeach()
+        elseif(WIN32)
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTENSOR\n" "")
+            foreach(CUTENSOR_INCLUDE_DIR IN LISTS CUTENSOR_INCLUDE_DIRS)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUTENSOR_INCLUDE_DIR}\n" "")
+            endforeach()
+            foreach(CUTENSOR_LIBRARY IN LISTS CUTENSOR_LIBRARIES)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARY}\n" "")
+            endforeach()
+        else()
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTENSOR\n" "")
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUTENSOR_INCLUDE_DIRS}\n" "")
+            FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
+        endif()
         message( STATUS "CuTensor: libdir:${CUTENSOR_LIBRARY_DIRS} incdir:${CUTENSOR_INCLUDE_DIRS} libs:${CUTENSOR_LIBRARIES}")
 
     endif()
@@ -332,9 +344,27 @@ if(USE_CUDA)
         endif()
 
         message( STATUS "Build with CuQuantum: YES")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUQUANTUM\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUQUANTUM_INCLUDE_DIRS}\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
+        if(MSVC)
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/DUNI_CUQUANTUM\n" "")
+            foreach(CUQUANTUM_INCLUDE_DIR IN LISTS CUQUANTUM_INCLUDE_DIRS)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/I${CUQUANTUM_INCLUDE_DIR}\n" "")
+            endforeach()
+            foreach(CUQUANTUM_LIBRARY IN LISTS CUQUANTUM_LIBRARIES)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARY}\n" "")
+            endforeach()
+        elseif(WIN32)
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUQUANTUM\n" "")
+            foreach(CUQUANTUM_INCLUDE_DIR IN LISTS CUQUANTUM_INCLUDE_DIRS)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUQUANTUM_INCLUDE_DIR}\n" "")
+            endforeach()
+            foreach(CUQUANTUM_LIBRARY IN LISTS CUQUANTUM_LIBRARIES)
+                FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARY}\n" "")
+            endforeach()
+        else()
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUQUANTUM\n" "")
+            FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUQUANTUM_INCLUDE_DIRS}\n" "")
+            FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
+        endif()
         message( STATUS "CuQuantum: libdir:${CUQUANTUM_LIBRARY_DIRS} incdir:${CUQUANTUM_INCLUDE_DIRS} libs:${CUQUANTUM_LIBRARIES}")
 
     endif()
@@ -347,22 +377,45 @@ if(USE_CUDA)
     message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
     message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
     message( STATUS "  - Internal macro switch: GPU/CUDA")
-    FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_GPU\n" "")
+    if(MSVC)
+      FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/DUNI_GPU\n" "")
+    else()
+      FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_GPU\n" "")
+    endif()
     message( STATUS "  - Cudatoolkit include dir: ${CUDAToolkit_INCLUDE_DIRS}")
-    FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUDAToolkit_INCLUDE_DIRS}\n" "")
+    if(MSVC)
+      foreach(CUDAToolkit_INCLUDE_DIR IN LISTS CUDAToolkit_INCLUDE_DIRS)
+        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/I${CUDAToolkit_INCLUDE_DIR}\n" "")
+      endforeach()
+    else()
+      FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${CUDAToolkit_INCLUDE_DIRS}\n" "")
+    endif()
     message( STATUS "  - Cudatoolkit lib dir: ${CUDAToolkit_LIBRARY_DIR}")
-    FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "-L${CUDAToolkit_LIBRARY_DIR}\n" "")
-    FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "-Wl,-rpath,${CUDAToolkit_LIBRARY_DIR}\n" "")
+    if(MSVC)
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "/LIBPATH:${CUDAToolkit_LIBRARY_DIR}\n" "")
+    elseif(WIN32)
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "-L${CUDAToolkit_LIBRARY_DIR}\n" "")
+    else()
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "-L${CUDAToolkit_LIBRARY_DIR}\n" "")
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "-Wl,-rpath,${CUDAToolkit_LIBRARY_DIR}\n" "")
+    endif()
     message( STATUS "  - CuSolver library: ${CUDA_cusolver_LIBRARY}")
     FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusolver_LIBRARY}\n" "")
     message( STATUS "  - Curand library: ${CUDA_curand_LIBRARY}")
     FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_curand_LIBRARY}\n" "")
     message( STATUS "  - CuBlas library: ${CUDA_cublas_LIBRARY}")
     FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cublas_LIBRARY}\n" "")
-    message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY} -ldl")
-    FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing
-    message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt")
-    FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt\n" "") # use > to indicate special rt processing
+    if(WIN32)
+      message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY}")
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY}\n" "")
+      message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY}")
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY}\n" "")
+    else()
+      message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY} -ldl")
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing
+      message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt")
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt\n" "") # use > to indicate special rt processing
+    endif()
     message( STATUS "  - Cuda cusparse library: ${CUDA_cusparse_LIBRARY}")
     FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusparse_LIBRARY}\n" "")
 

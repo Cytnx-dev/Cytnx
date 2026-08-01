@@ -18,7 +18,7 @@
         "BUILD_PYTHON": "ON",
         "BACKEND_TORCH": "OFF",
         "USE_HPTT": "ON",
-        "HPTT_ENABLE_FINE_TUNE": "ON",
+        "HPTT_ENABLE_FINE_TUNE": "OFF",
         "USE_CUDA": "OFF",
         "RUN_TESTS": "OFF",
         "RUN_BENCHMARKS": "OFF",
@@ -62,6 +62,24 @@
       "inherits": ["mkl", "openblas-cuda"]
     },
     {
+      "name": "cuda-windows",
+      "hidden": true,
+      "description": "A base preset overriding the CUDA variables NVIDIA does not ship for Windows.",
+      "cacheVariables": {
+        "USE_CUQUANTUM": "OFF"
+      }
+    },
+    {
+      "name": "openblas-cuda-windows",
+      "description": "Windows build: OpenBLAS as the BLAS vendor with CUDA support, without cuQuantum.",
+      "inherits": ["cuda-windows", "openblas-cuda"]
+    },
+    {
+      "name": "mkl-cuda-windows",
+      "description": "Windows build: Intel MKL as the BLAS vendor with CUDA support, without cuQuantum.",
+      "inherits": ["cuda-windows", "mkl-cuda"]
+    },
+    {
       "name": "openblas-apple",
       "description": "OpenBLAS as the BLAS vendor with CUDA support on Apple.",
       "inherits": [ "default"]
@@ -100,6 +118,16 @@
       "name": "debug-mkl-cuda",
       "description": "Debug build: Intel MKL as the BLAS vendor with CUDA support.",
       "inherits": ["debug", "mkl-cuda"]
+    },
+    {
+      "name": "debug-openblas-cuda-windows",
+      "description": "Debug build for Windows: OpenBLAS as the BLAS vendor with CUDA support, without cuQuantum.",
+      "inherits": ["debug", "openblas-cuda-windows"]
+    },
+    {
+      "name": "debug-mkl-cuda-windows",
+      "description": "Debug build for Windows: Intel MKL as the BLAS vendor with CUDA support, without cuQuantum.",
+      "inherits": ["debug", "mkl-cuda-windows"]
     },
     {
       "name": "debug-openblas-apple",
@@ -141,6 +169,18 @@
       "inherits": "default"
     },
     {
+      "name": "openblas-cuda-windows",
+      "description": "Windows build using OpenBLAS with CUDA support, without cuQuantum.",
+      "configurePreset": "openblas-cuda-windows",
+      "inherits": "default"
+    },
+    {
+      "name": "mkl-cuda-windows",
+      "description": "Windows build using Intel MKL with CUDA support, without cuQuantum.",
+      "configurePreset": "mkl-cuda-windows",
+      "inherits": "default"
+    },
+    {
       "name": "openblas-apple",
       "description": "Build using OpenBLAS with CUDA support on Apple.",
       "configurePreset": "openblas-apple",
@@ -171,6 +211,18 @@
       "inherits": "default"
     },
     {
+      "name": "debug-openblas-cuda-windows",
+      "description": "Windows debug build using OpenBLAS with CUDA support, without cuQuantum.",
+      "configurePreset": "debug-openblas-cuda-windows",
+      "inherits": "default"
+    },
+    {
+      "name": "debug-mkl-cuda-windows",
+      "description": "Windows debug build using Intel MKL with CUDA support, without cuQuantum.",
+      "configurePreset": "debug-mkl-cuda-windows",
+      "inherits": "default"
+    },
+    {
       "name": "debug-openblas-apple",
       "description": "Debug build using OpenBLAS with CUDA support on Apple.",
       "configurePreset": "debug-openblas-apple",
@@ -195,6 +247,16 @@
       "description": "Run tests for builds with CUDA support.",
       "configurePreset": "debug-openblas-cuda",
       "inherits": "cpu-only"
+    },
+    {
+      "name": "gpu-only",
+      "description": "Run only the GPU-labeled tests (tests/gpu/gpu_test_main) for builds with CUDA support.",
+      "inherits": "cpu-and-cuda",
+      "filter": {
+        "include": {
+          "label": "gpu"
+        }
+      }
     }
   ]
 }

@@ -74,11 +74,24 @@ _ANNOTATION_ELLIPSIS = re.compile(r": \.\.\.([,)])")
 # untouched.
 _SUBSCRIPT_ELLIPSIS = re.compile(r"\[\.\.\.\]")
 
+# pybind11 3.0.4 renders a cytnx_complex128 parameter as this exact union.
+# typeshed's builtin `complex` has no `__complex__` (real-valued dunders like
+# `__float__` don't satisfy `SupportsComplex`, which requires `__complex__`
+# specifically), so `SupportsComplex` alone rejects a plain Python complex
+# literal even though the binding accepts it directly. Add `complex`
+# explicitly so the annotation covers the full accepted range.
+_SUPPORTS_COMPLEX_UNION = re.compile(
+    r"(?<!complex \| )typing\.SupportsComplex \| typing\.SupportsFloat \| typing\.SupportsIndex"
+)
+
 
 def sanitize(text: str) -> str:
     text = _RETURN_ELLIPSIS.sub("-> typing.Any:", text)
     text = _ANNOTATION_ELLIPSIS.sub(r": typing.Any\1", text)
     text = _SUBSCRIPT_ELLIPSIS.sub("[typing.Any]", text)
+    text = _SUPPORTS_COMPLEX_UNION.sub(
+        "complex | typing.SupportsComplex | typing.SupportsFloat | typing.SupportsIndex", text
+    )
     # Match the repo's pre-commit hooks (trailing-whitespace, end-of-file-fixer)
     # so regeneration stays idempotent and the committed stubs do not get
     # rewritten on the next commit.

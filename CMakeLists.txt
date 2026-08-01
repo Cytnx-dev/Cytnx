@@ -22,6 +22,10 @@ message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT DEFINED CMAKE_CUDA_STANDARD)
+  set(CMAKE_CUDA_STANDARD 20)
+  set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+endif()
 
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
@@ -168,11 +172,16 @@ option(BUILD_PYTHON "Build Python API. Requires Python and pybind11 installed." 
 option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
 cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
 cmake_dependent_option(USE_HPTT "Use HPTT library to accelerate tensor transpose." OFF "NOT BACKEND_TORCH" OFF)
-cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Enable fine-tune HPTT for the native hardware." OFF "USE_HPTT" OFF)
+cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Tune HPTT for the CPU running the build (-march=native and friends). The objects then require whatever that CPU supports, so leave it OFF for any build that will be redistributed." OFF "USE_HPTT" OFF)
 # TODO: use variable instead of option to handle HPTT variant.
-cmake_dependent_option(HPTT_ENABLE_ARM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
-cmake_dependent_option(HPTT_ENABLE_AVX "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
-cmake_dependent_option(HPTT_ENABLE_IBM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
+# Each variant compiles HPTT's hand-vectorized micro-kernels for one
+# architecture and assumes that architecture's ISA floor: ARM needs ARMv8-A
+# arm64, AVX needs x86-64-v3 (AVX, AVX2, FMA), IBM needs POWER with AltiVec.
+# HPTT raises a FATAL_ERROR when the one that is ON cannot be served by the
+# build's target architecture, so a wrong choice fails during configure.
+cmake_dependent_option(HPTT_ENABLE_ARM "Compile HPTT's Neon kernels; requires an ARMv8-A arm64 target." OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_AVX "Compile HPTT's AVX kernels; requires an x86-64-v3 target." OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_IBM "Compile HPTT's AltiVec kernels; requires a POWER target." OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
 cmake_dependent_option(USE_CUDA "Enable CUDA support." OFF "NOT BACKEND_TORCH" OFF)
 # cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
 # cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
@@ -247,26 +256,47 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
-  # Default to a portable fat binary unless the caller picked architectures via
-  # -D, the cache, a preset's cacheVariables, or the CUDAARCHS environment
-  # variable. This must run before enable_language(CUDA): afterwards
-  # CMAKE_CUDA_ARCHITECTURES is never empty (CMake fills in its own default), so
-  # the "not specified" case can no longer be detected. enable_language(CUDA)
-  # reads CUDAARCHS on its own, so we only avoid shadowing it here, not copy it.
-  # The default embeds SASS for each supported real architecture (Volta sm_70 is
-  # the floor required by cuTENSOR/cuQuantum, up through Hopper sm_90) plus PTX
-  # of the newest (90-virtual) so the driver can JIT for newer/unknown GPUs.
-  if(NOT CMAKE_CUDA_ARCHITECTURES AND NOT DEFINED ENV{CUDAARCHS})
-    set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+  # Record whether the caller already picked architectures via -D, the cache,
+  # a preset's cacheVariables, or the CUDAARCHS environment variable, before
+  # enable_language(CUDA) fills CMAKE_CUDA_ARCHITECTURES with its own default
+  # and makes the "not specified" case impossible to detect.
+  set(_cytnx_user_set_cuda_architectures FALSE)
+  if(CMAKE_CUDA_ARCHITECTURES OR DEFINED ENV{CUDAARCHS})
+    set(_cytnx_user_set_cuda_architectures TRUE)
   endif()
+  # enable_language(CUDA) runs its own internal compiler ABI-detection compile
+  # using whatever CMAKE_CUDA_ARCHITECTURES is set to at this point, so our own
+  # default below is applied only after this call returns (CMake's own default
+  # is toolchain-aware and won't pick an architecture the detected nvcc
+  # rejects; ours, chosen without knowing the CUDA version yet, might).
   enable_language(CUDA)
+  find_package(CUDAToolkit REQUIRED)
+  if(NOT _cytnx_user_set_cuda_architectures)
+    # Default to a portable fat binary, embedding SASS for each supported real
+    # architecture plus PTX of the newest (90-virtual) so the driver can JIT
+    # for newer/unknown GPUs. CUDA 13.0 removed offline compilation support
+    # for Maxwell/Pascal/Volta (sm_70 and below,
+    # https://docs.nvidia.com/cuda/archive/13.0.0/cuda-toolkit-release-notes/),
+    # so the floor is Turing (sm_75) on CUDA >=13 and Volta (sm_70) below that.
+    if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 13.0)
+      set(CMAKE_CUDA_ARCHITECTURES 75-real 80-real 86-real 89-real 90-real 90-virtual)
+    else()
+      set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+    endif()
+  endif()
+  unset(_cytnx_user_set_cuda_architectures)
   # Disable generation of "--option-file" flag in compile_commands.json.
   # This workaround helps VSCode's cpptools extension correctly locate CUDA
   # include files.
   # Refer to: https://discourse.cmake.org/t/cmake-target-include-directories-doesnt-export-to-compile-commands-json-when-using-cuda/10072/10
-  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
-  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
-  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
+  # Keep response files when CMake is hosted on Windows: the short Windows
+  # command-line limit applies regardless of whether the compiler is MSVC,
+  # clang-cl, or MinGW. Preserve the existing behavior on non-Windows hosts.
+  if(NOT CMAKE_HOST_WIN32)
+    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
+    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
+    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
+  endif()
 endif()
 
 
@@ -274,11 +304,19 @@ endif()
 # for parallel compilation
 # It cannot enable on MacOS since it causes building errors when linking the library libcytnx.a.
 # Error message: Error running link command: no such file or directory make[2]: *** [CMakeFiles/cytnx.dir/build.make:3109: libcytnx.a]
-IF (APPLE)
-  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
-ELSE ()
-  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-ENDIF ()
+#
+# Only apply this default if the caller hasn't already set
+# CMAKE_INTERPROCEDURAL_OPTIMIZATION via -D/cache/preset: a plain set() (no
+# CACHE keyword) unconditionally shadows a cache value of the same name for
+# the rest of this script, so skipping the set() when the variable is
+# already DEFINED is what lets a caller's override actually take effect.
+if(NOT DEFINED CMAKE_INTERPROCEDURAL_OPTIMIZATION)
+  IF (APPLE)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+  ELSE ()
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+  ENDIF ()
+endif()
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
@@ -298,20 +336,61 @@ target_include_directories(cytnx
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
-target_include_directories(cytnx SYSTEM
-  PUBLIC
-  ${Boost_INCLUDE_DIRS}
-)
-
-target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
+target_compile_definitions(cytnx PRIVATE _LIBCPP_DISABLE_AVAILABILITY)
+if(MSVC)
+  target_compile_options(cytnx
+    PRIVATE
+      $<$<COMPILE_LANGUAGE:CXX>:/w>
+      $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/Zc:preprocessor>
+    # cytnx_error.hpp uses __VA_OPT__, so consumers compiling the installed
+    # header with MSVC need the conforming preprocessor as a usage requirement.
+    PUBLIC
+      $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/Zc:preprocessor>
+  )
+  FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/Zc:preprocessor\n" "")
+else()
+  target_compile_options(cytnx PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-Wformat=0>
+    $<$<COMPILE_LANGUAGE:CXX>:-w>
+    $<$<COMPILE_LANGUAGE:CXX>:-fsized-deallocation>
+  )
+endif()
 add_subdirectory(src)
 
 if(USE_DEBUG)
   target_compile_definitions(cytnx PUBLIC UNI_DEBUG)
 
   # Remember to add export ASAN_OPTIONS=protect_shadow_gap=0 in Install.sh
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+  if(MSVC)
+    # CMake 3.x puts /RTC1 and /INCREMENTAL in its MSVC Debug defaults, but
+    # both are incompatible with AddressSanitizer. Override only the local
+    # project variables; do not rewrite the caller's cache entries.
+    foreach(cytnx_compile_flags CMAKE_CXX_FLAGS_DEBUG CMAKE_CUDA_FLAGS_DEBUG)
+      string(REGEX REPLACE "/RTC[1csu]*" "" ${cytnx_compile_flags}
+        "${${cytnx_compile_flags}}")
+    endforeach()
+    foreach(cytnx_linker_flags
+        CMAKE_EXE_LINKER_FLAGS_DEBUG
+        CMAKE_SHARED_LINKER_FLAGS_DEBUG
+        CMAKE_MODULE_LINKER_FLAGS_DEBUG)
+      string(REGEX REPLACE "/INCREMENTAL([ ]|$)" "/INCREMENTAL:NO\\1"
+        ${cytnx_linker_flags} "${${cytnx_linker_flags}}")
+    endforeach()
+
+    # MSVC embeds /DEFAULTLIB directives for the ASan runtime in instrumented
+    # objects, so the static archive does not need an exported link option.
+    set(cytnx_asan_compile_options
+      $<$<COMPILE_LANGUAGE:CXX>:/fsanitize=address>
+      $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/fsanitize=address>
+    )
+  else()
+    set(cytnx_asan_compile_options
+      $<$<COMPILE_LANGUAGE:CXX>:-fsanitize=address>
+      $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-fsanitize=address>
+    )
+    target_link_options(cytnx INTERFACE -fsanitize=address)
+  endif()
+  target_compile_options(cytnx PRIVATE ${cytnx_asan_compile_options})
 endif()
 
 include(GNUInstallDirs)
@@ -319,11 +398,11 @@ include(GNUInstallDirs)
 # #####################################################################
 
 # ## Boost
-find_package(Boost REQUIRED)
-target_include_directories(cytnx SYSTEM
-  PUBLIC
-  ${Boost_INCLUDE_DIRS}
-)
+if(WIN32)
+  find_package(Boost CONFIG REQUIRED)
+else()
+  find_package(Boost REQUIRED)
+endif()
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 
@@ -371,13 +450,9 @@ if(RUN_TESTS)
   # is not found
   include(CTest)
 
-  # Source-level coverage instrumentation for the library and anything that
-  # links it (e.g. the gtest binary under tests/, which links cytnx PUBLIC).
-  # PUBLIC + $<BUILD_INTERFACE:...> propagates the flag to in-tree
-  # consumers (test_main picks it up) but strips it from the exported
-  # CytnxTargets.cmake, so external projects that `find_package(Cytnx)`
-  # against the installed library are NOT forced into coverage
-  # instrumentation.
+  # Source-level coverage instrumentation for the library. The final consumer
+  # link must also use the coverage runtime, including when cytnx is a static
+  # archive, so keep the link option as an install-tree usage requirement.
   #
   #   - GCC / Clang / AppleClang: `--coverage` is a driver shorthand that
   #     expands to `-fprofile-arcs -ftest-coverage` at compile time and adds
@@ -390,8 +465,11 @@ if(RUN_TESTS)
   #     for a status message so configure still succeeds.
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR
      CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(cytnx PUBLIC $<BUILD_INTERFACE:--coverage>)
-    target_link_options(cytnx PUBLIC $<BUILD_INTERFACE:--coverage>)
+    target_compile_options(cytnx PRIVATE
+      $<$<COMPILE_LANGUAGE:CXX>:--coverage>
+      $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=--coverage>
+    )
+    target_link_options(cytnx INTERFACE --coverage)
   # TODO(coverage-msvc): wire up OpenCppCoverage in CI for Windows builds.
   # It instruments the test binary post-build and emits Cobertura XML that
   # Codecov ingests directly, so no compile flags are needed here -- only
@@ -426,7 +504,7 @@ endif()
 # ## Python wrapper
 # #######
 IF(BUILD_PYTHON)
-  find_package (Python COMPONENTS Interpreter Development)
+  find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
   # Require a compatible pybind11 to be installed. The committed
   # cytnx/cytnx/*.pyi stubs are regenerated only via the `pip` path, which
   # provisions the pybind11 pinned in [build-system].requires (==3.0.4).
@@ -434,7 +512,9 @@ IF(BUILD_PYTHON)
   # pyproject.toml pin once pybind11 3.0.4 is available on conda-forge. It
   # currently ships 3.0.3, which a 3.0.4 requirement would reject and break the
   # conda build.
-  find_package(pybind11 3.0.0 REQUIRED)
+  # Pixi tasks and presets should expose package configs through
+  # CMAKE_PREFIX_PATH or pybind11_ROOT.
+  find_package(pybind11 3.0.0 REQUIRED CONFIG)
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
     pybind/generator_py.cpp
@@ -449,11 +529,16 @@ IF(BUILD_PYTHON)
     pybind/algo_py.cpp
     pybind/physics_related_py.cpp
     pybind/random_py.cpp
-    pybind/scalar_py.cpp
     pybind/ncon_py.cpp
   )
   target_link_libraries(pycytnx PUBLIC cytnx)
-  target_compile_definitions(pycytnx PRIVATE CYTNX_VERSION="${CYTNX_VERSION_FULL}")
+  target_compile_definitions(pycytnx PRIVATE
+    CYTNX_VERSION="${CYTNX_VERSION_FULL}"
+    _LIBCPP_DISABLE_AVAILABILITY
+  )
+  if(USE_DEBUG)
+    target_compile_options(pycytnx PRIVATE ${cytnx_asan_compile_options})
+  endif()
 
   # On macOS, Python extensions should NOT link to libpython
   # Use -undefined dynamic_lookup to resolve symbols from the running interpreter
@@ -461,6 +546,12 @@ IF(BUILD_PYTHON)
     target_link_options(pycytnx PRIVATE "-undefined" "dynamic_lookup")
   endif()
   set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
+  if(WIN32)
+    # The static core already produces cytnx.lib. Keep the Python module named
+    # cytnx.pyd while giving its otherwise-unused import library a distinct
+    # name so link.exe does not treat its output as the static library input.
+    set_target_properties(pycytnx PROPERTIES ARCHIVE_OUTPUT_NAME pycytnx)
+  endif()
   message(STATUS "pybind11 include dir: ${CUTENSOR_LIBRARY_DIRS}")
   message(STATUS "pybind11 include dir: ${CUQUANTUM_LIBRARY_DIRS}")
   message(STATUS "pybind11 include dir: ${LAPACK_LIBRARY_DIRS}")
@@ -481,9 +572,9 @@ IF(BUILD_PYTHON)
   endif()
 
   message(STATUS " Build Python Wrapper: YES")
-  message(STATUS "  - Python Excutable  : ${PYTHON_EXECUTABLE}")
-  message(STATUS "  - Python Headers    : ${PYTHON_INCLUDE_DIR}")
-  message(STATUS "  - Python Library    : ${PYTHON_LIBRARY}")
+  message(STATUS "  - Python Excutable  : ${Python_EXECUTABLE}")
+  message(STATUS "  - Python Headers    : ${Python_INCLUDE_DIRS}")
+  message(STATUS "  - Python Library    : ${Python_LIBRARIES}")
 
 ELSE()
   message(STATUS " Build Python Wrapper: NO")
@@ -506,8 +597,12 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
 )
 
 if(BUILD_PYTHON)
+  # COMPONENT is scoped to each artifact group in install(TARGETS).
   INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
     LIBRARY
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
+    COMPONENT libraries
+    RUNTIME
     DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
     COMPONENT libraries
   )
@@ -540,9 +635,19 @@ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
 )
 
+# The generated CytnxConfig.cmake also backs the build-tree export
+# (export(PACKAGE Cytnx) below), where CMAKE_CURRENT_LIST_DIR is the binary dir.
+# Copy the cccl-detection module next to it so both the build-tree and installed
+# configs can include() it.
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/CytnxDetectCCCL.cmake COPYONLY)
+
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfigVersion.cmake
+  # CytnxConfig.cmake includes this to re-detect the CUDA cccl include dir
+  # against the consumer's toolkit, so it must ship next to the config.
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
   COMPONENT Development
 )

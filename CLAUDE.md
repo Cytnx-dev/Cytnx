@@ -167,8 +167,6 @@ Green locally before opening a PR. CI enforces:
   non-contiguous tensor⊗tensor kernels that `cuAdd`/`cuSub` have — contiguous-ize
   first or results are silently wrong; a narrow LHS can OOB-write; a length-1
   scalar RHS must stay CPU-resident (#988).
-- **`cuKron` GPU compile is currently broken** under CUDA 13 (#999) — the CUDA
-  build is not green for that path.
 - **Raise errors via `cytnx_error_msg(cond, "fmt", …)`** (throws `cytnx::error`,
   surfaced in Python as `cytnx.CytnxError`); the function name comes from
   `CYTNX_FUNC_NAME`.

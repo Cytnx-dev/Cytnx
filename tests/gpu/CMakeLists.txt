@@ -11,16 +11,23 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  arange_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
   linalg_test/Abs_test.cpp
   linalg_test/Add_test.cpp
+  linalg_test/Kron_test.cpp
   linalg_test/Cpr_test.cpp
   linalg_test/Div_test.cpp
   linalg_test/Mod_test.cpp
   linalg_test/Mul_test.cpp
   linalg_test/Sub_test.cpp
+  linalg_test/InplacePromote_test.cpp
+  linalg_test/NonContigElementwise_test.cpp
+  linalg_test/Outer_test.cpp
+  linalg_test/CuLibraryHandle_test.cpp
+  linalg_test/CusolverResourceLeak_test.cpp
   linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
@@ -49,6 +56,10 @@ target_include_directories(
   gpu_test_main
   PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
+  # Internal backend headers (e.g. utils_internal_gpu/cuLibraryHandle_gpu.hpp) live under src/
+  # and are PRIVATE to the cytnx target; expose them to the test binary so internal utilities
+  # can be unit-tested directly. Mirrors what tests/CMakeLists.txt does for test_main.
+  ${CMAKE_SOURCE_DIR}/src
 )
 target_link_libraries(
   gpu_test_main
@@ -58,6 +69,19 @@ target_link_libraries(
 )
 target_link_libraries(gpu_test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
+
+# gpu_test_main's .cpp TUs are host-compiled (g++) but include cytnx public
+# headers (Type.hpp) that pull <cuda/std/complex>. cytnx adds the CUDA toolkit
+# and CCCL include dirs PRIVATEly, so they do not propagate here through
+# linking; add them explicitly, otherwise the host compile fails with
+# "fatal error: cuda/std/complex: No such file or directory".
+if(CUDAToolkit_INCLUDE_DIRS)
+  target_include_directories(gpu_test_main PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+endif()
+if(CYTNX_CCCL_INCLUDE_DIR)
+  target_include_directories(gpu_test_main PRIVATE ${CYTNX_CCCL_INCLUDE_DIR})
+endif()
+
 include(GoogleTest)
 cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR ".." OUTPUT_VARIABLE test_dir)
 gtest_discover_tests(gpu_test_main

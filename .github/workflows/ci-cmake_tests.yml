@@ -96,6 +96,19 @@ jobs:
         # `pip install --editable .[dev]` step below. That keeps
         # pyproject.toml as the single source of truth for everything
         # Python.
+        #
+        # blas=*=openblas *openmp* pins the OpenMP-threaded OpenBLAS build,
+        # matching the wheel build (tools/cibuildwheel_before_all.sh): HPTT
+        # and cytnx's own code use OpenMP (-fopenmp), and an OpenBLAS build
+        # with its own independent (pthreads) thread pool oversubscribes the
+        # CPU when a BLAS call originates from inside an OpenMP region.
+        # conda-forge's openmp OpenBLAS build hard-requires
+        # _openmp_mutex=*_llvm (an explicit _gnu pin is unsolvable against
+        # it), so libopenblas=*=*openmp* already forces the whole
+        # environment onto the single llvm OpenMP runtime -- no separate
+        # _openmp_mutex pin is needed. (libgomp is still present, symlinked
+        # to libomp by _kmp_llvm, so GCC's -fopenmp -lgomp and OpenBLAS
+        # resolve to that one runtime.)
         run: |
           mamba install cmake make boost git compilers "blas=*=openblas" "libopenblas=*=*openmp*" liblapacke arpack gtest graphviz
 
@@ -150,10 +163,18 @@ jobs:
         # wins over the pyproject.toml default; see
         # .claude/skills/build-test-workflow/scripts/build_preset.sh for the
         # verified mechanics).
+        #
+        #   HPTT_ENABLE_AVX=ON
+        #     Compiles HPTT's AVX micro-kernels, which is what the released
+        #     x86_64 wheels ship (see release_pypi.yml). This runner is
+        #     ubuntu-latest, i.e. always x86_64; HPTT fails the configure
+        #     outright if this option ever reaches a non-x86 target, so the
+        #     hardcoded choice cannot silently go wrong.
         run: |
           pip install --editable '.[dev]' --verbose \
             --config-settings=build-dir=build \
-            --config-settings=cmake.args=--preset=debug-openblas-cpu
+            --config-settings=cmake.args=--preset=debug-openblas-cpu \
+            --config-settings=cmake.define.HPTT_ENABLE_AVX=ON
 
       - name: Resolve ASan runtime paths for Python-hosted steps
         id: asan_preload
