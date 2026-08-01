@@ -7,6 +7,7 @@ target_sources(cytnx
     cuGetElems_gpu.hpp
     cuGetElems_contiguous_gpu.hpp
     cuMovemem_gpu.hpp
+    cuScopedResource_gpu.hpp
     cuSetArange_gpu.hpp
     cuSetElems_gpu.hpp
     cuSetElems_contiguous_gpu.hpp
