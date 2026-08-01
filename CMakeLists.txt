@@ -197,7 +197,6 @@ option(RUN_TESTS "Run Cytnx tests." OFF)
 option(RUN_BENCHMARKS "Run Cytnx benchmarks." OFF)
 option(USE_DEBUG "Build in debug mode and enable address sanitizer." OFF)
 option(BUILD_DOC "Build API documentation." OFF)
-option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 
 # #####################################################################
 # ## PROJECT
@@ -689,14 +688,6 @@ endif()
 
 # ====================================================================
 set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-
-if(DEV_MODE)
-  add_executable(dev_test ${CMAKE_CURRENT_SOURCE_DIR}/dev_test.cpp)
-  target_link_libraries(dev_test cytnx)
-  add_custom_command(TARGET dev_test POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dev_test> ${CMAKE_CURRENT_SOURCE_DIR}/dev_test
-  )
-endif()
 
 # #####################################################################
 # Final Information Messages
