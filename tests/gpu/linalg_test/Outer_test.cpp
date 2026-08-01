@@ -27,8 +27,8 @@ namespace cytnx {
       // undefined behaviour in the GPU kernel and the CPU oracle alike and makes a comparison
       // between them compiler-dependent. Bound Uint16 to the [0, 1000] the wider unsigned dtypes
       // already use. Int16 is safe: 32768 * 32768 fits in int.
-      Tensor MakeSweepOperand(const std::vector<cytnx_uint64>& shape, unsigned int dtype,
-                              unsigned int seed) {
+      Tensor make_sweep_operand(const std::vector<cytnx_uint64>& shape, unsigned int dtype,
+                                unsigned int seed) {
         if (dtype == Type.Uint16) {
           Tensor bounded(shape, Type.Double);
           random::uniform_(bounded, 0, 1000, seed);
@@ -160,9 +160,9 @@ namespace cytnx {
       TEST(Outer, GpuMatchesCpuAllDtypes) {
         for (auto dtype : dtype_list) {
           SCOPED_TRACE("dtype " + std::to_string(dtype));
-          const cytnx_double tol = (dtype == Type.ComplexFloat) ? 0.1 : 1e-6;
-          Tensor a = MakeSweepOperand({5}, dtype, /*seed=*/3);
-          Tensor b = MakeSweepOperand({7}, dtype, /*seed=*/4);
+          const double tol = (dtype == Type.ComplexFloat) ? 0.1 : 1e-6;
+          Tensor a = make_sweep_operand({5}, dtype, /*seed=*/3);
+          Tensor b = make_sweep_operand({7}, dtype, /*seed=*/4);
           Tensor expected = linalg::Outer(a, b);
           Tensor gpu = linalg::Outer(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
           EXPECT_EQ(gpu.dtype(), expected.dtype());

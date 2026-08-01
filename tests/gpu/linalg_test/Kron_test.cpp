@@ -40,8 +40,8 @@ namespace cytnx {
       //
       // Bounding here rather than in GetRandRange keeps the change to this PR's tests; the
       // promotion hazard in the kernels themselves is a separate matter.
-      Tensor MakeSweepOperand(const std::vector<cytnx_uint64>& shape, unsigned int dtype,
-                              unsigned int seed) {
+      Tensor make_sweep_operand(const std::vector<cytnx_uint64>& shape, unsigned int dtype,
+                                unsigned int seed) {
         if (dtype == Type.Uint16) {
           Tensor bounded(shape, Type.Double);
           random::uniform_(bounded, 0, 1000, seed);
@@ -294,11 +294,11 @@ namespace cytnx {
         for (auto dtype : dtype_list) {
           // See Outer_test's note: ~1e6-magnitude complex-float products diverge
           // from the CPU at the float32 ULP, so ComplexFloat gets a looser tol.
-          const cytnx_double tol = (dtype == Type.ComplexFloat) ? 0.1 : 1e-6;
+          const double tol = (dtype == Type.ComplexFloat) ? 0.1 : 1e-6;
           for (const auto& s : shapes) {
             SCOPED_TRACE("dtype " + std::to_string(dtype));
-            Tensor a = MakeSweepOperand(s.first, dtype, /*seed=*/1);
-            Tensor b = MakeSweepOperand(s.second, dtype, /*seed=*/2);
+            Tensor a = make_sweep_operand(s.first, dtype, /*seed=*/1);
+            Tensor b = make_sweep_operand(s.second, dtype, /*seed=*/2);
             Tensor expected = linalg::Kron(a, b);
             Tensor gpu = linalg::Kron(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
             EXPECT_EQ(gpu.dtype(), expected.dtype());
