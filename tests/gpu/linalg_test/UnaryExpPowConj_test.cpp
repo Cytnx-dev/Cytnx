@@ -18,7 +18,8 @@ namespace UnaryExpPowConjTest {
   using cytnx::Tensor;
   namespace la = cytnx::linalg;
 
-  ::testing::AssertionResult SameAsCpu(const char* what, const Tensor& gpu, const Tensor& cpu_ref) {
+  ::testing::AssertionResult same_as_cpu(const char* what, const Tensor& gpu,
+                                         const Tensor& cpu_ref) {
     Tensor g = gpu.to(cytnx::Device.cpu);
     if (g.dtype() != cpu_ref.dtype())
       return ::testing::AssertionFailure()
@@ -31,7 +32,7 @@ namespace UnaryExpPowConjTest {
   // Small deterministic real-valued input (in [-0.5, 0.5]) cast to `dtype`, on the GPU. Kept small
   // so exp/pow do not overflow; a complex dtype gets zero imaginary part (still exercises the
   // complex kernel path).
-  Tensor SmallInput(unsigned int dtype) {
+  Tensor small_input(unsigned int dtype) {
     Tensor base = cytnx::arange(0, 64, 1, cytnx::Type.Double);  // [0..63]
     base = (base - 31.5) / 63.0;  // [-0.5, 0.5]
     return base.astype(dtype).to(cytnx::Device.cuda);
@@ -42,27 +43,27 @@ namespace UnaryExpPowConjTest {
 
   TEST(GpuUnary, exp_matches_cpu) {
     for (auto dt : kFloatish) {
-      Tensor t = SmallInput(dt);
+      Tensor t = small_input(dt);
       SCOPED_TRACE("Exp dtype " + std::to_string(dt));
-      EXPECT_TRUE(SameAsCpu("Exp", la::Exp(t), la::Exp(t.to(cytnx::Device.cpu))));
+      EXPECT_TRUE(same_as_cpu("Exp", la::Exp(t), la::Exp(t.to(cytnx::Device.cpu))));
 
       Tensor gi = t.clone(), ci = t.to(cytnx::Device.cpu);
       la::Exp_(gi);
       la::Exp_(ci);
-      EXPECT_TRUE(SameAsCpu("Exp_", gi, ci));
+      EXPECT_TRUE(same_as_cpu("Exp_", gi, ci));
     }
   }
 
   TEST(GpuUnary, pow_matches_cpu) {
     for (auto dt : kFloatish) {
-      Tensor t = SmallInput(dt);
+      Tensor t = small_input(dt);
       SCOPED_TRACE("Pow dtype " + std::to_string(dt));
-      EXPECT_TRUE(SameAsCpu("Pow", la::Pow(t, 2.0), la::Pow(t.to(cytnx::Device.cpu), 2.0)));
+      EXPECT_TRUE(same_as_cpu("Pow", la::Pow(t, 2.0), la::Pow(t.to(cytnx::Device.cpu), 2.0)));
 
       Tensor gi = t.clone(), ci = t.to(cytnx::Device.cpu);
       la::Pow_(gi, 3.0);
       la::Pow_(ci, 3.0);
-      EXPECT_TRUE(SameAsCpu("Pow_", gi, ci));
+      EXPECT_TRUE(same_as_cpu("Pow_", gi, ci));
     }
   }
 
@@ -71,12 +72,12 @@ namespace UnaryExpPowConjTest {
       Tensor t = Tensor({64}, dt).to(cytnx::Device.cuda);
       cytnx::gpu_test::InitTensorUniform(t, /*seed=*/7);  // genuine complex (nonzero imag)
       SCOPED_TRACE("Conj dtype " + std::to_string(dt));
-      EXPECT_TRUE(SameAsCpu("Conj", la::Conj(t), la::Conj(t.to(cytnx::Device.cpu))));
+      EXPECT_TRUE(same_as_cpu("Conj", la::Conj(t), la::Conj(t.to(cytnx::Device.cpu))));
 
       Tensor gi = t.clone(), ci = t.to(cytnx::Device.cpu);
       la::Conj_(gi);
       la::Conj_(ci);
-      EXPECT_TRUE(SameAsCpu("Conj_", gi, ci));
+      EXPECT_TRUE(same_as_cpu("Conj_", gi, ci));
     }
   }
 
@@ -182,6 +183,94 @@ namespace UnaryExpPowConjTest {
       Tensor g = la::Abs(t.to(cytnx::Device.cuda)).to(cytnx::Device.cpu);
       EXPECT_FALSE(std::signbit(g.at<float>({0}))) << "Abs(-0.0f) must be +0.0f";
       EXPECT_FLOAT_EQ(g.at<float>({1}), 3.5f);
+    }
+  }
+
+  // Exp and Pow accept integer and bool tensors by promoting them to Double before dispatch, so
+  // the kernel itself never sees an integer dtype. Both the promoted RESULT dtype and the values
+  // are checked, against std:: -- not against the Cytnx CPU path.
+  TEST(GpuUnary, exp_pow_promote_integer_dtypes) {
+    using cytnx::cytnx_uint64;
+
+    // Small non-negative values, exactly representable in every integer dtype including Uint16.
+    const std::vector<double> vals = {0.0, 1.0, 2.0, 3.0};
+    Tensor base = cytnx::zeros({static_cast<cytnx_uint64>(vals.size())}, cytnx::Type.Double);
+    for (cytnx_uint64 i = 0; i < vals.size(); ++i) base.at<double>({i}) = vals[i];
+
+    for (auto dt : {cytnx::Type.Int64, cytnx::Type.Uint64, cytnx::Type.Int32, cytnx::Type.Uint32,
+                    cytnx::Type.Int16, cytnx::Type.Uint16}) {
+      SCOPED_TRACE("integer dtype " + std::to_string(dt));
+      Tensor g = base.astype(dt).to(cytnx::Device.cuda);
+
+      Tensor ge = la::Exp(g).to(cytnx::Device.cpu);
+      ASSERT_EQ(ge.dtype(), cytnx::Type.Double) << "Exp must promote an integer input to Double";
+      Tensor gp = la::Pow(g, 2.0).to(cytnx::Device.cpu);
+      ASSERT_EQ(gp.dtype(), cytnx::Type.Double) << "Pow must promote an integer input to Double";
+
+      for (cytnx_uint64 i = 0; i < vals.size(); ++i) {
+        EXPECT_NEAR(ge.at<double>({i}), std::exp(vals[i]), 1e-12);
+        EXPECT_NEAR(gp.at<double>({i}), std::pow(vals[i], 2.0), 1e-12);
+      }
+    }
+
+    // Bool promotes the same way; its only values are 0 and 1.
+    {
+      Tensor b = cytnx::zeros({2}, cytnx::Type.Double);
+      b.at<double>({0}) = 0.0;
+      b.at<double>({1}) = 1.0;
+      Tensor ge = la::Exp(b.astype(cytnx::Type.Bool).to(cytnx::Device.cuda)).to(cytnx::Device.cpu);
+      ASSERT_EQ(ge.dtype(), cytnx::Type.Double);
+      EXPECT_NEAR(ge.at<double>({0}), 1.0, 1e-12);
+      EXPECT_NEAR(ge.at<double>({1}), std::exp(1.0), 1e-12);
+    }
+  }
+
+  // Expf / Expf_ are the deprecated narrowing spellings (Double -> Float, ComplexDouble ->
+  // ComplexFloat). This PR rewires both onto the shared GPU dispatch, so they get their own
+  // independent coverage rather than inheriting Exp's.
+  TEST(GpuUnary, expf_narrows_and_matches_std_library) {
+    using cytnx::cytnx_complex64;
+    using cytnx::cytnx_uint64;
+
+    const std::vector<double> in = {-0.75, 0.0, 0.5, 1.25};
+    Tensor t = cytnx::zeros({static_cast<cytnx_uint64>(in.size())}, cytnx::Type.Double);
+    for (cytnx_uint64 i = 0; i < in.size(); ++i) t.at<double>({i}) = in[i];
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+    Tensor g = la::Expf(t.to(cytnx::Device.cuda)).to(cytnx::Device.cpu);
+    Tensor gi = t.to(cytnx::Device.cuda);
+    la::Expf_(gi);
+#pragma GCC diagnostic pop
+    Tensor gi_cpu = gi.to(cytnx::Device.cpu);
+
+    ASSERT_EQ(g.dtype(), cytnx::Type.Float) << "Expf narrows Double to Float";
+    ASSERT_EQ(gi_cpu.dtype(), cytnx::Type.Float) << "Expf_ narrows Double to Float in place";
+    for (cytnx_uint64 i = 0; i < in.size(); ++i) {
+      EXPECT_NEAR(g.at<float>({i}), std::exp(static_cast<float>(in[i])), 1e-5);
+      EXPECT_NEAR(gi_cpu.at<float>({i}), std::exp(static_cast<float>(in[i])), 1e-5);
+    }
+
+    // ComplexDouble input narrows to ComplexFloat.
+    {
+      const std::vector<std::complex<double>> cin = {{0.5, -0.3}, {-0.2, 0.7}, {0.0, 1.0}};
+      Tensor ct = cytnx::zeros({static_cast<cytnx_uint64>(cin.size())}, cytnx::Type.ComplexDouble);
+      for (cytnx_uint64 i = 0; i < cin.size(); ++i)
+        ct.at<cytnx::cytnx_complex128>({i}) = cytnx::cytnx_complex128(cin[i].real(), cin[i].imag());
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+      Tensor cg = la::Expf(ct.to(cytnx::Device.cuda)).to(cytnx::Device.cpu);
+#pragma GCC diagnostic pop
+
+      ASSERT_EQ(cg.dtype(), cytnx::Type.ComplexFloat)
+        << "Expf narrows ComplexDouble to ComplexFloat";
+      for (cytnx_uint64 i = 0; i < cin.size(); ++i) {
+        const std::complex<double> e = std::exp(cin[i]);
+        const cytnx_complex64 a = cg.at<cytnx_complex64>({i});
+        EXPECT_NEAR(a.real(), e.real(), 1e-5);
+        EXPECT_NEAR(a.imag(), e.imag(), 1e-5);
+      }
     }
   }
 
