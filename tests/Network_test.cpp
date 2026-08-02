@@ -31,6 +31,96 @@ namespace cytnx {
         net.FromString(network_def);
       }
 
+      TEST_F(NetworkTest, NetworkOrderAcceptsBinaryGrammar) {
+        struct OrderCase {
+          std::string order;
+          std::string expected_root;
+        };
+        const std::vector<OrderCase> order_cases = {
+          {"(A,B),(C,D)", "((A,B),(C,D))"},
+          {"((A,B),(C,D))", "((A,B),(C,D))"},
+          {"(((A,B),C),D)", "(((A,B),C),D)"},
+          {"(A,(B,(C,D)))", "(A,(B,(C,D)))"},
+          {" ( A , B ) , ( C , D ) ", "((A,B),(C,D))"},
+        };
+
+        for (const OrderCase &order_case : order_cases) {
+          SCOPED_TRACE(order_case.order);
+          auto net = Network();
+          net.FromString(
+            {"A: a,b", "B: b,c", "C: c,d", "D: d,e", "TOUT: a;e", "ORDER: " + order_case.order});
+
+          ASSERT_EQ(net._impl->CtTree.nodes_container.size(), 3);
+          EXPECT_EQ(net._impl->CtTree.nodes_container.back()->name, order_case.expected_root);
+        }
+
+        for (const std::string &order : {"(A,B)", "A,B"}) {
+          SCOPED_TRACE(order);
+          auto net = Network();
+          net.FromString({"A: a,b", "B: b,c", "TOUT: a;c", "ORDER: " + order});
+          ASSERT_EQ(net._impl->CtTree.nodes_container.size(), 1);
+          EXPECT_EQ(net._impl->CtTree.nodes_container.back()->name, "(A,B)");
+        }
+
+        auto named_net = Network();
+        named_net.FromString({"A1: a,b", "B_Conj: b,c", "C2: c,d", "D_3: d,e", "TOUT: a;e",
+                              "ORDER: (A1,B_Conj),(C2,D_3)"});
+        ASSERT_EQ(named_net._impl->CtTree.nodes_container.size(), 3);
+        EXPECT_EQ(named_net._impl->CtTree.nodes_container.back()->name, "((A1,B_Conj),(C2,D_3))");
+      }
+
+      TEST_F(NetworkTest, NetworkOrderRejectsMalformedExpressions) {
+        struct MalformedOrderCase {
+          std::string order;
+          std::size_t expected_column;
+        };
+        const std::vector<MalformedOrderCase> malformed_orders = {
+          {"A,B,C,D", 4},    {"(A,B,C,D)", 5},    {"((A,B)),(C,D)", 7}, {"(A,B,)", 5},
+          {"),A,B,(", 1},    {"()(),A,B,C,D", 2}, {"(A,(B,C,D))", 8},   {"A,,B", 3},
+          {"(A,B)(C,D)", 6}, {"(A,(B,C)", 9},     {"(A,B))", 6},
+        };
+
+        for (const MalformedOrderCase &order_case : malformed_orders) {
+          SCOPED_TRACE(order_case.order);
+          auto net = Network();
+          try {
+            net.FromString(
+              {"A: a,b", "B: b,c", "C: c,d", "D: d,e", "TOUT: a;e", "ORDER: " + order_case.order});
+            FAIL() << "accepted malformed ORDER expression: " << order_case.order;
+          } catch (const error &exception) {
+            const std::string message = exception.what();
+            EXPECT_NE(message.find("[ERROR][ORDER]"), std::string::npos);
+            EXPECT_NE(message.find("column:" + std::to_string(order_case.expected_column)),
+                      std::string::npos);
+          }
+        }
+      }
+
+      TEST_F(NetworkTest, NetworkSetOrderRequiresEveryTensorExactlyOnce) {
+        struct OrderErrorCase {
+          std::string order;
+          std::string expected_message;
+        };
+        const std::vector<OrderErrorCase> order_cases = {
+          {"(A,(B,(C,C)))", "duplicate tensor name: C"},
+          {"(A,(B,(C,E)))", "undefined tensor name: E"},
+          {"(A,(B,C))", "every tensor exactly once"},
+        };
+
+        for (const OrderErrorCase &order_case : order_cases) {
+          SCOPED_TRACE(order_case.order);
+          auto net = Network();
+          net.FromString({"A: a,b", "B: b,c", "C: c,d", "D: d,e", "TOUT: a;e"});
+          try {
+            net.setOrder(false, order_case.order);
+            FAIL() << "accepted incomplete ORDER expression: " << order_case.order;
+          } catch (const error &exception) {
+            EXPECT_NE(std::string(exception.what()).find(order_case.expected_message),
+                      std::string::npos);
+          }
+        }
+      }
+
       TEST_F(NetworkTest, NetworkDenseNoOrder) {
         auto net = Network();
         net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
@@ -93,8 +183,8 @@ namespace cytnx {
 
       // Helper: Contract three tensors directly with Contract, and permute the open legs into the
       // requested TOUT order.
-      static UniTensor BlockNetworkReference(const UniTensor& A, const UniTensor& B,
-                                             const UniTensor& C) {
+      static UniTensor BlockNetworkReference(const UniTensor &A, const UniTensor &B,
+                                             const UniTensor &C) {
         UniTensor a = A.relabel({"a", "e"});
         UniTensor b = B.relabel({"a", "c_", "d_", "h"});
         UniTensor c = C.relabel({"e", "f_", "g_", "h"});
@@ -178,7 +268,7 @@ namespace cytnx {
 
       // Helper: build a permuted (consistent {1,0,3,2}) copy and assert it carries non-trivial sign
       // flips.
-      inline UniTensor permute_with_signflips(const UniTensor& M) {
+      inline UniTensor permute_with_signflips(const UniTensor &M) {
         UniTensor Mp = M.permute({1, 0, 3, 2}).contiguous();
         bool anyflip = false;
         for (auto f : Mp.signflip()) anyflip = anyflip || f;

@@ -4,6 +4,7 @@ target_sources(cytnx
     #utils_internal_interface.hpp
     cartesian.cpp
     is.cpp
+    order_parser.cpp
     str_utils.cpp
     dynamic_arg_resolver.cpp
     utils.cpp
