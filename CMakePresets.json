@@ -24,7 +24,6 @@
         "RUN_BENCHMARKS": "OFF",
         "USE_DEBUG": "OFF",
         "BUILD_DOC": "OFF",
-        "DEV_MODE": "OFF",
         "CMAKE_INSTALL_PREFIX": "~/.local/cytnx"
       }
     },
@@ -95,8 +94,7 @@
         "USE_DEBUG": "ON",
         "RUN_TESTS": "ON",
         "RUN_BENCHMARKS": "OFF",
-        "BUILD_DOC": "OFF",
-        "DEV_MODE": "OFF"
+        "BUILD_DOC": "OFF"
       }
     },
     {
