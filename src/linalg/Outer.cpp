@@ -1,7 +1,6 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
 
-
 namespace cytnx {
 
   namespace linalg {

@@ -10,8 +10,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-
-  #include "backend/Storage.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
   /**
@@ -231,6 +230,5 @@ namespace cytnx {
 
   }  // namespace random
 }  // namespace cytnx
-
 
 #endif  // CYTNX_RANDOM_H_

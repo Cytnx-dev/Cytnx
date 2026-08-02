@@ -9,7 +9,7 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -62,7 +62,7 @@ namespace cytnx {
         return out;
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(in.device()));
         cytnx::linalg_internal::lii.cuEigh_ii[in.dtype()](in._impl->storage()._impl,
                                                           S._impl->storage()._impl,
@@ -83,11 +83,11 @@ namespace cytnx {
         }
 
         return out;
-  #else
+#else
         cytnx_error_msg(true, "[Eigh] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-  #endif
+#endif
       }
     }
 

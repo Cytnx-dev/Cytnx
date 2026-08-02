@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {

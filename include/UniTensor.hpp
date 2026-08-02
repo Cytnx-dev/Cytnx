@@ -19,7 +19,7 @@
 #include "Generator.hpp"
 #include <random>
 
-  #include "backend/Scalar.hpp"
+#include "backend/Scalar.hpp"
 
 // namespace cytnx{
 namespace cytnx {
@@ -1263,35 +1263,35 @@ namespace cytnx {
     };
 
     unsigned int dtype() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? Type.Void : this->_blocks[0].dtype();
     };
     int device() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? -404 : this->_blocks[0].device();
     };
     std::string dtype_str() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? "Void, no valid blocks" : this->_blocks[0].dtype_str();
     };
     std::string device_str() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? "None, no valid blocks" : this->_blocks[0].device_str();
     };
 
@@ -2041,35 +2041,35 @@ namespace cytnx {
     };
 
     unsigned int dtype() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? Type.Void : this->_blocks[0].dtype();
     };
     int device() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? -404 : this->_blocks[0].device();
     };
     std::string dtype_str() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? "Void, no valid blocks" : this->_blocks[0].dtype_str();
     };
     std::string device_str() const {
-        //[21 Aug 2024] This is a copy from BlockUniTensor;
-  #ifdef UNI_DEBUG
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+#ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-  #endif
+#endif
       return this->_blocks.size() < 1 ? "None, no valid blocks" : this->_blocks[0].device_str();
     };
 
@@ -2864,7 +2864,7 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const std::string &name = "")
         : _impl(new UniTensor_base()) {
-  #ifdef UNI_DEBUG
+#ifdef UNI_DEBUG
       cytnx_warning_msg(
         true,
         "[DEBUG] message: entry for UniTensor(const std::vector<Bond> &bonds, const "
@@ -2872,7 +2872,7 @@ namespace cytnx {
         "int "
         "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
         "\n");
-  #endif
+#endif
       this->Init(bonds, in_labels, rowrank, dtype, device, is_diag, name);
     }
 
@@ -2940,9 +2940,9 @@ namespace cytnx {
 
       // dynamical dispatch:
       if (is_sym) {
-  #ifdef UNI_DEBUG
+#ifdef UNI_DEBUG
         cytnx_warning_msg(true, "[DEBUG] message: entry dispatch: UniTensor: symmetric%s", "\n");
-  #endif
+#endif
         cytnx_error_msg(
           sym_fver < 1,
           "[ERROR] Symmetric tensor, but no degeneracies given. The UniTensor seems broken.%s",
@@ -6297,6 +6297,5 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-
 
 #endif  // CYTNX_UNITENSOR_H_

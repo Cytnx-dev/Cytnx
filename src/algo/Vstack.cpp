@@ -3,12 +3,12 @@
 #include "Accessor.hpp"
 #include "Generator.hpp"
 
-  #include "backend/algo_internal_cpu/Concate_internal.hpp"
-  #ifdef UNI_GPU
-    #include "backend/algo_internal_gpu/cuConcate_internal.hpp"
-  #endif
-  #include "backend/Storage.hpp"
-  #include "backend/Scalar.hpp"
+#include "backend/algo_internal_cpu/Concate_internal.hpp"
+#ifdef UNI_GPU
+  #include "backend/algo_internal_gpu/cuConcate_internal.hpp"
+#endif
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
     typedef Accessor ac;
@@ -88,15 +88,15 @@ namespace cytnx {
         algo_internal::vConcate_internal((char *)out.storage().data(), rawPtr, Ds,
                                          Type.typeSize(dtype_id));
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(device_id));
         algo_internal::cuvConcate_internal((char *)out.storage().data(), rawPtr, Ds,
                                            Type.typeSize(dtype_id));
-  #else
+#else
         cytnx_error_msg(
           true, "[ERROR][VStack_] input is on GPU but current cytnx is compiled without GPU.%s",
           "\n");
-  #endif
+#endif
       }
 
       return out;

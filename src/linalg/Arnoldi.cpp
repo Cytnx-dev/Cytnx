@@ -9,7 +9,6 @@
 
 #include "backend/arpack_wrapper.hpp"
 
-
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
@@ -63,19 +62,19 @@ namespace cytnx {
               if (device == Device.cpu) {
                 memcpy(UT_data, data_ptr, dim * sizeof(T));
               } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
                 checkCudaErrors(
                   cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
-  #endif
+#endif
               }
             } else {
               if (device == Device.cpu) {
                 memcpy(data_ptr, UT_data, dim * sizeof(T));
               } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
                 checkCudaErrors(
                   cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
-  #endif
+#endif
               }
             }
             data_ptr += dim;
@@ -89,19 +88,19 @@ namespace cytnx {
             if (device == Device.cpu) {
               memcpy(UT_data, data_ptr, dim * sizeof(T));
             } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
               checkCudaErrors(
                 cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
-  #endif
+#endif
             }
           } else {
             if (device == Device.cpu) {
               memcpy(data_ptr, UT_data, dim * sizeof(T));
             } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
               checkCudaErrors(
                 cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
-  #endif
+#endif
             }
           }
           return;
@@ -113,17 +112,17 @@ namespace cytnx {
           if (device == Device.cpu) {
             memcpy(UT_data, data_ptr, dim * sizeof(T));
           } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
             checkCudaErrors(cudaMemcpy(UT_data, data_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
-  #endif
+#endif
           }
         } else {
           if (device == Device.cpu) {
             memcpy(data_ptr, UT_data, dim * sizeof(T));
           } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
             checkCudaErrors(cudaMemcpy(data_ptr, UT_data, dim * sizeof(T), cudaMemcpyDeviceToHost));
-  #endif
+#endif
           }
         }
         return;
@@ -352,10 +351,10 @@ namespace cytnx {
             if (Hop->device() == Device.cpu) {
               memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
             } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
               checkCudaErrors(
                 cudaMemcpy(tmp_data, z_k_ptr, dim * sizeof(T), cudaMemcpyHostToDevice));
-  #endif
+#endif
             }
           }
         }

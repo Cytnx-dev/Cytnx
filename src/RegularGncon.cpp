@@ -7,7 +7,6 @@
 
 #include "search_tree.hpp"
 
-
 namespace cytnx {
   // these three are internal functions:
 

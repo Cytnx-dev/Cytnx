@@ -2,12 +2,12 @@
 
 #include "Tensor.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
-  #include "Arithmetic_shape.hpp"
-  #include "iArithmetic_visit.hpp"
-  #ifdef UNI_GPU
-    #include "backend/linalg_internal_gpu/cuiArithmetic_dispatch.hpp"
-  #endif
+#include "backend/linalg_internal_interface.hpp"
+#include "Arithmetic_shape.hpp"
+#include "iArithmetic_visit.hpp"
+#ifdef UNI_GPU
+  #include "backend/linalg_internal_gpu/cuiArithmetic_dispatch.hpp"
+#endif
 
 namespace cytnx {
   namespace linalg {
@@ -67,13 +67,13 @@ namespace cytnx {
           detail::DispatchInplaceArithmeticCPU<0>(Lt, R, rhs_is_weak_scalar, empty_mapper,
                                                   empty_mapper, empty_mapper);
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           linalg_internal::cuiArithmeticDispatch(0, Lt, R, rhs_is_weak_scalar, empty_mapper,
                                                  empty_mapper, empty_mapper);
-  #else
+#else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-  #endif
+#endif
         }
       } else {
         // non-contiguous section
@@ -81,13 +81,13 @@ namespace cytnx {
           detail::DispatchInplaceArithmeticCPU<0>(Lt, R, rhs_is_weak_scalar, Lt._impl->shape(),
                                                   Lt._impl->invmapper(), Rt._impl->invmapper());
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           linalg_internal::cuiArithmeticDispatch(0, Lt, R, rhs_is_weak_scalar, Lt._impl->shape(),
                                                  Lt._impl->invmapper(), Rt._impl->invmapper());
-  #else
+#else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-  #endif
+#endif
         }
       }
     }

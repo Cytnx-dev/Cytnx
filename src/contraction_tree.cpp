@@ -2,7 +2,6 @@
 
 #include <stack>
 
-
 namespace cytnx {
   void ContractionTree::build_default_contraction_tree() {
     this->reset_contraction_order();

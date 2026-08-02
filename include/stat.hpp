@@ -8,8 +8,7 @@
 #include <algorithm>
 #include <iostream>
 
-
-  #include "backend/Storage.hpp"
+#include "backend/Storage.hpp"
 namespace cytnx {
   namespace stat {
 
@@ -210,6 +209,5 @@ namespace cytnx {
 
   }  // namespace stat
 }  // namespace cytnx
-
 
 #endif  // CYTNX_STAT_H_

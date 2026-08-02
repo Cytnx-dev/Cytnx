@@ -2,12 +2,12 @@
 
 #include "Tensor.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
-  #include "Arithmetic_shape.hpp"
-  #include "iArithmetic_visit.hpp"
-  #ifdef UNI_GPU
-    #include "backend/linalg_internal_gpu/cuiArithmetic_dispatch.hpp"
-  #endif
+#include "backend/linalg_internal_interface.hpp"
+#include "Arithmetic_shape.hpp"
+#include "iArithmetic_visit.hpp"
+#ifdef UNI_GPU
+  #include "backend/linalg_internal_gpu/cuiArithmetic_dispatch.hpp"
+#endif
 
 namespace cytnx {
   namespace linalg {
@@ -68,13 +68,13 @@ namespace cytnx {
           detail::DispatchInplaceArithmeticCPU<3>(Lt, R, rhs_is_weak_scalar, empty_mapper,
                                                   empty_mapper, empty_mapper);
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           linalg_internal::cuiArithmeticDispatch(3, Lt, R, rhs_is_weak_scalar, empty_mapper,
                                                  empty_mapper, empty_mapper);
-  #else
+#else
           cytnx_error_msg(true, "[Div] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-  #endif
+#endif
         }
       } else {
         // non-contiguous section
@@ -82,17 +82,17 @@ namespace cytnx {
           detail::DispatchInplaceArithmeticCPU<3>(Lt, R, rhs_is_weak_scalar, Lt._impl->shape(),
                                                   Lt._impl->invmapper(), Rt._impl->invmapper());
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           // #1013: the typed in-place dispatch's non-contiguous kernel applies the layout
           // mappers correctly, so non-contiguous tensor /= tensor -- previously rejected
           // because the legacy cuDiv kernels ignored the mappers (#988) -- is now
           // supported in place like Add/Sub.
           linalg_internal::cuiArithmeticDispatch(3, Lt, R, rhs_is_weak_scalar, Lt._impl->shape(),
                                                  Lt._impl->invmapper(), Rt._impl->invmapper());
-  #else
+#else
           cytnx_error_msg(true, "[Div] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-  #endif
+#endif
         }
       }
     }

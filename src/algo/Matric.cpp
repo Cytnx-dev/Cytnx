@@ -2,9 +2,8 @@
 #include "Accessor.hpp"
 #include "Generator.hpp"
 
-
-  #include "backend/Storage.hpp"
-  #include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
     typedef Accessor ac;

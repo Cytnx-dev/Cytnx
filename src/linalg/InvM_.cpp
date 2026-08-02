@@ -1,7 +1,7 @@
 #include "linalg.hpp"
 
 #include "Tensor.hpp"
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -20,15 +20,15 @@ namespace cytnx {
                                                                  Tin.shape().back());
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         cytnx::linalg_internal::lii.cuInvM_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,
                                                                    Tin.shape().back());
 
-  #else
+#else
         cytnx_error_msg(true, "[InvM] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
-  #endif
+#endif
       }
     }
 

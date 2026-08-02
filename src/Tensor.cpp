@@ -8,7 +8,6 @@
 #include "utils/checked_cast.hpp"
 #include "Type.hpp"
 
-
 namespace cytnx {
   namespace {
     constexpr unsigned int kLegacyTensorMagic = 888;
@@ -86,7 +85,7 @@ namespace cytnx {
                                     std::make_index_sequence<std::variant_size_v<pointer_types>>{});
   }
 
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
   template <std::size_t... Is>
   Tensor::gpu_pointer_types gpu_void_ptr_to_variant_impl(void *p, unsigned int dtype,
                                                          std::index_sequence<Is...>) {
@@ -112,7 +111,7 @@ namespace cytnx {
       this->_impl->_storage._impl->data(), this->dtype() - 1,
       std::make_index_sequence<std::variant_size_v<gpu_pointer_types>>{});
   }
-  #endif  // UNI_GPU
+#endif  // UNI_GPU
 
   // ADD
   Tensor Tensor::Tproxy::operator+(

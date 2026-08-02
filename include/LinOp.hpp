@@ -171,5 +171,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-
 #endif  // CYTNX_LINOP_H_

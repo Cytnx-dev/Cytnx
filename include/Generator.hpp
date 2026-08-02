@@ -116,5 +116,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-
 #endif  // CYTNX_GENERATOR_H_

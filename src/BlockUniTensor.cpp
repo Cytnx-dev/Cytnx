@@ -16,7 +16,6 @@
 #include "utils/vec_concatenate.hpp"
 #include "utils/vec_print.hpp"
 
-
 namespace cytnx {
   namespace {
     void save_symmetry_cache(std::fstream &f, const std::vector<Symmetry> &syms) {
@@ -1079,7 +1078,7 @@ namespace cytnx {
                             "sub-Tensors on different device.%s",
                             "\n");
           }
-  #ifdef UNI_MKL
+#ifdef UNI_MKL
           if (common_dtype > 4) {
             // Integer dtype: Gemm_Batch only supports fp/complex (dtype <= 4); fall back to Matmul.
             for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -1178,7 +1177,7 @@ namespace cytnx {
             }
           }  // end else (common_dtype <= 4)
         }
-  #else
+#else
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
@@ -1222,7 +1221,7 @@ namespace cytnx {
           //   }
           // }
         }
-  #endif
+#endif
 
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;

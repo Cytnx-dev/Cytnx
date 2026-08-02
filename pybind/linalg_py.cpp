@@ -18,7 +18,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-
 namespace {
   // ExpH/ExpM accept a Python int through a single overload. Python int is
   // arbitrary precision while the kernels are fixed width, so dispatch on the
@@ -383,14 +382,14 @@ void linalg_binding(py::module &m) {
 
   m_linalg.def("Exp", &cytnx::linalg::Exp, py::arg("Tin"));
   m_linalg.def("Exp_", &cytnx::linalg::Exp_, py::arg("Tio"));
-  // Expf/Expf_ are deprecated: Exp/Exp_ are now dtype-preserving (a Float input already yields a
-  // Float result), so the float-precision variants are redundant. The -Wdeprecated-declarations
-  // warning from calling the [[deprecated]] cytnx::linalg::Expf/Expf_ is suppressed around these
-  // standalone binding statements (legal at statement scope, unlike inside a .def() chain).
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
+// Expf/Expf_ are deprecated: Exp/Exp_ are now dtype-preserving (a Float input already yields a
+// Float result), so the float-precision variants are redundant. The -Wdeprecated-declarations
+// warning from calling the [[deprecated]] cytnx::linalg::Expf/Expf_ is suppressed around these
+// standalone binding statements (legal at statement scope, unlike inside a .def() chain).
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
   m_linalg.def(
     "Expf_",
     [](cytnx::Tensor &Tio) {
@@ -412,9 +411,9 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Expf(Tio);
     },
     py::arg("Tio"));
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic pop
+#endif
 
   // ExpH / ExpM, [Note] no bool type! One overload per scalar dtype; see
   // bind_exp_scalar for the dtype set and overload ordering.
@@ -517,17 +516,17 @@ void linalg_binding(py::module &m) {
   m_linalg.def("Tridiag", &cytnx::linalg::Tridiag, py::arg("A"), py::arg("B"),
                py::arg("is_V") = true, py::arg("is_row") = false, py::arg("throw_excp") = false);
 
-  // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::Tensor());
-  // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::UniTensor());
-  // NOTE: Norm() is deprecated (use norm(), which returns a python float) but kept bound
-  // for one release; it emits a python DeprecationWarning on every call. The
-  // -Wdeprecated-declarations warning that calling cytnx::linalg::Norm would otherwise
-  // trigger here is suppressed locally since this binding's whole purpose is to keep
-  // exposing the deprecated call for one release.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
+// m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::Tensor());
+// m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::UniTensor());
+// NOTE: Norm() is deprecated (use norm(), which returns a python float) but kept bound
+// for one release; it emits a python DeprecationWarning on every call. The
+// -Wdeprecated-declarations warning that calling cytnx::linalg::Norm would otherwise
+// trigger here is suppressed locally since this binding's whole purpose is to keep
+// exposing the deprecated call for one release.
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
   m_linalg.def(
     "Norm",
     [](cytnx::UniTensor &T1) {
@@ -546,9 +545,9 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Norm(T1);
     },
     py::arg("T1"));
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic pop
+#endif
   // norm() returns a Scalar in C++ (dtype-preserving); hand Python a native float so
   // cytnx.Scalar is not exposed on the Python surface.
   m_linalg.def(

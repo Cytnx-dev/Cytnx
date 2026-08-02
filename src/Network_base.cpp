@@ -4,7 +4,6 @@
 
 #include "linalg.hpp"
 
-
 namespace cytnx {
   void Network_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                                    const std::vector<std::string> &alias,

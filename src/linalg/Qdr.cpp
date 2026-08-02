@@ -6,7 +6,7 @@
 #include "algo.hpp"
 typedef cytnx::Accessor ac;
 
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -52,7 +52,7 @@ namespace cytnx {
         return out;
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         cytnx_error_msg(true, "[Qdr] error,%s", "Currently QR does not support CUDA.\n");
         /*
         checkCudaErrors(cudaSetDevice(in.device()));
@@ -70,11 +70,11 @@ namespace cytnx {
         return out;
         */
         return std::vector<Tensor>();
-  #else
+#else
         cytnx_error_msg(true, "[QdR] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-  #endif
+#endif
       }
     }
 

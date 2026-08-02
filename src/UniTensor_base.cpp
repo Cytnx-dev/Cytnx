@@ -6,7 +6,6 @@
 #include "Tensor.hpp"
 #include "linalg.hpp"
 
-
 namespace cytnx {
   //====================================================
   std::string UniTensorType_class::getname(const int &ut_type) const {

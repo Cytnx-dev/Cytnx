@@ -5,8 +5,8 @@
 #include "Generator.hpp"
 #include "Tensor.hpp"
 
-  #include "backend/linalg_internal_cpu/Gemm_Batch_internal.hpp"
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_cpu/Gemm_Batch_internal.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -222,16 +222,16 @@ namespace cytnx {
           },
           a_promoted[0].ptr());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(device));
         linalg_internal::lii.cuGemm_Batch_ii[promoted_dtype](
           trans_flags.data(), trans_flags.data(), ns.data(), ms.data(), ks.data(), alpha_promoted,
           (const void**)b_data.data(), ns.data(), (const void**)a_data.data(), ks.data(),
           beta_promoted, c_data.data(), ns.data(), group_count, blas_group_sizes.data());
-  #else
+#else
         cytnx_error_msg(true, "[Gemm_Batch] fatal error,%s",
                         "try to use GPU but not compiled with GPU support.\n");
-  #endif
+#endif
       }
     }
 

@@ -11,7 +11,6 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-
 namespace cytnx {
   namespace physics {
     //@{
@@ -47,11 +46,11 @@ namespace cytnx {
 
     /// @cond
     Tensor pauli(const char &Comp, const int &device = Device.cpu);
-      /// @endcond
+    /// @endcond
 
-  #define kBoltz cytnx_double(1.380649e-23)  // J/K
-  #define hPlanck cytnx_double(6.62607015e-34)  // J-s
-  #define hBar cytnx_double(1.05457181e-34)  // J-s
+#define kBoltz cytnx_double(1.380649e-23)  // J/K
+#define hPlanck cytnx_double(6.62607015e-34)  // J-s
+#define hBar cytnx_double(1.05457181e-34)  // J-s
 
   }  // namespace physics
 }  // namespace cytnx
@@ -85,6 +84,5 @@ namespace cytnx {
 
 }  // namespace cytnx
    /// @endcond
-
 
 #endif  // CYTNX_PHYSICS_H_

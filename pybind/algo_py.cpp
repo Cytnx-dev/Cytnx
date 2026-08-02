@@ -17,7 +17,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-
 void algo_binding(py::module &m) {
   // [Submodule algo]
   pybind11::module m_algo = m.def_submodule("algo", "algorithm related.");

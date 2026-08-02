@@ -1,6 +1,5 @@
 #include "ncon.hpp"
 
-
 namespace cytnx {
   UniTensor ncon(const std::vector<UniTensor> &tensor_list_in,
                  const std::vector<std::vector<cytnx_int64>> &connect_list_in,

@@ -17,7 +17,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-
 void ncon_binding(py::module &m) {
   m.def(
     "ncon",

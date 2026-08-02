@@ -9,7 +9,6 @@
 #include "Tensor.hpp"
 #include <iomanip>
 
-
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;

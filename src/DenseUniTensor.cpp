@@ -10,7 +10,6 @@
 #include "utils/utils.hpp"
 typedef cytnx::Accessor ac;
 
-
 namespace cytnx {
   namespace {
     void check_dense_unitensor_arithmetic_scalar_structure(const Tensor &lhs_block,
@@ -1164,19 +1163,19 @@ namespace cytnx {
     return out;
   }
 
-  // DenseUniTensor::Norm() (non-deprecated internal virtual) intentionally keeps
-  // delegating to the deprecated linalg::Norm free function for one release so the
-  // returned rank-0 Tensor's dtype stays bit-identical to the old behavior; the
-  // local pragma silences -Wdeprecated-declarations the same way the pybind Norm
-  // shims do.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
+// DenseUniTensor::Norm() (non-deprecated internal virtual) intentionally keeps
+// delegating to the deprecated linalg::Norm free function for one release so the
+// returned rank-0 Tensor's dtype stays bit-identical to the old behavior; the
+// local pragma silences -Wdeprecated-declarations the same way the pybind Norm
+// shims do.
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
   Tensor DenseUniTensor::Norm() const { return linalg::Norm(this->_block); }
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic pop
+#endif
   void DenseUniTensor::Trace_(const std::string &a, const std::string &b) {
     // 1) from label to indx.
     cytnx_uint64 ida, idb;

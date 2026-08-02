@@ -5,7 +5,7 @@
 #include "UniTensor.hpp"
 // #include "cytnx.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -45,14 +45,14 @@ namespace cytnx {
       if (Tn.device() == Device.cpu) {
         return linalg_internal::lii.Trace_ii[Tn.dtype()](Tn, axisA, axisB);
       }
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(Tn.device()));
       return linalg_internal::lii.cuTrace_ii[Tn.dtype()](Tn, axisA, axisB);
-  #else
+#else
       cytnx_error_msg(true, "[Trace] fatal error,%s",
                       "try to call the gpu section without CUDA support.\n");
       return Tensor();
-  #endif
+#endif
     }
 
   }  // namespace linalg

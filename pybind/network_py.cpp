@@ -17,7 +17,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-
 void network_binding(py::module &m) {
   py::enum_<__ntwk::__nttype>(m, "NtType")
     .value("Regular", __ntwk::__nttype::Regular)

@@ -1,6 +1,5 @@
 #include "Gncon.hpp"
 
-
 namespace cytnx {
   std::string GnconType_class::getname(const int& nwrktype_id) {
     if (nwrktype_id == this->Regular) {

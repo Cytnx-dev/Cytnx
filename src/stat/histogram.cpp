@@ -2,7 +2,6 @@
 
 #include "Type.hpp"
 
-
 namespace cytnx {
   namespace stat {
 

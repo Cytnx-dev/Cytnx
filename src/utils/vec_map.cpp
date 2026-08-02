@@ -7,7 +7,7 @@
 #include "Accessor.hpp"
 
 #include "Bond.hpp"
-  #include "Tensor.hpp"
+#include "Tensor.hpp"
 
 namespace cytnx {
 

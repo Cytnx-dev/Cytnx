@@ -4,7 +4,6 @@
 #include <functional>
 #include <algorithm>
 
-
 namespace cytnx {
   // helper functions
   cytnx_float get_cost(const PseudoUniTensor& t1, const PseudoUniTensor& t2) {

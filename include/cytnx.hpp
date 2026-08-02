@@ -8,7 +8,7 @@
 #include "Device.hpp"
 #include "Type.hpp"
 
-  #include "backend/Storage.hpp"
+#include "backend/Storage.hpp"
 
 #include "Tensor.hpp"
 #include "Generator.hpp"
@@ -26,7 +26,7 @@
 #include "Network.hpp"
 #include "Bond.hpp"
 
-  #include "backend/Scalar.hpp"
+#include "backend/Scalar.hpp"
 
 #include "LinOp.hpp"
 #include "utils/is.hpp"

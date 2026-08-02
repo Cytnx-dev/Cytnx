@@ -19,7 +19,6 @@ using namespace pybind11::literals;
 using namespace cytnx;
 using pybind_cytnx::dispatch_pyint;
 
-
 class PyLinOp : public LinOp {
  public:
   /* inherit constructor */

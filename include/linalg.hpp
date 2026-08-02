@@ -8,12 +8,11 @@
 #include "cytnx_error.hpp"
 #include "random.hpp"
 
+#include <functional>
+#include <type_traits>
 
-  #include <functional>
-  #include <type_traits>
-
-  #include "backend/Scalar.hpp"
-  #include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
 
@@ -3386,6 +3385,5 @@ namespace cytnx {
   Tensor operator==(const Tensor &Lt, const T &rc);
 
 }  // namespace cytnx
-
 
 #endif  // CYTNX_LINALG_H_

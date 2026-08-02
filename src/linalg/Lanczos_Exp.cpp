@@ -13,7 +13,6 @@
 #include "utils/vec_print.hpp"
 #include <iomanip>
 
-
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;

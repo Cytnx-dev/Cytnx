@@ -3,12 +3,12 @@
 #include "Accessor.hpp"
 #include "Generator.hpp"
 
-  #include "backend/algo_internal_cpu/Split_internal.hpp"
-  #ifdef UNI_GPU
-    #include "backend/algo_internal_gpu/cuSplit_internal.hpp"
-  #endif
-  #include "backend/Storage.hpp"
-  #include "backend/Scalar.hpp"
+#include "backend/algo_internal_cpu/Split_internal.hpp"
+#ifdef UNI_GPU
+  #include "backend/algo_internal_gpu/cuSplit_internal.hpp"
+#endif
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
     typedef Accessor ac;
@@ -43,15 +43,15 @@ namespace cytnx {
         algo_internal::vSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
                                        _Tn.shape()[1], Type.typeSize(Tin.dtype()));
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         algo_internal::cuvSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
                                          _Tn.shape()[1], Type.typeSize(Tin.dtype()));
-  #else
+#else
         cytnx_error_msg(
           true, "[ERROR][Vsplit_] input is on GPU but current cytnx is compiled without GPU.%s",
           "\n");
-  #endif
+#endif
       }
     }
     std::vector<Tensor> Vsplit(const Tensor &Tin, const std::vector<cytnx_uint64> &dims) {

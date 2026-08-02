@@ -1,12 +1,12 @@
 #ifndef CYTNX_BACKEND_SCALAR_H_
 #define CYTNX_BACKEND_SCALAR_H_
 
-  #include "Type.hpp"
-  #include "cytnx_error.hpp"
-  #include "intrusive_ptr_base.hpp"
-  #include <ostream>
-  #include <type_traits>
-  #include <variant>
+#include "Type.hpp"
+#include "cytnx_error.hpp"
+#include "intrusive_ptr_base.hpp"
+#include <ostream>
+#include <type_traits>
+#include <variant>
 namespace cytnx {
 
   ///@cond
@@ -753,6 +753,5 @@ namespace cytnx {
   /// @endcond
 
 }  // namespace cytnx
-
 
 #endif  // CYTNX_BACKEND_SCALAR_H_

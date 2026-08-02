@@ -7,7 +7,6 @@
 #include "linalg.hpp"
 #include "random.hpp"
 
-
 namespace cytnx {
   namespace {
     constexpr unsigned int kLegacyUniTensorMagic = 555;

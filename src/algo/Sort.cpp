@@ -1,12 +1,11 @@
 #include "algo.hpp"
 
-
-  #include "backend/algo_internal_cpu/Sort_internal.hpp"
-  #ifdef UNI_GPU
-    #include "backend/algo_internal_gpu/cuSort_internal.cuh"
-  #endif
-  #include "backend/Storage.hpp"
-  #include "backend/Scalar.hpp"
+#include "backend/algo_internal_cpu/Sort_internal.hpp"
+#ifdef UNI_GPU
+  #include "backend/algo_internal_gpu/cuSort_internal.cuh"
+#endif
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
     Tensor Sort(const Tensor &Tin) {
@@ -36,7 +35,7 @@ namespace cytnx {
           out.ptr());
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         std::visit(
           [&](auto ptr) {
             using out_type = std::remove_pointer_t<decltype(ptr)>;
@@ -45,11 +44,11 @@ namespace cytnx {
               out._impl->storage()._impl, out.shape().back(), out.storage().size());
           },
           out.gpu_ptr());
-  #else
+#else
         cytnx_error_msg(true, "[Svd] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
-          // return std::vector<Tensor>();
-  #endif
+        // return std::vector<Tensor>();
+#endif
       }
       return out;
     }

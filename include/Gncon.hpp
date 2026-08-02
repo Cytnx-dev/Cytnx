@@ -360,5 +360,4 @@ namespace cytnx {
   ///@endcond
 }  // namespace cytnx
 
-
 #endif  // CYTNX_GNCON_H_

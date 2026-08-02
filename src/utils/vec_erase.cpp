@@ -5,10 +5,8 @@
 #include <vector>
 #include <cstring>
 
-
-  #include "Bond.hpp"
-  #include "Tensor.hpp"
-
+#include "Bond.hpp"
+#include "Tensor.hpp"
 
 namespace cytnx {
 
@@ -83,11 +81,9 @@ namespace cytnx {
   template void vec_erase_(std::vector<cytnx_bool> &, const std::vector<cytnx_uint64> &);
   template void vec_erase_(std::vector<std::string> &, const std::vector<cytnx_uint64> &);
 
-
   template std::vector<Tensor> vec_erase(const std::vector<Tensor> &,
                                          const std::vector<cytnx_uint64> &);
   template void vec_erase_(std::vector<Tensor> &, const std::vector<cytnx_uint64> &);
-
 
   template std::vector<Bond> vec_erase(const std::vector<Bond> &,
                                        const std::vector<cytnx_uint64> &);

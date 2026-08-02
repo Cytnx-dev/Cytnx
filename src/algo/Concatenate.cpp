@@ -2,12 +2,12 @@
 #include "Accessor.hpp"
 #include "Generator.hpp"
 
-  #include "backend/algo_internal_cpu/Concate_internal.hpp"
-  #ifdef UNI_GPU
-    #include "backend/algo_internal_gpu/cuConcate_internal.hpp"
-  #endif
-  #include "backend/Storage.hpp"
-  #include "backend/Scalar.hpp"
+#include "backend/algo_internal_cpu/Concate_internal.hpp"
+#ifdef UNI_GPU
+  #include "backend/algo_internal_gpu/cuConcate_internal.hpp"
+#endif
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
     typedef Accessor ac;

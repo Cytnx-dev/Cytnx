@@ -17,7 +17,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-
 void random_binding(py::module &m) {
   // [Submodule random]
   pybind11::module m_random = m.def_submodule("random", "random related.");

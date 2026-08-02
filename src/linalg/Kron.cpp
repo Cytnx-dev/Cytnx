@@ -4,13 +4,12 @@
 #include <iostream>
 #include "Tensor.hpp"
 
+#include "backend/linalg_internal_cpu/Kron_internal.hpp"
 
-  #include "backend/linalg_internal_cpu/Kron_internal.hpp"
-
-  #ifdef UNI_GPU
-    #include "backend/linalg_internal_gpu/cuKron_internal.cuh"
-    #include "backend/linalg_internal_gpu/cuTypeCvt.hpp"
-  #endif
+#ifdef UNI_GPU
+  #include "backend/linalg_internal_gpu/cuKron_internal.cuh"
+  #include "backend/linalg_internal_gpu/cuTypeCvt.hpp"
+#endif
 
 namespace cytnx {
 
@@ -81,7 +80,7 @@ namespace cytnx {
           lhs_contiguous.ptr(), rhs_contiguous.ptr());
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         // checkCudaErrors(cudaSetDevice(lhs_contiguous.device()));
         // Dispatch to the kernel based on the types of lhs and rhs. This visits the
         // ordinary Cytnx (host) value-type pointers and computes the promoted type with
@@ -102,10 +101,10 @@ namespace cytnx {
               rhs_padded_shape);
           },
           lhs_contiguous.ptr(), rhs_contiguous.ptr());
-  #else
+#else
         cytnx_error_msg(true, "[Kron] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;

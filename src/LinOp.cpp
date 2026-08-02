@@ -2,7 +2,6 @@
 #include "Tensor.hpp"
 #include "utils/vec_print.hpp"
 
-
 namespace cytnx {
 
   void LinOp::_print() {

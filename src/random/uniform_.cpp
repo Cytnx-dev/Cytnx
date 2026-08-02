@@ -1,12 +1,12 @@
 #include "random.hpp"
 
-  #include <random>
+#include <random>
 
-  #include "backend/random_internal_interface.hpp"
-  #include "backend/Storage.hpp"
-  #include "Tensor.hpp"
-  #include "Type.hpp"
-  #include "UniTensor.hpp"
+#include "backend/random_internal_interface.hpp"
+#include "backend/Storage.hpp"
+#include "Tensor.hpp"
+#include "Type.hpp"
+#include "UniTensor.hpp"
 
 namespace cytnx {
   namespace random {
@@ -59,7 +59,7 @@ namespace cytnx {
       if (Sin.device() == Device.cpu) {
         random_internal::rii.Uniform[Sin.dtype()](Sin._impl, low, high, seed);
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         random_internal::rii.cuUniform[Sin.dtype()](Sin._impl, low, high, seed);
         // TODO: The element-wise linear algebra functions should take iterators as the arguments
         // like `std` instead of the instances related to the Storage class. After landing that we
@@ -67,9 +67,9 @@ namespace cytnx {
         Tensor wrapper = Tensor::from_storage(Sin);
         TransformToRange(wrapper, low, high);
         Sin._impl = wrapper.storage()._impl;
-  #else
+#else
         cytnx_error_msg(true, "[ERROR][uniform_] Storage is on GPU without CUDA support.%s", "\n");
-  #endif
+#endif
       }
     }
     void uniform_(Tensor &Tin, const double &low, const double &high, const unsigned int &seed) {
@@ -82,15 +82,15 @@ namespace cytnx {
       if (Tin.device() == Device.cpu) {
         random_internal::rii.Uniform[Tin.dtype()](Tin._impl->storage()._impl, low, high, seed);
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         random_internal::rii.cuUniform[Tin.dtype()](Tin._impl->storage()._impl, low, high, seed);
         // TODO: Use cublas's cublas<t>axpy() in the underlying function instead. Because
         // modifiying the underlying function will make conflicts with the #528 pull request,
         // leave this temporary solution here now.
         TransformToRange(Tin, low, high);
-  #else
+#else
         cytnx_error_msg(true, "[ERROR][uniform_] Tensor is on GPU without CUDA support.%s", "\n");
-  #endif
+#endif
       }
     }
 

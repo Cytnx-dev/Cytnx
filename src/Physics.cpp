@@ -8,8 +8,7 @@
 #include <iostream>
 #include <cmath>
 
-
-  #include "backend/Storage.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
   namespace physics {

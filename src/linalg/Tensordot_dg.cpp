@@ -3,7 +3,6 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-
 namespace cytnx {
 
   namespace linalg {

@@ -4,8 +4,7 @@
 #include "Generator.hpp"
 #include "Tensor.hpp"
 
-
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
     Tensor Det(const Tensor &Tl) {
@@ -37,18 +36,18 @@ namespace cytnx {
         return out;
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         // cytnx_error_msg(true, "[Det] on GPU Developing!%s", "\n");
         checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuDet_ii[_tl.dtype()](
           out._impl->storage()._impl->data(), _tl._impl->storage()._impl, Tl.shape()[0]);
 
         return out;
-  #else
+#else
         cytnx_error_msg(true, "[Det] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return Tensor();
-  #endif
+#endif
       }
     }
 

@@ -1,7 +1,7 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
     Tensor Expf(const Tensor &Tin) {
@@ -27,15 +27,15 @@ namespace cytnx {
                                                         out._impl->storage()._impl,
                                                         out._impl->storage()._impl->size());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(out.device()));
         cytnx::linalg_internal::lii.cuExp_ii[out.dtype()](out._impl->storage()._impl,
                                                           out._impl->storage()._impl,
                                                           out._impl->storage()._impl->size());
-  #else
+#else
         cytnx_error_msg(true, "[Expf] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;

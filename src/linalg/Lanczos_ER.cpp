@@ -6,7 +6,6 @@
 
 #include <cfloat>
 
-
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;

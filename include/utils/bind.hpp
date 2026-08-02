@@ -8,7 +8,7 @@
 #include "Symmetry.hpp"
 #include "UniTensor.hpp"
 
-  #include "backend/Storage.hpp"
+#include "backend/Storage.hpp"
 namespace cytnx {
 
   bool is(const Tensor &L, const Tensor &R);
@@ -21,6 +21,5 @@ namespace cytnx {
   bool is(const cytnx::Symmetry &L, const cytnx::Symmetry &R);
   bool is(const UniTensor &L, const UniTensor &R);
 }  // namespace cytnx
-
 
 #endif  // CYTNX_UTILS_BIND_H_

@@ -4,7 +4,6 @@
 
 #include "linalg.hpp"
 
-
 namespace cytnx {
   std::string NetworkType_class::getname(const int& nwrktype_id) {
     if (nwrktype_id == this->Regular) {

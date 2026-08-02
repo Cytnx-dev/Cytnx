@@ -9,7 +9,7 @@
 #include "Generator.hpp"
 #include "search_tree.hpp"
 
-  #include "utils/cutensornet.hpp"
+#include "utils/cutensornet.hpp"
 
 namespace cytnx {
 
@@ -572,11 +572,11 @@ namespace cytnx {
       this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
     }
 
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
     this->optimizerInfo = nullptr;
-    #endif
   #endif
+#endif
 
     std::vector<std::string> names;
     for (int i = 0; i < this->names.size(); i++) {
@@ -824,8 +824,8 @@ namespace cytnx {
         this->order_line = Optim_ORDERline;
         ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
       } else {
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
         if (this->tensors[0].uten_type() != UTenType.Dense) {
           std::string Optim_ORDERline = this->getOptimalOrder();
           this->order_line = Optim_ORDERline;
@@ -858,19 +858,19 @@ namespace cytnx {
           this->einsum_path = path;
           this->order_line = EinsumpathToStringInternal(path, names);
         }
-    #else
+  #else
         // cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
         //                 "try to call the gpu section for finding optimal contraction order
         //                 without " "CUQUANTUM support.\n");
         std::string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
         ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
-    #endif
+  #endif
 
-  #else
+#else
         cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
-  #endif
+#endif
       }
 
     } else {
@@ -903,7 +903,7 @@ namespace cytnx {
 
     int tn_device = this->tensors[0].device();
 
-  #if defined(UNI_GPU) && defined(UNI_CUQUANTUM)  // gpu workflow with cuquantum
+#if defined(UNI_GPU) && defined(UNI_CUQUANTUM)  // gpu workflow with cuquantum
     if (tn_device != Device.cpu && this->tensors[0].uten_type() == UTenType.Dense) {
       std::vector<cytnx_uint64> out_shape;
       out_shape.reserve(this->TOUT_labels.size());
@@ -939,7 +939,7 @@ namespace cytnx {
 
       return out;
     }
-  #endif
+#endif
 
     // all other cases (CPU, without cuquantum, or not dense)
     for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
@@ -1132,11 +1132,11 @@ namespace cytnx {
       this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
     }
 
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
     this->optimizerInfo = nullptr;
-    #endif
   #endif
+#endif
 
     std::vector<std::string> names;
     for (int i = 0; i < this->names.size(); i++) {

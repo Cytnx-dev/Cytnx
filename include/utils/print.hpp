@@ -10,8 +10,8 @@
 #include "Network.hpp"
 #include <iostream>
 
-  #include "backend/Storage.hpp"
-  #include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 
 namespace cytnx {
 

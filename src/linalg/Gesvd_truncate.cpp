@@ -10,14 +10,13 @@
 #include "block_truncation_helpers.hpp"
 #include "Generator.hpp"
 
+#include "backend/linalg_internal_interface.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
-
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
-      #include "backend/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
-    #endif
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include "backend/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
   #endif
+#endif
 
 namespace cytnx {
   namespace linalg {
@@ -53,8 +52,8 @@ namespace cytnx {
         return outT;
 
       } else {
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
 
         // cytnx_uint64 n_singlu = std::min(keepdim, std::min(Tin.shape()[0], Tin.shape()[1]));
@@ -103,18 +102,18 @@ namespace cytnx {
 
         return outT;
 
-    #else
+  #else
         std::vector<Tensor> outT = Gesvd(Tin, is_U, is_vT);
         cytnx::linalg_internal::cudaMemcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
                                                      mindim);
         return outT;
-    #endif
-  #else
+  #endif
+#else
         cytnx_error_msg(
           true, "[Error][Gesvd_truncate] Trying to call the gpu section without CUDA support%s",
           "\n");
         return std::vector<Tensor>();
-  #endif
+#endif
       }
     }
 

@@ -12,12 +12,11 @@
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
 
-
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
-      #include <cutensornet.h>
-    #endif
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include <cutensornet.h>
   #endif
+#endif
 
 namespace cytnx {
   /// @cond
@@ -68,8 +67,8 @@ namespace cytnx {
     std::vector<std::vector<cytnx_int64>> int_modes;
     std::vector<cytnx_int64> int_out_mode;
 
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
     // // stream
     // cudaStream_t stream;
     // // cutensornet handle
@@ -79,8 +78,8 @@ namespace cytnx {
     cutensornetNetworkDescriptor_t descNet;
     // optimizer info
     cutensornetContractionOptimizerInfo_t optimizerInfo;
-    #endif
   #endif
+#endif
     friend class FermionNetwork;
     friend class RegularNetwork;
     friend class Network;
@@ -457,6 +456,5 @@ namespace cytnx {
   std::ostream &operator<<(std::ostream &os, const Network &bin);
   ///@endcond
 }  // namespace cytnx
-
 
 #endif  // CYTNX_NETWORK_H_

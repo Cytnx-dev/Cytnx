@@ -15,10 +15,9 @@
 #include <initializer_list>
 #include <string>
 
-
-  #include "backend/Scalar.hpp"
-  #include "backend/Storage.hpp"
-  #include "backend/Tensor_impl.hpp"
+#include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
+#include "backend/Tensor_impl.hpp"
 
 namespace cytnx {
 
@@ -529,7 +528,7 @@ namespace cytnx {
       return static_cast<T *>(this->_impl->_storage._impl->data());
     }
 
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
     // std::variant of pointers to Type_list_gpu, without void ....
     using gpu_pointer_types =
       make_variant_from_transform_t<typename internal::exclude_first<Type_list_gpu>::type,
@@ -552,7 +551,7 @@ namespace cytnx {
         Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
       return static_cast<T *>(this->_impl->_storage._impl->data());
     }
-  #endif
+#endif
 
     /**
     @brief Convert a Storage to Tensor
@@ -1838,6 +1837,5 @@ namespace cytnx {
   ///@endcond
   //{ os << Tensor(in);};
 }  // namespace cytnx
-
 
 #endif  // CYTNX_TENSOR_H_

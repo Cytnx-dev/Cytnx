@@ -3,8 +3,8 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-  #include "Arithmetic_shape.hpp"
-  #include "backend/linalg_internal_interface.hpp"
+#include "Arithmetic_shape.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -46,15 +46,15 @@ namespace cytnx {
             },
             Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
           cytnx::linalg_internal::cuMod_dispatch(
             out._impl->storage()._impl, left._impl->storage()._impl, right._impl->storage()._impl,
             out._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
           cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-  #endif
+#endif
         }
       } else {
         // non-contiguous section
@@ -71,15 +71,15 @@ namespace cytnx {
             },
             Lt._impl->storage().as_storage_variant(), Rt._impl->storage().as_storage_variant());
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           cytnx_error_msg(true,
                           "[Mod][on GPU/CUDA] error two tensors must be contiguous. Call "
                           "Contiguous_() or Contiguous() first%s",
                           "\n");
-  #else
+#else
           cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-  #endif
+#endif
         }
       }
       return out;
@@ -108,15 +108,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -147,15 +147,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -184,14 +184,14 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -220,15 +220,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -257,14 +257,14 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -293,15 +293,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -330,15 +330,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -367,15 +367,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -404,15 +404,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -441,15 +441,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -478,15 +478,15 @@ namespace cytnx {
           },
           Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -516,15 +516,15 @@ namespace cytnx {
           },
           Cnst.as_storage_variant(), Rt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Rt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl, Cnst._impl,
                                                Rt._impl->storage()._impl,
                                                Rt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -553,15 +553,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -590,15 +590,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -627,15 +627,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -663,15 +663,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -699,15 +699,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -735,15 +735,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -771,15 +771,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -807,15 +807,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -844,15 +844,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -880,15 +880,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -916,15 +916,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -954,15 +954,15 @@ namespace cytnx {
           },
           Lt._impl->storage().as_storage_variant(), Cnst.as_storage_variant());
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Lt.device()));
         cytnx::linalg_internal::cuMod_dispatch(out._impl->storage()._impl,
                                                Lt._impl->storage()._impl, Cnst._impl,
                                                Lt._impl->storage()._impl->size(), {}, {}, {});
-  #else
+#else
         cytnx_error_msg(true, "[Mod] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;

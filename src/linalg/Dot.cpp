@@ -3,7 +3,7 @@
 #include <vector>
 #include "Tensor.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -65,18 +65,18 @@ namespace cytnx {
           return out;
 
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Tl.device()));
           cytnx::linalg_internal::lii.cuMatvec_ii[out.dtype()](
             out._impl->storage()._impl, tl._impl->storage()._impl, tr._impl->storage()._impl,
             lin_dim, tr.shape()[0]);
 
           return out;
-  #else
+#else
           cytnx_error_msg(true, "[Dot] fatal error,%s",
                           "try to call the gpu section without CUDA support.\n");
           return Tensor();
-  #endif
+#endif
         }
 
       } else {

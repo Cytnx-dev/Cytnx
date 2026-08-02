@@ -5,7 +5,6 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 
-
 namespace cytnx {
   /**
    * @namespace cytnx::algo
