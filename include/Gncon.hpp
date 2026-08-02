@@ -207,7 +207,6 @@ namespace cytnx {
     }
     ///@endcond
 
-    // clang-format off
     /**
     @brief Construct Gncon from Gncon file.
     @param fname The Gncon file path
@@ -223,9 +222,12 @@ namespace cytnx {
         Format of a Gncon file:
 
         - each line defines a UniTensor, that takes the format '[name] : [Labels]'
-        - tensor names may contain nonalphabetic characters
-        - There are two reserved name: 'TOUT' and 'ORDER' (all capital)
-        - One can use 'TOUT' line to specify the output UniTensor's bond order using labels
+        - tensor
+names may contain nonalphabetic characters
+        - There are two reserved name: 'TOUT' and 'ORDER'
+(all capital)
+        - One can use 'TOUT' line to specify the output UniTensor's bond order using
+labels
         - The 'ORDER' line is used to specify the contraction order
 
         About [Labels]:
@@ -235,10 +237,13 @@ namespace cytnx {
 
         About [ORDER]:
 
-        - ORDER is a binary tree: each contraction has the form (left,right).
+        - ORDER is a binary tree: each contraction has the form
+(left,right).
         - Each operand is a tensor name or another binary contraction.
-        - The root parentheses may be omitted, as in (A,B),(C,D).
-        - Every tensor name must appear exactly once in ORDER.
+        - The
+root parentheses may be omitted, as in (A,B),(C,D).
+        - Every tensor name must appear exactly
+once in ORDER.
         - Without ORDER, tensors are contracted from the first to the last.
 
 
@@ -257,7 +262,6 @@ namespace cytnx {
 
 
     */
-    // clang-format on
     void Fromfile(const std::string &fname, const int &Gncon_type = GNType.Regular) {
       if (Gncon_type == GNType.Regular) {
         boost::intrusive_ptr<Gncon_base> tmp(new RegularGncon());
