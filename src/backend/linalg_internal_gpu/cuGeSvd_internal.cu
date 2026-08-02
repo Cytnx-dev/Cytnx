@@ -81,7 +81,7 @@ namespace cytnx {
                                         lwork, devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-        linalg_internal::cuConj_inplace_internal_cd(U, M * min);
+        linalg_internal::cuConj_inplace_dispatch(U, M * min);
       }
 
       cytnx_int32 info;
@@ -166,7 +166,7 @@ namespace cytnx {
                                         lwork, devinfo.get(), gesvdj_params.get()));
       if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-        linalg_internal::cuConj_inplace_internal_cf(U, M * min);
+        linalg_internal::cuConj_inplace_dispatch(U, M * min);
       }
 
       cytnx_int32 info;

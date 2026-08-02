@@ -108,7 +108,7 @@ namespace cytnx {
                         d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
       if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-        linalg_internal::cuConj_inplace_internal_cd(U, M * min);
+        linalg_internal::cuConj_inplace_dispatch(U, M * min);
       }
       // get info
       checkCudaErrors(
@@ -220,7 +220,7 @@ namespace cytnx {
                         d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
       if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-        linalg_internal::cuConj_inplace_internal_cf(U, M * min);
+        linalg_internal::cuConj_inplace_dispatch(U, M * min);
       }
       // get info
       checkCudaErrors(
