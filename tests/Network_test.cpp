@@ -96,6 +96,34 @@ namespace cytnx {
         }
       }
 
+      TEST_F(NetworkTest, NetworkOrderRejectsSingleTensorAndInvalidCharacters) {
+        struct InvalidOrderCase {
+          std::string order;
+          std::size_t expected_column;
+          std::string expected_message;
+        };
+        const std::vector<InvalidOrderCase> invalid_orders = {
+          {"A", 2, "expected at least two tensor names"},
+          {"A;B", 2, "found a character that is not allowed in an ORDER expression"},
+        };
+
+        for (const InvalidOrderCase &order_case : invalid_orders) {
+          SCOPED_TRACE(order_case.order);
+          auto net = Network();
+          try {
+            net.FromString(
+              {"A: a,b", "B: b,c", "C: c,d", "D: d,e", "TOUT: a;e", "ORDER: " + order_case.order});
+            FAIL() << "accepted invalid ORDER expression: " << order_case.order;
+          } catch (const error &exception) {
+            const std::string message = exception.what();
+            EXPECT_NE(message.find("[ERROR][ORDER]"), std::string::npos);
+            EXPECT_NE(message.find("column:" + std::to_string(order_case.expected_column)),
+                      std::string::npos);
+            EXPECT_NE(message.find(order_case.expected_message), std::string::npos);
+          }
+        }
+      }
+
       TEST_F(NetworkTest, NetworkSetOrderRequiresEveryTensorExactlyOnce) {
         struct OrderErrorCase {
           std::string order;
