@@ -2874,7 +2874,6 @@ Uint64: Type  # value = <Type.Uint64: 6>
 User_debug: bool = False
 Void: NtType  # value = <NtType.Void: -1>
 Z: SymType  # value = <SymType.Z: 0>
-__blasINTsize__: int = 4
 __cytnx_backend__: str = 'cytnx'
 __version__: str = '1.1.1'
 fNum: SymType  # value = <SymType.fNum: -3>

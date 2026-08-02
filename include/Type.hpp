@@ -558,8 +558,6 @@ namespace cytnx {
 
   constexpr Type_class Type;
 
-  extern int __blasINTsize__;
-
   // User_debug is declared in cytnx_error.hpp (included above); no need to redeclare it here.
 
 }  // namespace cytnx
