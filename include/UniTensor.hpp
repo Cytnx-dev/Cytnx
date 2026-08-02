@@ -19,8 +19,6 @@
 #include "Generator.hpp"
 #include <random>
 
-#ifdef BACKEND_TORCH
-#else
   #include "backend/Scalar.hpp"
 
 // namespace cytnx{
@@ -6300,6 +6298,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_UNITENSOR_H_

@@ -3,8 +3,6 @@
 #include "Accessor.hpp"
 #include "Generator.hpp"
 
-#ifdef BACKEND_TORCH
-#else
   #include "backend/algo_internal_cpu/Split_internal.hpp"
   #ifdef UNI_GPU
     #include "backend/algo_internal_gpu/cuSplit_internal.hpp"
@@ -64,5 +62,3 @@ namespace cytnx {
 
   }  // namespace algo
 }  // namespace cytnx
-
-#endif

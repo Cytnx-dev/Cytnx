@@ -6,8 +6,6 @@
 #include "Tensor.hpp"
 #include "linalg.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   //====================================================
@@ -832,4 +830,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

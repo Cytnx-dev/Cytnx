@@ -1,6 +1,5 @@
 #include "random.hpp"
 
-#ifndef BACKEND_TORCH
   #include <random>
 
   #include "backend/random_internal_interface.hpp"
@@ -107,4 +106,3 @@ namespace cytnx {
 
   }  // namespace random
 }  // namespace cytnx
-#endif  // BACKEND_TORCH

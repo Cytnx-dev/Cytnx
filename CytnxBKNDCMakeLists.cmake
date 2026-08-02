@@ -5,8 +5,7 @@
 # so the OpenBLAS branch's runtime-dependency check can inspect ARPACK_LIB's
 # own dependencies, and so it's available for the target_link_libraries(cytnx
 # PRIVATE ${ARPACK_LIB}) call in the main CMakeLists.txt after this file is
-# included. This file is only included for the non-BACKEND_TORCH build, so
-# ARPACK_LIB is not defined here when BACKEND_TORCH is on.
+# included.
 find_library(ARPACK_LIB arpack REQUIRED)
 message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
 

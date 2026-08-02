@@ -20,8 +20,6 @@ using namespace pybind11::literals;
 using namespace cytnx;
 using pybind_cytnx::dispatch_pyint;
 
-#ifdef BACKEND_TORCH
-#else
 
 void storage_binding(py::module &m) {
   py::class_<cytnx::Storage>(m, "Storage")
@@ -604,4 +602,3 @@ void storage_binding(py::module &m) {
 
     ;  // end of object line
 }
-#endif

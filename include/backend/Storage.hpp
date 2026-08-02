@@ -1,7 +1,6 @@
 #ifndef CYTNX_BACKEND_STORAGE_H_
 #define CYTNX_BACKEND_STORAGE_H_
 
-#ifndef BACKEND_TORCH
 
   #include <cstdlib>
   #include <fstream>
@@ -1134,6 +1133,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_BACKEND_STORAGE_H_

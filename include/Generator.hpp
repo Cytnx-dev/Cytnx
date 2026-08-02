@@ -8,8 +8,6 @@
 #include <vector>
 #include <initializer_list>
 
-#ifdef BACKEND_TORCH
-#else
 namespace cytnx {
 
   //@{
@@ -118,6 +116,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_GENERATOR_H_

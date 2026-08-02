@@ -8,8 +8,6 @@
 #include "cytnx_error.hpp"
 #include "random.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
   #include <functional>
   #include <type_traits>
@@ -3389,6 +3387,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_LINALG_H_

@@ -10,8 +10,6 @@
 #include "utils/utils.hpp"
 typedef cytnx::Accessor ac;
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   namespace {
@@ -1729,4 +1727,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

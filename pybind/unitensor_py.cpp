@@ -22,8 +22,6 @@ using namespace pybind11::literals;
 using namespace cytnx;
 using pybind_cytnx::dispatch_pyint;
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace {
   bool is_empty_tuple(py::handle object) {
@@ -2674,4 +2672,3 @@ void unitensor_binding(py::module &m) {
     py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true,
     py::call_guard<py::gil_scoped_release>());
 }
-#endif

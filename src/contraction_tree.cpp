@@ -2,8 +2,6 @@
 
 #include <stack>
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   void ContractionTree::build_default_contraction_tree() {
@@ -127,4 +125,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

@@ -12,8 +12,6 @@
 #include "backend/arpack_wrapper.hpp"
 #include <iomanip>
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   namespace linalg {
@@ -584,5 +582,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

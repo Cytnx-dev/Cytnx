@@ -8,8 +8,6 @@
 #include <algorithm>
 #include <iostream>
 
-#ifdef BACKEND_TORCH
-#else
 
   #include "backend/Storage.hpp"
 namespace cytnx {
@@ -213,6 +211,5 @@ namespace cytnx {
   }  // namespace stat
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_STAT_H_

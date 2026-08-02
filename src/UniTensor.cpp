@@ -7,8 +7,6 @@
 #include "linalg.hpp"
 #include "random.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   namespace {
@@ -270,4 +268,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

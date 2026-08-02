@@ -18,8 +18,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace {
   // ExpH/ExpM accept a Python int through a single overload. Python int is
@@ -795,5 +793,3 @@ void linalg_binding(py::module &m) {
                });
   */
 }
-
-#endif

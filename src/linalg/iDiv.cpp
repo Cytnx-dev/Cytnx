@@ -2,8 +2,6 @@
 
 #include "Tensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
   #include "backend/linalg_internal_interface.hpp"
   #include "Arithmetic_shape.hpp"
   #include "iArithmetic_visit.hpp"
@@ -101,4 +99,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-#endif  // BACKEND_TORCH

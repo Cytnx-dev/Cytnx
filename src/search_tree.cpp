@@ -4,8 +4,6 @@
 #include <functional>
 #include <algorithm>
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   // helper functions
@@ -385,4 +383,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

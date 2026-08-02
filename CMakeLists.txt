@@ -169,9 +169,8 @@ include(CMakeDependentOption)
 
 set(CMAKE_INSTALL_PREFIX "~/.local/cytnx" CACHE PATH "Destination path for installation")
 option(BUILD_PYTHON "Build Python API. Requires Python and pybind11 installed." ON)
-option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
-cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
-cmake_dependent_option(USE_HPTT "Use HPTT library to accelerate tensor transpose." OFF "NOT BACKEND_TORCH" OFF)
+option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF)
+option(USE_HPTT "Use HPTT library to accelerate tensor transpose." OFF)
 cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Tune HPTT for the CPU running the build (-march=native and friends). The objects then require whatever that CPU supports, so leave it OFF for any build that will be redistributed." OFF "USE_HPTT" OFF)
 # TODO: use variable instead of option to handle HPTT variant.
 # Each variant compiles HPTT's hand-vectorized micro-kernels for one
@@ -182,7 +181,7 @@ cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Tune HPTT for the CPU running the 
 cmake_dependent_option(HPTT_ENABLE_ARM "Compile HPTT's Neon kernels; requires an ARMv8-A arm64 target." OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
 cmake_dependent_option(HPTT_ENABLE_AVX "Compile HPTT's AVX kernels; requires an x86-64-v3 target." OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
 cmake_dependent_option(HPTT_ENABLE_IBM "Compile HPTT's AltiVec kernels; requires a POWER target." OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
-cmake_dependent_option(USE_CUDA "Enable CUDA support." OFF "NOT BACKEND_TORCH" OFF)
+option(USE_CUDA "Enable CUDA support." OFF)
 # cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
 # cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
 cmake_dependent_option(USE_CUTENSOR "Enable cuTENSOR." OFF "USE_CUDA" OFF)
@@ -405,37 +404,8 @@ endif()
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 
-# ###
-if(BACKEND_TORCH)
-  message(STATUS "backend = pytorch")
-  target_compile_definitions(cytnx PUBLIC BACKEND_TORCH)
-
-  # let torch python expose where pytorch.cmake is installed
-  execute_process(
-    COMMAND bash -c "python -c 'import torch;print(torch.utils.cmake_prefix_path)'"
-    OUTPUT_VARIABLE TORCH_CMAKE_PATH_C
-  )
-  string(REGEX REPLACE "\n$" "" TORCH_CMAKE_PATH_C "${TORCH_CMAKE_PATH_C}")
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_CMAKE_PATH_C})
-  message(STATUS ${CMAKE_PREFIX_PATH})
-
-  find_package(Torch REQUIRED)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-  message(STATUS "pytorch: ${TORCH_INSTALL_PREFIX}")
-  message(STATUS "pytorch libs: ${TORCH_LIBRARIES}")
-
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.dylib)
-  else()
-    target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
-    target_link_libraries(cytnx PRIVATE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
-    target_link_libraries(cytnx INTERFACE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
-  endif()
-
-else()
-  message(STATUS "backend = cytnx")
-  include(CytnxBKNDCMakeLists.cmake)
-endif() # Backend torch
+message(STATUS "backend = cytnx")
+include(CytnxBKNDCMakeLists.cmake)
 
 #ARPACK
 target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
@@ -626,7 +596,7 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion
 )
 
-# CytnxConfig.cmake.in references @USE_CUDA@ / @USE_HPTT@ / @BACKEND_TORCH@
+# CytnxConfig.cmake.in references @USE_CUDA@ / @USE_HPTT@
 # directly so the installed Config re-finds the imported-target deps that
 # match the options of the cytnx build. See the template for the gating logic.
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in

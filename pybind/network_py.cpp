@@ -17,8 +17,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-#ifdef BACKEND_TORCH
-#else
 
 void network_binding(py::module &m) {
   py::enum_<__ntwk::__nttype>(m, "NtType")
@@ -128,5 +126,3 @@ void network_binding(py::module &m) {
 
     ;  // end of object line
 }
-
-#endif

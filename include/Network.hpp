@@ -12,8 +12,6 @@
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
   #ifdef UNI_GPU
     #ifdef UNI_CUQUANTUM
@@ -460,6 +458,5 @@ namespace cytnx {
   ///@endcond
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_NETWORK_H_

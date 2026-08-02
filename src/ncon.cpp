@@ -1,7 +1,5 @@
 #include "ncon.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   UniTensor ncon(const std::vector<UniTensor> &tensor_list_in,
@@ -96,4 +94,3 @@ namespace cytnx {
     return out;
   }
 }  // namespace cytnx
-#endif

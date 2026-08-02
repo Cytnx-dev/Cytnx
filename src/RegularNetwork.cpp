@@ -9,8 +9,6 @@
 #include "Generator.hpp"
 #include "search_tree.hpp"
 
-#ifdef BACKEND_TORCH
-#else
   #include "utils/cutensornet.hpp"
 
 namespace cytnx {
@@ -1154,4 +1152,3 @@ namespace cytnx {
   }  // end construct
 
 }  // namespace cytnx
-#endif

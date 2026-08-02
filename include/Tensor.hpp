@@ -15,8 +15,6 @@
 #include <initializer_list>
 #include <string>
 
-#ifdef BACKEND_TORCH
-#else
 
   #include "backend/Scalar.hpp"
   #include "backend/Storage.hpp"
@@ -1841,6 +1839,5 @@ namespace cytnx {
   //{ os << Tensor(in);};
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_TENSOR_H_

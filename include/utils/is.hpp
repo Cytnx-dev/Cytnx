@@ -7,8 +7,6 @@
 #include "Symmetry.hpp"
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
   #include "backend/Storage.hpp"
 namespace cytnx {
@@ -24,6 +22,5 @@ namespace cytnx {
   bool is(const UniTensor &L, const UniTensor &R);
 }  // namespace cytnx
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_UTILS_IS_H_

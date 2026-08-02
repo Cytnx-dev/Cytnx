@@ -1,7 +1,6 @@
 #ifndef CYTNX_BACKEND_LAPACK_WRAPPER_H_
 #define CYTNX_BACKEND_LAPACK_WRAPPER_H_
 
-#ifndef BACKEND_TORCH
   #include <stdint.h>
 
   #include <complex>
@@ -785,7 +784,6 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
   */
   #endif  // UNI_MKL
 
-#endif
 
 // Additional LAPACKE functions not in standard LAPACKE
 inline int LAPACKE_zlacp2(int matrix_order, char uplo, int m, int n, const double *a, int lda,

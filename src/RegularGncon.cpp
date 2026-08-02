@@ -7,8 +7,6 @@
 
 #include "search_tree.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   // these three are internal functions:
@@ -721,5 +719,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-
-#endif

@@ -3,8 +3,6 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
   #include "Arithmetic_shape.hpp"
   #include "backend/linalg_internal_interface.hpp"
 
@@ -1208,5 +1206,3 @@ namespace cytnx {
   template cytnx::UniTensor operator%<cytnx_bool>(const cytnx::UniTensor &Lt, const cytnx_bool &rc);
 
 }  // namespace cytnx
-
-#endif

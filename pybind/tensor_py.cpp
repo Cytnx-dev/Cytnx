@@ -18,8 +18,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using pybind_cytnx::dispatch_pyint;
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace {
   bool is_empty_tuple(py::handle object) {
@@ -1567,4 +1565,3 @@ void tensor_binding(py::module &m) {
 
     ;  // end of object line
 }
-#endif

@@ -2,9 +2,6 @@
 #include "Tensor.hpp"
 #include <iostream>
 
-#ifdef BACKEND_TORCH
-
-#else
 
   #include "backend/linalg_internal_interface.hpp"
 
@@ -44,5 +41,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

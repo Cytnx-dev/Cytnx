@@ -1,7 +1,6 @@
 #ifndef CYTNX_BACKEND_TENSOR_IMPL_H_
 #define CYTNX_BACKEND_TENSOR_IMPL_H_
 
-#ifndef BACKEND_TORCH
   #include "Type.hpp"
   #include "cytnx_error.hpp"
   #include "backend/Storage.hpp"
@@ -355,6 +354,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
 
 #endif  // CYTNX_BACKEND_TENSOR_IMPL_H_

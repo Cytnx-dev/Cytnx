@@ -8,8 +8,6 @@
 #include <limits>
 #include <iostream>
 
-#ifdef BACKEND_TORCH
-#else
   #include "backend/Storage.hpp"
   #include "backend/utils_internal_interface.hpp"
 
@@ -128,4 +126,3 @@ namespace cytnx {
   //--------------
 
 }  // namespace cytnx
-#endif

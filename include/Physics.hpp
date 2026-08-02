@@ -11,8 +11,6 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
   namespace physics {
@@ -88,6 +86,5 @@ namespace cytnx {
 }  // namespace cytnx
    /// @endcond
 
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_PHYSICS_H_

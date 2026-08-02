@@ -2,11 +2,6 @@
 #include "cytnx_error.hpp"
 #include <algorithm>
 
-#ifdef BACKEND_TORCH
-namespace cytnx {
-  int __blasINTsize__ = 32;
-}
-#else
 
   #ifdef UNI_MKL
     #include <mkl.h>
@@ -26,7 +21,6 @@ namespace cytnx {
 }
   #endif
 
-#endif  // BACKEND_TORCH
 
 // global debug flag!
 namespace cytnx {

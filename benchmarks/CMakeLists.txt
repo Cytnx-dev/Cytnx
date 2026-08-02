@@ -1,6 +1,3 @@
-if(BACKEND_TORCH)
-else()
-
 add_executable(
   benchmarks_main
   benchmarks_main.cpp
@@ -31,5 +28,3 @@ endif()
 
 target_link_libraries(benchmarks_main cytnx)
 target_link_libraries(benchmarks_main benchmark::benchmark)
-
-endif()

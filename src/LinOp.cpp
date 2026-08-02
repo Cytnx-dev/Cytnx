@@ -2,8 +2,6 @@
 #include "Tensor.hpp"
 #include "utils/vec_print.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
 namespace cytnx {
 
@@ -65,4 +63,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

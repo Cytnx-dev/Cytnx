@@ -4,8 +4,6 @@
 #include <iostream>
 #include "Tensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
   #include "backend/linalg_internal_cpu/Kron_internal.hpp"
 
@@ -115,4 +113,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-#endif  // BACKEND_TORCH

@@ -1,7 +1,5 @@
 #include "algo.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 
   #include "backend/algo_internal_cpu/Sort_internal.hpp"
   #ifdef UNI_GPU
@@ -57,5 +55,3 @@ namespace cytnx {
     }
   }  // namespace algo
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

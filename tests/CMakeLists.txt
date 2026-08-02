@@ -1,7 +1,4 @@
 
-if(BACKEND_TORCH)
-else()
-
 # GoogleTest (gtest + gmock) is a required prerequisite for the test suite and
 # must be provided by the toolchain / a config-mode install. It is deliberately
 # NOT fetched here so the CMake configuration stays free of network access
@@ -148,5 +145,3 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_BINARY_DIR})
-
-endif()
