@@ -124,6 +124,24 @@ namespace cytnx {
         }
       }
 
+      TEST_F(NetworkTest, NetworkOrderLimitsNestingDepth) {
+        constexpr std::size_t nesting_depth = 1025;
+        std::string order(nesting_depth, '(');
+        order += "A,B";
+        order += std::string(nesting_depth, ')');
+
+        auto net = Network();
+        try {
+          net.FromString({"A: a,b", "B: b,c", "C: c,d", "D: d,e", "TOUT: a;e", "ORDER: " + order});
+          FAIL() << "accepted an excessively nested ORDER expression";
+        } catch (const error &exception) {
+          const std::string message = exception.what();
+          EXPECT_NE(message.find("[ERROR][ORDER]"), std::string::npos);
+          EXPECT_NE(message.find("column:1025"), std::string::npos);
+          EXPECT_NE(message.find("ORDER nesting exceeds maximum depth of 1024"), std::string::npos);
+        }
+      }
+
       TEST_F(NetworkTest, NetworkSetOrderRequiresEveryTensorExactlyOnce) {
         struct OrderErrorCase {
           std::string order;
