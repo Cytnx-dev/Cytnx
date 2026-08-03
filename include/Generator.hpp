@@ -93,13 +93,17 @@ namespace cytnx {
   */
   Tensor arange(cytnx_int64 Nelem);
   /**
-  @brief Create a rank-1 Tensor with incremental elements in the range [\p start,\p end) with given
-  step-size \p step between elements.
-  @details The elements are \p start, \p start + \p step, \p start + 2 * \p step, ... The last
-  element is the largest one that is smaller than \p end.
+  @brief Create a rank-1 Tensor with incremental elements \p start, \p start + \p step,
+  \p start + 2 * \p step, ..., following the same convention as
+  [numpy.arange](https://numpy.org/doc/stable/reference/generated/numpy.arange.html).
+  @details The number of elements is `ceil((end - start) / step)`. The range is nominally
+  half-open [\p start, \p end), but -- exactly as with numpy -- this is not guaranteed under
+  floating-point rounding: the final element may equal or slightly exceed \p end (e.g.
+  `arange(0.5, 0.8, 0.1)` yields `[0.5, 0.6, 0.7, 0.8]`). An empty or direction-mismatched range
+  (a non-positive count) yields a zero-extent Tensor.
   @param[in] start start value of the range.
-  @param[in] end end value of the range (exclusive).
-  @param[in] step step-size between subsequent elements in the range.
+  @param[in] end end value of the range (nominally exclusive; see details).
+  @param[in] step step-size between subsequent elements; must be non-zero.
   @param[in] dtype the data type of the Tensor, see cytnx::Type for more information.
   @param[in] device the device type of the Tensor, see cytnx::Device for more information.
   @return
