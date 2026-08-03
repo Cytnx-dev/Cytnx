@@ -461,7 +461,7 @@ namespace cytnx {
         EXPECT_DOUBLE_EQ(scalar.item<double>(), 9.0);
 
         vector.set(std::vector<Accessor>{}, shape_one);
-        for (int i = 0; i < 3; ++i) EXPECT_DOUBLE_EQ(vector.at<double>({i}), 9.0);
+        for (std::size_t i = 0; i < 3; ++i) EXPECT_DOUBLE_EQ(vector.at<double>({i}), 9.0);
 
         Tensor shape_one_one({1, 1}, Type.Double);
         shape_one_one.at<double>({0, 0}) = 6.0;
