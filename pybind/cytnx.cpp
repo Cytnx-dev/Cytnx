@@ -49,7 +49,6 @@ void ncon_binding(py::module &m);
 
 PYBIND11_MODULE(cytnx, m) {
   m.attr("__version__") = CYTNX_VERSION;
-  m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
   // Map cytnx::error (thrown by cytnx_error_msg) to cytnx.CytnxError, a subclass

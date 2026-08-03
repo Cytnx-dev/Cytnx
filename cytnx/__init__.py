@@ -135,12 +135,6 @@ else:
     else:
         _validate_blas_runtime()
 
-
-
-__blasINTsize__ = cytnx.__blasINTsize__
-
-
-
 def _resolve_cpp_compileflags__():
     f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cxxflags.tmp"))
     lines = f.readlines()
