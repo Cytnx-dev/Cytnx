@@ -649,10 +649,10 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
           <defval>Device.cpu</defval>
         </param>
         <briefdescription>
-<para>Create a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with incremental elements in the range [<computeroutput>start</computeroutput>,<computeroutput>end</computeroutput>) with given step-size <computeroutput>step</computeroutput> between elements. </para>
+<para>Create a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with incremental elements <computeroutput>start</computeroutput>, <computeroutput>start</computeroutput> + <computeroutput>step</computeroutput>, <computeroutput>start</computeroutput> + 2 * <computeroutput>step</computeroutput>, ..., following the same convention as <ulink url="https://numpy.org/doc/stable/reference/generated/numpy.arange.html">numpy.arange</ulink>. </para>
         </briefdescription>
         <detaileddescription>
-<para>The elements are <computeroutput>start</computeroutput>, <computeroutput>start</computeroutput> + <computeroutput>step</computeroutput>, <computeroutput>start</computeroutput> + 2 * <computeroutput>step</computeroutput>, ... The last element is the largest one that is smaller than <computeroutput>end</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>The number of elements is <computeroutput>ceil((end - start) / step)</computeroutput>. The range is nominally half-open [<computeroutput>start</computeroutput>, <computeroutput>end</computeroutput>), but <ndash/> exactly as with numpy <ndash/> this is not guaranteed under floating-point rounding: the final element may equal or slightly exceed <computeroutput>end</computeroutput> (e.g. <computeroutput>arange(0.5, 0.8, 0.1)</computeroutput> yields <computeroutput>[0.5, 0.6, 0.7, 0.8]</computeroutput>). An empty or direction-mismatched range (a non-positive count) yields a zero-extent <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">start</parametername>
 </parameternamelist>
@@ -665,7 +665,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
 <parametername direction="in">end</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>end value of the range (exclusive). </para>
+<para>end value of the range (nominally exclusive; see details). </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -673,7 +673,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
 <parametername direction="in">step</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>step-size between subsequent elements in the range. </para>
+<para>step-size between subsequent elements; must be non-zero. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -699,7 +699,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="108" column="10" declfile="include/Generator.hpp" declline="108" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="112" column="10" declfile="include/Generator.hpp" declline="112" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a799980e687c848a43d9e1145ffe464bd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -740,7 +740,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="112" column="10" declfile="include/Generator.hpp" declline="112" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="116" column="10" declfile="include/Generator.hpp" declline="116" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ad1f97cdff6a9825441592b906d8ae330" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
