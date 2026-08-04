@@ -411,9 +411,6 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 message(STATUS "backend = cytnx")
 include(CytnxBKNDCMakeLists.cmake)
 
-#ARPACK
-target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
-
 
 # #####################################################################
 # ## Get Gtest & benchmark
@@ -670,8 +667,8 @@ block(SCOPE_FOR VARIABLES)
   morse_install_finds(CYTNX_MORSE_FINDS "${INSTALL_CONFIGDIR}/morse")
 endblock()
 
-# cytnx's own finders for the optional CUDA SDKs, which create
-# CUTENSOR::CUTENSOR / CUQUANTUM::CUQUANTUM.
+# cytnx's own finders, which create the CUTENSOR::CUTENSOR /
+# CUQUANTUM::CUQUANTUM targets the exported cytnx target names.
 install(FILES
   ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUTENSOR.cmake
   ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUQUANTUM.cmake

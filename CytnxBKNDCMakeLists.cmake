@@ -1,11 +1,3 @@
-
-
-#ARPACK
-# Resolved here for the target_link_libraries(cytnx PRIVATE ${ARPACK_LIB}) call
-# the main CMakeLists.txt makes after including this file.
-find_library(ARPACK_LIB arpack REQUIRED)
-message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
-
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
@@ -86,7 +78,46 @@ else()
   message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
 endif()
 
+######################################################################
+### Find ARPACK
+######################################################################
 
+# Looked up after the BLAS/LAPACK provider above: a static arpack's own package
+# config runs find_dependency(BLAS) and find_dependency(LAPACK) unless those
+# targets already exist, so resolving cytnx's provider first keeps arpack from
+# binding the build to a different vendor than BLA_VENDOR asks for.
+#
+# arpack-ng's own package config defines ARPACK::ARPACK, and naming that target
+# is what keeps this machine's libarpack path out of CytnxTargets.cmake. cytnx
+# is a static archive, so even a PRIVATE dependency reaches the export, under a
+# LINK_ONLY genex, and the consumer's final link is what needs it;
+# CytnxConfig.cmake re-finds the package to recreate the target there.
+#
+# Accept either spelling of the package name: arpack-ng renamed it from
+# "arpack-ng" to "arpackng" in 3.9, and Alpine -- which the musllinux wheels
+# build against -- still ships 3.8.0. The two also differ in how they define
+# ARPACK::ARPACK: 3.9 makes it an alias of a target named arpack, so the export
+# records "arpack" (CMake writes the target an alias names), while 3.8 makes it
+# an imported target in its own right, so the export records "ARPACK::ARPACK".
+# Either way it is a target name and not a path, and either lookup recreates
+# whichever name the export holds.
+find_package(arpackng CONFIG QUIET)
+if(NOT arpackng_FOUND)
+  find_package(arpack-ng CONFIG REQUIRED)
+endif()
+target_link_libraries(cytnx PRIVATE ARPACK::ARPACK)
+
+# Record the name that reaches the export, so CytnxConfig.cmake can test for
+# that exact target rather than guessing which spelling this build produced.
+# CMake writes the aliased target's name, so under 3.9 the export says "arpack"
+# while ARPACK::ARPACK is only the alias the build links.
+get_target_property(cytnx_arpack_aliased ARPACK::ARPACK ALIASED_TARGET)
+if(cytnx_arpack_aliased)
+  set(CYTNX_ARPACK_TARGET "${cytnx_arpack_aliased}")
+else()
+  set(CYTNX_ARPACK_TARGET ARPACK::ARPACK)
+endif()
+message(STATUS "ARPACK target in the export: ${CYTNX_ARPACK_TARGET}")
 
 if (USE_HPTT)
     set(HPTT_SUBMODULE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/hptt")
