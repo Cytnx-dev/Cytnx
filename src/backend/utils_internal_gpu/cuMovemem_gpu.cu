@@ -163,7 +163,7 @@ namespace cytnx {
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = init_storage(dtype_T);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->data(), dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
@@ -271,7 +271,7 @@ namespace cytnx {
       checkCudaErrors(cutensorDestroyPlanPreference(planPref));
       checkCudaErrors(cutensorDestroyPlan(plan));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = init_storage(dtype_T);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(

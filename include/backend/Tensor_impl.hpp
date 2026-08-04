@@ -24,9 +24,6 @@ namespace cytnx {
   // real implementation
   class Tensor_impl : public intrusive_ptr_base<Tensor_impl> {
    private:
-    // Interface:
-    Storage_init_interface __SII;
-
     // Memory:
     Storage _storage;
 
