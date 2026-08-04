@@ -39,7 +39,7 @@ uncommitted work first and return to the original ref at the end. Per
 revision:
 
 ```sh
-S=.claude/skills/build-test-workflow/scripts/build_preset.sh
+S=.agents/skills/build-test-workflow/scripts/build_preset.sh
 "$S" openblas-cpu --target benchmarks_main --test \
   --benchmark_repetitions=5 --benchmark_report_aggregates_only=true \
   --benchmark_filter='<pattern>' > /tmp/bm-<label>.txt

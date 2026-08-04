@@ -26,9 +26,10 @@ dev_test
 # Claude Code
 CLAUDE.local.md
 .claude/*
-# ...but the project's shared agent skills (e.g. the Google style enforcers) are
-# committed so every contributor's Claude Code picks them up.
-!.claude/skills/
+# ...but the symlink to the shared skills in .agents/skills/ is committed, so
+# every contributor's Claude Code picks them up. No trailing slash: the pattern
+# has to match a symlink, not a directory.
+!.claude/skills
 # OpenAI Codex
 AGENTS.local.md
 .codex/
