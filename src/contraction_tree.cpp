@@ -2,6 +2,8 @@
 
 #include <stack>
 
+#include "utils/order_parser.hpp"
+
 #ifdef BACKEND_TORCH
 #else
 
@@ -44,6 +46,37 @@ namespace cytnx {
       "[ERROR][ContractionTree][build_contraction_order_by_tokens] Cannot have empty tokens.%s",
       "\n");
 
+    std::string order_line;
+    for (const std::string &token : tokens) order_line += token;
+    const std::vector<std::string> validated_tokens =
+      network_internal::parse_order_line(order_line, 0);
+
+    std::vector<bool> seen_tensors(this->base_nodes.size(), false);
+    std::size_t leaf_count = 0;
+    for (const std::string &raw_token : validated_tokens) {
+      const std::string token = str_strip(raw_token);
+      if (token.empty() || token == "(" || token == ")" || token == ",") continue;
+
+      const auto name_position = name2pos.find(token);
+      cytnx_error_msg(name_position == name2pos.end(),
+                      "[ERROR][ContractionTree] ORDER contains undefined tensor name: %s.\n",
+                      token.c_str());
+      const std::size_t tensor_index = name_position->second;
+      cytnx_error_msg(tensor_index >= seen_tensors.size(),
+                      "[ERROR][ContractionTree] ORDER tensor index is out of range: %zu.\n",
+                      tensor_index);
+      cytnx_error_msg(seen_tensors[tensor_index],
+                      "[ERROR][ContractionTree] ORDER contains duplicate tensor name: %s.\n",
+                      token.c_str());
+      seen_tensors[tensor_index] = true;
+      ++leaf_count;
+    }
+    cytnx_error_msg(
+      leaf_count != this->base_nodes.size(),
+      "[ERROR][ContractionTree] ORDER must contain every tensor exactly once; found %zu tensor "
+      "names for %zu tensors.\n",
+      leaf_count, this->base_nodes.size());
+
     std::stack<std::shared_ptr<Node>> stk;
     std::shared_ptr<Node> left, right;
     std::stack<char> operators;
@@ -55,8 +88,8 @@ namespace cytnx {
     this->nodes_container.reserve(
       this->base_nodes.size());  // reserve a contiguous memeory address to prevent re-allocate that
                                  // change address.
-    for (cytnx_uint64 i = 0; i < tokens.size(); i++) {
-      tok = str_strip(tokens[i]);  // remove space.
+    for (cytnx_uint64 i = 0; i < validated_tokens.size(); i++) {
+      tok = str_strip(validated_tokens[i]);  // remove space.
       if (tok.length() == 0) continue;
       if (tok == "(") {
         operators.push(tok.c_str()[0]);
@@ -124,6 +157,10 @@ namespace cytnx {
       this->nodes_container.push_back(new_node);
       stk.push(this->nodes_container.back());
     }
+
+    cytnx_error_msg(stk.size() != 1 || this->nodes_container.size() + 1 != leaf_count,
+                    "[ERROR][ContractionTree] ORDER did not produce one complete binary tree.%s",
+                    "\n");
   }
 
 }  // namespace cytnx

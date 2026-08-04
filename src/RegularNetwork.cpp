@@ -8,6 +8,7 @@
 #include "Device.hpp"
 #include "Generator.hpp"
 #include "search_tree.hpp"
+#include "utils/order_parser.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -16,30 +17,6 @@
 namespace cytnx {
 
   namespace {
-    std::vector<std::string> ParseOrderLineInternal(const std::string &line,
-                                                    const cytnx_uint64 &line_num) {
-      cytnx_error_msg((line.find_first_of("\t;\n:") != std::string::npos),
-                      "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
-                      "\n");
-      cytnx_error_msg((line.find_first_of("(),") == std::string::npos),
-                      "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
-                      " tensors should be seperate by delimiter \',\' (comma), and/or wrapped with "
-                      "\'(\' and \')\'");
-
-      // check mismatch:
-      std::size_t lbrac_n = std::count(line.begin(), line.end(), '(');
-      std::size_t rbrac_n = std::count(line.begin(), line.end(), ')');
-      cytnx_error_msg(lbrac_n != rbrac_n, "[ERROR][Network][Fromfile] parentheses mismatch.%s",
-                      "\n");
-
-      // slice the line into pieces by parentheses and comma
-      std::vector<std::string> tokens = str_findall(line, "(),");
-
-      cytnx_error_msg(tokens.size() == 0,
-                      "[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s", line_num, "\n");
-      return tokens;
-    }
-
     std::vector<std::string> ParseToutLineInternal(cytnx_uint64 &TOUT_iBondNum,
                                                    const std::string &line,
                                                    const cytnx_uint64 &line_num) {
@@ -259,7 +236,7 @@ namespace cytnx {
     // reading
     if (contract_order.length()) {
       // ORDER assigned
-      this->ORDER_tokens = ParseOrderLineInternal(contract_order, 0);
+      this->ORDER_tokens = network_internal::parse_order_line(contract_order, 0);
       isORDER_exist = true;
     }
     if (Tout.length()) {
@@ -427,7 +404,7 @@ namespace cytnx {
           // cut the line into tokens,
           // and leave it to process by CtTree after read all lines.
           this->order_line = content;
-          this->ORDER_tokens = ParseOrderLineInternal(content, i);
+          this->ORDER_tokens = network_internal::parse_order_line(content, i);
           isORDER_exist = true;
         }
       } else if (name == "TOUT") {
@@ -824,14 +801,14 @@ namespace cytnx {
       if (this->tensors[0].device() == Device.cpu) {
         std::string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
-        ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
+        ORDER_tokens = network_internal::parse_order_line(Optim_ORDERline, 999999);
       } else {
   #ifdef UNI_GPU
     #ifdef UNI_CUQUANTUM
         if (this->tensors[0].uten_type() != UTenType.Dense) {
           std::string Optim_ORDERline = this->getOptimalOrder();
           this->order_line = Optim_ORDERline;
-          ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
+          ORDER_tokens = network_internal::parse_order_line(Optim_ORDERline, 999999);
         } else {
           std::vector<cytnx_uint64> out_shape;
           for (int i = 0; i < this->TOUT_labels.size(); i++) {
@@ -866,7 +843,7 @@ namespace cytnx {
         //                 without " "CUQUANTUM support.\n");
         std::string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
-        ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
+        ORDER_tokens = network_internal::parse_order_line(Optim_ORDERline, 999999);
     #endif
 
   #else
@@ -878,7 +855,7 @@ namespace cytnx {
     } else {
       this->order_line = contract_order;
       if (contract_order != "") {
-        ORDER_tokens = ParseOrderLineInternal(contract_order, 999999);
+        ORDER_tokens = network_internal::parse_order_line(contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
         this->einsum_path = CtTreeToEinsumpathInternal(CtTree, names);
       } else {
@@ -1027,7 +1004,7 @@ namespace cytnx {
     if (order.length()) {
       this->order_line = order;
       // checking if all TN are set in ORDER.
-      this->ORDER_tokens = ParseOrderLineInternal(order, 0);
+      this->ORDER_tokens = network_internal::parse_order_line(order, 0);
       std::vector<std::string> TN_names;
       TN_names = ExtractTnsFromOrderInternal(this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {

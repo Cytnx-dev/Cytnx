@@ -6,6 +6,7 @@
 #include <typeinfo>
 
 #include "search_tree.hpp"
+#include "utils/order_parser.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -55,27 +56,6 @@ namespace cytnx {
     }
   }
 
-  void _parse_ORDER_line_(std::vector<std::string> &tokens, const std::string &line,
-                          const cytnx_uint64 &line_num) {
-    cytnx_error_msg((line.find_first_of("\t;\n:") != std::string::npos),
-                    "[ERROR][Gncon][Fromfile] line:%d invalid ORDER line format.%s", line_num,
-                    "\n");
-    cytnx_error_msg((line.find_first_of("(),") == std::string::npos),
-                    "[ERROR][Gncon][Fromfile] line:%d invalid ORDER line format.%s", line_num,
-                    " tensors should be seperate by delimiter \',\' (comma), and/or wrapped with "
-                    "\'(\' and \')\'");
-
-    // check mismatch:
-    std::size_t lbrac_n = std::count(line.begin(), line.end(), '(');
-    std::size_t rbrac_n = std::count(line.begin(), line.end(), ')');
-    cytnx_error_msg(lbrac_n != rbrac_n, "[ERROR][Gncon][Fromfile] parentheses mismatch.%s", "\n");
-
-    // slice the line into pieces by parentheses and comma
-    tokens = str_findall(line, "(),");
-
-    cytnx_error_msg(tokens.size() == 0, "[ERROR][Gncon][Fromfile] line:%d invalid ORDER line.%s",
-                    line_num, "\n");
-  }
   void _parse_TOUT_line_(std::vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum,
                          std::vector<std::vector<std::pair<std::string, std::string>>> &table,
                          std::map<std::string, cytnx_uint64> name2pos, const std::string &line,
@@ -184,7 +164,7 @@ namespace cytnx {
     // // reading
     // if (contract_order.length()) {
     //   // ORDER assigned
-    //   _parse_ORDER_line_(this->ORDER_tokens, contract_order, 0);
+    //   this->ORDER_tokens = network_internal::parse_order_line(contract_order, 0);
     //   isORDER_exist = true;
     // }
     // if (Tout.length()) {
@@ -342,7 +322,7 @@ namespace cytnx {
           if (content.length()) {
             // cut the line into tokens,
             // and leave it to process by CtTree after read all lines.
-            _parse_ORDER_line_(this->ORDER_tokens, content, i);
+            this->ORDER_tokens = network_internal::parse_order_line(content, i);
             isORDER_exist = true;
           }
         } else if (command == "TOUT") {
@@ -649,11 +629,11 @@ namespace cytnx {
       if (optimal == true) {
         std::string Optim_ORDERline = this->getOptimalOrder();
         this->ORDER_tokens.clear();
-        _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+        ORDER_tokens = network_internal::parse_order_line(Optim_ORDERline, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
       } else if (contract_order != "") {
         this->ORDER_tokens.clear();
-        _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
+        ORDER_tokens = network_internal::parse_order_line(contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
       } else {
         CtTree.build_default_contraction_tree();
