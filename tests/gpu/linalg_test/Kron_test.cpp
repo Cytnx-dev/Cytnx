@@ -29,6 +29,11 @@ namespace cytnx {
   namespace gpu_test {
     namespace {
 
+      // Mirrors gpu_kron::kGpuKronMaxRank in
+      // src/backend/linalg_internal_gpu/cuKron_internal.cuh, which this test cannot
+      // include (that header requires a CUDA compiler).
+      constexpr cytnx_uint64 kGpuKronMaxRank = 32;
+
       // Builds a sweep operand, bounding Uint16 away from signed-overflow UB.
       //
       // GetRandRange gives the narrow types their full numeric_limits range, so Uint16 draws
@@ -190,6 +195,100 @@ namespace cytnx {
         ASSERT_EQ(out.dtype(), Type.Int16);
         const cytnx_int16 expect[4] = {12, 15, -8, -10};
         for (std::size_t k = 0; k < 4; ++k) EXPECT_EQ(out.at<cytnx_int16>({k}), expect[k]);
+      }
+
+      // Rank 3, the case that actually exercises the multi-dimensional index decompose
+      // in the GPU kernel -- every other value test above is rank 1 or rank 2, where the
+      // decompose degenerates. Both operands carry a length-1 dimension (in different
+      // slots) so the per-dimension strides are non-uniform and a stride built from the
+      // wrong extent cannot cancel out. Expected values come from the Kronecker
+      // definition applied to the CPU inputs,
+      //     out[i1*b1 + j1, i2*b2 + j2, i3*b3 + j3] = a[i1,i2,i3] * b[j1,j2,j3],
+      // not from another Cytnx Kron call. Both factors are exact in double and so is
+      // their product, hence EXPECT_DOUBLE_EQ rather than a tolerance.
+      TEST(Kron, GpuRank3MatchesDefinition) {
+        const std::vector<cytnx_uint64> a_shape = {2, 1, 3};
+        const std::vector<cytnx_uint64> b_shape = {1, 2, 2};
+        Tensor a = zeros(a_shape, Type.Double);
+        Tensor b = zeros(b_shape, Type.Double);
+        for (cytnx_uint64 i = 0; i < a_shape[0]; i++)
+          for (cytnx_uint64 j = 0; j < a_shape[1]; j++)
+            for (cytnx_uint64 k = 0; k < a_shape[2]; k++)
+              a.at<cytnx_double>({i, j, k}) = 0.5 * (3 * i + k) - 1.25;
+        for (cytnx_uint64 i = 0; i < b_shape[0]; i++)
+          for (cytnx_uint64 j = 0; j < b_shape[1]; j++)
+            for (cytnx_uint64 k = 0; k < b_shape[2]; k++)
+              b.at<cytnx_double>({i, j, k}) = 2.0 - 0.75 * (2 * j + k);
+
+        Tensor out = linalg::Kron(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
+
+        ASSERT_EQ(out.dtype(), Type.Double);
+        ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{2, 2, 6}));
+        for (cytnx_uint64 i1 = 0; i1 < a_shape[0]; i1++)
+          for (cytnx_uint64 i2 = 0; i2 < a_shape[1]; i2++)
+            for (cytnx_uint64 i3 = 0; i3 < a_shape[2]; i3++)
+              for (cytnx_uint64 j1 = 0; j1 < b_shape[0]; j1++)
+                for (cytnx_uint64 j2 = 0; j2 < b_shape[1]; j2++)
+                  for (cytnx_uint64 j3 = 0; j3 < b_shape[2]; j3++) {
+                    const double expected =
+                      a.at<cytnx_double>({i1, i2, i3}) * b.at<cytnx_double>({j1, j2, j3});
+                    EXPECT_DOUBLE_EQ(
+                      out.at<cytnx_double>(
+                        {i1 * b_shape[0] + j1, i2 * b_shape[1] + j2, i3 * b_shape[2] + j3}),
+                      expected)
+                      << "at a(" << i1 << "," << i2 << "," << i3 << ") b(" << j1 << "," << j2 << ","
+                      << j3 << ")";
+                  }
+      }
+
+      // Unequal ranks: Kron pads the shorter operand's shape with trailing ones (the
+      // default lhs_pad_left/rhs_pad_left = false), so a rank-3 (x) rank-1 pair becomes
+      // {2,1,2} (x) {3,1,1} -> {6,1,2}. The padded dimensions make two of the rhs strides
+      // degenerate, which is exactly where an index decompose built from the unpadded
+      // shape would go wrong. Expected values again from the definition, with the rhs
+      // index taken at the padded coordinates (j2 = j3 = 0).
+      TEST(Kron, GpuUnequalRankPadsWithTrailingOnes) {
+        Tensor a = zeros({2, 1, 2}, Type.Double);
+        for (cytnx_uint64 i = 0; i < 2; i++)
+          for (cytnx_uint64 k = 0; k < 2; k++)
+            a.at<cytnx_double>({i, 0, k}) = 1.5 * (2 * i + k) - 2.0;
+        Tensor b = zeros({3}, Type.Double);
+        b.at<cytnx_double>({0}) = -0.5;
+        b.at<cytnx_double>({1}) = 2.25;
+        b.at<cytnx_double>({2}) = 0.0;
+
+        Tensor out = linalg::Kron(a.to(Device.cuda), b.to(Device.cuda)).to(Device.cpu);
+
+        ASSERT_EQ(out.dtype(), Type.Double);
+        ASSERT_EQ(out.shape(), (std::vector<cytnx_uint64>{6, 1, 2}));
+        for (cytnx_uint64 i1 = 0; i1 < 2; i1++)
+          for (cytnx_uint64 i3 = 0; i3 < 2; i3++)
+            for (cytnx_uint64 j1 = 0; j1 < 3; j1++) {
+              const double expected = a.at<cytnx_double>({i1, 0, i3}) * b.at<cytnx_double>({j1});
+              EXPECT_DOUBLE_EQ(out.at<cytnx_double>({i1 * 3 + j1, 0, i3}), expected)
+                << "at a(" << i1 << ",0," << i3 << ") b(" << j1 << ")";
+            }
+      }
+
+      // The GPU kernel carries its layout metadata (output strides, per-operand strides
+      // and the rhs extents) by value in one POD, which bounds the supported rank at
+      // gpu_kron::kGpuKronMaxRank = 32. Past that the front end must raise rather than
+      // truncate: the previous device-array kernel staged 4*rank entries into shared
+      // memory with only blockDim.x threads, so rank > 64 silently produced garbage.
+      // This limit is GPU-only -- the CPU path has no such bound, so the same Kron on
+      // the CPU still succeeds.
+      TEST(Kron, GpuRankAboveLayoutLimitThrows) {
+        const std::vector<cytnx_uint64> deep(kGpuKronMaxRank + 1, 1);
+        Tensor a = zeros(deep, Type.Double);
+        Tensor b = zeros(deep, Type.Double);
+        a.at<cytnx_double>(std::vector<cytnx_uint64>(deep.size(), 0)) = 2.0;
+        b.at<cytnx_double>(std::vector<cytnx_uint64>(deep.size(), 0)) = -3.0;
+
+        EXPECT_THROW(linalg::Kron(a.to(Device.cuda), b.to(Device.cuda)), cytnx::error);
+
+        Tensor cpu_out = linalg::Kron(a, b);
+        ASSERT_EQ(cpu_out.shape().size(), deep.size());
+        EXPECT_DOUBLE_EQ(cpu_out.at<cytnx_double>(std::vector<cytnx_uint64>(deep.size(), 0)), -6.0);
       }
 
       // Kron short-circuits on a rank-0 operand -- `if (lhs.is_scalar() || rhs.is_scalar())

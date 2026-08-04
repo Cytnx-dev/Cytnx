@@ -1,111 +1,118 @@
 #ifndef CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUKRON_INTERNAL_H_
 #define CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUKRON_INTERNAL_H_
 
-#include "backend/utils_internal_interface.hpp"
-#include "utils/utils.hpp"
-#include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
-#include <algorithm>
+#include <vector>
 
-#include "cytnx_error.hpp"
 #include "Type.hpp"
-#include "backend/lapack_wrapper.hpp"
-#include <iostream>
+#include "cytnx_error.hpp"
 
 #ifndef __CUDACC__
   #error This file requires a CUDA compiler
 #endif
 
+// GPU Kronecker product. The kernel needs, per output dimension d, three strides --
+// the output stride (to decompose a linear output index into the output coordinate),
+// each operand's stride in its own buffer -- plus the rhs extent, which splits the
+// output coordinate into the lhs coordinate (quotient) and the rhs coordinate
+// (remainder).
+//
+// That is launch-time metadata, not tensor data. It used to be assembled on *every*
+// call (#1003) into one cuMalloc_gpu'd array (cudaMallocManaged) filled by four
+// pageable cudaMemcpy's, staged into dynamic shared memory by the kernel, and then
+// cudaFree'd -- six API calls that each synchronize with the device, so all of them
+// serialize against the launch they exist to configure. The shared-memory staging was
+// unsound on top of that: it copied 4*rank entries using only blockDim.x threads, so a
+// rank above 64 silently read uninitialised shared memory. Both go away by packing the
+// metadata into one POD passed to the kernel BY VALUE, which rides in the kernel's
+// parameter space with no device allocation and no shared memory. This mirrors
+// GpuNonContigLayout for the elementwise binary kernels (cuNonContigLayout.cuh).
+
 namespace cytnx {
 
   namespace linalg_internal {
 
-    template <class TO, class TL, class TR>
-    __global__ void cuKron_kernel(TO *out, const TL *Lin, const TR *Rin, cytnx_uint64 *meta_infos,
-                                  int len_nsa, int offset1, int offset2, int offset3,
-                                  cytnx_uint64 Nelem) {
-      extern __shared__ cytnx_uint64 info[];
+    namespace gpu_kron {
 
-      // copy data into shared mem:
-      if (threadIdx.x < offset3) {
-        info[threadIdx.x] = meta_infos[threadIdx.x];
-      }
-      __syncthreads();
+      // Bounds the four rank-sized arrays carried by value in GpuKronLayout:
+      // 4 * kGpuKronMaxRank * sizeof(cytnx_uint64) + 16 B (= 1040 B at 32), well within
+      // the >=4 KB CUDA kernel parameter budget. Matches kGpuNonContigMaxRank so the GPU
+      // elementwise paths share one documented rank limit.
+      constexpr int kGpuKronMaxRank = 32;
 
-      // cytnx_uint64 *new_shape_acc = info;
-      // cytnx_uint64 *shape1_acc = &info[len_nsa];
-      // cytnx_uint64 *shape2_acc = &info[offset1];
-      // cytnx_uint64 *shape2 = &info[offset2];
+      constexpr int kKronThreadsPerBlock = 256;
 
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        cytnx_uint64 tmp = blockIdx.x * blockDim.x + threadIdx.x;
-        cytnx_uint64 tmp2;
-        cytnx_uint64 x = 0, y = 0;
-        for (cytnx_uint64 j = 0; j < len_nsa; j++) {
-          tmp2 = tmp / info[j];
-          tmp %= info[j];
-          x += cytnx_uint64(tmp2 / info[offset2 + j]) * info[len_nsa + j];
-          y += cytnx_uint64(tmp2 % info[offset2 + j]) * info[offset1 + j];
+      struct GpuKronLayout {
+        cytnx_uint64 out_stride[kGpuKronMaxRank];  // output stride per output dim
+        cytnx_uint64 lhs_stride[kGpuKronMaxRank];  // lhs stride per output dim
+        cytnx_uint64 rhs_stride[kGpuKronMaxRank];  // rhs stride per output dim
+        cytnx_uint64 rhs_shape[kGpuKronMaxRank];  // rhs extent per output dim
+        cytnx_uint64 rank;
+        cytnx_uint64 total_elems;
+      };
+
+      // Host-side builder. Both shapes are the operands' shapes after Kron's rank
+      // padding, so they have one entry per output dimension and equal length. Output
+      // dimension d has extent shape_lhs[d] * shape_rhs[d]; the strides are the usual
+      // row-major suffix products of each shape, and total_elems is the output size.
+      inline GpuKronLayout make_gpu_kron_layout(const std::vector<cytnx_uint64> &shape_lhs,
+                                                const std::vector<cytnx_uint64> &shape_rhs) {
+        cytnx_error_msg(shape_lhs.size() != shape_rhs.size(),
+                        "[ERROR][Internal cuKron] T1 rank != T2 rank %s", "\n");
+        const cytnx_uint64 rank = shape_lhs.size();
+        cytnx_error_msg(rank > static_cast<cytnx_uint64>(kGpuKronMaxRank),
+                        "[ERROR][Internal cuKron] rank %d exceeds the supported GPU maximum %d.%s",
+                        static_cast<int>(rank), kGpuKronMaxRank, "\n");
+
+        GpuKronLayout layout{};
+        layout.rank = rank;
+        cytnx_uint64 out_accu = 1, lhs_accu = 1, rhs_accu = 1;
+        for (cytnx_uint64 i = 0; i < rank; i++) {
+          const cytnx_uint64 d = rank - 1 - i;
+          layout.out_stride[d] = out_accu;
+          layout.lhs_stride[d] = lhs_accu;
+          layout.rhs_stride[d] = rhs_accu;
+          layout.rhs_shape[d] = shape_rhs[d];
+          out_accu *= shape_lhs[d] * shape_rhs[d];
+          lhs_accu *= shape_lhs[d];
+          rhs_accu *= shape_rhs[d];
         }
-        out[blockIdx.x * blockDim.x + threadIdx.x] = TO(Lin[x]) * TO(Rin[y]);
+        layout.total_elems = out_accu;
+        return layout;
       }
-    }
 
-#define _TNinB_KRON_ 256
+    }  // namespace gpu_kron
+
+    template <class TO, class TL, class TR>
+    __global__ void cuKron_kernel(TO *out, const TL *Lin, const TR *Rin,
+                                  const gpu_kron::GpuKronLayout layout) {
+      const cytnx_uint64 idx = blockIdx.x * blockDim.x + threadIdx.x;
+      if (idx >= layout.total_elems) return;
+
+      cytnx_uint64 tmp = idx;
+      cytnx_uint64 x = 0, y = 0;
+      for (cytnx_uint64 j = 0; j < layout.rank; j++) {
+        const cytnx_uint64 coord = tmp / layout.out_stride[j];
+        tmp %= layout.out_stride[j];
+        x += (coord / layout.rhs_shape[j]) * layout.lhs_stride[j];
+        y += (coord % layout.rhs_shape[j]) * layout.rhs_stride[j];
+      }
+      // Compute through the operation's output type (#1003): TO is the promoted dtype the
+      // caller already allocated, so converting both operands first keeps the arithmetic on
+      // Cytnx's promotion rules instead of C++'s native ones.
+      out[idx] = static_cast<TO>(Lin[x]) * static_cast<TO>(Rin[y]);
+    }
 
     template <class TO, class TL, class TR>
     void cuKron_general(TO *out, const TL *Lin, const TR *Rin,
                         const std::vector<cytnx_uint64> &shape1,
                         const std::vector<cytnx_uint64> &shape2) {
-      cytnx_error_msg(shape1.size() != shape2.size(),
-                      "[ERROR][Internal cuKron] T1 rank != T2 rank %s", "\n");
+      const gpu_kron::GpuKronLayout layout = gpu_kron::make_gpu_kron_layout(shape1, shape2);
+      if (layout.total_elems == 0) return;
 
-      std::vector<cytnx_uint64> new_shape_acc(shape1.size());
-      std::vector<cytnx_uint64> shape1_acc(shape1.size());
-      std::vector<cytnx_uint64> shape2_acc(shape2.size());
-      new_shape_acc.back() = 1;
-      shape1_acc.back() = 1;
-      shape2_acc.back() = 1;
-      cytnx_uint64 TotalElem = shape1[0] * shape2[0];
+      cytnx_uint64 nblocks = layout.total_elems / gpu_kron::kKronThreadsPerBlock;
+      if (layout.total_elems % gpu_kron::kKronThreadsPerBlock) nblocks += 1;
 
-      for (unsigned long long i = 1; i < new_shape_acc.size(); i++) {
-        new_shape_acc[new_shape_acc.size() - 1 - i] = new_shape_acc[new_shape_acc.size() - i] *
-                                                      shape1[new_shape_acc.size() - i] *
-                                                      shape2[new_shape_acc.size() - i];
-        TotalElem *= shape1[i] * shape2[i];
-        shape1_acc[shape1_acc.size() - 1 - i] =
-          shape1_acc[shape1_acc.size() - i] * shape1[shape1_acc.size() - i];
-        shape2_acc[shape2_acc.size() - 1 - i] =
-          shape2_acc[shape2_acc.size() - i] * shape2[shape2_acc.size() - i];
-      }
-
-      int offset1 = new_shape_acc.size() + shape1_acc.size();
-      int offset2 = offset1 + shape2_acc.size();
-      int offset3 = offset2 + shape2.size();
-
-      cytnx_uint64 *dshare_info = (cytnx_uint64 *)utils_internal::cuMalloc_gpu(
-        (new_shape_acc.size() + shape1_acc.size() + shape2_acc.size() + shape2.size()) *
-        sizeof(cytnx_uint64));
-      checkCudaErrors(cudaMemcpy(dshare_info, &new_shape_acc[0],
-                                 new_shape_acc.size() * sizeof(cytnx_uint64),
-                                 cudaMemcpyHostToDevice));
-      checkCudaErrors(cudaMemcpy((char *)dshare_info + new_shape_acc.size() * sizeof(cytnx_uint64),
-                                 shape1_acc.data(), shape1_acc.size() * sizeof(cytnx_uint64),
-                                 cudaMemcpyHostToDevice));
-      checkCudaErrors(cudaMemcpy((char *)dshare_info + offset1 * sizeof(cytnx_uint64),
-                                 shape2_acc.data(), shape2_acc.size() * sizeof(cytnx_uint64),
-                                 cudaMemcpyHostToDevice));
-      checkCudaErrors(cudaMemcpy((char *)dshare_info + offset2 * sizeof(cytnx_uint64),
-                                 shape2.data(), shape2.size() * sizeof(cytnx_uint64),
-                                 cudaMemcpyHostToDevice));
-
-      cytnx_uint64 NBlocks = TotalElem / _TNinB_KRON_;
-      if (TotalElem % _TNinB_KRON_) NBlocks += 1;
-
-      // cudaDeviceSynchronize(); // not needed, cudaMemcpy is synchronous
-      cuKron_kernel<<<NBlocks, _TNinB_KRON_, offset3 * sizeof(cytnx_uint64)>>>(
-        out, Lin, Rin, dshare_info, new_shape_acc.size(), offset1, offset2, offset3, TotalElem);
-
-      cudaFree(dshare_info);
+      cuKron_kernel<<<nblocks, gpu_kron::kKronThreadsPerBlock>>>(out, Lin, Rin, layout);
     }
 
   }  // namespace linalg_internal
