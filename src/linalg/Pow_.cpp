@@ -18,9 +18,9 @@ namespace cytnx {
       } else {
 #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
-        cytnx::linalg_internal::lii.cuPow_ii[Tin.dtype()](Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl->size(), p);
+        cytnx::linalg_internal::cuPow_dispatch(Tin._impl->storage()._impl,
+                                               Tin._impl->storage()._impl,
+                                               Tin._impl->storage()._impl->size(), p);
         // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
 #else
         cytnx_error_msg(true, "[Pow_] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -42,9 +42,9 @@ namespace cytnx {
       } else {
 #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
-        cytnx::linalg_internal::lii.cuPow_ii[Tin.dtype()](Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl->size(), dp);
+        cytnx::linalg_internal::cuPow_dispatch(Tin._impl->storage()._impl,
+                                               Tin._impl->storage()._impl,
+                                               Tin._impl->storage()._impl->size(), dp);
         // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
 #else
         cytnx_error_msg(true, "[Pow_] fatal error, the tensor is on GPU without CUDA support.%s",

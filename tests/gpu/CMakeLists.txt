@@ -16,6 +16,7 @@ add_executable(
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
   linalg_test/Abs_test.cpp
+  linalg_test/UnaryExpPowConj_test.cpp
   linalg_test/Add_test.cpp
   linalg_test/Kron_test.cpp
   linalg_test/Cpr_test.cpp
@@ -63,9 +64,7 @@ target_include_directories(
 )
 target_link_libraries(
   gpu_test_main
-  GTest::gtest_main
-  GTest::gmock
-  GTest::gtest
+  GTest::gmock_main
 )
 target_link_libraries(gpu_test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
