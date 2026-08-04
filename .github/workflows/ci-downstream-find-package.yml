@@ -186,6 +186,37 @@ jobs:
       - name: Install cytnx
         run: cmake --install "$CYTNX_BUILD_DIR"
 
+      - name: Assert the export names dependency targets, not paths
+        # Every dependency cytnx exports has to be re-findable in the
+        # consumer's own environment, which means INTERFACE_LINK_LIBRARIES may
+        # name only targets. An absolute library path there pins the installed
+        # package to this runner's layout -- and the install-tree consumer
+        # below would still pass, because that path exists on this runner. So
+        # check the property itself.
+        #
+        # arpack is the one dependency cytnx keeps PRIVATE. A static archive
+        # exports it anyway, as $<LINK_ONLY:arpack>, so require it by name too:
+        # dropping it from the export would leave a downstream link short of
+        # arpack's symbols with nothing here to notice.
+        run: |
+          targets="$CYTNX_INSTALL_DIR/lib/cmake/cytnx/CytnxTargets.cmake"
+          link_libs=$(sed -n 's/^ *INTERFACE_LINK_LIBRARIES "\(.*\)"$/\1/p' "$targets")
+          if [ -z "$link_libs" ]; then
+            echo "No INTERFACE_LINK_LIBRARIES found in $targets" >&2
+            exit 1
+          fi
+          echo "INTERFACE_LINK_LIBRARIES: $link_libs"
+          paths=$(printf '%s\n' "$link_libs" | tr ';' '\n' | grep -E '(^|:)/' || true)
+          if [ -n "$paths" ]; then
+            echo "Exported link libraries carry absolute paths:" >&2
+            printf '%s\n' "$paths" >&2
+            exit 1
+          fi
+          printf '%s\n' "$link_libs" | grep -qi 'arpack' || {
+            echo "The export no longer names arpack" >&2
+            exit 1
+          }
+
       - name: Consumer against the INSTALL TREE
         # Use a fresh build dir and resolve the package from the install
         # prefix via CMAKE_PREFIX_PATH (the canonical way a real downstream
