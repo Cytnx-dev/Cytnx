@@ -35,6 +35,7 @@ namespace cytnx {
       }
 
       FillGpuKernel<<<block_count, 1024>>>(typed_first, cuda_value, count);
+      CYTNX_CHECK_CUDA_LAUNCH(FillGpuKernel);
     }
 
     template void FillGpu<cytnx_complex128>(void*, const cytnx_complex128&, cytnx_uint64);
