@@ -10,16 +10,13 @@
 #include "algo.hpp"
 #include "block_truncation_helpers.hpp"
 
-#ifdef BACKEND_TORCH
-#else
+#include "backend/linalg_internal_interface.hpp"
 
-  #include "backend/linalg_internal_interface.hpp"
-
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
-      #include "backend/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
-    #endif
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include "backend/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
   #endif
+#endif
 
 namespace cytnx {
   namespace linalg {
@@ -95,16 +92,16 @@ namespace cytnx {
             in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
             S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(in.device()));
           cytnx::linalg_internal::lii.cuGeSvd_ii[in.dtype()](
             in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
             S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
-  #else
+#else
           cytnx_error_msg(true, "[Rsvd] fatal error,%s",
                           "try to call the gpu section without CUDA support.\n");
           return std::vector<Tensor>();
-  #endif
+#endif
         }
         std::vector<Tensor> out;
         out.push_back(S);
@@ -483,8 +480,8 @@ namespace cytnx {
         return outT;
 
       } else {
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
@@ -550,7 +547,7 @@ namespace cytnx {
 
         return outT;
 
-    #else
+  #else
         std::vector<Tensor> outT;
         // Project away the larger external dimension so the full SVD runs on the smaller matrix;
         // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
@@ -582,12 +579,12 @@ namespace cytnx {
         }
 
         return outT;
-    #endif
-  #else
+  #endif
+#else
         cytnx_error_msg(true, "[Error][Rsvd] Trying to call the gpu section without CUDA support%s",
                         "\n");
         return std::vector<Tensor>();
-  #endif
+#endif
       }
     }  // Rsvd(Tensor)
 
@@ -1194,4 +1191,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-#endif  // BACKEND_TORCH

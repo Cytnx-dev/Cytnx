@@ -1,10 +1,7 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
     void Abs_(Tensor &Tin) {
@@ -49,20 +46,18 @@ namespace cytnx {
             },
             out.ptr());
         } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(out.device()));
           cytnx::linalg_internal::cuAbs_dispatch(out._impl->storage()._impl,
                                                  Tin._impl->storage()._impl,
                                                  Tin._impl->storage()._impl->size());
-  #else
+#else
           cytnx_error_msg(true, "[Abs_] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-  #endif
+#endif
         }
         if (Tin.dtype() == Type.ComplexDouble || Tin.dtype() == Type.ComplexFloat) Tin = out;
       }
     }
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

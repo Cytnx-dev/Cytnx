@@ -22,9 +22,6 @@ using namespace pybind11::literals;
 using namespace cytnx;
 using pybind_cytnx::dispatch_pyint;
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace {
   bool is_empty_tuple(py::handle object) {
     return py::isinstance<py::tuple>(object) &&
@@ -275,15 +272,15 @@ auto build_accessors = [](const UniTensor &self, py::object locators) {
 };
 
 namespace {
-  // Deprecated combineBonds()/Norm() binding helpers. Calling the [[deprecated]]
-  // UniTensor::combineBonds / UniTensor::Norm warns; the suppression lives here at file scope
-  // because a #pragma GCC diagnostic cannot legally sit inside the .def() chain expression under
-  // GCC (only clang tolerated that). These bindings intentionally keep exposing the deprecated
-  // calls for one release: use combineBond_()/combineBond() and norm() instead.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
+// Deprecated combineBonds()/Norm() binding helpers. Calling the [[deprecated]]
+// UniTensor::combineBonds / UniTensor::Norm warns; the suppression lives here at file scope
+// because a #pragma GCC diagnostic cannot legally sit inside the .def() chain expression under
+// GCC (only clang tolerated that). These bindings intentionally keep exposing the deprecated
+// calls for one release: use combineBond_()/combineBond() and norm() instead.
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
   py::object unitensor_combineBonds_int_deprecated(py::object self,
                                                    const std::vector<cytnx_int64> &indicators,
                                                    const bool &force, const bool &by_label) {
@@ -318,9 +315,9 @@ namespace {
       throw py::error_already_set();
     return self.Norm();
   }
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic pop
+#endif
   // Converts a homogeneous list of numpy integer scalars to vector<cytnx_int64>
   // (or vector<cytnx_uint64> for numpy_scalar<uint64_t>, the one numpy width
   // that doesn't always fit in int64), then calls fn with it. numpy integer
@@ -2674,4 +2671,3 @@ void unitensor_binding(py::module &m) {
     py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true,
     py::call_guard<py::gil_scoped_release>());
 }
-#endif

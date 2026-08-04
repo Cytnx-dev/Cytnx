@@ -11,9 +11,6 @@
 #include "utils/vec_print.hpp"
 #include <iomanip>
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
@@ -203,5 +200,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

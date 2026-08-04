@@ -2,9 +2,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -18,16 +16,16 @@ namespace cytnx {
                                                         Tin._impl->storage()._impl,
                                                         Tin._impl->storage()._impl->size(), p);
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         cytnx::linalg_internal::cuPow_dispatch(Tin._impl->storage()._impl,
                                                Tin._impl->storage()._impl,
                                                Tin._impl->storage()._impl->size(), p);
-          // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
-  #else
+        // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
+#else
         cytnx_error_msg(true, "[Pow_] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
     }
 
@@ -42,16 +40,16 @@ namespace cytnx {
                                                         Tin._impl->storage()._impl,
                                                         Tin._impl->storage()._impl->size(), dp);
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         cytnx::linalg_internal::cuPow_dispatch(Tin._impl->storage()._impl,
                                                Tin._impl->storage()._impl,
                                                Tin._impl->storage()._impl->size(), dp);
-          // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
-  #else
+        // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
+#else
         cytnx_error_msg(true, "[Pow_] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
     }
 
@@ -74,5 +72,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

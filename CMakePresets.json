@@ -16,7 +16,6 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": "OFF",
         "USE_MKL": "OFF",
         "BUILD_PYTHON": "ON",
-        "BACKEND_TORCH": "OFF",
         "USE_HPTT": "ON",
         "HPTT_ENABLE_FINE_TUNE": "OFF",
         "USE_CUDA": "OFF",

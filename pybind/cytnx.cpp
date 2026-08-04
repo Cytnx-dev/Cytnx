@@ -24,9 +24,6 @@ using namespace cytnx;
 void bond_binding(py::module &m);
 void symmetry_binding(py::module &m);
 
-#ifdef BACKEND_TORCH
-#else
-
 void generator_binding(py::module &m);
 void storage_binding(py::module &m);
 void tensor_binding(py::module &m);
@@ -45,7 +42,6 @@ void physics_related_binding(py::module &m);
 void random_binding(py::module &m);
 
 void ncon_binding(py::module &m);
-#endif
 
 PYBIND11_MODULE(cytnx, m) {
   m.attr("__version__") = CYTNX_VERSION;
@@ -82,9 +78,6 @@ PYBIND11_MODULE(cytnx, m) {
   mdev.def("getname",
            [](const int &device_id) -> std::string { return cytnx::Device.getname(device_id); });
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
-#ifdef BACKEND_TORCH
-  m.attr("__cytnx_backend__") = std::string("torch");
-#else
   m.attr("__cytnx_backend__") = std::string("cytnx");
 
   // m.def("set_mkl_lp64", &cytnx::set_mkl_lp64);
@@ -140,5 +133,4 @@ PYBIND11_MODULE(cytnx, m) {
   physics_related_binding(m);
   random_binding(m);
   ncon_binding(m);
-#endif
 }

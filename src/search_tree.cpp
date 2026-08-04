@@ -4,9 +4,6 @@
 #include <functional>
 #include <algorithm>
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   // helper functions
   cytnx_float get_cost(const PseudoUniTensor& t1, const PseudoUniTensor& t2) {
@@ -385,4 +382,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif
