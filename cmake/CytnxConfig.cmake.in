@@ -86,15 +86,15 @@ block(SCOPE_FOR VARIABLES)
   # imported target, so rerun the finder that creates it here -- against the
   # consumer's own installation, which is what keeps the package relocatable.
   #
-  # LAPACK first, matching the order cytnx itself uses. cytnx links
-  # LAPACK::LAPACK directly, and FindLAPACKE below needs LAPACK anyway
-  # ("LAPACKE requires LAPACK but LAPACK has not been found"), so this adds no
-  # requirement a LAPACKE lookup would not already impose.
-  find_dependency(LAPACK REQUIRED)
-  if(NOT @USE_MKL@)
+  if(@USE_MKL@)
+    # MKL's LAPACK carries the LAPACKE entry points and <mkl.h> itself, so
+    # CMake's own FindLAPACK is the whole lookup.
+    find_dependency(LAPACK REQUIRED)
+  else()
     # A standalone LAPACKE is a separate library from the LAPACK under it, so
     # LAPACK::LAPACK alone does not resolve the LAPACKE_* entry points (nor
-    # provide <lapacke.h>). Recreate MORSE::LAPACKE for those.
+    # provide <lapacke.h>). One FindLAPACKE run recreates both targets cytnx
+    # links: it pulls in FindLAPACKEXT, which calls CMake's FindLAPACK.
     #
     # find_package rather than find_dependency, because find_dependency skips a
     # call whose arguments match one another package config already made in this

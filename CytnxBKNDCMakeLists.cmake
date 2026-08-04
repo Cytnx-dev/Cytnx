@@ -31,7 +31,8 @@ if (USE_MKL)
       set(BLA_VENDOR Intel10_64lp)
   endif()
   message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
-  find_package( BLAS REQUIRED)
+  # CMake's FindLAPACK finds the BLAS under LAPACK itself, so it is the only
+  # lookup this branch needs.
   find_package( LAPACK REQUIRED)
 
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
@@ -56,8 +57,11 @@ else()
   set(BLA_VENDOR OpenBLAS)
   set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OPENBLAS")
   message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
-  find_package( BLAS REQUIRED)
-  find_package( LAPACK REQUIRED)
+  # One lookup resolves the whole stack: FindLAPACKE (morse_cmake) pulls in
+  # FindLAPACKEXT, which calls CMake's own FindLAPACK under the BLA_VENDOR set
+  # above, which in turn finds BLAS. MORSE::LAPACKE and LAPACK::LAPACK both
+  # exist afterwards.
+  #
   # MODULE, not the basic signature: cytnx links MORSE::LAPACKE, which only
   # morse_cmake's finder defines. The basic signature searches config mode ahead
   # of module mode under CMAKE_FIND_PACKAGE_PREFER_CONFIG, so a LAPACKEConfig.cmake
@@ -76,6 +80,7 @@ else()
   # installed public header that includes <lapacke.h>, so install-tree consumers
   # get the include dir by re-running FindLAPACKE from CytnxConfig.cmake.
   target_link_libraries(cytnx PUBLIC MORSE::LAPACKE LAPACK::LAPACK)
+  target_compile_definitions(cytnx PUBLIC UNI_OPENBLAS)
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
   message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
   message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
