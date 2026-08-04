@@ -25,7 +25,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Physics.hpp" line="64" column="15" declfile="include/Physics.hpp" declline="64" declcolumn="15"/>
+        <location file="include/Physics.hpp" line="61" column="15" declfile="include/Physics.hpp" declline="61" declcolumn="15"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1operators_1acbd91c764e06a212ae93d5700feaf527" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -54,7 +54,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Physics.hpp" line="65" column="15" declfile="include/Physics.hpp" declline="65" declcolumn="15"/>
+        <location file="include/Physics.hpp" line="62" column="15" declfile="include/Physics.hpp" declline="62" declcolumn="15"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1operators_1a187acfa82e21b55a4d2770b8e60f4da2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -83,13 +83,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Physics.hpp" line="67" column="15" declfile="include/Physics.hpp" declline="67" declcolumn="15"/>
+        <location file="include/Physics.hpp" line="64" column="15" declfile="include/Physics.hpp" declline="64" declcolumn="15"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/Physics.hpp" line="62" column="3"/>
+    <location file="include/Physics.hpp" line="59" column="3"/>
   </compounddef>
 </doxygen>

@@ -123,7 +123,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="320" column="10" bodyfile="include/Network.hpp" bodystart="320" bodyend="328"/>
+        <location file="include/Network.hpp" line="317" column="10" bodyfile="include/Network.hpp" bodystart="317" bodyend="325"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1aa863a755e95a85411a15af58d1ac4057" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -223,7 +223,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="357" column="10" bodyfile="include/Network.hpp" bodystart="357" bodyend="366"/>
+        <location file="include/Network.hpp" line="354" column="10" bodyfile="include/Network.hpp" bodystart="354" bodyend="363"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a0fc550caee8609366ccc37ef86011af9" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -246,7 +246,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="379" column="5" bodyfile="include/Network.hpp" bodystart="379" bodyend="381"/>
+        <location file="include/Network.hpp" line="376" column="5" bodyfile="include/Network.hpp" bodystart="376" bodyend="378"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1ab8921440814db09453b4c8c2f5529001" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -264,7 +264,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="383" column="10" bodyfile="include/Network.hpp" bodystart="383" bodyend="383"/>
+        <location file="include/Network.hpp" line="380" column="10" bodyfile="include/Network.hpp" bodystart="380" bodyend="380"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a529e42dea93f665ac7ec9b5254614513" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -282,7 +282,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="384" column="10" bodyfile="include/Network.hpp" bodystart="384" bodyend="384"/>
+        <location file="include/Network.hpp" line="381" column="10" bodyfile="include/Network.hpp" bodystart="381" bodyend="381"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a46dba7d89d63541b3b24e025d623dd43" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -300,7 +300,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="385" column="10" bodyfile="include/Network.hpp" bodystart="385" bodyend="385"/>
+        <location file="include/Network.hpp" line="382" column="10" bodyfile="include/Network.hpp" bodystart="382" bodyend="382"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1ae5cf21f4be6a5c69e15844c44878f803" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -327,7 +327,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="386" column="10" bodyfile="include/Network.hpp" bodystart="386" bodyend="393"/>
+        <location file="include/Network.hpp" line="383" column="10" bodyfile="include/Network.hpp" bodystart="383" bodyend="390"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1ac6961820f444956e8e846e73a870afda" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -354,7 +354,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="394" column="10" bodyfile="include/Network.hpp" bodystart="394" bodyend="401"/>
+        <location file="include/Network.hpp" line="391" column="10" bodyfile="include/Network.hpp" bodystart="391" bodyend="398"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1abc19de742ef4d2505a56a20acd0ec668" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -376,7 +376,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="403" column="10" bodyfile="include/Network.hpp" bodystart="403" bodyend="406"/>
+        <location file="include/Network.hpp" line="400" column="10" bodyfile="include/Network.hpp" bodystart="400" bodyend="403"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a24e34b95b458be854a36b0fbcf008b41" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -395,7 +395,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="407" column="17" bodyfile="include/Network.hpp" bodystart="407" bodyend="413"/>
+        <location file="include/Network.hpp" line="404" column="17" bodyfile="include/Network.hpp" bodystart="404" bodyend="410"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1abb3df3d3952f5d1c90e0e5eec30b116c" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>std::string</type>
@@ -409,7 +409,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="415" column="17" bodyfile="include/Network.hpp" bodystart="415" bodyend="415"/>
+        <location file="include/Network.hpp" line="412" column="17" bodyfile="include/Network.hpp" bodystart="412" bodyend="412"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a1448a256ba9b39aad997efc7a34270bb" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -431,7 +431,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="417" column="10" bodyfile="include/Network.hpp" bodystart="417" bodyend="419"/>
+        <location file="include/Network.hpp" line="414" column="10" bodyfile="include/Network.hpp" bodystart="414" bodyend="416"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a4b590db0bf62665f69544677b58fc6f2" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -450,7 +450,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="421" column="15" bodyfile="include/Network.hpp" bodystart="421" bodyend="427"/>
+        <location file="include/Network.hpp" line="418" column="15" bodyfile="include/Network.hpp" bodystart="418" bodyend="424"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a1b89285cac2ecbea18cc8e5c08d6a76b" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -497,7 +497,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="429" column="10" bodyfile="include/Network.hpp" bodystart="429" bodyend="441"/>
+        <location file="include/Network.hpp" line="426" column="10" bodyfile="include/Network.hpp" bodystart="426" bodyend="438"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1ab46151cedd2ff6da6fd81d700cd1df5f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -511,7 +511,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="443" column="10" bodyfile="include/Network.hpp" bodystart="443" bodyend="446"/>
+        <location file="include/Network.hpp" line="440" column="10" bodyfile="include/Network.hpp" bodystart="440" bodyend="443"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a1235a67c0cbb357e34e99116bf7d20ea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Network" kindref="compound">Network</ref></type>
@@ -525,7 +525,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="448" column="13" bodyfile="include/Network.hpp" bodystart="448" bodyend="452"/>
+        <location file="include/Network.hpp" line="445" column="13" bodyfile="include/Network.hpp" bodystart="445" bodyend="449"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1a2218d13ef5879f5d35d8b799d33703e7" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -539,7 +539,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="453" column="10" bodyfile="include/Network.hpp" bodystart="453" bodyend="453"/>
+        <location file="include/Network.hpp" line="450" column="10" bodyfile="include/Network.hpp" bodystart="450" bodyend="450"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Network_1affde6272cbdcd1bd101e61f37674be24" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>void</type>
@@ -557,7 +557,7 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="455" column="10" bodyfile="include/Network.hpp" bodystart="455" bodyend="455"/>
+        <location file="include/Network.hpp" line="452" column="10" bodyfile="include/Network.hpp" bodystart="452" bodyend="452"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -591,14 +591,14 @@ ORDER : (A,B),(C,D)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Network.hpp" line="369" column="20" bodyfile="include/Network.hpp" bodystart="369" bodyend="377"/>
+        <location file="include/Network.hpp" line="366" column="20" bodyfile="include/Network.hpp" bodystart="366" bodyend="374"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/Network.hpp" line="261" column="3" bodyfile="include/Network.hpp" bodystart="261" bodyend="456"/>
+    <location file="include/Network.hpp" line="258" column="3" bodyfile="include/Network.hpp" bodystart="258" bodyend="453"/>
     <listofallmembers>
       <member refid="classcytnx_1_1Network_1ab46151cedd2ff6da6fd81d700cd1df5f" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>clear</name></member>
       <member refid="classcytnx_1_1Network_1a1235a67c0cbb357e34e99116bf7d20ea" prot="public" virt="non-virtual"><scope>cytnx::Network</scope><name>clone</name></member>

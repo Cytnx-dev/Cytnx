@@ -300,7 +300,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="56" column="30" declfile="include/UniTensor.hpp" declline="56" declcolumn="30"/>
+        <location file="include/UniTensor.hpp" line="54" column="30" declfile="include/UniTensor.hpp" declline="54" declcolumn="30"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="func">
@@ -359,7 +359,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="28" column="10" declfile="include/Generator.hpp" declline="28" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="26" column="10" declfile="include/Generator.hpp" declline="26" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a4915e210610123158d897eb3d2f1cdb7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -387,7 +387,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="30" column="10" declfile="include/Generator.hpp" declline="30" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="28" column="10" declfile="include/Generator.hpp" declline="28" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1acf9cf080bb224422e598b614f8520085" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -444,7 +444,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="47" column="10" declfile="include/Generator.hpp" declline="47" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="45" column="10" declfile="include/Generator.hpp" declline="45" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a3e4b9a6d555d6b828db9d77ac7404e8a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -501,7 +501,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="65" column="10" declfile="include/Generator.hpp" declline="65" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="63" column="10" declfile="include/Generator.hpp" declline="63" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a8ba6fb2ad03f3c2754e992118b5bd038" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -558,7 +558,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="80" column="10" declfile="include/Generator.hpp" declline="80" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="78" column="10" declfile="include/Generator.hpp" declline="78" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1adda4e2217a1b4ed544cb5559cba50c3b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -586,7 +586,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="82" column="10" declfile="include/Generator.hpp" declline="82" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="80" column="10" declfile="include/Generator.hpp" declline="80" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1acabf9410a3eb1e205321580186930003" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -617,7 +617,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="94" column="10" declfile="include/Generator.hpp" declline="94" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="92" column="10" declfile="include/Generator.hpp" declline="92" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a6fcf3a2f5887fd6996f3e9fe9456ca3e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -699,7 +699,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="112" column="10" declfile="include/Generator.hpp" declline="112" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="110" column="10" declfile="include/Generator.hpp" declline="110" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a799980e687c848a43d9e1145ffe464bd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -740,7 +740,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Generator.hpp" line="116" column="10" declfile="include/Generator.hpp" declline="116" declcolumn="10"/>
+        <location file="include/Generator.hpp" line="114" column="10" declfile="include/Generator.hpp" declline="114" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ad1f97cdff6a9825441592b906d8ae330" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -789,7 +789,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="53" column="20" declfile="include/linalg.hpp" declline="53" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="50" column="20" declfile="include/linalg.hpp" declline="50" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ac4937c837a6b35b28b4307dfeb2b4e3c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -841,7 +841,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="65" column="20" declfile="include/linalg.hpp" declline="65" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="62" column="20" declfile="include/linalg.hpp" declline="62" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ab78b9a88285af588f13175832211e783" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -893,7 +893,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="77" column="20" declfile="include/linalg.hpp" declline="77" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="74" column="20" declfile="include/linalg.hpp" declline="74" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a64cab629757608840015fd955f53f961" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -942,7 +942,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="92" column="20" declfile="include/linalg.hpp" declline="92" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="89" column="20" declfile="include/linalg.hpp" declline="89" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a45878246163ead59e22c8f3d1c0f0a31" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -994,7 +994,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="104" column="20" declfile="include/linalg.hpp" declline="104" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="101" column="20" declfile="include/linalg.hpp" declline="101" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a0c3c40f9303eb01914b4739b6957e67b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1046,7 +1046,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="116" column="20" declfile="include/linalg.hpp" declline="116" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="113" column="20" declfile="include/linalg.hpp" declline="113" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a0b23c5c933bf53cc25b8e94bf0e8cd80" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1095,7 +1095,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="131" column="20" declfile="include/linalg.hpp" declline="131" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="128" column="20" declfile="include/linalg.hpp" declline="128" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a482e868bef211087752942b824114420" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1147,7 +1147,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="143" column="20" declfile="include/linalg.hpp" declline="143" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="140" column="20" declfile="include/linalg.hpp" declline="140" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a3c2ff0e0343f0250ca446d1ce5e7e287" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1199,7 +1199,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="155" column="20" declfile="include/linalg.hpp" declline="155" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="152" column="20" declfile="include/linalg.hpp" declline="152" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1adf098bf65b5c3fb990065f0df05d087c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1248,7 +1248,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="170" column="20" declfile="include/linalg.hpp" declline="170" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="167" column="20" declfile="include/linalg.hpp" declline="167" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a2dd47e15e5252eff0e727739939ae392" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1300,7 +1300,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="182" column="20" declfile="include/linalg.hpp" declline="182" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="179" column="20" declfile="include/linalg.hpp" declline="179" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1aef5c2e6d840e287e8f50834be5e1902a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1352,7 +1352,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="194" column="20" declfile="include/linalg.hpp" declline="194" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="191" column="20" declfile="include/linalg.hpp" declline="191" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1acb9f1360d7c413c1e087d3e46b3ff907" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1399,7 +1399,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="206" column="20" declfile="include/linalg.hpp" declline="206" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="203" column="20" declfile="include/linalg.hpp" declline="203" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ac4bfb24faa8b3c20005c29043d79ecfd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1451,7 +1451,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="218" column="20" declfile="include/linalg.hpp" declline="218" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="215" column="20" declfile="include/linalg.hpp" declline="215" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a52b81425a33f7550aa8dcc309b98180c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1503,7 +1503,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="230" column="20" declfile="include/linalg.hpp" declline="230" declcolumn="20"/>
+        <location file="include/linalg.hpp" line="227" column="20" declfile="include/linalg.hpp" declline="227" declcolumn="20"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a067e7063e7cc7a80c9c91d8998ab7134" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1550,7 +1550,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3176" column="10" declfile="include/linalg.hpp" declline="3176" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3173" column="10" declfile="include/linalg.hpp" declline="3173" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a75a3787e9b9565f0bc90d19453d1ffa5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1602,7 +1602,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3188" column="10" declfile="include/linalg.hpp" declline="3188" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3185" column="10" declfile="include/linalg.hpp" declline="3185" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a9b46a4945621a40fc5e23bbea0576b1a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1654,7 +1654,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3200" column="10" declfile="include/linalg.hpp" declline="3200" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3197" column="10" declfile="include/linalg.hpp" declline="3197" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a5a476408cdb97a10fa2330a5d6b4934c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1701,7 +1701,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3213" column="10" declfile="include/linalg.hpp" declline="3213" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3210" column="10" declfile="include/linalg.hpp" declline="3210" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a7c7bcfb0e14ec9e5317e686b955ea548" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1753,7 +1753,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3225" column="10" declfile="include/linalg.hpp" declline="3225" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3222" column="10" declfile="include/linalg.hpp" declline="3222" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a7c77b1fa99bea6e243e7e1dab2cb15ab" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1805,7 +1805,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3237" column="10" declfile="include/linalg.hpp" declline="3237" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3234" column="10" declfile="include/linalg.hpp" declline="3234" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ad579dd62bafd8261a0192a108b0f4b1b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -1852,7 +1852,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3250" column="10" declfile="include/linalg.hpp" declline="3250" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3247" column="10" declfile="include/linalg.hpp" declline="3247" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ae1925a88cc713abd7d25ad548b7f7c22" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1904,7 +1904,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3262" column="10" declfile="include/linalg.hpp" declline="3262" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3259" column="10" declfile="include/linalg.hpp" declline="3259" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a5f0900c609bcf28f53091f403d8ea859" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1956,7 +1956,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3274" column="10" declfile="include/linalg.hpp" declline="3274" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3271" column="10" declfile="include/linalg.hpp" declline="3271" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1aa12ec2394a750ba7e4c29799ec4bd53e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2007,7 +2007,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3289" column="10" declfile="include/linalg.hpp" declline="3289" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3286" column="10" declfile="include/linalg.hpp" declline="3286" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ac0b24a49371fb7bf2fc2992d1271a59d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2061,7 +2061,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3302" column="10" declfile="include/linalg.hpp" declline="3302" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3299" column="10" declfile="include/linalg.hpp" declline="3299" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1aa0d1098af300b504134953d480d0f780" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2115,7 +2115,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3315" column="10" declfile="include/linalg.hpp" declline="3315" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3312" column="10" declfile="include/linalg.hpp" declline="3312" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1aef20777a8ac1af257e87abbe1487a789" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2162,7 +2162,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3328" column="10" declfile="include/linalg.hpp" declline="3328" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3325" column="10" declfile="include/linalg.hpp" declline="3325" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1aa1a0d001adbe36469803a4c9f6d02547" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2214,7 +2214,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3340" column="10" declfile="include/linalg.hpp" declline="3340" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3337" column="10" declfile="include/linalg.hpp" declline="3337" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a3c3bc03a795c8c884fbd7a781f2eeea2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2266,7 +2266,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3352" column="10" declfile="include/linalg.hpp" declline="3352" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3349" column="10" declfile="include/linalg.hpp" declline="3349" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a6d2f2c308c9fbe7a791d981aa48ec5b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2311,7 +2311,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3364" column="10" declfile="include/linalg.hpp" declline="3364" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3361" column="10" declfile="include/linalg.hpp" declline="3361" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a37e5a46a2493ffec095e247e0a242d0f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2363,7 +2363,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3376" column="10" declfile="include/linalg.hpp" declline="3376" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3373" column="10" declfile="include/linalg.hpp" declline="3373" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a7c18f8c9b8ce890be3ae8c81c2a05139" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2415,7 +2415,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3388" column="10" declfile="include/linalg.hpp" declline="3388" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3385" column="10" declfile="include/linalg.hpp" declline="3385" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a75ffd11538c5da8c1099d8eab530f802" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2457,7 +2457,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/ncon.hpp" line="12" column="13" declfile="include/ncon.hpp" declline="12" declcolumn="13"/>
+        <location file="include/ncon.hpp" line="10" column="13" declfile="include/ncon.hpp" declline="10" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a5717588f86189b8687cf9d9596b7a736" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2479,7 +2479,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1827" column="10" declfile="include/Tensor.hpp" declline="1827" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1824" column="10" declfile="include/Tensor.hpp" declline="1824" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a9c25f8ea46015051abb7aa8b12d4d922" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2501,7 +2501,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1828" column="10" declfile="include/Tensor.hpp" declline="1828" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1825" column="10" declfile="include/Tensor.hpp" declline="1825" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a907f550960d7cff3629b034496c7277f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2523,7 +2523,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1829" column="10" declfile="include/Tensor.hpp" declline="1829" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1826" column="10" declfile="include/Tensor.hpp" declline="1826" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a1b5dcab529a34545c0202175cacee982" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2545,7 +2545,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1830" column="10" declfile="include/Tensor.hpp" declline="1830" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1827" column="10" declfile="include/Tensor.hpp" declline="1827" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a78e2a1032003b1961fa67dfaa6c9ae5d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2567,7 +2567,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1832" column="10" declfile="include/Tensor.hpp" declline="1832" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1829" column="10" declfile="include/Tensor.hpp" declline="1829" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ade8c4e81459b4136aac831ae6b15f322" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2589,7 +2589,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1833" column="10" declfile="include/Tensor.hpp" declline="1833" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1830" column="10" declfile="include/Tensor.hpp" declline="1830" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a6e943792e9aa2cadc156eb88459132ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2611,7 +2611,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1834" column="10" declfile="include/Tensor.hpp" declline="1834" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1831" column="10" declfile="include/Tensor.hpp" declline="1831" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a39c7b16c06135b1de3ac699d74511ac9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2633,7 +2633,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Tensor.hpp" line="1835" column="10" declfile="include/Tensor.hpp" declline="1835" declcolumn="10"/>
+        <location file="include/Tensor.hpp" line="1832" column="10" declfile="include/Tensor.hpp" declline="1832" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1a6bf4d5dbc0c159db72ff3019ca8125f5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2704,7 +2704,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6225" column="13" declfile="include/UniTensor.hpp" declline="6225" declcolumn="13"/>
+        <location file="include/UniTensor.hpp" line="6223" column="13" declfile="include/UniTensor.hpp" declline="6223" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ae707018c91a03ba0c43b9b0b20830a62" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2759,7 +2759,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6240" column="13" declfile="include/UniTensor.hpp" declline="6240" declcolumn="13"/>
+        <location file="include/UniTensor.hpp" line="6238" column="13" declfile="include/UniTensor.hpp" declline="6238" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ab3eaecf9ef354a43851bb3e4fd24147a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -2790,7 +2790,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6253" column="5" declfile="include/UniTensor.hpp" declline="6253" declcolumn="5"/>
+        <location file="include/UniTensor.hpp" line="6251" column="5" declfile="include/UniTensor.hpp" declline="6251" declcolumn="5"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1aded169a56c47928185057cc8f24b4d66" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2848,7 +2848,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6276" column="13" bodyfile="include/UniTensor.hpp" bodystart="6276" bodyend="6281"/>
+        <location file="include/UniTensor.hpp" line="6274" column="13" bodyfile="include/UniTensor.hpp" bodystart="6274" bodyend="6279"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1ac17fa8d955067a516de44a7704a731ba" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2890,7 +2890,7 @@ See also <ref refid="classcytnx_1_1UniTensor_1abb9e74ecee1a85af02b7f2a8e835c969"
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/UniTensor.hpp" line="6294" column="5" bodyfile="include/UniTensor.hpp" bodystart="6294" bodyend="6299"/>
+        <location file="include/UniTensor.hpp" line="6292" column="5" bodyfile="include/UniTensor.hpp" bodystart="6292" bodyend="6297"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

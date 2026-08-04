@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="23" column="12" declfile="include/algo.hpp" declline="23" declcolumn="12"/>
+        <location file="include/algo.hpp" line="20" column="12" declfile="include/algo.hpp" declline="20" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1algo_1a17ac6e68684bf5d5cf7392bd218e309f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -84,7 +84,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="38" column="12" declfile="include/algo.hpp" declline="38" declcolumn="12"/>
+        <location file="include/algo.hpp" line="35" column="12" declfile="include/algo.hpp" declline="35" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1algo_1a993ff4c266490e7fee38ab2f20e6aa50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -132,7 +132,7 @@ M_3\\
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="68" column="12" declfile="include/algo.hpp" declline="68" declcolumn="12"/>
+        <location file="include/algo.hpp" line="65" column="12" declfile="include/algo.hpp" declline="65" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1algo_1aab9f9b299fa60c565206f5f0c021618b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -178,7 +178,7 @@ M_1, M_2, M_3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="96" column="12" declfile="include/algo.hpp" declline="96" declcolumn="12"/>
+        <location file="include/algo.hpp" line="93" column="12" declfile="include/algo.hpp" declline="93" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1algo_1a63774284b4470db6265bc944b60ac476" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -233,7 +233,7 @@ M_1, M_2, M_3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="108" column="10" declfile="include/algo.hpp" declline="108" declcolumn="10"/>
+        <location file="include/algo.hpp" line="105" column="10" declfile="include/algo.hpp" declline="105" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1algo_1a030124e0b8e894d35837134e3111e3c7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -288,7 +288,7 @@ M_1, M_2, M_3
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="121" column="10" declfile="include/algo.hpp" declline="121" declcolumn="10"/>
+        <location file="include/algo.hpp" line="118" column="10" declfile="include/algo.hpp" declline="118" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1algo_1a977a0c66043b8238214658b1178cd073" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -357,7 +357,7 @@ m_{31} &amp; m_{32} &amp; m_{33}\\
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="162" column="17" declfile="include/algo.hpp" declline="162" declcolumn="17"/>
+        <location file="include/algo.hpp" line="159" column="17" declfile="include/algo.hpp" declline="159" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1algo_1a882e6a0d33e659d35f7f1df18a51152a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -429,7 +429,7 @@ m_{33}\\
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/algo.hpp" line="205" column="17" declfile="include/algo.hpp" declline="205" declcolumn="17"/>
+        <location file="include/algo.hpp" line="202" column="17" declfile="include/algo.hpp" declline="202" declcolumn="17"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -437,6 +437,6 @@ m_{33}\\
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/algo.hpp" line="13" column="1"/>
+    <location file="include/algo.hpp" line="10" column="1"/>
   </compounddef>
 </doxygen>

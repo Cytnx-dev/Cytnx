@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="23" column="17" bodyfile="include/LinOp.hpp" bodystart="23" bodyend="-1"/>
+        <location file="include/LinOp.hpp" line="21" column="17" bodyfile="include/LinOp.hpp" bodystart="21" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1a38afcf53b4dc771d8c23e0441450a2d8" prot="private" static="no" mutable="no">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref></type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="26" column="18" bodyfile="include/LinOp.hpp" bodystart="26" bodyend="-1"/>
+        <location file="include/LinOp.hpp" line="24" column="18" bodyfile="include/LinOp.hpp" bodystart="24" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1ac76c9e57aa2113b01bf71c3d509499fb" prot="private" static="no" mutable="no">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref></type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="29" column="9" bodyfile="include/LinOp.hpp" bodystart="29" bodyend="-1"/>
+        <location file="include/LinOp.hpp" line="27" column="9" bodyfile="include/LinOp.hpp" bodystart="27" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1a232ded9ea0ee4107477119fdaf5c4f1b" prot="private" static="no" mutable="no">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref></type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="30" column="9" bodyfile="include/LinOp.hpp" bodystart="30" bodyend="-1"/>
+        <location file="include/LinOp.hpp" line="28" column="9" bodyfile="include/LinOp.hpp" bodystart="28" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1af3a0dac626a93e3d76f99ec240ba29d8" prot="private" static="no" mutable="no">
         <type>std::map&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref>, std::pair&lt; std::vector&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;</type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="34" column="7" bodyfile="include/LinOp.hpp" bodystart="34" bodyend="-1"/>
+        <location file="include/LinOp.hpp" line="32" column="7" bodyfile="include/LinOp.hpp" bodystart="32" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1a85e4b563c270ccc9a92a5035e50dfd42" prot="private" static="no" mutable="no">
         <type>std::map&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref>, std::pair&lt; std::vector&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;<ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">::iterator</ref></type>
@@ -86,7 +86,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="35" column="25" bodyfile="include/LinOp.hpp" bodystart="35" bodyend="-1"/>
+        <location file="include/LinOp.hpp" line="33" column="25" bodyfile="include/LinOp.hpp" bodystart="33" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-func">
@@ -105,7 +105,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="37" column="12"/>
+        <location file="include/LinOp.hpp" line="35" column="12"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -266,7 +266,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="70" column="5" bodyfile="include/LinOp.hpp" bodystart="70" bodyend="84"/>
+        <location file="include/LinOp.hpp" line="68" column="5" bodyfile="include/LinOp.hpp" bodystart="68" bodyend="82"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1adcdd3fb4a8e375e3225b11ea5e2c56ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
@@ -302,7 +302,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="98" column="10" bodyfile="include/LinOp.hpp" bodystart="98" bodyend="117"/>
+        <location file="include/LinOp.hpp" line="96" column="10" bodyfile="include/LinOp.hpp" bodystart="96" bodyend="115"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1afa706c8f70c20e993d8721b963a38b74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref></type>
@@ -324,7 +324,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="118" column="20" bodyfile="include/LinOp.hpp" bodystart="118" bodyend="145"/>
+        <location file="include/LinOp.hpp" line="116" column="20" bodyfile="include/LinOp.hpp" bodystart="116" bodyend="143"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1aeb31367ba356298976de92fef9e948cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">void</ref></type>
@@ -342,7 +342,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="147" column="10" bodyfile="include/LinOp.hpp" bodystart="147" bodyend="150"/>
+        <location file="include/LinOp.hpp" line="145" column="10" bodyfile="include/LinOp.hpp" bodystart="145" bodyend="148"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1af71ddba715715d03342a323c82b0eb7f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">void</ref></type>
@@ -360,7 +360,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="151" column="10" bodyfile="include/LinOp.hpp" bodystart="151" bodyend="154"/>
+        <location file="include/LinOp.hpp" line="149" column="10" bodyfile="include/LinOp.hpp" bodystart="149" bodyend="152"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>int</type>
@@ -374,7 +374,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="155" column="9" bodyfile="include/LinOp.hpp" bodystart="155" bodyend="155"/>
+        <location file="include/LinOp.hpp" line="153" column="9" bodyfile="include/LinOp.hpp" bodystart="153" bodyend="153"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1a64aa0529d6f0d5fd4bb06b900a469a08" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref></type>
@@ -388,7 +388,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="156" column="9" bodyfile="include/LinOp.hpp" bodystart="156" bodyend="156"/>
+        <location file="include/LinOp.hpp" line="154" column="9" bodyfile="include/LinOp.hpp" bodystart="154" bodyend="154"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1a7d5704336a5a9f786a582ba0a668b521" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref></type>
@@ -402,7 +402,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="157" column="18" bodyfile="include/LinOp.hpp" bodystart="157" bodyend="157"/>
+        <location file="include/LinOp.hpp" line="155" column="18" bodyfile="include/LinOp.hpp" bodystart="155" bodyend="155"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1af3e9b2601404994b0ce40b4a148ab637" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">void</ref></type>
@@ -416,7 +416,7 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="159" column="10"/>
+        <location file="include/LinOp.hpp" line="157" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1a45e98312370884ae85bbc53921011e7d" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -434,14 +434,14 @@ Shape : (4)
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/LinOp.hpp" line="165" column="20"/>
+        <location file="include/LinOp.hpp" line="163" column="20"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/LinOp.hpp" line="20" column="3" bodyfile="include/LinOp.hpp" bodystart="20" bodyend="172"/>
+    <location file="include/LinOp.hpp" line="18" column="3" bodyfile="include/LinOp.hpp" bodystart="18" bodyend="170"/>
     <listofallmembers>
       <member refid="classcytnx_1_1LinOp_1ac76c9e57aa2113b01bf71c3d509499fb" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_device</name></member>
       <member refid="classcytnx_1_1LinOp_1a232ded9ea0ee4107477119fdaf5c4f1b" prot="private" virt="non-virtual"><scope>cytnx::LinOp</scope><name>_dtype</name></member>
