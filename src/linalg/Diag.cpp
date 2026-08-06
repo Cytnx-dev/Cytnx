@@ -3,10 +3,7 @@
 #include "Generator.hpp"
 #include "Tensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
     Tensor Diag(const Tensor &Tin) {
@@ -33,7 +30,7 @@ namespace cytnx {
             out._impl->storage()._impl, Tin._impl->storage()._impl, Tin.shape()[0], 1);
         }
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(out.device()));
         if (rank == 1) {
           cytnx::linalg_internal::lii.cuDiag_ii[out.dtype()](
@@ -42,15 +39,13 @@ namespace cytnx {
           cytnx::linalg_internal::lii.cuDiag_ii[out.dtype()](
             out._impl->storage()._impl, Tin._impl->storage()._impl, Tin.shape()[0], 1);
         }
-  #else
+#else
         cytnx_error_msg(true, "[Diag] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
     }
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

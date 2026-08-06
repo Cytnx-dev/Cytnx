@@ -10,8 +10,6 @@
 #include <string>
 #include <memory>
 
-#ifdef BACKEND_TORCH
-#else
 namespace cytnx {
   /// @cond
   class Node : public std::enable_shared_from_this<Node> {
@@ -147,6 +145,5 @@ namespace cytnx {
   };
   /// @endcond
 }  // namespace cytnx
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_CONTRACTION_TREE_H_

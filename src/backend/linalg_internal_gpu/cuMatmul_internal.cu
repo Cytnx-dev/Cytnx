@@ -2,6 +2,7 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
 
@@ -26,8 +27,9 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                               const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_complex128 alpha = cytnx_complex128(1, 0), beta = cytnx_complex128(0, 0);
 
       cuDoubleComplex *_out = (cuDoubleComplex *)out->data();
@@ -39,16 +41,15 @@ namespace cytnx {
       checkCudaErrors(cublasZgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm,
                                   (cuDoubleComplex *)&alpha, _inr, blsNr, _inl, blsComm,
                                   (cuDoubleComplex *)&beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
     void cuMatmul_internal_cf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &inl,
                               const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                               const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_complex64 alpha = cytnx_complex64(1, 0), beta = cytnx_complex64(0, 0);
 
       cuFloatComplex *_out = (cuFloatComplex *)out->data();
@@ -60,8 +61,6 @@ namespace cytnx {
       checkCudaErrors(cublasCgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm,
                                   (cuFloatComplex *)&alpha, _inr, blsNr, _inl, blsComm,
                                   (cuFloatComplex *)&beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
 
     void cuMatmul_internal_d(boost::intrusive_ptr<Storage_base> &out,
@@ -69,8 +68,9 @@ namespace cytnx {
                              const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                              const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_double alpha = 1, beta = 0;
 
       cytnx_double *_out = (cytnx_double *)out->data();
@@ -81,16 +81,15 @@ namespace cytnx {
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;
       checkCudaErrors(cublasDgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm, &alpha,
                                   _inr, blsNr, _inl, blsComm, &beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
     void cuMatmul_internal_f(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &inl,
                              const boost::intrusive_ptr<Storage_base> &inr, const cytnx_int64 &Ml,
                              const cytnx_int64 &Comm, const cytnx_int64 &Nr) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_float alpha = 1, beta = 0;
 
       cytnx_float *_out = (cytnx_float *)out->data();
@@ -101,8 +100,6 @@ namespace cytnx {
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;
       checkCudaErrors(cublasSgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm, &alpha,
                                   _inr, blsNr, _inl, blsComm, &beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
     void cuMatmul_internal_i64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &inl,

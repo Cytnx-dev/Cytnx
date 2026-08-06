@@ -1,9 +1,6 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
 
   namespace linalg {
@@ -31,5 +28,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

@@ -1,8 +1,5 @@
 #include "Gncon.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   std::string GnconType_class::getname(const int& nwrktype_id) {
     if (nwrktype_id == this->Regular) {
@@ -24,4 +21,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

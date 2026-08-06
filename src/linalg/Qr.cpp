@@ -11,9 +11,7 @@
 
 typedef cytnx::Accessor ac;
 
-#ifdef BACKEND_TORCH
-#else
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -58,8 +56,8 @@ namespace cytnx {
         return out;
 
       } else {
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
 
         checkCudaErrors(cudaSetDevice(in.device()));
 
@@ -80,16 +78,16 @@ namespace cytnx {
                         "\n");
 
         return out;
-    #else
+  #else
         cytnx_error_msg(
           true, "QR decomposition on GPU not implemented without cuQuantum support!%s", "\n");
         return std::vector<Tensor>();
-    #endif
-  #else
+  #endif
+#else
         cytnx_error_msg(true, "[QR] fatal error, %s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-  #endif
+#endif
       }
     }
 
@@ -431,4 +429,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-#endif  // BACKEND_TORCH

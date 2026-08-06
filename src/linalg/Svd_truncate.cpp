@@ -10,10 +10,7 @@
 #include "Accessor.hpp"
 #include "block_truncation_helpers.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
 
@@ -35,17 +32,17 @@ namespace cytnx {
 
         return outT;
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         std::vector<Tensor> outT = Svd(Tin, is_UvT);
         cytnx::linalg_internal::cudaMemcpyTruncation(outT, keepdim, err, is_UvT, is_UvT, return_err,
                                                      mindim);
         return outT;
-  #else
+#else
         cytnx_error_msg(
           true, "[Error][Svd_truncate] Trying to call the gpu section without CUDA support%s",
           "\n");
         return std::vector<Tensor>();
-  #endif
+#endif
       }
     }
 
@@ -641,5 +638,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

@@ -2,6 +2,7 @@
 #include "backend/utils_internal_interface.hpp"
 
 #include "backend/lapack_wrapper.hpp"
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
   namespace linalg_internal {
@@ -10,8 +11,9 @@ namespace cytnx {
                            const boost::intrusive_ptr<Storage_base> &x,
                            const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_complex128 alpha = complex128(a);
 
       cuDoubleComplex *_A = (cuDoubleComplex *)A->data();
@@ -20,16 +22,15 @@ namespace cytnx {
 
       checkCudaErrors(cublasZgeru(cublasH, y->size(), x->size(), (cuDoubleComplex *)&alpha, _y, 1,
                                   _x, 1, _A, y->size()));
-
-      cublasDestroy(cublasH);
     }
 
     void cuGer_internal_cf(boost::intrusive_ptr<Storage_base> &A,
                            const boost::intrusive_ptr<Storage_base> &x,
                            const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_complex64 alpha = complex64(a);
 
       cuFloatComplex *_A = (cuFloatComplex *)A->data();
@@ -38,16 +39,15 @@ namespace cytnx {
 
       checkCudaErrors(cublasCgeru(cublasH, y->size(), x->size(), (cuFloatComplex *)&alpha, _y, 1,
                                   _x, 1, _A, y->size()));
-
-      cublasDestroy(cublasH);
     }
 
     void cuGer_internal_d(boost::intrusive_ptr<Storage_base> &A,
                           const boost::intrusive_ptr<Storage_base> &x,
                           const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_double alpha = cytnx_double(a);
 
       cytnx_double *_A = (cytnx_double *)A->data();
@@ -56,16 +56,15 @@ namespace cytnx {
 
       checkCudaErrors(
         cublasDger(cublasH, y->size(), x->size(), &alpha, _y, 1, _x, 1, _A, y->size()));
-
-      cublasDestroy(cublasH);
     }
 
     void cuGer_internal_f(boost::intrusive_ptr<Storage_base> &A,
                           const boost::intrusive_ptr<Storage_base> &x,
                           const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_float alpha = cytnx_float(a);
 
       cytnx_float *_A = (cytnx_float *)A->data();
@@ -74,8 +73,6 @@ namespace cytnx {
 
       checkCudaErrors(
         cublasSger(cublasH, y->size(), x->size(), &alpha, _y, 1, _x, 1, _A, y->size()));
-
-      cublasDestroy(cublasH);
     }
 
   }  // namespace linalg_internal

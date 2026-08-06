@@ -2,6 +2,7 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
 
@@ -12,8 +13,9 @@ namespace cytnx {
                             const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                             const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_complex128 alpha = complex128(a), beta = complex128(b);
 
       cuDoubleComplex *_out = (cuDoubleComplex *)out->data();
@@ -25,8 +27,6 @@ namespace cytnx {
       checkCudaErrors(cublasZgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm,
                                   (cuDoubleComplex *)&alpha, _inr, blsNr, _inl, blsComm,
                                   (cuDoubleComplex *)&beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
     void cuGemm_internal_cf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &inl,
@@ -34,8 +34,9 @@ namespace cytnx {
                             const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                             const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_complex64 alpha = complex64(a), beta = complex64(b);
 
       cuFloatComplex *_out = (cuFloatComplex *)out->data();
@@ -47,8 +48,6 @@ namespace cytnx {
       checkCudaErrors(cublasCgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm,
                                   (cuFloatComplex *)&alpha, _inr, blsNr, _inl, blsComm,
                                   (cuFloatComplex *)&beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
 
     void cuGemm_internal_d(boost::intrusive_ptr<Storage_base> &out,
@@ -57,8 +56,9 @@ namespace cytnx {
                            const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                            const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_double alpha = double(a), beta = double(b);
 
       cytnx_double *_out = (cytnx_double *)out->data();
@@ -69,8 +69,6 @@ namespace cytnx {
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;
       checkCudaErrors(cublasDgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm, &alpha,
                                   _inr, blsNr, _inl, blsComm, &beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
     void cuGemm_internal_f(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &inl,
@@ -78,8 +76,9 @@ namespace cytnx {
                            const cytnx_int64 &Comm, const cytnx_int64 &Nr, const Scalar &a,
                            const Scalar &b) {
       // create handles:
-      cublasHandle_t cublasH = nullptr;
-      checkCudaErrors(cublasCreate(&cublasH));
+      // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+      // up to 20x the cost of the small GEMMs it wraps.
+      cublasHandle_t cublasH = utils_internal::get_cublas_handle();
       cytnx_float alpha = float(a), beta = float(b);
 
       cytnx_float *_out = (cytnx_float *)out->data();
@@ -90,8 +89,6 @@ namespace cytnx {
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;
       checkCudaErrors(cublasSgemm(cublasH, CUBLAS_OP_N, CUBLAS_OP_N, blsNr, blsMl, blsComm, &alpha,
                                   _inr, blsNr, _inl, blsComm, &beta, _out, blsNr));
-
-      cublasDestroy(cublasH);
     }
 
   }  // namespace linalg_internal

@@ -2,212 +2,184 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+
+#include <vector>
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
   namespace linalg_internal {
 
     void cuInvM_inplace_internal_d(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
-      // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
+      // Scoped resources (#1146): the info checks below throw, so ownership -- not a cleanup block
+      // at the tail of the function -- is what keeps these from leaking.
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
-      cytnx_int32 *ipiv;
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_double *d_work = nullptr;
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> ipiv(L + 1);
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       // trf:
       checkCudaErrors(
         cusolverDnDgetrf_bufferSize(cusolverH, L, L, (cytnx_double *)ten->data(), L, &lwork));
-      checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_double) * lwork));
+      utils_internal::DeviceBuffer<cytnx_double> d_work(lwork);
 
+      checkCudaErrors(cusolverDnDgetrf(cusolverH, L, L, (cytnx_double *)ten->data(), L,
+                                       d_work.get(), ipiv.get(), devinfo.get()));
       checkCudaErrors(
-        cusolverDnDgetrf(cusolverH, L, L, (cytnx_double *)ten->data(), L, d_work, ipiv, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnDgetrf': cuBlas INFO = ", info);
 
       // trs AX = B with B = I
-      lwork = 0;
-      cytnx_double *d_I;
-      checkCudaErrors(cudaMalloc((void **)&d_I, sizeof(cytnx_double) * L * L));
-      cytnx_double *h_I = (cytnx_double *)calloc(L * L, sizeof(cytnx_double));
-      for (auto i = 0; i < L; i++) h_I[i * L + i] = 1;
+      utils_internal::DeviceBuffer<cytnx_double> d_I(L * L);
+      std::vector<cytnx_double> h_I(L * L, 0);
+      for (cytnx_int64 i = 0; i < L; i++) h_I[i * L + i] = 1;
 
-      checkCudaErrors(cudaMemcpy(d_I, h_I, sizeof(cytnx_double) * L * L, cudaMemcpyHostToDevice));
+      checkCudaErrors(
+        cudaMemcpy(d_I.get(), h_I.data(), sizeof(cytnx_double) * L * L, cudaMemcpyHostToDevice));
 
       checkCudaErrors(cusolverDnDgetrs(cusolverH, CUBLAS_OP_N, L, L, (cytnx_double *)ten->data(), L,
-                                       ipiv, d_I, L, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+                                       ipiv.get(), d_I.get(), L, devinfo.get()));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnDgetrs': cuBlas INFO = ", info);
 
       checkCudaErrors(
-        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_double) * L * L, cudaMemcpyDeviceToDevice));
-
-      cudaFree(d_I);
-      cudaFree(d_work);
-      cudaFree(devinfo);
-      cudaFree(ipiv);
-      free(h_I);
-      cusolverDnDestroy(cusolverH);
+        cudaMemcpy(ten->data(), d_I.get(), sizeof(cytnx_double) * L * L, cudaMemcpyDeviceToDevice));
     }
-    void cuInvM_inplace_internal_f(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
-      // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
 
-      cytnx_int32 *ipiv;
+    void cuInvM_inplace_internal_f(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
+
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_float *d_work = nullptr;
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> ipiv(L + 1);
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       // trf:
       checkCudaErrors(
         cusolverDnSgetrf_bufferSize(cusolverH, L, L, (cytnx_float *)ten->data(), L, &lwork));
-      checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_float) * lwork));
+      utils_internal::DeviceBuffer<cytnx_float> d_work(lwork);
 
+      checkCudaErrors(cusolverDnSgetrf(cusolverH, L, L, (cytnx_float *)ten->data(), L, d_work.get(),
+                                       ipiv.get(), devinfo.get()));
       checkCudaErrors(
-        cusolverDnSgetrf(cusolverH, L, L, (cytnx_float *)ten->data(), L, d_work, ipiv, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnSgetrf': cuBlas INFO = ", info);
 
       // trs AX = B with B = I
-      lwork = 0;
-      cytnx_float *d_I;
-      checkCudaErrors(cudaMalloc((void **)&d_I, sizeof(cytnx_float) * L * L));
-      cytnx_float *h_I = (cytnx_float *)calloc(L * L, sizeof(cytnx_float));
-      for (auto i = 0; i < L; i++) h_I[i * L + i] = 1;
+      utils_internal::DeviceBuffer<cytnx_float> d_I(L * L);
+      std::vector<cytnx_float> h_I(L * L, 0);
+      for (cytnx_int64 i = 0; i < L; i++) h_I[i * L + i] = 1;
 
-      checkCudaErrors(cudaMemcpy(d_I, h_I, sizeof(cytnx_float) * L * L, cudaMemcpyHostToDevice));
+      checkCudaErrors(
+        cudaMemcpy(d_I.get(), h_I.data(), sizeof(cytnx_float) * L * L, cudaMemcpyHostToDevice));
 
       checkCudaErrors(cusolverDnSgetrs(cusolverH, CUBLAS_OP_N, L, L, (cytnx_float *)ten->data(), L,
-                                       ipiv, d_I, L, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+                                       ipiv.get(), d_I.get(), L, devinfo.get()));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnSgetrs': cuBlas INFO = ", info);
 
       checkCudaErrors(
-        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_float) * L * L, cudaMemcpyDeviceToDevice));
-
-      cudaFree(d_I);
-      cudaFree(d_work);
-      cudaFree(devinfo);
-      cudaFree(ipiv);
-      free(h_I);
-      cusolverDnDestroy(cusolverH);
+        cudaMemcpy(ten->data(), d_I.get(), sizeof(cytnx_float) * L * L, cudaMemcpyDeviceToDevice));
     }
-    void cuInvM_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
-      // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
 
-      cytnx_int32 *ipiv;
+    void cuInvM_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
+
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_complex128 *d_work = nullptr;
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> ipiv(L + 1);
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       // trf:
       checkCudaErrors(
         cusolverDnZgetrf_bufferSize(cusolverH, L, L, (cuDoubleComplex *)ten->data(), L, &lwork));
-      checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_complex128) * lwork));
+      utils_internal::DeviceBuffer<cytnx_complex128> d_work(lwork);
 
       checkCudaErrors(cusolverDnZgetrf(cusolverH, L, L, (cuDoubleComplex *)ten->data(), L,
-                                       (cuDoubleComplex *)d_work, ipiv, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+                                       (cuDoubleComplex *)d_work.get(), ipiv.get(), devinfo.get()));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnZgetrf': cuBlas INFO = ", info);
 
       // trs AX = B with B = I
-      lwork = 0;
-      cytnx_complex128 *d_I;
-      checkCudaErrors(cudaMalloc((void **)&d_I, sizeof(cytnx_complex128) * L * L));
-      cytnx_complex128 *h_I = (cytnx_complex128 *)calloc(L * L, sizeof(cytnx_complex128));
-      for (auto i = 0; i < L; i++) h_I[i * L + i] = cytnx_complex128(1, 0);
+      utils_internal::DeviceBuffer<cytnx_complex128> d_I(L * L);
+      std::vector<cytnx_complex128> h_I(L * L, 0);
+      for (cytnx_int64 i = 0; i < L; i++) h_I[i * L + i] = cytnx_complex128(1, 0);
 
-      checkCudaErrors(
-        cudaMemcpy(d_I, h_I, sizeof(cytnx_complex128) * L * L, cudaMemcpyHostToDevice));
+      checkCudaErrors(cudaMemcpy(d_I.get(), h_I.data(), sizeof(cytnx_complex128) * L * L,
+                                 cudaMemcpyHostToDevice));
 
       checkCudaErrors(cusolverDnZgetrs(cusolverH, CUBLAS_OP_N, L, L, (cuDoubleComplex *)ten->data(),
-                                       L, ipiv, (cuDoubleComplex *)d_I, L, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+                                       L, ipiv.get(), (cuDoubleComplex *)d_I.get(), L,
+                                       devinfo.get()));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnZgetrs': cuBlas INFO = ", info);
 
-      checkCudaErrors(
-        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_complex128) * L * L, cudaMemcpyDeviceToDevice));
-
-      cudaFree(d_I);
-      cudaFree(d_work);
-      cudaFree(devinfo);
-      cudaFree(ipiv);
-      free(h_I);
-      cusolverDnDestroy(cusolverH);
+      checkCudaErrors(cudaMemcpy(ten->data(), d_I.get(), sizeof(cytnx_complex128) * L * L,
+                                 cudaMemcpyDeviceToDevice));
     }
 
     void cuInvM_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten, const cytnx_int64 &L) {
-      // create handles:
-      cusolverDnHandle_t cusolverH = nullptr;
-      checkCudaErrors(cusolverDnCreate(&cusolverH));
+      // Shared per-device handle (#1144): cusolverDnCreate costs ~456 us per call
+      // and its ~12 MB device workspace was reallocated every time.
+      cusolverDnHandle_t cusolverH = utils_internal::get_cusolverdn_handle();
 
-      cytnx_int32 *ipiv;
       cytnx_int32 info;
       cytnx_int32 lwork = 0;
-      cytnx_complex64 *d_work = nullptr;
-      cytnx_int32 *devinfo;
-      checkCudaErrors(cudaMalloc((void **)&ipiv, (L + 1) * sizeof(cytnx_int32)));
-      checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
+      utils_internal::DeviceBuffer<cytnx_int32> ipiv(L + 1);
+      utils_internal::DeviceBuffer<cytnx_int32> devinfo(1);
       // trf:
       checkCudaErrors(
         cusolverDnCgetrf_bufferSize(cusolverH, L, L, (cuFloatComplex *)ten->data(), L, &lwork));
-      checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_complex64) * lwork));
+      utils_internal::DeviceBuffer<cytnx_complex64> d_work(lwork);
 
       checkCudaErrors(cusolverDnCgetrf(cusolverH, L, L, (cuFloatComplex *)ten->data(), L,
-                                       (cuFloatComplex *)d_work, ipiv, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+                                       (cuFloatComplex *)d_work.get(), ipiv.get(), devinfo.get()));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnCgetrf': cuBlas INFO = ", info);
 
       // trs AX = B with B = I
-      lwork = 0;
-      cytnx_complex64 *d_I;
-      checkCudaErrors(cudaMalloc((void **)&d_I, sizeof(cytnx_complex64) * L * L));
-      cytnx_complex64 *h_I = (cytnx_complex64 *)calloc(L * L, sizeof(cytnx_complex64));
-      for (auto i = 0; i < L; i++) h_I[i * L + i] = cytnx_complex64(1, 0);
+      utils_internal::DeviceBuffer<cytnx_complex64> d_I(L * L);
+      std::vector<cytnx_complex64> h_I(L * L, 0);
+      for (cytnx_int64 i = 0; i < L; i++) h_I[i * L + i] = cytnx_complex64(1, 0);
 
       checkCudaErrors(
-        cudaMemcpy(d_I, h_I, sizeof(cytnx_complex64) * L * L, cudaMemcpyHostToDevice));
+        cudaMemcpy(d_I.get(), h_I.data(), sizeof(cytnx_complex64) * L * L, cudaMemcpyHostToDevice));
 
       checkCudaErrors(cusolverDnCgetrs(cusolverH, CUBLAS_OP_N, L, L, (cuFloatComplex *)ten->data(),
-                                       L, ipiv, (cuFloatComplex *)d_I, L, devinfo));
-      checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
+                                       L, ipiv.get(), (cuFloatComplex *)d_I.get(), L,
+                                       devinfo.get()));
+      checkCudaErrors(
+        cudaMemcpy(&info, devinfo.get(), sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnCgetrs': cuBlas INFO = ", info);
 
-      checkCudaErrors(
-        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_complex64) * L * L, cudaMemcpyDeviceToDevice));
-
-      cudaFree(d_I);
-      cudaFree(d_work);
-      cudaFree(devinfo);
-      cudaFree(ipiv);
-      free(h_I);
-      cusolverDnDestroy(cusolverH);
+      checkCudaErrors(cudaMemcpy(ten->data(), d_I.get(), sizeof(cytnx_complex64) * L * L,
+                                 cudaMemcpyDeviceToDevice));
     }
 
   }  // namespace linalg_internal

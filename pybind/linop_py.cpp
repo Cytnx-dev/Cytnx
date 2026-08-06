@@ -19,9 +19,6 @@ using namespace pybind11::literals;
 using namespace cytnx;
 using pybind_cytnx::dispatch_pyint;
 
-#ifdef BACKEND_TORCH
-#else
-
 class PyLinOp : public LinOp {
  public:
   /* inherit constructor */
@@ -173,5 +170,3 @@ void linop_binding(py::module &m) {
 
     ;  // end of object
 }
-
-#endif

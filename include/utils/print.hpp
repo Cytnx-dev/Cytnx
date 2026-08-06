@@ -10,11 +10,8 @@
 #include "Network.hpp"
 #include <iostream>
 
-#ifdef BACKEND_TORCH
-#else
-  #include "backend/Storage.hpp"
-  #include "backend/Scalar.hpp"
-#endif  // BACKEND_TORCH
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 
 namespace cytnx {
 

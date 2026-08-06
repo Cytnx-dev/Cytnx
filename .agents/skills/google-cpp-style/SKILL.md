@@ -35,7 +35,8 @@ existing tree predates the convention.
 
 - **No leading underscore in new code — strict.** `_foo`, `_impl`, `_Load` are
   the *old* private-member / internal convention and are being retired (#836).
-  New members, helpers, and locals must not start with `_`.
+  New members, helpers, and locals must not start with `_`. The ban is scoped to
+  C++/CUDA: Python keeps Google's `_internal` marker (see `google-python-style`).
 - **A trailing underscore marks an in-place mutator that returns `*this`** —
   `Add_`, `contiguous_`, `Inv_`, `Exp_`. This is Cytnx's meaning and **differs
   from Google**, where a trailing underscore denotes a data member. Do not give
@@ -53,7 +54,7 @@ existing tree predates the convention.
   `Storage`, `UniTensor`, `std::vector`, `std::string`, containers.
 - **C++20 / CUDA 20 are available and expected** (`CMAKE_CXX_STANDARD 20`,
   `CMAKE_CUDA_STANDARD 20`). Use them; never add C++17 back-compat guards or
-  workarounds (see `GEMINI.md`).
+  workarounds (see `AGENTS.md`).
 
 ## Google naming reference (baseline)
 

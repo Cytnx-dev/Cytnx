@@ -15,7 +15,7 @@ description: >-
 ## `scripts/build_preset.sh` — the one entry point
 
 ```sh
-S=.claude/skills/build-test-workflow/scripts/build_preset.sh
+S=.agents/skills/build-test-workflow/scripts/build_preset.sh
 "$S" <preset> [--target <target>] [--test [args...]]
 ```
 
@@ -83,7 +83,7 @@ target:
 ## How much to run, when
 
 - **While iterating:** only the affected gtest suite / pytest file.
-- **Before push / PR:** the full gates in `CLAUDE.md` — ctest for both CPU
+- **Before push / PR:** the full gates in `AGENTS.md` — ctest for both CPU
   debug presets, `pytest pytests/` when Python-facing code changed, the
   CUDA compile check when GPU code changed, and the GPU suite when a GPU is
   present.

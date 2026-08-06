@@ -97,7 +97,6 @@ ignore:
   - "thirdparty/**"
   - "cmake_modules/**"
   - "conda_build/**"
-  - "developer_tools/**"
   - "build/**"
   - "**/_deps/**"
   - "**/*.cu.o"

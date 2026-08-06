@@ -17,9 +17,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-#ifdef BACKEND_TORCH
-#else
-
 void generator_binding(py::module &m) {
   m.def(
     "zeros",
@@ -122,5 +119,3 @@ void generator_binding(py::module &m) {
     return m;
   });
 }
-
-#endif

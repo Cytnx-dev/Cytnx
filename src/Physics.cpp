@@ -8,10 +8,7 @@
 #include <iostream>
 #include <cmath>
 
-#ifdef BACKEND_TORCH
-#else
-
-  #include "backend/Storage.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
   namespace physics {
@@ -215,4 +212,3 @@ namespace cytnx {
   }  // namespace operators
 
 }  // namespace cytnx
-#endif

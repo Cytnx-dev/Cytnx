@@ -3,6 +3,7 @@
   #include "cytnx_error.hpp"
   #include "Type.hpp"
   #include "backend/lapack_wrapper.hpp"
+  #include "backend/utils_internal_gpu/cuTensorHandle_gpu.hpp"
   #include <cutensor.h>
 
   #define HANDLE_ERROR(x)                                                        \
@@ -101,8 +102,9 @@ namespace cytnx {
        * cuTENSOR
        *************************/
 
-      cutensorHandle_t handle;
-      HANDLE_ERROR(cutensorCreate(&handle));
+      // Shared per-device handle (#1132): cutensorCreate costs ~3.4 ms
+      // per call and its plan cache dies with the handle.
+      cutensorHandle_t handle = utils_internal::get_cutensor_handle();
 
       /**********************
        * Create Tensor Descriptors
@@ -183,7 +185,6 @@ namespace cytnx {
       HANDLE_ERROR(cutensorDestroyTensorDescriptor(descOut));
       HANDLE_ERROR(cutensorDestroyPlanPreference(planPref));
       HANDLE_ERROR(cutensorDestroyPlan(plan));
-      HANDLE_ERROR(cutensorDestroy(handle));
     }
 
     void cuTensordot_internal_cd(Tensor &out, const Tensor &Lin, const Tensor &Rin,

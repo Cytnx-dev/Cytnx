@@ -8,14 +8,11 @@
 #include "cytnx_error.hpp"
 #include "random.hpp"
 
-#ifdef BACKEND_TORCH
-#else
+#include <functional>
+#include <type_traits>
 
-  #include <functional>
-  #include <type_traits>
-
-  #include "backend/Scalar.hpp"
-  #include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
 
@@ -3388,7 +3385,5 @@ namespace cytnx {
   Tensor operator==(const Tensor &Lt, const T &rc);
 
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_LINALG_H_

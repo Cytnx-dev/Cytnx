@@ -5,9 +5,6 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   /**
    * @namespace cytnx::algo
@@ -214,6 +211,5 @@ namespace cytnx {
 
   }  // namespace algo
 }  // namespace cytnx
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_ALGO_H_
