@@ -59,6 +59,7 @@ namespace cytnx {
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
       cuInv_internal_kernel_d<<<NBlocks, 512>>>((cytnx_double *)ten->data(), Nelem, clip);
+      CYTNX_CHECK_CUDA_LAUNCH(cuInv_internal_kernel_d);
     }
 
     void cuInv_inplace_internal_f(boost::intrusive_ptr<Storage_base> &ten,
@@ -66,6 +67,7 @@ namespace cytnx {
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
       cuInv_internal_kernel_f<<<NBlocks, 512>>>((cytnx_float *)ten->data(), Nelem, clip);
+      CYTNX_CHECK_CUDA_LAUNCH(cuInv_internal_kernel_f);
     }
 
     void cuInv_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten,
@@ -74,6 +76,7 @@ namespace cytnx {
       if (Nelem % 256) NBlocks += 1;
       const double clipsq = (clip < 0. ? -1. : clip * clip);  // because std::norm is squared norm
       cuInv_internal_kernel_cd<<<NBlocks, 256>>>((cuDoubleComplex *)ten->data(), Nelem, clipsq);
+      CYTNX_CHECK_CUDA_LAUNCH(cuInv_internal_kernel_cd);
     }
 
     void cuInv_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten,
@@ -82,6 +85,7 @@ namespace cytnx {
       if (Nelem % 256) NBlocks += 1;
       const float clipsq = (clip < 0.f ? -1.f : clip * clip);  // because std::norm is squared norm
       cuInv_internal_kernel_cf<<<NBlocks, 256>>>((cuFloatComplex *)ten->data(), Nelem, clipsq);
+      CYTNX_CHECK_CUDA_LAUNCH(cuInv_internal_kernel_cf);
     }
 
   }  // namespace linalg_internal
