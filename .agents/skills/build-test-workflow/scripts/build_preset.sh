@@ -18,7 +18,7 @@ set -euo pipefail
 # on an agent's own dev machine, unlike a minimal CI runner.
 #
 # Every build through this script is uninstrumented: the first configure
-# wires in strip-coverage-launcher.sh as CMAKE_CXX_COMPILER_LAUNCHER/
+# wires in tools/strip_coverage_launcher.sh as CMAKE_CXX_COMPILER_LAUNCHER/
 # CMAKE_CXX_LINKER_LAUNCHER to drop the --coverage flag that RUN_TESTS=ON
 # would otherwise add (see that script for why stripping the token is the
 # only approach that works).
@@ -113,9 +113,10 @@ cd "${repo_root}"
 # Resolved from repo_root, not the script's own location: a copy of this
 # script (e.g. cross-revision-benchmark's edge-case note for a revision
 # predating this script) would otherwise point CMake at a
-# strip-coverage-launcher.sh that doesn't exist next to the copy -- the
-# real repo checkout always has it at this fixed path.
-coverage_launcher="${repo_root}/.agents/skills/build-test-workflow/scripts/strip-coverage-launcher.sh"
+# strip_coverage_launcher.sh that doesn't exist next to the copy -- the
+# real repo checkout always has it at this fixed path. pixi.toml's configure
+# task wires in the same script, so the two share one copy.
+coverage_launcher="${repo_root}/tools/strip_coverage_launcher.sh"
 
 build_dir="build/${preset}"
 venv_dir="build/${preset}-venv"

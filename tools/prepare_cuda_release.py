@@ -102,7 +102,9 @@ CUDA_BUILD_TOOLCHAIN = [
 # directories, so this only needs to cover the extension's own direct
 # NEEDED entries; the transitive graph resolves itself. Semicolon-separated
 # because CMAKE_INSTALL_RPATH is a CMake list (CMake emits it to the linker
-# colon-separated).
+# colon-separated). pixi.toml's install-python-cuda task passes the same list
+# for the local Linux CUDA editable install, whose extension lands in the same
+# place relative to the wheels; keep the two in step.
 CUDA_INSTALL_RPATH = ";".join(
     f"$ORIGIN/../{rel}"
     for rel in ("nvidia/cu13/lib", "cutensor/lib", "cuquantum/lib")
