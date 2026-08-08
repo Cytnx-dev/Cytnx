@@ -75,9 +75,11 @@ namespace cytnx {
     //     call sites than the six arithmetic families converted in #941's
     //     first pass (Add/Sub/Mul/Div/Cpr/Mod) and is out of scope for that
     //     task.
-    //   - GPU kernel dispatch (src/backend/linalg_internal_gpu/*, the
-    //     cuAri_ii table) -- ruling 3 keeps GPU on the legacy table; see GPU
-    //     tracking issue #1013.
+    //   - GPU kernel launches (src/backend/linalg_internal_gpu/*). The dtype
+    //     *dispatch* there is typed now -- as_storage_variant() + type_promote_t,
+    //     with the legacy cuAri_ii table removed (#1003, #1013) -- but the launch
+    //     helpers still reinterpret_cast this erased pointer to the CUDA-native
+    //     kernel type, because CUDA needs the raw device address.
     // New code should use StorageImplementation<T>::data() (typed) via
     // as_storage_variant()/storage_cast<T> instead. Do not add new callers of
     // this accessor.

@@ -162,6 +162,59 @@ namespace cytnx {
         EXPECT_TRUE(AreNearlyEqTensor(gpu_result_r_cpu, expected_r, 1e-6));
       }
 
+      // The #984/#999 promotion discriminator on the GPU Mul path (#1003): ComplexFloat
+      // (x) Double must produce ComplexDouble, with the product computed and stored through
+      // that output type. See Sub_test's twin for why the Double operands are float32-
+      // inexact (0.1, 3.3) and the ComplexFloat components are float-exact -- an
+      // implementation that reports ComplexDouble but multiplies through ComplexFloat lands
+      // ~1e-8 away, far past the tolerance here. Expected values are evaluated in host
+      // double arithmetic, not taken from the CPU Mul path.
+      //
+      // The scalar cases matter separately: a scalar operand takes the lconst/rconst
+      // kernels rather than the tensor(x)tensor one, so its promotion is a distinct code
+      // path in the shared dispatch.
+      TEST(MulMixedDtypeTest, GpuComplexFloatDoublePromotesToComplexDouble) {
+        Tensor cf = zeros({2}, Type.ComplexFloat);
+        cf.at<cytnx_complex64>({0}) = cytnx_complex64(1.5f, -2.5f);
+        cf.at<cytnx_complex64>({1}) = cytnx_complex64(0.0f, 4.0f);
+        Tensor d = zeros({2}, Type.Double);
+        d.at<cytnx_double>({0}) = 0.1;
+        d.at<cytnx_double>({1}) = 3.3;
+
+        Tensor expected = zeros({2}, Type.ComplexDouble);
+        expected.at<cytnx_complex128>({0}) = cytnx_complex128(1.5 * 0.1, -2.5 * 0.1);
+        expected.at<cytnx_complex128>({1}) = cytnx_complex128(0.0, 4.0 * 3.3);
+
+        {
+          SCOPED_TRACE("ComplexFloat x Double");
+          Tensor out = linalg::Mul(cf.to(Device.cuda), d.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+          EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
+        }
+        {
+          SCOPED_TRACE("Double x ComplexFloat (multiplication commutes)");
+          Tensor out = linalg::Mul(d.to(Device.cuda), cf.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+          EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
+        }
+        {
+          // Scalar on each side: a ComplexFloat scalar against a Double tensor promotes the
+          // same way, through the lconst/rconst kernels.
+          SCOPED_TRACE("ComplexFloat scalar x Double tensor, both orders");
+          const cytnx_complex64 scalar(1.5f, -2.5f);
+          Tensor scalar_expected = zeros({2}, Type.ComplexDouble);
+          scalar_expected.at<cytnx_complex128>({0}) = cytnx_complex128(1.5 * 0.1, -2.5 * 0.1);
+          scalar_expected.at<cytnx_complex128>({1}) = cytnx_complex128(1.5 * 3.3, -2.5 * 3.3);
+
+          Tensor out_l = linalg::Mul(scalar, d.to(Device.cuda)).to(Device.cpu);
+          Tensor out_r = linalg::Mul(d.to(Device.cuda), scalar).to(Device.cpu);
+          ASSERT_EQ(out_l.dtype(), Type.ComplexDouble);
+          ASSERT_EQ(out_r.dtype(), Type.ComplexDouble);
+          EXPECT_TRUE(AreNearlyEqTensor(out_l, scalar_expected, 1e-12));
+          EXPECT_TRUE(AreNearlyEqTensor(out_r, scalar_expected, 1e-12));
+        }
+      }
+
       INSTANTIATE_TEST_SUITE_P(MulTests, MulTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
       ::testing::AssertionResult CheckMulResult(const Tensor& gpu_result, const Tensor& left_tensor,
