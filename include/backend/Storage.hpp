@@ -484,7 +484,7 @@ namespace cytnx {
     constexpr std::size_t n_non_void = std::variant_size_v<Type_list> - 1;
     return internal::init_storage_impl(dtype, std::make_index_sequence<n_non_void>());
   }
-    ///@endcond
+  ///@endcond
 
 #ifdef UNI_GPU
   // Explicit specialization declarations for the GPU complex pointer views, so they are visible
