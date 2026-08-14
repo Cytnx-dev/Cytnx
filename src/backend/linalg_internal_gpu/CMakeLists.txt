@@ -4,7 +4,6 @@ target_sources(cytnx
     # cuAbs_internal.hpp
     # cuAdd_internal.hpp
     # cuGer_internal.hpp
-    # cuArithmetic_internal.hpp
     # cuConj_inplace_internal.hpp
     # cuCpr_internal.hpp
     # cuDiag_internal.hpp
@@ -21,7 +20,6 @@ target_sources(cytnx
     # cuMatvec_internal.hpp
     # cuVectordot_internal.hpp
     # cuMul_internal.hpp
-    # cuOuter_internal.hpp
     # cuSub_internal.hpp
     # cuGeSvd_internal.hpp
     # cuSvd_internal.hpp
@@ -33,22 +31,22 @@ target_sources(cytnx
     # cuQuantumGeSvd_internal.hpp
     # cuQuantumQr_internal.hpp
     # cudaMemcpyTruncation.hpp
+    # cuUnaryDispatch.cuh
 
-    cuAbs_internal.cu
+    cuAbs_dispatch.cu
     cuAdd_internal.cu
     cuSub_dispatch.cu
     cuMul_dispatch.cu
     cuDiv_dispatch.cu
+    cuiArithmetic_dispatch.cu
     cuGer_internal.cu
-    cuArithmetic_internal.cu
-    cuConj_inplace_internal.cu
+    cuConj_inplace_dispatch.cu
     cuCpr_dispatch.cu
     cuMod_dispatch.cu
     cuDiag_internal.cu
-    cuDiv_internal.cu
-    cuPow_internal.cu
+    cuPow_dispatch.cu
     cuEigh_internal.cu
-    cuExp_internal.cu
+    cuExp_dispatch.cu
     cuInvM_inplace_internal.cu
     cuInv_inplace_internal.cu
     cuGemm_internal.cu
@@ -57,13 +55,9 @@ target_sources(cytnx
     cuMatmul_dg_internal.cu
     cuMatvec_internal.cu
     cuVectordot_internal.cu
-    cuMul_internal.cu
-    cuOuter_internal.cu
-    cuSub_internal.cu
     cuGeSvd_internal.cu
     cuSvd_internal.cu
     cuNorm_internal.cu
-    cuMod_internal.cu
     cuDet_internal.cu
     cuSum_internal.cu
     cuTrace_internal.cu

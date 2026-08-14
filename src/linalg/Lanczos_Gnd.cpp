@@ -9,9 +9,6 @@
 #include "Tensor.hpp"
 #include <iomanip>
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
@@ -434,5 +431,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif

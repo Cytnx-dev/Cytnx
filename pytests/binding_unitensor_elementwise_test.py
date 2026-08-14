@@ -25,9 +25,9 @@ src/linalg/Lanczos_Exp.cpp use it as genuine Krylov-subspace vector-space
 arithmetic backing ``cytnx.linalg.Lanczos(..., method="Gnd")`` /
 ``cytnx.linalg.Lanczos_Exp`` (used by the DMRG and TDVP examples).
 
-Scalar (Python/numpy number, cytnx.Scalar) <-> UniTensor arithmetic is
-unaffected and stays public in both directions (`2.0 * ut`, `ut * 2.0`,
-`ut + 1.5`, `ut += 2.0`, etc.).
+Scalar (native Python/numpy number) <-> UniTensor arithmetic is unaffected
+and stays public in both directions (`2.0 * ut`, `ut * 2.0`, `ut + 1.5`,
+`ut += 2.0`, etc.).
 """
 
 import pytest

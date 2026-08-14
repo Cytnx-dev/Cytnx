@@ -13,8 +13,6 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 namespace cytnx {
 
   class LinOp {
@@ -172,7 +170,5 @@ namespace cytnx {
   };
 
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_LINOP_H_

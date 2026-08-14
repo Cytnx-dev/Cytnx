@@ -6,9 +6,6 @@
 #include "Tensor.hpp"
 #include "linalg.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   //====================================================
   std::string UniTensorType_class::getname(const int &ut_type) const {
@@ -832,4 +829,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

@@ -4,14 +4,12 @@
 #include <iostream>
 #include "Tensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
+#include "backend/linalg_internal_cpu/Kron_internal.hpp"
 
-  #include "backend/linalg_internal_cpu/Kron_internal.hpp"
-
-  #ifdef UNI_GPU
-    #include "backend/linalg_internal_gpu/cuKron_internal.cuh"
-  #endif
+#ifdef UNI_GPU
+  #include "backend/linalg_internal_gpu/cuKron_internal.cuh"
+  #include "backend/linalg_internal_gpu/cuTypeCvt.hpp"
+#endif
 
 namespace cytnx {
 
@@ -82,22 +80,31 @@ namespace cytnx {
           lhs_contiguous.ptr(), rhs_contiguous.ptr());
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         // checkCudaErrors(cudaSetDevice(lhs_contiguous.device()));
-        // Dispatch to the kernel based on the types of lhs and rhs.
+        // Dispatch to the kernel based on the types of lhs and rhs. This visits the
+        // ordinary Cytnx (host) value-type pointers and computes the promoted type with
+        // the same type_promote_from_pointer_t as the CPU path above, then maps to the
+        // CUDA-native kernel type with to_cuda_t at the launch boundary (#1013) -- there
+        // is no separate Type_list_gpu / type_promote_gpu_t promotion hierarchy.
         std::visit(
           [&](auto lhs_ptr, auto rhs_ptr) {
             using out_type =
-              Type_class::type_promote_from_gpu_pointer_t<decltype(lhs_ptr), decltype(rhs_ptr)>;
+              Type_class::type_promote_from_pointer_t<decltype(lhs_ptr), decltype(rhs_ptr)>;
             static_assert(!std::is_same_v<out_type, void>);
-            cytnx::linalg_internal::cuKron_general(out.gpu_ptr_as<out_type>(), lhs_ptr, rhs_ptr,
-                                                   lhs_padded_shape, rhs_padded_shape);
+            using TL = std::remove_const_t<std::remove_pointer_t<decltype(lhs_ptr)>>;
+            using TR = std::remove_const_t<std::remove_pointer_t<decltype(rhs_ptr)>>;
+            cytnx::linalg_internal::cuKron_general(
+              out.gpu_ptr_as<linalg_internal::to_cuda_t<out_type>>(),
+              reinterpret_cast<const linalg_internal::to_cuda_t<TL> *>(lhs_ptr),
+              reinterpret_cast<const linalg_internal::to_cuda_t<TR> *>(rhs_ptr), lhs_padded_shape,
+              rhs_padded_shape);
           },
-          lhs_contiguous.gpu_ptr(), rhs_contiguous.gpu_ptr());
-  #else
+          lhs_contiguous.ptr(), rhs_contiguous.ptr());
+#else
         cytnx_error_msg(true, "[Kron] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
 
       return out;
@@ -105,4 +112,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-#endif  // BACKEND_TORCH

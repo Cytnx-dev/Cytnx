@@ -17,9 +17,6 @@
 #include "utils/vec_concatenate.hpp"
 #include "utils/vec_print.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   namespace {
     void save_symmetry_cache(std::fstream &f, const std::vector<Symmetry> &syms) {
@@ -1651,7 +1648,7 @@ namespace cytnx {
                             "contraction on sub-Tensors on different device.%s",
                             "\n");
           }
-  #ifdef UNI_MKL
+#ifdef UNI_MKL
           if (common_dtype > 4) {
             // Integer dtype: Gemm_Batch only supports fp/complex (dtype <= 4); fall back to Matmul.
             for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -1759,7 +1756,7 @@ namespace cytnx {
             }
           }  // end else (common_dtype <= 4)
         }
-  #else
+#else
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
@@ -1809,7 +1806,7 @@ namespace cytnx {
           //   }
           // }
         }
-  #endif
+#endif
 
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
@@ -2704,10 +2701,7 @@ namespace cytnx {
 
     // reshape each blocks, and update_inner_to_outer_idx:
     // process stride:
-    memcpy(&cb_stride[0], &cb_stride[1], sizeof(cytnx_uint64) * (cb_stride.size() - 1));
-    // for(int i=cb_stride.size()-2;i>=0;i--){
-    //     cb_stride[i] = cb_stride[i+1];
-    // }
+    std::copy(cb_stride.begin() + 1, cb_stride.end(), cb_stride.begin());
     cb_stride.back() = 1;
     for (int i = cb_stride.size() - 2; i >= 0; i--) {
       cb_stride[i] *= cb_stride[i + 1];
@@ -2735,13 +2729,8 @@ namespace cytnx {
       for (int i = idor + 1; i < idor + indicators.size(); i++) {
         this->_inner_to_outer_idx[b][idor] += this->_inner_to_outer_idx[b][i] * cb_stride[i - idor];
       }
-      if (idor + indicators.size() < this->_inner_to_outer_idx[b].size()) {
-        memcpy(
-          &this->_inner_to_outer_idx[b][idor + 1],
-          &this->_inner_to_outer_idx[b][idor + indicators.size()],
-          sizeof(cytnx_uint64) * (this->_inner_to_outer_idx[b].size() - idor - indicators.size()));
-      }
-      this->_inner_to_outer_idx[b].resize(this->rank());
+      auto &itoi = this->_inner_to_outer_idx[b];
+      itoi.erase(itoi.begin() + idor + 1, itoi.begin() + idor + indicators.size());
     }
 
     // change rowrank:
@@ -2870,5 +2859,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

@@ -21,6 +21,12 @@ build:
     - CMAKE_CUDA_COMPILER_LAUNCHER
     - CMAKE_PRESET=mkl-cpu            # [x86]
     - CMAKE_PRESET=openblas-cpu       # [not x86]
+    # Which of HPTT's hand-vectorized kernel families to compile. They are
+    # opt-in per target architecture and HPTT rejects an option its target
+    # cannot serve, so build.sh passes this one through only when a selector
+    # below matched; any other architecture builds HPTT's scalar fallback.
+    - CYTNX_HPTT_ISA_OPTION=HPTT_ENABLE_AVX     # [x86_64]
+    - CYTNX_HPTT_ISA_OPTION=HPTT_ENABLE_ARM     # [aarch64 or arm64]
 
 requirements:
   build:

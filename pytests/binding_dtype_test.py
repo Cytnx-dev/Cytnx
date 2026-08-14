@@ -7,8 +7,7 @@ numpy scalar type (11 more), even though many of those overloads collapse to
 the same Python-visible signature. This task collapses each operator down to
 the "keep-set" (Tensor/UniTensor, cytnx_double, cytnx_complex128, py::int_,
 numpy_scalar<float>/<complex64>, numpy_scalar<int64/uint64/int32/uint32/
-int16/uint16/bool>, Scalar) and adds the missing `__ne__`/`__bool__`
-semantics.
+int16/uint16/bool>) and adds the missing `__ne__`/`__bool__` semantics.
 
 Root cause found empirically for the numpy integer-dtype-preservation bug
 (recorded here because it explains several "unexpectedly red" baselines
@@ -231,20 +230,23 @@ def test_ne_elementwise_values():
 
 
 def test_ne_scalar_operand():
-    # cytnx.Scalar closes the keep-set for __ne__ exactly as it does for
-    # __eq__. Without the explicit overload, `t != Scalar(x)` only worked
-    # through pybind11's lossy implicit-conversion fallbacks
-    # (Scalar.__float__/__complex__ feeding the double/complex128 overloads),
-    # printing cytnx error noise to stderr mid-dispatch along the way and
-    # losing precision for integer Scalars beyond 2**53.
+    # The __ne__ keep-set mirrors __eq__: native Python int/float/complex and
+    # numpy scalars all reach it. cytnx.Scalar is no longer exposed on the
+    # Python surface (issue #1045); a plain Python int flows through the
+    # py::int_ overload (dispatch_pyint), so an integer operand beyond 2**53
+    # keeps full precision instead of degrading through a float cast.
     t = cytnx.ones([3])
-    r = t != cytnx.Scalar(2.0)
+    r = t != 2.0
     assert isinstance(r, cytnx.Tensor)
     assert r.dtype() == Type.Bool
     assert bool(r[0].item()) is True
 
-    r2 = t != cytnx.Scalar(1.0)
+    r2 = t != 1.0
     assert bool(r2[0].item()) is False
+
+    # Large integer operand: routed as an exact int64 (not rounded to a double).
+    r3 = t != (2**60 + 1)
+    assert bool(r3[0].item()) is True
 
 
 def test_bool_multielement_raises():

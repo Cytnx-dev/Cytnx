@@ -1,27 +1,25 @@
 #ifndef CYTNX_BACKEND_STORAGE_H_
 #define CYTNX_BACKEND_STORAGE_H_
 
-#ifndef BACKEND_TORCH
+#include <cstdlib>
+#include <fstream>
+#include <initializer_list>
+#include <iostream>
+#include <string>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
 
-  #include <cstdlib>
-  #include <fstream>
-  #include <initializer_list>
-  #include <iostream>
-  #include <string>
-  #include <type_traits>
-  #include <utility>
-  #include <variant>
-  #include <vector>
+#include "boost/smart_ptr/intrusive_ptr.hpp"
 
-  #include "boost/smart_ptr/intrusive_ptr.hpp"
+#include "backend/Scalar.hpp"
+#include "cytnx_error.hpp"
+#include "Device.hpp"
+#include "intrusive_ptr_base.hpp"
+#include "Type.hpp"
 
-  #include "backend/Scalar.hpp"
-  #include "cytnx_error.hpp"
-  #include "Device.hpp"
-  #include "intrusive_ptr_base.hpp"
-  #include "Type.hpp"
-
-  #define STORAGE_DEFT_SZ 2
+#define STORAGE_DEFT_SZ 2
 
 namespace cytnx {
 
@@ -488,7 +486,7 @@ namespace cytnx {
   }
     ///@endcond
 
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
   // Explicit specialization declarations for the GPU complex pointer views, so they are visible
   // (and reachable via Storage::data<T>()) from any TU, not only Storage_base.cpp where they are
   // defined. They specialize the deleted primary -- the cu* types are not cytnx dtypes: the
@@ -501,7 +499,7 @@ namespace cytnx {
   cytnx_cuda_complex128 *Storage_base::data<cytnx_cuda_complex128>() const;
   template <>
   cytnx_cuda_complex64 *Storage_base::data<cytnx_cuda_complex64>() const;
-  #endif
+#endif
 
   ///@brief an memeory storage with multi-type/multi-device support
   class Storage {
@@ -1025,7 +1023,5 @@ namespace cytnx {
   ///@endcond
 
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_BACKEND_STORAGE_H_

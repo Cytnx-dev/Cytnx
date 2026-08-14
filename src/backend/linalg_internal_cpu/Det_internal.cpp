@@ -1,8 +1,5 @@
 #include "Det_internal.hpp"
 
-#include <complex.h>
-#include <type_traits>
-
 #include "backend/lapack_wrapper.hpp"
 #include "backend/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
@@ -35,21 +32,10 @@ namespace cytnx {
         return;
       }
 
-      // Whether lapack_complex_T is defined as std::complex<T> (c++ complex) or T _Complex
-      // (C complex) depends on whether MKL is used.
-      auto lapack_complex_to_cytnx_complex = [](auto x) {
-        if constexpr (std::is_same_v<std::complex<double>, decltype(x)>) {
-          return static_cast<cytnx_complex128>(x);
-        } else if constexpr (std::is_same_v<double _Complex, decltype(x)>) {
-          return cytnx_complex128{__real__(x), __imag__(x)};
-        } else {
-          assert(false);
-        }
-      };
       od[0] = 1;
       bool neg = 0;
       for (lapack_int i = 0; i < N; i++) {
-        od[0] *= lapack_complex_to_cytnx_complex(_Rin[i * N + i]);
+        od[0] *= _Rin[i * N + i];
         if (ipiv[i] != (i + 1)) neg = !neg;
       }
       free(ipiv);
@@ -79,21 +65,10 @@ namespace cytnx {
         return;
       }
 
-      // Whether lapack_complex_T is defined as std::complex<T> (c++ complex) or T _Complex
-      // (C complex) depends on whether MKL is used.
-      auto lapack_complex_to_cytnx_complex = [](auto x) {
-        if constexpr (std::is_same_v<std::complex<float>, decltype(x)>) {
-          return static_cast<cytnx_complex64>(x);
-        } else if constexpr (std::is_same_v<float _Complex, decltype(x)>) {
-          return cytnx_complex64{__real__(x), __imag__(x)};
-        } else {
-          assert(false);
-        }
-      };
       od[0] = 1;
       bool neg = 0;
       for (lapack_int i = 0; i < N; i++) {
-        od[0] *= lapack_complex_to_cytnx_complex(_Rin[i * N + i]);
+        od[0] *= _Rin[i * N + i];
         if (ipiv[i] != (i + 1)) neg = !neg;
       }
       free(ipiv);

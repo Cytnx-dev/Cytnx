@@ -2,10 +2,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -22,14 +19,14 @@ namespace cytnx {
         cytnx::linalg_internal::lii.Inv_inplace_ii[Tin.dtype()](
           Tin._impl->storage()._impl, Tin._impl->storage()._impl->size(), clip);
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         cytnx::linalg_internal::lii.cuInv_inplace_ii[Tin.dtype()](
           Tin._impl->storage()._impl, Tin._impl->storage()._impl->size(), clip);
-  #else
+#else
         cytnx_error_msg(true, "[Inv_] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-  #endif
+#endif
       }
     }
 
@@ -52,5 +49,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

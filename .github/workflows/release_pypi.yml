@@ -229,6 +229,18 @@ jobs:
         CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
+        # Compile HPTT's hand-vectorized kernels for the architecture this
+        # wheel targets. Every matrix entry builds natively (cibuildwheel's
+        # default CIBW_ARCHS=auto), so runner.arch names the wheel's target:
+        # ubuntu-24.04-arm and macos-14 are ARM64, the other two X64. HPTT
+        # fails the configure if an option reaches an architecture it cannot
+        # serve, so a matrix entry added without revisiting this line errors
+        # out rather than silently shipping the scalar fallback.
+        #
+        # scikit-build-core reads cmake.define from SKBUILD_CMAKE_DEFINE; the
+        # Linux wheels build inside a container, so pyproject.toml's
+        # [tool.cibuildwheel.linux].environment-pass forwards this in.
+        SKBUILD_CMAKE_DEFINE: HPTT_ENABLE_${{ runner.arch == 'ARM64' && 'ARM' || 'AVX' }}=ON
         # CYTNX_VERSION_TAG is sourced from the DetermineChannel job
         # output so every matrix entry sees the same dev tag for one
         # workflow run. It is the empty string for stable builds, in

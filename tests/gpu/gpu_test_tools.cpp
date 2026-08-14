@@ -17,7 +17,7 @@
 #define RAND_MIN_VAL ((-1) * RAND_MAX_VAL)
 
 namespace cytnx {
-  namespace TestTools {
+  namespace gpu_test {
 
     void TestFailMsg::AppendMsg(const std::string& fail_msg, const std::string& func_name,
                                 const int line) {
@@ -181,7 +181,8 @@ namespace cytnx {
 
     // Tensor
     // random initialize
-    void GetRandRange(const unsigned int dtype, cytnx_double* low_bd, cytnx_double* high_bd) {
+    static void GetRandRange(const unsigned int dtype, cytnx_double* low_bd,
+                             cytnx_double* high_bd) {
       if (dtype == Type.Void) return;
       switch (dtype) {
         case Type.Void:  // return directly
@@ -588,5 +589,5 @@ namespace cytnx {
       return shapes;
     }
 
-  }  // namespace TestTools
+  }  // namespace gpu_test
 }  // namespace cytnx

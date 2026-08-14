@@ -4,9 +4,6 @@
 
 #include "linalg.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   void Network_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                                    const std::vector<std::string> &alias,
@@ -87,5 +84,3 @@ namespace cytnx {
   }
 
 };  // namespace cytnx
-
-#endif

@@ -1,73 +1,80 @@
 #include "ExpH_test.h"
 
-TEST(ExpH, gpu_ExpH_test) {
-  // CompareWithScipy
-  std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
-                                      {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
-                                      {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},
-                                      {{-1, 0}, {0, 0}, {0, 0}, {2, 0}}};
-  std::complex<double> t_f_e[4][4] = {{{1.10646, 0}, {0, 0}, {0, 0}, {5.01042e-2, 0}},
-                                      {{0, 0}, {1.00125, 0}, {5.00208e-2, 0}, {0, 0}},
-                                      {{0, 0}, {5.00208e-02, 0}, {1.00125, 0}, {0, 0}},
-                                      {{5.01042e-2, 0}, {0, 0}, {0, 0}, {9.06048e-1, 0}}};
-  Tensor t_i = zeros({16}, Type.ComplexDouble, cytnx::Device.cuda);
-  t_i.reshape_(4, 4);
-  for (int i = 0; i < 16; i++) {
-    int x = i / 4, y = i % 4;
-    t_i(x, y) = t_i_e[x][y];
-  }
-  // t_i.Mul_(std::complex<double>(0,1));
-  double dt = 0.05;
-  Tensor t_f = linalg::ExpH(t_i, -dt).to(cytnx::Device.cuda);
-  for (int i = 0; i < 16; i++) {
-    int x = i / 4, y = i % 4;
-    EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().real()) - t_f_e[x][y].real()) <
-                1e-5);
-    EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().imag()) - t_f_e[x][y].imag()) <
-                1e-5);
-  }
-}
+namespace cytnx {
+  namespace gpu_test {
+    namespace {
+      TEST(ExpH, GpuExpHTest) {
+        // CompareWithScipy
+        std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
+                                            {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
+                                            {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},
+                                            {{-1, 0}, {0, 0}, {0, 0}, {2, 0}}};
+        std::complex<double> t_f_e[4][4] = {{{1.10646, 0}, {0, 0}, {0, 0}, {5.01042e-2, 0}},
+                                            {{0, 0}, {1.00125, 0}, {5.00208e-2, 0}, {0, 0}},
+                                            {{0, 0}, {5.00208e-02, 0}, {1.00125, 0}, {0, 0}},
+                                            {{5.01042e-2, 0}, {0, 0}, {0, 0}, {9.06048e-1, 0}}};
+        Tensor t_i = zeros({16}, Type.ComplexDouble, Device.cuda);
+        t_i.reshape_(4, 4);
+        for (int i = 0; i < 16; i++) {
+          int x = i / 4, y = i % 4;
+          t_i(x, y) = t_i_e[x][y];
+        }
+        // t_i.Mul_(std::complex<double>(0,1));
+        double dt = 0.05;
+        Tensor t_f = linalg::ExpH(t_i, -dt).to(Device.cuda);
+        for (int i = 0; i < 16; i++) {
+          int x = i / 4, y = i % 4;
+          EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().real()) - t_f_e[x][y].real()) <
+                      1e-5);
+          EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().imag()) - t_f_e[x][y].imag()) <
+                      1e-5);
+        }
+      }
 
-TEST(ExpH_UT, gpu_UTExpH_test) {
-  // CompareWithScipy
-  std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
-                                      {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
-                                      {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},
-                                      {{-1, 0}, {0, 0}, {0, 0}, {2, 0}}};
-  std::complex<double> t_f_e[4][4] = {{{1.10646, 0}, {0, 0}, {0, 0}, {5.01042e-2, 0}},
-                                      {{0, 0}, {1.00125, 0}, {5.00208e-2, 0}, {0, 0}},
-                                      {{0, 0}, {5.00208e-02, 0}, {1.00125, 0}, {0, 0}},
-                                      {{5.01042e-2, 0}, {0, 0}, {0, 0}, {9.06048e-1, 0}}};
+      TEST(ExpHUT, GpuUTExpHTest) {
+        // CompareWithScipy
+        std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
+                                            {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
+                                            {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},
+                                            {{-1, 0}, {0, 0}, {0, 0}, {2, 0}}};
+        std::complex<double> t_f_e[4][4] = {{{1.10646, 0}, {0, 0}, {0, 0}, {5.01042e-2, 0}},
+                                            {{0, 0}, {1.00125, 0}, {5.00208e-2, 0}, {0, 0}},
+                                            {{0, 0}, {5.00208e-02, 0}, {1.00125, 0}, {0, 0}},
+                                            {{5.01042e-2, 0}, {0, 0}, {0, 0}, {9.06048e-1, 0}}};
 
-  Tensor t_i = zeros({16}, Type.ComplexDouble, cytnx::Device.cuda);
-  t_i.reshape_(4, 4);
-  for (int i = 0; i < 16; i++) {
-    int x = i / 4, y = i % 4;
-    t_i(x, y) = t_i_e[x][y];
-  }
-  t_i.reshape_(2, 2, 2, 2);
+        Tensor t_i = zeros({16}, Type.ComplexDouble, Device.cuda);
+        t_i.reshape_(4, 4);
+        for (int i = 0; i < 16; i++) {
+          int x = i / 4, y = i % 4;
+          t_i(x, y) = t_i_e[x][y];
+        }
+        t_i.reshape_(2, 2, 2, 2);
 
-  // convert to UT
-  UniTensor UT = UniTensor(t_i).to(cytnx::Device.cuda);
-  UT.set_rowrank(2);
-  UT.relabel_({"a", "b", "c", "d"});
+        // convert to UT
+        UniTensor UT = UniTensor(t_i).to(Device.cuda);
+        UT.set_rowrank(2);
+        UT.relabel_({"a", "b", "c", "d"});
 
-  double dt = 0.05;
-  UniTensor UTFin = linalg::ExpH(UT, -dt).to(cytnx::Device.cuda);
+        double dt = 0.05;
+        UniTensor UTFin = linalg::ExpH(UT, -dt).to(Device.cuda);
 
-  // checking metas:
-  EXPECT_TRUE(UTFin.labels() == UT.labels());
-  EXPECT_TRUE(UTFin.rowrank() == UT.rowrank());
+        // checking metas:
+        EXPECT_TRUE(UTFin.labels() == UT.labels());
+        EXPECT_TRUE(UTFin.rowrank() == UT.rowrank());
 
-  // checking data:
-  UTFin.reshape_({4, 4});
-  Tensor &t_f = UTFin.get_block_();
-  t_f.to_(cytnx::Device.cuda);
-  for (int i = 0; i < 16; i++) {
-    int x = i / 4, y = i % 4;
-    EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().real()) - t_f_e[x][y].real()) <
-                1e-5);
-    EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().imag()) - t_f_e[x][y].imag()) <
-                1e-5);
-  }
-};
+        // checking data:
+        UTFin.reshape_({4, 4});
+        Tensor &t_f = UTFin.get_block_();
+        t_f.to_(Device.cuda);
+        for (int i = 0; i < 16; i++) {
+          int x = i / 4, y = i % 4;
+          EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().real()) - t_f_e[x][y].real()) <
+                      1e-5);
+          EXPECT_TRUE(std::fabs(static_cast<double>(t_f(x, y).item().imag()) - t_f_e[x][y].imag()) <
+                      1e-5);
+        }
+      };
+
+    }  // namespace
+  }  // namespace gpu_test
+}  // namespace cytnx
