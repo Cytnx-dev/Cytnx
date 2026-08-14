@@ -241,7 +241,7 @@ namespace cytnx {
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
     return Tensor();
   }
-  Tensor UniTensor_base::get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
+  Tensor UniTensor_base::get_block(const std::vector<cytnx_int64> &qidx, const bool &force) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
     return Tensor();
@@ -260,14 +260,14 @@ namespace cytnx {
     Tensor t;
     return t;
   }
-  const Tensor &UniTensor_base::get_block_(const std::vector<cytnx_int64> &qnum,
+  const Tensor &UniTensor_base::get_block_(const std::vector<cytnx_int64> &qidx,
                                            const bool &force) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
     Tensor t;
     return t;
   }
-  Tensor &UniTensor_base::get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) {
+  Tensor &UniTensor_base::get_block_(const std::vector<cytnx_int64> &qidx, const bool &force) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
     Tensor t;
@@ -298,11 +298,11 @@ namespace cytnx {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum) {
+  void UniTensor_base::put_block(const Tensor &in, const std::vector<cytnx_int64> &qidx) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum) {
+  void UniTensor_base::put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
