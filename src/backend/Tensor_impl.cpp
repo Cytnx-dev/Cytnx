@@ -16,7 +16,6 @@ namespace cytnx {
     for (int i = 0; i < shape.size(); i++) {
       Nelem *= shape[i];
     }
-    // this->_storage = __SII.USIInit[dtype]();
     this->_storage.Init(Nelem, dtype, device, init_zero);
     this->_shape = shape;
     this->_mapper = vec_range(shape.size());
