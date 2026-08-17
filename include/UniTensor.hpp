@@ -297,16 +297,18 @@ namespace cytnx {
 
     virtual cytnx_uint64 Nblocks() const { return 0; };
     virtual Tensor get_block(const cytnx_uint64 &idx = 0) const;  // return a copy of block
-    virtual Tensor get_block(const std::vector<cytnx_int64> &qnum,
+    // qidx holds one sector index per bond (a position in the bond's qnum list, not a
+    // quantum-number charge); the block whose sectors match qidx is selected.
+    virtual Tensor get_block(const std::vector<cytnx_int64> &qidx,
                              const bool &force) const;  // return a copy of block
 
     virtual const Tensor &get_block_(const cytnx_uint64 &idx = 0)
       const;  // return a share view of block, this only work for non-symm tensor.
-    virtual const Tensor &get_block_(const std::vector<cytnx_int64> &qnum,
+    virtual const Tensor &get_block_(const std::vector<cytnx_int64> &qidx,
                                      const bool &force) const;  // return a copy of block
     virtual Tensor &get_block_(const cytnx_uint64 &idx = 0);  // return a share view of block, this
                                                               // only work for non-symm tensor.
-    virtual Tensor &get_block_(const std::vector<cytnx_int64> &qnum,
+    virtual Tensor &get_block_(const std::vector<cytnx_int64> &qidx,
                                const bool &force);  // return a copy of block
     virtual bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const;
 
@@ -316,8 +318,8 @@ namespace cytnx {
 
     virtual void put_block(const Tensor &in, const cytnx_uint64 &idx = 0);
     virtual void put_block_(Tensor &in, const cytnx_uint64 &idx = 0);
-    virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum);
-    virtual void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum);
+    virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qidx);
+    virtual void put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx);
 
     // this will only work on non-symm tensor (DenseUniTensor)
     virtual boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
@@ -670,24 +672,24 @@ namespace cytnx {
       return this->_block.clone();
     }
 
-    Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
+    Tensor get_block(const std::vector<cytnx_int64> &qidx, const bool &force) const {
       cytnx_error_msg(
-        true, "[ERROR][DenseUniTensor] try to get_block() using qnum on a non-symmetry UniTensor%s",
+        true, "[ERROR][DenseUniTensor] try to get_block() using qidx on a non-symmetry UniTensor%s",
         "\n");
       return Tensor();
     }
     // return a share view of block, this only work for non-symm tensor.
-    const Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) const {
+    const Tensor &get_block_(const std::vector<cytnx_int64> &qidx, const bool &force) const {
       cytnx_error_msg(
         true,
-        "[ERROR][DenseUniTensor] try to get_block_() using qnum on a non-symmetry UniTensor%s",
+        "[ERROR][DenseUniTensor] try to get_block_() using qidx on a non-symmetry UniTensor%s",
         "\n");
       return this->_block;
     }
-    Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) {
+    Tensor &get_block_(const std::vector<cytnx_int64> &qidx, const bool &force) {
       cytnx_error_msg(
         true,
-        "[ERROR][DenseUniTensor] try to get_block_() using qnum on a non-symmetry UniTensor%s",
+        "[ERROR][DenseUniTensor] try to get_block_() using qidx on a non-symmetry UniTensor%s",
         "\n");
       return this->_block;
     }
@@ -799,14 +801,14 @@ namespace cytnx {
       put_block_(in);
     }
 
-    void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum) {
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(
-        true, "[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s",
+        true, "[ERROR][DenseUniTensor] try to put_block using qidx on a non-symmetry UniTensor%s",
         "\n");
     }
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum) {
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(
-        true, "[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s",
+        true, "[ERROR][DenseUniTensor] try to put_block using qidx on a non-symmetry UniTensor%s",
         "\n");
     }
     // these two methods only work on non-symm tensor (DenseUniTensor)
@@ -1302,24 +1304,24 @@ namespace cytnx {
     };
 
     // this one for Block will return the indicies!!
-    Tensor get_block(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
+    Tensor get_block(const std::vector<cytnx_int64> &qidx, const bool &force_return) const {
       if (this->rank() == 0) {
-        cytnx_error_msg(!indices.empty(),
+        cytnx_error_msg(!qidx.empty(),
                         "[ERROR][get_block][BlockUniTensor] rank-0 scalar block expects no "
-                        "qnum indices.%s",
+                        "qidx entries.%s",
                         "\n");
         cytnx_error_msg(this->_blocks.empty(), "[ERROR][BlockUniTensor] index out of range%s",
                         "\n");
         return this->_blocks[0].clone();
       }
-      cytnx_error_msg(indices.size() != this->rank(),
-                      "[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the "
+      cytnx_error_msg(qidx.size() != this->rank(),
+                      "[ERROR][get_block][BlockUniTensor] len(qidx) must be the same as the "
                       "Tensor rank (number of legs).%s",
                       "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -1357,25 +1359,24 @@ namespace cytnx {
       return this->_blocks[idx];
     };
 
-    const Tensor &get_block_(const std::vector<cytnx_int64> &indices,
-                             const bool &force_return) const {
+    const Tensor &get_block_(const std::vector<cytnx_int64> &qidx, const bool &force_return) const {
       if (this->rank() == 0) {
-        cytnx_error_msg(!indices.empty(),
+        cytnx_error_msg(!qidx.empty(),
                         "[ERROR][get_block][BlockUniTensor] rank-0 scalar block expects no "
-                        "qnum indices.%s",
+                        "qidx entries.%s",
                         "\n");
         cytnx_error_msg(this->_blocks.empty(), "[ERROR][BlockUniTensor] index out of range%s",
                         "\n");
         return this->_blocks[0];
       }
-      cytnx_error_msg(indices.size() != this->rank(),
-                      "[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the "
+      cytnx_error_msg(qidx.size() != this->rank(),
+                      "[ERROR][get_block][BlockUniTensor] len(qidx) must be the same as the "
                       "Tensor rank (number of legs).%s",
                       "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -1401,24 +1402,24 @@ namespace cytnx {
       }
     }
 
-    Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return) {
+    Tensor &get_block_(const std::vector<cytnx_int64> &qidx, const bool &force_return) {
       if (this->rank() == 0) {
-        cytnx_error_msg(!indices.empty(),
+        cytnx_error_msg(!qidx.empty(),
                         "[ERROR][get_block][BlockUniTensor] rank-0 scalar block expects no "
-                        "qnum indices.%s",
+                        "qidx entries.%s",
                         "\n");
         cytnx_error_msg(this->_blocks.empty(), "[ERROR][BlockUniTensor] index out of range%s",
                         "\n");
         return this->_blocks[0];
       }
-      cytnx_error_msg(indices.size() != this->rank(),
-                      "[ERROR][get_block][BlockUniTensor] len(indices) must be the same as the "
+      cytnx_error_msg(qidx.size() != this->rank(),
+                      "[ERROR][get_block][BlockUniTensor] len(qidx) must be the same as the "
                       "Tensor rank (number of legs).%s",
                       "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -1620,7 +1621,7 @@ namespace cytnx {
 
       this->_blocks[idx] = in;
     }
-    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices) {
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(in.dtype() != this->dtype(),
                       "[ERROR][BlockUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
@@ -1630,14 +1631,14 @@ namespace cytnx {
                       "\n");
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
-      cytnx_error_msg(indices.size() != this->rank(),
-                      "[ERROR][put_block][BlockUniTensor] len(indices) must be the same as the "
+      cytnx_error_msg(qidx.size() != this->rank(),
+                      "[ERROR][put_block][BlockUniTensor] len(qidx) must be the same as the "
                       "Tensor rank (number of legs).%s",
                       "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -1659,7 +1660,7 @@ namespace cytnx {
         this->_blocks[b] = in.clone();
       }
     }
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices) {
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(in.dtype() != this->dtype(),
                       "[ERROR][BlockUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
@@ -1669,14 +1670,14 @@ namespace cytnx {
                       "\n");
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
-      cytnx_error_msg(indices.size() != this->rank(),
-                      "[ERROR][put_block][BlockUniTensor] len(indices) must be the same as the "
+      cytnx_error_msg(qidx.size() != this->rank(),
+                      "[ERROR][put_block][BlockUniTensor] len(qidx) must be the same as the "
                       "Tensor rank (number of legs).%s",
                       "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -2081,26 +2082,26 @@ namespace cytnx {
     };
 
     // this one for Block will return the indicies!!
-    Tensor get_block(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
+    Tensor get_block(const std::vector<cytnx_int64> &qidx, const bool &force_return) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       if (this->rank() == 0) {
-        cytnx_error_msg(!indices.empty(),
+        cytnx_error_msg(!qidx.empty(),
                         "[ERROR][get_block][BlockFermionicUniTensor] rank-0 scalar block expects "
-                        "no qnum indices.%s",
+                        "no qidx entries.%s",
                         "\n");
         cytnx_error_msg(this->_blocks.empty(),
                         "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
         return this->_blocks[0].clone();
       }
       cytnx_error_msg(
-        indices.size() != this->rank(),
-        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        qidx.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(qidx) must be the same as the "
         "Tensor rank (number of legs).%s",
         "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -2140,27 +2141,26 @@ namespace cytnx {
       return this->_blocks[idx];
     };
 
-    const Tensor &get_block_(const std::vector<cytnx_int64> &indices,
-                             const bool &force_return) const {
+    const Tensor &get_block_(const std::vector<cytnx_int64> &qidx, const bool &force_return) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       if (this->rank() == 0) {
-        cytnx_error_msg(!indices.empty(),
+        cytnx_error_msg(!qidx.empty(),
                         "[ERROR][get_block][BlockFermionicUniTensor] rank-0 scalar block expects "
-                        "no qnum indices.%s",
+                        "no qidx entries.%s",
                         "\n");
         cytnx_error_msg(this->_blocks.empty(),
                         "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
         return this->_blocks[0];
       }
       cytnx_error_msg(
-        indices.size() != this->rank(),
-        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        qidx.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(qidx) must be the same as the "
         "Tensor rank (number of legs).%s",
         "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -2186,26 +2186,26 @@ namespace cytnx {
       }
     }
 
-    Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return) {
+    Tensor &get_block_(const std::vector<cytnx_int64> &qidx, const bool &force_return) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       if (this->rank() == 0) {
-        cytnx_error_msg(!indices.empty(),
+        cytnx_error_msg(!qidx.empty(),
                         "[ERROR][get_block][BlockFermionicUniTensor] rank-0 scalar block expects "
-                        "no qnum indices.%s",
+                        "no qidx entries.%s",
                         "\n");
         cytnx_error_msg(this->_blocks.empty(),
                         "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
         return this->_blocks[0];
       }
       cytnx_error_msg(
-        indices.size() != this->rank(),
-        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        qidx.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(qidx) must be the same as the "
         "Tensor rank (number of legs).%s",
         "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -2431,7 +2431,7 @@ namespace cytnx {
 
       this->_blocks[idx] = in;
     }
-    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices) {
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &qidx) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       cytnx_error_msg(
         in.dtype() != this->dtype(),
@@ -2445,14 +2445,14 @@ namespace cytnx {
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
       cytnx_error_msg(
-        indices.size() != this->rank(),
-        "[ERROR][put_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        qidx.size() != this->rank(),
+        "[ERROR][put_block][BlockFermionicUniTensor] len(qidx) must be the same as the "
         "Tensor rank (number of legs).%s",
         "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -2474,7 +2474,7 @@ namespace cytnx {
         this->_blocks[b] = in.clone();
       }
     }
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices) {
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       cytnx_error_msg(
         in.dtype() != this->dtype(),
@@ -2488,14 +2488,14 @@ namespace cytnx {
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
       cytnx_error_msg(
-        indices.size() != this->rank(),
-        "[ERROR][put_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        qidx.size() != this->rank(),
+        "[ERROR][put_block][BlockFermionicUniTensor] len(qidx) must be the same as the "
         "Tensor rank (number of legs).%s",
         "\n");
 
-      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+      std::vector<cytnx_uint64> inds(qidx.begin(), qidx.end());
 
-      // find if the indices specify exists!
+      // find the block whose qidx matches
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -4299,7 +4299,7 @@ namespace cytnx {
                      const bool &force = false) const {
       cytnx_error_msg(
         labels.size() != qidx.size(),
-        "[ERROR][get_block] length of lists must be the same for both lables and qnidices%s", "\n");
+        "[ERROR][get_block] length of lists must be the same for both labels and qidx%s", "\n");
       cytnx_error_msg(labels.size() != this->rank(),
                       "[ERROR][get_block] length of lists must be the rank (# of legs)%s", "\n");
 
@@ -4324,27 +4324,27 @@ namespace cytnx {
 
     /**
      * @see
-     * get_block(const std::vector<cytnx_int64> &qnum, const bool &force)const
+     * get_block(const std::vector<cytnx_int64> &qidx, const bool &force)const
      */
-    Tensor get_block(const std::initializer_list<cytnx_int64> &qnum,
+    Tensor get_block(const std::initializer_list<cytnx_int64> &qidx,
                      const bool &force = false) const {
-      std::vector<cytnx_int64> tmp = qnum;
+      std::vector<cytnx_int64> tmp = qidx;
       return get_block(tmp, force);
     }
 
     /**
      * @see
-     * get_block(const std::vector<cytnx_int64> &qnum, const bool &force)const
+     * get_block(const std::vector<cytnx_int64> &qidx, const bool &force)const
      */
-    Tensor get_block(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const {
-      std::vector<cytnx_int64> iqnum(qnum.begin(), qnum.end());
-      return this->_impl->get_block(iqnum, force);
+    Tensor get_block(const std::vector<cytnx_uint64> &qidx, const bool &force = false) const {
+      std::vector<cytnx_int64> iqidx(qidx.begin(), qidx.end());
+      return this->_impl->get_block(iqidx, force);
     }
 
     Tensor get_block(const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &qidx,
                      const bool &force = false) const {
-      std::vector<cytnx_int64> iqnum(qidx.begin(), qidx.end());
-      return this->get_block(labels, iqnum, force);
+      std::vector<cytnx_int64> iqidx(qidx.begin(), qidx.end());
+      return this->get_block(labels, iqidx, force);
     }
 
     /**
@@ -4402,7 +4402,7 @@ namespace cytnx {
                       const bool &force = false) {
       cytnx_error_msg(
         labels.size() != qidx.size(),
-        "[ERROR][get_block] length of lists must be the same for both lables and qnidices%s", "\n");
+        "[ERROR][get_block] length of lists must be the same for both labels and qidx%s", "\n");
       cytnx_error_msg(labels.size() != this->rank(),
                       "[ERROR][get_block] length of lists must be the rank (# of legs)%s", "\n");
 
@@ -4542,7 +4542,7 @@ namespace cytnx {
     }
 
     /**
-    @brief Put the block into the UniTensor with given quantum number.
+    @brief Put the block into the UniTensor with given quantum indices.
     @param[in] in_tens the block you want to put into UniTensor
     @param[in] qidx the quantum indices of the UniTensor you want to put the block \p in_tens in.
     @warning For fermions, the signflip is not included and has to be multiplied by the user! Use
@@ -4581,7 +4581,7 @@ namespace cytnx {
                          const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(
         lbls.size() != qidx.size(),
-        "[ERROR][put_block] length of lists must be the same for both lables and qnidices%s", "\n");
+        "[ERROR][put_block] length of lists must be the same for both labels and qidx%s", "\n");
       cytnx_error_msg(lbls.size() != this->rank(),
                       "[ERROR][put_block] length of lists must be the rank (# of legs)%s", "\n");
 
@@ -4674,8 +4674,7 @@ namespace cytnx {
                           const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(
         lbls.size() != qidx.size(),
-        "[ERROR][put_block_] length of lists must be the same for both lables and qnidices%s",
-        "\n");
+        "[ERROR][put_block_] length of lists must be the same for both labels and qidx%s", "\n");
       cytnx_error_msg(lbls.size() != this->rank(),
                       "[ERROR][put_block_] length of lists must be the rank (# of legs)%s", "\n");
 
