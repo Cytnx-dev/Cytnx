@@ -338,8 +338,8 @@
     <member refid="classcytnx_1_1UniTensor_1a7d4df6dffeca0fd8eafdb9d766813f84" kind="function"><name>get_block</name></member>
     <member refid="classcytnx_1_1UniTensor_1a2406cf0250175887be132de18b054953" kind="function"><name>get_block</name></member>
     <member refid="classcytnx_1_1UniTensor_1a0e25cd5c5ea43d8f2c7fda2d2bf671e3" kind="function"><name>get_block</name></member>
-    <member refid="classcytnx_1_1UniTensor_1afb6f38f370802c39cc4bae6eebf7ee5e" kind="function"><name>get_block</name></member>
-    <member refid="classcytnx_1_1UniTensor_1af1b28d5c93207d8a8b08f239c7dfb7d4" kind="function"><name>get_block</name></member>
+    <member refid="classcytnx_1_1UniTensor_1ade05006453466e38fd989f7e37488a62" kind="function"><name>get_block</name></member>
+    <member refid="classcytnx_1_1UniTensor_1ad302bde0659e76d94265278c39362547" kind="function"><name>get_block</name></member>
     <member refid="classcytnx_1_1UniTensor_1adb181f580f4cc90333eaf40ec0229063" kind="function"><name>get_block</name></member>
     <member refid="classcytnx_1_1UniTensor_1abee44516bc18f72b726500bc2bb4872f" kind="function"><name>get_block_</name></member>
     <member refid="classcytnx_1_1UniTensor_1affb7a9d6dcbf5cdda50187ea0e01ecd3" kind="function"><name>get_block_</name></member>
