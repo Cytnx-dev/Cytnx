@@ -816,7 +816,7 @@ against the distribution package, create the directory <code class="docutils lit
 symlink the packaged <code class="docutils literal notranslate"><span class="pre">libnvvm</span></code> library into it:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$libnvvm_src</span><span class="o">=</span><span class="k">$(</span>ls<span class="w"> </span>-1<span class="w"> </span>/usr/lib/x86_64-linux-gnu/libnvvm.so*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-V<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-1<span class="k">)</span>
 <span class="nv">$sudo</span><span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/usr/lib/nvidia-cuda-toolkit/lib64
-<span class="nv">$sudo</span><span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$libnvvm_src</span><span class="s2">&quot;</span><span class="w"> </span>/usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so
+<span class="nv">$sudo</span><span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span><span class="s2">"</span><span class="nv">$libnvvm_src</span><span class="s2">"</span><span class="w"> </span>/usr/lib/nvidia-cuda-toolkit/lib64/libnvvm.so
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">…</span> <span class="pre">|</span> <span class="pre">sort</span> <span class="pre">-V</span> <span class="pre">|</span> <span class="pre">tail</span> <span class="pre">-1</span></code> picks the highest-version file present
@@ -841,7 +841,7 @@ runtime performance cost for compatibility with the unmodified apt package.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cytnx version = &quot;</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">print</span><span class="p">(</span><span class="s2">"Cytnx version = "</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

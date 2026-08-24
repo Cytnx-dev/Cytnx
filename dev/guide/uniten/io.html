@@ -459,18 +459,18 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Create an untagged unitensor and save</span>
 <span class="linenos"> 2</span><span class="n">T1</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
 <span class="linenos"> 3</span>                     <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<span class="linenos"> 4</span>                     <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">],</span>
-<span class="linenos"> 5</span>                     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Untagged_Unitensor&quot;</span><span class="p">)</span>
-<span class="linenos"> 6</span><span class="n">T1</span><span class="o">.</span><span class="n">Save</span><span class="p">(</span><span class="s2">&quot;Untagged_ut.cytnx&quot;</span><span class="p">)</span>
+<span class="linenos"> 4</span>                     <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"b"</span><span class="p">],</span>
+<span class="linenos"> 5</span>                     <span class="n">name</span><span class="o">=</span><span class="s2">"Untagged_Unitensor"</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="n">T1</span><span class="o">.</span><span class="n">Save</span><span class="p">(</span><span class="s2">"Untagged_ut.cytnx"</span><span class="p">)</span>
 <span class="linenos"> 7</span>
 <span class="linenos"> 8</span><span class="c1"># Create an unitensor with symmetry and save</span>
 <span class="linenos"> 9</span><span class="n">bd</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,[[</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 <span class="linenos">10</span><span class="n">T2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bd</span><span class="p">,</span> <span class="n">bd</span><span class="o">.</span><span class="n">redirect</span><span class="p">()],</span>
 <span class="linenos">11</span>                     <span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-<span class="linenos">12</span>                     <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">],</span>
-<span class="linenos">13</span>                     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symmetric_Unitensor&quot;</span><span class="p">)</span>
+<span class="linenos">12</span>                     <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"b"</span><span class="p">],</span>
+<span class="linenos">13</span>                     <span class="n">name</span><span class="o">=</span><span class="s2">"symmetric_Unitensor"</span><span class="p">)</span>
 <span class="linenos">14</span><span class="n">T2</span><span class="o">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">15</span><span class="n">T2</span><span class="o">.</span><span class="n">Save</span><span class="p">(</span><span class="s2">&quot;sym_ut.cytnx&quot;</span><span class="p">)</span>
+<span class="linenos">15</span><span class="n">T2</span><span class="o">.</span><span class="n">Save</span><span class="p">(</span><span class="s2">"sym_ut.cytnx"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This saves UniTensors <em>T1</em> and <em>T2</em> in the current directory as <strong>Untagged_ut.cytnx</strong> and <strong>sym_ut.cytnx</strong>.</p>
@@ -486,17 +486,17 @@
 <section id="load-a-unitensor">
 <h2><span class="section-number">7.10.2. </span>Load a UniTensor<a class="headerlink" href="#load-a-unitensor" title="Link to this heading">¶</a></h2>
 <p>Similarly, a UniTensor can be loaded from a file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">T1_</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s2">&quot;Untagged_ut.cytnx&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">T1_</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s2">"Untagged_ut.cytnx"</span><span class="p">)</span>
 <span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">T1_</span><span class="o">.</span><span class="n">labels</span><span class="p">())</span>
 <span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">T1_</span><span class="p">)</span>
 <span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">T2_</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s2">&quot;sym_ut.cytnx&quot;</span><span class="p">)</span>
+<span class="linenos">5</span><span class="n">T2_</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">Load</span><span class="p">(</span><span class="s2">"sym_ut.cytnx"</span><span class="p">)</span>
 <span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">T2_</span><span class="o">.</span><span class="n">labels</span><span class="p">())</span>
 <span class="linenos">7</span><span class="nb">print</span><span class="p">(</span><span class="n">T2_</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[&#39;a&#39;, &#39;b&#39;]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>['a', 'b']
 -------- start of print ---------
 Tensor name: Untagged_Unitensor
 is_diag    : False
@@ -514,7 +514,7 @@ Shape : (4,4)
 
 
 
-[&#39;a&#39;, &#39;b&#39;]
+['a', 'b']
 -------- start of print ---------
 Tensor name: symmetric_Unitensor
 braket_form : True

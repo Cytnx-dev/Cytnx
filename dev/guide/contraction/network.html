@@ -505,17 +505,17 @@ ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 <li><p>In Python:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">net</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
-<span class="linenos"> 2</span><span class="n">net</span><span class="o">.</span><span class="n">FromString</span><span class="p">([</span><span class="s2">&quot;c0: t0-c0, t3-c0&quot;</span><span class="p">,</span>\
-<span class="linenos"> 3</span>                <span class="s2">&quot;c1: t1-c1, t0-c1&quot;</span><span class="p">,</span>\
-<span class="linenos"> 4</span>                <span class="s2">&quot;c2: t2-c2, t1-c2&quot;</span><span class="p">,</span>\
-<span class="linenos"> 5</span>                <span class="s2">&quot;c3: t3-c3, t2-c3&quot;</span><span class="p">,</span>\
-<span class="linenos"> 6</span>                <span class="s2">&quot;t0: t0-c1, w-t0, t0-c0&quot;</span><span class="p">,</span>\
-<span class="linenos"> 7</span>                <span class="s2">&quot;t1: t1-c2, w-t1, t1-c1&quot;</span><span class="p">,</span>\
-<span class="linenos"> 8</span>                <span class="s2">&quot;t2: t2-c3, w-t2, t2-c2&quot;</span><span class="p">,</span>\
-<span class="linenos"> 9</span>                <span class="s2">&quot;t3: t3-c0, w-t3, t3-c3&quot;</span><span class="p">,</span>\
-<span class="linenos">10</span>                <span class="s2">&quot;w: w-t0, w-t1, w-t2, w-t3&quot;</span><span class="p">,</span>\
-<span class="linenos">11</span>                <span class="s2">&quot;TOUT:&quot;</span><span class="p">,</span>\
-<span class="linenos">12</span>                <span class="s2">&quot;ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)&quot;</span><span class="p">])</span>
+<span class="linenos"> 2</span><span class="n">net</span><span class="o">.</span><span class="n">FromString</span><span class="p">([</span><span class="s2">"c0: t0-c0, t3-c0"</span><span class="p">,</span>\
+<span class="linenos"> 3</span>                <span class="s2">"c1: t1-c1, t0-c1"</span><span class="p">,</span>\
+<span class="linenos"> 4</span>                <span class="s2">"c2: t2-c2, t1-c2"</span><span class="p">,</span>\
+<span class="linenos"> 5</span>                <span class="s2">"c3: t3-c3, t2-c3"</span><span class="p">,</span>\
+<span class="linenos"> 6</span>                <span class="s2">"t0: t0-c1, w-t0, t0-c0"</span><span class="p">,</span>\
+<span class="linenos"> 7</span>                <span class="s2">"t1: t1-c2, w-t1, t1-c1"</span><span class="p">,</span>\
+<span class="linenos"> 8</span>                <span class="s2">"t2: t2-c3, w-t2, t2-c2"</span><span class="p">,</span>\
+<span class="linenos"> 9</span>                <span class="s2">"t3: t3-c0, w-t3, t3-c3"</span><span class="p">,</span>\
+<span class="linenos">10</span>                <span class="s2">"w: w-t0, w-t1, w-t2, w-t3"</span><span class="p">,</span>\
+<span class="linenos">11</span>                <span class="s2">"TOUT:"</span><span class="p">,</span>\
+<span class="linenos">12</span>                <span class="s2">"ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)"</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>This approach can be convenient if you do not want to maintain the .net files.</p>
@@ -540,18 +540,18 @@ ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 <span class="linenos">10</span><span class="n">t3</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
 <span class="linenos">11</span>
 <span class="linenos">12</span><span class="c1"># initialize network object from ctm.net file</span>
-<span class="linenos">13</span><span class="n">net</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;ctm.net&quot;</span><span class="p">)</span>
+<span class="linenos">13</span><span class="n">net</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">"ctm.net"</span><span class="p">)</span>
 <span class="linenos">14</span>
 <span class="linenos">15</span><span class="c1"># put tensors</span>
-<span class="linenos">16</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
-<span class="linenos">17</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;c0&quot;</span><span class="p">,</span><span class="n">c0</span><span class="p">)</span>
-<span class="linenos">18</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;c1&quot;</span><span class="p">,</span><span class="n">c1</span><span class="p">)</span>
-<span class="linenos">19</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;c2&quot;</span><span class="p">,</span><span class="n">c2</span><span class="p">)</span>
-<span class="linenos">20</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;c3&quot;</span><span class="p">,</span><span class="n">c3</span><span class="p">)</span>
-<span class="linenos">21</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;t0&quot;</span><span class="p">,</span><span class="n">t0</span><span class="p">)</span>
-<span class="linenos">22</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;t1&quot;</span><span class="p">,</span><span class="n">t1</span><span class="p">)</span>
-<span class="linenos">23</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;t2&quot;</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
-<span class="linenos">24</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;t3&quot;</span><span class="p">,</span><span class="n">t3</span><span class="p">)</span>
+<span class="linenos">16</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"w"</span><span class="p">,</span><span class="n">w</span><span class="p">)</span>
+<span class="linenos">17</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"c0"</span><span class="p">,</span><span class="n">c0</span><span class="p">)</span>
+<span class="linenos">18</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"c1"</span><span class="p">,</span><span class="n">c1</span><span class="p">)</span>
+<span class="linenos">19</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"c2"</span><span class="p">,</span><span class="n">c2</span><span class="p">)</span>
+<span class="linenos">20</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"c3"</span><span class="p">,</span><span class="n">c3</span><span class="p">)</span>
+<span class="linenos">21</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"t0"</span><span class="p">,</span><span class="n">t0</span><span class="p">)</span>
+<span class="linenos">22</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"t1"</span><span class="p">,</span><span class="n">t1</span><span class="p">)</span>
+<span class="linenos">23</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"t2"</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
+<span class="linenos">24</span><span class="n">net</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"t3"</span><span class="p">,</span><span class="n">t3</span><span class="p">)</span>
 <span class="linenos">25</span>
 <span class="linenos">26</span><span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
 </pre></div>
@@ -571,18 +571,18 @@ ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 <span class="linenos">10</span><span class="k">auto</span><span class="w"> </span><span class="n">t3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">random</span><span class="o">::</span><span class="n">normal</span><span class="p">({</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">},</span><span class="w"> </span><span class="mf">0.</span><span class="p">,</span><span class="w"> </span><span class="mf">1.</span><span class="p">));</span>
 <span class="linenos">11</span>
 <span class="linenos">12</span><span class="c1">// initialize network object from ctm.net file</span>
-<span class="linenos">13</span><span class="n">Network</span><span class="w"> </span><span class="n">net</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Network</span><span class="p">(</span><span class="s">&quot;ctm.net&quot;</span><span class="p">);</span>
+<span class="linenos">13</span><span class="n">Network</span><span class="w"> </span><span class="n">net</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Network</span><span class="p">(</span><span class="s">"ctm.net"</span><span class="p">);</span>
 <span class="linenos">14</span>
 <span class="linenos">15</span><span class="c1">// put tensors</span>
-<span class="linenos">16</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;w&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">);</span>
-<span class="linenos">17</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;c0&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c0</span><span class="p">);</span>
-<span class="linenos">18</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;c1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="p">);</span>
-<span class="linenos">19</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;c2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c2</span><span class="p">);</span>
-<span class="linenos">20</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;c3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">c3</span><span class="p">);</span>
-<span class="linenos">21</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;t0&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
-<span class="linenos">22</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;t1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">t1</span><span class="p">);</span>
-<span class="linenos">23</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;t2&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">t2</span><span class="p">);</span>
-<span class="linenos">24</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">&quot;t3&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">t3</span><span class="p">);</span>
+<span class="linenos">16</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"w"</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">);</span>
+<span class="linenos">17</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"c0"</span><span class="p">,</span><span class="w"> </span><span class="n">c0</span><span class="p">);</span>
+<span class="linenos">18</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"c1"</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="p">);</span>
+<span class="linenos">19</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"c2"</span><span class="p">,</span><span class="w"> </span><span class="n">c2</span><span class="p">);</span>
+<span class="linenos">20</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"c3"</span><span class="p">,</span><span class="w"> </span><span class="n">c3</span><span class="p">);</span>
+<span class="linenos">21</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"t0"</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span><span class="p">);</span>
+<span class="linenos">22</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"t1"</span><span class="p">,</span><span class="w"> </span><span class="n">t1</span><span class="p">);</span>
+<span class="linenos">23</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"t2"</span><span class="p">,</span><span class="w"> </span><span class="n">t2</span><span class="p">);</span>
+<span class="linenos">24</span><span class="n">net</span><span class="p">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s">"t3"</span><span class="p">,</span><span class="w"> </span><span class="n">t3</span><span class="p">);</span>
 <span class="linenos">25</span>
 <span class="linenos">26</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">net</span><span class="p">;</span>
 </pre></div>
@@ -619,9 +619,9 @@ ORDER : ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 <span class="linenos">3</span>        <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
 <span class="linenos">4</span>        <span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ComplexDouble</span><span class="p">));</span>
 <span class="linenos">5</span>
-<span class="linenos">6</span><span class="n">A1</span><span class="o">.</span><span class="n">relabel_</span><span class="p">([</span><span class="s2">&quot;phy&quot;</span><span class="p">,</span><span class="s2">&quot;v1&quot;</span><span class="p">,</span><span class="s2">&quot;v2&quot;</span><span class="p">]);</span>
+<span class="linenos">6</span><span class="n">A1</span><span class="o">.</span><span class="n">relabel_</span><span class="p">([</span><span class="s2">"phy"</span><span class="p">,</span><span class="s2">"v1"</span><span class="p">,</span><span class="s2">"v2"</span><span class="p">]);</span>
 <span class="linenos">7</span><span class="n">A2</span> <span class="o">=</span> <span class="n">A1</span><span class="o">.</span><span class="n">Conj</span><span class="p">();</span>
-<span class="linenos">8</span><span class="n">A2</span><span class="o">.</span><span class="n">relabel_</span><span class="p">([</span><span class="s2">&quot;phy*&quot;</span><span class="p">,</span><span class="s2">&quot;v1*&quot;</span><span class="p">,</span><span class="s2">&quot;v2*&quot;</span><span class="p">]);</span>
+<span class="linenos">8</span><span class="n">A2</span><span class="o">.</span><span class="n">relabel_</span><span class="p">([</span><span class="s2">"phy*"</span><span class="p">,</span><span class="s2">"v1*"</span><span class="p">,</span><span class="s2">"v2*"</span><span class="p">]);</span>
 </pre></div>
 </div>
 <p>The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2 for spin-half case for example) and the other two legs are the virtual ones (with dimension 8).</p>
@@ -631,17 +631,17 @@ ORDER : ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 <li><p>In Python:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">N</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
-<span class="linenos">2</span><span class="n">N</span><span class="o">.</span><span class="n">FromString</span><span class="p">([</span><span class="s2">&quot;A1: in1,phys,out1&quot;</span><span class="p">,</span>
-<span class="linenos">3</span>              <span class="s2">&quot;A2: in2,phys,out2&quot;</span><span class="p">,</span>
-<span class="linenos">4</span>              <span class="s2">&quot;TOUT: in1,in2;out1,out2&quot;</span><span class="p">])</span>
+<span class="linenos">2</span><span class="n">N</span><span class="o">.</span><span class="n">FromString</span><span class="p">([</span><span class="s2">"A1: in1,phys,out1"</span><span class="p">,</span>
+<span class="linenos">3</span>              <span class="s2">"A2: in2,phys,out2"</span><span class="p">,</span>
+<span class="linenos">4</span>              <span class="s2">"TOUT: in1,in2;out1,out2"</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Note that in this Network the second leg of the two tensors are to be contracted. This is not consistent to the definition of <strong>A1</strong> and <strong>A2</strong> which are created such that their physical leg is the first one. We can call <cite>PutUniTensor</cite> and specify the labels though:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">N</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;A1&quot;</span><span class="p">,</span><span class="n">A1</span><span class="p">,[</span><span class="s2">&quot;v1&quot;</span><span class="p">,</span><span class="s2">&quot;phy&quot;</span><span class="p">,</span><span class="s2">&quot;v2&quot;</span><span class="p">])</span>
-<span class="linenos">2</span><span class="n">N</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;A2&quot;</span><span class="p">,</span><span class="n">A2</span><span class="p">,[</span><span class="s2">&quot;v1*&quot;</span><span class="p">,</span><span class="s2">&quot;phy*&quot;</span><span class="p">,</span><span class="s2">&quot;v2*&quot;</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">N</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"A1"</span><span class="p">,</span><span class="n">A1</span><span class="p">,[</span><span class="s2">"v1"</span><span class="p">,</span><span class="s2">"phy"</span><span class="p">,</span><span class="s2">"v2"</span><span class="p">])</span>
+<span class="linenos">2</span><span class="n">N</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">"A2"</span><span class="p">,</span><span class="n">A2</span><span class="p">,[</span><span class="s2">"v1*"</span><span class="p">,</span><span class="s2">"phy*"</span><span class="p">,</span><span class="s2">"v2*"</span><span class="p">])</span>
 <span class="linenos">3</span><span class="n">Res</span> <span class="o">=</span> <span class="n">N</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
 <span class="linenos">4</span><span class="n">Res</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
@@ -688,13 +688,13 @@ on device   : cytnx device: CPU
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="o">.</span><span class="n">setOrder</span><span class="p">(</span><span class="n">contraction_order</span> <span class="o">=</span> <span class="s2">&quot;((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="o">.</span><span class="n">setOrder</span><span class="p">(</span><span class="n">contraction_order</span> <span class="o">=</span> <span class="s2">"((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)"</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="p">.</span><span class="n">setOrder</span><span class="p">(</span><span class="cm">/*optimal*/</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="cm">/*contract_order*/</span><span class="w"> </span><span class="s">&quot;((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)&quot;</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="p">.</span><span class="n">setOrder</span><span class="p">(</span><span class="cm">/*optimal*/</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="cm">/*contract_order*/</span><span class="w"> </span><span class="s">"((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)"</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="admonition note">

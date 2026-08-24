@@ -508,12 +508,12 @@
 <li><p>In Python:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> \
-<span class="linenos">2</span>                    <span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;uT&quot;</span><span class="p">)</span>
+<span class="linenos">2</span>                    <span class="o">.</span><span class="n">set_rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"uT"</span><span class="p">)</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">uT</span><span class="o">.</span><span class="n">relabel_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;xx&quot;</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">uT</span><span class="o">.</span><span class="n">relabel_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="s2">"xx"</span><span class="p">)</span>
 <span class="linenos">5</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 <span class="linenos">6</span>
-<span class="linenos">7</span><span class="n">uT</span><span class="o">.</span><span class="n">relabel_</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">])</span>
+<span class="linenos">7</span><span class="n">uT</span><span class="o">.</span><span class="n">relabel_</span><span class="p">([</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"b"</span><span class="p">,</span><span class="s2">"c"</span><span class="p">])</span>
 <span class="linenos">8</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -560,7 +560,7 @@ on device   : cytnx device: CPU
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT_new</span> <span class="o">=</span> <span class="n">uT</span><span class="o">.</span><span class="n">relabel</span><span class="p">(</span><span class="n">old_label</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">new_label</span><span class="o">=</span><span class="s2">&quot;xx&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT_new</span> <span class="o">=</span> <span class="n">uT</span><span class="o">.</span><span class="n">relabel</span><span class="p">(</span><span class="n">old_label</span><span class="o">=</span><span class="s2">"a"</span><span class="p">,</span> <span class="n">new_label</span><span class="o">=</span><span class="s2">"xx"</span><span class="p">)</span>
 <span class="linenos">2</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 <span class="linenos">3</span><span class="n">uT_new</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 <span class="linenos">4</span>

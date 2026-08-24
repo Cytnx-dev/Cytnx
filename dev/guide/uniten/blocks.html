@@ -456,7 +456,7 @@
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;uT&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"uT"</span><span class="p">)</span><span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"b"</span><span class="p">])</span>
 <span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">uT</span><span class="o">.</span><span class="n">get_block</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -500,8 +500,8 @@ Shape : (3,3)
 <span class="linenos">15</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos">16</span>
 <span class="linenos">17</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">],</span>
-<span class="linenos">18</span>                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">,</span>
-<span class="linenos">19</span>                        <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="s2">&quot;f&quot;</span><span class="p">])</span>
+<span class="linenos">18</span>                        <span class="n">name</span><span class="o">=</span><span class="s2">"symm. tensor"</span><span class="p">,</span>
+<span class="linenos">19</span>                        <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">"d"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"f"</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>There are two ways to get a certain block from a UniTensor.</p>

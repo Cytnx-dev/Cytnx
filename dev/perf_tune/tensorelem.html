@@ -458,7 +458,7 @@ Here, we give a general guide on their difference and when you should use one in
 <li><p>In C++:</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">30</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">2</span><span class="n">A</span><span class="p">(</span><span class="s">&quot;:&quot;</span><span class="p">,</span><span class="n">Accessor</span><span class="o">::</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos">2</span><span class="n">A</span><span class="p">(</span><span class="s">":"</span><span class="p">,</span><span class="n">Accessor</span><span class="o">::</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="mi">0</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>In the scnario where we want to access only single element, using operator(), one can do:</p>

@@ -455,8 +455,8 @@
 <li><p>In Python:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span> \
-<span class="linenos"> 2</span>                    <span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">])</span> \
-<span class="linenos"> 3</span>                    <span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;untagged tensor&quot;</span><span class="p">)</span>
+<span class="linenos"> 2</span>                    <span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">"a"</span><span class="p">,</span><span class="s2">"b"</span><span class="p">,</span><span class="s2">"c"</span><span class="p">])</span> \
+<span class="linenos"> 3</span>                    <span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"untagged tensor"</span><span class="p">)</span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="n">bond_d</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span>
 <span class="linenos"> 6</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],</span>
@@ -476,12 +476,12 @@
 <span class="linenos">20</span><span class="n">bond_h</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">)</span>
 <span class="linenos">21</span>
 <span class="linenos">22</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">])</span> \
-<span class="linenos">23</span>                       <span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="s2">&quot;f&quot;</span><span class="p">])</span> \
-<span class="linenos">24</span>                       <span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">)</span>
+<span class="linenos">23</span>                       <span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">"d"</span><span class="p">,</span><span class="s2">"e"</span><span class="p">,</span><span class="s2">"f"</span><span class="p">])</span> \
+<span class="linenos">24</span>                       <span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"symm. tensor"</span><span class="p">)</span>
 <span class="linenos">25</span>
 <span class="linenos">26</span><span class="n">Tdiag</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_g</span><span class="p">,</span> <span class="n">bond_h</span><span class="p">],</span> <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> \
-<span class="linenos">27</span>                       <span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="s2">&quot;h&quot;</span><span class="p">])</span> \
-<span class="linenos">28</span>                       <span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;diag tensor&quot;</span><span class="p">)</span>
+<span class="linenos">27</span>                       <span class="o">.</span><span class="n">relabel</span><span class="p">([</span><span class="s2">"g"</span><span class="p">,</span><span class="s2">"h"</span><span class="p">])</span> \
+<span class="linenos">28</span>                       <span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"diag tensor"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We will discuss how a UniTensor is created in <a class="reference internal" href="create.html#creating-a-unitensor"><span class="std std-ref">Creating a UniTensor</span></a> and the details about Symmetry, Bonds etc. in the following subchapters. Here, we want to focus on the output of <strong>print_diagram()</strong> and <strong>print</strong>, so no need to understand the lines above in detail.</p>
@@ -595,7 +595,7 @@ braket_form : False
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;tensor uT&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">"tensor uT"</span><span class="p">)</span>
 <span class="linenos">2</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
