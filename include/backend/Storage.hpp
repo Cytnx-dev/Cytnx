@@ -970,52 +970,54 @@ namespace cytnx {
     void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.ComplexDouble]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex128) * vin.size());
+      if (!vin.empty())
+        memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_complex128) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.ComplexFloat]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex64) * vin.size());
+      if (!vin.empty())
+        memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_complex64) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_double> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Double]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_double) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_double) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_float> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Float]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_float) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_float) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint64]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint64) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_uint64) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_int64> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int64]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int64) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_int64) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint32]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint32) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_uint32) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_int32> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int32]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int32) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_int32) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint16]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint16) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_uint16) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_int16> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int16]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int16) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_int16) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_bool> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Bool]();
