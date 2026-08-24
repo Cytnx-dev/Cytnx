@@ -41,14 +41,12 @@ namespace cytnx {
       cuDoubleComplex* new_elem_ptr_ = static_cast<cuDoubleComplex*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -65,29 +63,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_cf(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                       const std::vector<cytnx_uint64>& new_offj,
                                       const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -98,14 +88,12 @@ namespace cytnx {
       cuFloatComplex* new_elem_ptr_ = static_cast<cuFloatComplex*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -122,29 +110,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_d(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                      const std::vector<cytnx_uint64>& new_offj,
                                      const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -154,14 +134,12 @@ namespace cytnx {
       cytnx_double* new_elem_ptr_ = static_cast<cytnx_double*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -178,29 +156,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_f(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                      const std::vector<cytnx_uint64>& new_offj,
                                      const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -210,14 +180,12 @@ namespace cytnx {
       cytnx_float* new_elem_ptr_ = static_cast<cytnx_float*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -234,29 +202,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_i64(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                        const std::vector<cytnx_uint64>& new_offj,
                                        const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -267,14 +227,12 @@ namespace cytnx {
       cytnx_int64* new_elem_ptr_ = static_cast<cytnx_int64*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -291,29 +249,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_u64(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                        const std::vector<cytnx_uint64>& new_offj,
                                        const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -324,14 +274,12 @@ namespace cytnx {
       cytnx_uint64* new_elem_ptr_ = static_cast<cytnx_uint64*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -348,29 +296,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_i32(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                        const std::vector<cytnx_uint64>& new_offj,
                                        const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -381,14 +321,12 @@ namespace cytnx {
       cytnx_int32* new_elem_ptr_ = static_cast<cytnx_int32*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -405,29 +343,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_u32(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                        const std::vector<cytnx_uint64>& new_offj,
                                        const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -438,14 +368,12 @@ namespace cytnx {
       cytnx_uint32* new_elem_ptr_ = static_cast<cytnx_uint32*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -462,29 +390,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_i16(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                        const std::vector<cytnx_uint64>& new_offj,
                                        const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -495,14 +415,12 @@ namespace cytnx {
       cytnx_int16* new_elem_ptr_ = static_cast<cytnx_int16*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -519,29 +437,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_u16(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                        const std::vector<cytnx_uint64>& new_offj,
                                        const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -552,14 +462,12 @@ namespace cytnx {
       cytnx_uint16* new_elem_ptr_ = static_cast<cytnx_uint16*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -576,29 +484,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
     void cuGetElems_contiguous_gpu_b(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                                      const std::vector<cytnx_uint64>& new_offj,
                                      const std::vector<std::vector<cytnx_uint64>>& locators,
@@ -608,14 +508,12 @@ namespace cytnx {
       cytnx_bool* new_elem_ptr_ = static_cast<cytnx_bool*>(out);
 
       // create on device:
-      cytnx_uint64* d_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_offj, sizeof(cytnx_uint64) * offj.size()));
+      utils_internal::DeviceBuffer<cytnx_uint64> d_offj(offj.size());
       checkCudaErrors(
-        cudaMemcpy(d_offj, &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
+        cudaMemcpy(d_offj.get(), &offj[0], sizeof(cytnx_uint64) * offj.size(), cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_new_offj;
-      checkCudaErrors(cudaMalloc((void**)&d_new_offj, sizeof(cytnx_uint64) * new_offj.size()));
-      checkCudaErrors(cudaMemcpy(d_new_offj, &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_new_offj(new_offj.size());
+      checkCudaErrors(cudaMemcpy(d_new_offj.get(), &new_offj[0], sizeof(cytnx_uint64) * new_offj.size(),
                                  cudaMemcpyHostToDevice));
 
       std::vector<cytnx_uint64> composit_locators, picksize;
@@ -632,29 +530,21 @@ namespace cytnx {
         Nte += locators[i].size();
       }
 
-      cytnx_uint64* d_locators;
-      checkCudaErrors(
-        cudaMalloc((void**)&d_locators, sizeof(cytnx_uint64) * composit_locators.size()));
-      checkCudaErrors(cudaMemcpy(d_locators, &composit_locators[0],
+      utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
+      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
                                  sizeof(cytnx_uint64) * composit_locators.size(),
                                  cudaMemcpyHostToDevice));
 
-      cytnx_uint64* d_picksize;
-      checkCudaErrors(cudaMalloc((void**)&d_picksize, sizeof(cytnx_uint64) * picksize.size()));
-      checkCudaErrors(cudaMemcpy(d_picksize, &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
+      utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
+      checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0], sizeof(cytnx_uint64) * picksize.size(),
                                  cudaMemcpyHostToDevice));
 
       cytnx_uint64 NBlocks = TotalElem / 256;
       if (TotalElem % 256) NBlocks += 1;
-      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
-                                                     d_locators, d_picksize, offj.size(), TotalElem,
+      cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
+                                                     d_locators.get(), d_picksize.get(), offj.size(), TotalElem,
                                                      Nelem_grp);
-
-      cudaFree(d_offj);
-      cudaFree(d_new_offj);
-      cudaFree(d_locators);
-      cudaFree(d_picksize);
-    }
+}
 
   }  // namespace utils_internal
 }  // namespace cytnx
