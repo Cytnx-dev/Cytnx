@@ -113,6 +113,7 @@ namespace cytnx {
       if (layout.total_elems % gpu_kron::kKronThreadsPerBlock) nblocks += 1;
 
       cuKron_kernel<<<nblocks, gpu_kron::kKronThreadsPerBlock>>>(out, Lin, Rin, layout);
+      CYTNX_CHECK_CUDA_LAUNCH(cuKron_kernel);
     }
 
   }  // namespace linalg_internal

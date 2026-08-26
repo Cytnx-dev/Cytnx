@@ -40,6 +40,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_cf(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                             const cytnx_double &end, const cytnx_double &step,
@@ -49,6 +50,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_d(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
@@ -58,6 +60,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_f(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
@@ -67,6 +70,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_i64(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                              const cytnx_double &end, const cytnx_double &step,
@@ -76,6 +80,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_u64(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                              const cytnx_double &end, const cytnx_double &step,
@@ -85,6 +90,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_i32(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                              const cytnx_double &end, const cytnx_double &step,
@@ -94,6 +100,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_u32(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                              const cytnx_double &end, const cytnx_double &step,
@@ -103,6 +110,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_i16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                              const cytnx_double &end, const cytnx_double &step,
@@ -112,6 +120,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_u16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                              const cytnx_double &end, const cytnx_double &step,
@@ -121,6 +130,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
     void cuSetArange_gpu_b(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
@@ -130,6 +140,7 @@ namespace cytnx {
 
       if (Nelem % 512) NBlocks += 1;
       cuSetArange_kernel<<<NBlocks, 512>>>(ptr, start, step, Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetArange_kernel);
     }
 
   }  // namespace utils_internal

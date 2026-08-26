@@ -46,6 +46,7 @@ namespace cytnx {
         const unsigned int num_blocks =
           static_cast<unsigned int>((size + kThreadsPerBlock - 1) / kThreadsPerBlock);
         unary_kernel<<<num_blocks, kThreadsPerBlock>>>(out, in, size, op);
+        CYTNX_CHECK_CUDA_LAUNCH(unary_kernel);
       }
 
       // ---- operation functors -------------------------------------------------------------

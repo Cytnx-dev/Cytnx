@@ -109,17 +109,22 @@ namespace cytnx {
 
         if (Lin->size() == 1 and Rin->size() == 1) {
           constconst_kernel<op_code><<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+          CYTNX_CHECK_CUDA_LAUNCH(constconst_kernel);
         } else if (Lin->size() == 1) {
           lconst_kernel<op_code><<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
+          CYTNX_CHECK_CUDA_LAUNCH(lconst_kernel);
         } else if (Rin->size() == 1) {
           rconst_kernel<op_code><<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
+          CYTNX_CHECK_CUDA_LAUNCH(rconst_kernel);
         } else {
           if (shape.size() == 0) {
             tn_kernel<op_code><<<NBlocks, 512>>>(_out, _Lin, len, _Rin);
+            CYTNX_CHECK_CUDA_LAUNCH(tn_kernel);
           } else {
             const gpu_layout::GpuNonContigLayout layout =
               gpu_layout::make_gpu_non_contig_layout(shape, invmapper_L, invmapper_R);
             tn_kernel_nonconti<op_code><<<NBlocks, 512>>>(_out, _Lin, len, _Rin, layout);
+            CYTNX_CHECK_CUDA_LAUNCH(tn_kernel_nonconti);
           }
         }
       }

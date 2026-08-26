@@ -341,6 +341,7 @@ namespace cytnx {
       if (TotalElem % 256) NBlocks += 1;
       cuSetElems_gpu_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                               d_locators, d_picksize, offj.size(), TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetElems_gpu_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -397,6 +398,7 @@ namespace cytnx {
       if (TotalElem % 256) NBlocks += 1;
       cuSetElems_gpu_scal_kernel<<<NBlocks, 256>>>(new_elem_, elem_ptr_, d_offj, d_new_offj,
                                                    d_locators, d_picksize, offj.size(), TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetElems_gpu_scal_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);

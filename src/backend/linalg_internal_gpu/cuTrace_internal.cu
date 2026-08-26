@@ -340,7 +340,7 @@ namespace cytnx {
           diagonal_length, diagonal_stride);
         // Surface a launch/configuration failure at the trace call rather than
         // at the next, unrelated CUDA call.
-        checkCudaErrors(cudaGetLastError());
+        CYTNX_CHECK_CUDA_LAUNCH(TraceKernel);
 
         return ComposeTraceOutput(output_storage, output_shape, output_is_scalar);
       }

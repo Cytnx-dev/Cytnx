@@ -140,10 +140,13 @@ namespace cytnx {
 
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
-      if (diag_L)
+      if (diag_L) {
         cuMatMul_dg_kernel_diagL<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
-      else
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagL);
+      } else {
         cuMatMul_dg_kernel_diagR<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagR);
+      }
     }
     void cuMatmul_dg_internal_u64(boost::intrusive_ptr<Storage_base> &out,
                                   const boost::intrusive_ptr<Storage_base> &inl,
@@ -157,10 +160,13 @@ namespace cytnx {
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
 
-      if (diag_L)
+      if (diag_L) {
         cuMatMul_dg_kernel_diagL<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
-      else
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagL);
+      } else {
         cuMatMul_dg_kernel_diagR<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagR);
+      }
     }
     void cuMatmul_dg_internal_i32(boost::intrusive_ptr<Storage_base> &out,
                                   const boost::intrusive_ptr<Storage_base> &inl,
@@ -174,10 +180,13 @@ namespace cytnx {
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
 
-      if (diag_L)
+      if (diag_L) {
         cuMatMul_dg_kernel_diagL<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
-      else
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagL);
+      } else {
         cuMatMul_dg_kernel_diagR<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagR);
+      }
     }
     void cuMatmul_dg_internal_u32(boost::intrusive_ptr<Storage_base> &out,
                                   const boost::intrusive_ptr<Storage_base> &inl,
@@ -191,10 +200,13 @@ namespace cytnx {
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
 
-      if (diag_L)
+      if (diag_L) {
         cuMatMul_dg_kernel_diagL<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
-      else
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagL);
+      } else {
         cuMatMul_dg_kernel_diagR<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagR);
+      }
     }
     void cuMatmul_dg_internal_i16(boost::intrusive_ptr<Storage_base> &out,
                                   const boost::intrusive_ptr<Storage_base> &inl,
@@ -208,10 +220,13 @@ namespace cytnx {
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
 
-      if (diag_L)
+      if (diag_L) {
         cuMatMul_dg_kernel_diagL<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
-      else
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagL);
+      } else {
         cuMatMul_dg_kernel_diagR<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagR);
+      }
     }
     void cuMatmul_dg_internal_u16(boost::intrusive_ptr<Storage_base> &out,
                                   const boost::intrusive_ptr<Storage_base> &inl,
@@ -225,10 +240,13 @@ namespace cytnx {
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
 
-      if (diag_L)
+      if (diag_L) {
         cuMatMul_dg_kernel_diagL<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
-      else
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagL);
+      } else {
         cuMatMul_dg_kernel_diagR<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagR);
+      }
     }
     void cuMatmul_dg_internal_b(boost::intrusive_ptr<Storage_base> &out,
                                 const boost::intrusive_ptr<Storage_base> &inl,
@@ -242,10 +260,13 @@ namespace cytnx {
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
 
-      if (diag_L)
+      if (diag_L) {
         cuMatMul_dg_kernel_diagL<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
-      else
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagL);
+      } else {
         cuMatMul_dg_kernel_diagR<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Comm, Nr);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMatMul_dg_kernel_diagR);
+      }
     }
 
   }  // namespace linalg_internal

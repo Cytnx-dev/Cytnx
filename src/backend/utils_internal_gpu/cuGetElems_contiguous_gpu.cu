@@ -81,6 +81,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -138,6 +139,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -194,6 +196,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -250,6 +253,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -307,6 +311,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -364,6 +369,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -421,6 +427,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -478,6 +485,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -535,6 +543,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -592,6 +601,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -648,6 +658,7 @@ namespace cytnx {
       cuGetElems_contiguous_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                      d_locators, d_picksize, offj.size(), TotalElem,
                                                      Nelem_grp);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_contiguous_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);

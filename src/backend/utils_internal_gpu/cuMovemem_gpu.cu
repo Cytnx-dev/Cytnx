@@ -158,6 +158,7 @@ namespace cytnx {
       }
       cuMovemem_kernel<<<NBlocks, 256, shifter_old.size() * 2 * sizeof(cytnx_uint64)>>>(
         dtmp, (cuT *)in->data(), dshifter_old, dperm_shifter_new, old_shape.size(), Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMovemem_kernel);
 
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
