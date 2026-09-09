@@ -1,4 +1,5 @@
 #include "cuMaxMin_internal.hpp"
+
 #include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"

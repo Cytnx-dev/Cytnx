@@ -1,4 +1,5 @@
 #include "cuGetElems_contiguous_gpu.hpp"
+
 #include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
 
 namespace cytnx {
