@@ -1,6 +1,7 @@
 #include "utils/vec_intersect.hpp"
 #include "utils/vec2d_col_sort.hpp"
 #include <algorithm>
+#include <iterator>
 #include <vector>
 namespace cytnx {
 
