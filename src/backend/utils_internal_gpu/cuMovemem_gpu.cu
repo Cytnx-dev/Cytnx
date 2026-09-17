@@ -1,5 +1,7 @@
 #include "cuMovemem_gpu.hpp"
 
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+
 #include <algorithm>
 #include <vector>
 #include <type_traits>
