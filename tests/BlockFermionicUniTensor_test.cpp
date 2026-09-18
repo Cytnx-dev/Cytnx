@@ -81,6 +81,85 @@ namespace cytnx {
         EXPECT_TRUE(std::abs(double(out.item().real()) - 32.0) < 1e-5);
       }
 
+      /*=====test info=====
+      describe:contraction without any common label (outer product): the output block
+               signs are the products of the two source-block signs, paired by the
+               source blocks that supply the data; contract-then-permute agrees with
+               permute-then-contract, and symmetry-forbidden blocks stay exactly zero
+      ====================*/
+      TEST_F(BlockFermionicUniTensorTest, NoCommonLabelContractCombinesSignflips) {
+        for (auto dtype : {Type.ComplexDouble, Type.Double}) {
+          const bool is_complex = (dtype == Type.ComplexDouble);
+          // permutations put pending signflips on some (but not all) blocks
+          UniTensor A0 =
+            UniTensor({B5Li, B5Lo, B5Ri, B5Ro}, {"v", "w", "x", "y"}, 2, dtype, Device.cpu);
+          random::uniform_(A0, -10.0, 10.0, 0);
+          UniTensor A = A0.permute({3, 1, 0, 2});
+          UniTensor B0 = BFUT1.astype(dtype);
+          random::uniform_(B0, -10.0, 10.0, 1);
+          UniTensor B = B0.permute({2, 0, 1});
+
+          // make sure A and B have some signflips but not on all blocks
+          bool a_flip = false, a_noflip = false, b_flip = false, b_noflip = false;
+          for (bool s : A.signflip()) (s ? a_flip : a_noflip) = true;
+          for (bool s : B.signflip()) (s ? b_flip : b_noflip) = true;
+          ASSERT_TRUE(a_flip);
+          ASSERT_TRUE(a_noflip);
+          ASSERT_TRUE(b_flip);
+          ASSERT_TRUE(b_noflip);
+
+          UniTensor out = A.contract(B);
+          EXPECT_EQ(out.uten_type(), UTenType.BlockFermionic);
+          ASSERT_EQ(out.rank(), A.rank() + B.rank());
+
+          // independent oracle: each physical (sign-applied) element of the outer
+          // product is the product of the corresponding physical elements
+          UniTensor outp = out.apply();
+          UniTensor Ap = A.apply();
+          UniTensor Bp = B.apply();
+          // the same physical tensor through the other operation order: contract the
+          // unpermuted operands first, then permute the labels of the result
+          UniTensor out2p = A0.contract(B0).permute({"y", "w", "v", "x", "c", "a", "b"}).apply();
+          ASSERT_EQ(out2p.labels(), outp.labels());
+          auto val = [is_complex](const UniTensor& ut, const std::vector<cytnx_uint64>& loc) {
+            auto p = ut.at(loc);
+            return cytnx_complex128(double(p.real()), is_complex ? double(p.imag()) : 0.0);
+          };
+          const std::vector<cytnx_uint64> ashape = A.shape();
+          const std::vector<cytnx_uint64> bshape = B.shape();
+          std::vector<cytnx_uint64> la(4), loc(7);
+          for (la[0] = 0; la[0] < ashape[0]; la[0]++)
+            for (la[1] = 0; la[1] < ashape[1]; la[1]++)
+              for (la[2] = 0; la[2] < ashape[2]; la[2]++)
+                for (la[3] = 0; la[3] < ashape[3]; la[3]++) {
+                  std::vector<cytnx_uint64> lb(3);
+                  for (lb[0] = 0; lb[0] < bshape[0]; lb[0]++)
+                    for (lb[1] = 0; lb[1] < bshape[1]; lb[1]++)
+                      for (lb[2] = 0; lb[2] < bshape[2]; lb[2]++) {
+                        std::copy(la.begin(), la.end(), loc.begin());
+                        std::copy(lb.begin(), lb.end(), loc.begin() + 4);
+                        EXPECT_EQ(out2p.at(loc).exists(), outp.at(loc).exists());
+                        if (outp.at(loc).exists()) {
+                          EXPECT_EQ(val(out2p, loc), val(outp, loc))
+                            << "dtype " << dtype << " contract/permute order dependence";
+                        }
+                        if (Ap.at(la).exists() && Bp.at(lb).exists()) {
+                          ASSERT_TRUE(outp.at(loc).exists());
+                          const cytnx_complex128 expected = val(Ap, la) * val(Bp, lb);
+                          EXPECT_LT(std::abs(val(outp, loc) - expected), 1e-14)
+                            << "dtype " << dtype << " element mismatch";
+                        } else if (outp.at(loc).exists()) {
+                          // the output tensor has all allowed blocks initialized, including those
+                          // where the flux of A equals the negative flux of B; therefore, these
+                          // blocks exist and are initialized to zero
+                          EXPECT_EQ(val(outp, loc), cytnx_complex128(0.0, 0.0))
+                            << "dtype " << dtype << " expected structural zero";
+                        }
+                      }
+                }
+        }
+      }
+
       TEST_F(BlockFermionicUniTensorTest, NormReturnsScalarTensor) {
         Tensor norm = BFUT1.Norm();
         EXPECT_TRUE(norm.is_scalar());

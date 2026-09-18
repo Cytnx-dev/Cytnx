@@ -1356,6 +1356,8 @@ namespace cytnx {
       std::vector<cytnx_uint64> lidx(lhs_rank);
       std::vector<cytnx_uint64> ridx(rhs_rank);
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
+        // b enumerates the ouptut blocks;
+        // idl[0] and idr[0] are the block indices in the left and right tensors
         const auto &outer_idx = tmp->_inner_to_outer_idx[b];
         std::copy_n(outer_idx.begin(), lhs_rank, lidx.begin());
         std::copy_n(outer_idx.begin() + lhs_rank, rhs_rank, ridx.begin());
@@ -1391,9 +1393,8 @@ namespace cytnx {
           cytnx_error_msg(out_block.shape() != tmp->_blocks[b].shape(),
                           "[ERROR][BlockFermionicUniTensors][contract] Mismatching shape!%s", "\n");
           tmp->_blocks[b] = out_block;
-          const bool lhs_signflip = this->_signflip[b];
-          const bool rhs_signflip = signflip_rhs[b];
-          tmp->_signflip[b] = (lhs_signflip == rhs_signflip) ? EVEN : ODD;
+          // the output sign is the product of the two source-block signs
+          tmp->_signflip[b] = (this->_signflip[idl[0]] != signflip_rhs[idr[0]]);
         }
       }
 
@@ -1896,7 +1897,7 @@ namespace cytnx {
     if (ida < tmpRk) this->_rowrank--;
     if (idb < tmpRk) this->_rowrank--;
 
-    // make sure BRA_KET comes before BD_BRA to avoid supertrace
+    // make sure the BD_BRA bond comes before the BD_KET bond to avoid a supertrace
     if (this->_bonds[ida].type() == BD_KET) std::swap(ida, idb);
     // permute such that idb comes right after ida
     std::vector<cytnx_int64> perm(this->rank());

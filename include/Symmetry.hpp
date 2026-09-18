@@ -31,9 +31,9 @@ namespace cytnx {
 
   /**
    * @brief fermionParity
-   * @details the parity of fermionis
+   * @details the parity of fermions
    * EVEN For bosons or an even number of fermions
-   * ODD  For an even number of fermions
+   * ODD  For an odd number of fermions
    */
   enum fermionParity : bool { EVEN = false, ODD = true };
 
