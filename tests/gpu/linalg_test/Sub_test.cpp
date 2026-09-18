@@ -162,6 +162,51 @@ namespace cytnx {
         EXPECT_TRUE(AreNearlyEqTensor(gpu_result_r_cpu, expected_r, 1e-6));
       }
 
+      // The #984/#999 promotion discriminator on the GPU Sub path (#1003): ComplexFloat
+      // (-) Double must produce ComplexDouble -- the higher-precision complex -- with the
+      // subtraction computed and stored through that output type. The sweeps above pair a
+      // dtype with itself and the mixed tests above cover only signed/unsigned, so this
+      // row was untested here.
+      //
+      // The Double operands are deliberately values float32 cannot represent (0.1, 3.3).
+      // An implementation that reports ComplexDouble but computes through ComplexFloat
+      // rounds them first and lands ~1e-8 away -- four orders of magnitude past the
+      // tolerance below, so it fails loudly. The ComplexFloat components stay float-exact
+      // (1.5, -2.5, 0, 4) so float -> double widening of that operand is exact and the
+      // only precision question under test is the one above.
+      //
+      // Both operand orders are checked because subtraction does not commute: a path that
+      // silently swapped or narrowed one side would survive a single-order test. Expected
+      // values are evaluated here in host double arithmetic rather than taken from the CPU
+      // Sub path, so a shared promotion bug cannot hide.
+      TEST(SubMixedDtypeTest, GpuComplexFloatDoublePromotesToComplexDouble) {
+        Tensor cf = zeros({2}, Type.ComplexFloat);
+        cf.at<cytnx_complex64>({0}) = cytnx_complex64(1.5f, -2.5f);
+        cf.at<cytnx_complex64>({1}) = cytnx_complex64(0.0f, 4.0f);
+        Tensor d = zeros({2}, Type.Double);
+        d.at<cytnx_double>({0}) = 0.1;
+        d.at<cytnx_double>({1}) = 3.3;
+
+        {
+          SCOPED_TRACE("ComplexFloat - Double");
+          Tensor out = linalg::Sub(cf.to(Device.cuda), d.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+          Tensor expected = zeros({2}, Type.ComplexDouble);
+          expected.at<cytnx_complex128>({0}) = cytnx_complex128(1.5 - 0.1, -2.5);
+          expected.at<cytnx_complex128>({1}) = cytnx_complex128(0.0 - 3.3, 4.0);
+          EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
+        }
+        {
+          SCOPED_TRACE("Double - ComplexFloat");
+          Tensor out = linalg::Sub(d.to(Device.cuda), cf.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+          Tensor expected = zeros({2}, Type.ComplexDouble);
+          expected.at<cytnx_complex128>({0}) = cytnx_complex128(0.1 - 1.5, 2.5);
+          expected.at<cytnx_complex128>({1}) = cytnx_complex128(3.3 - 0.0, -4.0);
+          EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
+        }
+      }
+
       INSTANTIATE_TEST_SUITE_P(SubTests, SubTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
       ::testing::AssertionResult CheckSubResult(const Tensor& gpu_result, const Tensor& left_tensor,

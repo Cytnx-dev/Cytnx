@@ -214,6 +214,46 @@ namespace cytnx {
         }
       }
 
+      // Cpr's promotion is invisible in the output dtype -- the result is always Bool -- so
+      // a wrong comparison type here cannot be caught by a dtype assertion the way it can
+      // for Add/Sub/Mul/Div. What pins it is a pair of values whose equality *depends* on
+      // the comparison type (#1003).
+      //
+      // Type.type_promote(ComplexFloat, Double) is ComplexDouble, so both operands widen to
+      // double before comparing. 0.5 is exactly representable in float32, so it compares
+      // equal either way. 0.1 is not: as a float it is 0.100000001490116119384765625, which
+      // is a different double from 0.1, so the correct answer is *false*. An implementation
+      // that compared in ComplexFloat instead would narrow the double 0.1 to the same float
+      // and wrongly report true. The third pair is unequal under any comparison type and
+      // guards against a kernel that returns a constant.
+      TEST(CprMixedDtypeTest, GpuComplexFloatVsDoubleComparesInComplexDouble) {
+        Tensor cf = zeros({3}, Type.ComplexFloat);
+        cf.at<cytnx_complex64>({0}) = cytnx_complex64(0.5f, 0.0f);
+        cf.at<cytnx_complex64>({1}) = cytnx_complex64(0.1f, 0.0f);
+        cf.at<cytnx_complex64>({2}) = cytnx_complex64(2.0f, 0.0f);
+        Tensor d = zeros({3}, Type.Double);
+        d.at<cytnx_double>({0}) = 0.5;
+        d.at<cytnx_double>({1}) = 0.1;
+        d.at<cytnx_double>({2}) = -7.0;
+
+        const bool expected[3] = {true, false, false};
+
+        {
+          SCOPED_TRACE("ComplexFloat == Double");
+          Tensor out = linalg::Cpr(cf.to(Device.cuda), d.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.Bool);
+          for (std::size_t k = 0; k < 3; ++k)
+            EXPECT_EQ(out.at<cytnx_bool>({k}), expected[k]) << "element " << k;
+        }
+        {
+          SCOPED_TRACE("Double == ComplexFloat (equality is symmetric)");
+          Tensor out = linalg::Cpr(d.to(Device.cuda), cf.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.Bool);
+          for (std::size_t k = 0; k < 3; ++k)
+            EXPECT_EQ(out.at<cytnx_bool>({k}), expected[k]) << "element " << k;
+        }
+      }
+
       INSTANTIATE_TEST_SUITE_P(CprTests, CprTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
       // Non-contiguous tensor(==)tensor on the GPU (#1003, #988): the GPU front end used to
