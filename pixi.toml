@@ -104,6 +104,12 @@ mkl-devel = "*"
 # itself is deliberately absent, as it is from the release list: it drags in
 # cudensitymat, cupauliprop and custabilizer, none of which cytnx links.
 nvidia-cuda-nvcc = "~=13.3.73"
+# Named although nvidia-cuda-nvcc already depends on them: it does so without
+# version bounds, which lets a re-resolve pick a newer CUDA minor version for
+# cicc (nvidia-nvvm) than for ptxas (nvidia-cuda-nvcc), and ptxas rejects a
+# PTX ISA newer than its own. Must match nvidia-cuda-nvcc above.
+nvidia-nvvm = "~=13.3.73"
+nvidia-cuda-crt = "~=13.3.73"
 nvidia-cuda-cccl = "~=13.3.3.4.1"
 nvidia-cuda-runtime = "~=13.3.29"
 nvidia-cublas = "~=13.6.0.2"
