@@ -9,6 +9,13 @@
 #   CUQUANTUM_INCLUDE_DIRS        ... cuquantum include directory
 #   CUQUANTUM_LIBRARIES           ... cuquantum libraries
 #
+# It also defines the following IMPORTED target when cuQuantum is found:
+#   CUQUANTUM::CUQUANTUM          ... the headers and libraries to use for cuQuantum
+#
+# cytnx links that target instead of the variables above so its exported package
+# refers to cuQuantum by name; this module is installed next to CytnxConfig.cmake,
+# which re-runs it to recreate the target against the consumer's CUQUANTUM_ROOT.
+#
 #   CUQUANTUM_ROOT                this is required to set!
 #
 
@@ -69,3 +76,10 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CUQUANTUM
   REQUIRED_VARS CUQUANTUM_TENSORNET_LIB CUQUANTUM_CUSTATEVEC_LIB CUQUANTUM_INCLUDE_DIRS)
+
+if(CUQUANTUM_FOUND AND NOT TARGET CUQUANTUM::CUQUANTUM)
+  add_library(CUQUANTUM::CUQUANTUM INTERFACE IMPORTED)
+  set_target_properties(CUQUANTUM::CUQUANTUM PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${CUQUANTUM_INCLUDE_DIRS}"
+    INTERFACE_LINK_LIBRARIES "${CUQUANTUM_LIBRARIES}")
+endif()
