@@ -87,13 +87,11 @@ CUDA_RUNTIME_DEPENDENCIES = [
 # dropped here since this only ever runs inside the Linux manylinux container.
 CUDA_BUILD_TOOLCHAIN = [
     "nvidia-cuda-nvcc ~=13.3.73",
-    # nvidia-nvvm and nvidia-cuda-crt are not listed here because the build
-    # calls them directly -- they arrive as unpinned dependencies of
-    # nvidia-cuda-nvcc, which lets pip resolve them to a newer CUDA minor
-    # version than the nvcc above. They are parts of the same compiler:
-    # cicc (nvidia-nvvm) emits the PTX that ptxas (nvidia-cuda-nvcc)
-    # assembles, and ptxas rejects a PTX ISA newer than its own. Must match
-    # the nvidia-cuda-nvcc version above.
+    # Named although nvidia-cuda-nvcc already depends on them: it does so
+    # without version bounds, which lets pip resolve a newer CUDA minor
+    # version for cicc (nvidia-nvvm) than for ptxas (nvidia-cuda-nvcc), and
+    # ptxas rejects a PTX ISA newer than its own. Must match the
+    # nvidia-cuda-nvcc version above.
     "nvidia-nvvm ~=13.3.73",
     "nvidia-cuda-crt ~=13.3.73",
     "nvidia-cuda-cccl ~=13.3.3.4.1",
