@@ -1623,11 +1623,11 @@ namespace cytnx {
               if (this->_blocks[a].device() != this->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(all_sub_tensor_same_dtype,
+            cytnx_error_msg(!all_sub_tensor_same_dtype,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors with different dtype.%s",
                             "\n");
-            cytnx_error_msg(all_sub_tensor_same_device,
+            cytnx_error_msg(!all_sub_tensor_same_device,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors on different device.%s",
                             "\n");
@@ -1639,11 +1639,11 @@ namespace cytnx {
               if (Rtn->_blocks[a].device() != Rtn->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(all_sub_tensor_same_dtype,
+            cytnx_error_msg(!all_sub_tensor_same_dtype,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors with different dtype.%s",
                             "\n");
-            cytnx_error_msg(all_sub_tensor_same_device,
+            cytnx_error_msg(!all_sub_tensor_same_device,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors on different device.%s",
                             "\n");
