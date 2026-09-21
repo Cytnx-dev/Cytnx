@@ -1393,8 +1393,8 @@ namespace cytnx {
           cytnx_error_msg(out_block.shape() != tmp->_blocks[b].shape(),
                           "[ERROR][BlockFermionicUniTensors][contract] Mismatching shape!%s", "\n");
           tmp->_blocks[b] = out_block;
-          // the output sign is the product of the two source-block signs
-          tmp->_signflip[b] = (this->_signflip[idl[0]] != signflip_rhs[idr[0]]);
+          // the output sign is EVEN if the two source-block signs are EVEN-EVEN or ODD-ODD
+          tmp->_signflip[b] = (this->_signflip[idl[0]] == signflip_rhs[idr[0]]) ? EVEN : ODD;
         }
       }
 
