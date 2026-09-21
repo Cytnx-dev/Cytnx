@@ -200,7 +200,7 @@
 <para>fermionParity </para>
         </briefdescription>
         <detaileddescription>
-<para>the parity of fermionis EVEN For bosons or an even number of fermions ODD For an even number of fermions </para>
+<para>the parity of fermions EVEN For bosons or an even number of fermions ODD For an odd number of fermions </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
