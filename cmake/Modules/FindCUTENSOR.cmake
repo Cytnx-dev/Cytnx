@@ -9,6 +9,13 @@
 #   CUTENSOR_INCLUDE_DIRS        ... cutensor include directory
 #   CUTENSOR_LIBRARIES           ... cutensor libraries
 #
+# It also defines the following IMPORTED target when cuTENSOR is found:
+#   CUTENSOR::CUTENSOR           ... the headers and libraries to use for cuTENSOR
+#
+# cytnx links that target instead of the variables above so its exported package
+# refers to cuTENSOR by name; this module is installed next to CytnxConfig.cmake,
+# which re-runs it to recreate the target against the consumer's CUTENSOR_ROOT.
+#
 #   MAGMA_ROOT                this is required to set!
 #
 
@@ -130,3 +137,10 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(CUTENSOR
   REQUIRED_VARS CUTENSOR_LIB CUTENSOR_INCLUDE_DIRS
   VERSION_VAR CUTENSOR_VERSION)
+
+if(CUTENSOR_FOUND AND NOT TARGET CUTENSOR::CUTENSOR)
+  add_library(CUTENSOR::CUTENSOR INTERFACE IMPORTED)
+  set_target_properties(CUTENSOR::CUTENSOR PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${CUTENSOR_INCLUDE_DIRS}"
+    INTERFACE_LINK_LIBRARIES "${CUTENSOR_LIBRARIES}")
+endif()
