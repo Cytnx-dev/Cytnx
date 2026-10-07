@@ -45,7 +45,7 @@ authors:
 identifiers:
   - type: doi
     value: 10.21468/SciPostPhysCodeb.53
-url: 'https://cytnx-dev.github.io/Cytnx_doc'
+url: 'https://cytnx-dev.github.io/Cytnx/'
 license: Apache-2.0
 version: 1.0.0
 date-released: '2025-03-13'
