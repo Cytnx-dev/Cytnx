@@ -48,6 +48,9 @@ jobs:
       # sm_70, so the repo-default fatbin can't be used as-is; pin per runner.
       GPU_CUDA_ARCH: ${{ vars.GPU_CUDA_ARCH || '89' }}
       BUILD_DIR: ${{ github.workspace }}/build_gpu
+      # Prefix the arpack step below creates; read by the configure step and by
+      # the test run, which needs libarpack.so on the loader path.
+      ARPACK_PREFIX: ${{ github.workspace }}/arpack-prefix
     steps:
       - uses: actions/checkout@v4
         with:
@@ -73,6 +76,26 @@ jobs:
           nvidia-smi
           nvcc --version
 
+      # cytnx resolves arpack through find_package(arpackng CONFIG), and the
+      # runner's system arpack ships the library and headers without a CMake
+      # package config. Provision conda-forge's arpack -- the same package the
+      # released wheels and the GitHub-hosted jobs build against, which does ship
+      # lib/cmake/arpackng -- into a workspace-local prefix.
+      #
+      # micromamba is fetched as a single static binary into the runner's temp
+      # dir rather than installing a conda distribution: nothing outside the
+      # workspace changes, and no shell profile is touched, so the job keeps the
+      # plain (non-login) shell the rest of the steps use. The prefix carries
+      # arpack's own BLAS/LAPACK and libgfortran, which is what makes it
+      # self-contained on a runner whose other dependencies come from apt.
+      - name: Provision arpack from conda-forge
+        run: |
+          curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest \
+            | tar -xj -C "$RUNNER_TEMP" bin/micromamba
+          "$RUNNER_TEMP/bin/micromamba" create --yes --prefix "$ARPACK_PREFIX" \
+            -c conda-forge "arpack=*=nompi*"
+          test -f "$ARPACK_PREFIX/lib/cmake/arpackng/arpackng-config.cmake"
+
       - name: Configure (CUDA Release, C++ tests, no Python)
         run: >-
           cmake -S . -B "$BUILD_DIR"
@@ -80,6 +103,7 @@ jobs:
           -DUSE_CUDA=ON -DUSE_CUTENSOR=ON -DUSE_CUQUANTUM=ON
           -DRUN_TESTS=ON -DBUILD_PYTHON=OFF
           -DCMAKE_CUDA_ARCHITECTURES="$GPU_CUDA_ARCH"
+          -DCMAKE_PREFIX_PATH="$ARPACK_PREFIX"
 
       - name: Build gpu_test_main
         run: cmake --build "$BUILD_DIR" -j "$(nproc)" --target gpu_test_main
@@ -88,4 +112,6 @@ jobs:
       # tests/gpu/CMakeLists.txt (the CPU suite is already covered by
       # ci-cmake_tests.yml, so there is no need to re-run it here).
       - name: Run GPU test suite
-        run: GTEST_COLOR=1 ctest --test-dir "$BUILD_DIR" -L gpu --output-on-failure
+        run: |
+          export LD_LIBRARY_PATH="$ARPACK_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+          GTEST_COLOR=1 ctest --test-dir "$BUILD_DIR" -L gpu --output-on-failure
