@@ -58,7 +58,8 @@ so that metadata must already be right when the tag is created:
 
 3. **Update `CITATION.cff`.** Set `version` to the same
    `MAJOR.MINOR.PATCH` as step 1, and `date-released` to the `YYYY-MM-DD`
-   date the release ships.
+   date the release ships. Leave the `preferred-citation` block alone: it
+   describes the SciPost paper, which does not change when a release ships.
 
 4. **Open steps 1–3 as a release-prep pull request and merge it.** The
    `Release metadata consistency` workflow checks that `version.cmake`,
