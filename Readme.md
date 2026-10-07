@@ -1,4 +1,4 @@
-# Cytnx [![Build Status (GitHub Actions)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml/badge.svg?branch=master)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml) [![codecov](https://codecov.io/gh/Cytnx-dev/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/Cytnx-dev/Cytnx) [![Coverity Scan Build Status](https://scan.coverity.com/projects/28835/badge.svg)](https://scan.coverity.com/projects/cytnx-dev-cytnx)
+# Cytnx [![Build Status (GitHub Actions)](https://github.com/Cytnx-dev/Cytnx/actions/workflows/ci-cmake_tests.yml/badge.svg?branch=master)](https://github.com/Cytnx-dev/Cytnx/actions/workflows/ci-cmake_tests.yml) [![codecov](https://codecov.io/gh/Cytnx-dev/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/Cytnx-dev/Cytnx) [![Coverity Scan Build Status](https://scan.coverity.com/projects/28835/badge.svg)](https://scan.coverity.com/projects/cytnx-dev-cytnx)
 [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ![alt text](./Icons/Icon_small.png)
@@ -211,7 +211,7 @@ Cytnx provides a set of linear algebra functions.
 * For instance, one can perform SVD, Eig, Eigh decomposition, etc. on a `Tensor` or `UniTensor`.
 * Iterative methods such as Lanczos, Arnoldi are also available.
 * The linear algebra functions are implemented in the `linalg` namespace.
-For more details, see the [API documentation](https://kaihsinwu.gitlab.io/cytnx_api/).
+For more details, see the [API documentation](https://cytnx-dev.github.io/Cytnx/dev/api/).
 ```c++
 auto mean = 0.0;
 auto std = 1.0;
