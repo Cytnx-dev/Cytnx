@@ -37,8 +37,12 @@ PROJECT_NAME           = "Cytnx"
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
+#
+# Left empty on purpose: docs/build_api_docs.py appends PROJECT_NUMBER with the
+# version from version.cmake and the checked-out commit (docs/cytnx_version.py),
+# and tools/check_release_consistency.py rejects a literal here.
 
-PROJECT_NUMBER         = "v1.0.0"
+PROJECT_NUMBER         =
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a

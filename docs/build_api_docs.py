@@ -9,6 +9,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from cytnx_version import version_label  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOXYFILE = REPO_ROOT / "docs.doxygen"
 
@@ -48,7 +51,10 @@ def main(argv: list[str] | None = None) -> int:
     # Doxygen writes its HTML straight into `output_dir`, regardless of the
     # paths configured in the Doxyfile. Doxygen applies the last assignment of
     # a scalar tag, so these trailing lines override the file's own values and
-    # the script never has to guess where the build landed. Relative INPUT /
+    # the script never has to guess where the build landed. PROJECT_NUMBER, the
+    # version shown next to the project name, is set the same way from
+    # version.cmake and the checked-out commit (see cytnx_version.py), so the
+    # Doxyfile carries no version literal that could go stale. Relative INPUT /
     # EXAMPLE_PATH entries still resolve against the working directory, so the
     # invocation runs from the Doxyfile's directory (the repository root).
     config = doxyfile.read_text()
@@ -56,6 +62,7 @@ def main(argv: list[str] | None = None) -> int:
         f"\nGENERATE_HTML = YES\n"
         f"OUTPUT_DIRECTORY = {output_dir.parent}\n"
         f"HTML_OUTPUT = {output_dir.name}\n"
+        f'PROJECT_NUMBER = "{version_label()}"\n'
     )
     subprocess.run(
         ["doxygen", "-"],
