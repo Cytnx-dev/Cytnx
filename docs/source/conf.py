@@ -30,6 +30,16 @@ project = 'Cytnx'
 copyright = '2019-, Kai-Hsin Wu'
 author = 'Kai-Hsin Wu'
 
+# The version comes from version.cmake, the single source of truth for the
+# release version (see docs/cytnx_version.py). `release` carries a
+# `.devN+g<sha>` suffix when the build is not on a release tag, which is what
+# the `dev` documentation built from master shows.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from cytnx_version import release_version, version_label
+version = release_version()
+release = version_label()
+html_title = f"{project} {release}"
+
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
