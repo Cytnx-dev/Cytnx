@@ -44,19 +44,34 @@ In addition, you might want to install the following optional dependencies if yo
 * numpy
 * beartype
 
-There are two methods how you can set-up all the dependencies before starting the build process:
+There are three methods how you can set-up all the dependencies before starting the build process:
 
+0. Using Pixi, which is what the project itself uses
 1. Using conda to install dependencies
 2. Directly install dependencies one-by-one via system package manager
 
 .. Note::
 
-    We recommend using conda to handle all the dependencies (including compiling tools).
-    This is the simplest way as conda automatically resolves the whole path of each dependency, allowing cmake to automatically capture those.
+    **Pixi is the recommended path.** The repository ships a ``pixi.toml`` that
+    pins every dependency in this list -- compilers, CMake, Ninja, BLAS/LAPACK,
+    Boost, GTest, and the CUDA toolkit -- together with a lock file, so a
+    contributor on any supported platform gets the same versions:
 
-    How it works?
+    .. code-block:: shell
 
-        >> The conda-forge channel includes not only the Python package but also other pre-compiled libraries/compilers.
+        pixi run setup        # git submodule update --init --recursive
+        pixi run configure    # cmake --preset <preset>
+        pixi run build
+        pixi run test-cpp
+
+    ``pixi run`` creates the environment on first use, so there is no separate
+    install step. Run ``pixi task list`` to see the rest of the tasks.
+
+    The conda and system-package-manager options below still work and are kept
+    for anyone not using Pixi. With conda, dependencies are resolved from the
+    conda-forge channel, which includes not only Python packages but also
+    pre-compiled libraries and compilers, so CMake can pick them up
+    automatically.
 
 
 
