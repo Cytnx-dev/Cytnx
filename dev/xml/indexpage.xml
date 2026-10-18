@@ -623,17 +623,23 @@
 <para><computeroutput>^</computeroutput> this is generator</para>
 <para><simplesect kind="note"><para>The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.</para>
 </simplesect>
-<heading level="1">conda install</heading>
+<heading level="1">Installation</heading>
 </para>
-<para><bold>[Currently Linux only]</bold></para>
-<para>without CUDA<itemizedlist>
-<listitem><para>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx</para>
+<para>Cytnx publishes prebuilt Python wheels for CPython 3.9-3.14 on Linux (x86_64, aarch64) and macOS (Apple silicon and Intel). There is no native Windows wheel; use WSL.</para>
+<para>with <ulink url="https://pixi.sh">Pixi</ulink>, which is what we recommend. Pin a Python version Cytnx has wheels for; a bare <computeroutput>pixi add python</computeroutput> takes a newer CPython than the wheels cover and the resolve fails<itemizedlist>
+<listitem><para>pixi add &quot;python=3.12&quot;</para>
+</listitem><listitem><para>pixi add <ndash/>pypi cytnx</para>
 </listitem></itemizedlist>
 </para>
-<para>with CUDA<itemizedlist>
-<listitem><para>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx_cuda</para>
+<para>with pip, inside a virtual environment created from one of those Python versions<itemizedlist>
+<listitem><para>pip install cytnx</para>
 </listitem></itemizedlist>
 </para>
+<para>The CUDA build is a separate <computeroutput>cytnx-cuda</computeroutput> package, currently published on the nightly index for Linux x86_64 only:<itemizedlist>
+<listitem><para>pixi add <ndash/>pypi cytnx-cuda <ndash/>index <ulink url="https://pypi.anaconda.org/cytnx-nightly-wheels/simple">https://pypi.anaconda.org/cytnx-nightly-wheels/simple</ulink></para>
+</listitem></itemizedlist>
+</para>
+<para>The wheels carry only the Python extension. For the C++ API, build the library with CMake and consume it via <computeroutput>find_package(Cytnx)</computeroutput>. See the <ulink url="https://cytnx-dev.github.io/Cytnx/dev/install.html">installation guide</ulink> for the full instructions.</para>
 <para><heading level="1">Some snippets:</heading>
 </para>
 <para><heading level="2">Storage</heading>

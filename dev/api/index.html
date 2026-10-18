@@ -270,14 +270,19 @@ $(function() {
 <p><code>*</code> this is initializer</p>
 <p><code>^</code> this is generator</p>
 <dl class="section note"><dt>Note</dt><dd>The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.</dd></dl>
-<h1>conda install</h1>
-<p><b>[Currently Linux only]</b></p>
-<p>without CUDA</p><ul>
-<li>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx</li>
+<h1>Installation</h1>
+<p>Cytnx publishes prebuilt Python wheels for CPython 3.9-3.14 on Linux (x86_64, aarch64) and macOS (Apple silicon and Intel). There is no native Windows wheel; use WSL.</p>
+<p>with <a href="https://pixi.sh">Pixi</a>, which is what we recommend. Pin a Python version Cytnx has wheels for; a bare <code>pixi add python</code> takes a newer CPython than the wheels cover and the resolve fails</p><ul>
+<li>pixi add "python=3.12"</li>
+<li>pixi add &ndash;pypi cytnx</li>
 </ul>
-<p>with CUDA</p><ul>
-<li>python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx_cuda</li>
+<p>with pip, inside a virtual environment created from one of those Python versions</p><ul>
+<li>pip install cytnx</li>
 </ul>
+<p>The CUDA build is a separate <code>cytnx-cuda</code> package, currently published on the nightly index for Linux x86_64 only:</p><ul>
+<li>pixi add &ndash;pypi cytnx-cuda &ndash;index <a href="https://pypi.anaconda.org/cytnx-nightly-wheels/simple">https://pypi.anaconda.org/cytnx-nightly-wheels/simple</a></li>
+</ul>
+<p>The wheels carry only the Python extension. For the C++ API, build the library with CMake and consume it via <code>find_package(Cytnx)</code>. See the <a href="https://cytnx-dev.github.io/Cytnx/dev/install.html">installation guide</a> for the full instructions.</p>
 <h1>Some snippets:</h1>
 <h2>Storage</h2>
 <ul>

@@ -150,14 +150,29 @@
 <codeline></codeline>
 <codeline><highlight class="normal"><sp/><sp/><sp/><sp/>\note<sp/>The<sp/>difference<sp/>of<sp/>initializer<sp/>and<sp/>generator<sp/>is<sp/>that<sp/>initializer<sp/>is<sp/>used<sp/>to<sp/>initialize<sp/>the<sp/>Tensor,<sp/>and<sp/>generator<sp/>generates<sp/>a<sp/>new<sp/>Tensor.</highlight></codeline>
 <codeline></codeline>
-<codeline><highlight class="normal">##<sp/>conda<sp/>install</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>**[Currently<sp/>Linux<sp/>only]**</highlight></codeline>
+<codeline><highlight class="normal">##<sp/>Installation</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Cytnx<sp/>publishes<sp/>prebuilt<sp/>Python<sp/>wheels<sp/>for<sp/>CPython<sp/>3.9-3.14<sp/>on<sp/>Linux</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>(x86_64,<sp/>aarch64)<sp/>and<sp/>macOS<sp/>(Apple<sp/>silicon<sp/>and<sp/>Intel).<sp/>There<sp/>is<sp/>no<sp/>native</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>Windows<sp/>wheel;<sp/>use<sp/>WSL.</highlight></codeline>
 <codeline></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>without<sp/>CUDA</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>python<sp/>3.6/3.7/3.8:<sp/>conda<sp/>install<sp/>-c<sp/>kaihsinwu<sp/>cytnx</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>with<sp/>[Pixi](https://pixi.sh),<sp/>which<sp/>is<sp/>what<sp/>we<sp/>recommend.<sp/>Pin<sp/>a<sp/>Python</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>version<sp/>Cytnx<sp/>has<sp/>wheels<sp/>for;<sp/>a<sp/>bare<sp/>`pixi<sp/>add<sp/>python`<sp/>takes<sp/>a<sp/>newer</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>CPython<sp/>than<sp/>the<sp/>wheels<sp/>cover<sp/>and<sp/>the<sp/>resolve<sp/>fails</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>pixi<sp/>add<sp/>&quot;python=3.12&quot;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>pixi<sp/>add<sp/>--pypi<sp/>cytnx</highlight></codeline>
 <codeline></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>with<sp/>CUDA</highlight></codeline>
-<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>python<sp/>3.6/3.7/3.8:<sp/>conda<sp/>install<sp/>-c<sp/>kaihsinwu<sp/>cytnx_cuda</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>with<sp/>pip,<sp/>inside<sp/>a<sp/>virtual<sp/>environment<sp/>created<sp/>from<sp/>one<sp/>of<sp/>those<sp/>Python</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>versions</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>pip<sp/>install<sp/>cytnx</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>The<sp/>CUDA<sp/>build<sp/>is<sp/>a<sp/>separate<sp/>`cytnx-cuda`<sp/>package,<sp/>currently<sp/>published<sp/>on</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>the<sp/>nightly<sp/>index<sp/>for<sp/>Linux<sp/>x86_64<sp/>only:</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>*<sp/>pixi<sp/>add<sp/>--pypi<sp/>cytnx-cuda<sp/>--index<sp/>https://pypi.anaconda.org/cytnx-nightly-wheels/simple</highlight></codeline>
+<codeline></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>The<sp/>wheels<sp/>carry<sp/>only<sp/>the<sp/>Python<sp/>extension.<sp/>For<sp/>the<sp/>C++<sp/>API,<sp/>build<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>library<sp/>with<sp/>CMake<sp/>and<sp/>consume<sp/>it<sp/>via<sp/>`find_package(Cytnx)`.<sp/>See<sp/>the</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>[installation<sp/>guide](https://cytnx-dev.github.io/Cytnx/dev/install.html)</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>for<sp/>the<sp/>full<sp/>instructions.</highlight></codeline>
 <codeline></codeline>
 <codeline><highlight class="normal">##<sp/>Some<sp/>snippets:</highlight></codeline>
 <codeline></codeline>
