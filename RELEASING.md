@@ -38,46 +38,50 @@ so that metadata must already be right when the tag is created:
   which is how it sat at `1.0.0` through three later releases (1.0.1, 1.1.0,
   1.1.1).
 
+Everything else derives its version from `version.cmake` at build time and
+needs no edit: the PyPI/conda package version and `cytnx.__version__`
+(scikit-build-core), and both documentation builds. The Sphinx user guide
+(`docs/source/conf.py`) and the Doxygen API reference
+(`docs/build_api_docs.py`) read it through `docs/cytnx_version.py`, which
+shows `X.Y.Z` on the release tag and `X.Y.Z.devN+g<sha>` on the `dev` docs
+built from `master`.
+
 ## Steps
 
-1. **Bump `version.cmake`** to the new `MAJOR.MINOR.PATCH`.
-
-2. **Add the docs slug to `docs/site_root/versions.json`.** Insert an entry
-   whose `version` (the URL slug) and `name` (the switcher label) are both the
-   numeric version with **no leading `v`**:
-
-   ```json
-   { "name": "1.2.0", "version": "1.2.0" }
-   ```
-
-   Keep the `dev` entry. There is no separate `stable` entry to maintain:
-   the switcher automatically labels the highest-numbered release `(stable)`
-   and the documentation root redirects to it, so adding the new release entry
-   is all that is needed. (`gh-pages/stable/` still exists as a permalink to
-   the latest release docs, maintained by `docs.yml`.)
-
-3. **Update `CITATION.cff`.** Set `version` to the same
-   `MAJOR.MINOR.PATCH` as step 1, and `date-released` to the `YYYY-MM-DD`
-   date the release ships. Leave the `preferred-citation` block alone: it
-   describes the SciPost paper, which does not change when a release ships.
-
-4. **Open steps 1–3 as a release-prep pull request and merge it.** The
-   `Release metadata consistency` workflow checks that `version.cmake`,
-   `versions.json`, and `CITATION.cff` agree; if you forget a step, or write
-   a `v`-prefixed slug, the PR check fails before the release goes out. Run
-   the same check locally with:
+1. **Run the bump script** with the new `MAJOR.MINOR.PATCH` (no leading `v`):
 
    ```sh
-   python3 tools/check_release_consistency.py
+   python3 tools/bump_version.py 1.2.0
    ```
 
-5. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
+   It rewrites the three files above in one go — `version.cmake`, the new
+   `{ "name": "1.2.0", "version": "1.2.0" }` entry in
+   `docs/site_root/versions.json`, and `version` plus `date-released` in
+   `CITATION.cff` (today's date, or pass `--date YYYY-MM-DD`) — and then runs
+   `tools/check_release_consistency.py`.
+
+   Keep the `dev` entry in `versions.json`. There is no separate `stable`
+   entry to maintain: the switcher automatically labels the highest-numbered
+   release `(stable)` and the documentation root redirects to it.
+   (`gh-pages/stable/` still exists as a permalink to the latest release
+   docs, maintained by `docs.yml`.) The `preferred-citation` block in
+   `CITATION.cff` is left alone: it describes the SciPost paper, which does
+   not change when a release ships.
+
+2. **Open the change as a release-prep pull request and merge it.** The
+   `Release metadata consistency` workflow runs the same check as the script:
+   `version.cmake`, `versions.json`, and `CITATION.cff` must agree, no slug
+   may carry a leading `v`, and the documentation builds must not hard-code a
+   version. If anything was edited by hand and drifted, the PR check fails
+   before the release goes out.
+
+3. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
    new release*, create the tag `vMAJOR.MINOR.PATCH` targeting the merged
    release-prep commit on `master`, click *Generate release notes*, review,
    and publish. Publishing pushes the tag and starts the release workflows
    above.
 
-Doing steps 1–3 in a merged PR first means the tagged commit already holds
+Doing step 1 in a merged PR first means the tagged commit already holds
 the correct `version.cmake`, `versions.json`, and `CITATION.cff`, and the
 consistency check has already passed — so publishing the release is the
 last action, not the first.

@@ -41,8 +41,15 @@ Checks performed:
      its leading ``v`` equals the ``version.cmake`` version -- otherwise
      the PyPI and conda package version would not match the release tag --
      and is present as a ``versions.json`` slug.
+  5. The documentation builds carry no version literal: ``docs.doxygen``
+     leaves ``PROJECT_NUMBER`` empty and ``docs/source/conf.py`` does not
+     assign a string to ``version`` or ``release``. Both take the version
+     from ``version.cmake`` through ``docs/cytnx_version.py``; a literal
+     would override it and go stale, which is how the API reference showed
+     ``v1.0.0`` through three later releases.
 
-Run it before drafting a release::
+``tools/bump_version.py`` rewrites the three metadata files and runs this
+check. Run it on its own before drafting a release::
 
     python3 tools/check_release_consistency.py
 
@@ -60,6 +67,8 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 VERSION_CMAKE = REPO_ROOT / "version.cmake"
 VERSIONS_JSON = REPO_ROOT / "docs" / "site_root" / "versions.json"
 CITATION_CFF = REPO_ROOT / "CITATION.cff"
+DOXYFILE = REPO_ROOT / "docs.doxygen"
+SPHINX_CONF = REPO_ROOT / "docs" / "source" / "conf.py"
 
 # Slugs that are not numbered releases: they are exempt from the
 # "must be numeric" rule and never need to equal version.cmake.
@@ -202,6 +211,24 @@ def main() -> None:
                 f'docs/site_root/versions.json (expected "version": '
                 f'"{tag_version}").'
             )
+
+    # Check 5: the documentation builds must not carry a version literal.
+    doxygen_number = re.search(r"^PROJECT_NUMBER\s*=(.*)$", DOXYFILE.read_text(), re.MULTILINE)
+    if doxygen_number and doxygen_number.group(1).strip():
+        errors.append(
+            f"docs.doxygen sets PROJECT_NUMBER = {doxygen_number.group(1).strip()}. "
+            f"Leave it empty: docs/build_api_docs.py sets the version label from "
+            f"version.cmake, and a literal here goes stale."
+        )
+    sphinx_literal = re.search(
+        r"""^(version|release)\s*=\s*['"]""", SPHINX_CONF.read_text(), re.MULTILINE
+    )
+    if sphinx_literal:
+        errors.append(
+            f"docs/source/conf.py assigns a string literal to "
+            f"{sphinx_literal.group(1)}. Take it from docs/cytnx_version.py so the "
+            f"user guide shows the version from version.cmake."
+        )
 
     if errors:
         print("Release metadata is inconsistent:", file=sys.stderr)
