@@ -1,11 +1,12 @@
 #ifndef CYTNX_INTRUSIVE_PTR_BASE_H_
 #define CYTNX_INTRUSIVE_PTR_BASE_H_
 
-#include <ostream>
 #include <cassert>
-#include <boost/smart_ptr/intrusive_ptr.hpp>
+#include <atomic>
+#include <ostream>
+
 #include <boost/checked_delete.hpp>
-#include <boost/detail/atomic_count.hpp>
+#include <boost/smart_ptr/intrusive_ptr.hpp>
 
 namespace cytnx {
   /// @cond
@@ -56,7 +57,7 @@ namespace cytnx {
 
    private:
     // should be modifiable within the class.
-    mutable boost::detail::atomic_count ref_count;
+    mutable std::atomic<int> ref_count;
   };
   ///@endcond
 }  // namespace cytnx
