@@ -309,7 +309,7 @@ endif()
 # the rest of this script, so skipping the set() when the variable is
 # already DEFINED is what lets a caller's override actually take effect.
 if(NOT DEFINED CMAKE_INTERPROCEDURAL_OPTIMIZATION)
-  IF (APPLE)
+  IF (APPLE OR RUN_TESTS)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
   ELSE ()
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
