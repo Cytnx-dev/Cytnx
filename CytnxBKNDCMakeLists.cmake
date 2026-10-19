@@ -1,175 +1,123 @@
-
-
-#ARPACK
-# Found ahead of the BLAS/LAPACK resolution below (regardless of USE_MKL)
-# so the OpenBLAS branch's runtime-dependency check can inspect ARPACK_LIB's
-# own dependencies, and so it's available for the target_link_libraries(cytnx
-# PRIVATE ${ARPACK_LIB}) call in the main CMakeLists.txt after this file is
-# included.
-find_library(ARPACK_LIB arpack REQUIRED)
-message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
-
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
-if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE_LIBRARIES))
-  if (USE_MKL)
-    #message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
-    # Set MKL interface to LP64 by default, but allow ILP64
-    set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
-    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
 
-    set(MKL_ROOT $ENV{MKLROOT})
-    message(STATUS "MKL_ROOT: ${MKL_ROOT}")
-    message(STATUS "MKL_INTERFACE: ${MKL_INTERFACE}")
-    if(MKL_INTERFACE STREQUAL "ilp64")
-        set(BLA_VENDOR Intel10_64ilp)
-    else()
-        set(BLA_VENDOR Intel10_64lp)
-    endif()
-    message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
-    find_package( BLAS REQUIRED)
-    find_package( LAPACK REQUIRED)
+# cytnx exports its BLAS/LAPACK usage requirement by *imported target name*
+# (MORSE::LAPACKE or LAPACK::LAPACK) so CytnxTargets.cmake stays free of this
+# machine's absolute library and include paths. Those targets only exist after
+# their finder has run, so CytnxConfig.cmake must rerun the matching finder in
+# the consumer's environment; it selects which one from USE_MKL, the same knob
+# that picks the branch below.
+if (USE_MKL)
+  #message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
+  # Set MKL interface to LP64 by default, but allow ILP64
+  set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
+  set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
 
-    message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
-
-    #find_package(MKL CONFIG REQUIRED)
-    #Provides available list of targets based on input
-    #message(STATUS "MKL_IMPORTED_TARGETS: ${MKL_IMPORTED_TARGETS}")
-  #  target_compile_options(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>)
-  #  target_include_directories(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
-  #  target_link_libraries(cytnx PUBLIC  $<LINK_ONLY:MKL::MKL>)
-  #  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
-    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
-    target_compile_definitions(cytnx PUBLIC UNI_MKL)
-
-
+  set(MKL_ROOT $ENV{MKLROOT})
+  message(STATUS "MKL_ROOT: ${MKL_ROOT}")
+  message(STATUS "MKL_INTERFACE: ${MKL_INTERFACE}")
+  if(MKL_INTERFACE STREQUAL "ilp64")
+      set(BLA_VENDOR Intel10_64ilp)
   else()
-    set(BLA_VENDOR OpenBLAS)
-    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OPENBLAS")
-    message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
-    find_package( BLAS REQUIRED)
-    find_package( LAPACK REQUIRED)
-    find_package( LAPACKE REQUIRED)
-
-    # Some OpenBLAS packagings (e.g. Fedora/RHEL's "openblas-devel", used by
-    # the manylinux_2_28 image) install a serial and a pthread-threaded
-    # build side by side, and the system's prebuilt "arpack" package (found
-    # as ARPACK_LIB above) can end up needing a different one than
-    # find_package(BLAS) above resolved (the generic "-lopenblas" name), so
-    # both variants get linked and both are vendored into the wheel. Rather
-    # than guess a vendor-specific naming convention for the "other" build,
-    # ask the loader what arpack actually needs, and switch to that OpenBLAS
-    # build if it differs, so only one variant is linked overall.
-    # find_package(LAPACKE) above already resolved LAPACKE_INCLUDE_DIRS
-    # through morse_cmake's hardened, cross-platform header search (see the
-    # "Vendor FindLAPACKE via Inria morse_cmake submodule" commit for why
-    # cytnx moved off a homegrown find_path(lapacke.h)); only the library
-    # selection is revisited here, since the header itself is agnostic to
-    # which OpenBLAS build backs it.
-    #
-    # This project only ships Linux and macOS wheels (see the
-    # [tool.cibuildwheel.*] sections in pyproject.toml), so `ldd`/`otool -L`
-    # cover every platform that needs this check; CMake's own
-    # file(GET_RUNTIME_DEPENDENCIES) would also work here, but its own docs
-    # (see Help/command/file.rst) say it "is not intended to be used in
-    # project mode" -- it's meant for install(CODE)/install(SCRIPT), which
-    # run too late to influence target_link_libraries below -- and we only
-    # need arpack's one direct OpenBLAS dependency, not the full recursive
-    # dependency graph that command computes, so a single ldd/otool call is
-    # enough.
-    set(CYTNX_ARPACK_OPENBLAS "")
-    if(APPLE)
-      execute_process(
-        COMMAND otool -L "${ARPACK_LIB}"
-        OUTPUT_VARIABLE CYTNX_ARPACK_DEPS_OUTPUT
-        RESULT_VARIABLE CYTNX_ARPACK_DEPS_RESULT
-        ERROR_QUIET
-      )
-      if(CYTNX_ARPACK_DEPS_RESULT EQUAL 0)
-        string(REPLACE "\n" ";" CYTNX_ARPACK_DEPS_LINES "${CYTNX_ARPACK_DEPS_OUTPUT}")
-        foreach(_cytnx_line ${CYTNX_ARPACK_DEPS_LINES})
-          if(_cytnx_line MATCHES "([^ \t]*libopenblas[^ \t]*)")
-            set(CYTNX_ARPACK_OPENBLAS "${CMAKE_MATCH_1}")
-            break()
-          endif()
-        endforeach()
-      endif()
-    elseif(UNIX)
-      execute_process(
-        COMMAND ldd "${ARPACK_LIB}"
-        OUTPUT_VARIABLE CYTNX_ARPACK_DEPS_OUTPUT
-        RESULT_VARIABLE CYTNX_ARPACK_DEPS_RESULT
-        ERROR_QUIET
-      )
-      if(CYTNX_ARPACK_DEPS_RESULT EQUAL 0)
-        string(REPLACE "\n" ";" CYTNX_ARPACK_DEPS_LINES "${CYTNX_ARPACK_DEPS_OUTPUT}")
-        foreach(_cytnx_line ${CYTNX_ARPACK_DEPS_LINES})
-          if(_cytnx_line MATCHES "libopenblas[^ \t]* => ([^ \t]+)")
-            set(CYTNX_ARPACK_OPENBLAS "${CMAKE_MATCH_1}")
-            break()
-          endif()
-        endforeach()
-      endif()
-    endif()
-
-    if(CYTNX_ARPACK_OPENBLAS)
-      # find_package(BLAS BLA_VENDOR OpenBLAS) can resolve BLAS_LIBRARIES to a
-      # bare linker flag (e.g. "-lopenblas") rather than an absolute path on
-      # some platforms; REALPATH on that yields a bogus path resolved against
-      # the current working directory, which never matches
-      # CYTNX_ARPACK_OPENBLAS_REAL. That's harmless here -- it just means the
-      # "already matches, no switch needed" fast-path below only ever fires
-      # when find_package returned a real path, and falls through to the
-      # switch (the correct, dedup-preserving direction) otherwise.
-      get_filename_component(CYTNX_ARPACK_OPENBLAS_REAL "${CYTNX_ARPACK_OPENBLAS}" REALPATH)
-      set(CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK FALSE)
-      foreach(_cytnx_found_lib ${BLAS_LIBRARIES})
-        get_filename_component(_cytnx_found_lib_real "${_cytnx_found_lib}" REALPATH)
-        if(_cytnx_found_lib_real STREQUAL CYTNX_ARPACK_OPENBLAS_REAL)
-          set(CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK TRUE)
-        endif()
-      endforeach()
-
-      if(NOT CYTNX_FOUND_OPENBLAS_MATCHES_ARPACK)
-        # arpack needs a different OpenBLAS build than find_package(BLAS)
-        # picked. Only switch to it if it itself exposes LAPACKE symbols
-        # directly (cytnx's own C++ code calls the LAPACKE C API, unlike
-        # arpack's Fortran BLAS/LAPACK calls, so this isn't guaranteed just
-        # because arpack is happy with it); otherwise leave the
-        # find_package() result as-is and accept both variants being linked.
-        include(CheckLibraryExists)
-        # check_library_exists() only runs its try_compile when the result
-        # variable is NOT DEFINED (see CheckLibraryExists.cmake); unset the
-        # cache entry first so a reconfigure against a different
-        # arpack/OpenBLAS pairing in the same build tree re-checks instead of
-        # reusing a stale cached result from a previous CYTNX_ARPACK_OPENBLAS.
-        unset(CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE CACHE)
-        check_library_exists("${CYTNX_ARPACK_OPENBLAS}" LAPACKE_dgesdd "" CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE)
-        if(CYTNX_ARPACK_OPENBLAS_HAS_LAPACKE)
-          set(BLAS_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
-          set(LAPACK_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
-          set(LAPACKE_LIBRARIES "${CYTNX_ARPACK_OPENBLAS}")
-          message(STATUS "Switching to arpack's own OpenBLAS build to avoid linking two copies: ${CYTNX_ARPACK_OPENBLAS}")
-        endif()
-      endif()
-    endif()
-    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
-    target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
-    message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
-    message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
-    message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
+      set(BLA_VENDOR Intel10_64lp)
   endif()
+  message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
+  # CMake's FindLAPACK finds the BLAS under LAPACK itself, so it is the only
+  # lookup this branch needs.
+  find_package( LAPACK REQUIRED)
+
+  message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
+
+  #find_package(MKL CONFIG REQUIRED)
+  #Provides available list of targets based on input
+  #message(STATUS "MKL_IMPORTED_TARGETS: ${MKL_IMPORTED_TARGETS}")
+#  target_compile_options(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>)
+#  target_include_directories(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
+#  target_link_libraries(cytnx PUBLIC  $<LINK_ONLY:MKL::MKL>)
+#  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
+  # LAPACK::LAPACK (CMake's own FindLAPACK) already carries ${LAPACK_LIBRARIES}
+  # plus the BLAS libraries it depends on. Linking the target instead of the raw
+  # path list keeps the exported cytnx target relocatable: the installed
+  # CytnxTargets.cmake records the target name, and CytnxConfig.cmake re-runs
+  # find_package(LAPACK) with the same BLA_VENDOR to recreate it.
+  target_link_libraries(cytnx PUBLIC LAPACK::LAPACK)
+  target_compile_definitions(cytnx PUBLIC UNI_MKL)
+
 
 else()
-  set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
-  message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
-  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
+  set(BLA_VENDOR OpenBLAS)
+  set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OPENBLAS")
+  message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
+  # One lookup resolves the whole stack: FindLAPACKE (morse_cmake) pulls in
+  # FindLAPACKEXT, which calls CMake's own FindLAPACK under the BLA_VENDOR set
+  # above, which in turn finds BLAS. MORSE::LAPACKE and LAPACK::LAPACK both
+  # exist afterwards.
+  #
+  # MODULE, not the basic signature: cytnx links MORSE::LAPACKE, which only
+  # morse_cmake's finder defines. The basic signature searches config mode ahead
+  # of module mode under CMAKE_FIND_PACKAGE_PREFER_CONFIG, so a LAPACKEConfig.cmake
+  # that sets the usual variables would satisfy the lookup without creating that
+  # target and the link below would fail at generate time.
+  find_package(LAPACKE MODULE REQUIRED)
+  # MORSE::LAPACKE owns the LAPACKE headers and the LAPACKE library, and
+  # LAPACK::LAPACK owns the LAPACK/BLAS libraries under it. Both are needed:
+  # when LAPACKE is a standalone library rather than one embedded in LAPACK
+  # (reference liblapacke.so against OpenBLAS, say), MORSE::LAPACKE carries
+  # liblapacke alone, and cytnx calls plain BLAS/LAPACK entry points too, so
+  # dropping LAPACK::LAPACK leaves the consumer's final link short of them.
+  #
+  # Propagating ${LAPACKE_INCLUDE_DIRS} or the raw library lists instead would
+  # bake build-machine paths into the exported target. lapack_wrapper.hpp is an
+  # installed public header that includes <lapacke.h>, so install-tree consumers
+  # get the include dir by re-running FindLAPACKE from CytnxConfig.cmake.
+  target_link_libraries(cytnx PUBLIC MORSE::LAPACKE LAPACK::LAPACK)
+  target_compile_definitions(cytnx PUBLIC UNI_OPENBLAS)
+  message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
   message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
   message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
 endif()
 
+######################################################################
+### Find ARPACK
+######################################################################
 
+# Looked up after the BLAS/LAPACK provider above: a static arpack's own package
+# config runs find_dependency(BLAS) and find_dependency(LAPACK) unless those
+# targets already exist, so resolving cytnx's provider first keeps arpack from
+# binding the build to a different vendor than BLA_VENDOR asks for.
+#
+# arpack-ng's own package config defines ARPACK::ARPACK, and naming that target
+# is what keeps this machine's libarpack path out of CytnxTargets.cmake. cytnx
+# is a static archive, so even a PRIVATE dependency reaches the export, under a
+# LINK_ONLY genex, and the consumer's final link is what needs it;
+# CytnxConfig.cmake re-finds the package to recreate the target there.
+#
+# Accept either spelling of the package name: arpack-ng renamed it from
+# "arpack-ng" to "arpackng" in 3.9, and Alpine -- which the musllinux wheels
+# build against -- still ships 3.8.0. The two also differ in how they define
+# ARPACK::ARPACK: 3.9 makes it an alias of a target named arpack, so the export
+# records "arpack" (CMake writes the target an alias names), while 3.8 makes it
+# an imported target in its own right, so the export records "ARPACK::ARPACK".
+# Either way it is a target name and not a path, and either lookup recreates
+# whichever name the export holds.
+find_package(arpackng CONFIG QUIET)
+if(NOT arpackng_FOUND)
+  find_package(arpack-ng CONFIG REQUIRED)
+endif()
+target_link_libraries(cytnx PRIVATE ARPACK::ARPACK)
+
+# Record the name that reaches the export, so CytnxConfig.cmake can test for
+# that exact target rather than guessing which spelling this build produced.
+# CMake writes the aliased target's name, so under 3.9 the export says "arpack"
+# while ARPACK::ARPACK is only the alias the build links.
+get_target_property(cytnx_arpack_aliased ARPACK::ARPACK ALIASED_TARGET)
+if(cytnx_arpack_aliased)
+  set(CYTNX_ARPACK_TARGET "${cytnx_arpack_aliased}")
+else()
+  set(CYTNX_ARPACK_TARGET ARPACK::ARPACK)
+endif()
+message(STATUS "ARPACK target in the export: ${CYTNX_ARPACK_TARGET}")
 
 if (USE_HPTT)
     set(HPTT_SUBMODULE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/hptt")
@@ -299,9 +247,14 @@ if(USE_CUDA)
     if(USE_CUTENSOR)
         find_package(CUTENSOR REQUIRED)
         if(CUTENSOR_FOUND)
+            # UNI_CUTENSOR is PUBLIC and makes the installed header
+            # cytnx_error.hpp include <cutensor.h>, so the include dir is a real
+            # public usage requirement. Carry it (and the libraries) on the
+            # imported target rather than on cytnx itself, so the exported target
+            # names CUTENSOR::CUTENSOR instead of this machine's CUTENSOR_ROOT;
+            # CytnxConfig.cmake re-runs FindCUTENSOR to recreate it.
             target_compile_definitions(cytnx PUBLIC UNI_CUTENSOR)
-            target_include_directories(cytnx PUBLIC ${CUTENSOR_INCLUDE_DIRS})
-            target_link_libraries(cytnx PUBLIC ${CUTENSOR_LIBRARIES})
+            target_link_libraries(cytnx PUBLIC CUTENSOR::CUTENSOR)
         else()
             message(FATAL_ERROR "cannot find cutensor! please specify cutensor root with -DCUTENSOR_ROOT")
         endif()
@@ -335,9 +288,12 @@ if(USE_CUDA)
     if(USE_CUQUANTUM)
         find_package(CUQUANTUM REQUIRED)
         if(CUQUANTUM_FOUND)
+            # Same reasoning as cuTENSOR above: UNI_CUQUANTUM is PUBLIC and makes
+            # the installed header Network.hpp include <cutensornet.h>, so the
+            # include dir must reach consumers -- through the imported target, not
+            # as a build-machine path baked into CytnxTargets.cmake.
             target_compile_definitions(cytnx PUBLIC UNI_CUQUANTUM)
-            target_include_directories(cytnx PUBLIC ${CUQUANTUM_INCLUDE_DIRS})
-            target_link_libraries(cytnx PUBLIC ${CUQUANTUM_LIBRARIES})
+            target_link_libraries(cytnx PUBLIC CUQUANTUM::CUQUANTUM)
         else()
             message(FATAL_ERROR "cannot find cuquantum! please specify cuquantum root with -DCUQUANTUM_ROOT")
         endif()
