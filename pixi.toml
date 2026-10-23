@@ -4,6 +4,10 @@ channels = ["conda-forge"]
 # Every platform cytnx is developed on. The lock file resolves all of them,
 # so a contributor on any one of them gets the same dependency versions.
 platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
+# A minimum, never a cap: older pixi releases trust the compromised eMudhra
+# intermediate CA certificates, which lets a forged HTTPS certificate tamper
+# with every package pixi downloads.
+requires-pixi = ">=0.82.1"
 
 # One environment, so `pixi run` never needs -e and switching between presets
 # costs nothing. Everything a platform can build is installed for it: both BLAS
@@ -18,7 +22,10 @@ platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
 # dependencies on one platform without restricting anything.
 [dependencies]
 python = "3.10.*"
-pip = "*"
+# The floor excludes the CA bundles that still trust the compromised eMudhra
+# intermediate CA certificates. OpenSSL-based tools in this environment, git
+# among them, verify HTTPS against this package.
+ca-certificates = ">=2026.10.19"
 
 # Build tools. c-compiler/cxx-compiler resolve to the platform's toolchain:
 # GCC on Linux and Clang on macOS come from conda-forge, while on Windows the
@@ -32,7 +39,6 @@ cxx-compiler = ">=1.11,<2"
 # Must match the clang-format revision pinned in .pre-commit-config.yaml;
 # a different major version reflows code and fails the format CI job.
 clang-format = "14.*"
-pre-commit = "*"
 
 arpack = { version = ">=3.9,<4", build = "nompi_*" }
 # Must match the libboost-headers constraint in
@@ -68,17 +74,30 @@ liblapack = { version = ">=3.9,<4", build = "*openblas" }
 liblapacke = { version = ">=3.9,<4", build = "*openblas" }
 
 [pypi-dependencies]
-# Only what has to exist before pip runs. pybind11 is here because
-# find_package(pybind11) has to succeed for a bare `cmake --preset`, before any
-# editable install has happened; its version must match the pin in
-# pyproject.toml's [build-system].requires, which is what the wheel builds and
-# the committed stubs are generated against.
+# Only what has to exist before pip runs, plus the tools that download
+# packages themselves. pybind11 is here because find_package(pybind11) has to
+# succeed for a bare `cmake --preset`, before any editable install has
+# happened; its version must match the pin in pyproject.toml's
+# [build-system].requires, which is what the wheel builds and the committed
+# stubs are generated against.
 #
 # Nothing else Python-side is listed. numpy, beartype, graphviz, pytest,
 # pytest-cov, mypy and pybind11-stubgen are declared in pyproject.toml and
 # arrive with `pip install --editable .[dev]`, which the install-python task
 # runs -- pyproject.toml stays the single source of truth for them.
 pybind11 = "==3.0.4"
+
+# The floors exclude the releases whose CA bundle still trusts the
+# compromised eMudhra intermediate CA certificates: pip vendors its own copy
+# of certifi, and pre-commit installs its hooks with the pip that virtualenv
+# embeds in each hook environment. pip and virtualenv come from PyPI because
+# conda-forge builds those releases only for Python 3.11 and later, while
+# [dependencies] pins 3.10. pre-commit comes from PyPI too, because
+# conda-forge's pre-commit depends on conda-forge's virtualenv and would pull
+# in an older one.
+pip = ">=26.2.2"
+pre-commit = "*"
+virtualenv = ">=21.14.12"
 
 # Intel MKL is x86-only, which is why these are three target tables rather than
 # one shared entry: the mkl-* presets are buildable on x86 and simply are not
