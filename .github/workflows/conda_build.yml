@@ -51,7 +51,8 @@ jobs:
         # Remember to quote this, or YAML will think you want python 3.1 not 3.10
         python-version: "3.10"
         # Using miniforge to the enable conda-forge channel only.
-        miniforge-version: latest
+        # Must match the Miniforge pin in ci-cmake_tests.yml, which explains it.
+        miniforge-version: "26.7.2-1"
         # Install conda-build in base so `conda build` command is available.
         conda-build-version: "*"
 

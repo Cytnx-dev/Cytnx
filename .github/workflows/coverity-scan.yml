@@ -26,7 +26,8 @@ jobs:
         python-version: "3.11"
         # This uses *miniforge*, rather than *minicond*. The primary difference is that
         # the defaults channel is not enabled at all
-        miniforge-version: latest
+        # Must match the Miniforge pin in ci-cmake_tests.yml, which explains it.
+        miniforge-version: "26.7.2-1"
         # These properties enable the use of mamba, which is much faster and far less error
         # prone than conda while being completely compatible with the conda CLI
         use-mamba: true

@@ -80,7 +80,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: "3.11"
-          miniforge-version: latest
+          # Must match the Miniforge pin in ci-cmake_tests.yml, which explains it.
+          miniforge-version: "26.7.2-1"
           use-mamba: true
           mamba-version: "*"
 

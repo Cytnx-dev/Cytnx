@@ -54,7 +54,13 @@ jobs:
           python-version: "3.11"
           # This uses *miniforge*, rather than *miniconda*. The primary difference is that
           # the defaults channel is not enabled at all
-          miniforge-version: latest
+          # Pinned rather than `latest`. The base environment of 26.7.2-1
+          # ships ca-certificates and certifi 2026.10.19 and pip 26.2.2, none
+          # of which trusts the compromised eMudhra intermediate CA
+          # certificates, and conda and mamba fetch every later package
+          # through that base environment. Every other workflow's Miniforge
+          # pin must match this one.
+          miniforge-version: "26.7.2-1"
           # These properties enable the use of mamba, which is much faster and far less error
           # prone than conda while being completely compatible with the conda CLI
           use-mamba: true
@@ -90,8 +96,12 @@ jobs:
         # _openmp_mutex pin is needed. (libgomp is still present, symlinked
         # to libomp by _kmp_llvm, so GCC's -fopenmp -lgomp and OpenBLAS
         # resolve to that one runtime.)
+        #
+        # pip>=26.2.2 keeps the editable install below off the pip releases
+        # whose vendored certifi still trusts the compromised eMudhra
+        # intermediate CA certificates.
         run: |
-          mamba install cmake make boost git compilers "blas=*=openblas" "libopenblas=*=*openmp*" liblapacke arpack gtest graphviz
+          mamba install cmake make boost git compilers "blas=*=openblas" "libopenblas=*=*openmp*" liblapacke arpack gtest graphviz "pip>=26.2.2"
 
       - name: CPU info
         run: lscpu
