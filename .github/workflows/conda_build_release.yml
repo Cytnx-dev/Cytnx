@@ -19,11 +19,11 @@ jobs:
         shell: bash -el {0}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4.4.0
       with:
         submodules: recursive
 
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@fc2d68f6413eb2d87b895e92f8584b5b94a10167  # v3.3.0
       with:
         # Remember to quote this, or YAML will think you want python 3.1 not 3.10
         python-version: "3.10"
@@ -40,7 +40,7 @@ jobs:
         conda config --set anaconda_upload no
 
     - name: Cache Ccache Directory
-      uses: actions/cache@v4
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4.3.0
       with:
         path: |
           ~/.ccache
