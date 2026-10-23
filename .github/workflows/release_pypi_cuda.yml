@@ -153,8 +153,8 @@ jobs:
       # release_pypi.yml's equivalent step for why --group over
       # .[release-tools] and the pip upgrade.
       run: |
-        python -m pip install --upgrade pip
-        pip install --group release-tools
+        python -m pip install --require-hashes --no-deps -r .github/pip-bootstrap-requirements.txt
+        python -m pip install --group release-tools
 
     - name: Stamp pyproject.toml for cytnx-cuda
       # Always runs (unlike release_pypi.yml's nightly-only stamping
