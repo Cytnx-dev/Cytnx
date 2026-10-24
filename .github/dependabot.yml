@@ -11,10 +11,16 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    # Minor and patch updates arrive as one grouped pull request; each major
+    # update gets its own, since a major release can change inputs or
+    # behaviour and deserves a separate review.
     groups:
       github-actions:
         patterns:
           - "*"
+        update-types:
+          - minor
+          - patch
 
   # .github/pip-bootstrap-requirements.txt, the hash-pinned pip the release
   # workflows upgrade the runner's own pip to.
