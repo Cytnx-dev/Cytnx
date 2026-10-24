@@ -28,12 +28,15 @@ only the standard library and no syntax newer than Python 3.6.
 
 import argparse
 import hashlib
+import http.client
 import io
 import os
 import platform
 import sys
 import tarfile
+import time
 import typing
+import urllib.error
 import urllib.request
 import zipfile
 
@@ -85,6 +88,8 @@ MICROMAMBA = {
 }
 
 DOWNLOAD_TIMEOUT_SECONDS = 120
+MAX_ATTEMPTS = 3
+RETRY_BACKOFF_SECONDS = 2.0
 
 
 def conda_subdir() -> str:
@@ -106,6 +111,43 @@ def conda_subdir() -> str:
     sys.exit(f"fetch_pinned: no pinned micromamba for {system} {machine}")
 
 
+def urlopen_with_retry(url: str) -> bytes:
+    """Fetch a URL, retrying transient network failures.
+
+    A stalled or dropped connection (``TimeoutError``, ``ConnectionError``,
+    ``URLError``) or a truncated body (``http.client.IncompleteRead``) is
+    retried with a growing delay; the body is read inside the same attempt so
+    a stall while streaming is retried too. ``HTTPError`` is a real response
+    from the server and propagates on the first attempt.
+
+    Args:
+        url: The URL to fetch.
+
+    Returns:
+        The response body.
+    """
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=DOWNLOAD_TIMEOUT_SECONDS) as response:
+                return response.read()
+        except urllib.error.HTTPError:
+            raise
+        except (
+            TimeoutError,
+            ConnectionError,
+            http.client.IncompleteRead,
+            urllib.error.URLError,
+        ) as error:
+            if attempt == MAX_ATTEMPTS:
+                raise
+            print(
+                f"fetch_pinned: attempt {attempt}/{MAX_ATTEMPTS} failed ({error!r}), retrying",
+                file=sys.stderr,
+            )
+            time.sleep(RETRY_BACKOFF_SECONDS * attempt)
+    raise AssertionError("unreachable: the last attempt always returns or raises")
+
+
 def download_verified(artifact: Artifact) -> bytes:
     """Download an artifact and check its digest.
 
@@ -121,8 +163,7 @@ def download_verified(artifact: Artifact) -> bytes:
     Raises:
         SystemExit: If the digest does not match the pin.
     """
-    with urllib.request.urlopen(artifact.url, timeout=DOWNLOAD_TIMEOUT_SECONDS) as response:
-        payload = response.read()
+    payload = urlopen_with_retry(artifact.url)
     digest = hashlib.sha256(payload).hexdigest()
     if digest != artifact.sha256:
         sys.exit(
