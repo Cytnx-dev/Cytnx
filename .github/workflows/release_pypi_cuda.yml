@@ -153,8 +153,8 @@ jobs:
       # release_pypi.yml's equivalent step for why --group over
       # .[release-tools] and the pip upgrade.
       run: |
-        python -m pip install --upgrade pip
-        pip install --group release-tools
+        python -m pip install --require-hashes --no-deps -r .github/pip-bootstrap-requirements.txt
+        python -m pip install --group release-tools
 
     - name: Stamp pyproject.toml for cytnx-cuda
       # Always runs (unlike release_pypi.yml's nightly-only stamping
@@ -187,7 +187,7 @@ jobs:
         rm -f "${HOME}/.ccache/.cytnx_first_wheel_build_done"
 
     - name: Build Wheels
-      uses: pypa/cibuildwheel@63fd63b352a9a8bdcc24791c9dbee952ee9a8abc  # v3.3.0
+      uses: pypa/cibuildwheel@b9e566a2b284570af229f6c2a33673410d0389a3  # v4.3.4
       env:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
@@ -231,7 +231,7 @@ jobs:
         merge-multiple: true
 
     - name: Publish package distributions to PyPI
-      uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
+      uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3
       with:
         packages-dir: dist
 
@@ -250,6 +250,18 @@ jobs:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       with:
         sparse-checkout: tools
+
+    - name: Use the pinned CA bundle for anaconda.org
+      # prune_nightly_wheels.py verifies HTTPS against the runner's system
+      # bundle, and upload-nightly-action against the certifi locked in its
+      # own environment; either may still trust the compromised eMudhra
+      # intermediate CA certificates, and both send the anaconda.org token.
+      # Point both at certifi 2026.10.19's bundle, pinned by hash in
+      # tools/fetch_pinned.py.
+      run: |
+        python3 tools/fetch_pinned.py ca-bundle "${RUNNER_TEMP}/cacert.pem"
+        echo "SSL_CERT_FILE=${RUNNER_TEMP}/cacert.pem" >> "${GITHUB_ENV}"
+        echo "REQUESTS_CA_BUNDLE=${RUNNER_TEMP}/cacert.pem" >> "${GITHUB_ENV}"
 
     - name: Prune old nightly releases
       # Prunes cytnx-cuda specifically; the CPU cytnx nightlies are
