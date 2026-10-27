@@ -40,18 +40,11 @@ jobs:
 
         cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/works/Cytnx_lib --preset=mkl-cpu
 
-    - name: Fetch the pinned CA bundle
-      # Both Coverity steps below send the scan token over HTTPS. The
-      # runner's system bundle may still trust the compromised eMudhra
-      # intermediate CA certificates, so they verify against certifi
-      # 2026.10.19's bundle instead, pinned by hash in tools/fetch_pinned.py.
-      run: python3 tools/fetch_pinned.py ca-bundle "${RUNNER_TEMP}/cacert.pem"
-
     - name: Download Coverity Build Tool
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
       run: |
-        wget -q --ca-certificate="${RUNNER_TEMP}/cacert.pem" https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=Cytnx-dev%2FCytnx" -O cov-analysis-linux64.tar.gz
+        wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=Cytnx-dev%2FCytnx" -O cov-analysis-linux64.tar.gz
         mkdir cov-analysis-linux64
         tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
       env:
@@ -71,7 +64,6 @@ jobs:
       run: |
         tar czvf cytnx.tgz cov-int
         curl \
-          --cacert "${RUNNER_TEMP}/cacert.pem" \
           --form token=$TOKEN \
           --form email=kaihsinwu@gmail.com \
           --form file=@cytnx.tgz \

@@ -46,22 +46,26 @@ deps_prefix="/tmp/cytnx-deps"
 # runtime libs) needlessly raise MACOSX_DEPLOYMENT_TARGET.
 build_tools_prefix="/tmp/cytnx-build-tools"
 
-# micromamba and the CA bundle it verifies HTTPS against are both pinned by
-# SHA-256 in tools/fetch_pinned.py. micromamba otherwise trusts the system
-# bundle, and macOS's /etc/ssl/cert.pem still trusts the compromised eMudhra
-# intermediate CA certificates.
-python3 "$(dirname "$0")/fetch_pinned.py" micromamba ./bin/micromamba
-python3 "$(dirname "$0")/fetch_pinned.py" ca-bundle ./bin/cacert.pem
+arch="$(uname -m)"
+if [[ "${arch}" == "arm64" ]]; then
+  conda_subdir="osx-arm64"
+else
+  conda_subdir="osx-64"
+fi
+
+# Pinned rather than `latest`, so a new micromamba release reaches the wheel
+# builds only through a reviewed change. Must match micromamba_version in
+# tools/cibuildwheel_before_all.sh.
+micromamba_version="2.9.0"
+curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/${micromamba_version}" | tar -xj bin/micromamba
 export MAMBA_ROOT_PREFIX="/tmp/cytnx-micromamba"
 ./bin/micromamba create -y -p "${deps_prefix}" -c conda-forge \
-  --cacert-path ./bin/cacert.pem \
   "openblas=*=*openmp*" \
   liblapacke \
   "arpack=*=nompi*" \
   libboost-headers \
   llvm-openmp
-./bin/micromamba create -y -p "${build_tools_prefix}" -c conda-forge \
-  --cacert-path ./bin/cacert.pem ccache
+./bin/micromamba create -y -p "${build_tools_prefix}" -c conda-forge ccache
 
 report_file="${PWD}/.cibw_macos_condaforge_minos_report.txt"
 target_file="${PWD}/.cibw_macos_deployment_target.txt"

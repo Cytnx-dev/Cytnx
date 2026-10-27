@@ -293,18 +293,6 @@ jobs:
       with:
         sparse-checkout: tools
 
-    - name: Use the pinned CA bundle for anaconda.org
-      # prune_nightly_wheels.py verifies HTTPS against the runner's system
-      # bundle, and upload-nightly-action against the certifi locked in its
-      # own environment; either may still trust the compromised eMudhra
-      # intermediate CA certificates, and both send the anaconda.org token.
-      # Point both at certifi 2026.10.19's bundle, pinned by hash in
-      # tools/fetch_pinned.py.
-      run: |
-        python3 tools/fetch_pinned.py ca-bundle "${RUNNER_TEMP}/cacert.pem"
-        echo "SSL_CERT_FILE=${RUNNER_TEMP}/cacert.pem" >> "${GITHUB_ENV}"
-        echo "REQUESTS_CA_BUNDLE=${RUNNER_TEMP}/cacert.pem" >> "${GITHUB_ENV}"
-
     - name: Prune old nightly releases
       # Deletes nightly releases beyond the newest 4, so the channel
       # holds at most 5 versions after this job's upload step runs.
