@@ -1781,6 +1781,34 @@ namespace cytnx {
         EXPECT_TRUE(AreNearlyEqTensor(block_after, expected, 1e-12));
       }
 
+      /*=====test info=====
+      describe:relabel() returns a view sharing block storage with its parent (#1206). Contracting
+      two views of one tensor must give the same result as contracting a view with a clone (and
+      as the dense contraction), and must leave the parent's blocks untouched.
+      ====================*/
+      TEST_F(BlockUniTensorTest, ContractTwoRelabelViewsOfOneTensor) {
+        Bond in = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2}, {Symmetry::Zn(2)});
+        UniTensor T({in, in, in.redirect(), in.redirect()}, {"a", "b", "c", "d"}, 2);
+        InitUniTensorUniform(T, 7);
+        std::vector<std::vector<cytnx_uint64>> shapes_before;
+        for (cytnx_uint64 b = 0; b < T.Nblocks(); b++)
+          shapes_before.push_back(T.get_block_(b).shape());
+        UniTensor dense_T = T.to_dense();
+
+        UniTensor C = Contract(T.relabel({"a", "b", "c", "s"}), T.relabel({"s", "q", "r", "d"}));
+        UniTensor C_clone =
+          Contract(T.relabel({"a", "b", "c", "s"}), T.clone().relabel({"s", "q", "r", "d"}));
+        UniTensor C_dense =
+          Contract(dense_T.relabel({"a", "b", "c", "s"}), dense_T.relabel({"s", "q", "r", "d"}));
+
+        EXPECT_EQ(C.labels(), std::vector<std::string>({"a", "b", "c", "q", "r", "d"}));
+        EXPECT_TRUE((C - C_clone).Norm().item() < 1e-12);
+        EXPECT_TRUE((C.to_dense() - C_dense).Norm().item() < 1e-12);
+        for (cytnx_uint64 b = 0; b < T.Nblocks(); b++)
+          EXPECT_EQ(T.get_block_(b).shape(), shapes_before[b]) << "block " << b;
+        EXPECT_TRUE((T.to_dense() - dense_T).Norm().item() < 1e-15);
+      }
+
     }  // namespace
   }  // namespace test
 }  // namespace cytnx
