@@ -2110,6 +2110,15 @@ namespace cytnx {
     The eigenvalues are ranked by \f$ |\lambda| \f$ across all blocks; the kept eigenvalues of
     every block stay in the ascending order Eigh returns.
 
+    For a block-sparse input the result is, on the kept eigenspace, the dense truncation of the
+    same matrix: Eigh of the dense matrix with the \p keepdim eigenpairs of largest
+    \f$ |\lambda| \f$ kept (the rank-\p keepdim approximation of smallest 2-norm error, the
+    Eckart-Young truncation that Svd_truncate performs for a general matrix), block structure
+    aside. Ranking by magnitude is what makes \p err and \p return_err approximation errors; it
+    is not a selection by algebraic value. To select eigenpairs by value (the lowest or highest
+    eigenvalues of a Hamiltonian) use Eigh and keep the wanted part of its ascending spectrum, or
+    Lanczos with \p which set to "SA"/"LA".
+
     The truncation order is the same as in Svd_truncate (later constraints may be violated by
     earlier ones): 1) keep at least \p min_blockdim eigenpairs in each block (the overload with
     \p min_blockdim); 2) keep at most \p keepdim eigenpairs overall, except that an exact

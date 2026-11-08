@@ -74,6 +74,27 @@ Eigenvalue decomposition
     :language: python
     :linenos:
 
+Truncated Hermitian eigenvalue decomposition
+--------------------------------------------
+
+For a Hermitian matrix, **Eigh()** returns the eigenvalues in ascending order; on a UniTensor with symmetries it does so block by block, one block per charge sector. **Eigh_truncate()** is the counterpart of **Svd_truncate()** for this case: it keeps the **keepdim** eigenpairs of largest magnitude :math:`|\lambda|`, ranked across all blocks, and returns the truncated eigenvalue UniTensor, the eigenvectors with a truncated eigen bond, and, with **return_err**, the discarded magnitudes. The arguments **keepdim**, **err**, **mindim**, **min_blockdim** and **return_err** have the same meaning as in **Svd_truncate()**. A typical use is the truncation of a reduced density matrix to its dominant eigenbasis, sector by sector, in one call.
+
+* In Python:
+
+.. literalinclude:: ../../code/python/doc_codes/guide_xlinalg_Eigh_truncate.py
+    :language: python
+    :linenos:
+
+Output >>
+
+.. literalinclude:: ../../code/python/outputs/guide_xlinalg_Eigh_truncate.out
+    :language: text
+
+The ranking is global: the kept dimension of each sector is decided by comparing the eigenvalues of all sectors, exactly as **Svd_truncate()** compares the singular values of all blocks. Up to the block structure, the result is therefore the same as taking the dense matrix, calling **Eigh()** on it and keeping the **keepdim** eigenpairs of largest :math:`|\lambda|`. The magnitude ranking is what makes this a truncation in the sense of the SVD: the kept part :math:`V D V^\dagger` is the rank-**keepdim** approximation of the matrix with the smallest 2-norm error (for a Hermitian matrix the singular values are the :math:`|\lambda|`), and **err** and the values reported by **return_err** are approximation errors.
+
+.. Note::
+    **Eigh_truncate()** selects by magnitude, not by algebraic value. To select eigenpairs by value, for instance the lowest or the highest eigenvalues of a Hamiltonian, call **Eigh()** and keep the wanted part of its ascending spectrum (for a symmetric UniTensor, block by block), or use **Lanczos()** with **which = "SA"** (smallest algebraic) or **"LA"** (largest algebraic), which computes only the wanted eigenpairs.
+
 QR decomposition
 *****************************
 
