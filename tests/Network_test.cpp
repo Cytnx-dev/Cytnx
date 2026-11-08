@@ -242,14 +242,14 @@ namespace cytnx {
         Bond bi = bo.redirect();
         UniTensor W({bi, bo}, {"i", "x"}, 1, Type.Double, Device.cpu, true);
         UniTensor A({bi, bo}, {"x", "o"}, 1);
-        for (cytnx_uint64 q = 0; q < 3; q++) {
+        for (std::size_t q = 0; q < 3; q++) {
           W.get_block_(q).storage().at<double>(0) = double(q + 1);
           A.get_block_(q).storage().at<double>(0) = double(2 * q + 1);
         }
         // the by-label put permutes the tensor; the permuted diagonal tensor must keep its blocks
         UniTensor P = W.permute(std::vector<std::string>{"x", "i"});
         ASSERT_EQ(P.Nblocks(), W.Nblocks());
-        for (cytnx_uint64 q = 0; q < 3; q++) {
+        for (std::size_t q = 0; q < 3; q++) {
           ASSERT_EQ(P.get_block_(q).shape(), W.get_block_(q).shape()) << "block " << q;
           EXPECT_DOUBLE_EQ(P.get_block_(q).storage().at<double>(0), double(q + 1));
         }
@@ -262,7 +262,7 @@ namespace cytnx {
           net.PutUniTensor("W", W, order);
           UniTensor out = net.Launch();
           ASSERT_EQ(out.Nblocks(), 3u);
-          for (cytnx_uint64 q = 0; q < 3; q++)
+          for (std::size_t q = 0; q < 3; q++)
             EXPECT_DOUBLE_EQ(out.get_block_(q).storage().at<double>(0),
                              double((q + 1) * (2 * q + 1)));
         }
