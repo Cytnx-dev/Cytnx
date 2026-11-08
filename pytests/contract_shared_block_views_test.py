@@ -4,11 +4,11 @@
 two such views of one block-sparse UniTensor used to raise inside
 ``BlockUniTensor::contract`` (a reshape of a permuted block) and left the parent's
 first block reshaped. The expected value is computed independently with numpy on
-the dense form of the tensor.
+the dense array assembled from all blocks (``to_dense()`` does not expand a
+symmetric UniTensor; it only expands diagonal storage).
 """
 
 import numpy as np
-import pytest
 
 import cytnx
 
@@ -29,7 +29,23 @@ def _random_z2_rank4(seed=0, dim=4):
 
 
 def _dense(T):
-    return T.to_dense().get_block().numpy()
+    """The full dense array of a block-sparse UniTensor, every block in its sector slot."""
+    bonds = T.bonds()
+    offsets = [np.concatenate([[0], np.cumsum(b.getDegeneracies())]) for b in bonds]
+    out = np.zeros([b.dim() for b in bonds])
+    for i in range(T.Nblocks()):
+        blk = T.get_block_(i).numpy()
+        where = tuple(slice(offsets[leg][q], offsets[leg][q] + blk.shape[leg])
+                      for leg, q in enumerate(T.get_qindices(i)))
+        out[where] = blk
+    return out
+
+
+def test_dense_assembly_covers_every_block():
+    T = _random_z2_rank4()
+    dense = _dense(T)
+    assert dense.shape == (4, 4, 4, 4)
+    assert np.count_nonzero(dense) == sum(blk.numpy().size for blk in T.get_blocks())
 
 
 def test_contract_of_two_relabel_views_matches_numpy_and_leaves_parent_intact():
@@ -41,6 +57,7 @@ def test_contract_of_two_relabel_views_matches_numpy_and_leaves_parent_intact():
 
     assert C.labels() == ["a", "b", "c", "q", "r", "d"]
     expected = np.einsum("abcs,sqrd->abcqrd", dense_before, dense_before)
+    assert C.Nblocks() > 1
     np.testing.assert_allclose(_dense(C), expected, rtol=0, atol=1e-12)
     # the operands' shared storage must be untouched by the contraction
     assert [blk.shape() for blk in T.get_blocks()] == shapes_before

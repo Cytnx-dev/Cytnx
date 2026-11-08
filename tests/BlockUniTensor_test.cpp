@@ -1783,30 +1783,51 @@ namespace cytnx {
 
       /*=====test info=====
       describe:relabel() returns a view sharing block storage with its parent (#1206). Contracting
-      two views of one tensor must give the same result as contracting a view with a clone (and
-      as the dense contraction), and must leave the parent's blocks untouched.
+      two views of one tensor must agree with the dense Tensordot of the tensor's dense form (an
+      independent reference) and must leave the parent's blocks untouched.
       ====================*/
+      namespace {
+        // Assemble the dense array of a block-sparse UniTensor from its blocks and qindices.
+        Tensor DenseArrayOf(const UniTensor& ut) {
+          std::vector<cytnx_uint64> shape;
+          for (const auto& bond : ut.bonds()) shape.push_back(bond.dim());
+          Tensor out = zeros(shape, ut.dtype());
+          for (std::size_t b = 0; b < ut.Nblocks(); b++) {
+            const std::vector<cytnx_uint64>& qidx = ut.get_qindices(b);
+            std::vector<Accessor> where;
+            for (std::size_t leg = 0; leg < qidx.size(); leg++) {
+              const std::vector<cytnx_uint64>& degs = ut.bonds()[leg].getDegeneracies();
+              cytnx_int64 offset = 0;
+              for (std::size_t q = 0; q < qidx[leg]; q++) offset += degs[q];
+              where.push_back(Accessor::range(offset, offset + degs[qidx[leg]]));
+            }
+            out.set(where, ut.get_block_(b));
+          }
+          return out;
+        }
+      }  // namespace
+
       TEST_F(BlockUniTensorTest, ContractTwoRelabelViewsOfOneTensor) {
         Bond in = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2}, {Symmetry::Zn(2)});
         UniTensor T({in, in, in.redirect(), in.redirect()}, {"a", "b", "c", "d"}, 2);
         InitUniTensorUniform(T, 7);
+        UniTensor T_before = T.clone();  // an independent value snapshot (to_dense() would alias T)
         std::vector<std::vector<cytnx_uint64>> shapes_before;
-        for (cytnx_uint64 b = 0; b < T.Nblocks(); b++)
+        for (std::size_t b = 0; b < T.Nblocks(); b++)
           shapes_before.push_back(T.get_block_(b).shape());
-        UniTensor dense_T = T.to_dense();
+        Tensor dense_T = DenseArrayOf(T);
+        Tensor expected = linalg::Tensordot(dense_T, dense_T, {3}, {0});  // abcs,sqrd->abcqrd
 
         UniTensor C = Contract(T.relabel({"a", "b", "c", "s"}), T.relabel({"s", "q", "r", "d"}));
         UniTensor C_clone =
           Contract(T.relabel({"a", "b", "c", "s"}), T.clone().relabel({"s", "q", "r", "d"}));
-        UniTensor C_dense =
-          Contract(dense_T.relabel({"a", "b", "c", "s"}), dense_T.relabel({"s", "q", "r", "d"}));
 
         EXPECT_EQ(C.labels(), std::vector<std::string>({"a", "b", "c", "q", "r", "d"}));
         EXPECT_TRUE((C - C_clone).Norm().item() < 1e-12);
-        EXPECT_TRUE((C.to_dense() - C_dense).Norm().item() < 1e-12);
-        for (cytnx_uint64 b = 0; b < T.Nblocks(); b++)
+        EXPECT_TRUE((DenseArrayOf(C) - expected).Norm().item() < 1e-12);
+        for (std::size_t b = 0; b < T.Nblocks(); b++)
           EXPECT_EQ(T.get_block_(b).shape(), shapes_before[b]) << "block " << b;
-        EXPECT_TRUE((T.to_dense() - dense_T).Norm().item() < 1e-15);
+        EXPECT_TRUE((T - T_before).Norm().item() < 1e-15);
       }
 
     }  // namespace
