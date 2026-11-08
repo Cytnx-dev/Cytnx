@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <algorithm>
 
 #include "../test_tools.h"
 #include "cytnx.hpp"
@@ -214,6 +215,83 @@ namespace cytnx {
         UniTensor M = hermitian_blocks(2, {{{1}}, {{2}}});
         EXPECT_THROW(linalg::Eigh_truncate(M, 0), std::logic_error);
         EXPECT_THROW(linalg::Eigh_truncate(M, 1, std::vector<cytnx_uint64>{}), std::logic_error);
+      }
+
+      // The full dense array of a block-sparse UniTensor, every block in its sector slot.
+      Tensor dense_array_of(const UniTensor &ut) {
+        std::vector<cytnx_uint64> shape;
+        for (const auto &bond : ut.bonds()) shape.push_back(bond.dim());
+        Tensor out = zeros(shape, ut.dtype());
+        for (std::size_t b = 0; b < ut.Nblocks(); b++) {
+          const std::vector<cytnx_uint64> &qidx = ut.get_qindices(b);
+          std::vector<Accessor> where;
+          for (std::size_t leg = 0; leg < qidx.size(); leg++) {
+            const std::vector<cytnx_uint64> &degs = ut.bonds()[leg].getDegeneracies();
+            cytnx_int64 offset = 0;
+            for (std::size_t q = 0; q < qidx[leg]; q++) offset += degs[q];
+            where.push_back(Accessor::range(offset, offset + degs[qidx[leg]]));
+          }
+          Tensor blk = ut.get_block_(b);
+          if (ut.is_diag()) blk = linalg::Diag(blk);
+          out.set(where, blk);
+        }
+        return out;
+      }
+
+      // Gauge-invariant content of a truncated eigendecomposition given as dense matrices:
+      // the ascending kept eigenvalues, the projector V V^T and the reconstruction V e V^T.
+      struct TruncationInvariants {
+        std::vector<double> eigenvalues;
+        Tensor projector;
+        Tensor reconstruction;
+      };
+
+      // eigen_matrix is the dense k x k diagonal matrix whose column order matches vectors'.
+      TruncationInvariants invariants_of(const Tensor &eigen_matrix, const Tensor &vectors) {
+        TruncationInvariants out;
+        for (cytnx_uint64 i = 0; i < eigen_matrix.shape()[0]; i++)
+          out.eigenvalues.push_back(eigen_matrix.at<double>({i, i}));
+        std::sort(out.eigenvalues.begin(), out.eigenvalues.end());
+        Tensor vt = vectors.permute({1, 0}).contiguous();
+        out.projector = linalg::Matmul(vectors, vt);
+        out.reconstruction = linalg::Matmul(linalg::Matmul(vectors, eigen_matrix), vt);
+        return out;
+      }
+
+      /*=====test info=====
+      describe:the same Hermitian matrix through the dense path (dense UniTensor -> Eigh_truncate)
+      and through the block-sparse path (block UniTensor -> Eigh_truncate -> assembled to dense)
+      must agree on every gauge-invariant object for every keepdim. Non-diagonal Z3 blocks with
+      eigenvalues of both signs.
+      ====================*/
+      TEST(EighTruncate, BlockSparsePathEqualsDensePath) {
+        const double tol = 1e-12;
+        UniTensor M = hermitian_blocks(3, {{{1.0, 2.0, 0.5}, {2.0, -3.0, 1.5}, {0.5, 1.5, 0.25}},
+                                           {{-4.0, 1.0}, {1.0, 2.5}},
+                                           {{0.75, -2.0}, {-2.0, 3.5}}});
+        Tensor dense = dense_array_of(M);
+        UniTensor M_dense(dense, false, 1, {"r", "c"});
+        for (cytnx_uint64 keepdim : {1u, 3u, 4u, 6u}) {
+          std::vector<UniTensor> block_out = linalg::Eigh_truncate(M, keepdim);
+          std::vector<UniTensor> dense_out = linalg::Eigh_truncate(M_dense, keepdim);
+          ASSERT_EQ(block_out.size(), 2u);
+          ASSERT_EQ(dense_out.size(), 2u);
+
+          TruncationInvariants from_blocks =
+            invariants_of(dense_array_of(block_out[0]), dense_array_of(block_out[1]));
+          TruncationInvariants from_dense =
+            invariants_of(linalg::Diag(dense_out[0].get_block_()), dense_out[1].get_block_());
+
+          ASSERT_EQ(from_blocks.eigenvalues.size(), keepdim) << "keepdim " << keepdim;
+          ASSERT_EQ(from_dense.eigenvalues.size(), keepdim) << "keepdim " << keepdim;
+          for (std::size_t i = 0; i < keepdim; i++)
+            EXPECT_NEAR(from_blocks.eigenvalues[i], from_dense.eigenvalues[i], tol)
+              << "keepdim " << keepdim << " eigenvalue " << i;
+          EXPECT_TRUE((from_blocks.projector - from_dense.projector).Norm().item() < tol)
+            << "keepdim " << keepdim;
+          EXPECT_TRUE((from_blocks.reconstruction - from_dense.reconstruction).Norm().item() < tol)
+            << "keepdim " << keepdim;
+        }
       }
 
     }  // namespace

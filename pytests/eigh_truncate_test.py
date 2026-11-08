@@ -61,7 +61,7 @@ def test_eigenvectors_are_orthonormal_and_satisfy_the_eigen_equation():
     MV = cytnx.Contract(M, V.relabel("r", "c"))
     Ve = cytnx.Contract(V, e).relabel("_aux_R", "_aux_L")
     diff = MV - Ve.permute(MV.labels())
-    assert diff.Norm().item() < 1e-10
+    assert diff.norm() < 1e-10
 
 
 def test_min_blockdim_floor_beats_keepdim_and_zero_drops_the_block():
@@ -89,3 +89,51 @@ def test_err_and_return_err_report_discarded_magnitudes():
     np.testing.assert_allclose(dropped.get_block_().numpy(), all_lam[3:], rtol=0, atol=1e-10)
     e1, V1, largest = cytnx.linalg.Eigh_truncate(M, 7, threshold, True, 1)
     assert abs(largest.get_block_().item() - all_lam[3]) < 1e-10
+
+
+def _dense_array(U):
+    """Full dense array of a block-sparse UniTensor, every block in its sector slot."""
+    bonds = U.bonds()
+    offsets = [np.concatenate([[0], np.cumsum(b.getDegeneracies())]) for b in bonds]
+    out = np.zeros([b.dim() for b in bonds])
+    for i in range(U.Nblocks()):
+        blk = U.get_block_(i).numpy()
+        where = tuple(slice(offsets[leg][q], offsets[leg][q] + blk.shape[leg])
+                      for leg, q in enumerate(U.get_qindices(i)))
+        out[where] = blk
+    return out
+
+
+@pytest.mark.parametrize("keepdim", [1, 3, 4, 6])
+def test_block_sparse_path_equals_dense_path(keepdim):
+    """dense rep -> Eigh_truncate  ==  block-sparse rep -> Eigh_truncate -> dense, for one matrix.
+
+    Compared through the gauge-invariant objects: the sorted kept eigenvalues, the projector
+    V V^dagger onto the kept subspace and the reconstruction V e V^dagger; numpy's eigh on the
+    dense matrix is the third, independent reference (the keepdim largest |eigenvalue|).
+    """
+    M, _ = _hermitian_z3(seed=2)
+    dense = _dense_array(M)
+    assert np.count_nonzero(dense) > 0 and np.allclose(dense, dense.T)
+
+    e_blk, v_blk = cytnx.linalg.Eigh_truncate(M, keepdim)
+    e_dn, v_dn = cytnx.linalg.Eigh_truncate(
+        cytnx.UniTensor(cytnx.from_numpy(dense), rowrank=1, labels=["r", "c"]), keepdim)
+
+    def invariants(e_flat, v_matrix):
+        proj = v_matrix @ v_matrix.T
+        recon = v_matrix @ np.diag(e_flat) @ v_matrix.T
+        return np.sort(e_flat), proj, recon
+
+    e_b = np.concatenate([e_blk.get_block_(i).numpy() for i in range(e_blk.Nblocks())])
+    inv_blk = invariants(e_b, _dense_array(v_blk))
+    inv_dn = invariants(e_dn.get_block().numpy(), v_dn.get_block().numpy())
+    lam, vec = np.linalg.eigh(dense)
+    kept = np.argsort(-np.abs(lam), kind="stable")[:keepdim]
+    inv_np = invariants(lam[kept], vec[:, kept])
+
+    for a, b in zip(inv_blk, inv_dn):
+        np.testing.assert_allclose(a, b, rtol=0, atol=1e-12)
+    for a, b in zip(inv_blk, inv_np):
+        np.testing.assert_allclose(a, b, rtol=0, atol=1e-10)
+    assert len(e_b) == keepdim
