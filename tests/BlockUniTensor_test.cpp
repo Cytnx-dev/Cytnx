@@ -1,5 +1,7 @@
 #include "BlockUniTensor_test.h"
 
+#include <cstdint>
+
 namespace cytnx {
   namespace test {
     namespace {
@@ -1797,7 +1799,7 @@ namespace cytnx {
             std::vector<Accessor> where;
             for (std::size_t leg = 0; leg < qidx.size(); leg++) {
               const std::vector<cytnx_uint64>& degs = ut.bonds()[leg].getDegeneracies();
-              cytnx_int64 offset = 0;
+              std::int64_t offset = 0;
               for (std::size_t q = 0; q < qidx[leg]; q++) offset += degs[q];
               where.push_back(Accessor::range(offset, offset + degs[qidx[leg]]));
             }
