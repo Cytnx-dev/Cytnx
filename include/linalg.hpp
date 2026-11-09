@@ -8,15 +8,20 @@
 #include "cytnx_error.hpp"
 #include "random.hpp"
 
-#ifdef BACKEND_TORCH
-#else
+#include <functional>
+#include <type_traits>
 
-  #include <functional>
-
-  #include "backend/Scalar.hpp"
-  #include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
+
+  // The scalar-like operand concepts (cytnx_scalar_value, cytnx_scalar_like,
+  // cytnx_unitensor_scalar_like) are defined in Tensor.hpp, which this header includes. They must
+  // be declared there because cytnx_scalar_like names Tensor::Tproxy, and because Tensor.hpp
+  // forward-declares the constrained `Tensor <op> T` operators -- those forward declarations have
+  // to carry the identical constraint or they form a distinct, unconstrained overload set
+  // (#1003, operator hygiene -- Ian's note).
 
   /**
    * @brief The addition operator between two UniTensor.
@@ -53,7 +58,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -65,7 +70,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -92,7 +97,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -104,7 +109,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -131,7 +136,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -143,7 +148,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -170,7 +175,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -182,7 +187,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_unitensor_scalar_like T>
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -206,7 +211,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const T &lc, const cytnx::UniTensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
@@ -218,7 +223,7 @@ namespace cytnx {
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const cytnx::UniTensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
 
   /**
@@ -752,7 +757,7 @@ namespace cytnx {
                                                const cytnx_uint64 &mindim = 1);
 
     /**
-     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
+     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at least
      * \p min_blockdim singular values in each block.
      * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
      * truncates the singular values. The result will depend on the rowrank of the
@@ -770,9 +775,16 @@ namespace cytnx {
      *
      * @param[in] Tin a BlockUniTensor, with the correct rowrank set to interpret it as a matrix
      * @param[in] keepdim the number (at most) of singular values to keep.
-     * @param[in] min_blockdim a vector containing the minimum dimension of each block;
-     * alternatively, a vector with only one element can be given to have the same min_blockdim for
-     * each block
+     * @param[in] min_blockdim per-block floors on the number of singular values kept. The vector
+     * is positional over the blocks of the singular-value UniTensor of the full SVD, i.e. over the
+     * charge sectors that survive the row/column bipartition of \p Tin, in the order the SVD lists
+     * them (ascending by qnum); a sector without a block in the SVD has no entry, so the length
+     * must equal the number of blocks of the singular-value UniTensor (checked), not the number of
+     * qnums of a bond. A vector with a single element applies that floor to every block. Each
+     * entry is a floor, not a cap: at least that many singular values of the block are kept,
+     * clamped to the block's rank, and the floors are honoured before \p keepdim, so the total kept
+     * dimension is max(\p keepdim, sum of the clamped floors), capped at the full rank. A zero
+     * entry imposes no floor on that block (the block may be dropped entirely).
      * @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
      * @param[in] is_UvT if \em true, the left- and right- unitary UniTensors (isometries) are
      * returned.
@@ -824,11 +836,13 @@ namespace cytnx {
                                                  const cytnx_uint64 &mindim = 1);
 
     /**
-     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
+     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at least
      * \p min_blockdim singular values in each block.
      * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
      * truncates the singular values. This version uses the ?gesvd method. See references below for
-     * more details.
+     * more details. \p min_blockdim has the same semantics as in Svd_truncate: positional over the
+     * blocks of the singular-value UniTensor (ascending by qnum), a per-block floor clamped to the
+     * block's rank, honoured before \p keepdim.
      * @see Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const
      * std::vector<cytnx_uint64> min_blockdim, const double &err, const bool &is_UvT,
      * const unsigned int &return_err, const cytnx_uint64 &mindim), Gesvd(const
@@ -899,8 +913,8 @@ namespace cytnx {
                                        unsigned int seed = random::__static_random_device());
 
     /**
-     * @brief Perform a truncated Singular-Value decomposition of a UniTensor and keep at most
-     * \p min_blockdim singular values in each block.
+     * @brief Perform a truncated Singular-Value decomposition of a UniTensor and keep at
+     * least \p min_blockdim singular values in each block.
      * @details For each block, the minimum dimension can be chosen for the truncation. This can be
      * helpful to avoid loosing symmetry sectors in the truncated SVD. For more details, please
      * refer to the documentation of the function \ref Rsvd(const cytnx::UniTensor &Tin,
@@ -916,9 +930,16 @@ namespace cytnx {
      * singular values are kept<br> 3) Keep at least \p mindim singular values;<br> 4) Drop all
      * singular values smaller than \p err (no normalization applied to the singular values)
      *
-     * @param[in] min_blockdim a vector containing the minimum dimension of each block;
-     * alternatively, a vector with only one element can be given to have the same min_blockdim for
-     * each block
+     * @param[in] min_blockdim per-block floors on the number of singular values kept. The vector
+     * is positional over the blocks of the singular-value UniTensor of the full SVD, i.e. over the
+     * charge sectors that survive the row/column bipartition of \p Tin, in the order the SVD lists
+     * them (ascending by qnum); a sector without a block in the SVD has no entry, so the length
+     * must equal the number of blocks of the singular-value UniTensor (checked), not the number of
+     * qnums of a bond. A vector with a single element applies that floor to every block. Each
+     * entry is a floor, not a cap: at least that many singular values of the block are kept,
+     * clamped to the block's rank, and the floors are honoured before \p keepdim, so the total kept
+     * dimension is max(\p keepdim, sum of the clamped floors), capped at the full rank. A zero
+     * entry imposes no floor on that block (the block may be dropped entirely).
      * @see Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err = 0., bool is_U =
      * true, bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1, cytnx_uint64
      * oversampling_summand = 10, double oversampling_factor = 1., cytnx_uint64 power_iteration = 0,
@@ -3176,7 +3197,7 @@ namespace cytnx {
    * @return [Tensor] the result of addition.
    * @see linalg::Add(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator+(const T &lc, const Tensor &Rt);
 
   /**
@@ -3188,7 +3209,7 @@ namespace cytnx {
    * @return [Tensor] the result of addition.
    * @see linalg::Add(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator+(const Tensor &Lt, const T &rc);
 
   //------------------------------------
@@ -3213,7 +3234,7 @@ namespace cytnx {
    * @return [Tensor] the result of subtraction.
    * @see linalg::Sub(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator-(const T &lc, const Tensor &Rt);
 
   /**
@@ -3225,7 +3246,7 @@ namespace cytnx {
    * @return [Tensor] the result of subtraction.
    * @see linalg::Sub(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator-(const Tensor &Lt, const T &rc);
 
   //-----------------------------------
@@ -3250,7 +3271,7 @@ namespace cytnx {
    * @return [Tensor] the result of multiplication.
    * @see linalg::Mul(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator*(const T &lc, const Tensor &Rt);
 
   /**
@@ -3262,7 +3283,7 @@ namespace cytnx {
    * @return [Tensor] the result of multiplication.
    * @see linalg::Mul(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator*(const Tensor &Lt, const T &rc);
 
   //----------------------------------
@@ -3290,7 +3311,7 @@ namespace cytnx {
    * @see linalg::Div(const T &lc, const Tensor &Rt)
    * @pre The divisor cannot be zero.
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator/(const T &lc, const Tensor &Rt);
 
   /**
@@ -3303,7 +3324,7 @@ namespace cytnx {
    * @see linalg::Div(const Tensor &Lt, const T &rc)
    * @pre The divisor cannot be zero.
    */
-  template <class T>
+  template <cytnx_scalar_like T>
   Tensor operator/(const Tensor &Lt, const T &rc);
 
   //----------------------------------
@@ -3328,7 +3349,7 @@ namespace cytnx {
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator%(const T &lc, const Tensor &Rt);
 
   /**
@@ -3340,7 +3361,7 @@ namespace cytnx {
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator%(const Tensor &Lt, const T &rc);
 
   //----------------------------------
@@ -3364,7 +3385,7 @@ namespace cytnx {
    * @return [Tensor] the result of comparison.
    * @see linalg::Cpr(const T &lc, const Tensor &Rt)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator==(const T &lc, const Tensor &Rt);
 
   /**
@@ -3376,11 +3397,9 @@ namespace cytnx {
    * @return [Tensor] the result of comparison.
    * @see linalg::Cpr(const Tensor &Lt, const T &rc)
    */
-  template <class T>
+  template <cytnx_scalar_value T>
   Tensor operator==(const Tensor &Lt, const T &rc);
 
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_LINALG_H_

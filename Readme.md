@@ -1,5 +1,5 @@
-# Cytnx [![Build Status (GitHub Actions)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml/badge.svg?branch=master)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml) [![codecov](https://codecov.io/gh/Cytnx-dev/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/Cytnx-dev/Cytnx) [![Coverity Scan Build Status](https://scan.coverity.com/projects/28835/badge.svg)](https://scan.coverity.com/projects/cytnx-dev-cytnx)
-[![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
+# Cytnx [![Build Status (GitHub Actions)](https://github.com/Cytnx-dev/Cytnx/actions/workflows/ci-cmake_tests.yml/badge.svg?branch=master)](https://github.com/Cytnx-dev/Cytnx/actions/workflows/ci-cmake_tests.yml) [![codecov](https://codecov.io/gh/Cytnx-dev/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/Cytnx-dev/Cytnx) [![Coverity Scan Build Status](https://scan.coverity.com/projects/28835/badge.svg)](https://scan.coverity.com/projects/cytnx-dev-cytnx)
+[![PyPI](https://img.shields.io/pypi/v/cytnx.svg)](https://pypi.org/project/cytnx/) [![Python versions](https://img.shields.io/pypi/pyversions/cytnx.svg)](https://pypi.org/project/cytnx/)
 
 ![alt text](./Icons/Icon_small.png)
 
@@ -17,11 +17,55 @@ Cytnx is a tensor network library designed for quantum physics simulations using
 >[Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
 ## News
-	[v1.0.0]
-	This is the release of the version v1.0.0, which is the stable version of the project.
- **See also**
-[Release Note](misc_doc/version.log).
+The current release is **v1.1.1**. See the
+[GitHub releases page](https://github.com/Cytnx-dev/Cytnx/releases) for what
+changed in each release, and [misc_doc/version.log](misc_doc/version.log) for
+the older hand-written changelog.
 
+
+## Installation
+Cytnx publishes prebuilt Python wheels, so there is normally nothing to
+compile. We recommend [Pixi](https://pixi.sh):
+
+```sh
+pixi init my-project
+cd my-project
+pixi add "python=3.12"      # pin a version Cytnx has wheels for
+pixi add --pypi cytnx
+pixi run python
+```
+
+Pin the Python version: a bare `pixi add python` takes the newest CPython
+conda-forge offers, which is already past the newest Python Cytnx builds wheels
+for, and the resolve then fails.
+
+Or with `pip`, in a virtual environment:
+
+```sh
+python3.12 -m venv cytnx-env
+source cytnx-env/bin/activate
+pip install cytnx
+```
+
+> [!WARNING]
+> The current release on PyPI, `cytnx` 1.1.1, fails on `import cytnx` with
+> `AttributeError: module 'importlib' has no attribute 'util'`. The bug is
+> fixed on `master` but is not in a release yet. Until the next patch release,
+> take Cytnx from the nightly index, which is built from `master`:
+>
+> ```sh
+> pixi add --pypi cytnx --index https://pypi.anaconda.org/cytnx-nightly-wheels/simple
+> ```
+
+Wheels cover CPython 3.9-3.14 on Linux (x86_64, aarch64) and macOS (Apple
+silicon and Intel). There is no native Windows wheel; use WSL. The CUDA build
+is a separate `cytnx-cuda` package, currently published on the nightly index
+for Linux x86_64 only.
+
+The wheels contain only the Python extension. To use the C++ API, build the
+library with CMake and consume it via `find_package(Cytnx)`. See the
+[installation guide](https://cytnx-dev.github.io/Cytnx/dev/install.html) for
+the full instructions.
 
 ## User Guide [under construction]:
 
@@ -211,7 +255,7 @@ Cytnx provides a set of linear algebra functions.
 * For instance, one can perform SVD, Eig, Eigh decomposition, etc. on a `Tensor` or `UniTensor`.
 * Iterative methods such as Lanczos, Arnoldi are also available.
 * The linear algebra functions are implemented in the `linalg` namespace.
-For more details, see the [API documentation](https://kaihsinwu.gitlab.io/cytnx_api/).
+For more details, see the [API documentation](https://cytnx-dev.github.io/Cytnx/dev/api/).
 ```c++
 auto mean = 0.0;
 auto std = 1.0;
@@ -231,6 +275,8 @@ See the examples in the folder `example`
 
 ## How to contribute & get in contact
 If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
+
+[CONTRIBUTING.md](CONTRIBUTING.md) sets up a Pixi development environment on Linux, macOS, and Windows.
 Also, if you have any questions or suggestions, feel free to reach out to us.
 
 Maintainers cutting a tagged release should follow [RELEASING.md](RELEASING.md).

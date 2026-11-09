@@ -3,7 +3,6 @@ target_sources(cytnx
 
     #utils_internal_interface.hpp
     cartesian.cpp
-    complex_arithmetic.cpp
     is.cpp
     str_utils.cpp
     dynamic_arg_resolver.cpp

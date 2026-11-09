@@ -11,10 +11,18 @@ install_log=$(mktemp)
 
 run_pip_install() {
   set -o pipefail
+  # meta.yaml sets CYTNX_HPTT_ISA_OPTION for the architectures HPTT has
+  # hand-vectorized kernels for, and leaves it unset elsewhere so those
+  # builds keep HPTT's scalar fallback.
+  local isa_args=()
+  if [ -n "${CYTNX_HPTT_ISA_OPTION:-}" ]; then
+    isa_args=(--config-settings "skbuild.cmake.args=-D${CYTNX_HPTT_ISA_OPTION}=ON")
+  fi
   $PYTHON -m pip install . -vv --no-deps --ignore-installed \
     --config-settings skbuild.build-dir=build \
     --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
-    --config-settings "skbuild.cmake.args=-G Unix Makefiles" 2>&1 | tee "$install_log"
+    --config-settings "skbuild.cmake.args=-G Unix Makefiles" \
+    "${isa_args[@]}" 2>&1 | tee "$install_log"
   local status=$?
   set +o pipefail
   return $status

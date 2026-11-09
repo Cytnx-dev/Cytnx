@@ -1,8 +1,6 @@
 #include "random.hpp"
 #include "Type.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 namespace cytnx {
   namespace random {
     Tensor normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
@@ -20,4 +18,3 @@ namespace cytnx {
 
   }  // namespace random
 }  // namespace cytnx
-#endif

@@ -236,7 +236,94 @@ namespace cytnx {
           AreNearlyEqTensor(gpu_result_r_cpu, expected_r, GetTolerance(gpu_result_r.dtype())));
       }
 
+      // The #984/#999 promotion discriminator on the GPU Div path (#1003): ComplexFloat
+      // (/) Double must produce ComplexDouble, with the quotient computed and stored
+      // through that output type. Div's output rule is
+      // make_floating_point_t<type_promote_t<TL, TR>>, and ComplexDouble is already
+      // floating, so the expected dtype is the plain promotion.
+      //
+      // See Sub_test's twin for why the Double operands are float32-inexact (0.1, 3.3):
+      // computing through ComplexFloat lands ~1e-8 away, far past the tolerance here.
+      // Both operand orders are checked because division does not commute, and the two
+      // orders exercise different arithmetic -- dividing by a real-valued complex reduces
+      // to a componentwise divide, while dividing by a complex with a non-zero imaginary
+      // part goes through the full complex-division formula. Expected values are evaluated
+      // in host double arithmetic from that formula, not taken from the CPU Div path.
+      TEST(DivMixedDtypeTest, GpuComplexFloatDoublePromotesToComplexDouble) {
+        Tensor cf = zeros({2}, Type.ComplexFloat);
+        cf.at<cytnx_complex64>({0}) = cytnx_complex64(1.5f, -2.5f);
+        cf.at<cytnx_complex64>({1}) = cytnx_complex64(0.0f, 4.0f);
+        Tensor d = zeros({2}, Type.Double);
+        d.at<cytnx_double>({0}) = 0.1;
+        d.at<cytnx_double>({1}) = 3.3;
+
+        {
+          SCOPED_TRACE("ComplexFloat / Double");
+          Tensor out = linalg::Div(cf.to(Device.cuda), d.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+          // Dividing by a real: (a + bi) / c = a/c + (b/c)i.
+          Tensor expected = zeros({2}, Type.ComplexDouble);
+          expected.at<cytnx_complex128>({0}) = cytnx_complex128(1.5 / 0.1, -2.5 / 0.1);
+          expected.at<cytnx_complex128>({1}) = cytnx_complex128(0.0 / 3.3, 4.0 / 3.3);
+          EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
+        }
+        {
+          SCOPED_TRACE("Double / ComplexFloat");
+          Tensor out = linalg::Div(d.to(Device.cuda), cf.to(Device.cuda)).to(Device.cpu);
+          ASSERT_EQ(out.dtype(), Type.ComplexDouble);
+          // (a + bi) / (c + di) = ((ac + bd) + (bc - ad)i) / (c^2 + d^2), with b = 0 here.
+          const double den0 = 1.5 * 1.5 + 2.5 * 2.5;
+          const double den1 = 4.0 * 4.0;
+          Tensor expected = zeros({2}, Type.ComplexDouble);
+          expected.at<cytnx_complex128>({0}) =
+            cytnx_complex128(0.1 * 1.5 / den0, -(0.1 * -2.5) / den0);
+          expected.at<cytnx_complex128>({1}) = cytnx_complex128(0.0, -(3.3 * 4.0) / den1);
+          EXPECT_TRUE(AreNearlyEqTensor(out, expected, 1e-12));
+        }
+      }
+
       INSTANTIATE_TEST_SUITE_P(DivTests, DivTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
+
+      // Non-contiguous tensor(/)tensor on the GPU (#1003, #988): the GPU front end used to
+      // reject a non-contiguous operand ("must be contiguous"); it now feeds the layout to
+      // the shared dispatch kernel like Add/Sub. Both operands are permuted so both operand
+      // offsets are gathered through the inverse mappers. Div is true division (floating
+      // output). Nonzero denominators (arange from 1) avoid divide-by-zero. Compare against
+      // the independent CPU path across all dtypes.
+      TEST(DivNonContig, GpuNoncontiguousTensorTensorMatchesCpu) {
+        for (auto dtype : dtype_list) {
+          if (dtype == Type.Bool) continue;
+          SCOPED_TRACE("Div non-contiguous dtype=" + std::to_string(dtype));
+
+          Tensor gpu_l = arange(2, 8, 1, dtype).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          Tensor gpu_r = arange(1, 7, 1, dtype).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+          ASSERT_FALSE(gpu_l.is_contiguous());
+          ASSERT_FALSE(gpu_r.is_contiguous());
+
+          Tensor gpu_out = linalg::Div(gpu_l, gpu_r);
+          Tensor cpu_out = linalg::Div(gpu_l.to(Device.cpu), gpu_r.to(Device.cpu));
+          EXPECT_EQ(gpu_out.dtype(), cpu_out.dtype());
+          EXPECT_TRUE(
+            AreNearlyEqTensor(gpu_out.to(Device.cpu), cpu_out, GetTolerance(gpu_out.dtype())));
+        }
+      }
+
+      // Independent hand-computed literal (NOT the CPU oracle) for the non-contiguous gather:
+      // l logical = [[2,4,6],[3,5,7]], r logical = [[1,3,5],[2,4,6]] (arange 3x2 permuted).
+      // Int64/Int64 is true division -> Double: l/r = [[2, 4/3, 6/5],[3/2, 5/4, 7/6]] --
+      // distinct per element, so a wrong multi-index decomposition is caught.
+      TEST(DivNonContig, GpuNoncontiguousLiteral) {
+        Tensor l = arange(2, 8, 1, Type.Int64).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+        Tensor r = arange(1, 7, 1, Type.Int64).reshape({3, 2}).permute({1, 0}).to(Device.cuda);
+        ASSERT_FALSE(l.is_contiguous());
+        Tensor got = linalg::Div(l, r).to(Device.cpu);
+        EXPECT_EQ(got.dtype(), Type.Double);
+        const cytnx_double expect[2][3] = {{2.0, 4.0 / 3.0, 6.0 / 5.0},
+                                           {3.0 / 2.0, 5.0 / 4.0, 7.0 / 6.0}};
+        for (cytnx_uint64 i = 0; i < 2; i++)
+          for (cytnx_uint64 j = 0; j < 3; j++)
+            EXPECT_NEAR(got.at<cytnx_double>({i, j}), expect[i][j], 1e-10);
+      }
 
     }  // namespace
   }  // namespace gpu_test

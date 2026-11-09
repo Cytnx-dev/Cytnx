@@ -32,7 +32,6 @@ import urllib.request
 
 API_BASE = "https://api.anaconda.org"
 ORGANIZATION = "cytnx-nightly-wheels"
-PACKAGE = "cytnx"
 NIGHTLY_VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)\.dev(\d{12})$")
 MAX_ATTEMPTS = 3
 RETRY_BACKOFF_SECONDS = 2.0
@@ -75,9 +74,18 @@ def _urlopen_with_retry(request: urllib.request.Request, *, timeout: int) -> byt
     raise AssertionError("unreachable: the last attempt always returns or raises")
 
 
-def fetch_versions() -> list[str]:
-    url = f"{API_BASE}/package/{ORGANIZATION}/{PACKAGE}"
-    body = _urlopen_with_retry(urllib.request.Request(url), timeout=30)
+def fetch_versions(package: str) -> list[str]:
+    url = f"{API_BASE}/package/{ORGANIZATION}/{package}"
+    try:
+        body = _urlopen_with_retry(urllib.request.Request(url), timeout=30)
+    except urllib.error.HTTPError as error:
+        if error.code == 404:
+            # The package is not on the channel yet -- e.g. the first
+            # nightly upload for a brand-new package, where this prune runs
+            # before any wheel has created it. Nothing to prune.
+            print(f"{package}: not on the channel yet, nothing to prune")
+            return []
+        raise
     return list(json.loads(body)["versions"])
 
 
@@ -105,8 +113,8 @@ def select_versions_to_delete(versions: list[str], keep: int) -> list[str]:
     return nightly_versions[:excess] if excess > 0 else []
 
 
-def delete_version(version: str, token: str) -> None:
-    url = f"{API_BASE}/release/{ORGANIZATION}/{PACKAGE}/{version}"
+def delete_version(package: str, version: str, token: str) -> None:
+    url = f"{API_BASE}/release/{ORGANIZATION}/{package}/{version}"
     request = urllib.request.Request(
         url, method="DELETE", headers={"Authorization": f"token {token}"}
     )
@@ -138,11 +146,16 @@ def main() -> int:
         action="store_true",
         help="print the versions that would be deleted without deleting them",
     )
+    parser.add_argument(
+        "--package",
+        default="cytnx",
+        help="package name on the cytnx-nightly-wheels channel to prune (default: cytnx)",
+    )
     args = parser.parse_args()
     if args.keep < 0:
         parser.error("--keep must be a non-negative integer")
 
-    versions = fetch_versions()
+    versions = fetch_versions(args.package)
     to_delete = select_versions_to_delete(versions, args.keep)
 
     if not to_delete:
@@ -159,7 +172,7 @@ def main() -> int:
         sys.exit("ANACONDA_API_TOKEN is required to delete releases")
 
     for version in to_delete:
-        delete_version(version, token)
+        delete_version(args.package, version, token)
     return 0
 
 

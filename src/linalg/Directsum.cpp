@@ -4,9 +4,6 @@
 #include "Tensor.hpp"
 #include <numeric>
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   namespace linalg {
     cytnx::Tensor Directsum(const cytnx::Tensor &T1, const cytnx::Tensor &T2,
@@ -79,4 +76,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-#endif  // BACKEND_TORCH

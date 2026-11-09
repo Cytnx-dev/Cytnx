@@ -27,20 +27,26 @@ else()
 endif()
 
 message(STATUS " cudaver: ${CUDAToolkit_VERSION_MAJOR}" )
-# Cytnx requires CUDA >= 12 (enforced in CMakeLists.txt) and cuTENSOR >= 2.0.
-# Search both library layouts: cuTENSOR 2.x tarballs place the libraries
-# directly under lib/, while 1.x tarballs and apt use a per-CUDA subdir
-# (lib/<cuda-major>, e.g. lib/12, lib/13). Listing both as find_library
-# PATH_SUFFIXES lets the supported 2.x flat layout and the legacy versioned
-# layout resolve for both CUDA 12 and 13. The older lib/10.2 and lib/11
-# branches were removed as dead code; apt multiarch paths remain (issue #946).
-if(CUDAToolkit_VERSION_MAJOR GREATER_EQUAL 12)
-  set(CUTNLIB_DIR lib lib/${CUDAToolkit_VERSION_MAJOR})
-else()
-  message(FATAL_ERROR
-    "cuTENSOR support requires CUDA >= 12, but CUDAToolkit_VERSION_MAJOR is "
-    "'${CUDAToolkit_VERSION_MAJOR}'.")
-endif()
+# Search every cuTENSOR library layout: 2.x tarballs place the libraries
+# directly under lib/, while older tarballs and apt use a per-CUDA-major subdir
+# (lib/<cuda-major>, e.g. lib/11, lib/12, lib/13). The older minor-specific
+# lib/10.2 and lib/11.0 special-cases were removed; the generic lib/<major>
+# covers them (apt multiarch paths remain, issue #946). The CUDA-version floor
+# is a separate policy decision (issue #962), enforced in CMakeLists.txt rather
+# than gated here, so this finder stays policy-free.
+#
+# The per-major directory records which CUDA major the libraries were *built*
+# for, which need not equal the host toolkit's major: a cuTENSOR built for CUDA
+# 12 ships lib/12 and is usable from a CUDA 13 host. Searching only
+# lib/${CUDAToolkit_VERSION_MAJOR} therefore misses valid installs, so glob for
+# the per-major directories this install actually has and append them, highest
+# first. lib/ and the host major stay at the front so an exact match still wins.
+set(CUTNLIB_DIR lib lib/${CUDAToolkit_VERSION_MAJOR})
+file(GLOB _cutensor_major_dirs RELATIVE "${CUTENSOR_ROOT}" "${CUTENSOR_ROOT}/lib/[0-9]*")
+list(SORT _cutensor_major_dirs COMPARE NATURAL ORDER DESCENDING)
+list(APPEND CUTNLIB_DIR ${_cutensor_major_dirs})
+list(REMOVE_DUPLICATES CUTNLIB_DIR)
+message(STATUS "cuTENSOR library search suffixes: ${CUTNLIB_DIR}")
 
 set(CUTENSOR_INCLUDE_DIRS ${CUTENSOR_ROOT}/include)
 
@@ -61,23 +67,20 @@ endforeach()
 if(_cutensor_version_header)
   file(STRINGS "${_cutensor_version_header}" _cutensor_minor_line REGEX "^#define[ \t]+CUTENSOR_MINOR[ \t]+[0-9]+")
   string(REGEX REPLACE ".*CUTENSOR_MAJOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MAJOR "${_cutensor_major_line}")
-  string(REGEX REPLACE ".*CUTENSOR_MINOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MINOR "${_cutensor_minor_line}")
+  # CUTENSOR_MINOR may be absent/unmatched; default it to 0 rather than leaving
+  # CUTENSOR_VERSION malformed (e.g. "2."), which would break the VERSION_VAR
+  # comparison in find_package_handle_standard_args.
+  if(_cutensor_minor_line)
+    string(REGEX REPLACE ".*CUTENSOR_MINOR[ \t]+([0-9]+).*" "\\1" CUTENSOR_VERSION_MINOR "${_cutensor_minor_line}")
+  else()
+    set(CUTENSOR_VERSION_MINOR "0")
+  endif()
   set(CUTENSOR_VERSION "${CUTENSOR_VERSION_MAJOR}.${CUTENSOR_VERSION_MINOR}")
   message(STATUS "cuTENSOR version: ${CUTENSOR_VERSION} (from ${_cutensor_version_header})")
   if(CUTENSOR_VERSION_MAJOR LESS 2)
     message(FATAL_ERROR
       "cuTENSOR >= 2.0 is required, but found ${CUTENSOR_VERSION} in "
       "${CUTENSOR_ROOT}. Install cuTENSOR 2.x and point CUTENSOR_ROOT at it.")
-  endif()
-  # CUDA 13 support was added in cuTENSOR 2.3.0 (NVIDIA cuTENSOR release notes).
-  # cuTENSOR 2.0-2.2 are CUDA-12 builds: their major version passes the >= 2.0
-  # check above, but they can fail at link/load time against a CUDA 13 toolkit,
-  # so require >= 2.3 in that case.
-  if(CUDAToolkit_VERSION_MAJOR GREATER_EQUAL 13 AND CUTENSOR_VERSION VERSION_LESS 2.3)
-    message(FATAL_ERROR
-      "CUDA ${CUDAToolkit_VERSION_MAJOR} requires cuTENSOR >= 2.3 (CUDA 13 support "
-      "was added in cuTENSOR 2.3.0), but found ${CUTENSOR_VERSION} in "
-      "${CUTENSOR_ROOT}. Install cuTENSOR >= 2.3 and point CUTENSOR_ROOT at it.")
   endif()
 else()
   message(WARNING
@@ -86,18 +89,22 @@ else()
 endif()
 
 # set libs:
+# Try the CUDA-major-versioned subdirectory first (the layout of NVIDIA's
+# standalone cuTENSOR tarball releases, e.g. lib/12/libcutensor.so), then
+# fall back to a flat lib/ directory: the cutensor-cuXX PyPI wheels ship
+# libcutensor.so.N directly under lib/, with no CUDA-version subdirectory.
 find_library(
     CUTENSOR_LIB
     NAMES "cutensor"
     PATHS ${CUTENSOR_ROOT}
-    PATH_SUFFIXES ${CUTNLIB_DIR}
+    PATH_SUFFIXES ${CUTNLIB_DIR} "lib"
     NO_DEFAULT_PATH
 )
 find_library(
     CUTENSORMg_LIB
     NAMES "cutensorMg"
     PATHS ${CUTENSOR_ROOT}
-    PATH_SUFFIXES ${CUTNLIB_DIR}
+    PATH_SUFFIXES ${CUTNLIB_DIR} "lib"
     NO_DEFAULT_PATH
 )
 message(STATUS "CUTENSOR_LIB: ${CUTENSOR_LIB}")
