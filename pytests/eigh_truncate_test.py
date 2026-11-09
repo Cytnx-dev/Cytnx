@@ -76,7 +76,7 @@ def test_min_blockdim_floor_beats_keepdim_and_zero_drops_the_block():
     assert e0.Nblocks() == 1
     assert e0.bonds()[0].qnums() == [[1]]
     assert e0.bonds()[0].getDegeneracies() == [2]
-    with pytest.raises(Exception):
+    with pytest.raises(cytnx.CytnxError, match="same number of elements"):
         cytnx.linalg.Eigh_truncate(M, 1, [1, 1])
 
 
@@ -137,3 +137,156 @@ def test_block_sparse_path_equals_dense_path(keepdim):
     for a, b in zip(inv_blk, inv_np):
         np.testing.assert_allclose(a, b, rtol=0, atol=1e-10)
     assert len(e_b) == keepdim
+
+
+def _diagonal_input(values, blocked):
+    """Build one known spectrum in dense or one-sector block form."""
+    matrix = np.diag(np.asarray(values, dtype=np.float64))
+    if not blocked:
+        return cytnx.UniTensor(cytnx.from_numpy(matrix), rowrank=1, labels=["r", "c"])
+    row = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(0) >> len(values)], [cytnx.Symmetry.Zn(2)])
+    tensor = cytnx.UniTensor([row, row.redirect()], labels=["r", "c"], rowrank=1)
+    tensor.put_block_(cytnx.from_numpy(matrix), 0)
+    return tensor
+
+
+@pytest.mark.parametrize("blocked", [False, True])
+@pytest.mark.parametrize("boundary", [2**63 - 1, 2**63, 2**64 - 1])
+@pytest.mark.parametrize("return_err", [1, 2])
+@pytest.mark.parametrize("large_minimum", [False, True])
+def test_unsigned_dimension_boundaries(blocked, boundary, return_err, large_minimum):
+    tensor = _diagonal_input([1, 2, 3], blocked)
+    kwargs = {"keepdim": boundary}
+    if large_minimum:
+        kwargs = {"keepdim": 3, "mindim": boundary, "err": 100.0}
+    eigenvalues, error = cytnx.linalg.Eigh_truncate(
+        tensor, is_V=False, return_err=return_err, **kwargs)
+    np.testing.assert_array_equal(eigenvalues.get_block_(0).numpy(), [1, 2, 3])
+    if return_err == 1:
+        assert error.get_block_().item() == 0
+    else:
+        assert error.get_block_().shape() == [0]
+
+
+@pytest.mark.parametrize("return_err", [1, 2])
+@pytest.mark.parametrize("floors, expected, discarded", [
+    ([0, 2], [1, 4], [5, 3, 0.5]),
+    ([9, 9], [-3, 0.5, 1, 4, 5], []),
+    ([1, 1], [4, 5], [3, 1, 0.5]),
+])
+def test_floors_with_cutoff_and_error_reports(return_err, floors, expected, discarded):
+    row = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(0) >> 3, cytnx.Qs(1) >> 2],
+                     [cytnx.Symmetry.Zn(2)])
+    tensor = cytnx.UniTensor([row, row.redirect()], labels=["r", "c"], rowrank=1)
+    tensor.put_block_(cytnx.from_numpy(np.diag([-3.0, 0.5, 5.0])), 0)
+    tensor.put_block_(cytnx.from_numpy(np.diag([1.0, 4.0])), 1)
+    eigenvalues, error = cytnx.linalg.Eigh_truncate(
+        tensor, 2, floors, err=100.0, is_V=False, return_err=return_err)
+    actual = np.concatenate([block.numpy() for block in eigenvalues.get_blocks()])
+    np.testing.assert_array_equal(np.sort(actual), expected)
+    if return_err == 1:
+        assert error.get_block_().item() == (discarded[0] if discarded else 0)
+    else:
+        np.testing.assert_array_equal(error.get_block_().numpy(), discarded)
+
+
+@pytest.mark.parametrize("blocked", [False, True])
+@pytest.mark.parametrize("values, keepdim, cutoff, mindim, expected, discarded", [
+    ([0, 0, 0], 1, 0.0, 1, [0, 0, 0], []),
+    ([1, 2, 3], 3, 2.0, 1, [2, 3], [1]),
+    ([1, 2, 3], 3, 100.0, 2, [2, 3], [1]),
+    ([1, 2, 3], 1, 100.0, 3, [3], [2, 1]),
+    ([1, 1 + 1e-10, 3], 2, 0.0, 1, [1 + 1e-10, 3], [1]),
+])
+def test_selection_boundary_interactions(
+        blocked, values, keepdim, cutoff, mindim, expected, discarded):
+    tensor = _diagonal_input(values, blocked)
+    eigenvalues, error = cytnx.linalg.Eigh_truncate(
+        tensor, keepdim, err=cutoff, mindim=mindim, is_V=False, return_err=2)
+    np.testing.assert_allclose(eigenvalues.get_block_(0).numpy(), expected, rtol=0, atol=1e-14)
+    np.testing.assert_array_equal(error.get_block_().numpy(), discarded)
+
+
+@pytest.mark.parametrize("blocked", [False, True])
+@pytest.mark.parametrize("dtype", [np.float32, np.float64, np.complex64, np.complex128])
+def test_dtypes_and_input_preservation(blocked, dtype):
+    matrix = np.array([[2, 1], [1, -2]], dtype=dtype)
+    if np.issubdtype(dtype, np.complexfloating):
+        matrix[0, 1] += 0.5j
+        matrix[1, 0] -= 0.5j
+    tensor = _diagonal_input([1, 2], blocked)
+    tensor = tensor.astype(cytnx.from_numpy(matrix).dtype())
+    tensor.put_block_(cytnx.from_numpy(matrix), 0)
+    before = tensor.get_block_(0).numpy().copy()
+    eigenvalues, vectors = cytnx.linalg.Eigh_truncate(tensor, 2)
+    values = eigenvalues.get_block_(0).numpy()
+    basis = vectors.get_block_(0).numpy()
+    expected_real_dtype = np.float32 if dtype in (np.float32, np.complex64) else np.float64
+    assert values.dtype == expected_real_dtype
+    assert basis.dtype == dtype
+    tolerance = 1e-5 if expected_real_dtype == np.float32 else 1e-12
+    np.testing.assert_allclose(values, np.linalg.eigvalsh(matrix), atol=tolerance, rtol=0)
+    np.testing.assert_allclose(matrix @ basis, basis * values, atol=tolerance, rtol=0)
+    np.testing.assert_allclose(basis.conj().T @ basis, np.eye(2), atol=tolerance, rtol=0)
+    np.testing.assert_array_equal(tensor.get_block_(0).numpy(), before)
+    assert tensor.labels() == ["r", "c"]
+    assert tensor.rowrank() == 1
+    with pytest.raises(cytnx.CytnxError, match="keepdim must be >=1"):
+        cytnx.linalg.Eigh_truncate(tensor, 0)
+    np.testing.assert_array_equal(tensor.get_block_(0).numpy(), before)
+
+
+@pytest.mark.parametrize("blocked, expected", [(False, [3]), (True, [1, 2, 3])])
+def test_dense_floor_is_a_cutoff_minimum(blocked, expected):
+    eigenvalues, _ = cytnx.linalg.Eigh_truncate(_diagonal_input([1, 2, 3], blocked), 1, [3])
+    np.testing.assert_array_equal(eigenvalues.get_block_(0).numpy(), expected)
+
+
+def test_dense_noncontiguous_higher_rank_preserves_input_and_flattens_vectors():
+    array = np.diag([1.0, 2.0, 3.0]).reshape(1, 3, 1, 3)
+    tensor = cytnx.UniTensor(cytnx.from_numpy(array), rowrank=2, labels=["a", "b", "c", "d"])
+    tensor = tensor.permute([2, 3, 0, 1], rowrank=2)
+    assert not tensor.is_contiguous()
+    eigenvalues, vectors = cytnx.linalg.Eigh_truncate(tensor, 2)
+    np.testing.assert_array_equal(eigenvalues.get_block_().numpy(), [2, 3])
+    assert vectors.shape() == [3, 2]
+    assert vectors.rowrank() == 1
+    assert tensor.shape() == [1, 3, 1, 3]
+    assert tensor.rowrank() == 2
+    assert tensor.labels() == ["c", "d", "a", "b"]
+    np.testing.assert_array_equal(tensor.get_block_().numpy(), array)
+
+
+@pytest.mark.parametrize("shape, rowrank, diagonal, message", [
+    ([3], 0, False, "rank>1"),
+    ([2, 2], 0, False, "rowrank>0"),
+    ([2, 2], 2, False, "rowrank<rank"),
+    ([2, 3], 1, False, "square"),
+    ([3], 1, True, "diagonal"),
+])
+def test_invalid_inputs(shape, rowrank, diagonal, message):
+    tensor = cytnx.UniTensor(cytnx.zeros(shape), is_diag=diagonal, rowrank=rowrank)
+    before = tensor.get_block_().numpy().copy()
+    before_shape, before_labels = tensor.shape(), tensor.labels()
+    with pytest.raises(cytnx.CytnxError, match=message):
+        cytnx.linalg.Eigh_truncate(tensor, 1)
+    np.testing.assert_array_equal(tensor.get_block_().numpy(), before)
+    assert tensor.shape() == before_shape
+    assert tensor.labels() == before_labels
+    assert tensor.rowrank() == rowrank
+
+
+@pytest.mark.parametrize("dimension", [2**63 - 1, 2**63, 2**64 - 1])
+@pytest.mark.parametrize("large_minimum", [False, True])
+def test_unsigned_dimensions_with_reserved_floors(dimension, large_minimum):
+    tensor, blocks = _hermitian_z3(seed=7)
+    kwargs = {"keepdim": dimension}
+    if large_minimum:
+        kwargs = {"keepdim": 7, "mindim": dimension, "err": 100.0}
+    eigenvalues, error = cytnx.linalg.Eigh_truncate(
+        tensor, min_blockdim=[1, 1, 1], is_V=False, return_err=2, **kwargs)
+    assert eigenvalues.bonds()[0].getDegeneracies() == [3, 2, 2]
+    for index, matrix in enumerate(blocks):
+        np.testing.assert_allclose(eigenvalues.get_block_(index).numpy(),
+                                   np.linalg.eigvalsh(matrix), atol=1e-12, rtol=0)
+    assert error.get_block_().shape() == [0]

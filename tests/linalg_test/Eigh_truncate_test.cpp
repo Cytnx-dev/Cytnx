@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 #include <algorithm>
+#include <cmath>
+#include <cstdint>
+#include <limits>
 
 #include "../test_tools.h"
 #include "cytnx.hpp"
@@ -232,6 +235,7 @@ namespace cytnx {
             where.push_back(Accessor::range(offset, offset + degs[qidx[leg]]));
           }
           Tensor blk = ut.get_block_(b);
+          if (ut.uten_type() == UTenType.BlockFermionic && ut.signflip()[b]) blk = -blk;
           if (ut.is_diag()) blk = linalg::Diag(blk);
           out.set(where, blk);
         }
@@ -291,6 +295,84 @@ namespace cytnx {
             << "keepdim " << keepdim;
           EXPECT_TRUE((from_blocks.reconstruction - from_dense.reconstruction).Norm().item() < tol)
             << "keepdim " << keepdim;
+        }
+      }
+
+      TEST(EighTruncate, UnsignedDimensionsAndDiscardedReports) {
+        const auto block_input = hermitian_blocks(2, {{{1, 0, 0}, {0, 2, 0}, {0, 0, 3}}, {{0.5}}});
+        const UniTensor dense_input(dense_array_of(block_input), false, 1);
+        const std::uint64_t signed_max = std::numeric_limits<std::int64_t>::max();
+        for (const auto &input : {dense_input, block_input}) {
+          for (std::uint64_t dimension :
+               {signed_max, signed_max + 1, std::numeric_limits<std::uint64_t>::max()}) {
+            for (bool large_minimum : {false, true}) {
+              for (unsigned int return_err : {1u, 2u}) {
+                SCOPED_TRACE(input.uten_type_str());
+                SCOPED_TRACE(dimension);
+                SCOPED_TRACE(large_minimum);
+                const auto output = linalg::Eigh_truncate(
+                  input, large_minimum ? 4 : dimension, large_minimum ? 100. : 0., false,
+                  return_err, large_minimum ? dimension : 1);
+                ASSERT_EQ(output.size(), 2u);
+                EXPECT_EQ(output[0].bonds()[0].dim(), 4u);
+                if (input.uten_type() == UTenType.Dense) {
+                  expect_block_values(output[0], 0, {0.5, 1, 2, 3}, 1e-12);
+                } else {
+                  expect_block_values(output[0], 0, {1, 2, 3}, 1e-12);
+                  expect_block_values(output[0], 1, {0.5}, 1e-12);
+                }
+                if (return_err == 1) {
+                  EXPECT_DOUBLE_EQ(static_cast<double>(Scalar(output[1].get_block_().item())), 0.);
+                } else {
+                  EXPECT_EQ(output[1].get_block_().shape(), std::vector<cytnx_uint64>{0});
+                }
+              }
+            }
+          }
+        }
+      }
+
+      TEST(EighTruncate, FermionicSignflipsDtypesAndSectorDeletion) {
+        for (unsigned int dtype :
+             {Type.Float, Type.Double, Type.ComplexFloat, Type.ComplexDouble}) {
+          SCOPED_TRACE(dtype);
+          const bool complex_input = dtype == Type.ComplexFloat || dtype == Type.ComplexDouble;
+          const bool single_precision = dtype == Type.Float || dtype == Type.ComplexFloat;
+          const double tol = single_precision ? 1e-5 : 1e-12;
+          const auto input =
+            permute_with_signflips(make_rank4_herm_dt(complex_input).astype(dtype));
+          const auto original = input.clone();
+          const auto original_signs = input.signflip();
+          const auto output = linalg::Eigh_truncate(input, 1, 0., true, 1);
+          const auto &eigenvalues = output[0];
+          const auto &vectors = output[1];
+          const double odd_radius =
+            std::sqrt(0.25 * 0.25 + 0.9 * 0.9 + (complex_input ? 0.35 * 0.35 : 0.));
+          const double even_radius =
+            std::sqrt(0.75 * 0.75 + 0.6 * 0.6 + (complex_input ? 0.2 * 0.2 : 0.));
+          ASSERT_EQ(eigenvalues.Nblocks(), 1u);
+          // The selected real sector inherits Eigh's Float -> Double promotion when a pending
+          // sign flip is materialized by unary minus. The selected complex sector has no flips.
+          EXPECT_EQ(eigenvalues.dtype(), dtype == Type.ComplexFloat ? Type.Float : Type.Double);
+          EXPECT_EQ(vectors.dtype(), dtype == Type.Float ? Type.Double : dtype);
+          EXPECT_NEAR(static_cast<double>(Scalar(eigenvalues.get_block_(0).storage().at(0))),
+                      1.05 + std::max(odd_radius, even_radius), tol);
+          EXPECT_NEAR(static_cast<double>(Scalar(output[2].get_block_().item())),
+                      1.05 + std::min(odd_radius, even_radius), tol);
+          EXPECT_EQ(eigenvalues.signflip().size(), eigenvalues.Nblocks());
+          EXPECT_EQ(vectors.signflip().size(), vectors.Nblocks());
+          for (bool sign : eigenvalues.signflip()) EXPECT_FALSE(sign);
+          for (bool sign : vectors.signflip()) EXPECT_FALSE(sign);
+          expect_unitary(vectors, "_aux_L", tol);
+          // Check the independent coefficient-matrix eigen-equation. A fermionic network
+          // contraction introduces additional graded signs beyond this matrix convention.
+          const auto matrix = dense_array_of(input).reshape({4, 4});
+          const auto basis = dense_array_of(vectors).reshape({4, 1});
+          const auto diagonal = dense_array_of(eigenvalues);
+          const auto residual = linalg::Matmul(matrix, basis) - linalg::Matmul(basis, diagonal);
+          EXPECT_LT(static_cast<double>(residual.norm()), tol);
+          EXPECT_EQ(input.signflip(), original_signs);
+          EXPECT_LT(static_cast<double>((input - original).norm()), tol);
         }
       }
 

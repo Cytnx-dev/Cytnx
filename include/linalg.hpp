@@ -2126,14 +2126,19 @@ namespace cytnx {
     The eigenvalues are ranked by \f$ |\lambda| \f$ across all blocks; the kept eigenvalues of
     every block stay in the ascending order Eigh returns.
 
-    For a block-sparse input the result is, on the kept eigenspace, the dense truncation of the
-    same matrix: Eigh of the dense matrix with the \p keepdim eigenpairs of largest
-    \f$ |\lambda| \f$ kept (the rank-\p keepdim approximation of smallest 2-norm error, the
-    Eckart-Young truncation that Svd_truncate performs for a general matrix), block structure
-    aside. Ranking by magnitude is what makes \p err and \p return_err approximation errors; it
-    is not a selection by algebraic value. To select eigenpairs by value (the lowest or highest
-    eigenvalues of a Hamiltonian) use Eigh and keep the wanted part of its ascending spectrum, or
-    Lanczos with \p which set to "SA"/"LA".
+    When per-block floors do not alter the global magnitude selection, the block-sparse and
+    dense paths select the same eigenvalue magnitudes. If the retained count is exactly
+    \p keepdim, the reconstruction is an optimal rank-\p keepdim approximation in spectral
+    norm (the Hermitian case of the Eckart-Young theorem). A cutoff can reduce that count;
+    floors and exact degeneracy at the cut can increase it. Per-block floors are selection
+    constraints and can exclude the unconstrained optimum even at the same retained count.
+    Ranking by magnitude makes \p return_err report discarded approximation errors, rather
+    than algebraic eigenvalues. To select the lowest or highest eigenvalues of a Hamiltonian,
+    use Eigh and keep the wanted part of its ascending spectrum, or Lanczos with \p which set
+    to "SA"/"LA".
+
+    Dense eigenvectors inherit Eigh's flattened row space and rowrank 1, including for
+    higher-rank inputs. Block eigenvectors preserve the row-space bonds and rowrank.
 
     The truncation order is the same as in Svd_truncate (later constraints may be violated by
     earlier ones): 1) keep at least \p min_blockdim eigenpairs in each block (the overload with
@@ -2175,9 +2180,13 @@ namespace cytnx {
     bool is_V, unsigned int return_err, cytnx_uint64 mindim), with \p min_blockdim as in
     Svd_truncate: positional over the blocks of the eigenvalue UniTensor (one block per charge
     sector of the row space, ascending by qnum), a per-block floor on the number of kept
-    eigenpairs clamped to the block's dimension and honoured before \p keepdim, so the total kept
-    dimension is max(\p keepdim, sum of the clamped floors). A single-element vector applies that
-    floor to every block; for a DenseUniTensor it must have one element, acting as \p mindim.
+    eigenpairs clamped to the block's dimension and honoured before \p keepdim. The total kept
+    dimension can exceed \p keepdim due to floors or exact degeneracy, or be reduced by \p err
+    subject to the higher-priority constraints. A single-element vector applies that floor to
+    every block. For a DenseUniTensor it must have one element, acting as \p mindim instead:
+    it prevents cutoff-based removal but does not override \p keepdim. Thus a dense input with
+    keepdim=1 and floor {3} retains one eigenpair, while a one-sector block input retains three
+    if its sector has at least three eigenpairs.
     @param[in] min_blockdim the per-block floors
     @see Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err, bool is_V,
     unsigned int return_err, cytnx_uint64 mindim)
