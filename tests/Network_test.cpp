@@ -231,6 +231,43 @@ namespace cytnx {
         EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), res_net.get_block(), 1e-12));
       }
 
+      /*=====test info=====
+      describe:A Z_N-symmetric is_diag UniTensor put into a Network with the by-label
+      PutUniTensor(name, T, labels) used to crash Launch() (#1207): the label permutation
+      produced a diagonal BlockUniTensor without its blocks. Expected values are the products
+      of the diagonal entries.
+      ====================*/
+      TEST_F(NetworkTest, SymmetricIsDiagPutByLabelLaunches) {
+        Bond bo = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1, Qs(2) >> 1}, {Symmetry::Zn(3)});
+        Bond bi = bo.redirect();
+        UniTensor W({bi, bo}, {"i", "x"}, 1, Type.Double, Device.cpu, true);
+        UniTensor A({bi, bo}, {"x", "o"}, 1);
+        for (std::size_t q = 0; q < 3; q++) {
+          W.get_block_(q).storage().at<double>(0) = double(q + 1);
+          A.get_block_(q).storage().at<double>(0) = double(2 * q + 1);
+        }
+        // the by-label put permutes the tensor; the permuted diagonal tensor must keep its blocks
+        UniTensor P = W.permute(std::vector<std::string>{"x", "i"});
+        ASSERT_EQ(P.Nblocks(), W.Nblocks());
+        for (std::size_t q = 0; q < 3; q++) {
+          ASSERT_EQ(P.get_block_(q).shape(), W.get_block_(q).shape()) << "block " << q;
+          EXPECT_DOUBLE_EQ(P.get_block_(q).storage().at<double>(0), double(q + 1));
+        }
+
+        for (const std::vector<std::string>& order :
+             {std::vector<std::string>{"i", "x"}, std::vector<std::string>{"x", "i"}}) {
+          Network net;
+          net.FromString({"W: " + order[0] + ", " + order[1], "A: x, o", "TOUT: i; o"});
+          net.PutUniTensor("A", A);
+          net.PutUniTensor("W", W, order);
+          UniTensor out = net.Launch();
+          ASSERT_EQ(out.Nblocks(), 3u);
+          for (std::size_t q = 0; q < 3; q++)
+            EXPECT_DOUBLE_EQ(out.get_block_(q).storage().at<double>(0),
+                             double((q + 1) * (2 * q + 1)));
+        }
+      }
+
     }  // namespace
   }  // namespace test
 }  // namespace cytnx
