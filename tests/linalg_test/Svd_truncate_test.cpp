@@ -416,6 +416,42 @@ namespace cytnx {
         }
       }
 
+      /*=====test info=====
+      describe:Pins the documented semantics of min_blockdim (issue #1208): the vector is positional
+      over the blocks of the singular-value UniTensor (ascending by qnum, sectors killed by the
+      bipartition have no entry), each entry is a floor clamped to the block's rank, and the floors
+      are honoured before keepdim, so the kept total is max(keepdim, sum of clamped floors).
+      ====================*/
+      TEST(SvdTruncate, MinBlockdimIsPositionalClampedFloorBeforeKeepdim) {
+        auto syms = std::vector<Symmetry>{Symmetry(SymmetryType::U)};
+        // rows carry sectors {0, 1, 2}, columns only {0, 1}: sector 2 has no block in S.
+        Bond row = Bond(BD_KET, {{0}, {1}, {2}}, {3, 3, 3}, syms);
+        Bond col = Bond(BD_BRA, {{0}, {1}}, {2, 3}, syms);
+        UniTensor src_T({row, col}, {"l", "r"}, 1, Type.Double, Device.cpu, false);
+        InitUniTensorUniform(src_T, 31);
+
+        // the full SVD lists the two surviving sectors ascending by qnum with ranks 2 and 3
+        std::vector<UniTensor> full = linalg::Svd(src_T, false);
+        ASSERT_EQ(full[0].Nblocks(), 2u);
+        EXPECT_EQ(full[0].bonds()[0].getDegeneracies(), std::vector<cytnx_uint64>({2, 3}));
+
+        // positional: one entry per surviving block, not per qnum of the row bond
+        EXPECT_THROW(linalg::Svd_truncate(src_T, 1, {1, 1, 1}), std::logic_error);
+
+        // the floor beats keepdim: keepdim = 1 but {2, 1} keeps 2 + 1 = 3
+        std::vector<UniTensor> floored = linalg::Svd_truncate(src_T, 1, {2, 1});
+        EXPECT_EQ(floored[0].bonds()[0].getDegeneracies(), std::vector<cytnx_uint64>({2, 1}));
+
+        // a floor above the block's rank is clamped to the rank (2 and 3 here)
+        std::vector<UniTensor> clamped = linalg::Svd_truncate(src_T, 1, {9, 9});
+        EXPECT_EQ(clamped[0].bonds()[0].getDegeneracies(), std::vector<cytnx_uint64>({2, 3}));
+
+        // a zero entry imposes no floor: keepdim = 2 with {0, 2} is exhausted by block 1 alone
+        std::vector<UniTensor> zero = linalg::Svd_truncate(src_T, 2, {0, 2});
+        EXPECT_EQ(zero[0].bonds()[0].getDegeneracies(), std::vector<cytnx_uint64>({2}));
+        EXPECT_EQ(zero[0].bonds()[0].qnums(), std::vector<std::vector<cytnx_int64>>({{1}}));
+      }
+
     }  // namespace
   }  // namespace test
 }  // namespace cytnx
