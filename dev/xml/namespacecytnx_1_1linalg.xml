@@ -991,7 +991,7 @@ const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &
           <defval>1</defval>
         </param>
         <briefdescription>
-<para>Perform Singular-Value decomposition on a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with truncation and keep at most <computeroutput>min_blockdim</computeroutput> singular values in each block. </para>
+<para>Perform Singular-Value decomposition on a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with truncation and keep at least <computeroutput>min_blockdim</computeroutput> singular values in each block. </para>
         </briefdescription>
         <detaileddescription>
 <para>This function performs the Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput> and truncates the singular values. The result will depend on the rowrank of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput>. For each block, the minimum dimension can be chosen. This can be helpful to avoid loosing symmetry sectors in the truncated SVD. For more details, please refer to the documentation of the function Svd_truncate(const Tensor &amp;Tin, const cytnx_uint64
@@ -1022,7 +1022,7 @@ const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &
 <parametername direction="in">min_blockdim</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>a vector containing the minimum dimension of each block; alternatively, a vector with only one element can be given to have the same min_blockdim for each block </para>
+<para>per-block floors on the number of singular values kept. The vector is positional over the blocks of the singular-value <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> of the full SVD, i.e. over the charge sectors that survive the row/column bipartition of <computeroutput>Tin</computeroutput>, in the order the SVD lists them (ascending by qnum); a sector without a block in the SVD has no entry, so the length must equal the number of blocks of the singular-value <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (checked), not the number of qnums of a bond. A vector with a single element applies that floor to every block. Each entry is a floor, not a cap: at least that many singular values of the block are kept, clamped to the block&apos;s rank, and the floors are honoured before <computeroutput>keepdim</computeroutput>, so the total kept dimension is max(<computeroutput>keepdim</computeroutput>, sum of the clamped floors), capped at the full rank. A zero entry imposes no floor on that block (the block may be dropped entirely). </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -1071,7 +1071,7 @@ bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64&amp; mi
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="806" column="17" declfile="include/linalg.hpp" declline="806" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="813" column="17" declfile="include/linalg.hpp" declline="813" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a680fe65e25efe7650aa5f2c8bfa06e83" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &gt;</type>
@@ -1125,7 +1125,7 @@ int &amp;return_err, const cytnx_uint64 &amp;mindim)</ref>, <ref refid="namespac
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="824" column="17" declfile="include/linalg.hpp" declline="824" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="831" column="17" declfile="include/linalg.hpp" declline="831" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a7c7b2d5d502d72015cb2c0ffd4066a9b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &gt;</type>
@@ -1171,10 +1171,10 @@ int &amp;return_err, const cytnx_uint64 &amp;mindim)</ref>, <ref refid="namespac
           <defval>1</defval>
         </param>
         <briefdescription>
-<para>Perform Singular-Value decomposition on a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with truncation and keep at most <computeroutput>min_blockdim</computeroutput> singular values in each block. </para>
+<para>Perform Singular-Value decomposition on a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with truncation and keep at least <computeroutput>min_blockdim</computeroutput> singular values in each block. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs the Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput> and truncates the singular values. This version uses the ?gesvd method. See references below for more details. <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1ae2ca9351e25411abfe9ffb6d18aeb6cf" kindref="member">Svd_truncate(const cytnx::UniTensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const
+<para>This function performs the Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput> and truncates the singular values. This version uses the ?gesvd method. See references below for more details. <computeroutput>min_blockdim</computeroutput> has the same semantics as in Svd_truncate: positional over the blocks of the singular-value <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (ascending by qnum), a per-block floor clamped to the block&apos;s rank, honoured before <computeroutput>keepdim</computeroutput>. <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1ae2ca9351e25411abfe9ffb6d18aeb6cf" kindref="member">Svd_truncate(const cytnx::UniTensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const
 std::vector&lt;cytnx_uint64&gt; min_blockdim, const double &amp;err, const bool &amp;is_UvT,
 const unsigned int &amp;return_err, const cytnx_uint64 &amp;mindim)</ref>, <ref refid="namespacecytnx_1_1linalg_1a829b1cbf704ff5560e32473e71dd6ed1" kindref="member">Gesvd(const
 cytnx::UniTensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</ref> </para>
@@ -1183,7 +1183,7 @@ cytnx::UniTensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</ref> </
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="842" column="17" declfile="include/linalg.hpp" declline="842" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="851" column="17" declfile="include/linalg.hpp" declline="851" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ae5d2679fdacea982722a55ff13ff30d3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &gt;</type>
@@ -1355,7 +1355,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="898" column="17" declfile="include/linalg.hpp" declline="898" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="907" column="17" declfile="include/linalg.hpp" declline="907" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1adce6937bc07ded106c13520a0d37aae9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &gt;</type>
@@ -1421,7 +1421,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
           <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">random::__static_random_device</ref>()</defval>
         </param>
         <briefdescription>
-<para>Perform a truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and keep at most <computeroutput>min_blockdim</computeroutput> singular values in each block. </para>
+<para>Perform a truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and keep at least <computeroutput>min_blockdim</computeroutput> singular values in each block. </para>
         </briefdescription>
         <detaileddescription>
 <para>For each block, the minimum dimension can be chosen for the truncation. This can be helpful to avoid loosing symmetry sectors in the truncated SVD. For more details, please refer to the documentation of the function <ref refid="namespacecytnx_1_1linalg_1ae5d2679fdacea982722a55ff13ff30d3" kindref="member">Rsvd</ref>(const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;Tin, cytnx_uint64 keepdim, double err = 0., bool is_U = true, bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1, cytnx_uint64 oversampling_summand = 10, double oversampling_factor = 1., cytnx_uint64 power_iteration = 0, unsigned int seed = <ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">random::__static_random_device()</ref>).</para>
@@ -1435,7 +1435,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
 <parametername direction="in">min_blockdim</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>a vector containing the minimum dimension of each block; alternatively, a vector with only one element can be given to have the same min_blockdim for each block </para>
+<para>per-block floors on the number of singular values kept. The vector is positional over the blocks of the singular-value <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> of the full SVD, i.e. over the charge sectors that survive the row/column bipartition of <computeroutput>Tin</computeroutput>, in the order the SVD lists them (ascending by qnum); a sector without a block in the SVD has no entry, so the length must equal the number of blocks of the singular-value <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (checked), not the number of qnums of a bond. A vector with a single element applies that floor to every block. Each entry is a floor, not a cap: at least that many singular values of the block are kept, clamped to the block&apos;s rank, and the floors are honoured before <computeroutput>keepdim</computeroutput>, so the total kept dimension is max(<computeroutput>keepdim</computeroutput>, sum of the clamped floors), capped at the full rank. A zero entry imposes no floor on that block (the block may be dropped entirely). </para>
 </parameterdescription>
 </parameteritem>
 </parameterlist>
@@ -1445,7 +1445,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="932" column="17" declfile="include/linalg.hpp" declline="932" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="948" column="17" declfile="include/linalg.hpp" declline="948" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aa1a08b9294b199a6d56f5f5aa2fa58cc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &gt;</type>
@@ -1482,7 +1482,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="941" column="17" declfile="include/linalg.hpp" declline="941" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="957" column="17" declfile="include/linalg.hpp" declline="957" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ae394378db613a244ad518504047669c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1518,7 +1518,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="955" column="22" declfile="include/linalg.hpp" declline="955" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="971" column="22" declfile="include/linalg.hpp" declline="971" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ad5c478aa9da366c15ec7a2351dc99d93" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -1554,7 +1554,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="965" column="22" declfile="include/linalg.hpp" declline="965" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="981" column="22" declfile="include/linalg.hpp" declline="981" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5343eaa08465151a60d716887b071584" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1576,7 +1576,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="975" column="22" declfile="include/linalg.hpp" declline="975" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="991" column="22" declfile="include/linalg.hpp" declline="991" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1abd3811f5c8c7ca20ab294a751f937f0e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1598,7 +1598,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="984" column="22" declfile="include/linalg.hpp" declline="984" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="1000" column="22" declfile="include/linalg.hpp" declline="1000" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2345742316261ec8d04ceb2797c6b521" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1633,7 +1633,7 @@ const std::string &amp;b)</ref> instead. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="994" column="22" declfile="include/linalg.hpp" declline="994" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="1010" column="22" declfile="include/linalg.hpp" declline="1010" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ad5acb5c8d20b164b52affdd2e747e46b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1663,7 +1663,7 @@ const std::string &amp;b)</ref> instead. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1003" column="22" declfile="include/linalg.hpp" declline="1003" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="1019" column="22" declfile="include/linalg.hpp" declline="1019" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a194461432b34c60984a02569a4d9c903" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &gt;</type>
@@ -1690,7 +1690,7 @@ const std::string &amp;b)</ref> instead. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1013" column="17" declfile="include/linalg.hpp" declline="1013" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="1029" column="17" declfile="include/linalg.hpp" declline="1029" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac3a4d9f746e4d05555de50ac9fca9a77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &gt;</type>
@@ -1717,7 +1717,7 @@ const std::string &amp;b)</ref> instead. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1023" column="17" declfile="include/linalg.hpp" declline="1023" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="1039" column="17" declfile="include/linalg.hpp" declline="1039" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a855ef5046319e5630ff34e1748278aed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1772,7 +1772,7 @@ const std::string &amp;b)</ref> instead. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1045" column="22" declfile="include/linalg.hpp" declline="1045" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="1061" column="22" declfile="include/linalg.hpp" declline="1061" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aad95a08aec3fa0e90a619def647da684" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1827,7 +1827,7 @@ const std::string &amp;b)</ref> instead. </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1065" column="10" declfile="include/linalg.hpp" declline="1065" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="1081" column="10" declfile="include/linalg.hpp" declline="1081" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a189a72fc032787f89b865e175c86c641" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1891,7 +1891,7 @@ T_\text{out}[i] = \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1095" column="22" declfile="include/linalg.hpp" declline="1095" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="1111" column="22" declfile="include/linalg.hpp" declline="1111" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af289299ee7e7fca7c551b87231acbba3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1955,7 +1955,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1123" column="10" declfile="include/linalg.hpp" declline="1123" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="1139" column="10" declfile="include/linalg.hpp" declline="1139" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a15851ab7204c9314a0c3cee1b7c4f3bf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref></type>
@@ -1988,7 +1988,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1131" column="22" declfile="include/linalg.hpp" declline="1131" declcolumn="22"/>
+        <location file="include/linalg.hpp" line="1147" column="22" declfile="include/linalg.hpp" declline="1147" declcolumn="22"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a7bfd6330fe968956a795ae21c28bc8a3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2019,7 +2019,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1138" column="10" declfile="include/linalg.hpp" declline="1138" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="1154" column="10" declfile="include/linalg.hpp" declline="1154" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af36e9e20e4c7d74f2f6f838902482d98" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2068,7 +2068,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1168" column="12" declfile="include/linalg.hpp" declline="1168" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1184" column="12" declfile="include/linalg.hpp" declline="1184" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a33643657d8cc96b037818e2003c049c7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2120,7 +2120,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1192" column="12" declfile="include/linalg.hpp" declline="1192" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1208" column="12" declfile="include/linalg.hpp" declline="1208" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ae158543bf09e9e6914eab96995015d9e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2172,7 +2172,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1216" column="12" declfile="include/linalg.hpp" declline="1216" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1232" column="12" declfile="include/linalg.hpp" declline="1232" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ab9fe989375c5c8f3b57d443969251e85" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2235,7 +2235,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1246" column="10" declfile="include/linalg.hpp" declline="1246" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="1262" column="10" declfile="include/linalg.hpp" declline="1262" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a78477b25b3eed121847f1a13b878a925" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2282,7 +2282,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1272" column="12" declfile="include/linalg.hpp" declline="1272" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1288" column="12" declfile="include/linalg.hpp" declline="1288" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a4fa0cd62f3723518ae4e46db00d8be50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2334,7 +2334,7 @@ T_o[i] = c - T_R[i],
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1296" column="12" declfile="include/linalg.hpp" declline="1296" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1312" column="12" declfile="include/linalg.hpp" declline="1312" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a0fa9fc16ad7e8d2685d0acfa25efc479" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2386,7 +2386,7 @@ T_o[i] = T_L[i] - c,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1320" column="12" declfile="include/linalg.hpp" declline="1320" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1336" column="12" declfile="include/linalg.hpp" declline="1336" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac9373342ca15958f1e03779b2215c200" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2449,7 +2449,7 @@ T_L[i] = T_L[i] - T_R[i],
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1350" column="10" declfile="include/linalg.hpp" declline="1350" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="1366" column="10" declfile="include/linalg.hpp" declline="1366" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2fc49876b7b53f6f6e97ce70f475f636" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2496,7 +2496,7 @@ T_o[i] = T_L[i] * T_R[i]
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1376" column="12" declfile="include/linalg.hpp" declline="1376" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1392" column="12" declfile="include/linalg.hpp" declline="1392" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2d21f1d35bcecf3e257146540c668779" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2548,7 +2548,7 @@ T_o[i] = T_L[i] * c,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1400" column="12" declfile="include/linalg.hpp" declline="1400" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1416" column="12" declfile="include/linalg.hpp" declline="1416" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5b2930a8759b8ceb7cd92df6b27bdf24" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2600,7 +2600,7 @@ T_o[i] = T_L[i] * c,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1424" column="12" declfile="include/linalg.hpp" declline="1424" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1440" column="12" declfile="include/linalg.hpp" declline="1440" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1adb1642e4dab78364bd2dd482689c41c6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2661,7 +2661,7 @@ T_o[i] = T_L[i] * T_R[i]
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1454" column="10" declfile="include/linalg.hpp" declline="1454" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="1470" column="10" declfile="include/linalg.hpp" declline="1470" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1abc1940e0e7364299ea1481c81003ba13" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2710,7 +2710,7 @@ T_o[i] = T_L[i] / T_R[i]
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1481" column="12" declfile="include/linalg.hpp" declline="1481" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1497" column="12" declfile="include/linalg.hpp" declline="1497" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1acb8965e9a67906d0c8064725c7d499a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2764,7 +2764,7 @@ T_o[i] = c / T_R[i]
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1506" column="12" declfile="include/linalg.hpp" declline="1506" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1522" column="12" declfile="include/linalg.hpp" declline="1522" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a9296701c7aad0456965f42b8ea01ad2e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2818,7 +2818,7 @@ T_o[i] = T_L[i] / c
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1531" column="12" declfile="include/linalg.hpp" declline="1531" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1547" column="12" declfile="include/linalg.hpp" declline="1547" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aa9c75b7d0b04b445ad5dc93cacc3d0ab" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -2881,7 +2881,7 @@ T_o[i] = T_L[i] / T_R[i]
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1561" column="10" declfile="include/linalg.hpp" declline="1561" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="1577" column="10" declfile="include/linalg.hpp" declline="1577" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ab8ac85bd0291ab12523eec073aef1fa3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -2930,7 +2930,7 @@ T_o[i] = T_L[i] % T_R[i]
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1588" column="12" declfile="include/linalg.hpp" declline="1588" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1604" column="12" declfile="include/linalg.hpp" declline="1604" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6c9fca4a4fd4cea1738babc120e51690" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -2984,7 +2984,7 @@ T_o[i] = c % T_R[i]
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1611" column="12" declfile="include/linalg.hpp" declline="1611" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1627" column="12" declfile="include/linalg.hpp" declline="1627" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a35ed41287fa71215d4575de818f02e43" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -3038,7 +3038,7 @@ T_o[i] = T_L[i] % c
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1634" column="12" declfile="include/linalg.hpp" declline="1634" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1650" column="12" declfile="include/linalg.hpp" declline="1650" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aea125f2928934007725809426bb77e38" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3090,7 +3090,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1663" column="12" declfile="include/linalg.hpp" declline="1663" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1679" column="12" declfile="include/linalg.hpp" declline="1679" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a12d6a02bc402d9ae1bb7652f7ec92865" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -3145,7 +3145,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1690" column="12" declfile="include/linalg.hpp" declline="1690" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1706" column="12" declfile="include/linalg.hpp" declline="1706" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac59f29dd40385b5b2705299d0366876f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -3200,7 +3200,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1717" column="12" declfile="include/linalg.hpp" declline="1717" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1733" column="12" declfile="include/linalg.hpp" declline="1733" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a9cd2be179860bb4742ebe320fa063680" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3232,7 +3232,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1731" column="13" declfile="include/linalg.hpp" declline="1731" declcolumn="13"/>
+        <location file="include/linalg.hpp" line="1747" column="13" declfile="include/linalg.hpp" declline="1747" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ab8116911911c9310a1ce078c47b22ffe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>Scalar</type>
@@ -3263,7 +3263,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1744" column="12" declfile="include/linalg.hpp" declline="1744" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1760" column="12" declfile="include/linalg.hpp" declline="1760" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a00e435cae51f9e3a9b5506d328b8d118" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3295,7 +3295,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1758" column="13" declfile="include/linalg.hpp" declline="1758" declcolumn="13"/>
+        <location file="include/linalg.hpp" line="1774" column="13" declfile="include/linalg.hpp" declline="1774" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a0a7b82a2cde2874f25798048058222e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>Scalar</type>
@@ -3326,7 +3326,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1771" column="12" declfile="include/linalg.hpp" declline="1771" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1787" column="12" declfile="include/linalg.hpp" declline="1787" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5fd73573057cda064a77f69c927a45dc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3359,7 +3359,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1783" column="12" declfile="include/linalg.hpp" declline="1783" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1799" column="12" declfile="include/linalg.hpp" declline="1799" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aa154d2fd120245a51bba64e68f21198b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -3428,7 +3428,7 @@ T_o[i] = \left\{\begin{array}{ll}
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1814" column="12" declfile="include/linalg.hpp" declline="1814" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="1830" column="12" declfile="include/linalg.hpp" declline="1830" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a330151ef7e84a8169d6871cc08fa14d4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3488,7 +3488,7 @@ bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64&amp; mi
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1845" column="17" declfile="include/linalg.hpp" declline="1845" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="1861" column="17" declfile="include/linalg.hpp" declline="1861" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a8ae32a5c874c9f5c1cf8cbbd59ef50bb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3561,7 +3561,7 @@ const bool &amp;is_U, const bool &amp;is_vT, const unsigned int &amp;return_err,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1876" column="17" declfile="include/linalg.hpp" declline="1876" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="1892" column="17" declfile="include/linalg.hpp" declline="1892" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a0525c8197d0d441586467676bf814e90" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3669,7 +3669,7 @@ M = U S V^\dagger,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1924" column="17" declfile="include/linalg.hpp" declline="1924" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="1940" column="17" declfile="include/linalg.hpp" declline="1940" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6f892de4a9319faf9e7822f8a072f77f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3840,7 +3840,7 @@ M = U S V^\dagger,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="1977" column="17" declfile="include/linalg.hpp" declline="1977" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="1993" column="17" declfile="include/linalg.hpp" declline="1993" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a002709e89db060b9004412a6f0510600" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3946,7 +3946,7 @@ M = U S V^\dagger,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2012" column="17" declfile="include/linalg.hpp" declline="2012" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2028" column="17" declfile="include/linalg.hpp" declline="2028" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6c3142f633f9aca2f80bb359b9c58cf5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -3983,7 +3983,7 @@ M = U S V^\dagger,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2018" column="17" declfile="include/linalg.hpp" declline="2018" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2034" column="17" declfile="include/linalg.hpp" declline="2034" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af22616b7e35f13b775f2423d19e9ffe7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -4042,7 +4042,7 @@ M = Q R,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2050" column="17" declfile="include/linalg.hpp" declline="2050" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2066" column="17" declfile="include/linalg.hpp" declline="2066" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a49f6c1a406ac0a3446ea8c9423587dd8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -4099,7 +4099,7 @@ M = Q R,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2073" column="17" declfile="include/linalg.hpp" declline="2073" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2089" column="17" declfile="include/linalg.hpp" declline="2089" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a63fb9c9751ff27d22f84a52a876cc6fc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -4163,7 +4163,7 @@ M = V D V^\dagger,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2099" column="17" declfile="include/linalg.hpp" declline="2099" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2115" column="17" declfile="include/linalg.hpp" declline="2115" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a9f15e25a4048a604b9f5ed243443bf80" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -4191,7 +4191,7 @@ M = V D V^\dagger,
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2101" column="17" declfile="include/linalg.hpp" declline="2101" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2117" column="17" declfile="include/linalg.hpp" declline="2117" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a243ceac5dc7d4a8c983b0e7693b97489" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -4255,7 +4255,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2129" column="17" declfile="include/linalg.hpp" declline="2129" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2145" column="17" declfile="include/linalg.hpp" declline="2145" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aac143f3d5a9255d4e71b9ada3cdf9566" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -4283,7 +4283,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2131" column="17" declfile="include/linalg.hpp" declline="2131" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2147" column="17" declfile="include/linalg.hpp" declline="2147" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a02d7105bf16d23128687ba92fb231b54" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4342,7 +4342,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2149" column="12" declfile="include/linalg.hpp" declline="2149" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2165" column="12" declfile="include/linalg.hpp" declline="2165" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a25b5f2fdfb550aabc9cc41daa963e1fb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4373,7 +4373,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2158" column="12" declfile="include/linalg.hpp" declline="2158" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2174" column="12" declfile="include/linalg.hpp" declline="2174" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a93ef263824e2dcdab4832ea628959d19" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4404,7 +4404,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2167" column="12" declfile="include/linalg.hpp" declline="2167" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2183" column="12" declfile="include/linalg.hpp" declline="2183" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a24855027b29b1777946617f480bc5014" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4433,7 +4433,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2175" column="12" declfile="include/linalg.hpp" declline="2175" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2191" column="12" declfile="include/linalg.hpp" declline="2191" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a53feb441b4b1bd263714ed33e093728f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4478,7 +4478,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2190" column="12" declfile="include/linalg.hpp" declline="2190" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2206" column="12" declfile="include/linalg.hpp" declline="2206" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af2e6723dc80031eb28fc10cc19826dda" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4504,7 +4504,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2200" column="12" declfile="include/linalg.hpp" declline="2200" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2216" column="12" declfile="include/linalg.hpp" declline="2216" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af819d2fc4522d2a6287aa16dfbe3f787" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4528,7 +4528,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2210" column="12" declfile="include/linalg.hpp" declline="2210" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2226" column="12" declfile="include/linalg.hpp" declline="2226" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a62fe45ce80ab5cd5fd9a4c7718270468" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4546,7 +4546,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2211" column="15" declfile="include/linalg.hpp" declline="2211" declcolumn="15"/>
+        <location file="include/linalg.hpp" line="2227" column="15" declfile="include/linalg.hpp" declline="2227" declcolumn="15"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac414e561888051c1fbacde18c9039fbf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4570,7 +4570,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2219" column="10" declfile="include/linalg.hpp" declline="2219" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2235" column="10" declfile="include/linalg.hpp" declline="2235" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5c9bc42bf34acc1830e2bedd474ffa84" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4588,7 +4588,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2220" column="10" declfile="include/linalg.hpp" declline="2220" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2236" column="10" declfile="include/linalg.hpp" declline="2236" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6b7c861f65e3ee03c246887c64c405ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4649,7 +4649,7 @@ T_\text{out}[i] = \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2248" column="12" declfile="include/linalg.hpp" declline="2248" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2264" column="12" declfile="include/linalg.hpp" declline="2264" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1acae5e14ab0cf35a1a713b92444850f89" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4710,7 +4710,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2274" column="10" declfile="include/linalg.hpp" declline="2274" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2290" column="10" declfile="include/linalg.hpp" declline="2290" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a470d0886432554a35ecaf961451c0806" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4747,7 +4747,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2292" column="12" declfile="include/linalg.hpp" declline="2292" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2308" column="12" declfile="include/linalg.hpp" declline="2308" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1adc3233bf8bc3eb6a435340f912412801" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4773,7 +4773,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2302" column="10" declfile="include/linalg.hpp" declline="2302" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2318" column="10" declfile="include/linalg.hpp" declline="2318" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aac38382cbc0e8202411c96a0ff636471" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4806,7 +4806,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2319" column="12" declfile="include/linalg.hpp" declline="2319" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2335" column="12" declfile="include/linalg.hpp" declline="2335" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5831918722e5d18f4eaf37834b8fbf77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4838,7 +4838,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2331" column="13" declfile="include/linalg.hpp" declline="2331" declcolumn="13"/>
+        <location file="include/linalg.hpp" line="2347" column="13" declfile="include/linalg.hpp" declline="2347" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aaab08439dde94ee87939d07933ede6e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4873,7 +4873,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2343" column="10" declfile="include/linalg.hpp" declline="2343" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2359" column="10" declfile="include/linalg.hpp" declline="2359" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5de1faf71c76cdc6b7fa5ba3a3e21bbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4904,7 +4904,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2353" column="11" declfile="include/linalg.hpp" declline="2353" declcolumn="11"/>
+        <location file="include/linalg.hpp" line="2369" column="11" declfile="include/linalg.hpp" declline="2369" declcolumn="11"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2919ef6c163a54360071c286df3fb92e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4953,7 +4953,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2369" column="12" declfile="include/linalg.hpp" declline="2369" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2385" column="12" declfile="include/linalg.hpp" declline="2385" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a269ef291355dfee4421fa55ad0247aad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -5002,7 +5002,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2384" column="10" declfile="include/linalg.hpp" declline="2384" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2400" column="10" declfile="include/linalg.hpp" declline="2400" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a3ded6435c7b47eb348d03783bfe72611" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5033,7 +5033,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2395" column="12" declfile="include/linalg.hpp" declline="2395" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2411" column="12" declfile="include/linalg.hpp" declline="2411" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a30687e6240a889c04637b33ef90c2525" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -5065,7 +5065,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2404" column="10" declfile="include/linalg.hpp" declline="2404" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2420" column="10" declfile="include/linalg.hpp" declline="2420" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5913f0bdd6cc130aeb927f42a874a149" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5089,7 +5089,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2416" column="12" declfile="include/linalg.hpp" declline="2416" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2432" column="12" declfile="include/linalg.hpp" declline="2432" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a242f1b9c1ee7938ba050121773ab4b55" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5188,7 +5188,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2435" column="12" declfile="include/linalg.hpp" declline="2435" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2451" column="12" declfile="include/linalg.hpp" declline="2451" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac77faf8e0c0153e1890610a6e21f36af" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5274,7 +5274,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2458" column="12" declfile="include/linalg.hpp" declline="2458" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2474" column="12" declfile="include/linalg.hpp" declline="2474" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a3e8edc89fdabb9c0f9b342198a31798b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5319,7 +5319,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2473" column="12" declfile="include/linalg.hpp" declline="2473" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2489" column="12" declfile="include/linalg.hpp" declline="2489" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af10e9e9d441e0a111a2382f636ccfa30" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5390,7 +5390,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2493" column="12" declfile="include/linalg.hpp" declline="2493" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2509" column="12" declfile="include/linalg.hpp" declline="2509" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac908296e4737c2b080669faf26b89253" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5447,7 +5447,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2512" column="12" declfile="include/linalg.hpp" declline="2512" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2528" column="12" declfile="include/linalg.hpp" declline="2528" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aa69a91a5651fce55380cf800c6030d73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5507,7 +5507,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2528" column="12" declfile="include/linalg.hpp" declline="2528" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2544" column="12" declfile="include/linalg.hpp" declline="2544" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a215dbfd2aa7ef898450de7afff726bca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5557,7 +5557,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2551" column="12" declfile="include/linalg.hpp" declline="2551" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2567" column="12" declfile="include/linalg.hpp" declline="2567" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5a502c7d0a6a46f0e695f211a42ab9dc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -5643,7 +5643,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2575" column="17" declfile="include/linalg.hpp" declline="2575" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2591" column="17" declfile="include/linalg.hpp" declline="2591" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af116da0421730edbcba17cda953f13b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -5710,7 +5710,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2598" column="12" declfile="include/linalg.hpp" declline="2598" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2614" column="12" declfile="include/linalg.hpp" declline="2614" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ae1c7e52ab3ee393428ff6fb4f087425c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5738,7 +5738,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2611" column="12" declfile="include/linalg.hpp" declline="2611" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2627" column="12" declfile="include/linalg.hpp" declline="2627" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a0d4b1c10f01b98fd738af6ac3abd7021" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -5803,7 +5803,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2628" column="12" declfile="include/linalg.hpp" declline="2628" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2644" column="12" declfile="include/linalg.hpp" declline="2644" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a07b223a17f1b1daa8de5ad1e9dc1dd34" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5838,7 +5838,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2640" column="12" declfile="include/linalg.hpp" declline="2640" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2656" column="12" declfile="include/linalg.hpp" declline="2656" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ade270f8949237b46ed3e3aba5a665dac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -5998,7 +5998,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2689" column="17" declfile="include/linalg.hpp" declline="2689" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2705" column="17" declfile="include/linalg.hpp" declline="2705" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a7752089c2bce2abb7bdfedcc96b3e859" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -6159,7 +6159,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2750" column="17" declfile="include/linalg.hpp" declline="2750" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2766" column="17" declfile="include/linalg.hpp" declline="2766" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a91b798c44c9479338b03e13f73284b3f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -6314,7 +6314,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2789" column="17" declfile="include/linalg.hpp" declline="2789" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2805" column="17" declfile="include/linalg.hpp" declline="2805" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a61bbd603fe43d009deca4e5f11d2368a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -6471,7 +6471,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2834" column="17" declfile="include/linalg.hpp" declline="2834" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2850" column="17" declfile="include/linalg.hpp" declline="2850" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a095ddd1c9cb78bd9a4a9895c6dd6f46b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -6629,7 +6629,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2886" column="17" declfile="include/linalg.hpp" declline="2886" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2902" column="17" declfile="include/linalg.hpp" declline="2902" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a3e6acd25ef7cadc9b06d1c8190f13cd0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -6786,7 +6786,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2928" column="17" declfile="include/linalg.hpp" declline="2928" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2944" column="17" declfile="include/linalg.hpp" declline="2944" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1abf13b4960e1c68f717840de7e555f1f0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -6923,7 +6923,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2958" column="17" declfile="include/linalg.hpp" declline="2958" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2974" column="17" declfile="include/linalg.hpp" declline="2974" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ae1d138b06f259478aa7f4276ebba9430" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -7021,7 +7021,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2984" column="17" declfile="include/linalg.hpp" declline="2984" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3000" column="17" declfile="include/linalg.hpp" declline="3000" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac1834487d31858f1ae3c248abb4b412f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -7118,7 +7118,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3009" column="17" declfile="include/linalg.hpp" declline="3009" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3025" column="17" declfile="include/linalg.hpp" declline="3025" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a74e4c9a9cfe97d7ca523012078a3f5e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7220,7 +7220,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3046" column="15" declfile="include/linalg.hpp" declline="3046" declcolumn="15"/>
+        <location file="include/linalg.hpp" line="3062" column="15" declfile="include/linalg.hpp" declline="3062" declcolumn="15"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a59fdd5725d0fe8c422dfe602629d34d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -7286,7 +7286,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3077" column="17" declfile="include/linalg.hpp" declline="3077" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3093" column="17" declfile="include/linalg.hpp" declline="3093" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aad5bd110b48c053428e72ecceb2aa04d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -7344,7 +7344,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3093" column="12" declfile="include/linalg.hpp" declline="3093" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="3109" column="12" declfile="include/linalg.hpp" declline="3109" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2a4fdc352527d77235ff53d3694bf92c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -7423,7 +7423,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3112" column="10" declfile="include/linalg.hpp" declline="3112" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3128" column="10" declfile="include/linalg.hpp" declline="3128" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ab781bbb25cc0f04ad700596d14da4596" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -7480,7 +7480,7 @@ return = a\textbf{x}\textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3129" column="12" declfile="include/linalg.hpp" declline="3129" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="3145" column="12" declfile="include/linalg.hpp" declline="3145" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6a5391acd57dd66914790575407dceaa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -7572,7 +7572,7 @@ return = a\textbf{x}\textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3156" column="10" declfile="include/linalg.hpp" declline="3156" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3172" column="10" declfile="include/linalg.hpp" declline="3172" declcolumn="10"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
