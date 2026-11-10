@@ -1,5 +1,7 @@
 #include "cuReduce_gpu.hpp"
 
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+
 #include <type_traits>
 
 #include "cuda/std/complex"

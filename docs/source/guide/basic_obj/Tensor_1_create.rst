@@ -118,7 +118,7 @@ You can create a Tensor with a different data type, and/or on different devices 
 
             device=cytnx.Device.cuda+4   #will create the Tensor on GPU id=4
 
-    3. In C++, there are no keyword arguments as Python, so make sure you put the arguments in the correct order. Check the `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!
+    3. In C++, there are no keyword arguments as Python, so make sure you put the arguments in the correct order. Check the :doc:`API documentation </apidoc_redirect>` for function signatures!
 
 
 Currently, there are several data types supported by Cytnx:

@@ -44,9 +44,26 @@ jobs:
       # FindCUTENSOR / FindCUQUANTUM modules require both to be set.
       CUTENSOR_ROOT: ${{ vars.CUTENSOR_ROOT }}
       CUQUANTUM_ROOT: ${{ vars.CUQUANTUM_ROOT }}
-      # The runner's GPU is an RTX 4070 Ti SUPER (Ada, sm_89). CUDA 13 dropped
-      # sm_70, so the repo-default fatbin can't be used as-is; pin per runner.
+      # Both of the runner's GPUs are RTX 4070 Ti SUPER (Ada, sm_89). CUDA 13
+      # dropped sm_70, so the repo-default fatbin can't be used as-is; pin per
+      # runner.
       GPU_CUDA_ARCH: ${{ vars.GPU_CUDA_ARCH || '89' }}
+      # Pin the suite to one GPU. The runner is also the maintainer's
+      # workstation and has two cards, so the default device is routinely busy
+      # with interactive work. That is not a benign slowdown: Cytnx allocates
+      # through cudaMallocManaged, which succeeds on a full device and then
+      # faults while migrating pages, and cudaErrorIllegalAddress is sticky. So
+      # contention surfaces as a dozen tests failing at an innocent
+      # cudaMalloc/cudaFree rather than as an out-of-memory error, which reads
+      # exactly like a real regression (run 38230511963).
+      #
+      # CUDA_DEVICE_ORDER=PCI_BUS_ID makes the CUDA index equal the nvidia-smi
+      # index, so this number means the same thing in the workflow, in the
+      # `nvidia-smi -i` query below, and in a human's `nvidia-smi` output.
+      # Without it CUDA orders devices FASTEST_FIRST, an arbitrary tie-break
+      # between identical cards.
+      CUDA_DEVICE_ORDER: PCI_BUS_ID
+      CUDA_VISIBLE_DEVICES: ${{ vars.GPU_CI_DEVICE || '1' }}
       BUILD_DIR: ${{ github.workspace }}/build_gpu
     steps:
       - uses: actions/checkout@v4
@@ -68,10 +85,28 @@ jobs:
       - name: Put CUDA toolkit on PATH
         run: echo "/usr/local/cuda/bin" >> "$GITHUB_PATH"
 
+      # nvidia-smi ignores CUDA_VISIBLE_DEVICES, so it still shows both cards --
+      # which is what we want in the log, because the process list on the *other*
+      # card is the evidence that explains a contention failure.
       - name: GPU and toolkit info
         run: |
           nvidia-smi
           nvcc --version
+          read -r free total < <(nvidia-smi -i "$CUDA_VISIBLE_DEVICES" \
+            --query-gpu=memory.free,memory.total \
+            --format=csv,noheader,nounits | tr -d ',')
+          echo "Pinned to GPU $CUDA_VISIBLE_DEVICES: ${free} MiB free of ${total} MiB"
+          # Half the card is a heuristic, not a measured requirement: a clean run
+          # leaves the pinned GPU almost entirely free, so anything below this
+          # means another process is resident and a failure needs checking
+          # against the process list before it is believed.
+          if [ "$free" -lt $((total / 2)) ]; then
+            msg="Only ${free} MiB of ${total} MiB free on GPU ${CUDA_VISIBLE_DEVICES} before the suite started."
+            msg="${msg} Another process is using this GPU, so managed-memory tests can fail with a sticky"
+            msg="${msg} cudaErrorIllegalAddress reported at an unrelated cudaMalloc/cudaFree. Check the process"
+            msg="${msg} list in the nvidia-smi output above before treating a failure as a code regression."
+            echo "::warning title=GPU ${CUDA_VISIBLE_DEVICES} is busy::${msg}"
+          fi
 
       - name: Configure (CUDA Release, C++ tests, no Python)
         run: >-

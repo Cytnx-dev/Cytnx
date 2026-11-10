@@ -821,6 +821,8 @@ namespace cytnx {
       std::vector<cytnx_uint64> lidx(lhs_rank);
       std::vector<cytnx_uint64> ridx(rhs_rank);
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
+        // b enumerates the output blocks;
+        // idl[0] and idr[0] are the block indices in the left and right tensors
         const auto &outer_idx = tmp->_inner_to_outer_idx[b];
         std::copy_n(outer_idx.begin(), lhs_rank, lidx.begin());
         std::copy_n(outer_idx.begin() + lhs_rank, rhs_rank, ridx.begin());
@@ -1053,11 +1055,11 @@ namespace cytnx {
               if (this->_blocks[a].device() != this->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(all_sub_tensor_same_dtype,
+            cytnx_error_msg(!all_sub_tensor_same_dtype,
                             "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
                             "sub-Tensors with different dtype.%s",
                             "\n");
-            cytnx_error_msg(all_sub_tensor_same_device,
+            cytnx_error_msg(!all_sub_tensor_same_device,
                             "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
                             "sub-Tensors on different device.%s",
                             "\n");
@@ -1069,11 +1071,11 @@ namespace cytnx {
               if (Rtn->_blocks[a].device() != Rtn->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(all_sub_tensor_same_dtype,
+            cytnx_error_msg(!all_sub_tensor_same_dtype,
                             "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
                             "sub-Tensors with different dtype.%s",
                             "\n");
-            cytnx_error_msg(all_sub_tensor_same_device,
+            cytnx_error_msg(!all_sub_tensor_same_device,
                             "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
                             "sub-Tensors on different device.%s",
                             "\n");
