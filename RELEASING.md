@@ -71,7 +71,18 @@ so that metadata must already be right when the tag is created:
    python3 tools/check_release_consistency.py
    ```
 
-5. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
+5. **Write the release note for anything the generator cannot say.** *Generate
+   release notes* (next step) lists the merged pull requests by title, grouped by
+   label as `.github/release.yml` prescribes, and nothing else. It cannot tell a
+   user that a default changed, what they will observe, or how to keep the old
+   behaviour. For every PR labelled `behaviour-change` or `deprecation`, paste the
+   paragraph from that PR's description (contributors put it under a
+   `## Release note` heading, see CONTRIBUTING.md) above the generated list, under
+   a heading such as `## Notes for users`. A PR title is the changelog line, so it
+   should read as one: "linalg: `Eigh` takes `algorithm=`; default moves to divide
+   and conquer" rather than "fix syev".
+
+6. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
    new release*, create the tag `vMAJOR.MINOR.PATCH` targeting the merged
    release-prep commit on `master`, click *Generate release notes*, review,
    and publish. Publishing pushes the tag and starts the release workflows
@@ -88,3 +99,10 @@ last action, not the first.
   resolves and that the version switcher lists the new release, marked `(stable)`.
 - Once `release_pypi.yml` finishes, confirm `pip install cytnx==X.Y.Z`
   resolves.
+
+## The changelog
+
+The changelog of a release is its GitHub Release page: the hand-written notes of
+step 5 followed by the generated list of pull requests. There is no changelog file
+in the repository. `misc_doc/version.log` is the historical log of the releases up
+to v1.0.0 and is kept for the record only.
