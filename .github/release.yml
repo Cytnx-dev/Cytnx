@@ -1,0 +1,40 @@
+# Configuration of GitHub's "Generate release notes" (RELEASING.md step 6).
+# Sections are filled from the labels of the pull requests merged since the previous tag;
+# a PR with none of these labels lands in "Other changes".  PRs carrying an excluded label
+# are left out of the notes entirely.
+changelog:
+  exclude:
+    labels:
+      - CI/CD
+      - dependencies
+      - duplicate
+      - invalid/unlikely
+      - wontfix
+  categories:
+    - title: Behaviour changes and deprecations
+      labels:
+        - behaviour-change
+        - deprecation
+    - title: New features
+      labels:
+        - enhancement
+        - proposal
+    - title: Performance
+      labels:
+        - performance
+    - title: GPU
+      labels:
+        - gpu
+    - title: Bug fixes
+      labels:
+        - bug
+    - title: Documentation
+      labels:
+        - documentation
+        - docs
+    - title: Python binding
+      labels:
+        - python binding
+    - title: Other changes
+      labels:
+        - "*"
