@@ -1,0 +1,7 @@
+# pip itself, for workflows that start from a runner's bundled pip. That pip
+# may vendor a certifi that still trusts the compromised eMudhra intermediate
+# CA certificates, so HTTPS alone cannot vouch for what it downloads; the hash
+# lets it install this exact file and nothing else. Install with
+#   python -m pip install --require-hashes --no-deps -r .github/pip-bootstrap-requirements.txt
+pip==26.2.2 \
+    --hash=sha256:fd7f4dfa8190e014013b9f08f3e973f4e4c26ffd179a204895533a7254813a70
