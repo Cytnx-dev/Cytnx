@@ -5143,7 +5143,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The addition function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is addition function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return  <formula id="138">\[
+<para>This is addition function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return  <formula id="139">\[
               UT_{self} = UT_{self} + UT_2
             \]</formula> Perform element-wise addition of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5184,7 +5184,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The multiplcation function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is multiplcation function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return  <formula id="139">\[
+<para>This is multiplcation function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return  <formula id="140">\[
               UT_{self} = UT_{self} \times UT_2
             \]</formula> Perform element-wise multiplication of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5225,7 +5225,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The subtraction function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is subtraction function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return  <formula id="140">\[
+<para>This is subtraction function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return  <formula id="141">\[
               UT_{self} = UT_{self} - UT_2
             \]</formula> Perform element-wise subtraction of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5266,7 +5266,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The division function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is division function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return  <formula id="141">\[
+<para>This is division function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return  <formula id="142">\[
               UT_{self} = UT_{self} / UT_2
             \]</formula> Perform element-wise division of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5447,7 +5447,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The addition function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is addition function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="142">\[
+<para>This is addition function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="143">\[
               UT = UT_{self} + UT_2
             \]</formula> Perform element-wise addition of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5523,7 +5523,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The multiplication function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is multiplication function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="143">\[
+<para>This is multiplication function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="144">\[
               UT = UT_{self} \times UT_2
             \]</formula> Perform element-wise multiplcation of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5599,7 +5599,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The division function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is division function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="144">\[
+<para>This is division function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="145">\[
               UT = UT_{self} / UT_2
             \]</formula> Perform element-wise division of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5675,7 +5675,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The subtraction function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is subtraction function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="137">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="145">\[
+<para>This is subtraction function of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. Given the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="138">$ UT_2$</formula> as the argument, it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  <formula id="146">\[
               UT = UT_{self} - UT_2
             \]</formula> Perform element-wise subtraction of two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5747,7 +5747,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>Return the norm of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para><ref refid="classcytnx_1_1UniTensor_1a3d328126eaf4f8ac2854f96cba81d592" kindref="member">Norm()</ref> return the 2-norm of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="146">$UT$</formula>. Namely, it return  <formula id="147">\[
+<para><ref refid="classcytnx_1_1UniTensor_1a3d328126eaf4f8ac2854f96cba81d592" kindref="member">Norm()</ref> return the 2-norm of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="147">$UT$</formula>. Namely, it return  <formula id="148">\[
     ||UT||_2
     \]</formula> <simplesect kind="return"><para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
 </simplesect>
@@ -5768,7 +5768,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>Return the norm of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para><ref refid="classcytnx_1_1UniTensor_1abb5b13105b05303757eb673071d3671f" kindref="member">norm()</ref> return the 2-norm of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="146">$UT$</formula> as a Scalar carrying the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>&apos;s own precision (Float for Float/ComplexFloat input, Double otherwise), so <computeroutput>x /= x.norm()</computeroutput> stays dtype-preserving rather than promoting a Float <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> to Double.  <formula id="147">\[
+<para><ref refid="classcytnx_1_1UniTensor_1abb5b13105b05303757eb673071d3671f" kindref="member">norm()</ref> return the 2-norm of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="147">$UT$</formula> as a Scalar carrying the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>&apos;s own precision (Float for Float/ComplexFloat input, Double otherwise), so <computeroutput>x /= x.norm()</computeroutput> stays dtype-preserving rather than promoting a Float <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> to Double.  <formula id="148">\[
     ||UT||_2
     \]</formula> <simplesect kind="return"><para>Scalar </para>
 </simplesect>
@@ -5792,7 +5792,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The addition assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is addition assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise addition and return  <formula id="148">\[
+<para>This is addition assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise addition and return  <formula id="149">\[
             UT += UT_R
             \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5829,7 +5829,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The subtraction assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is subtraction assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise subtraction and return  <formula id="149">\[
+<para>This is subtraction assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise subtraction and return  <formula id="150">\[
             UT -= UT_R
             \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5866,7 +5866,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The division assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is division assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise division and return  <formula id="150">\[
+<para>This is division assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise division and return  <formula id="151">\[
             UT /= UT_R
             \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5903,7 +5903,7 @@ cytnx_int64 &amp;rowrank)</ref> instead </para>
 <para>The multiplication assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is multiplication assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise multiplication and return  <formula id="151">\[
+<para>This is multiplication assignment operator of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform element-wise multiplication and return  <formula id="152">\[
             UT *= UT_R
             \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>

@@ -631,6 +631,8 @@
     <member refid="namespacecytnx_1_1linalg_1a49f6c1a406ac0a3446ea8c9423587dd8" kind="function"><name>Qdr</name></member>
     <member refid="namespacecytnx_1_1linalg_1a63fb9c9751ff27d22f84a52a876cc6fc" kind="function"><name>Eigh</name></member>
     <member refid="namespacecytnx_1_1linalg_1a9f15e25a4048a604b9f5ed243443bf80" kind="function"><name>Eigh</name></member>
+    <member refid="namespacecytnx_1_1linalg_1a2b27ed354cf45c30b5add387381f9ab1" kind="function"><name>Eigh_truncate</name></member>
+    <member refid="namespacecytnx_1_1linalg_1adfbe23e0faf273b0ca8b9c634f5e1648" kind="function"><name>Eigh_truncate</name></member>
     <member refid="namespacecytnx_1_1linalg_1a243ceac5dc7d4a8c983b0e7693b97489" kind="function"><name>Eig</name></member>
     <member refid="namespacecytnx_1_1linalg_1aac143f3d5a9255d4e71b9ada3cdf9566" kind="function"><name>Eig</name></member>
     <member refid="namespacecytnx_1_1linalg_1a02d7105bf16d23128687ba92fb231b54" kind="function"><name>Trace</name></member>

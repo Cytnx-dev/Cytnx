@@ -74,6 +74,31 @@ Eigenvalue decomposition
     :language: python
     :linenos:
 
+Truncated Hermitian eigenvalue decomposition
+--------------------------------------------
+
+For a Hermitian matrix, **Eigh()** returns the eigenvalues in ascending order; on a UniTensor with symmetries it does so block by block, one block per charge sector. **Eigh_truncate()** is the counterpart of **Svd_truncate()** for this case: it keeps the **keepdim** eigenpairs of largest magnitude :math:`|\lambda|`, ranked across all blocks, and returns the truncated eigenvalue UniTensor, the eigenvectors with a truncated eigen bond, and, with **return_err**, the discarded magnitudes. The arguments **keepdim**, **err**, **mindim**, **min_blockdim** and **return_err** have the same meaning as in **Svd_truncate()**. A typical use is the truncation of a reduced density matrix to its dominant eigenbasis, sector by sector, in one call.
+
+* In Python:
+
+.. literalinclude:: ../../code/python/doc_codes/guide_xlinalg_Eigh_truncate.py
+    :language: python
+    :linenos:
+
+Output >>
+
+.. literalinclude:: ../../code/python/outputs/guide_xlinalg_Eigh_truncate.out
+    :language: text
+
+The ranking is global: eigenvalue magnitudes are compared across all sectors. Without per-block floors that change this selection, the block-sparse and dense paths keep the same eigenvalue magnitudes. When the retained count is exactly **keepdim**, the reconstruction :math:`V D V^\dagger` is an optimal rank-**keepdim** approximation in spectral norm (the Hermitian case of the Eckart-Young theorem). The **err** cutoff can reduce the retained count; per-block floors or an exact magnitude degeneracy at the cut can increase it. Floors constrain the selection and can exclude the unconstrained dense optimum: sectors with spectra ``[-3, 0.5, 5]`` and ``[1, 4]``, **keepdim = 2** and floors ``[0, 2]`` retain ``[1, 4]`` (spectral error 5), whereas the unconstrained optimum retains ``[5, 4]`` (error 3). **return_err** reports the magnitudes actually discarded, with mode 1 reporting their maximum (the spectral-norm reconstruction error).
+
+For a dense UniTensor, the one-element **min_blockdim** acts as **mindim** and prevents cutoff-based removal; it does not override **keepdim**. For block inputs, floors are reserved before applying the global budget. Consequently **keepdim = 1**, **min_blockdim = [3]** retains one eigenpair for a dense input but three for a one-sector block input with at least three eigenpairs. Dense eigenvectors also inherit **Eigh()**'s flattened row space and rowrank 1; block eigenvectors preserve the row-space bonds and rowrank. For example a dense shape ``[1, 3, 1, 3]`` with rowrank 2 returns eigenvectors of shape ``[3, 2]`` with rowrank 1 when two eigenpairs are kept.
+
+Dtypes follow **Eigh()**. For fermionic inputs, materializing pending sign flips can promote a real Float sector to Double; truncation inherits the dtype of the selected sectors.
+
+.. Note::
+    **Eigh_truncate()** selects by magnitude, not by algebraic value. To select eigenpairs by value, for instance the lowest or the highest eigenvalues of a Hamiltonian, call **Eigh()** and keep the wanted part of its ascending spectrum (for a symmetric UniTensor, block by block), or use **Lanczos()** with **which = "SA"** (smallest algebraic) or **"LA"** (largest algebraic), which computes only the wanted eigenpairs.
+
 QR decomposition
 *****************************
 

@@ -347,6 +347,12 @@ Functions</h2></td></tr>
 <tr class="separator:a63fb9c9751ff27d22f84a52a876cc6fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f15e25a4048a604b9f5ed243443bf80" id="r_a9f15e25a4048a604b9f5ed243443bf80"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a9f15e25a4048a604b9f5ed243443bf80">Eigh</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, const bool &amp;is_V=true, const bool &amp;row_v=false)</td></tr>
 <tr class="separator:a9f15e25a4048a604b9f5ed243443bf80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b27ed354cf45c30b5add387381f9ab1" id="r_a2b27ed354cf45c30b5add387381f9ab1"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a2b27ed354cf45c30b5add387381f9ab1">Eigh_truncate</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, double err=0., bool is_V=true, unsigned int return_err=0, cytnx_uint64 mindim=1)</td></tr>
+<tr class="memdesc:a2b27ed354cf45c30b5add387381f9ab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hermitian eigen-decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> with truncation of the eigenpairs.  <br /></td></tr>
+<tr class="separator:a2b27ed354cf45c30b5add387381f9ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfbe23e0faf273b0ca8b9c634f5e1648" id="r_adfbe23e0faf273b0ca8b9c634f5e1648"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#adfbe23e0faf273b0ca8b9c634f5e1648">Eigh_truncate</a> (const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;Tin, cytnx_uint64 keepdim, std::vector&lt; cytnx_uint64 &gt; min_blockdim, double err=0., bool is_V=true, unsigned int return_err=0, cytnx_uint64 mindim=1)</td></tr>
+<tr class="memdesc:adfbe23e0faf273b0ca8b9c634f5e1648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hermitian eigen-decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> with truncation and a per-block floor.  <br /></td></tr>
+<tr class="separator:adfbe23e0faf273b0ca8b9c634f5e1648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a243ceac5dc7d4a8c983b0e7693b97489" id="r_a243ceac5dc7d4a8c983b0e7693b97489"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecytnx_1_1linalg.html#a243ceac5dc7d4a8c983b0e7693b97489">Eig</a> (const <a class="el" href="classcytnx_1_1Tensor.html">Tensor</a> &amp;Tin, const bool &amp;is_V=true, const bool &amp;row_v=false)</td></tr>
 <tr class="memdesc:a243ceac5dc7d4a8c983b0e7693b97489"><td class="mdescLeft">&#160;</td><td class="mdescRight">eigen-value decomposition for generic square matrix  <br /></td></tr>
 <tr class="separator:a243ceac5dc7d4a8c983b0e7693b97489"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1934,6 +1940,153 @@ M = V D V^\dagger,
 <dl class="section return"><dt>Returns</dt><dd>[std::vector&lt;Tensors&gt;], the first tensor is the eigen values, a 1-d tensor (vector). The second tensor is the eigen vectors, a 2-d tensor (matrix). This tensor will only return when <code>is_V</code> = <em>true</em>. Furthermore, if <code>row_V</code> = <em>true</em>, then the eigen vectors will be row form. Otherwise, the eigen vectors will be column form. </dd></dl>
 <dl class="section pre"><dt>Precondition</dt><dd>the <code>Tin</code> should be a Hermitian matrix. </dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>If <code>Tin</code> is not a Hermitian matrix, only the lower triangular matrix will be used. (This is strongly not recommended, please use <a class="el" href="namespacecytnx_1_1linalg.html#a243ceac5dc7d4a8c983b0e7693b97489" title="eigen-value decomposition for generic square matrix">Eig(const Tensor &amp;Tin, const bool &amp;is_V, const bool &amp;row_v)</a> instead. </dd></dl>
+
+</div>
+</div>
+<a id="a2b27ed354cf45c30b5add387381f9ab1" name="a2b27ed354cf45c30b5add387381f9ab1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b27ed354cf45c30b5add387381f9ab1">&#9670;&#160;</a></span>Eigh_truncate() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &gt; cytnx::linalg::Eigh_truncate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cytnx_uint64&#160;</td>
+          <td class="paramname"><em>keepdim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>err</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_V</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>return_err</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cytnx_uint64&#160;</td>
+          <td class="paramname"><em>mindim</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Hermitian eigen-decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> with truncation of the eigenpairs. </p>
+<p>Performs <a class="el" href="namespacecytnx_1_1linalg.html#a9f15e25a4048a604b9f5ed243443bf80">Eigh(const cytnx::UniTensor &amp;Tin, const bool &amp;is_V, const bool &amp;row_v)</a> and keeps the eigenpairs with the largest eigenvalue magnitudes, the counterpart of Svd_truncate for a Hermitian matrix (whose singular values are the eigenvalue magnitudes): a reduced density matrix is truncated to its dominant eigenbasis, per charge sector, in one call. The eigenvalues are ranked by \( |\lambda| \) across all blocks; the kept eigenvalues of every block stay in the ascending order Eigh returns.</p>
+<p>When per-block floors do not alter the global magnitude selection, the block-sparse and dense paths select the same eigenvalue magnitudes. If the retained count is exactly <code>keepdim</code>, the reconstruction is an optimal rank-<code>keepdim</code> approximation in spectral norm (the Hermitian case of the Eckart-Young theorem). A cutoff can reduce that count; floors and exact degeneracy at the cut can increase it. Per-block floors are selection constraints and can exclude the unconstrained optimum even at the same retained count. Ranking by magnitude makes <code>return_err</code> report discarded approximation errors, rather than algebraic eigenvalues. To select the lowest or highest eigenvalues of a Hamiltonian, use Eigh and keep the wanted part of its ascending spectrum, or Lanczos with <code>which</code> set to "SA"/"LA".</p>
+<p>Dense eigenvectors inherit Eigh's flattened row space and rowrank 1, including for higher-rank inputs. Block eigenvectors preserve the row-space bonds and rowrank.</p>
+<p>The truncation order is the same as in Svd_truncate (later constraints may be violated by earlier ones): 1) keep at least <code>min_blockdim</code> eigenpairs in each block (the overload with <code>min_blockdim</code>); 2) keep at most <code>keepdim</code> eigenpairs overall, except that an exact degeneracy of \( |\lambda| \) at the cut is kept entirely; 3) keep at least <code>mindim</code> eigenpairs; 4) drop eigenpairs with \( |\lambda| \) smaller than <code>err</code>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Tin</td><td>a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> with rowrank set so that it is a Hermitian matrix; a DenseUniTensor, a BlockUniTensor or a BlockFermionicUniTensor </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">keepdim</td><td>the number (at most) of eigenpairs to keep </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">err</td><td>the cutoff: eigenpairs with \( |\lambda| \) smaller than <code>err</code> are dropped </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">is_V</td><td>if <em>true</em>, the eigenvector <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> is returned </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">return_err</td><td>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded \( |\lambda| \), or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded \( |\lambda| \) in descending order, empty if none were discarded. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">mindim</td><td>the number (at least) of eigenpairs to keep </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><p class="startdd">[std::vector&lt;UniTensor&gt;]</p>
+<ol type="1">
+<li>The first <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> is a diagonal <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> containing the kept eigenvalues.</li>
+<li>If <code>is_V</code> is <em>true</em>, the eigenvector <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> follows; its last bond is the truncated eigen bond, so \( V D V^\dagger \) is the projection of <code>Tin</code> onto the kept eigenspace.</li>
+<li>If <code>return_err</code> is nonzero, the discarded magnitudes are pushed back to the vector. </li>
+</ol>
+</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#aab83b0d368d074fe93ae9ae55dd37766" title="Perform Singular-Value decomposition on a UniTensor with truncation.">Svd_truncate(const cytnx::UniTensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const double
+&amp;err, const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &amp;mindim)</a>, <a class="el" href="namespacecytnx_1_1linalg.html#a9f15e25a4048a604b9f5ed243443bf80">Eigh(const cytnx::UniTensor &amp;Tin, const bool &amp;is_V, const bool &amp;row_v)</a> </dd></dl>
+
+</div>
+</div>
+<a id="adfbe23e0faf273b0ca8b9c634f5e1648" name="adfbe23e0faf273b0ca8b9c634f5e1648"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfbe23e0faf273b0ca8b9c634f5e1648">&#9670;&#160;</a></span>Eigh_truncate() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="classcytnx_1_1UniTensor.html">UniTensor</a> &gt; cytnx::linalg::Eigh_truncate </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classcytnx_1_1UniTensor.html">cytnx::UniTensor</a> &amp;&#160;</td>
+          <td class="paramname"><em>Tin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cytnx_uint64&#160;</td>
+          <td class="paramname"><em>keepdim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; cytnx_uint64 &gt;&#160;</td>
+          <td class="paramname"><em>min_blockdim</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>err</em> = <code>0.</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_V</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>return_err</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cytnx_uint64&#160;</td>
+          <td class="paramname"><em>mindim</em> = <code>1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Hermitian eigen-decomposition of a <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> with truncation and a per-block floor. </p>
+<p>As <a class="el" href="namespacecytnx_1_1linalg.html#a2b27ed354cf45c30b5add387381f9ab1" title="Hermitian eigen-decomposition of a UniTensor with truncation of the eigenpairs.">Eigh_truncate(const cytnx::UniTensor &amp;Tin, cytnx_uint64 keepdim, double err,
+bool is_V, unsigned int return_err, cytnx_uint64 mindim)</a>, with <code>min_blockdim</code> as in Svd_truncate: positional over the blocks of the eigenvalue <a class="el" href="classcytnx_1_1UniTensor.html" title="An Enhanced tensor specifically designed for physical Tensor network simulation.">UniTensor</a> (one block per charge sector of the row space, ascending by qnum), a per-block floor on the number of kept eigenpairs clamped to the block's dimension and honoured before <code>keepdim</code>. The total kept dimension can exceed <code>keepdim</code> due to floors or exact degeneracy, or be reduced by <code>err</code> subject to the higher-priority constraints. A single-element vector applies that floor to every block. For a DenseUniTensor it must have one element, acting as <code>mindim</code> instead: it prevents cutoff-based removal but does not override <code>keepdim</code>. Thus a dense input with keepdim=1 and floor {3} retains one eigenpair, while a one-sector block input retains three if its sector has at least three eigenpairs. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">min_blockdim</td><td>the per-block floors </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacecytnx_1_1linalg.html#a2b27ed354cf45c30b5add387381f9ab1" title="Hermitian eigen-decomposition of a UniTensor with truncation of the eigenpairs.">Eigh_truncate(const cytnx::UniTensor &amp;Tin, cytnx_uint64 keepdim, double err, bool is_V,
+unsigned int return_err, cytnx_uint64 mindim)</a> </dd></dl>
 
 </div>
 </div>

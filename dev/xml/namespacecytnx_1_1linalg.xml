@@ -4193,6 +4193,177 @@ M = V D V^\dagger,
         </inbodydescription>
         <location file="include/linalg.hpp" line="2117" column="17" declfile="include/linalg.hpp" declline="2117" declcolumn="17"/>
       </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2b27ed354cf45c30b5add387381f9ab1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
+        <definition>std::vector&lt; UniTensor &gt; cytnx::linalg::Eigh_truncate</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Tin, cytnx_uint64 keepdim, double err=0., bool is_V=true, unsigned int return_err=0, cytnx_uint64 mindim=1)</argsstring>
+        <name>Eigh_truncate</name>
+        <qualifiedname>cytnx::linalg::Eigh_truncate</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>cytnx_uint64</type>
+          <declname>keepdim</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>err</declname>
+          <defval>0.</defval>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>is_V</declname>
+          <defval>true</defval>
+        </param>
+        <param>
+          <type>unsigned int</type>
+          <declname>return_err</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>cytnx_uint64</type>
+          <declname>mindim</declname>
+          <defval>1</defval>
+        </param>
+        <briefdescription>
+<para>Hermitian eigen-decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with truncation of the eigenpairs. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Performs <ref refid="namespacecytnx_1_1linalg_1a9f15e25a4048a604b9f5ed243443bf80" kindref="member">Eigh(const cytnx::UniTensor &amp;Tin, const bool &amp;is_V, const bool &amp;row_v)</ref> and keeps the eigenpairs with the largest eigenvalue magnitudes, the counterpart of Svd_truncate for a Hermitian matrix (whose singular values are the eigenvalue magnitudes): a reduced density matrix is truncated to its dominant eigenbasis, per charge sector, in one call. The eigenvalues are ranked by <formula id="82">$ |\lambda| $</formula> across all blocks; the kept eigenvalues of every block stay in the ascending order Eigh returns.</para>
+<para>When per-block floors do not alter the global magnitude selection, the block-sparse and dense paths select the same eigenvalue magnitudes. If the retained count is exactly <computeroutput>keepdim</computeroutput>, the reconstruction is an optimal rank-<computeroutput>keepdim</computeroutput> approximation in spectral norm (the Hermitian case of the Eckart-Young theorem). A cutoff can reduce that count; floors and exact degeneracy at the cut can increase it. Per-block floors are selection constraints and can exclude the unconstrained optimum even at the same retained count. Ranking by magnitude makes <computeroutput>return_err</computeroutput> report discarded approximation errors, rather than algebraic eigenvalues. To select the lowest or highest eigenvalues of a Hamiltonian, use Eigh and keep the wanted part of its ascending spectrum, or Lanczos with <computeroutput>which</computeroutput> set to &quot;SA&quot;/&quot;LA&quot;.</para>
+<para>Dense eigenvectors inherit Eigh&apos;s flattened row space and rowrank 1, including for higher-rank inputs. Block eigenvectors preserve the row-space bonds and rowrank.</para>
+<para>The truncation order is the same as in Svd_truncate (later constraints may be violated by earlier ones): 1) keep at least <computeroutput>min_blockdim</computeroutput> eigenpairs in each block (the overload with <computeroutput>min_blockdim</computeroutput>); 2) keep at most <computeroutput>keepdim</computeroutput> eigenpairs overall, except that an exact degeneracy of <formula id="82">$ |\lambda| $</formula> at the cut is kept entirely; 3) keep at least <computeroutput>mindim</computeroutput> eigenpairs; 4) drop eigenpairs with <formula id="82">$ |\lambda| $</formula> smaller than <computeroutput>err</computeroutput>.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">Tin</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with rowrank set so that it is a Hermitian matrix; a DenseUniTensor, a BlockUniTensor or a BlockFermionicUniTensor </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">keepdim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number (at most) of eigenpairs to keep </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">err</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the cutoff: eigenpairs with <formula id="82">$ |\lambda| $</formula> smaller than <computeroutput>err</computeroutput> are dropped </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">is_V</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if <emphasis>true</emphasis>, the eigenvector <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is returned </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">return_err</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded <formula id="82">$ |\lambda| $</formula>, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded <formula id="82">$ |\lambda| $</formula> in descending order, empty if none were discarded. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">mindim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the number (at least) of eigenpairs to keep </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para><parblock><para>[std::vector&lt;UniTensor&gt;]</para>
+<para><orderedlist>
+<listitem><para>The first <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is a diagonal <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> containing the kept eigenvalues.</para>
+</listitem><listitem><para>If <computeroutput>is_V</computeroutput> is <emphasis>true</emphasis>, the eigenvector <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> follows; its last bond is the truncated eigen bond, so <formula id="83">$ V D V^\dagger $</formula> is the projection of <computeroutput>Tin</computeroutput> onto the kept eigenspace.</para>
+</listitem><listitem><para>If <computeroutput>return_err</computeroutput> is nonzero, the discarded magnitudes are pushed back to the vector. </para>
+</listitem></orderedlist>
+</para>
+</parblock></para>
+</simplesect>
+</para>
+<para><simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1aab83b0d368d074fe93ae9ae55dd37766" kindref="member">Svd_truncate(const cytnx::UniTensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const double
+&amp;err, const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &amp;mindim)</ref>, <ref refid="namespacecytnx_1_1linalg_1a9f15e25a4048a604b9f5ed243443bf80" kindref="member">Eigh(const cytnx::UniTensor &amp;Tin, const bool &amp;is_V, const bool &amp;row_v)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="2173" column="17" declfile="include/linalg.hpp" declline="2173" declcolumn="17"/>
+      </memberdef>
+      <memberdef kind="function" id="namespacecytnx_1_1linalg_1adfbe23e0faf273b0ca8b9c634f5e1648" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
+        <definition>std::vector&lt; UniTensor &gt; cytnx::linalg::Eigh_truncate</definition>
+        <argsstring>(const cytnx::UniTensor &amp;Tin, cytnx_uint64 keepdim, std::vector&lt; cytnx_uint64 &gt; min_blockdim, double err=0., bool is_V=true, unsigned int return_err=0, cytnx_uint64 mindim=1)</argsstring>
+        <name>Eigh_truncate</name>
+        <qualifiedname>cytnx::linalg::Eigh_truncate</qualifiedname>
+        <param>
+          <type>const <ref refid="classcytnx_1_1UniTensor" kindref="compound">cytnx::UniTensor</ref> &amp;</type>
+          <declname>Tin</declname>
+        </param>
+        <param>
+          <type>cytnx_uint64</type>
+          <declname>keepdim</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; cytnx_uint64 &gt;</type>
+          <declname>min_blockdim</declname>
+        </param>
+        <param>
+          <type>double</type>
+          <declname>err</declname>
+          <defval>0.</defval>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>is_V</declname>
+          <defval>true</defval>
+        </param>
+        <param>
+          <type>unsigned int</type>
+          <declname>return_err</declname>
+          <defval>0</defval>
+        </param>
+        <param>
+          <type>cytnx_uint64</type>
+          <declname>mindim</declname>
+          <defval>1</defval>
+        </param>
+        <briefdescription>
+<para>Hermitian eigen-decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with truncation and a per-block floor. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>As <ref refid="namespacecytnx_1_1linalg_1a2b27ed354cf45c30b5add387381f9ab1" kindref="member">Eigh_truncate(const cytnx::UniTensor &amp;Tin, cytnx_uint64 keepdim, double err,
+bool is_V, unsigned int return_err, cytnx_uint64 mindim)</ref>, with <computeroutput>min_blockdim</computeroutput> as in Svd_truncate: positional over the blocks of the eigenvalue <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (one block per charge sector of the row space, ascending by qnum), a per-block floor on the number of kept eigenpairs clamped to the block&apos;s dimension and honoured before <computeroutput>keepdim</computeroutput>. The total kept dimension can exceed <computeroutput>keepdim</computeroutput> due to floors or exact degeneracy, or be reduced by <computeroutput>err</computeroutput> subject to the higher-priority constraints. A single-element vector applies that floor to every block. For a DenseUniTensor it must have one element, acting as <computeroutput>mindim</computeroutput> instead: it prevents cutoff-based removal but does not override <computeroutput>keepdim</computeroutput>. Thus a dense input with keepdim=1 and floor {3} retains one eigenpair, while a one-sector block input retains three if its sector has at least three eigenpairs. <parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">min_blockdim</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the per-block floors </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a2b27ed354cf45c30b5add387381f9ab1" kindref="member">Eigh_truncate(const cytnx::UniTensor &amp;Tin, cytnx_uint64 keepdim, double err, bool is_V,
+unsigned int return_err, cytnx_uint64 mindim)</ref> </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/linalg.hpp" line="2194" column="17" declfile="include/linalg.hpp" declline="2194" declcolumn="17"/>
+      </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a243ceac5dc7d4a8c983b0e7693b97489" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
         <definition>std::vector&lt; Tensor &gt; cytnx::linalg::Eig</definition>
@@ -4217,7 +4388,7 @@ M = V D V^\dagger,
 <para>eigen-value decomposition for generic square matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform eigen-value decomposition for generic square matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="82">\[
+<para>This function will perform eigen-value decomposition for generic square matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="84">\[
 M = V D V^{-1},
 \]</formula> where <formula id="74">$ V $</formula> is a invertible matrix contains the eigen vectors, and <formula id="80">$ D $</formula> is a diagonal matrix contains the eigen values.</para>
 <para><parameterlist kind="param"><parameteritem>
@@ -4249,13 +4420,13 @@ M = V D V^{-1},
 </simplesect>
 <simplesect kind="pre"><para>the <computeroutput>Tin</computeroutput> should be a square matrix. </para>
 </simplesect>
-<simplesect kind="warning"><para>The returned eigenvectors <formula id="74">$ V $</formula> are in general only invertible, NOT unitary: the reconstruction is <formula id="83">$ M = V D V^{-1} $</formula>, not <formula id="84">$ V D V^\dagger $</formula>. The underlying LAPACK geev routine does not orthonormalize the eigenvectors, so <formula id="74">$ V $</formula> is generally non-unitary even when <computeroutput>Tin</computeroutput> is Hermitian/normal. Use Eigh for a unitary eigen basis. </para>
+<simplesect kind="warning"><para>The returned eigenvectors <formula id="74">$ V $</formula> are in general only invertible, NOT unitary: the reconstruction is <formula id="85">$ M = V D V^{-1} $</formula>, not <formula id="83">$ V D V^\dagger $</formula>. The underlying LAPACK geev routine does not orthonormalize the eigenvectors, so <formula id="74">$ V $</formula> is generally non-unitary even when <computeroutput>Tin</computeroutput> is Hermitian/normal. Use Eigh for a unitary eigen basis. </para>
 </simplesect>
 </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2145" column="17" declfile="include/linalg.hpp" declline="2145" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2224" column="17" declfile="include/linalg.hpp" declline="2224" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aac143f3d5a9255d4e71b9ada3cdf9566" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -4283,7 +4454,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2147" column="17" declfile="include/linalg.hpp" declline="2147" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2226" column="17" declfile="include/linalg.hpp" declline="2226" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a02d7105bf16d23128687ba92fb231b54" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4309,7 +4480,7 @@ M = V D V^{-1},
 <para>perform trace over index. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform trace over index <computeroutput>axisA</computeroutput> and <computeroutput>axisB</computeroutput>. For example, if <computeroutput>Tn</computeroutput> is a rank-4 tensor <formula id="85">$ T $</formula>, then <computeroutput>axisA</computeroutput> = 0 and <computeroutput>axisB</computeroutput> = 2, then the result will be:  <formula id="86">\[
+<para>This function will perform trace over index <computeroutput>axisA</computeroutput> and <computeroutput>axisB</computeroutput>. For example, if <computeroutput>Tn</computeroutput> is a rank-4 tensor <formula id="86">$ T $</formula>, then <computeroutput>axisA</computeroutput> = 0 and <computeroutput>axisB</computeroutput> = 2, then the result will be:  <formula id="87">\[
 \mathrm{Tr}_{j,l}(T) = \sum_{i,k} T_{i,j,k,l}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -4342,7 +4513,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2165" column="12" declfile="include/linalg.hpp" declline="2165" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2244" column="12" declfile="include/linalg.hpp" declline="2244" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a25b5f2fdfb550aabc9cc41daa963e1fb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4373,7 +4544,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2174" column="12" declfile="include/linalg.hpp" declline="2174" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2253" column="12" declfile="include/linalg.hpp" declline="2253" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a93ef263824e2dcdab4832ea628959d19" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4404,7 +4575,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2183" column="12" declfile="include/linalg.hpp" declline="2183" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2262" column="12" declfile="include/linalg.hpp" declline="2262" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a24855027b29b1777946617f480bc5014" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4433,7 +4604,7 @@ M = V D V^{-1},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2191" column="12" declfile="include/linalg.hpp" declline="2191" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2270" column="12" declfile="include/linalg.hpp" declline="2270" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a53feb441b4b1bd263714ed33e093728f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4453,7 +4624,7 @@ M = V D V^{-1},
 <para>perform matrix multiplication on two tensors. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform matrix multiplication on two matrices (2-rank <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) <computeroutput>TL</computeroutput> and <computeroutput>TR</computeroutput>. The result will be:  <formula id="87">\[
+<para>This function will perform matrix multiplication on two matrices (2-rank <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) <computeroutput>TL</computeroutput> and <computeroutput>TR</computeroutput>. The result will be:  <formula id="88">\[
 T = T_L T_R
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -4478,7 +4649,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2206" column="12" declfile="include/linalg.hpp" declline="2206" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2285" column="12" declfile="include/linalg.hpp" declline="2285" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af2e6723dc80031eb28fc10cc19826dda" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4504,7 +4675,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2216" column="12" declfile="include/linalg.hpp" declline="2216" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2295" column="12" declfile="include/linalg.hpp" declline="2295" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af819d2fc4522d2a6287aa16dfbe3f787" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4528,7 +4699,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2226" column="12" declfile="include/linalg.hpp" declline="2226" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2305" column="12" declfile="include/linalg.hpp" declline="2305" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a62fe45ce80ab5cd5fd9a4c7718270468" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -4546,7 +4717,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2227" column="15" declfile="include/linalg.hpp" declline="2227" declcolumn="15"/>
+        <location file="include/linalg.hpp" line="2306" column="15" declfile="include/linalg.hpp" declline="2306" declcolumn="15"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac414e561888051c1fbacde18c9039fbf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4570,7 +4741,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2235" column="10" declfile="include/linalg.hpp" declline="2235" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2314" column="10" declfile="include/linalg.hpp" declline="2314" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5c9bc42bf34acc1830e2bedd474ffa84" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4588,7 +4759,7 @@ T = T_L T_R
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2236" column="10" declfile="include/linalg.hpp" declline="2236" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2315" column="10" declfile="include/linalg.hpp" declline="2315" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6b7c861f65e3ee03c246887c64c405ff" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4649,7 +4820,7 @@ T_\text{out}[i] = \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2264" column="12" declfile="include/linalg.hpp" declline="2264" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2343" column="12" declfile="include/linalg.hpp" declline="2343" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1acae5e14ab0cf35a1a713b92444850f89" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4710,7 +4881,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2290" column="10" declfile="include/linalg.hpp" declline="2290" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2369" column="10" declfile="include/linalg.hpp" declline="2369" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a470d0886432554a35ecaf961451c0806" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4726,7 +4897,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Conjugate all the element in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function take the complex conjugate of all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:  <formula id="88">\[
+<para>This function take the complex conjugate of all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:  <formula id="89">\[
     T_{o}[i] = T_{in}[i]^*
 \]</formula> Furthermore,<orderedlist>
 <listitem><para>if the input <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is complex, then return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all the elements are conjugated.</para>
@@ -4747,7 +4918,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2308" column="12" declfile="include/linalg.hpp" declline="2308" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2387" column="12" declfile="include/linalg.hpp" declline="2387" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1adc3233bf8bc3eb6a435340f912412801" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4773,7 +4944,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2318" column="10" declfile="include/linalg.hpp" declline="2318" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2397" column="10" declfile="include/linalg.hpp" declline="2397" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aac38382cbc0e8202411c96a0ff636471" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4789,7 +4960,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Exponential all the element in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Exponential on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:  <formula id="89">\[
+<para>This function will perform Exponential on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:  <formula id="90">\[
     T_{o}[i] = e^{T_{i}[i]}
 \]</formula> The output preserves the input&apos;s floating precision (Float stays Float, Double stays Double, ComplexFloat/ComplexDouble preserved); integer/bool inputs promote to Double. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -4806,7 +4977,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2335" column="12" declfile="include/linalg.hpp" declline="2335" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2414" column="12" declfile="include/linalg.hpp" declline="2414" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5831918722e5d18f4eaf37834b8fbf77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4838,7 +5009,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2347" column="13" declfile="include/linalg.hpp" declline="2347" declcolumn="13"/>
+        <location file="include/linalg.hpp" line="2426" column="13" declfile="include/linalg.hpp" declline="2426" declcolumn="13"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aaab08439dde94ee87939d07933ede6e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4873,7 +5044,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2359" column="10" declfile="include/linalg.hpp" declline="2359" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2438" column="10" declfile="include/linalg.hpp" declline="2438" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5de1faf71c76cdc6b7fa5ba3a3e21bbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -4904,7 +5075,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2369" column="11" declfile="include/linalg.hpp" declline="2369" declcolumn="11"/>
+        <location file="include/linalg.hpp" line="2448" column="11" declfile="include/linalg.hpp" declline="2448" declcolumn="11"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2919ef6c163a54360071c286df3fb92e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -4953,7 +5124,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2385" column="12" declfile="include/linalg.hpp" declline="2385" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2464" column="12" declfile="include/linalg.hpp" declline="2464" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a269ef291355dfee4421fa55ad0247aad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -5002,7 +5173,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2400" column="10" declfile="include/linalg.hpp" declline="2400" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2479" column="10" declfile="include/linalg.hpp" declline="2479" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a3ded6435c7b47eb348d03783bfe72611" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5018,7 +5189,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Elementwise absolute value. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Elementwise absolute value on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be: <formula id="90">\[ T_{o}[i] = |T_{i}[i]| \]</formula> <parameterlist kind="param"><parameteritem>
+<para>This function will perform Elementwise absolute value on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be: <formula id="91">\[ T_{o}[i] = |T_{i}[i]| \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
 </parameternamelist>
@@ -5033,7 +5204,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2411" column="12" declfile="include/linalg.hpp" declline="2411" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2490" column="12" declfile="include/linalg.hpp" declline="2490" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a30687e6240a889c04637b33ef90c2525" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -5065,7 +5236,7 @@ T_\text{in}[i] \rightarrow \left\{
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2420" column="10" declfile="include/linalg.hpp" declline="2420" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="2499" column="10" declfile="include/linalg.hpp" declline="2499" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5913f0bdd6cc130aeb927f42a874a149" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5089,7 +5260,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2432" column="12" declfile="include/linalg.hpp" declline="2432" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2511" column="12" declfile="include/linalg.hpp" declline="2511" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a242f1b9c1ee7938ba050121773ab4b55" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5188,7 +5359,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2451" column="12" declfile="include/linalg.hpp" declline="2451" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2530" column="12" declfile="include/linalg.hpp" declline="2530" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac77faf8e0c0153e1890610a6e21f36af" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5274,7 +5445,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2474" column="12" declfile="include/linalg.hpp" declline="2474" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2553" column="12" declfile="include/linalg.hpp" declline="2553" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a3e8edc89fdabb9c0f9b342198a31798b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5319,7 +5490,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2489" column="12" declfile="include/linalg.hpp" declline="2489" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2568" column="12" declfile="include/linalg.hpp" declline="2568" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af10e9e9d441e0a111a2382f636ccfa30" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5390,7 +5561,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2509" column="12" declfile="include/linalg.hpp" declline="2509" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2588" column="12" declfile="include/linalg.hpp" declline="2588" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac908296e4737c2b080669faf26b89253" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5447,7 +5618,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2528" column="12" declfile="include/linalg.hpp" declline="2528" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2607" column="12" declfile="include/linalg.hpp" declline="2607" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aa69a91a5651fce55380cf800c6030d73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5507,7 +5678,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2544" column="12" declfile="include/linalg.hpp" declline="2544" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2623" column="12" declfile="include/linalg.hpp" declline="2623" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a215dbfd2aa7ef898450de7afff726bca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5557,7 +5728,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2567" column="12" declfile="include/linalg.hpp" declline="2567" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2646" column="12" declfile="include/linalg.hpp" declline="2646" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a5a502c7d0a6a46f0e695f211a42ab9dc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -5643,7 +5814,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2591" column="17" declfile="include/linalg.hpp" declline="2591" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2670" column="17" declfile="include/linalg.hpp" declline="2670" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1af116da0421730edbcba17cda953f13b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -5673,7 +5844,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for Hermitian matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for Hermitian matrix, That is,  <formula id="91">\[
+<para>This function perform matrix exponential for Hermitian matrix, That is,  <formula id="92">\[
     O = \exp{(aM + b)}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5710,7 +5881,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2614" column="12" declfile="include/linalg.hpp" declline="2614" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2693" column="12" declfile="include/linalg.hpp" declline="2693" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ae1c7e52ab3ee393428ff6fb4f087425c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5726,7 +5897,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for Hermitian matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for Hermitian matrix, That is,  <formula id="92">\[
+<para>This function perform matrix exponential for Hermitian matrix, That is,  <formula id="93">\[
       O = \exp{M}
    \]</formula> <simplesect kind="pre"><para>the <computeroutput>in</computeroutput> should be a Hermitian matrix. </para>
 </simplesect>
@@ -5738,7 +5909,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2627" column="12" declfile="include/linalg.hpp" declline="2627" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2706" column="12" declfile="include/linalg.hpp" declline="2706" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a0d4b1c10f01b98fd738af6ac3abd7021" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -5768,7 +5939,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for generic matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for generic matrix, That is,  <formula id="91">\[
+<para>This function perform matrix exponential for generic matrix, That is,  <formula id="92">\[
     O = \exp{(aM + b)}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5803,7 +5974,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2644" column="12" declfile="include/linalg.hpp" declline="2644" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2723" column="12" declfile="include/linalg.hpp" declline="2723" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a07b223a17f1b1daa8de5ad1e9dc1dd34" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -5819,7 +5990,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for generic matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for generic matrix, That is,  <formula id="93">\[
+<para>This function perform matrix exponential for generic matrix, That is,  <formula id="94">\[
     O = \exp{M}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
@@ -5838,7 +6009,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2656" column="12" declfile="include/linalg.hpp" declline="2656" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="2735" column="12" declfile="include/linalg.hpp" declline="2735" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ade270f8949237b46ed3e3aba5a665dac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -5981,7 +6152,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="94">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -5991,14 +6162,14 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem></orderedlist>
 </para>
 </simplesect>
-<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is <formula id="95">$[1.0+0i,
-0.7+0.1i, 0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which=&quot;LI&quot;</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="96">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="97">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
+<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is <formula id="96">$[1.0+0i,
+0.7+0.1i, 0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which=&quot;LI&quot;</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="97">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="98">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
 </simplesect>
 </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2705" column="17" declfile="include/linalg.hpp" declline="2705" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2784" column="17" declfile="include/linalg.hpp" declline="2784" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a7752089c2bce2abb7bdfedcc96b3e859" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -6141,7 +6312,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem><listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="94">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -6152,14 +6323,14 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem></orderedlist>
 </para>
 </simplesect>
-<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is <formula id="98">$[1.0+0i, 0.7+0.1i,
-0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which=&quot;LI&quot;</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="96">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="97">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
+<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is <formula id="99">$[1.0+0i, 0.7+0.1i,
+0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which=&quot;LI&quot;</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="97">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="98">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
 </simplesect>
 </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2766" column="17" declfile="include/linalg.hpp" declline="2766" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2845" column="17" declfile="include/linalg.hpp" declline="2845" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a91b798c44c9479338b03e13f73284b3f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -6314,7 +6485,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2805" column="17" declfile="include/linalg.hpp" declline="2805" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2884" column="17" declfile="include/linalg.hpp" declline="2884" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a61bbd603fe43d009deca4e5f11d2368a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -6455,7 +6626,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="94">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -6471,7 +6642,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2850" column="17" declfile="include/linalg.hpp" declline="2850" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2929" column="17" declfile="include/linalg.hpp" declline="2929" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a095ddd1c9cb78bd9a4a9895c6dd6f46b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -6612,7 +6783,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem><listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="94">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -6629,7 +6800,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2902" column="17" declfile="include/linalg.hpp" declline="2902" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="2981" column="17" declfile="include/linalg.hpp" declline="2981" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a3e6acd25ef7cadc9b06d1c8190f13cd0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -6786,7 +6957,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2944" column="17" declfile="include/linalg.hpp" declline="2944" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3023" column="17" declfile="include/linalg.hpp" declline="3023" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1abf13b4960e1c68f717840de7e555f1f0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -6923,7 +7094,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="2974" column="17" declfile="include/linalg.hpp" declline="2974" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3053" column="17" declfile="include/linalg.hpp" declline="3053" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ae1d138b06f259478aa7f4276ebba9430" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -7021,7 +7192,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3000" column="17" declfile="include/linalg.hpp" declline="3000" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3079" column="17" declfile="include/linalg.hpp" declline="3079" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ac1834487d31858f1ae3c248abb4b412f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> &gt;</type>
@@ -7118,7 +7289,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3025" column="17" declfile="include/linalg.hpp" declline="3025" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3104" column="17" declfile="include/linalg.hpp" declline="3104" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a74e4c9a9cfe97d7ca523012078a3f5e1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref></type>
@@ -7154,19 +7325,19 @@ This function will return a diagonal tensor with diagonal elements provided as <
           <defval>false</defval>
         </param>
         <briefdescription>
-<para>Perform the Lanczos algorithm for hermitian operator <formula id="99">$H$</formula> to approximate <formula id="100">$e^{H\tau}v$</formula>. </para>
+<para>Perform the Lanczos algorithm for hermitian operator <formula id="100">$H$</formula> to approximate <formula id="101">$e^{H\tau}v$</formula>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform the Lanczos-like algorithm for hermitian linear operator <formula id="99">$H$</formula> to approximate  <formula id="101">\[
+<para>This function perform the Lanczos-like algorithm for hermitian linear operator <formula id="100">$H$</formula> to approximate  <formula id="102">\[
             e^{H\tau}v
-            \]</formula> and return the state <formula id="102">$w$</formula> such that  <formula id="103">\[
+            \]</formula> and return the state <formula id="103">$w$</formula> such that  <formula id="104">\[
             |\exp(H\tau)v - w| &lt; \delta.
-            \]</formula> Here <formula id="104">$v$</formula> is a given vector or a state. <parameterlist kind="param"><parameteritem>
+            \]</formula> Here <formula id="105">$v$</formula> is a given vector or a state. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Hop</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the Linear Operator defined by <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class or it&apos;s inheritance (see <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref>). The operation method <formula id="105">$Hv$</formula> need to be defined in it. </para>
+<para>the Linear Operator defined by <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class or it&apos;s inheritance (see <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref>). The operation method <formula id="106">$Hv$</formula> need to be defined in it. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7174,7 +7345,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <parametername direction="in">v</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>The input vector (or state). The norm <formula id="106">$|v|$</formula> should be equal to 1. </para>
+<para>The input vector (or state). The norm <formula id="107">$|v|$</formula> should be equal to 1. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7190,7 +7361,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <parametername direction="in">CvgCrit</parametername>
 </parameternamelist>
 <parameterdescription>
-<para><formula id="107">$\delta$</formula>, the convergence criterion. </para>
+<para><formula id="108">$\delta$</formula>, the convergence criterion. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7210,17 +7381,17 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="102">$w$</formula> </para>
+<simplesect kind="return"><para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="103">$w$</formula> </para>
 </simplesect>
 <simplesect kind="note"><para>To use, define a linear operator with <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class either by assign a custom function or create a class that inherit <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> (see <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> for further details) </para>
 </simplesect>
-<simplesect kind="warning"><para>User need to guarantee that the input operator <formula id="99">$H$</formula> is Hermitian , and the exponetiate <formula id="108">$e^{-H\tau}$</formula> will converged. Ohterwise, the function will return the wrong results without any warning. </para>
+<simplesect kind="warning"><para>User need to guarantee that the input operator <formula id="100">$H$</formula> is Hermitian , and the exponetiate <formula id="109">$e^{-H\tau}$</formula> will converged. Ohterwise, the function will return the wrong results without any warning. </para>
 </simplesect>
 </para>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3062" column="15" declfile="include/linalg.hpp" declline="3062" declcolumn="15"/>
+        <location file="include/linalg.hpp" line="3141" column="15" declfile="include/linalg.hpp" declline="3141" declcolumn="15"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a59fdd5725d0fe8c422dfe602629d34d7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::vector&lt; <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt;</type>
@@ -7245,7 +7416,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>Return the least-squares solution to a linear matrix equation. </para>
         </briefdescription>
         <detaileddescription>
-<para>Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the &quot;exact&quot; solution of the equation. Else, x minimizes the Euclidean 2-norm <formula id="109">$ || b - a x ||_2 $</formula>.</para>
+<para>Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the &quot;exact&quot; solution of the equation. Else, x minimizes the Euclidean 2-norm <formula id="110">$ || b - a x ||_2 $</formula>.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">A</parametername>
@@ -7286,7 +7457,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3093" column="17" declfile="include/linalg.hpp" declline="3093" declcolumn="17"/>
+        <location file="include/linalg.hpp" line="3172" column="17" declfile="include/linalg.hpp" declline="3172" declcolumn="17"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1aad5bd110b48c053428e72ecceb2aa04d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -7344,7 +7515,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3109" column="12" declfile="include/linalg.hpp" declline="3109" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="3188" column="12" declfile="include/linalg.hpp" declline="3188" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a2a4fdc352527d77235ff53d3694bf92c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -7373,12 +7544,12 @@ This function will return a diagonal tensor with diagonal elements provided as <
           <declname>c</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm, performing <formula id="110">$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} $</formula>, inplacely. </para>
+<para>Blas Gemm, performing <formula id="111">$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} $</formula>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs  <formula id="111">\[
+<para>This function performs  <formula id="112">\[
 \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c},
-\]</formula> where <formula id="112">$ \textbf{x},\textbf{y},\textbf{c} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a, b are Scalars. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput> <computeroutput>b</computeroutput> <computeroutput>c</computeroutput>. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="113">$ \textbf{x},\textbf{y},\textbf{c} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a, b are Scalars. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput> <computeroutput>b</computeroutput> <computeroutput>c</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">a</parametername>
 </parameternamelist>
@@ -7423,7 +7594,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3128" column="10" declfile="include/linalg.hpp" declline="3128" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3207" column="10" declfile="include/linalg.hpp" declline="3207" declcolumn="10"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1ab781bbb25cc0f04ad700596d14da4596" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref></type>
@@ -7444,12 +7615,12 @@ This function will return a diagonal tensor with diagonal elements provided as <
           <declname>y</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm, performing <formula id="113">$ a\textbf{x}\textbf{y} -&gt; $</formula> return. </para>
+<para>Blas Gemm, performing <formula id="114">$ a\textbf{x}\textbf{y} -&gt; $</formula> return. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs  <formula id="114">\[
+<para>This function performs  <formula id="115">\[
 return = a\textbf{x}\textbf{y},
-\]</formula> where <formula id="115">$ \textbf{x},\textbf{y} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a is Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="116">$ \textbf{x},\textbf{y} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a is Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">a</parametername>
 </parameternamelist>
@@ -7480,7 +7651,7 @@ return = a\textbf{x}\textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3145" column="12" declfile="include/linalg.hpp" declline="3145" declcolumn="12"/>
+        <location file="include/linalg.hpp" line="3224" column="12" declfile="include/linalg.hpp" declline="3224" declcolumn="12"/>
       </memberdef>
       <memberdef kind="function" id="namespacecytnx_1_1linalg_1a6a5391acd57dd66914790575407dceaa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -7513,7 +7684,7 @@ return = a\textbf{x}\textbf{y},
           <declname>group_size</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm_Batch, performing many(batch) <formula id="116">$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
+<para>Blas Gemm_Batch, performing many(batch) <formula id="117">$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
 \beta\textbf{c} $</formula>, inplacely. You do not need to consider the row-major or column-major, just provide the correct shape. </para>
         </briefdescription>
         <detaileddescription>
@@ -7572,7 +7743,7 @@ return = a\textbf{x}\textbf{y},
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/linalg.hpp" line="3172" column="10" declfile="include/linalg.hpp" declline="3172" declcolumn="10"/>
+        <location file="include/linalg.hpp" line="3251" column="10" declfile="include/linalg.hpp" declline="3251" declcolumn="10"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
