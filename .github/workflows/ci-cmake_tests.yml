@@ -65,7 +65,11 @@ jobs:
         # pyproject.toml as the single source of truth for everything
         # Python.
         run: |
-          mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers blas=*=openblas liblapacke arpack gtest
+          # compilers is pinned to the 1.11 series (GCC 14). With GCC 15 a Debug
+          # build enables libstdc++'s bounds assertions, and 47 tests abort on
+          # out-of-range std::vector::operator[] calls that exist in the 1.1.x
+          # sources (fixed on master, not backported).
+          mamba install _openmp_mutex=*=*_llvm cmake make boost git "compilers=1.11.*" blas=*=openblas liblapacke arpack gtest
 
       - name: CPU info
         run: lscpu
