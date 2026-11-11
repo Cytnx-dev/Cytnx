@@ -29,10 +29,12 @@ In addition, you might want to install the following optional dependencies if yo
 
 [CUDA]
 
-* Nvidia cuda library v10+
+* Nvidia cuda library v12.0+
 * Nvidia cuDNN library
-* Nvidia cuTensor library
-* Nvidia cuQuantum library
+* Nvidia cuTensor library v2.0+
+* Nvidia cuQuantum library v24.03+ (cuTensorNet v2.4.0+)
+
+Which versions can be used depends on the GPU; see :ref:`gpu-version-support`.
 
 
 [Python API]
@@ -163,7 +165,7 @@ If cutensor shall be used as well (compile option -DUSE_CUTENSOR=ON), then furth
 
     $conda install -c nvidia cutensor
 
-Similarly, cuqauantum (compile option -DUSE_CUTENSOR=ON), requires:
+Similarly, cuQuantum (compile option -DUSE_CUQUANTUM=ON), requires:
 
 .. code-block:: shell
 
@@ -182,6 +184,84 @@ You can also choose to install dependencies directly from the system package man
 
     For the Python API, we recommend installing Python using anaconda or miniconda.
 
+
+.. _gpu-version-support:
+
+Supported CUDA, cuTENSOR and cuQuantum versions
+-------------------------------------------------
+A CUDA build (``-DUSE_CUDA=ON``) has three version requirements of its own:
+
+* **CUDA Toolkit 12.0 or newer.** Cytnx compiles its CUDA sources as C++20, which ``nvcc`` supports from CUDA 12.0.
+* **cuTENSOR 2.0 or newer** when ``-DUSE_CUTENSOR=ON``. CMake checks this and stops with an error on cuTENSOR 1.x.
+* **cuTensorNet 2.4.0 or newer** (cuQuantum 24.03) when ``-DUSE_CUQUANTUM=ON``. This is the first cuTensorNet release built against cuTENSOR 2; it needs cuTENSOR 2.0.1 or newer. CMake does not check this version. The cuStateVec library from the same cuQuantum release must also be installed, because the build links it.
+
+On top of these, NVIDIA removes support for older GPUs from newer library releases, so the usable range depends on the compute capability of the GPU:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 22 18 30 30
+
+   * - GPU (compute capability)
+     - CUDA Toolkit
+     - cuTENSOR
+     - cuTensorNet (cuQuantum)
+   * - Volta, e.g. V100 (``sm_70``)
+     - 12.0 to 12.9
+     - 2.0.1 to 2.2.0
+     - 2.4.0 to 2.8.0 (24.03 to 25.06)
+   * - Turing to Hopper, e.g. T4, A100, RTX 40, H100 (``sm_75`` to ``sm_90``)
+     - 12.0 or newer, including 13.x
+     - 2.0.1 or newer with CUDA 12; 2.3.0 or newer with CUDA 13
+     - 2.4.0 or newer with CUDA 12; 2.9.0 or newer with CUDA 13
+   * - Blackwell, e.g. B200, RTX 50 (``sm_100``, ``sm_120``)
+     - 12.8 or newer, including 13.x
+     - 2.1.0 or newer with CUDA 12; 2.3.0 or newer with CUDA 13
+     - 2.7.0 or newer with CUDA 12; 2.9.0 or newer with CUDA 13
+
+The limits in the table come from the following changes on the NVIDIA side:
+
+* CUDA 13.0 removed Volta and older architectures; it supports Turing and newer.
+* cuTENSOR 2.3.0 removed ``sm_70`` and added CUDA 13. cuTensorNet 2.9.0 needs cuTENSOR 2.3.1, so 2.8.0 is the last cuTensorNet that runs on Volta.
+* CUDA 12.8, cuTENSOR 2.1.0 and cuTensorNet 2.7.0 added Blackwell.
+* Each cuTensorNet release needs a minimum cuTENSOR: 2.4.0 needs 2.0.1, 2.5.0 needs 2.0.2, 2.7.0 needs 2.2.0, 2.9.0 needs 2.3.1, 2.12.0 needs 2.5.0, and 2.14.0 needs 2.8.0.
+
+See the release notes of the `CUDA Toolkit <https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html>`_, `cuTENSOR <https://docs.nvidia.com/cuda/cutensor/latest/release_notes.html>`_ and `cuTensorNet <https://docs.nvidia.com/cuda/cuquantum/latest/cutensornet/release-notes.html>`_ for the current state.
+
+The released ``cytnx-cuda`` wheels and the ``*-cuda`` CMake presets with Pixi use CUDA 13.3, cuTENSOR 2.7 and cuTensorNet 2.13. This combination needs a Turing or newer GPU. To build for a Volta GPU, use CUDA 12 with versions from the first row of the table, and set ``CUTENSOR_ROOT`` and ``CUQUANTUM_ROOT`` to that installation.
+
+**Tested configurations** (November 2026, ``master`` before the 2.0.0 release). Only these were built and run; the rest of the table follows from the NVIDIA release notes and package requirements.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 16 20 22 22
+
+   * - GPU
+     - CUDA Toolkit
+     - cuTENSOR
+     - cuTensorNet
+     - Result
+   * - A100 (``sm_80``)
+     - 13.3
+     - 2.7.0
+     - 2.13.0
+     - Builds; GPU contraction runs
+   * - V100 (``sm_70``)
+     - 12.9
+     - 2.0.2
+     - 2.4.0
+     - Builds; GPU contraction runs
+   * - V100 (``sm_70``)
+     - 12.9
+     - 2.0.2 and 2.2.0
+     - 2.5.0 to 2.8.0
+     - GPU contraction runs with the build above
+   * - V100 (``sm_70``)
+     - 12.9
+     - 2.3.1 to 2.7.0
+     - 2.7.0 to 2.13.0
+     - Fails at run time (GPU not supported)
+
+cuTENSOR 2.8 and cuTensorNet 2.14 and newer have not been tested with Cytnx.
 
 
 Compiling process
