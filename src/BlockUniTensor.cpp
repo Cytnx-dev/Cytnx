@@ -1928,6 +1928,14 @@ namespace cytnx {
       }
     }
 
+    // Group every bond before combining, not only after (#630). The basis order of the combined
+    // bond is "product of the constituent sectors in row-major order, then grouped by qnum", so
+    // it depends on the sector order of the constituents. The regroup at the end of this function
+    // also groups the bonds that are not combined here; without grouping first, a later call
+    // would combine those already-grouped bonds and order the same states differently than this
+    // call does, e.g. for the row bonds and the column bonds of one operator.
+    this->group_basis_();
+
     this->permute_(idx_mapper);
     this->contiguous_();
 
