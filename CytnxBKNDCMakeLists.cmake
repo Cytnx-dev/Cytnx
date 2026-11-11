@@ -373,8 +373,10 @@ if(USE_CUDA)
 
 
     message( STATUS " Build CUDA Support: YES")
-    message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
-    message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
+    message( STATUS "  - CUDA Version: ${CUDAToolkit_VERSION}")
+    message( STATUS "  - CUDA Toolkit bin dir: ${CUDAToolkit_BIN_DIR}")
+    message( STATUS "  - CUDA compiler (nvcc): ${CMAKE_CUDA_COMPILER}")
+    message( STATUS "  - CUDA compiler version: ${CMAKE_CUDA_COMPILER_VERSION}")
     message( STATUS "  - Internal macro switch: GPU/CUDA")
     if(MSVC)
       FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/DUNI_GPU\n" "")
