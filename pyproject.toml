@@ -1,5 +1,11 @@
 [build-system]
-requires = ["scikit-build-core >=0.11", "pybind11 >=3.0"]
+requires = [
+    "scikit-build-core >=0.11",
+    # Pinned exactly, as on master. An extension built against pybind11 3.1.0
+    # fails the import-time BLAS check: `M[0, 0] = 1.0` on a real Tensor raises
+    # "cannot assign complex element to real container".
+    "pybind11 ==3.0.4",
+]
 build-backend = "scikit_build_core.build"
 
 [project]
