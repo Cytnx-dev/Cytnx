@@ -117,10 +117,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # We intentionally pin specific macOS runners; do not blindly move to
-        # newer images because Homebrew dylib minos can force a higher wheel
-        # deployment target and break delocate compatibility for lower targets.
-        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel]
+        # macOS 14 runners were retired on 2026-11-02, so the ARM64 wheels are
+        # built on macOS 15 (as on master since 1b82049d). The deployment
+        # target follows the minos of the Homebrew dylibs on that image (see
+        # tools/cibuildwheel_before_all_macos.sh), so it may be higher than the
+        # one the v1.1.1 ARM64 wheels were built with.
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15, macos-15-intel]
 
     steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
