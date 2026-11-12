@@ -39,6 +39,7 @@ add_executable(
   linalg_test/Arnoldi_Ut_test.cpp
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
+  linalg_test/Qr_test.cpp
   linalg_test/Rsvd_test.cpp
   linalg_test/truncate_test.cpp
   linalg_test/Trace_test.cpp
