@@ -2566,30 +2566,40 @@ namespace cytnx {
       for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
         if (mask[b] == 1) continue;
         mask[b] = 1;
-        new_blocks.push_back(this->_blocks[b]);
-        new_inner_to_outer_idx.push_back(tmp_inner_to_outer_idx[b]);
-        new_signs.push_back(this->_signflip[b]);
+        // every block that lands in the same grouped sector as block b
+        std::vector<std::size_t> members = {static_cast<std::size_t>(b)};
         for (cytnx_int64 a = b + 1; a < this->_blocks.size(); a++) {
           if (mask[a] == 1) continue;
           if (tmp_inner_to_outer_idx[a] == tmp_inner_to_outer_idx[b]) {
-            // need to combine two!
-            // checking which bonds do not need to be combined!
             mask[a] = 1;
-            if (new_signs.back() == this->_signflip[a]) {
-              new_blocks.back() =
-                linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
-              new_signs.back() = this->_signflip[a];
-            } else if (new_signs.back()) {
-              new_blocks.back() =
-                linalg::Directsum(-new_blocks.back(), this->_blocks[a], no_combine);
-              new_signs.back() = false;
-            } else {  // this->_signflip[a] == true
-              new_blocks.back() =
-                linalg::Directsum(new_blocks.back(), -this->_blocks[a], no_combine);
-              new_signs.back() = false;
-            }
+            members.push_back(a);
           }
         }
+        // Direct-sum in the order of the old sector index, which is the state order
+        // Bond::group_duplicates gives the grouped sector. The block order is not that order
+        // after a permute (#630).
+        const std::size_t dup_bond = dup_bond_idxs[bn];
+        std::stable_sort(members.begin(), members.end(), [&](std::size_t lhs, std::size_t rhs) {
+          return this->_inner_to_outer_idx[lhs][dup_bond] <
+                 this->_inner_to_outer_idx[rhs][dup_bond];
+        });
+        Tensor grouped = this->_blocks[members[0]];
+        bool grouped_sign = this->_signflip[members[0]];
+        for (std::size_t m = 1; m < members.size(); m++) {
+          const std::size_t a = members[m];
+          if (grouped_sign == this->_signflip[a]) {
+            grouped = linalg::Directsum(grouped, this->_blocks[a], no_combine);
+          } else if (grouped_sign) {
+            grouped = linalg::Directsum(-grouped, this->_blocks[a], no_combine);
+            grouped_sign = false;
+          } else {  // this->_signflip[a] == true
+            grouped = linalg::Directsum(grouped, -this->_blocks[a], no_combine);
+            grouped_sign = false;
+          }
+        }
+        new_blocks.push_back(grouped);
+        new_inner_to_outer_idx.push_back(tmp_inner_to_outer_idx[b]);
+        new_signs.push_back(grouped_sign);
       }  // traversal each block!
 
       this->_blocks = new_blocks;
