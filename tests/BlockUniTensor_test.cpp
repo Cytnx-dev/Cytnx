@@ -1807,6 +1807,23 @@ namespace cytnx {
           }
           return out;
         }
+
+        // tr(M) and tr(M*M) of a dense array read as a dim x dim matrix. Both are invariant under
+        // M -> P M P^T for a permutation P, but not under M -> P1 M P2^T with P1 != P2.
+        std::pair<double, double> TraceAndTraceOfSquare(const Tensor& dense, std::int64_t dim) {
+          const Tensor m = dense.reshape({dim, dim});
+          double trace = 0.0;
+          double trace_of_square = 0.0;
+          for (std::int64_t i = 0; i < dim; i++) {
+            trace += m.at<double>({static_cast<cytnx_uint64>(i), static_cast<cytnx_uint64>(i)});
+            for (std::int64_t j = 0; j < dim; j++) {
+              trace_of_square +=
+                m.at<double>({static_cast<cytnx_uint64>(i), static_cast<cytnx_uint64>(j)}) *
+                m.at<double>({static_cast<cytnx_uint64>(j), static_cast<cytnx_uint64>(i)});
+            }
+          }
+          return {trace, trace_of_square};
+        }
       }  // namespace
 
       TEST_F(BlockUniTensorTest, ContractTwoRelabelViewsOfOneTensor) {
@@ -1850,21 +1867,7 @@ namespace cytnx {
         random::uniform_(T, -1.0, 1.0, 3);
 
         const std::int64_t dim = bi.dim() * bi.dim();
-        auto trace_and_trace_of_square = [dim](const Tensor& dense) {
-          const Tensor m = dense.reshape({dim, dim});
-          double trace = 0.0;
-          double trace_of_square = 0.0;
-          for (std::int64_t i = 0; i < dim; i++) {
-            trace += m.at<double>({static_cast<cytnx_uint64>(i), static_cast<cytnx_uint64>(i)});
-            for (std::int64_t j = 0; j < dim; j++) {
-              trace_of_square +=
-                m.at<double>({static_cast<cytnx_uint64>(i), static_cast<cytnx_uint64>(j)}) *
-                m.at<double>({static_cast<cytnx_uint64>(j), static_cast<cytnx_uint64>(i)});
-            }
-          }
-          return std::pair<double, double>(trace, trace_of_square);
-        };
-        const auto expected = trace_and_trace_of_square(DenseArrayOf(T));
+        const auto expected = TraceAndTraceOfSquare(DenseArrayOf(T), dim);
 
         for (const bool rows_first : {true, false}) {
           UniTensor C = T.clone();
@@ -1876,10 +1879,38 @@ namespace cytnx {
             C.combineBond_({"a", "b"});
           }
           ASSERT_EQ(C.rank(), 2);
-          const auto actual = trace_and_trace_of_square(DenseArrayOf(C));
+          const auto actual = TraceAndTraceOfSquare(DenseArrayOf(C), dim);
           EXPECT_NEAR(actual.first, expected.first, 1e-12) << "rows_first=" << rows_first;
           EXPECT_NEAR(actual.second, expected.second, 1e-12) << "rows_first=" << rows_first;
         }
+      }
+
+      /*=====test info=====
+      describe:#630 regression, the case of the original report -- permute, then combine the two
+        column bonds of T[0;1,2] in the order (2,1). The row bond has repeated qnum sectors and
+        the combined bond gets them, so both are grouped. Grouping used to direct-sum the blocks
+        in block order, which after a permute is not the order of the sector indices, so the
+        states inside a grouped sector of the combined bond came out in a different order than on
+        the row bond (M -> P1 M P2^T) and Eig returned wrong eigenvalues.
+        Expected values are tr(M) and tr(M*M) of the dense matrix M[i,(j2,j1)] assembled from T
+        BEFORE permuting and combining.
+      ====================*/
+      TEST_F(BlockUniTensorTest, CombineBondsAfterPermuteKeepsSectorOrder) {
+        Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1, Qs(0) >> 1}, {Symmetry::Zn(2)});
+        Bond bo = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::Zn(2)});
+        UniTensor T = UniTensor({bi, bo, bo}, {"0", "1", "2"}, 1, Type.Double);
+        random::uniform_(T, -1.0, 1.0, 5);
+
+        const std::int64_t dim = bi.dim();
+        const auto expected =
+          TraceAndTraceOfSquare(DenseArrayOf(T).permute({0, 2, 1}).contiguous(), dim);
+
+        UniTensor C = T.permute({"0", "2", "1"});
+        C.combineBond_({"2", "1"});
+        ASSERT_EQ(C.rank(), 2);
+        const auto actual = TraceAndTraceOfSquare(DenseArrayOf(C), dim);
+        EXPECT_NEAR(actual.first, expected.first, 1e-12);
+        EXPECT_NEAR(actual.second, expected.second, 1e-12);
       }
 
     }  // namespace
