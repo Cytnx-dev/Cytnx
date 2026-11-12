@@ -39,29 +39,27 @@ namespace cytnx {
       checkCudaErrors(
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */
@@ -97,15 +95,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_dispatch(U, M * min);
@@ -151,29 +150,27 @@ namespace cytnx {
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */
@@ -209,15 +206,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_dispatch(U, M * min);
@@ -262,29 +260,27 @@ namespace cytnx {
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */
@@ -320,15 +316,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR)
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
 
@@ -372,29 +369,27 @@ namespace cytnx {
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */
@@ -430,15 +425,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR)
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
 
