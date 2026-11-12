@@ -95,15 +95,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_dispatch(U, M * min);
@@ -205,15 +206,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_dispatch(U, M * min);
@@ -314,15 +316,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR)
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
 
@@ -422,15 +425,16 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, nullptr, /* params */
-                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
-                        S->data(), cuda_data_type, /* dataTypeU */
-                        vTMem, ldu, /* ldu */
-                        cuda_data_type, /* dataTypeV */
-                        UMem, ldvT, /* ldv */
-                        cuda_data_type, /* computeType */
-                        d_work, d_lwork, h_work, h_lwork, devinfo.get(), &h_err_sigma);
+      checkCudaErrors(cusolverDnXgesvdp(cusolverH, nullptr, /* params */
+                                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                        Mij.get(), ldA, cuda_data_typeR, /* dataTypeS */
+                                        S->data(), cuda_data_type, /* dataTypeU */
+                                        vTMem, ldu, /* ldu */
+                                        cuda_data_type, /* dataTypeV */
+                                        UMem, ldvT, /* ldv */
+                                        cuda_data_type, /* computeType */
+                                        d_work, d_lwork, h_work, h_lwork, devinfo.get(),
+                                        &h_err_sigma));
       if (jobz == CUSOLVER_EIG_MODE_VECTOR)
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
 
