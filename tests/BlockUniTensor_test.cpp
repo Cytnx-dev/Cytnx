@@ -1887,15 +1887,20 @@ namespace cytnx {
 
       /*=====test info=====
       describe:#630 regression, the case of the original report -- permute, then combine the two
-        column bonds of T[0;1,2] in the order (2,1). The row bond has repeated qnum sectors and
-        the combined bond gets them, so both are grouped. Grouping used to direct-sum the blocks
-        in block order, which after a permute is not the order of the sector indices, so the
-        states inside a grouped sector of the combined bond came out in a different order than on
-        the row bond (M -> P1 M P2^T) and Eig returned wrong eigenvalues.
+        column bonds of T[0;1,2] in the order (2,1). The result must not depend on the block
+        order that permute leaves behind. Grouping used to direct-sum the blocks in block order,
+        which after a permute is not the order of the sector indices, so the states inside a
+        grouped sector of the combined bond came out in a different order than on the row bond
+        (M -> P1 M P2^T) and Eig returned wrong eigenvalues.
+        Scope: this is not a general statement about sector order. The check relies on the bonds
+        chosen here: the row bond and the combined bond have the same sector sequence
+        [0,1,1,0] before grouping, so grouping must apply the same permutation to both. With
+        column bonds whose sectors are listed in different orders (e.g. [0,1] and [1,0]) the
+        two sequences differ and tr(M) is not preserved; that case is not covered by this test.
         Expected values are tr(M) and tr(M*M) of the dense matrix M[i,(j2,j1)] assembled from T
         BEFORE permuting and combining.
       ====================*/
-      TEST_F(BlockUniTensorTest, CombineBondsAfterPermuteKeepsSectorOrder) {
+      TEST_F(BlockUniTensorTest, CombineBondsAfterPermuteDoesNotDependOnBlockOrder) {
         Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1, Qs(0) >> 1}, {Symmetry::Zn(2)});
         Bond bo = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::Zn(2)});
         UniTensor T = UniTensor({bi, bo, bo}, {"0", "1", "2"}, 1, Type.Double);
