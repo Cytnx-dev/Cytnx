@@ -658,9 +658,35 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span> </div>
 <div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span><span class="preprocessor">  #endif</span></div>
 <div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span> </div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span><span class="preprocessor">#endif  </span><span class="comment">// End of #if defined(UNI_GPU)</span></div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span> </div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_CYTNX_ERROR_H_</span></div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>  <span class="comment">// Raise if the kernel launch immediately preceding this call failed.</span></div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>  <span class="comment">// A launch that never runs leaves the output buffer holding whatever it</span></div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>  <span class="comment">// already contained -- usually zeros from a fresh allocation -- so an</span></div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>  <span class="comment">// unchecked failure is indistinguishable from a numerical bug. The launch</span></div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>  <span class="comment">// status is not reported by the launch expression itself; it has to be read</span></div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>  <span class="comment">// back with cudaGetLastError().</span></div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>  <span class="comment">// This reads (and thereby clears) the pending status without synchronizing,</span></div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>  <span class="comment">// so it stays cheap enough to sit after every launch. That also means it</span></div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>  <span class="comment">// catches launch-time failures -- a fat binary with no image for the running</span></div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>  <span class="comment">// device, a bad launch configuration -- and not errors raised while the</span></div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>  <span class="comment">// kernel executes, which surface asynchronously at the next synchronizing</span></div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>  <span class="comment">// call.</span></div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>  <span class="comment">// Raising through cytnx_error_msg (rather than the exit() that checkCudaErrors</span></div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>  <span class="comment">// performs) keeps the failure catchable and reports the calling function,</span></div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>  <span class="comment">// file, and line of the launch site.</span></div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span><span class="preprocessor">  #define CYTNX_CHECK_CUDA_LAUNCH(kernel_name)                                \</span></div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span><span class="preprocessor">    do {                                                                      \</span></div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span><span class="preprocessor">      const cudaError_t cytnx_cuda_launch_status = cudaGetLastError();        \</span></div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span><span class="preprocessor">      cytnx_error_msg(cytnx_cuda_launch_status != cudaSuccess,                \</span></div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span><span class="preprocessor">                      &quot;CUDA kernel launch failed for &#39;%s&#39;: %s&quot;, #kernel_name, \</span></div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span><span class="preprocessor">                      cudaGetErrorString(cytnx_cuda_launch_status));          \</span></div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span><span class="preprocessor">    } while (0)</span></div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span> </div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span><span class="preprocessor">#endif  </span><span class="comment">// End of #if defined(UNI_GPU)</span></div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span> </div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_CYTNX_ERROR_H_</span></div>
 <div class="ttc" id="aclasscytnx_1_1error_html"><div class="ttname"><a href="classcytnx_1_1error.html">cytnx::error</a></div><div class="ttdef"><b>Definition</b> cytnx_error.hpp:37</div></div>
 <div class="ttc" id="anamespacecytnx_1_1internal_html_a28700253924d13c0c358dc9ae93ff5f0"><div class="ttname"><a href="namespacecytnx_1_1internal.html#a28700253924d13c0c358dc9ae93ff5f0">cytnx::internal::warning_msg_impl</a></div><div class="ttdeci">void warning_msg_impl(char const *func, char const *file, int line, char const *format,...)</div><div class="ttdef"><b>Definition</b> cytnx_error.hpp:106</div></div>
 <div class="ttc" id="anamespacecytnx_1_1internal_html_a892b9074c2498da118428f798784ce68"><div class="ttname"><a href="namespacecytnx_1_1internal.html#a892b9074c2498da118428f798784ce68">cytnx::internal::vformat_message</a></div><div class="ttdeci">std::string vformat_message(char const *format, va_list args)</div><div class="ttdef"><b>Definition</b> cytnx_error.hpp:44</div></div>
