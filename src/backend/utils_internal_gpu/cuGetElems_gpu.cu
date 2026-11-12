@@ -70,6 +70,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_cf(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                            const std::vector<cytnx_uint64>& new_offj,
@@ -116,6 +117,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_d(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                           const std::vector<cytnx_uint64>& new_offj,
@@ -162,6 +164,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_f(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                           const std::vector<cytnx_uint64>& new_offj,
@@ -208,6 +211,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_i64(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                             const std::vector<cytnx_uint64>& new_offj,
@@ -254,6 +258,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_u64(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                             const std::vector<cytnx_uint64>& new_offj,
@@ -300,6 +305,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_i32(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                             const std::vector<cytnx_uint64>& new_offj,
@@ -346,6 +352,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_u32(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                             const std::vector<cytnx_uint64>& new_offj,
@@ -392,6 +399,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_i16(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                             const std::vector<cytnx_uint64>& new_offj,
@@ -438,6 +446,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_u16(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                             const std::vector<cytnx_uint64>& new_offj,
@@ -484,6 +493,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
     void cuGetElems_gpu_b(void* out, void* in, const std::vector<cytnx_uint64>& offj,
                           const std::vector<cytnx_uint64>& new_offj,
@@ -530,6 +540,7 @@ namespace cytnx {
       cuGetElems_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj.get(), d_new_offj.get(),
                                           d_locators.get(), d_picksize.get(), offj.size(),
                                           TotalElem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuGetElems_kernel);
     }
 
   }  // namespace utils_internal

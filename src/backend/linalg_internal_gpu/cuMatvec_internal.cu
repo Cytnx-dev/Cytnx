@@ -120,6 +120,7 @@ namespace cytnx {
       if ((cytnx_uint64(Ml)) % 512) Nblocks += 1;
 
       cuMatVec_kernel<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Nr);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMatVec_kernel);
     }
     void cuMatvec_internal_u64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &inl,
@@ -133,6 +134,7 @@ namespace cytnx {
       if ((cytnx_uint64(Ml)) % 512) Nblocks += 1;
 
       cuMatVec_kernel<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Nr);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMatVec_kernel);
     }
     void cuMatvec_internal_i32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &inl,
@@ -146,6 +148,7 @@ namespace cytnx {
       if ((cytnx_uint64(Ml)) % 512) Nblocks += 1;
 
       cuMatVec_kernel<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Nr);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMatVec_kernel);
     }
     void cuMatvec_internal_u32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &inl,
@@ -159,6 +162,7 @@ namespace cytnx {
       if ((cytnx_uint64(Ml)) % 512) Nblocks += 1;
 
       cuMatVec_kernel<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Nr);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMatVec_kernel);
     }
     void cuMatvec_internal_i16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &inl,
@@ -172,6 +176,7 @@ namespace cytnx {
       if ((cytnx_uint64(Ml)) % 512) Nblocks += 1;
 
       cuMatVec_kernel<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Nr);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMatVec_kernel);
     }
     void cuMatvec_internal_u16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &inl,
@@ -185,6 +190,7 @@ namespace cytnx {
       if ((cytnx_uint64(Ml)) % 512) Nblocks += 1;
 
       cuMatVec_kernel<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Nr);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMatVec_kernel);
     }
     void cuMatvec_internal_b(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &inl,
@@ -198,6 +204,7 @@ namespace cytnx {
       if ((cytnx_uint64(Ml)) % 512) Nblocks += 1;
 
       cuMatVec_kernel<<<Nblocks, 512>>>(_out, _inl, _inr, Ml, Nr);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMatVec_kernel);
     }
 
   }  // namespace linalg_internal
