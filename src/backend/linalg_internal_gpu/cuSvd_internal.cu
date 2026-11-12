@@ -43,25 +43,22 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */
@@ -155,25 +152,22 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */
@@ -266,25 +260,22 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */
@@ -376,25 +367,22 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
-      // owned_* buffers are non-empty only in the temporary case, matching the old conditional
-      // cudaFree on `dtype() == Type.Void`.
+      // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
+      // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
+      // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          UMem = owned_u_mem.get();
-        }
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
-          owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
-          vTMem = owned_vt_mem.get();
-        }
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        vTMem = owned_vt_mem.get();
       }
 
       std::size_t d_lwork = 0; /* size of workspace */

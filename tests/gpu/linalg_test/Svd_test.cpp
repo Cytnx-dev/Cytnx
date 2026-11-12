@@ -175,7 +175,7 @@ namespace cytnx {
         bool compute_uv;
         std::string case_name = "sym_UT_U1_F64";
         std::string src_file_name = src_data_root + case_name + ".cytnx";
-        UniTensor src_T = UniTensor::Load(src_file_name);
+        UniTensor src_T = UniTensor::Load(src_file_name).to(Device.cuda);
         // get S, U, VT
         //  std::vector<UniTensor> svdsUV = linalg::Svd(src_T, need_U = true, need_VT = true);
         //  EXPECT_EQ(svdsUV.size(), 3) << "The number of the output of svd not correct. Line:"
@@ -214,6 +214,99 @@ namespace cytnx {
         // Since if no is_U and is_vT, we may call Lapack for different arguments to
         //   say we don't need U and VT, so we have tolerance here.
         EXPECT_TRUE(AreNearlyEqUniTensor(svdsS[0], svdsUV[0], tol));
+      }
+
+      // Builds a dense rows x cols matrix (rows, cols in {2, 4}) with the given singular values as
+      // U * diag(singular_values) * V^T, where U and V have orthonormal columns taken from
+      // Hadamard matrices. The singular values are therefore known without calling any SVD.
+      // For complex dtypes each column is multiplied by a unit phase, which keeps the singular
+      // values unchanged.
+      Tensor MakeMatrixWithKnownSingularValues(std::size_t rows, std::size_t cols,
+                                               const std::vector<double>& singular_values,
+                                               unsigned int dtype) {
+        const double hadamard4[4][4] = {
+          {1, 1, 1, 1}, {1, -1, 1, -1}, {1, 1, -1, -1}, {1, -1, -1, 1}};
+        const double hadamard2[2][2] = {{1, 1}, {1, -1}};
+        const auto orthonormal_entry = [&](std::size_t size, std::size_t row, std::size_t col) {
+          return size == 4 ? hadamard4[row][col] / 2. : hadamard2[row][col] / std::sqrt(2.);
+        };
+        const bool is_complex = Type.is_complex(dtype);
+        const std::vector<std::complex<double>> phases = {
+          {1., 0.}, {0., 1.}, {-1., 0.}, {std::sqrt(0.5), -std::sqrt(0.5)}};
+        Tensor matrix({rows, cols}, Type.ComplexDouble);
+        for (std::size_t row = 0; row < rows; ++row) {
+          for (std::size_t col = 0; col < cols; ++col) {
+            double entry = 0.;
+            for (std::size_t k = 0; k < singular_values.size(); ++k) {
+              // The second factor uses the Hadamard columns in reverse order so that U and V
+              // differ and the matrix is not symmetric.
+              entry += orthonormal_entry(rows, row, k) * singular_values[k] *
+                       orthonormal_entry(cols, col, cols - 1 - k);
+            }
+            matrix.at<cytnx_complex128>({row, col}) = is_complex ? entry * phases[col] : entry;
+          }
+        }
+        if (!is_complex) matrix = matrix.real();
+        return matrix.astype(dtype).to(Device.cuda);
+      }
+
+      /*=====test info=====
+      describe:Test Svd of a dense Tensor on the GPU without singular vectors (issue #831).
+      input:
+        T:Dense Tensor on cuda with known singular values, all four floating dtypes,
+          square, tall and wide.
+        is_UvT:false
+      ====================*/
+      TEST(Svd, GpuDenseTensorNoSingularVectors) {
+        struct Case {
+          std::size_t rows;
+          std::size_t cols;
+          std::vector<double> singular_values;
+        };
+        const std::vector<Case> cases = {
+          {4, 4, {3.5, 2.25, 1., 0.5}}, {4, 2, {3.5, 0.5}}, {2, 4, {2.25, 0.75}}};
+        for (const unsigned int dtype :
+             {Type.Double, Type.Float, Type.ComplexDouble, Type.ComplexFloat}) {
+          const bool is_single_precision = dtype == Type.Float || dtype == Type.ComplexFloat;
+          const double tol = is_single_precision ? 1.0e-5 : 1.0e-12;
+          for (const Case& test_case : cases) {
+            SCOPED_TRACE(Type.getname(dtype) + " " + std::to_string(test_case.rows) + "x" +
+                         std::to_string(test_case.cols));
+            const Tensor matrix = MakeMatrixWithKnownSingularValues(
+              test_case.rows, test_case.cols, test_case.singular_values, dtype);
+            const std::vector<Tensor> result = linalg::Svd(matrix, false);
+            ASSERT_EQ(result.size(), 1);
+            const Tensor& singular_values = result[0];
+            EXPECT_EQ(singular_values.device(), Device.cuda);
+            EXPECT_EQ(singular_values.dtype(), is_single_precision ? Type.Float : Type.Double);
+            ASSERT_EQ(singular_values.shape(),
+                      std::vector<cytnx_uint64>{test_case.singular_values.size()});
+            const Tensor on_cpu = singular_values.to(Device.cpu).astype(Type.Double);
+            for (std::size_t k = 0; k < test_case.singular_values.size(); ++k) {
+              EXPECT_NEAR(on_cpu.at<double>({k}), test_case.singular_values[k], tol);
+            }
+          }
+        }
+      }
+
+      /*=====test info=====
+      describe:Test Svd of a dense UniTensor on the GPU without singular vectors (issue #831).
+      input:
+        T:Dense UniTensor on cuda with known singular values.
+        is_UvT:false
+      ====================*/
+      TEST(Svd, GpuDenseUniTensorNoSingularVectors) {
+        const std::vector<double> expected = {3.5, 2.25, 1., 0.5};
+        const UniTensor matrix =
+          UniTensor(MakeMatrixWithKnownSingularValues(4, 4, expected, Type.Double));
+        const std::vector<UniTensor> result = linalg::Svd(matrix, false);
+        ASSERT_EQ(result.size(), 1);
+        EXPECT_EQ(result[0].device(), Device.cuda);
+        const Tensor on_cpu = result[0].get_block().to(Device.cpu);
+        ASSERT_EQ(on_cpu.shape(), std::vector<cytnx_uint64>{expected.size()});
+        for (std::size_t k = 0; k < expected.size(); ++k) {
+          EXPECT_NEAR(on_cpu.at<double>({k}), expected[k], 1.0e-12);
+        }
       }
 
       // error test
