@@ -1,6 +1,7 @@
 #ifndef CYTNX_LINALG_IARITHMETIC_VISIT_HPP_
 #define CYTNX_LINALG_IARITHMETIC_VISIT_HPP_
 
+#include <cstdint>
 #include <type_traits>
 #include <vector>
 
@@ -39,15 +40,38 @@ namespace cytnx {
                                                const std::vector<cytnx_uint64> &shape,
                                                const std::vector<cytnx_uint64> &invmapper_L,
                                                const std::vector<cytnx_uint64> &invmapper_R) {
+        // Without dtype promotion, out is lhs's own buffer. In a loop that writes out[i] from
+        // lhs[i], the compiler cannot rule out a partial overlap of the two pointers, and the
+        // runtime overlap check it adds sends exact aliasing down the scalar fallback. Reading
+        // the LHS through out leaves one destination, which the loop can vectorize.
         if (rhs_is_scalar) {
-          for (cytnx_uint64 i = 0; i < len; i++) {
-            out[i] = ApplyInplaceArithmeticOp<op_code, TO>(lhs[i], rhs[0]);
+          // The callers clone an RHS that shares storage with the LHS, so rhs never aliases
+          // out and its single element can be read once.
+          const TR rhs_value = rhs[0];
+          if constexpr (std::is_same_v<TO, TL>) {
+            if (out == lhs) {
+              for (std::uint64_t i = 0; i < len; ++i) {
+                out[i] = ApplyInplaceArithmeticOp<op_code, TO>(out[i], rhs_value);
+              }
+              return;
+            }
+          }
+          for (std::uint64_t i = 0; i < len; ++i) {
+            out[i] = ApplyInplaceArithmeticOp<op_code, TO>(lhs[i], rhs_value);
           }
           return;
         }
 
         if (shape.empty()) {
-          for (cytnx_uint64 i = 0; i < len; i++) {
+          if constexpr (std::is_same_v<TO, TL>) {
+            if (out == lhs) {
+              for (std::uint64_t i = 0; i < len; ++i) {
+                out[i] = ApplyInplaceArithmeticOp<op_code, TO>(out[i], rhs[i]);
+              }
+              return;
+            }
+          }
+          for (std::uint64_t i = 0; i < len; ++i) {
             out[i] = ApplyInplaceArithmeticOp<op_code, TO>(lhs[i], rhs[i]);
           }
           return;
