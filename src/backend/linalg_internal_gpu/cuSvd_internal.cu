@@ -39,25 +39,26 @@ namespace cytnx {
       checkCudaErrors(
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
       // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
       // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
       // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
         UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
         vTMem = owned_vt_mem.get();
       }
 
@@ -148,25 +149,26 @@ namespace cytnx {
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
       // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
       // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
       // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
         UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
         vTMem = owned_vt_mem.get();
       }
 
@@ -256,25 +258,26 @@ namespace cytnx {
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
       // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
       // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
       // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
         UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
         vTMem = owned_vt_mem.get();
       }
 
@@ -363,25 +366,26 @@ namespace cytnx {
         cudaMemcpy(Mij.get(), in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       // UMem/vTMem alias U's and vT's storage when it exists and are temporaries otherwise; the
       // owned_* buffers are non-empty only in the temporary case. The temporaries are needed even
       // when no singular vectors are requested: cusolverDnXgesvdp accesses the U and V buffers
       // with CUSOLVER_EIG_MODE_NOVECTOR too, so passing nullptr is an illegal device access (#831).
+      // They use the economy sizes (econ = 1), M * min and N * min, which are the sizes of the
+      // caller-supplied U and vT storage in the vector case.
       void *UMem = nullptr, *vTMem = nullptr;
       utils_internal::DeviceBuffer<data_type> owned_u_mem, owned_vt_mem;
       if (U->data()) {
         UMem = U->data();
       } else {
-        owned_u_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_u_mem = utils_internal::DeviceBuffer<data_type>(M * min);
         UMem = owned_u_mem.get();
       }
       if (vT->data()) {
         vTMem = vT->data();
       } else {
-        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(max * max);
+        owned_vt_mem = utils_internal::DeviceBuffer<data_type>(N * min);
         vTMem = owned_vt_mem.get();
       }
 
