@@ -669,9 +669,6 @@ namespace cytnx {
         T:Block and BlockFermionic UniTensor.
       ====================*/
       TEST(RsvdNoTruncation, GpuBlockAndFermionicOutputSize) {
-        GTEST_SKIP() << "GPU backend issue: block/fermionic full-SVD path currently hits "
-                        "CUSOLVER_STATUS_EXECUTION_FAILED in cuGeSvd_internal.cu "
-                        "(cusolverDnDgesvdj) for this coverage case.";
         {
           std::string case_name = "sym_UT_U1_F64";
           UniTensor src_T =
