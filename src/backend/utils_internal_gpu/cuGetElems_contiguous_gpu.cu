@@ -25,7 +25,7 @@ namespace cytnx {
         cytnx_uint64 n = blockIdx.x * blockDim.x + threadIdx.x;
         // d_out[blockIdx.x * blockDim.x + threadIdx.x] = d_in[Loc];
 
-        for (cytnx_uint64 x = 0; x < Nelem_grp; x++)
+        for (std::uint64_t x = 0; x < Nelem_grp; x++)
           d_out[n * Nelem_grp + x] = d_in[Loc * Nelem_grp + x];
         // memcpy(new_elem_ptr_ + n * Nelem_grp, elem_ptr_ + Loc * Nelem_grp,
         //        sizeof(cytnx_complex128) * Nelem_grp); from cpu code

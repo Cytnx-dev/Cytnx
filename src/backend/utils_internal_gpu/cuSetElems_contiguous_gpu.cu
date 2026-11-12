@@ -52,7 +52,7 @@ namespace cytnx {
         }
         cytnx_uint64 n = blockIdx.x * blockDim.x + threadIdx.x;
         // d_out[Loc] = d_in[blockIdx.x * blockDim.x + threadIdx.x];
-        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[n * Nunit + x];
+        for (std::uint64_t x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[n * Nunit + x];
       }
     }
     // cd cf
@@ -123,7 +123,7 @@ namespace cytnx {
         }
         // d_out[Loc] = d_in[blockIdx.x * blockDim.x + threadIdx.x];
         cytnx_uint64 n = blockIdx.x * blockDim.x + threadIdx.x;
-        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[n * Nunit + x];
+        for (std::uint64_t x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[n * Nunit + x];
       }
     }
 
