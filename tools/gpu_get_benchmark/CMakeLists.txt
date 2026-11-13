@@ -1,9 +1,22 @@
 cmake_minimum_required(VERSION 3.25)
-project(cytnx_gpu_get_benchmark LANGUAGES CXX)
+project(cytnx_gpu_get_benchmark LANGUAGES CXX CUDA)
 
-# Consume the existing Cytnx install tree. Never configure or rebuild Cytnx
-# with RUN_BENCHMARKS=ON: that would invalidate the release-build cache.
-find_package(Cytnx CONFIG REQUIRED)
+# Standalone backend comparison: compile the exact S0 production source and
+# the experimental S1-S4 source under identical CUDA compiler settings.
+# No Cytnx library, install tree, or RUN_BENCHMARKS build is required.
+if(NOT DEFINED CYTNX_SOURCE_DIR)
+  get_filename_component(CYTNX_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+endif()
+foreach(source IN ITEMS
+  src/backend/utils_internal_gpu/cuGetElems_contiguous_gpu.cu
+  src/backend/utils_internal_gpu/cuGetElems_contiguous_gpu_bench.cu
+  benchmarks/gpu/Get_contiguous_double_bm.cpp)
+  if(NOT EXISTS "${CYTNX_SOURCE_DIR}/${source}")
+    message(FATAL_ERROR "Missing benchmark source: ${CYTNX_SOURCE_DIR}/${source}")
+  endif()
+endforeach()
+
+find_package(CUDAToolkit REQUIRED)
 find_package(benchmark CONFIG QUIET)
 if(NOT benchmark_FOUND)
   include(FetchContent)
@@ -14,18 +27,16 @@ if(NOT benchmark_FOUND)
     DOWNLOAD_EXTRACT_TIMESTAMP TRUE)
   FetchContent_MakeAvailable(googlebenchmark)
 endif()
-find_package(CUDAToolkit REQUIRED)
 
 add_executable(gpu_get_benchmark
-  ${CYTNX_SOURCE_DIR}/benchmarks/benchmarks_main.cpp
-  ${CYTNX_SOURCE_DIR}/benchmarks/gpu/Get_contiguous_double_bm.cpp
+  "${CYTNX_SOURCE_DIR}/benchmarks/benchmarks_main.cpp"
+  "${CYTNX_SOURCE_DIR}/benchmarks/gpu/Get_contiguous_double_bm.cpp"
+  "${CYTNX_SOURCE_DIR}/src/backend/utils_internal_gpu/cuGetElems_contiguous_gpu.cu"
+  "${CYTNX_SOURCE_DIR}/src/backend/utils_internal_gpu/cuGetElems_contiguous_gpu_bench.cu"
 )
-if(NOT DEFINED CYTNX_SOURCE_DIR OR
-   NOT EXISTS "${CYTNX_SOURCE_DIR}/src/backend/utils_internal_gpu/cuGetElems_contiguous_gpu_bench.hpp")
-  message(FATAL_ERROR "Set CYTNX_SOURCE_DIR to the matching Cytnx source checkout; internal benchmark headers are not installed.")
-endif()
-target_compile_features(gpu_get_benchmark PRIVATE cxx_std_20)
+target_compile_features(gpu_get_benchmark PRIVATE cxx_std_20 cuda_std_17)
 target_compile_definitions(gpu_get_benchmark PRIVATE UNI_GPU)
-target_include_directories(gpu_get_benchmark PRIVATE "${CYTNX_SOURCE_DIR}/src")
-target_link_libraries(gpu_get_benchmark PRIVATE
-  Cytnx::cytnx benchmark::benchmark CUDA::cudart)
+target_include_directories(gpu_get_benchmark PRIVATE
+  "${CYTNX_SOURCE_DIR}/src"
+  "${CYTNX_SOURCE_DIR}/include")
+target_link_libraries(gpu_get_benchmark PRIVATE benchmark::benchmark CUDA::cudart)
