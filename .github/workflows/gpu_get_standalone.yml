@@ -1,0 +1,50 @@
+name: Standalone CUDA Get benchmark build
+
+on:
+  push:
+    branches:
+      - bench/1230-gpu-get-optimization
+    paths:
+      - '.github/workflows/gpu_get_standalone.yml'
+      - 'tools/gpu_get_benchmark/**'
+      - 'benchmarks/gpu/Get_contiguous_double_bm.cpp'
+      - 'benchmarks/benchmarks_main.cpp'
+      - 'src/backend/utils_internal_gpu/**'
+      - 'include/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  BuildStandalone:
+    runs-on: ubuntu-24.04
+    container:
+      image: nvidia/cuda:12.8.1-devel-ubuntu24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install CMake and build tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            cmake ninja-build g++ git ca-certificates curl
+      - name: Configure and build S0-S4
+        run: |
+          cmake -S tools/gpu_get_benchmark -B build/gpu-get -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CUDA_ARCHITECTURES=75 \
+            -DCYTNX_SOURCE_DIR="$GITHUB_WORKSPACE"
+          cmake --build build/gpu-get --target gpu_get_benchmark -j 2
+      - name: Package standalone benchmark
+        run: |
+          mkdir -p dist
+          cp build/gpu-get/gpu_get_benchmark dist/
+          cp benchmarks/gpu/kaggle_run.sh dist/
+          cp benchmarks/gpu/analyze_get_results.py dist/
+          printf '%s\n' "$GITHUB_SHA" > dist/source-commit.txt
+      - name: Upload standalone benchmark
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpu-get-standalone
+          path: dist/
+          if-no-files-found: error
