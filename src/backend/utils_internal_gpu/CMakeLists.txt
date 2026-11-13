@@ -6,6 +6,7 @@ target_sources(cytnx
     cuTypeTraits_gpu.hpp
     cuGetElems_gpu.hpp
     cuGetElems_contiguous_gpu.hpp
+    cuGetElems_contiguous_gpu_bench.hpp
     cuLibraryHandle_gpu.hpp
     cuMovemem_gpu.hpp
     cuScopedResource_gpu.hpp
@@ -21,6 +22,7 @@ target_sources(cytnx
     cuFill_gpu.cu
     cuGetElems_gpu.cu
     cuGetElems_contiguous_gpu.cu
+    cuGetElems_contiguous_gpu_bench.cu
     cuLibraryHandle_gpu.cu
     cuMovemem_gpu.cu
     cuTensorHandle_gpu.cu
