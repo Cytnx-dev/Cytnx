@@ -27,6 +27,10 @@ add_executable(
 )
 if(USE_CUDA)
   target_compile_definitions(benchmarks_main PRIVATE UNI_GPU)
+  # The L2 get benchmark intentionally calls experimental internal CUDA APIs.
+  # cytnx exports include/ publicly, but keeps src/ private to the library;
+  # explicitly expose it to this benchmark-only target.
+  target_include_directories(benchmarks_main PRIVATE "${PROJECT_SOURCE_DIR}/src")
 endif()
 
 target_link_libraries(benchmarks_main cytnx)
