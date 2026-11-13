@@ -1,5 +1,6 @@
 #include "cuMaxMin_internal.hpp"
 
+#include <cstdint>
 #include <vector>
 
 #include "cuda/std/complex"
@@ -48,12 +49,13 @@ namespace cytnx {
       // Reduces each block of blockDim.x consecutive input elements to one output element.
       // Requires blockDim.x to be a power of two no larger than kReduceBlockSize.
       template <class T, class Pick>
-      __global__ void ReduceBlocksKernel(T *out, const T *in, cytnx_uint64 element_count) {
+      __global__ void reduce_blocks_kernel(T *out, const T *in, std::uint64_t element_count) {
         __shared__ T block_values[kReduceBlockSize];
 
         // Slots past the end of the input are filled with the last element. A repeated element
         // cannot change a maximum or minimum, whereas a fixed filler such as 0 can.
-        const cytnx_uint64 index = static_cast<cytnx_uint64>(blockIdx.x) * blockDim.x + threadIdx.x;
+        const std::uint64_t index =
+          static_cast<std::uint64_t>(blockIdx.x) * blockDim.x + threadIdx.x;
         block_values[threadIdx.x] = in[index < element_count ? index : element_count - 1];
         __syncthreads();
 
@@ -74,21 +76,22 @@ namespace cytnx {
 
       // Writes the Pick-reduction of in[0, element_count) to out[0]. element_count must be > 0.
       template <class T, class Pick>
-      void ReduceToScalar(T *out, const T *in, cytnx_uint64 element_count) {
+      void reduce_to_scalar(T *out, const T *in, std::uint64_t element_count) {
         // Each level's buffer is read by the next kernel, which runs asynchronously, so all of
         // them stay allocated until the final synchronization.
         std::vector<utils_internal::DeviceBuffer<T>> levels;
         while (true) {
-          const cytnx_uint64 block_count =
+          const std::uint64_t block_count =
             (element_count + kReduceBlockSize - 1) / kReduceBlockSize;
           T *level_out = out;
           if (block_count > 1) {
             levels.emplace_back(block_count);
             level_out = levels.back().get();
           }
-          ReduceBlocksKernel<T, Pick><<<static_cast<unsigned int>(block_count), kReduceBlockSize>>>(
-            level_out, in, element_count);
-          CYTNX_CHECK_CUDA_LAUNCH(ReduceBlocksKernel);
+          reduce_blocks_kernel<T, Pick>
+            <<<static_cast<unsigned int>(block_count), kReduceBlockSize>>>(level_out, in,
+                                                                           element_count);
+          CYTNX_CHECK_CUDA_LAUNCH(reduce_blocks_kernel);
           if (block_count == 1) break;
           in = level_out;
           element_count = block_count;
@@ -97,15 +100,15 @@ namespace cytnx {
       }
 
       template <class HostType>
-      void MaxMinGpu(boost::intrusive_ptr<Storage_base> &out,
-                     const boost::intrusive_ptr<Storage_base> &ten, char type) {
+      void max_min_gpu(boost::intrusive_ptr<Storage_base> &out,
+                       const boost::intrusive_ptr<Storage_base> &ten, char type) {
         using DeviceType = typename utils_internal::ToCudaDType<HostType>::type;
         DeviceType *out_data = static_cast<DeviceType *>(out->data());
         const DeviceType *in_data = static_cast<const DeviceType *>(ten->data());
         if (type == 'x') {
-          ReduceToScalar<DeviceType, PickMax>(out_data, in_data, ten->size());
+          reduce_to_scalar<DeviceType, PickMax>(out_data, in_data, ten->size());
         } else {
-          ReduceToScalar<DeviceType, PickMin>(out_data, in_data, ten->size());
+          reduce_to_scalar<DeviceType, PickMin>(out_data, in_data, ten->size());
         }
       }
 
@@ -114,57 +117,57 @@ namespace cytnx {
     void cuMaxMin_internal_cd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &ten,
                               const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_complex128>(out, ten, type);
+      max_min_gpu<cytnx_complex128>(out, ten, type);
     }
     void cuMaxMin_internal_cf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &ten,
                               const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_complex64>(out, ten, type);
+      max_min_gpu<cytnx_complex64>(out, ten, type);
     }
     void cuMaxMin_internal_d(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_double>(out, ten, type);
+      max_min_gpu<cytnx_double>(out, ten, type);
     }
     void cuMaxMin_internal_f(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_float>(out, ten, type);
+      max_min_gpu<cytnx_float>(out, ten, type);
     }
     void cuMaxMin_internal_u64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_uint64>(out, ten, type);
+      max_min_gpu<cytnx_uint64>(out, ten, type);
     }
     void cuMaxMin_internal_i64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_int64>(out, ten, type);
+      max_min_gpu<cytnx_int64>(out, ten, type);
     }
     void cuMaxMin_internal_u32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_uint32>(out, ten, type);
+      max_min_gpu<cytnx_uint32>(out, ten, type);
     }
     void cuMaxMin_internal_i32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_int32>(out, ten, type);
+      max_min_gpu<cytnx_int32>(out, ten, type);
     }
     void cuMaxMin_internal_u16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_uint16>(out, ten, type);
+      max_min_gpu<cytnx_uint16>(out, ten, type);
     }
     void cuMaxMin_internal_i16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_int16>(out, ten, type);
+      max_min_gpu<cytnx_int16>(out, ten, type);
     }
     void cuMaxMin_internal_b(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      MaxMinGpu<cytnx_bool>(out, ten, type);
+      max_min_gpu<cytnx_bool>(out, ten, type);
     }
 
   }  // namespace linalg_internal
