@@ -672,6 +672,46 @@ namespace cytnx {
         }
       }
 
+      // A selection whose trailing accessor is not all() copies one element per kernel thread.
+      // With more than about 2048 such elements the device-side cudaMemcpyAsync that the kernel
+      // used to call failed silently for part of them, leaving those outputs unwritten (#1229).
+      TEST(TensorGetSetManyElements, GpuGetCopiesEveryElement) {
+        const std::size_t rows = 30000;
+        Tensor host({rows, 2}, Type.Double);
+        for (std::size_t i = 0; i < rows; i++) {
+          host.at<double>({i, 0}) = 0.5 * static_cast<double>(i) - 7.25;
+          host.at<double>({i, 1}) = -1.0;
+        }
+        Tensor picked =
+          host.to(Device.cuda).get({Accessor::all(), Accessor::range(0, 1)}).to(Device.cpu);
+        ASSERT_EQ(picked.shape(), (std::vector<cytnx_uint64>{rows, 1}));
+        std::size_t wrong = 0;
+        for (std::size_t i = 0; i < rows; i++) {
+          if (picked.storage().at<double>(i) != 0.5 * static_cast<double>(i) - 7.25) wrong++;
+        }
+        EXPECT_EQ(wrong, 0);
+      }
+
+      TEST(TensorGetSetManyElements, GpuSetComplexCopiesEveryElement) {
+        const std::size_t rows = 30000;
+        Tensor rhs_host({rows, 1}, Type.ComplexDouble);
+        for (std::size_t i = 0; i < rows; i++) {
+          rhs_host.at<cytnx_complex128>({i, 0}) =
+            cytnx_complex128(0.5 * static_cast<double>(i) - 7.25, -0.25 * static_cast<double>(i));
+        }
+        Tensor target = zeros({rows, 2}, Type.ComplexDouble, Device.cuda);
+        target.set({Accessor::all(), Accessor::range(0, 1)}, rhs_host.to(Device.cuda));
+        Tensor result = target.to(Device.cpu);
+        std::size_t wrong = 0;
+        for (std::size_t i = 0; i < rows; i++) {
+          const cytnx_complex128 expected(0.5 * static_cast<double>(i) - 7.25,
+                                          -0.25 * static_cast<double>(i));
+          if (result.at<cytnx_complex128>({i, 0}) != expected) wrong++;
+          if (result.at<cytnx_complex128>({i, 1}) != cytnx_complex128(0, 0)) wrong++;
+        }
+        EXPECT_EQ(wrong, 0);
+      }
+
     }  // namespace
   }  // namespace gpu_test
 }  // namespace cytnx
