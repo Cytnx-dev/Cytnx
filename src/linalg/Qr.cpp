@@ -60,27 +60,23 @@ namespace cytnx {
 
       } else {
 #ifdef UNI_GPU
+        cytnx_error_msg(is_tau, "[QR] Returning tau is not supported on GPU.%s", "\n");
+
         checkCudaErrors(cudaSetDevice(in.device()));
 
         Q.Init({Tin.shape()[0], n_tau}, in.dtype(), in.device());
         Q.storage().set_zeros();
 
   #ifdef UNI_CUQUANTUM
-        // cutensornetTensorQR cannot return tau, so that request goes to cuSOLVER below.
-        if (!is_tau) {
-          cytnx::linalg_internal::lii.cuQuantumQr_ii[in.dtype()](
-            in._impl->storage()._impl, Q._impl->storage()._impl, R._impl->storage()._impl,
-            D._impl->storage()._impl, tau._impl->storage()._impl, in.shape()[0], in.shape()[1],
-            false);
-          return std::vector<Tensor>{Q, R};
-        }
+        cytnx::linalg_internal::lii.cuQuantumQr_ii[in.dtype()](
+          in._impl->storage()._impl, Q._impl->storage()._impl, R._impl->storage()._impl,
+          D._impl->storage()._impl, tau._impl->storage()._impl, in.shape()[0], in.shape()[1],
+          false);
+  #else
+        cytnx::linalg_internal::cuQr(in, Q, R);
   #endif
 
-        cytnx::linalg_internal::cuQr(in, Q, R, tau);
-
-        std::vector<Tensor> out{Q, R};
-        if (is_tau) out.push_back(tau);
-        return out;
+        return std::vector<Tensor>{Q, R};
 #else
         cytnx_error_msg(true, "[QR] fatal error, %s",
                         "try to call the gpu section without CUDA support.\n");

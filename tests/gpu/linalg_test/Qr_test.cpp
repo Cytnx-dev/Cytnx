@@ -36,7 +36,6 @@ namespace cytnx {
       struct HostQr {
         HostMatrix q;
         HostMatrix r;
-        std::vector<Complex> geqrf_tau;
       };
 
       bool is_complex_dtype(unsigned int dtype) {
@@ -148,15 +147,6 @@ namespace cytnx {
         return out;
       }
 
-      std::vector<Complex> to_host_vector(const Tensor& in) {
-        const Tensor host = in.to(Device.cpu).contiguous();
-        EXPECT_EQ(host.shape().size(), 1u);
-        if (host.shape().size() != 1) return {};
-        std::vector<Complex> out(host.shape()[0]);
-        for (cytnx_uint64 i = 0; i < out.size(); ++i) out[i] = host_element(host, {i});
-        return out;
-      }
-
       // Unblocked Householder QR in the LAPACK geqrf / geqr2 / larfg convention:
       //   A = Q R,  Q = H_1 ... H_K,  H_i = I - tau_i v_i v_i^H,  v_i[i] = 1,
       // with beta_i = R(i, i) real and of the sign opposite to the real part of the pivot.
@@ -194,7 +184,7 @@ namespace cytnx {
           reflectors[k] = v;
         }
 
-        HostQr out{HostMatrix(rows, rank_bound), HostMatrix(rank_bound, cols), tau};
+        HostQr out{HostMatrix(rows, rank_bound), HostMatrix(rank_bound, cols)};
         for (std::size_t i = 0; i < rank_bound; ++i)
           for (std::size_t j = i; j < cols; ++j) out.r(i, j) = work(i, j);
 
@@ -211,25 +201,24 @@ namespace cytnx {
         return out;
       }
 
-      // Cytnx returns tau in the convention of its CPU path, which factors the transposed layout
-      // with gelqf: the geqrf scalars for real dtypes, their complex conjugates for complex ones.
-      std::vector<Complex> cytnx_tau_convention(const std::vector<Complex>& geqrf_tau) {
-        std::vector<Complex> out(geqrf_tau.size());
-        std::transform(geqrf_tau.begin(), geqrf_tau.end(), out.begin(),
-                       [](Complex value) { return std::conj(value); });
-        return out;
-      }
+      // Among the valid QR factorizations, the cuSOLVER path returns the LAPACK Householder one
+      // (R with a real diagonal of the sign opposite to the pivot). cuQuantum builds route Qr
+      // through cutensornetTensorQR, which does not document its choice, so comparisons with
+      // specific Q and R values are limited to builds without cuQuantum.
+#ifdef UNI_CUQUANTUM
+      constexpr bool kHouseholderConvention = false;
+#else
+      constexpr bool kHouseholderConvention = true;
+#endif
 
       double tolerance(unsigned int dtype) { return is_single_precision(dtype) ? 2e-4 : 1e-11; }
 
       void expect_output_layout(const std::vector<Tensor>& out,
-                                const std::vector<cytnx_uint64>& shape, unsigned int dtype,
-                                bool is_tau) {
+                                const std::vector<cytnx_uint64>& shape, unsigned int dtype) {
         const cytnx_uint64 rank_bound = std::min(shape[0], shape[1]);
-        ASSERT_EQ(out.size(), is_tau ? 3u : 2u);
+        ASSERT_EQ(out.size(), 2u);
         EXPECT_EQ(out[0].shape(), std::vector<cytnx_uint64>({shape[0], rank_bound}));
         EXPECT_EQ(out[1].shape(), std::vector<cytnx_uint64>({rank_bound, shape[1]}));
-        if (is_tau) EXPECT_EQ(out[2].shape(), std::vector<cytnx_uint64>({rank_bound}));
         for (const Tensor& tensor : out) {
           EXPECT_EQ(tensor.dtype(), dtype);
           EXPECT_EQ(tensor.device(), Device.cuda);
@@ -249,7 +238,7 @@ namespace cytnx {
       }
 
       // Full check for a matrix of full rank, where the Householder factorization is well defined
-      // to rounding: invariants plus Q, R and tau against the host reference.
+      // to rounding: invariants plus Q and R against the host reference.
       void check_full_rank_case(const HostMatrix& requested, unsigned int dtype) {
         SCOPED_TRACE("dtype " + Type.getname(dtype) + ", shape " + std::to_string(requested.rows) +
                      "x" + std::to_string(requested.cols));
@@ -258,31 +247,17 @@ namespace cytnx {
         const double tol = tolerance(dtype);
         const double scale = std::max(1.0, max_abs(a)) * static_cast<double>(a.rows + a.cols);
 
-        const std::vector<Tensor> out = linalg::Qr(cpu_input.to(Device.cuda), true);
-        expect_output_layout(out, {a.rows, a.cols}, dtype, true);
+        const std::vector<Tensor> out = linalg::Qr(cpu_input.to(Device.cuda));
+        expect_output_layout(out, {a.rows, a.cols}, dtype);
         const HostMatrix q = to_host(out[0]);
         const HostMatrix r = to_host(out[1]);
-        const std::vector<Complex> tau = to_host_vector(out[2]);
         expect_valid_factorization(a, q, r, tol);
 
-        const HostQr expected = reference_householder_qr(a);
-        EXPECT_LE(max_abs_diff(q, expected.q), tol * scale) << "Q differs from the reference";
-        EXPECT_LE(max_abs_diff(r, expected.r), tol * scale) << "R differs from the reference";
-        const std::vector<Complex> expected_tau = cytnx_tau_convention(expected.geqrf_tau);
-        ASSERT_EQ(tau.size(), expected_tau.size());
-        for (std::size_t i = 0; i < tau.size(); ++i) {
-          EXPECT_LE(std::abs(tau[i] - expected_tau[i]), tol * scale) << "tau[" << i << "]";
+        if (kHouseholderConvention) {
+          const HostQr expected = reference_householder_qr(a);
+          EXPECT_LE(max_abs_diff(q, expected.q), tol * scale) << "Q differs from the reference";
+          EXPECT_LE(max_abs_diff(r, expected.r), tol * scale) << "R differs from the reference";
         }
-
-        // Without tau the same Q and R come back (in cuQuantum builds this is the cuQuantum path,
-        // whose sign convention is not documented, so only the invariants are checked there).
-        const std::vector<Tensor> no_tau = linalg::Qr(cpu_input.to(Device.cuda), false);
-        expect_output_layout(no_tau, {a.rows, a.cols}, dtype, false);
-        expect_valid_factorization(a, to_host(no_tau[0]), to_host(no_tau[1]), tol);
-#ifndef UNI_CUQUANTUM
-        EXPECT_LE(max_abs_diff(to_host(no_tau[0]), expected.q), tol * scale);
-        EXPECT_LE(max_abs_diff(to_host(no_tau[1]), expected.r), tol * scale);
-#endif
       }
 
       const std::vector<unsigned int> kFloatingDtypes = {Type.ComplexDouble, Type.ComplexFloat,
@@ -315,46 +290,41 @@ namespace cytnx {
       // A = [3; 4]: beta = -5, v = [1, 1/2], tau = (beta - 3) / beta = 8/5, so Q = [-3/5; -4/5]
       // and R = [-5].
       TEST(Qr, GpuHandComputedRealColumn) {
+        if (!kHouseholderConvention) GTEST_SKIP() << "the sign of Q and R is cuSOLVER-specific";
         for (unsigned int dtype : {Type.Double, Type.Float}) {
           SCOPED_TRACE("dtype " + Type.getname(dtype));
           HostMatrix a(2, 1);
           a(0, 0) = 3.0;
           a(1, 0) = 4.0;
-          const std::vector<Tensor> out = linalg::Qr(to_tensor(a, dtype).to(Device.cuda), true);
-          expect_output_layout(out, {2, 1}, dtype, true);
+          const std::vector<Tensor> out = linalg::Qr(to_tensor(a, dtype).to(Device.cuda));
+          expect_output_layout(out, {2, 1}, dtype);
           const HostMatrix q = to_host(out[0]);
           const HostMatrix r = to_host(out[1]);
-          const std::vector<Complex> tau = to_host_vector(out[2]);
           const double tol = tolerance(dtype);
           EXPECT_NEAR(q(0, 0).real(), -0.6, tol);
           EXPECT_NEAR(q(1, 0).real(), -0.8, tol);
           EXPECT_NEAR(r(0, 0).real(), -5.0, 5 * tol);
-          ASSERT_EQ(tau.size(), 1u);
-          EXPECT_NEAR(tau[0].real(), 1.6, tol);
         }
       }
 
       // A = [3i; 4]: alpha = 3i has zero real part, so beta = -5 and the geqrf scalar is
       // ((beta - 0) / beta, -3 / beta) = 1 + 0.6i, v = [1, 4 / (3i + 5)] = [1, (10 - 6i) / 17].
-      // Q = H e_1 = e_1 - tau v = [-0.6i; -0.8], R = [-5], and Q R = [3i; 4]. Cytnx returns the
-      // conjugated scalar, 1 - 0.6i.
+      // Q = H e_1 = e_1 - tau v = [-0.6i; -0.8], R = [-5], and Q R = [3i; 4].
       TEST(Qr, GpuHandComputedComplexColumn) {
+        if (!kHouseholderConvention) GTEST_SKIP() << "the phase of Q and R is cuSOLVER-specific";
         for (unsigned int dtype : {Type.ComplexDouble, Type.ComplexFloat}) {
           SCOPED_TRACE("dtype " + Type.getname(dtype));
           HostMatrix a(2, 1);
           a(0, 0) = Complex(0.0, 3.0);
           a(1, 0) = 4.0;
-          const std::vector<Tensor> out = linalg::Qr(to_tensor(a, dtype).to(Device.cuda), true);
-          expect_output_layout(out, {2, 1}, dtype, true);
+          const std::vector<Tensor> out = linalg::Qr(to_tensor(a, dtype).to(Device.cuda));
+          expect_output_layout(out, {2, 1}, dtype);
           const HostMatrix q = to_host(out[0]);
           const HostMatrix r = to_host(out[1]);
-          const std::vector<Complex> tau = to_host_vector(out[2]);
           const double tol = tolerance(dtype);
           EXPECT_LE(std::abs(q(0, 0) - Complex(0.0, -0.6)), tol);
           EXPECT_LE(std::abs(q(1, 0) - Complex(-0.8, 0.0)), tol);
           EXPECT_LE(std::abs(r(0, 0) - Complex(-5.0, 0.0)), 5 * tol);
-          ASSERT_EQ(tau.size(), 1u);
-          EXPECT_LE(std::abs(tau[0] - Complex(1.0, -0.6)), tol);
         }
       }
 
@@ -377,26 +347,29 @@ namespace cytnx {
             const Tensor cpu_input = to_tensor(requested, dtype);
             const HostMatrix a = to_host(cpu_input);
 
-            const std::vector<Tensor> out = linalg::Qr(cpu_input.to(Device.cuda), true);
-            expect_output_layout(out, {a.rows, a.cols}, dtype, true);
+            const std::vector<Tensor> out = linalg::Qr(cpu_input.to(Device.cuda));
+            expect_output_layout(out, {a.rows, a.cols}, dtype);
             expect_valid_factorization(a, to_host(out[0]), to_host(out[1]), tolerance(dtype));
           }
         }
       }
 
-      // The zero matrix needs no reflection at all: every tau is 0, Q is the leading columns of
-      // the identity and R is zero.
+      // The zero matrix needs no reflection at all: R is zero and Q still has orthonormal
+      // columns. With the Householder convention Q is exactly the leading columns of the identity.
       TEST(Qr, GpuZeroMatrix) {
         for (unsigned int dtype : kFloatingDtypes) {
           SCOPED_TRACE("dtype " + Type.getname(dtype));
           const HostMatrix a(4, 3);
-          const std::vector<Tensor> out = linalg::Qr(to_tensor(a, dtype).to(Device.cuda), true);
-          expect_output_layout(out, {4, 3}, dtype, true);
-          HostMatrix expected_q(4, 3);
-          for (std::size_t i = 0; i < 3; ++i) expected_q(i, i) = 1.0;
-          EXPECT_EQ(max_abs_diff(to_host(out[0]), expected_q), 0.0);
+          const std::vector<Tensor> out = linalg::Qr(to_tensor(a, dtype).to(Device.cuda));
+          expect_output_layout(out, {4, 3}, dtype);
+          const HostMatrix q = to_host(out[0]);
+          expect_valid_factorization(a, q, to_host(out[1]), tolerance(dtype));
           EXPECT_EQ(max_abs(to_host(out[1])), 0.0);
-          for (Complex value : to_host_vector(out[2])) EXPECT_EQ(value, Complex(0.0, 0.0));
+          if (kHouseholderConvention) {
+            HostMatrix expected_q(4, 3);
+            for (std::size_t i = 0; i < 3; ++i) expected_q(i, i) = 1.0;
+            EXPECT_EQ(max_abs_diff(q, expected_q), 0.0);
+          }
         }
       }
 
@@ -409,13 +382,15 @@ namespace cytnx {
         for (std::size_t i = 0; i < 6; ++i)
           for (std::size_t j = 0; j < 4; ++j) a(i, j) = stored(j, i);
 
-        const std::vector<Tensor> out = linalg::Qr(permuted, true);
-        expect_output_layout(out, {6, 4}, Type.ComplexDouble, true);
-        const HostQr expected = reference_householder_qr(a);
+        const std::vector<Tensor> out = linalg::Qr(permuted);
+        expect_output_layout(out, {6, 4}, Type.ComplexDouble);
         const double tol = 1e-11;
         expect_valid_factorization(a, to_host(out[0]), to_host(out[1]), tol);
-        EXPECT_LE(max_abs_diff(to_host(out[0]), expected.q), tol);
-        EXPECT_LE(max_abs_diff(to_host(out[1]), expected.r), tol);
+        if (kHouseholderConvention) {
+          const HostQr expected = reference_householder_qr(a);
+          EXPECT_LE(max_abs_diff(to_host(out[0]), expected.q), tol);
+          EXPECT_LE(max_abs_diff(to_host(out[1]), expected.r), tol);
+        }
       }
 
       // Integer input is factored in double precision, as on the CPU.
@@ -425,22 +400,24 @@ namespace cytnx {
         for (std::size_t i = 0; i < 3; ++i)
           for (std::size_t j = 0; j < 2; ++j) a(i, j) = values[i][j];
 
-        const std::vector<Tensor> out = linalg::Qr(to_tensor(a, Type.Int64).to(Device.cuda), true);
-        expect_output_layout(out, {3, 2}, Type.Double, true);
-        const HostQr expected = reference_householder_qr(a);
+        const std::vector<Tensor> out = linalg::Qr(to_tensor(a, Type.Int64).to(Device.cuda));
+        expect_output_layout(out, {3, 2}, Type.Double);
         const double tol = 1e-12;
         expect_valid_factorization(a, to_host(out[0]), to_host(out[1]), tol);
-        EXPECT_LE(max_abs_diff(to_host(out[0]), expected.q), tol);
-        EXPECT_LE(max_abs_diff(to_host(out[1]), expected.r), tol);
-        // first column [2, -3, 6] has norm 7: beta = -7, tau = (beta - 2) / beta = 9/7
-        EXPECT_NEAR(to_host(out[1])(0, 0).real(), -7.0, tol);
-        EXPECT_NEAR(to_host_vector(out[2])[0].real(), 9.0 / 7.0, tol);
+        // first column [2, -3, 6] has norm 7, so |R(0, 0)| = 7 in every convention
+        EXPECT_NEAR(std::abs(to_host(out[1])(0, 0)), 7.0, tol);
+        if (kHouseholderConvention) {
+          const HostQr expected = reference_householder_qr(a);
+          EXPECT_LE(max_abs_diff(to_host(out[0]), expected.q), tol);
+          EXPECT_LE(max_abs_diff(to_host(out[1]), expected.r), tol);
+          EXPECT_NEAR(to_host(out[1])(0, 0).real(), -7.0, tol);
+        }
       }
 
       // Dense UniTensor: the first rowrank legs are the rows. Checks labels, shapes and, through
       // the blocks reshaped to matrices, Q^H Q = I and Q R = A.
-      void check_dense_unitensor(cytnx_uint64 rowrank, bool is_tau) {
-        SCOPED_TRACE("rowrank " + std::to_string(rowrank) + (is_tau ? ", with tau" : ""));
+      void check_dense_unitensor(cytnx_uint64 rowrank) {
+        SCOPED_TRACE("rowrank " + std::to_string(rowrank));
         const std::vector<cytnx_uint64> shape = {3, 4, 5};
         cytnx_uint64 rows = 1;
         for (cytnx_uint64 i = 0; i < rowrank; ++i) rows *= shape[i];
@@ -450,8 +427,8 @@ namespace cytnx {
         const HostMatrix a = random_matrix(rows, cols, true, 61);
         Tensor block = to_tensor(a, Type.ComplexDouble).reshape({3, 4, 5});
         UniTensor input = UniTensor(block, false, rowrank).relabel({"a", "b", "c"});
-        const std::vector<UniTensor> out = linalg::Qr(input.to(Device.cuda), is_tau);
-        ASSERT_EQ(out.size(), is_tau ? 3u : 2u);
+        const std::vector<UniTensor> out = linalg::Qr(input.to(Device.cuda));
+        ASSERT_EQ(out.size(), 2u);
 
         const UniTensor& q_ut = out[0];
         const UniTensor& r_ut = out[1];
@@ -474,27 +451,25 @@ namespace cytnx {
           to_host(r_ut.get_block().reshape(std::vector<cytnx_uint64>{rank_bound, cols}));
         expect_valid_factorization(a, q, r, 1e-11);
 
-        if (is_tau) {
-          // only the cuSOLVER path returns tau, so the reference applies in every build
+        if (kHouseholderConvention) {
           const HostQr expected = reference_householder_qr(a);
           EXPECT_LE(max_abs_diff(q, expected.q), 1e-11);
           EXPECT_LE(max_abs_diff(r, expected.r), 1e-11);
-          const std::vector<Complex> tau = to_host_vector(out[2].get_block());
-          const std::vector<Complex> expected_tau = cytnx_tau_convention(expected.geqrf_tau);
-          ASSERT_EQ(tau.size(), expected_tau.size());
-          for (std::size_t i = 0; i < tau.size(); ++i)
-            EXPECT_LE(std::abs(tau[i] - expected_tau[i]), 1e-11) << "tau[" << i << "]";
         }
       }
 
       TEST(Qr, GpuDenseUniTensor) {
-        check_dense_unitensor(2, false);  // 12 x 5, tall
-        check_dense_unitensor(1, false);  // 3 x 20, wide
+        check_dense_unitensor(2);  // 12 x 5, tall
+        check_dense_unitensor(1);  // 3 x 20, wide
       }
 
-      TEST(Qr, GpuDenseUniTensorWithTau) {
-        check_dense_unitensor(2, true);
-        check_dense_unitensor(1, true);
+      // The scalar factors of the reflectors are only returned for CPU tensors.
+      TEST(Qr, GpuReturningTauIsRejected) {
+        const Tensor matrix =
+          to_tensor(random_matrix(4, 3, false, 71), Type.Double).to(Device.cuda);
+        EXPECT_THROW(linalg::Qr(matrix, true), std::logic_error);
+        const UniTensor dense = UniTensor(matrix, false, 1);
+        EXPECT_THROW(linalg::Qr(dense, true), std::logic_error);
       }
 
     }  // namespace

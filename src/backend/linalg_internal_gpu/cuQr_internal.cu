@@ -13,7 +13,6 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "cuConj_inplace_internal.hpp"
 #include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 #include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
 
@@ -162,9 +161,9 @@ namespace cytnx {
       }
 
       // in_ptr: row-major rows x cols. q_ptr: row-major rows x min(rows, cols). r_ptr: row-major
-      // min(rows, cols) x cols. tau_ptr: min(rows, cols) geqrf scalars.
+      // min(rows, cols) x cols.
       template <CusolverQrScalar T>
-      void cu_qr_typed(const T *in_ptr, T *q_ptr, T *r_ptr, T *tau_ptr, int rows, int cols) {
+      void cu_qr_typed(const T *in_ptr, T *q_ptr, T *r_ptr, int rows, int cols) {
         const int rank_bound = std::min(rows, cols);
         const std::uint64_t rows64 = static_cast<std::uint64_t>(rows);
         const std::uint64_t cols64 = static_cast<std::uint64_t>(cols);
@@ -179,8 +178,12 @@ namespace cytnx {
           factor.get(), in_ptr, rows64, cols64);
         CYTNX_CHECK_CUDA_LAUNCH(cu_qr_to_col_major_kernel);
 
+        // Scalar factors of the reflectors: produced by geqrf, consumed by orgqr / ungqr, and not
+        // returned.
+        utils_internal::DeviceBuffer<T> tau(rank_bound64);
+
         auto *factor_arg = cusolver_ptr(factor.get());
-        auto *tau_arg = cusolver_ptr(tau_ptr);
+        auto *tau_arg = cusolver_ptr(tau.get());
 
         // Q is formed from the first rank_bound reflectors as a rows x rank_bound matrix. For a
         // wide input that is the leading rows x rows block of the factor, which satisfies the
@@ -220,7 +223,7 @@ namespace cytnx {
 
     }  // namespace
 
-    void cuQr(const Tensor &in, Tensor &Q, Tensor &R, Tensor &tau) {
+    void cuQr(const Tensor &in, Tensor &Q, Tensor &R) {
       cytnx_error_msg(in.rank() != 2, "[cuQr] the input must be a rank-2 tensor, got rank %d.\n",
                       static_cast<int>(in.rank()));
       cytnx_error_msg(!in.is_contiguous(), "[cuQr] the input must be contiguous.%s", "\n");
@@ -238,22 +241,20 @@ namespace cytnx {
                       std::numeric_limits<int>::max());
 
       cytnx_error_msg(Q.shape() != std::vector<cytnx_uint64>({rows, rank_bound}) ||
-                        R.shape() != std::vector<cytnx_uint64>({rank_bound, cols}) ||
-                        tau.shape() != std::vector<cytnx_uint64>({rank_bound}),
-                      "[cuQr] Q, R and tau must be pre-allocated with shapes (M, K), (K, N) and "
-                      "(K) for an M x N input, K = min(M, N).%s",
+                        R.shape() != std::vector<cytnx_uint64>({rank_bound, cols}),
+                      "[cuQr] Q and R must be pre-allocated with shapes (M, K) and (K, N) for an "
+                      "M x N input, K = min(M, N).%s",
                       "\n");
-      cytnx_error_msg(
-        Q.device() != in.device() || R.device() != in.device() || tau.device() != in.device(),
-        "[cuQr] Q, R and tau must be on the same device as the input.%s", "\n");
+      cytnx_error_msg(Q.device() != in.device() || R.device() != in.device(),
+                      "[cuQr] Q and R must be on the same device as the input.%s", "\n");
 
       std::visit(
         [&](auto in_ptr) {
           using T = std::remove_pointer_t<decltype(in_ptr)>;
           if constexpr (CusolverQrScalar<T>) {
             // gpu_ptr_as<T>() verifies that each output has the dtype of the input.
-            cu_qr_typed<T>(in_ptr, Q.gpu_ptr_as<T>(), R.gpu_ptr_as<T>(), tau.gpu_ptr_as<T>(),
-                           static_cast<int>(rows), static_cast<int>(cols));
+            cu_qr_typed<T>(in_ptr, Q.gpu_ptr_as<T>(), R.gpu_ptr_as<T>(), static_cast<int>(rows),
+                           static_cast<int>(cols));
           } else {
             cytnx_error_msg(true,
                             "[cuQr] unsupported dtype %s; expected Float, Double, ComplexFloat or "
@@ -262,11 +263,6 @@ namespace cytnx {
           }
         },
         in.gpu_ptr());
-
-      // geqrf scalars -> the convention of the CPU path (see the header): conjugate for complex.
-      if (Type.is_complex(in.dtype())) {
-        cuConj_inplace_dispatch(tau._impl->storage()._impl, rank_bound);
-      }
     }
 
   }  // namespace linalg_internal

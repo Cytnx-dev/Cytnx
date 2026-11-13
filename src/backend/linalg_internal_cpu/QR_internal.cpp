@@ -28,7 +28,7 @@ namespace cytnx {
     // gelqf on it: A^T = L Q_lq gives A = Q_lq^T L^T = Q R without an explicit transpose. A side
     // effect is the tau convention: tau holds the gelqf scalars of A^T, which for complex dtypes
     // are the complex conjugates of the scalars geqrf would return for A (identical for real
-    // dtypes). The GPU path (cuQr_internal.cu) reproduces this convention.
+    // dtypes). The GPU path does not return tau.
     void QR_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
                         boost::intrusive_ptr<Storage_base> &Q,
                         boost::intrusive_ptr<Storage_base> &R,

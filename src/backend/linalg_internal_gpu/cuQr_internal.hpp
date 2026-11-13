@@ -16,21 +16,17 @@ namespace cytnx {
      * real diagonal. The factorization is the unpivoted LAPACK Householder one, so Q and R agree
      * with the CPU path (`QR_ii`) up to rounding.
      *
-     * `tau` (length K) receives the scalar factors of the K elementary reflectors in the same
-     * convention as the CPU path, which factors the transposed layout with `gelqf`. For real
-     * dtypes these are exactly the `geqrf` scalars. For complex dtypes they are the complex
-     * conjugates of the `geqrf` scalars: with v_i the i-th Householder vector of `geqrf`,
-     * Q = H_1 ... H_K and H_i = I - conj(tau[i]) v_i v_i^H.
+     * The scalar factors of the Householder reflectors (`tau`) are used internally and not
+     * returned.
      *
      * @param[in] in contiguous rank-2 M x N tensor on a CUDA device; Float, Double, ComplexFloat
      * or ComplexDouble. Not modified. Both extents must be nonzero and fit a 32-bit `int`.
      * @param[out] Q pre-allocated M x K tensor, same dtype and device as `in`.
      * @param[out] R pre-allocated K x N tensor, same dtype and device as `in`.
-     * @param[out] tau pre-allocated length-K tensor, same dtype and device as `in`.
      *
      * The CUDA device of `in` must be current on the calling thread.
      */
-    void cuQr(const Tensor &in, Tensor &Q, Tensor &R, Tensor &tau);
+    void cuQr(const Tensor &in, Tensor &Q, Tensor &R);
 #endif
 
   }  // namespace linalg_internal

@@ -2066,9 +2066,9 @@ namespace cytnx {
     from the LQ factorization (LAPACK @c gelqf) of the transposed layout. For real dtypes
     \f$ \tau \f$ equals the scalars LAPACK @c geqrf would return for \f$ M \f$. For complex dtypes
     it is their complex conjugate: with \f$ v_i \f$ the Householder vectors of @c geqrf,
-    \f$ Q = H_1 \cdots H_k \f$ and \f$ H_i = I - \overline{\tau_i} v_i v_i^\dagger \f$. The CPU
-    and GPU implementations follow the same convention. The Householder vectors themselves are
-    not returned.
+    \f$ Q = H_1 \cdots H_k \f$ and \f$ H_i = I - \overline{\tau_i} v_i v_i^\dagger \f$. The
+    Householder vectors themselves are not returned. \f$ \tau \f$ is only available for CPU
+    tensors; \p is_tau = @em true raises an error for a GPU tensor.
     @see Qdr(const Tensor &Tin, const bool &is_tau)
     */
     std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau = false);
