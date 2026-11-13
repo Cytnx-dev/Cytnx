@@ -45,22 +45,31 @@ def replace_once(text: str, pattern: str, replacement: str, where: pathlib.Path)
     return text
 
 
+def write_if_changed(path: pathlib.Path, text: str) -> None:
+    """Write ``text`` to ``path`` and report whether the file changed."""
+    if path.read_text() == text:
+        print(f"unchanged {path.relative_to(REPO_ROOT)}", flush=True)
+        return
+    path.write_text(text)
+    print(f"updated {path.relative_to(REPO_ROOT)}", flush=True)
+
+
 def bump_version_cmake(version: str) -> None:
     text = VERSION_CMAKE.read_text()
     for field, number in zip(("MAJOR", "MINOR", "PATCH"), version.split(".")):
         text = replace_once(
             text, rf"^(set\(\w+?VERSION_{field}\s+)\d+(\))", rf"\g<1>{number}\g<2>", VERSION_CMAKE
         )
-    VERSION_CMAKE.write_text(text)
+    write_if_changed(VERSION_CMAKE, text)
 
 
 def add_docs_slug(version: str) -> None:
     entries = json.loads(VERSIONS_JSON.read_text())
     if any(entry.get("version") == version for entry in entries):
-        print(f"{VERSIONS_JSON.relative_to(REPO_ROOT)} already lists {version}")
+        print(f"unchanged {VERSIONS_JSON.relative_to(REPO_ROOT)}", flush=True)
         return
     entries.append({"name": version, "version": version})
-    VERSIONS_JSON.write_text(json.dumps(entries, indent=2) + "\n")
+    write_if_changed(VERSIONS_JSON, json.dumps(entries, indent=2) + "\n")
 
 
 def bump_citation(version: str, date: datetime.date) -> None:
@@ -69,7 +78,7 @@ def bump_citation(version: str, date: datetime.date) -> None:
     text = replace_once(
         text, r"^date-released:.*$", f"date-released: '{date.isoformat()}'", CITATION_CFF
     )
-    CITATION_CFF.write_text(text)
+    write_if_changed(CITATION_CFF, text)
 
 
 def main() -> None:
@@ -88,10 +97,8 @@ def main() -> None:
     bump_version_cmake(args.version)
     add_docs_slug(args.version)
     bump_citation(args.version, args.date)
-    for path in (VERSION_CMAKE, VERSIONS_JSON, CITATION_CFF):
-        print(f"updated {path.relative_to(REPO_ROOT)}")
 
-    subprocess.run([sys.executable, str(CONSISTENCY_CHECK)], check=True)
+    sys.exit(subprocess.run([sys.executable, str(CONSISTENCY_CHECK)]).returncode)
 
 
 if __name__ == "__main__":

@@ -42,11 +42,13 @@ Checks performed:
      the PyPI and conda package version would not match the release tag --
      and is present as a ``versions.json`` slug.
   5. The documentation builds carry no version literal: ``docs.doxygen``
-     leaves ``PROJECT_NUMBER`` empty and ``docs/source/conf.py`` does not
-     assign a string to ``version`` or ``release``. Both take the version
-     from ``version.cmake`` through ``docs/cytnx_version.py``; a literal
-     would override it and go stale, which is how the API reference showed
-     ``v1.0.0`` through three later releases.
+     leaves ``PROJECT_NUMBER`` empty, and ``docs/source/conf.py`` assigns
+     ``version`` and ``release`` only from ``release_version()`` and
+     ``version_label()`` and builds any ``html_title`` from ``release``.
+     Both take the version from ``version.cmake`` through
+     ``docs/cytnx_version.py``; a literal would override it and go stale,
+     which is how the API reference showed ``v1.0.0`` through three later
+     releases.
 
 ``tools/bump_version.py`` rewrites the three metadata files and runs this
 check. Run it on its own before drafting a release::
@@ -57,6 +59,7 @@ It prints every problem it finds and exits non-zero if any remain.
 """
 
 import argparse
+import ast
 import datetime
 import json
 import pathlib
@@ -131,6 +134,56 @@ def read_citation_field(field: str) -> str:
     if not match:
         sys.exit(f"could not parse top-level '{field}' from {CITATION_CFF}")
     return next(group for group in match.groups() if group is not None)
+
+
+# Module-level names in docs/source/conf.py that carry the version, and the
+# docs/cytnx_version.py function each must be assigned from.
+SPHINX_VERSION_SOURCES = {"version": "release_version", "release": "version_label"}
+
+
+def check_sphinx_version_source() -> list[str]:
+    """Return errors for ``conf.py`` version assignments not taken from cytnx_version.
+
+    Inspects the syntax tree instead of matching text, so any spelling of a
+    literal -- plain or f-string, ``str(1.0)``, a later reassignment -- is
+    caught. ``version`` and ``release`` must each be assigned exactly from
+    the matching call, and ``html_title``, if set, must use ``release``.
+    """
+    tree = ast.parse(SPHINX_CONF.read_text(), filename=str(SPHINX_CONF))
+    assigned: dict[str, list[ast.expr]] = {}
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    assigned.setdefault(target.id, []).append(node.value)
+
+    errors = []
+    for name, function in SPHINX_VERSION_SOURCES.items():
+        values = assigned.get(name, [])
+        all_expected_calls = all(
+            isinstance(value, ast.Call)
+            and isinstance(value.func, ast.Name)
+            and value.func.id == function
+            and not value.args
+            and not value.keywords
+            for value in values
+        )
+        if not values or not all_expected_calls:
+            errors.append(
+                f"docs/source/conf.py must set `{name} = {function}()` (from "
+                f"docs/cytnx_version.py) and assign {name} nowhere else, so the "
+                f"user guide shows the version from version.cmake."
+            )
+    for value in assigned.get("html_title", []):
+        uses_release = any(
+            isinstance(node, ast.Name) and node.id == "release" for node in ast.walk(value)
+        )
+        if not uses_release:
+            errors.append(
+                "docs/source/conf.py sets html_title without using `release`; a "
+                "version written into the title goes stale."
+            )
+    return errors
 
 
 def looks_like_v_prefixed_release(slug: str) -> bool:
@@ -220,15 +273,7 @@ def main() -> None:
             f"Leave it empty: docs/build_api_docs.py sets the version label from "
             f"version.cmake, and a literal here goes stale."
         )
-    sphinx_literal = re.search(
-        r"""^(version|release)\s*=\s*['"]""", SPHINX_CONF.read_text(), re.MULTILINE
-    )
-    if sphinx_literal:
-        errors.append(
-            f"docs/source/conf.py assigns a string literal to "
-            f"{sphinx_literal.group(1)}. Take it from docs/cytnx_version.py so the "
-            f"user guide shows the version from version.cmake."
-        )
+    errors.extend(check_sphinx_version_source())
 
     if errors:
         print("Release metadata is inconsistent:", file=sys.stderr)

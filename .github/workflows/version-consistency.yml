@@ -5,11 +5,14 @@ name: Release metadata consistency
 # scikit-build-core), and docs/site_root/versions.json must list the docs
 # slug for the version being shipped -- numeric, matching the tag with its
 # leading "v" stripped, the directory docs.yml publishes to gh-pages.
+# CITATION.cff must carry the same version, and the documentation builds
+# (docs.doxygen, docs/source/conf.py) must take their version from
+# version.cmake through docs/cytnx_version.py instead of a literal.
 #
 # Running on pull_request makes a release-prep PR fail before it is merged
-# if version.cmake or versions.json is missing the new version or uses a
-# "v"-prefixed docs slug. Running on the v* tag push is the safety net at
-# release time.
+# if version.cmake, versions.json or CITATION.cff disagree, a docs slug is
+# "v"-prefixed, or a documentation build hard-codes a version. Running on
+# the v* tag push is the safety net at release time.
 
 on:
   pull_request:

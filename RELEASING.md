@@ -46,6 +46,13 @@ needs no edit: the PyPI/conda package version and `cytnx.__version__`
 shows `X.Y.Z` on the release tag and `X.Y.Z.devN+g<sha>` on the `dev` docs
 built from `master`.
 
+Between releases `version.cmake` still holds the last released version, so
+the `dev` docs read, for example, `1.1.1.dev581+g<sha>`: 581 commits *after*
+1.1.1. The nightly wheels carry the same base version
+(`1.1.1.devYYYYMMDDHHMM`, see `tools/prepare_nightly_release.py`). Note that
+PEP 440 orders a `.devN` version *before* its base release, so tools that
+compare versions treat these builds as older than 1.1.1 (#1204).
+
 ## Steps
 
 1. **Run the bump script** with the new `MAJOR.MINOR.PATCH` (no leading `v`):
