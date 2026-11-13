@@ -1,7 +1,7 @@
 #include "cuMaxMin_internal.hpp"
 
 #include <cstdint>
-#include <vector>
+#include <utility>
 
 #include "cuda/std/complex"
 
@@ -77,24 +77,27 @@ namespace cytnx {
       // Writes the Pick-reduction of in[0, element_count) to out[0]. element_count must be > 0.
       template <class T, class Pick>
       void reduce_to_scalar(T *out, const T *in, std::uint64_t element_count) {
-        // Each level's buffer is read by the next kernel, which runs asynchronously, so all of
-        // them stay allocated until the final synchronization.
-        std::vector<utils_internal::DeviceBuffer<T>> levels;
+        // Intermediate levels alternate between two buffers. The kernels run in launch order on
+        // one stream, so a level may overwrite the buffer that the level before it read from. The
+        // first buffer holds the first level's results and the second the (512 times fewer)
+        // results of the second level; every later level fits into one of the two.
+        utils_internal::DeviceBuffer<T> level_input;
+        utils_internal::DeviceBuffer<T> level_output;
         while (true) {
           const std::uint64_t block_count =
             (element_count + kReduceBlockSize - 1) / kReduceBlockSize;
-          T *level_out = out;
-          if (block_count > 1) {
-            levels.emplace_back(block_count);
-            level_out = levels.back().get();
+          if (block_count > 1 && level_output.get() == nullptr) {
+            level_output = utils_internal::DeviceBuffer<T>(block_count);
           }
+          T *block_results = block_count > 1 ? level_output.get() : out;
           reduce_blocks_kernel<T, Pick>
-            <<<static_cast<unsigned int>(block_count), kReduceBlockSize>>>(level_out, in,
+            <<<static_cast<unsigned int>(block_count), kReduceBlockSize>>>(block_results, in,
                                                                            element_count);
           CYTNX_CHECK_CUDA_LAUNCH(reduce_blocks_kernel);
           if (block_count == 1) break;
-          in = level_out;
+          in = block_results;
           element_count = block_count;
+          std::swap(level_input, level_output);
         }
         checkCudaErrors(cudaDeviceSynchronize());
       }

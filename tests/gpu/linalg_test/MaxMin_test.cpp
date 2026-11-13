@@ -149,6 +149,25 @@ namespace cytnx {
         }
       }
 
+      // 512^3 + 1 elements need three intermediate reduction levels, so the third one reuses the
+      // buffer of the first. Int16 keeps the input at about 256 MB.
+      TEST(LinalgMaxMinGpuLargeTest, ThreeIntermediateLevels) {
+        const std::size_t size = std::size_t{512} * 512 * 512 + 1;
+        for (std::size_t position : {std::size_t{0}, size / 2, size - 1}) {
+          SCOPED_TRACE("position " + std::to_string(position));
+          std::vector<cytnx_int16> values(size, cytnx_int16{-5});
+          values[position] = -2;
+          const Tensor with_larger = make_gpu_vector(values);
+          expect_scalar<cytnx_int16>(linalg::Max(with_larger), -2);
+          expect_scalar<cytnx_int16>(linalg::Min(with_larger), -5);
+
+          values[position] = -9;
+          const Tensor with_smaller = make_gpu_vector(values);
+          expect_scalar<cytnx_int16>(linalg::Min(with_smaller), -9);
+          expect_scalar<cytnx_int16>(linalg::Max(with_smaller), -5);
+        }
+      }
+
       TEST(LinalgMaxMinGpuBoolTest, SingleExtreme) {
         for (std::size_t size : {1, 2, 64, 513, 2000}) {
           SCOPED_TRACE("size " + std::to_string(size));
