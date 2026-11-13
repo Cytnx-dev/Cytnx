@@ -186,6 +186,9 @@ jobs:
         mkdir -p "${HOME}/.ccache"
         rm -f "${HOME}/.ccache/.cytnx_first_wheel_build_done"
 
+    - name: Prepare benchmark export directory
+      run: mkdir -p cuda-benchmark-export
+
     - name: Build Wheels
       uses: pypa/cibuildwheel@b9e566a2b284570af229f6c2a33673410d0389a3  # v4.3.4
       env:
@@ -198,10 +201,12 @@ jobs:
         # rationale; this workflow only ever runs the Linux/docker path.
         CCACHE_DIR: /host_ccache
         CCACHE_BASEDIR: /project/build
-        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
+        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache --volume ${{ github.workspace }}/cuda-benchmark-export:/benchmark-export"
         # NVIDIA does not publish musllinux CUDA wheels for
         # tools/cibuildwheel_before_all_cuda.sh to install from.
         CIBW_BUILD: "cp311-manylinux_x86_64"
+        CYTNX_BENCHMARK_EXPORT_DIR: /benchmark-export
+        CIBW_BEFORE_TEST: "bash {project}/tools/export_cuda_benchmark_tree.sh"
         CIBW_SKIP: "*-musllinux*"
         CIBW_TEST_COMMAND: >-
           python {project}/tools/validate_ccache_stats.py &&
@@ -211,6 +216,13 @@ jobs:
         # names the target and how the value reaches the container.
         SKBUILD_CMAKE_DEFINE: HPTT_ENABLE_${{ runner.arch == 'ARM64' && 'ARM' || 'AVX' }}=ON
         CYTNX_VERSION_TAG: ${{ needs.DetermineChannel.outputs.dev_tag }}
+
+    - name: Upload CUDA benchmark install tree
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+      with:
+        name: cuda-benchmark-install-tree
+        path: cuda-benchmark-export/
+        if-no-files-found: error
 
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
       with:
