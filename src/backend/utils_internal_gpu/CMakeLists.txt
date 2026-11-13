@@ -6,7 +6,6 @@ target_sources(cytnx
     cuTypeTraits_gpu.hpp
     cuGetElems_gpu.hpp
     cuGetElems_contiguous_gpu.hpp
-    cuGetElems_contiguous_gpu_bench.hpp
     cuLibraryHandle_gpu.hpp
     cuMovemem_gpu.hpp
     cuScopedResource_gpu.hpp
@@ -22,7 +21,6 @@ target_sources(cytnx
     cuFill_gpu.cu
     cuGetElems_gpu.cu
     cuGetElems_contiguous_gpu.cu
-    cuGetElems_contiguous_gpu_bench.cu
     cuLibraryHandle_gpu.cu
     cuMovemem_gpu.cu
     cuTensorHandle_gpu.cu
@@ -33,3 +31,12 @@ target_sources(cytnx
     cuComplexmem_gpu.cu
     cuReduce_gpu.cu
   )
+
+# Keep experimental L2 kernel candidates out of normal Cytnx release builds.
+# The production CUDA get backend remains PR #1230's unmodified path.
+if(RUN_BENCHMARKS)
+  target_sources(cytnx PRIVATE
+    cuGetElems_contiguous_gpu_bench.hpp
+    cuGetElems_contiguous_gpu_bench.cu
+  )
+endif()
