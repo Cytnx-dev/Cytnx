@@ -227,13 +227,13 @@ namespace cytnx {
       cytnx_error_msg(in.rank() != 2, "[cuQr] the input must be a rank-2 tensor, got rank %d.\n",
                       static_cast<int>(in.rank()));
       cytnx_error_msg(!in.is_contiguous(), "[cuQr] the input must be contiguous.%s", "\n");
-      const cytnx_uint64 rows = in.shape()[0];
-      const cytnx_uint64 cols = in.shape()[1];
-      const cytnx_uint64 rank_bound = std::min(rows, cols);
+      const std::uint64_t rows = in.shape()[0];
+      const std::uint64_t cols = in.shape()[1];
+      const std::uint64_t rank_bound = std::min(rows, cols);
       cytnx_error_msg(rank_bound == 0, "[cuQr] the input must not have a zero extent.%s", "\n");
 
       // cusolverDn<t>geqrf / orgqr / ungqr take 32-bit int dimensions and have no 64-bit variant.
-      const cytnx_uint64 int_max = static_cast<cytnx_uint64>(std::numeric_limits<int>::max());
+      const std::uint64_t int_max = static_cast<std::uint64_t>(std::numeric_limits<int>::max());
       cytnx_error_msg(rows > int_max || cols > int_max,
                       "[cuQr] matrix of shape (%llu, %llu) exceeds the 32-bit dimension limit "
                       "(%d) of the cuSOLVER QR routines.\n",

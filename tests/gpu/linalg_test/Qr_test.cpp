@@ -2,6 +2,7 @@
 #include <cmath>
 #include <complex>
 #include <cstddef>
+#include <cstdint>
 #include <random>
 #include <string>
 #include <vector>
@@ -99,8 +100,8 @@ namespace cytnx {
 
       Tensor to_tensor(const HostMatrix& in, unsigned int dtype) {
         Tensor out({in.rows, in.cols}, dtype, Device.cpu);
-        for (cytnx_uint64 i = 0; i < in.rows; ++i) {
-          for (cytnx_uint64 j = 0; j < in.cols; ++j) {
+        for (std::uint64_t i = 0; i < in.rows; ++i) {
+          for (std::uint64_t j = 0; j < in.cols; ++j) {
             const Complex value = in(i, j);
             if (dtype == Type.ComplexDouble) {
               out.at<cytnx_complex128>({i, j}) = value;
@@ -142,8 +143,8 @@ namespace cytnx {
         EXPECT_EQ(host.shape().size(), 2u);
         if (host.shape().size() != 2) return HostMatrix(0, 0);
         HostMatrix out(host.shape()[0], host.shape()[1]);
-        for (cytnx_uint64 i = 0; i < out.rows; ++i)
-          for (cytnx_uint64 j = 0; j < out.cols; ++j) out(i, j) = host_element(host, {i, j});
+        for (std::uint64_t i = 0; i < out.rows; ++i)
+          for (std::uint64_t j = 0; j < out.cols; ++j) out(i, j) = host_element(host, {i, j});
         return out;
       }
 
@@ -215,7 +216,7 @@ namespace cytnx {
 
       void expect_output_layout(const std::vector<Tensor>& out,
                                 const std::vector<cytnx_uint64>& shape, unsigned int dtype) {
-        const cytnx_uint64 rank_bound = std::min(shape[0], shape[1]);
+        const std::uint64_t rank_bound = std::min(shape[0], shape[1]);
         ASSERT_EQ(out.size(), 2u);
         EXPECT_EQ(out[0].shape(), std::vector<cytnx_uint64>({shape[0], rank_bound}));
         EXPECT_EQ(out[1].shape(), std::vector<cytnx_uint64>({rank_bound, shape[1]}));
@@ -416,13 +417,13 @@ namespace cytnx {
 
       // Dense UniTensor: the first rowrank legs are the rows. Checks labels, shapes and, through
       // the blocks reshaped to matrices, Q^H Q = I and Q R = A.
-      void check_dense_unitensor(cytnx_uint64 rowrank) {
+      void check_dense_unitensor(std::uint64_t rowrank) {
         SCOPED_TRACE("rowrank " + std::to_string(rowrank));
         const std::vector<cytnx_uint64> shape = {3, 4, 5};
-        cytnx_uint64 rows = 1;
-        for (cytnx_uint64 i = 0; i < rowrank; ++i) rows *= shape[i];
-        const cytnx_uint64 cols = 60 / rows;
-        const cytnx_uint64 rank_bound = std::min(rows, cols);
+        std::uint64_t rows = 1;
+        for (std::uint64_t i = 0; i < rowrank; ++i) rows *= shape[i];
+        const std::uint64_t cols = 60 / rows;
+        const std::uint64_t rank_bound = std::min(rows, cols);
 
         const HostMatrix a = random_matrix(rows, cols, true, 61);
         Tensor block = to_tensor(a, Type.ComplexDouble).reshape({3, 4, 5});
