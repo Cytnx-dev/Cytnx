@@ -1,4 +1,6 @@
 #include "cuMaxMin_internal.hpp"
+
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
@@ -430,8 +432,10 @@ namespace cytnx {
 
       if (NBlocks == 1) {
         cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, in, Nelems);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMax_kernel);
       } else {
         cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk, in, Nelems);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMax_kernel);
       }
       Nelems = NBlocks;
 
@@ -441,11 +445,13 @@ namespace cytnx {
 
         if (NBlocks == 1) {
           cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, dblk, Nelems);
+          CYTNX_CHECK_CUDA_LAUNCH(cuMax_kernel);
         } else {
           T *dblk2;
           cudaMalloc((void **)&dblk2, NBlocks * sizeof(T));
           // do something:
           cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
+          CYTNX_CHECK_CUDA_LAUNCH(cuMax_kernel);
 
           swap(dblk2, dblk);  // swap new data to old data, and free the old
           cudaFree(dblk2);
@@ -468,8 +474,10 @@ namespace cytnx {
 
       if (NBlocks == 1) {
         cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, in, Nelems);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMin_kernel);
       } else {
         cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk, in, Nelems);
+        CYTNX_CHECK_CUDA_LAUNCH(cuMin_kernel);
       }
       Nelems = NBlocks;
 
@@ -479,11 +487,13 @@ namespace cytnx {
 
         if (NBlocks == 1) {
           cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, dblk, Nelems);
+          CYTNX_CHECK_CUDA_LAUNCH(cuMin_kernel);
         } else {
           T *dblk2;
           cudaMalloc((void **)&dblk2, NBlocks * sizeof(T));
           // do something:
           cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
+          CYTNX_CHECK_CUDA_LAUNCH(cuMin_kernel);
 
           swap(dblk2, dblk);  // swap new data to old data, and free the old
           cudaFree(dblk2);

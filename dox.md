@@ -141,14 +141,29 @@ See \link cytnx::linalg cytnx::linalg \endlink for further details
 
     \note The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.
 
-## conda install
-    **[Currently Linux only]**
+## Installation
+    Cytnx publishes prebuilt Python wheels for CPython 3.9-3.14 on Linux
+    (x86_64, aarch64) and macOS (Apple silicon and Intel). There is no native
+    Windows wheel; use WSL.
 
-    without CUDA
-    * python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx
+    with [Pixi](https://pixi.sh), which is what we recommend. Pin a Python
+    version Cytnx has wheels for; a bare `pixi add python` takes a newer
+    CPython than the wheels cover and the resolve fails
+    * pixi add "python=3.12"
+    * pixi add --pypi cytnx
 
-    with CUDA
-    * python 3.6/3.7/3.8: conda install -c kaihsinwu cytnx_cuda
+    with pip, inside a virtual environment created from one of those Python
+    versions
+    * pip install cytnx
+
+    The CUDA build is a separate `cytnx-cuda` package, currently published on
+    the nightly index for Linux x86_64 only:
+    * pixi add --pypi cytnx-cuda --index https://pypi.anaconda.org/cytnx-nightly-wheels/simple
+
+    The wheels carry only the Python extension. For the C++ API, build the
+    library with CMake and consume it via `find_package(Cytnx)`. See the
+    [installation guide](https://cytnx-dev.github.io/Cytnx/dev/install.html)
+    for the full instructions.
 
 ## Some snippets:
 

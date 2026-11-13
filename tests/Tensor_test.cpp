@@ -418,6 +418,46 @@ namespace cytnx {
         test::AreNearlyEqTensor(tmp, tslice1);
       }
 
+      // A Range accessor whose bounds leave the dimension must be rejected instead of reading
+      // past the end of the storage.
+      TEST_F(TensorTest, GetRangeOutOfBounds) {
+        // permuted shape is (5, 3, 4, 6); axis 1 has length 3.
+        Tensor permuted = tar3456.permute({2, 0, 1, 3});
+        ASSERT_EQ(permuted.shape()[1], 3);
+        ASSERT_FALSE(permuted.is_contiguous());
+
+        // upper bound == dimension is the last valid (exclusive) bound
+        Tensor ok = permuted(":", "1:3", ":", ":");
+        ASSERT_EQ(ok.shape(), (std::vector<cytnx_uint64>{5, 2, 4, 6}));
+        for (cytnx_uint64 a = 0; a < 5; a++)
+          for (cytnx_uint64 b = 0; b < 2; b++)
+            for (cytnx_uint64 c = 0; c < 4; c++)
+              for (cytnx_uint64 d = 0; d < 6; d++)
+                // permuted(a, b, c, d) == tar3456(b, c, a, d) == b*120 + c*30 + a*6 + d
+                EXPECT_EQ(ok.at<cytnx_complex128>({a, b, c, d}),
+                          cytnx_complex128((b + 1) * 120 + c * 30 + a * 6 + d, 0));
+
+        // upper bound past the dimension
+        EXPECT_THROW(Tensor(permuted(":", "2:4", ":", ":")), std::logic_error);
+        EXPECT_THROW(Tensor(permuted(":", ":4", ":", ":")), std::logic_error);
+        EXPECT_THROW(
+          permuted.get({Accessor::all(), Accessor::range(0, 4), Accessor::all(), Accessor::all()}),
+          std::logic_error);
+        // lower bound at or past the dimension
+        EXPECT_THROW(Tensor(permuted(":", "3:4", ":", ":")), std::logic_error);
+        EXPECT_THROW(Tensor(permuted(":", "3:3", ":", ":")), std::logic_error);
+        // negative step: lower bound past the dimension
+        EXPECT_THROW(permuted.get({Accessor::all(), Accessor::range(3, 0, -1), Accessor::all(),
+                                   Accessor::all()}),
+                     std::logic_error);
+        // the same check protects set()
+        Tensor rhs = zeros({5, 2, 4, 6}, Type.ComplexDouble);
+        EXPECT_THROW(
+          permuted.set({Accessor::all(), Accessor::range(2, 4), Accessor::all(), Accessor::all()},
+                       rhs),
+          std::logic_error);
+      }
+
       TEST_F(TensorTest, Set) {
         auto tmp = tar3456.clone();
         tar3456(1, 2, 3, 4) = -1999;

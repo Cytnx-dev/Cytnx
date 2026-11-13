@@ -6,7 +6,7 @@ import collections.abc
 import cytnx.cytnx
 import numpy
 import typing
-__all__: list[str] = ['Abs', 'Abs_', 'Arnoldi', 'Conj', 'Conj_', 'Det', 'Diag', 'Directsum', 'Dot', 'Eig', 'Eigh', 'Exp', 'ExpH', 'ExpM', 'Exp_', 'Expf', 'Expf_', 'Gemm', 'Gemm_', 'Ger', 'Gesvd', 'Gesvd_truncate', 'Hosvd', 'Inv', 'InvM', 'InvM_', 'Inv_', 'Kron', 'Lanczos', 'Lanczos_Exp', 'Lstsq', 'Matmul', 'Matmul_dg', 'Max', 'Min', 'Norm', 'Outer', 'Pow', 'Pow_', 'Qdr', 'Qr', 'Rand_isometry', 'Rsvd', 'Sum', 'Svd', 'Svd_truncate', 'Tensordot', 'Tensordot_dg', 'Trace', 'Tridiag', 'Vectordot', 'norm']
+__all__: list[str] = ['Abs', 'Abs_', 'Arnoldi', 'Conj', 'Conj_', 'Det', 'Diag', 'Directsum', 'Dot', 'Eig', 'Eigh', 'Eigh_truncate', 'Exp', 'ExpH', 'ExpM', 'Exp_', 'Expf', 'Expf_', 'Gemm', 'Gemm_', 'Ger', 'Gesvd', 'Gesvd_truncate', 'Hosvd', 'Inv', 'InvM', 'InvM_', 'Inv_', 'Kron', 'Lanczos', 'Lanczos_Exp', 'Lstsq', 'Matmul', 'Matmul_dg', 'Max', 'Min', 'Norm', 'Outer', 'Pow', 'Pow_', 'Qdr', 'Qr', 'Rand_isometry', 'Rsvd', 'Sum', 'Svd', 'Svd_truncate', 'Tensordot', 'Tensordot_dg', 'Trace', 'Tridiag', 'Vectordot', 'norm']
 def Abs(Tn: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
     ...
 def Abs_(Tn: cytnx.cytnx.Tensor) -> None:
@@ -48,6 +48,12 @@ def Eigh(Tin: cytnx.cytnx.Tensor, is_V: bool = True, row_v: bool = False) -> lis
     ...
 @typing.overload
 def Eigh(Tin: cytnx.cytnx.UniTensor, is_V: bool = True, row_v: bool = False) -> list[cytnx.cytnx.UniTensor]:
+    ...
+@typing.overload
+def Eigh_truncate(Tin: cytnx.cytnx.UniTensor, keepdim: typing.SupportsInt | typing.SupportsIndex, err: typing.SupportsFloat | typing.SupportsIndex = 0.0, is_V: bool = True, return_err: typing.SupportsInt | typing.SupportsIndex = 0, mindim: typing.SupportsInt | typing.SupportsIndex = 1) -> list[cytnx.cytnx.UniTensor]:
+    ...
+@typing.overload
+def Eigh_truncate(Tin: cytnx.cytnx.UniTensor, keepdim: typing.SupportsInt | typing.SupportsIndex, min_blockdim: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], err: typing.SupportsFloat | typing.SupportsIndex = 0.0, is_V: bool = True, return_err: typing.SupportsInt | typing.SupportsIndex = 0, mindim: typing.SupportsInt | typing.SupportsIndex = 1) -> list[cytnx.cytnx.UniTensor]:
     ...
 def Exp(Tin: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
     ...

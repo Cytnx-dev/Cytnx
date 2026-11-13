@@ -3,6 +3,7 @@ import collections.abc
 import cytnx.utils
 import numpy
 import typing
+import typing_extensions
 from . import Device
 from . import algo
 from . import linalg
@@ -2321,91 +2322,97 @@ class UniTensor:
     def get_block(self, idx: typing.SupportsInt | typing.SupportsIndex = 0) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, qnum: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
+    def get_block(self, qidx: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
+    def get_block(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, qnum: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
+    def get_block(self, qidx: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
+    def get_block(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, qnum: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
+    def get_block(self, qidx: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
+    def get_block(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, qnum: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
+    def get_block(self, qidx: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
+    def get_block(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, qnum: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
+    def get_block(self, qidx: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
+    def get_block(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, qnum: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
+    def get_block(self, qidx: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
+    def get_block(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, qnum: collections.abc.Sequence[int], force: bool = False) -> Tensor:
+    def get_block(self, qidx: collections.abc.Sequence[int], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[int], force: bool = False) -> Tensor:
+    def get_block(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[int], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, qnum: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
+    def get_block(self, *args, **kwargs) -> typing.Any:
         ...
     @typing.overload
-    def get_block_(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
+    def get_block_(self, qidx: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, qnum: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
+    def get_block_(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.int64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
+    def get_block_(self, qidx: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, qnum: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
+    def get_block_(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.uint64], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
+    def get_block_(self, qidx: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, qnum: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
+    def get_block_(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.int32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
+    def get_block_(self, qidx: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, qnum: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
+    def get_block_(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.uint32], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
+    def get_block_(self, qidx: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, qnum: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
+    def get_block_(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.int16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
+    def get_block_(self, qidx: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, qnum: collections.abc.Sequence[int], force: bool = False) -> Tensor:
+    def get_block_(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[numpy.uint16], force: bool = False) -> Tensor:
         ...
     @typing.overload
-    def get_block_(self, labels: collections.abc.Sequence[str], qnum: collections.abc.Sequence[int], force: bool = False) -> Tensor:
+    def get_block_(self, qidx: collections.abc.Sequence[int], force: bool = False) -> Tensor:
+        ...
+    @typing.overload
+    def get_block_(self, labels: collections.abc.Sequence[str], qidx: collections.abc.Sequence[int], force: bool = False) -> Tensor:
         ...
     @typing.overload
     def get_block_(self, idx: typing.SupportsInt | typing.SupportsIndex = 0) -> Tensor:
+        ...
+    @typing.overload
+    def get_block_(self, *args, **kwargs) -> typing.Any:
         ...
     def get_blocks(self) -> list[Tensor]:
         ...
@@ -2822,7 +2829,7 @@ def Contract(TNs: collections.abc.Sequence[UniTensor], order: str = '', optimal:
     ...
 def Contracts(TNs: collections.abc.Sequence[UniTensor], order: str = '', optimal: bool = True) -> UniTensor:
     ...
-def _from_numpy(arg0: collections.abc.Buffer) -> Tensor:
+def _from_numpy(arg0: typing_extensions.Buffer) -> Tensor:
     ...
 @typing.overload
 def arange(size: typing.SupportsInt | typing.SupportsIndex) -> Tensor:

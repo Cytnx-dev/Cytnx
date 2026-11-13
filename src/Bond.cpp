@@ -433,12 +433,10 @@ namespace cytnx {
         "[ERROR][get_fermion_parity] the qnum specify does not match the number of symmetries.%s",
         "\n");
 
+      // the total parity is the XOR over the parities of all symmetries of the bond
       fermionParity out = EVEN;
-      fermionParity curr = EVEN;
       for (cytnx_uint64 i = 0; i < qnum.size(); i++) {
-        out = static_cast<fermionParity>(
-          out != this->_syms[i].get_fermion_parity(
-                   qnum[i]));  // false (ODD) if the symmetries are not equal
+        out = static_cast<fermionParity>(out != this->_syms[i].get_fermion_parity(qnum[i]));
       }
 
       return out;

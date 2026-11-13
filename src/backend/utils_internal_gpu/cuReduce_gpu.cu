@@ -1,5 +1,7 @@
 #include "cuReduce_gpu.hpp"
 
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+
 #include <type_traits>
 
 #include "cuda/std/complex"
@@ -101,8 +103,10 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void**)&dblk, NBlocks * sizeof(*dblk)));
       if (NBlocks == 1) {
         cuReduce_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, in, Nelems);
+        CYTNX_CHECK_CUDA_LAUNCH(cuReduce_kernel);
       } else {
         cuReduce_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk, in, Nelems);
+        CYTNX_CHECK_CUDA_LAUNCH(cuReduce_kernel);
       }
       Nelems = NBlocks;
 
@@ -112,10 +116,12 @@ namespace cytnx {
 
         if (NBlocks == 1) {
           cuReduce_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, dblk, Nelems);
+          CYTNX_CHECK_CUDA_LAUNCH(cuReduce_kernel);
         } else {
           CudaT* dblk2;
           cudaMalloc((void**)&dblk2, NBlocks * sizeof(*dblk2));
           cuReduce_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
+          CYTNX_CHECK_CUDA_LAUNCH(cuReduce_kernel);
 
           swap(dblk2, dblk);
           cudaFree(dblk2);

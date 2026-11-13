@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check that the release version metadata is internally consistent.
 
-A Cytnx release is described by three pieces of metadata that must agree;
+A Cytnx release is described by four pieces of metadata that must agree;
 when they drift, the published artifacts contradict each other:
 
   * ``version.cmake`` carries the numeric ``MAJOR.MINOR.PATCH`` that
@@ -17,6 +17,12 @@ when they drift, the published artifacts contradict each other:
     ``docs.yml`` deploys the HTML to a directory named after the tag with
     the leading ``v`` stripped (``v1.1.0`` -> ``gh-pages/1.1.0/``), so the
     matching ``versions.json`` slug must be ``1.1.0``, never ``v1.1.0``.
+  * ``CITATION.cff`` carries the software ``version`` and the
+    ``date-released`` for it. GitHub's "Cite this repository" widget and
+    every downstream citation tool read these, so a stale ``version`` tells
+    users to cite a release that is not the one they installed. No build
+    step reads this file, which is exactly how it sat at ``1.0.0`` through
+    three later releases.
 
 Checks performed:
 
@@ -26,7 +32,12 @@ Checks performed:
   2. The ``version.cmake`` version appears as a ``versions.json`` slug, so
      the docs for the version being shipped are reachable from the
      switcher.
-  3. With ``--tag vX.Y.Z`` (passed by CI on a tag push): the tag without
+  3. ``CITATION.cff``'s ``version`` equals the ``version.cmake``
+     version, and its ``date-released`` parses as a ``YYYY-MM-DD`` date.
+     The date's *value* is deliberately not checked: at release-prep time
+     the tag does not exist yet, so nothing in the tree records when the
+     release actually went out.
+  4. With ``--tag vX.Y.Z`` (passed by CI on a tag push): the tag without
      its leading ``v`` equals the ``version.cmake`` version -- otherwise
      the PyPI and conda package version would not match the release tag --
      and is present as a ``versions.json`` slug.
@@ -39,6 +50,7 @@ It prints every problem it finds and exits non-zero if any remain.
 """
 
 import argparse
+import datetime
 import json
 import pathlib
 import re
@@ -47,6 +59,7 @@ import sys
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 VERSION_CMAKE = REPO_ROOT / "version.cmake"
 VERSIONS_JSON = REPO_ROOT / "docs" / "site_root" / "versions.json"
+CITATION_CFF = REPO_ROOT / "CITATION.cff"
 
 # Slugs that are not numbered releases: they are exempt from the
 # "must be numeric" rule and never need to equal version.cmake.
@@ -90,6 +103,27 @@ def read_slugs() -> list[str]:
     return slugs
 
 
+def read_citation_field(field: str) -> str:
+    """Return a top-level scalar field from CITATION.cff.
+
+    Parsed with a regex rather than PyYAML so this script keeps running on a
+    bare runner with no pip install step, the way the workflow invokes it.
+    The pattern is anchored at the start of a line, so it reads only
+    top-level keys: an indented key of the same name nested under, say, a
+    future ``preferred-citation`` block is not mistaken for the software's
+    own metadata, and ``cff-version`` is not mistaken for ``version``.
+    """
+    text = CITATION_CFF.read_text()
+    match = re.search(
+        rf"""^{re.escape(field)}:[ \t]*(?:'([^']*)'|"([^"]*)"|([^\s#]+))[ \t]*$""",
+        text,
+        re.MULTILINE,
+    )
+    if not match:
+        sys.exit(f"could not parse top-level '{field}' from {CITATION_CFF}")
+    return next(group for group in match.groups() if group is not None)
+
+
 def looks_like_v_prefixed_release(slug: str) -> bool:
     return slug.startswith("v") and slug[1:2].isdigit()
 
@@ -130,7 +164,27 @@ def main() -> None:
             f"docs for this release are reachable from the version switcher."
         )
 
-    # Check 3: on a tag push, the tag must agree with both.
+    # Check 3: the citation metadata must name the version in the tree.
+    citation_version = read_citation_field("version")
+    if citation_version != cmake_version:
+        errors.append(
+            f"CITATION.cff says version {citation_version} but version.cmake is "
+            f"{cmake_version}. The citation metadata would tell users to cite a "
+            f"release other than the one they installed. Set CITATION.cff's "
+            f"version to {cmake_version} and its date-released to the date that "
+            f"release ships."
+        )
+
+    citation_date = read_citation_field("date-released")
+    try:
+        datetime.date.fromisoformat(citation_date)
+    except ValueError:
+        errors.append(
+            f"CITATION.cff date-released is {citation_date!r}, which is not a "
+            f"YYYY-MM-DD date. Citation tools parse this field as a date."
+        )
+
+    # Check 4: on a tag push, the tag must agree with both.
     if args.tag:
         tag = args.tag
         tag_version = tag[1:] if tag.startswith("v") else tag
@@ -155,7 +209,10 @@ def main() -> None:
             print(f"  - {err}", file=sys.stderr)
         sys.exit(1)
 
-    summary = f"Release metadata OK: version.cmake={cmake_version}"
+    summary = (
+        f"Release metadata OK: version.cmake={cmake_version}, "
+        f"CITATION.cff={citation_version} ({citation_date})"
+    )
     if args.tag:
         summary += f", tag={args.tag}"
     summary += f", versions.json slugs={slugs}"
