@@ -126,10 +126,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # We intentionally pin specific macOS runners; do not blindly move to
-        # newer images because Homebrew dylib minos can force a higher wheel
-        # deployment target and break delocate compatibility for lower targets.
-        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel]
+        # macOS 14 runners were retired on 2026-11-02. Pin macOS 15 to
+        # retain native ARM64 wheels alongside macos-15-intel's x86_64 wheels.
+        # tools/cibuildwheel_before_all_macos.sh probes conda-forge dylibs
+        # to derive the deployment target independently of the runner OS.
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-15, macos-15-intel]
 
     steps:
     - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
@@ -161,12 +162,15 @@ jobs:
       # of truth for build-pipeline deps in pyproject.toml without
       # triggering scikit-build-core to compile cytnx itself before
       # cibuildwheel does so under its own isolated environment.
-      # `--group` requires pip 25.1+; the runner-bundled pip is
-      # upgraded first to make the requirement portable across
-      # runner image versions.
+      # `--group` requires pip 25.1+, so the runner-bundled pip is
+      # upgraded first. The upgrade installs only the hash-pinned wheel
+      # in .github/pip-bootstrap-requirements.txt, because the bundled
+      # pip may still trust the compromised eMudhra intermediate CA
+      # certificates and so cannot be trusted to fetch its own
+      # replacement over HTTPS alone.
       run: |
-        python -m pip install --upgrade pip
-        pip install --group release-tools
+        python -m pip install --require-hashes --no-deps -r .github/pip-bootstrap-requirements.txt
+        python -m pip install --group release-tools
 
     - name: Stamp pyproject.toml for nightly release
       if: needs.DetermineChannel.outputs.channel == 'nightly'
@@ -208,7 +212,7 @@ jobs:
         rm -f "${HOME}/.ccache/.cytnx_first_wheel_build_done"
 
     - name: Build Wheels
-      uses: pypa/cibuildwheel@63fd63b352a9a8bdcc24791c9dbee952ee9a8abc  # v3.3.0
+      uses: pypa/cibuildwheel@b9e566a2b284570af229f6c2a33673410d0389a3  # v4.3.4
       env:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
@@ -229,6 +233,18 @@ jobs:
         CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
+        # Compile HPTT's hand-vectorized kernels for the architecture this
+        # wheel targets. Every matrix entry builds natively (cibuildwheel's
+        # default CIBW_ARCHS=auto), so runner.arch names the wheel's target:
+        # ubuntu-24.04-arm and macos-15 are ARM64, the other two X64. HPTT
+        # fails the configure if an option reaches an architecture it cannot
+        # serve, so a matrix entry added without revisiting this line errors
+        # out rather than silently shipping the scalar fallback.
+        #
+        # scikit-build-core reads cmake.define from SKBUILD_CMAKE_DEFINE; the
+        # Linux wheels build inside a container, so pyproject.toml's
+        # [tool.cibuildwheel.linux].environment-pass forwards this in.
+        SKBUILD_CMAKE_DEFINE: HPTT_ENABLE_${{ runner.arch == 'ARM64' && 'ARM' || 'AVX' }}=ON
         # CYTNX_VERSION_TAG is sourced from the DetermineChannel job
         # output so every matrix entry sees the same dev tag for one
         # workflow run. It is the empty string for stable builds, in
@@ -258,7 +274,7 @@ jobs:
         merge-multiple: true
 
     - name: Publish package distributions to PyPI
-      uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
+      uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3
       with:
         packages-dir: dist
 

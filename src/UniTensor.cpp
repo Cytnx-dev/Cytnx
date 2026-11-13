@@ -7,9 +7,6 @@
 #include "linalg.hpp"
 #include "random.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   namespace {
     constexpr unsigned int kLegacyUniTensorMagic = 555;
@@ -272,4 +269,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif

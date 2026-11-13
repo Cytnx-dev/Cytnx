@@ -143,6 +143,13 @@ namespace cytnx {
       cytnx_int64 r_min = this->_min < 0 ? (this->_min + dim) % dim : this->_min;
       cytnx_int64 r_max = this->_max < 0 ? (this->_max + dim) % dim : this->_max;
       cytnx_error_msg((r_min < 0 || r_max < 0), "%s", "[ERROR] index is out of bounds\n");
+      // r_max is an exclusive bound, so it may equal dim; r_min is an index and must be < dim.
+      cytnx_error_msg(
+        r_min >= static_cast<cytnx_int64>(dim) || r_max > static_cast<cytnx_int64>(dim),
+        "[ERROR] range [%lld, %lld) is out of bounds for a dimension of length "
+        "%llu\n",
+        static_cast<long long>(r_min), static_cast<long long>(r_max),
+        static_cast<unsigned long long>(dim));
       cytnx_error_msg((r_max - r_min) / this->_step <= 0, "%s",
                       "[ERROR] upper bound and larger bound inconsistent with step sign resulting "
                       "a null Tensor.");

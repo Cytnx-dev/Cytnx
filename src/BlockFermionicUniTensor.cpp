@@ -17,9 +17,6 @@
 #include "utils/vec_concatenate.hpp"
 #include "utils/vec_print.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
   namespace {
     void save_symmetry_cache(std::fstream &f, const std::vector<Symmetry> &syms) {
@@ -1359,6 +1356,8 @@ namespace cytnx {
       std::vector<cytnx_uint64> lidx(lhs_rank);
       std::vector<cytnx_uint64> ridx(rhs_rank);
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
+        // b enumerates the ouptut blocks;
+        // idl[0] and idr[0] are the block indices in the left and right tensors
         const auto &outer_idx = tmp->_inner_to_outer_idx[b];
         std::copy_n(outer_idx.begin(), lhs_rank, lidx.begin());
         std::copy_n(outer_idx.begin() + lhs_rank, rhs_rank, ridx.begin());
@@ -1394,9 +1393,8 @@ namespace cytnx {
           cytnx_error_msg(out_block.shape() != tmp->_blocks[b].shape(),
                           "[ERROR][BlockFermionicUniTensors][contract] Mismatching shape!%s", "\n");
           tmp->_blocks[b] = out_block;
-          const bool lhs_signflip = this->_signflip[b];
-          const bool rhs_signflip = signflip_rhs[b];
-          tmp->_signflip[b] = (lhs_signflip == rhs_signflip) ? EVEN : ODD;
+          // the output sign is EVEN if the two source-block signs are EVEN-EVEN or ODD-ODD
+          tmp->_signflip[b] = (this->_signflip[idl[0]] == signflip_rhs[idr[0]]) ? EVEN : ODD;
         }
       }
 
@@ -1626,11 +1624,11 @@ namespace cytnx {
               if (this->_blocks[a].device() != this->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(all_sub_tensor_same_dtype,
+            cytnx_error_msg(!all_sub_tensor_same_dtype,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors with different dtype.%s",
                             "\n");
-            cytnx_error_msg(all_sub_tensor_same_device,
+            cytnx_error_msg(!all_sub_tensor_same_device,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors on different device.%s",
                             "\n");
@@ -1642,16 +1640,16 @@ namespace cytnx {
               if (Rtn->_blocks[a].device() != Rtn->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(all_sub_tensor_same_dtype,
+            cytnx_error_msg(!all_sub_tensor_same_dtype,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors with different dtype.%s",
                             "\n");
-            cytnx_error_msg(all_sub_tensor_same_device,
+            cytnx_error_msg(!all_sub_tensor_same_device,
                             "[ERROR][BlockFermionicUniTensors][contract] Cannot perform "
                             "contraction on sub-Tensors on different device.%s",
                             "\n");
           }
-  #ifdef UNI_MKL
+#ifdef UNI_MKL
           if (common_dtype > 4) {
             // Integer dtype: Gemm_Batch only supports fp/complex (dtype <= 4); fall back to Matmul.
             for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -1759,7 +1757,7 @@ namespace cytnx {
             }
           }  // end else (common_dtype <= 4)
         }
-  #else
+#else
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
@@ -1809,7 +1807,7 @@ namespace cytnx {
           //   }
           // }
         }
-  #endif
+#endif
 
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
@@ -1899,7 +1897,7 @@ namespace cytnx {
     if (ida < tmpRk) this->_rowrank--;
     if (idb < tmpRk) this->_rowrank--;
 
-    // make sure BRA_KET comes before BD_BRA to avoid supertrace
+    // make sure the BD_BRA bond comes before the BD_KET bond to avoid a supertrace
     if (this->_bonds[ida].type() == BD_KET) std::swap(ida, idb);
     // permute such that idb comes right after ida
     std::vector<cytnx_int64> perm(this->rank());
@@ -2568,30 +2566,40 @@ namespace cytnx {
       for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
         if (mask[b] == 1) continue;
         mask[b] = 1;
-        new_blocks.push_back(this->_blocks[b]);
-        new_inner_to_outer_idx.push_back(tmp_inner_to_outer_idx[b]);
-        new_signs.push_back(this->_signflip[b]);
+        // every block that lands in the same grouped sector as block b
+        std::vector<std::size_t> members = {static_cast<std::size_t>(b)};
         for (cytnx_int64 a = b + 1; a < this->_blocks.size(); a++) {
           if (mask[a] == 1) continue;
           if (tmp_inner_to_outer_idx[a] == tmp_inner_to_outer_idx[b]) {
-            // need to combine two!
-            // checking which bonds do not need to be combined!
             mask[a] = 1;
-            if (new_signs.back() == this->_signflip[a]) {
-              new_blocks.back() =
-                linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
-              new_signs.back() = this->_signflip[a];
-            } else if (new_signs.back()) {
-              new_blocks.back() =
-                linalg::Directsum(-new_blocks.back(), this->_blocks[a], no_combine);
-              new_signs.back() = false;
-            } else {  // this->_signflip[a] == true
-              new_blocks.back() =
-                linalg::Directsum(new_blocks.back(), -this->_blocks[a], no_combine);
-              new_signs.back() = false;
-            }
+            members.push_back(a);
           }
         }
+        // Direct-sum in the order of the old sector index, which is the state order
+        // Bond::group_duplicates gives the grouped sector. The block order is not that order
+        // after a permute (#630).
+        const std::size_t dup_bond = dup_bond_idxs[bn];
+        std::stable_sort(members.begin(), members.end(), [&](std::size_t lhs, std::size_t rhs) {
+          return this->_inner_to_outer_idx[lhs][dup_bond] <
+                 this->_inner_to_outer_idx[rhs][dup_bond];
+        });
+        Tensor grouped = this->_blocks[members[0]];
+        bool grouped_sign = this->_signflip[members[0]];
+        for (std::size_t m = 1; m < members.size(); m++) {
+          const std::size_t a = members[m];
+          if (grouped_sign == this->_signflip[a]) {
+            grouped = linalg::Directsum(grouped, this->_blocks[a], no_combine);
+          } else if (grouped_sign) {
+            grouped = linalg::Directsum(-grouped, this->_blocks[a], no_combine);
+            grouped_sign = false;
+          } else {  // this->_signflip[a] == true
+            grouped = linalg::Directsum(grouped, -this->_blocks[a], no_combine);
+            grouped_sign = false;
+          }
+        }
+        new_blocks.push_back(grouped);
+        new_inner_to_outer_idx.push_back(tmp_inner_to_outer_idx[b]);
+        new_signs.push_back(grouped_sign);
       }  // traversal each block!
 
       this->_blocks = new_blocks;
@@ -2862,5 +2870,3 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

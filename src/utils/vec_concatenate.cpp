@@ -1,36 +1,19 @@
 #include "utils/vec_concatenate.hpp"
+
+#include <string>
 #include <vector>
-#include <cstring>
+
+#include "Type.hpp"
+#include "cytnx_error.hpp"
+
 namespace cytnx {
 
   template <class T>
   std::vector<T> vec_concatenate(const std::vector<T> &inL, const std::vector<T> &inR) {
-    std::vector<T> out(inL.size() + inR.size());
-    memcpy(&out[0], &inL[0], sizeof(T) * inL.size());
-    memcpy(&out[inL.size()], &inR[0], sizeof(T) * inR.size());
-    return out;
-  }
-  template <>
-  std::vector<bool> vec_concatenate(const std::vector<bool> &inL, const std::vector<bool> &inR) {
-    std::vector<bool> out(inL.size() + inR.size());
-    // vector bool does not guarentee concurrent modification
-    for (cytnx_uint64 i = 0; i < inL.size(); i++) {
-      out[i] = inL[i];
-    }
-    for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
-
-    return out;
-  }
-  template <>
-  std::vector<std::string> vec_concatenate(const std::vector<std::string> &inL,
-                                           const std::vector<std::string> &inR) {
-    std::vector<std::string> out(inL.size() + inR.size());
-    // vector bool does not guarentee concurrent modification
-    for (cytnx_uint64 i = 0; i < inL.size(); i++) {
-      out[i] = inL[i];
-    }
-    for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
-
+    std::vector<T> out;
+    out.reserve(inL.size() + inR.size());
+    out.insert(out.end(), inL.begin(), inL.end());
+    out.insert(out.end(), inR.begin(), inR.end());
     return out;
   }
 
@@ -40,33 +23,10 @@ namespace cytnx {
                     "[ERROR][vec_concatenate_][Fromfile] You cannot store the result of "
                     "vec_concatenate_ to inL or inR.%s",
                     "\n");
-    out.resize(inL.size() + inR.size());
-    memcpy(&out[0], &inL[0], sizeof(T) * inL.size());
-    memcpy(&out[inL.size()], &inR[0], sizeof(T) * inR.size());
-  }
-  template <>
-  void vec_concatenate_(std::vector<bool> &out, const std::vector<bool> &inL,
-                        const std::vector<bool> &inR) {
-    cytnx_error_msg(&out == &inL or &out == &inR,
-                    "[ERROR][vec_concatenate_][Fromfile] You cannot store the result of "
-                    "vec_concatenate_ to inL or inR.%s",
-                    "\n");
-    out.resize(inL.size() + inR.size());
-    // vector bool does not guarentee concurrent modification
-    for (cytnx_uint64 i = 0; i < inL.size(); i++) out[i] = inL[i];
-    for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
-  }
-  template <>
-  void vec_concatenate_(std::vector<std::string> &out, const std::vector<std::string> &inL,
-                        const std::vector<std::string> &inR) {
-    cytnx_error_msg(&out == &inL or &out == &inR,
-                    "[ERROR][vec_concatenate_][Fromfile] You cannot store the result of "
-                    "vec_concatenate_ to inL or inR.%s",
-                    "\n");
-    out.resize(inL.size() + inR.size());
-    // vector bool does not guarentee concurrent modification
-    for (cytnx_uint64 i = 0; i < inL.size(); i++) out[i] = inL[i];
-    for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
+    out.clear();
+    out.reserve(inL.size() + inR.size());
+    out.insert(out.end(), inL.begin(), inL.end());
+    out.insert(out.end(), inR.begin(), inR.end());
   }
 
   template std::vector<cytnx_complex128> vec_concatenate(const std::vector<cytnx_complex128> &,
@@ -89,10 +49,10 @@ namespace cytnx {
                                                     const std::vector<cytnx_int16> &);
   template std::vector<cytnx_uint16> vec_concatenate(const std::vector<cytnx_uint16> &,
                                                      const std::vector<cytnx_uint16> &);
-  // template std::vector<std::string> vec_concatenate(const std::vector<std::string> &,
-  //                                                   const std::vector<std::string> &);
-  // template std::vector<cytnx_bool> vec_concatenate(const std::vector<cytnx_bool> &,const
-  // std::vector<cytnx_bool> &);
+  template std::vector<std::string> vec_concatenate(const std::vector<std::string> &,
+                                                    const std::vector<std::string> &);
+  template std::vector<cytnx_bool> vec_concatenate(const std::vector<cytnx_bool> &,
+                                                   const std::vector<cytnx_bool> &);
 
   template void vec_concatenate_(std::vector<cytnx_complex128> &out,
                                  const std::vector<cytnx_complex128> &,
@@ -116,8 +76,8 @@ namespace cytnx {
                                  const std::vector<cytnx_uint16> &);
   template void vec_concatenate_(std::vector<cytnx_int16> &out, const std::vector<cytnx_int16> &,
                                  const std::vector<cytnx_int16> &);
-  // template void vec_concatenate_(std::vector<std::string> &out, const std::vector<std::string> &,
-  //                                const std::vector<std::string> &);
-  // template void vec_concatenate_(std::vector<cytnx_bool> &out,const std::vector<cytnx_bool>
-  // &,const std::vector<cytnx_bool> &);
+  template void vec_concatenate_(std::vector<std::string> &out, const std::vector<std::string> &,
+                                 const std::vector<std::string> &);
+  template void vec_concatenate_(std::vector<cytnx_bool> &out, const std::vector<cytnx_bool> &,
+                                 const std::vector<cytnx_bool> &);
 }  // namespace cytnx

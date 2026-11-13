@@ -17,9 +17,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-#ifdef BACKEND_TORCH
-#else
-
 void physics_related_binding(py::module &m) {
   // [Submodule physics]
   pybind11::module m_physics = m.def_submodule("physics", "physics related.");
@@ -75,4 +72,3 @@ void physics_related_binding(py::module &m) {
     [](const UniTensor &gate_1q) -> UniTensor { return cytnx::qgates::cntl_gate_2q(gate_1q); },
     py::arg("gate_1q"));
 }
-#endif

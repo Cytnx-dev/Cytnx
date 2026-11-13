@@ -7,7 +7,7 @@ find_dependency(Boost CONFIG REQUIRED)
 # Conditional re-find of build-time PUBLIC imported-target deps.
 # Plain absolute-path link entries (e.g. ${LAPACK_LIBRARIES}, ${ARPACK_LIB})
 # do not need this — they were baked into INTERFACE_LINK_LIBRARIES as paths.
-# Imported targets (CUDA::*, OpenMP::*, Torch targets) only exist after the
+# Imported targets (CUDA::*, OpenMP::*) only exist after the
 # corresponding find_package runs in the consumer's project, so we recreate
 # them here when cytnx was built with the matching flag. The @VAR@ tokens
 # are expanded to the build-time value of each option by
@@ -22,10 +22,6 @@ if(@USE_HPTT@)
   # needs OpenMP to resolve libhptt's `__kmpc_*` / `omp_*` symbols. See
   # commit 5733a441 ("Propagate `-fopenmp` linking flag when using HPTT").
   find_dependency(OpenMP REQUIRED)
-endif()
-
-if(@BACKEND_TORCH@)
-  find_dependency(Torch REQUIRED)
 endif()
 
 if(NOT TARGET Cytnx::cytnx)

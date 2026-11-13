@@ -31,6 +31,12 @@ so that metadata must already be right when the tag is created:
   the leading `v` stripped** (`v1.1.0` → `gh-pages/1.1.0/`), so the
   `versions.json` slug must be the numeric `1.1.0`, never `v1.1.0`. A
   `v`-prefixed slug links to a directory that does not exist and serves a 404.
+- **`CITATION.cff` is read by people, not by a workflow.** Its `version` and
+  `date-released` are what GitHub's "Cite this repository" widget and every
+  downstream citation tool show. Nothing in the build consumes them, so a
+  stale `version` there is invisible until a user cites the wrong release --
+  which is how it sat at `1.0.0` through three later releases (1.0.1, 1.1.0,
+  1.1.1).
 
 ## Steps
 
@@ -50,25 +56,31 @@ so that metadata must already be right when the tag is created:
    is all that is needed. (`gh-pages/stable/` still exists as a permalink to
    the latest release docs, maintained by `docs.yml`.)
 
-3. **Open steps 1 and 2 as a release-prep pull request and merge it.** The
-   `Release metadata consistency` workflow checks that `version.cmake` and
-   `versions.json` agree; if you forget step 1 or 2, or write a `v`-prefixed
-   slug, the PR check fails before the release goes out. Run the same check
-   locally with:
+3. **Update `CITATION.cff`.** Set `version` to the same
+   `MAJOR.MINOR.PATCH` as step 1, and `date-released` to the `YYYY-MM-DD`
+   date the release ships. Leave the `preferred-citation` block alone: it
+   describes the SciPost paper, which does not change when a release ships.
+
+4. **Open steps 1–3 as a release-prep pull request and merge it.** The
+   `Release metadata consistency` workflow checks that `version.cmake`,
+   `versions.json`, and `CITATION.cff` agree; if you forget a step, or write
+   a `v`-prefixed slug, the PR check fails before the release goes out. Run
+   the same check locally with:
 
    ```sh
    python3 tools/check_release_consistency.py
    ```
 
-4. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
+5. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
    new release*, create the tag `vMAJOR.MINOR.PATCH` targeting the merged
    release-prep commit on `master`, click *Generate release notes*, review,
    and publish. Publishing pushes the tag and starts the release workflows
    above.
 
-Doing steps 1–2 in a merged PR first means the tagged commit already holds
-the correct `version.cmake` and `versions.json` and the consistency check has
-already passed — so publishing the release is the last action, not the first.
+Doing steps 1–3 in a merged PR first means the tagged commit already holds
+the correct `version.cmake`, `versions.json`, and `CITATION.cff`, and the
+consistency check has already passed — so publishing the release is the
+last action, not the first.
 
 ## After publishing
 

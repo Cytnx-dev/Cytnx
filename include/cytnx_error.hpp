@@ -21,9 +21,12 @@
   #define CYTNX_HAS_EXECINFO 0
 #endif
 
-// Full function signature for error reports. __PRETTY_FUNCTION__ is a GCC/Clang
-// extension; those are the only supported compilers (Linux/macOS, and Windows via WSL).
-#define CYTNX_FUNC_NAME __PRETTY_FUNCTION__
+// Full function signature for error reports.
+#if defined(_MSC_VER)
+  #define CYTNX_FUNC_NAME __FUNCSIG__
+#else
+  #define CYTNX_FUNC_NAME __PRETTY_FUNCTION__
+#endif
 
 namespace cytnx {
 
@@ -539,6 +542,32 @@ void check(T result, char const *const func, const char *const file, int const l
     #define checkCudaErrors(val) check((val), #val, __FILE__, __LINE__)
 
   #endif
+
+  // Raise if the kernel launch immediately preceding this call failed.
+  //
+  // A launch that never runs leaves the output buffer holding whatever it
+  // already contained -- usually zeros from a fresh allocation -- so an
+  // unchecked failure is indistinguishable from a numerical bug. The launch
+  // status is not reported by the launch expression itself; it has to be read
+  // back with cudaGetLastError().
+  //
+  // This reads (and thereby clears) the pending status without synchronizing,
+  // so it stays cheap enough to sit after every launch. That also means it
+  // catches launch-time failures -- a fat binary with no image for the running
+  // device, a bad launch configuration -- and not errors raised while the
+  // kernel executes, which surface asynchronously at the next synchronizing
+  // call.
+  //
+  // Raising through cytnx_error_msg (rather than the exit() that checkCudaErrors
+  // performs) keeps the failure catchable and reports the calling function,
+  // file, and line of the launch site.
+  #define CYTNX_CHECK_CUDA_LAUNCH(kernel_name)                                \
+    do {                                                                      \
+      const cudaError_t cytnx_cuda_launch_status = cudaGetLastError();        \
+      cytnx_error_msg(cytnx_cuda_launch_status != cudaSuccess,                \
+                      "CUDA kernel launch failed for '%s': %s", #kernel_name, \
+                      cudaGetErrorString(cytnx_cuda_launch_status));          \
+    } while (0)
 
 #endif  // End of #if defined(UNI_GPU)
 

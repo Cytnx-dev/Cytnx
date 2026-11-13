@@ -9,33 +9,25 @@
 #include <fstream>
 #include "utils/dynamic_arg_resolver.hpp"
 #include "Accessor.hpp"
+#include <type_traits>
 #include <utility>
 #include <vector>
 #include <initializer_list>
 #include <string>
 
-#ifdef BACKEND_TORCH
-#else
-
-  #include "backend/Scalar.hpp"
-  #include "backend/Storage.hpp"
-  #include "backend/Tensor_impl.hpp"
+#include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
+#include "backend/Tensor_impl.hpp"
 
 namespace cytnx {
 
   class Tensor;
 
-  ///@cond
-  // [Note] these are fwd from linalg.hpp
-  template <class T>
-  Tensor operator+(const Tensor &lhs, const T &rc);
-  template <class T>
-  Tensor operator-(const Tensor &lhs, const T &rhs);
-  template <class T>
-  Tensor operator*(const Tensor &lhs, const T &rhs);
-  template <class T>
-  Tensor operator/(const Tensor &lhs, const T &rhs);
-  ///@endcond
+  // [Note] The free `Tensor <op> T` operators declared in linalg.hpp are forward-declared below
+  // the class definition rather than here, because their constraint names Tensor::Tproxy, which
+  // is not available until Tensor is complete. Declaring them unconstrained here would defeat the
+  // constraint entirely: a differently-constrained declaration is a *distinct* template, so the
+  // unconstrained candidate would stay viable for every non-scalar T (#1003, Ian's review).
 
   /// @brief an tensor (multi-dimensional array)
   class Tensor {
@@ -536,7 +528,7 @@ namespace cytnx {
       return static_cast<T *>(this->_impl->_storage._impl->data());
     }
 
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
     // std::variant of pointers to Type_list_gpu, without void ....
     using gpu_pointer_types =
       make_variant_from_transform_t<typename internal::exclude_first<Type_list_gpu>::type,
@@ -559,7 +551,7 @@ namespace cytnx {
         Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
       return static_cast<T *>(this->_impl->_storage._impl->data());
     }
-  #endif
+#endif
 
     /**
     @brief Convert a Storage to Tensor
@@ -1788,6 +1780,47 @@ namespace cytnx {
 
   };  // class Tensor
 
+  // Scalar-like operand concepts for the free Tensor / UniTensor arithmetic and comparison
+  // operators. They live here, after the class, because cytnx_scalar_like names Tensor::Tproxy
+  // and so needs Tensor to be complete; linalg.hpp includes this header and reuses them.
+  //
+  // Each concept admits exactly the operand types the corresponding operators are instantiated
+  // for, so an unsupported operand is rejected at overload resolution instead of surviving to a
+  // link error. Widening one without adding the matching explicit instantiation reintroduces
+  // precisely that failure (#1003, operator hygiene -- Ian's review).
+
+  /// @cond
+  // Plain scalar values: the cytnx dtype scalars and cytnx::Scalar. This is the operand set of
+  // `operator%` (Tensor and UniTensor) and `operator==` (Tensor), which have no element-proxy
+  // instantiations -- see Mod.cpp and Cpr.cpp.
+  template <class T>
+  concept cytnx_scalar_value =
+    CytnxType<std::remove_cvref_t<T>> || std::is_same_v<std::remove_cvref_t<T>, Scalar>;
+
+  // Adds both element proxies: the operand set of the free Tensor `+ - * /` operators.
+  template <class T>
+  concept cytnx_scalar_like =
+    cytnx_scalar_value<T> || std::is_same_v<std::remove_cvref_t<T>, Tensor::Tproxy> ||
+    std::is_same_v<std::remove_cvref_t<T>, Scalar::Sproxy>;
+
+  // Adds only the Scalar proxy: the operand set of the free UniTensor `+ - * /` operators, which
+  // are instantiated for Scalar::Sproxy but never for Tensor::Tproxy -- see Add.cpp.
+  template <class T>
+  concept cytnx_unitensor_scalar_like =
+    cytnx_scalar_value<T> || std::is_same_v<std::remove_cvref_t<T>, Scalar::Sproxy>;
+
+  // [Note] these are fwd from linalg.hpp; the constraint must match linalg.hpp exactly, or the
+  // two declarations become distinct overloads and the unconstrained one stays viable.
+  template <cytnx_scalar_like T>
+  Tensor operator+(const Tensor &lhs, const T &rc);
+  template <cytnx_scalar_like T>
+  Tensor operator-(const Tensor &lhs, const T &rhs);
+  template <cytnx_scalar_like T>
+  Tensor operator*(const Tensor &lhs, const T &rhs);
+  template <cytnx_scalar_like T>
+  Tensor operator/(const Tensor &lhs, const T &rhs);
+  /// @endcond
+
   Tensor operator+(const Tensor &lhs, const Tensor::Tproxy &rhs);
   Tensor operator-(const Tensor &lhs, const Tensor::Tproxy &rhs);
   Tensor operator*(const Tensor &lhs, const Tensor::Tproxy &rhs);
@@ -1804,7 +1837,5 @@ namespace cytnx {
   ///@endcond
   //{ os << Tensor(in);};
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_TENSOR_H_

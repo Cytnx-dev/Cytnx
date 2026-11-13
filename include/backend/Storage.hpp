@@ -1,25 +1,23 @@
 #ifndef CYTNX_BACKEND_STORAGE_H_
 #define CYTNX_BACKEND_STORAGE_H_
 
-#ifndef BACKEND_TORCH
+#include <cstdlib>
+#include <fstream>
+#include <initializer_list>
+#include <iostream>
+#include <string>
+#include <type_traits>
+#include <vector>
 
-  #include <cstdlib>
-  #include <fstream>
-  #include <initializer_list>
-  #include <iostream>
-  #include <string>
-  #include <type_traits>
-  #include <vector>
+#include "boost/smart_ptr/intrusive_ptr.hpp"
 
-  #include "boost/smart_ptr/intrusive_ptr.hpp"
+#include "backend/Scalar.hpp"
+#include "cytnx_error.hpp"
+#include "Device.hpp"
+#include "intrusive_ptr_base.hpp"
+#include "Type.hpp"
 
-  #include "backend/Scalar.hpp"
-  #include "cytnx_error.hpp"
-  #include "Device.hpp"
-  #include "intrusive_ptr_base.hpp"
-  #include "Type.hpp"
-
-  #define STORAGE_DEFT_SZ 2
+#define STORAGE_DEFT_SZ 2
 
 namespace cytnx {
 
@@ -77,9 +75,11 @@ namespace cytnx {
     //     call sites than the six arithmetic families converted in #941's
     //     first pass (Add/Sub/Mul/Div/Cpr/Mod) and is out of scope for that
     //     task.
-    //   - GPU kernel dispatch (src/backend/linalg_internal_gpu/*, the
-    //     cuAri_ii table) -- ruling 3 keeps GPU on the legacy table; see GPU
-    //     tracking issue #1013.
+    //   - GPU kernel launches (src/backend/linalg_internal_gpu/*). The dtype
+    //     *dispatch* there is typed now -- as_storage_variant() + type_promote_t,
+    //     with the legacy cuAri_ii table removed (#1003, #1013) -- but the launch
+    //     helpers still reinterpret_cast this erased pointer to the CUDA-native
+    //     kernel type, because CUDA needs the raw device address.
     // New code should use StorageImplementation<T>::data() (typed) via
     // as_storage_variant()/storage_cast<T> instead. Do not add new callers of
     // this accessor.
@@ -524,9 +524,9 @@ namespace cytnx {
     }
   };
   extern Storage_init_interface __SII;
-    ///@endcond;
+  ///@endcond;
 
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
   // Explicit specialization declarations for the GPU complex pointer views, so they are visible
   // (and reachable via Storage::data<T>()) from any TU, not only Storage_base.cpp where they are
   // defined. They specialize the deleted primary -- the cu* types are not cytnx dtypes: the
@@ -539,7 +539,7 @@ namespace cytnx {
   cytnx_cuda_complex128 *Storage_base::data<cytnx_cuda_complex128>() const;
   template <>
   cytnx_cuda_complex64 *Storage_base::data<cytnx_cuda_complex64>() const;
-  #endif
+#endif
 
   ///@brief an memeory storage with multi-type/multi-device support
   class Storage {
@@ -750,10 +750,7 @@ namespace cytnx {
     @brief the dtype (std::string) of current Storage, see cytnx::Type for more details.
     @return [std::string] dtype name
     */
-    const std::string dtype_str() const {
-      std::string out = this->_impl->dtype_str();
-      return out;
-    }
+    std::string dtype_str() const { return this->_impl->dtype_str(); }
     /**
     @brief the device-id of current Storage, see cytnx::Device for more details.
     @return [cytnx_int64] the device-id.
@@ -764,10 +761,7 @@ namespace cytnx {
     @brief the device (std::string) of current Storage, see cytnx::Device for more details.
     @return [std::string] device name
     */
-    const std::string device_str() const {
-      std::string out = this->_impl->device_str();
-      return out;
-    }
+    std::string device_str() const { return this->_impl->device_str(); }
 
     /**
     @brief append a value
@@ -978,52 +972,54 @@ namespace cytnx {
     void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.ComplexDouble]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex128) * vin.size());
+      if (!vin.empty())
+        memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_complex128) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.ComplexFloat]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex64) * vin.size());
+      if (!vin.empty())
+        memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_complex64) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_double> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Double]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_double) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_double) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_float> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Float]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_float) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_float) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint64]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint64) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_uint64) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_int64> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int64]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int64) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_int64) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint32]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint32) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_uint32) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_int32> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int32]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int32) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_int32) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint16]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint16) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_uint16) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_int16> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int16]();
       this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int16) * vin.size());
+      if (!vin.empty()) memcpy(this->_impl->data(), vin.data(), sizeof(cytnx_int16) * vin.size());
     }
     void _from_vector(const std::vector<cytnx_bool> &vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Bool]();
@@ -1133,7 +1129,5 @@ namespace cytnx {
   ///@endcond
 
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH
 
 #endif  // CYTNX_BACKEND_STORAGE_H_

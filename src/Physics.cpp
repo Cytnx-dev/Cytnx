@@ -8,10 +8,7 @@
 #include <iostream>
 #include <cmath>
 
-#ifdef BACKEND_TORCH
-#else
-
-  #include "backend/Storage.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
   namespace physics {
@@ -36,18 +33,18 @@ namespace cytnx {
         for (cytnx_uint64 a = 0; a < Dim; a++) {
           if (a != 0)
             Out.at<cytnx_complex128>({a, a - 1}) =
-              cytnx_complex128(0, 1) * pow((S + 1) * (2 * a) - (a + 1) * a, 0.5) / 2;
+              cytnx_complex128(0, std::sqrt((S + 1) * (2 * a) - (a + 1) * a) / 2);
           if (a != Dim - 1)
             Out.at<cytnx_complex128>({a, a + 1}) =
-              cytnx_complex128(0, -1) * pow((S + 1) * (2 * a + 2) - (a + 2) * (a + 1), 0.5) / 2;
+              cytnx_complex128(0, -std::sqrt((S + 1) * (2 * a + 2) - (a + 2) * (a + 1)) / 2);
         }
       } else if (Comp == "x" || Comp == "X") {
         for (cytnx_uint64 a = 0; a < Dim; a++) {
           if (a != 0)
-            Out.at<cytnx_complex128>({a, a - 1}) = pow((S + 1) * (2 * a) - (a + 1) * a, 0.5) / 2;
+            Out.at<cytnx_complex128>({a, a - 1}) = std::sqrt((S + 1) * (2 * a) - (a + 1) * a) / 2;
           if (a != Dim - 1)
             Out.at<cytnx_complex128>({a, a + 1}) =
-              pow((S + 1) * (2 * a + 2) - (a + 2) * (a + 1), 0.5) / 2;
+              std::sqrt((S + 1) * (2 * a + 2) - (a + 2) * (a + 1)) / 2;
         }
       } else {
         cytnx_error_msg(
@@ -215,4 +212,3 @@ namespace cytnx {
   }  // namespace operators
 
 }  // namespace cytnx
-#endif
