@@ -201,6 +201,7 @@ jobs:
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         # NVIDIA does not publish musllinux CUDA wheels for
         # tools/cibuildwheel_before_all_cuda.sh to install from.
+        CIBW_BUILD: "cp311-manylinux_x86_64"
         CIBW_SKIP: "*-musllinux*"
         CIBW_TEST_COMMAND: >-
           python {project}/tools/validate_ccache_stats.py &&
