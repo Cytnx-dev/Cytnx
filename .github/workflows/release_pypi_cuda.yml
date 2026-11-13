@@ -46,7 +46,6 @@ on:
   push:
     branches:
       - master
-      - bench/1230-gpu-get-optimization
     tags:
       - "v*"
   workflow_dispatch:
