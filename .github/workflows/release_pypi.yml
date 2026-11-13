@@ -37,6 +37,11 @@ name: Release wheels
 #               --extra-index-url \
 #                 https://pypi.anaconda.org/cytnx-nightly-wheels/simple \
 #               cytnx
+#
+# The nightly command relies on version.cmake being *above* the last
+# release between releases (RELEASING.md step 4, #1204): PEP 440 sorts
+# X.Y.Z.devN below X.Y.Z, so a nightly stamped from the released version
+# would lose to the release on PyPI.
 
 on:
   pull_request:

@@ -29,18 +29,23 @@ Checks performed:
   1. Every numbered-release slug in ``versions.json`` is numeric (no
      leading ``v``). A ``v``-prefixed slug links to a directory
      ``docs.yml`` never creates and serves a 404.
-  2. The ``version.cmake`` version appears as a ``versions.json`` slug, so
-     the docs for the version being shipped are reachable from the
-     switcher.
-  3. ``CITATION.cff``'s ``version`` equals the ``version.cmake``
-     version, and its ``date-released`` parses as a ``YYYY-MM-DD`` date.
-     The date's *value* is deliberately not checked: at release-prep time
-     the tag does not exist yet, so nothing in the tree records when the
-     release actually went out.
+  2. The ``version.cmake`` version is not lower than the newest
+     ``MAJOR.MINOR.PATCH`` slug in ``versions.json``. Between releases it
+     runs *ahead* of that slug on purpose (``RELEASING.md``, #1204): the
+     nightly wheels are stamped ``<version.cmake>.devYYYYMMDDHHMM`` and
+     PEP 440 orders ``X.Y.Z.devN`` *below* ``X.Y.Z``, so a nightly built
+     from the released version would lose to the release in ``pip``.
+  3. ``CITATION.cff``'s ``version`` equals the newest ``versions.json``
+     slug -- the latest release, the one whose docs exist -- and its
+     ``date-released`` parses as a ``YYYY-MM-DD`` date. The date's *value*
+     is deliberately not checked: at release-prep time the tag does not
+     exist yet, so nothing in the tree records when the release actually
+     went out.
   4. With ``--tag vX.Y.Z`` (passed by CI on a tag push): the tag without
      its leading ``v`` equals the ``version.cmake`` version -- otherwise
      the PyPI and conda package version would not match the release tag --
-     and is present as a ``versions.json`` slug.
+     is present as a ``versions.json`` slug, and is the version
+     ``CITATION.cff`` cites.
   5. The documentation builds carry no version literal: ``docs.doxygen``
      leaves ``PROJECT_NUMBER`` empty, and ``docs/source/conf.py`` assigns
      ``version`` and ``release`` only from ``release_version()`` and
@@ -50,7 +55,8 @@ Checks performed:
      which is how the API reference showed ``v1.0.0`` through three later
      releases.
 
-``tools/bump_version.py`` rewrites the three metadata files and runs this
+``tools/bump_version.py`` rewrites the metadata files (all three for a
+release, ``version.cmake`` alone with ``--next`` after one) and runs this
 check. Run it on its own before drafting a release::
 
     python3 tools/check_release_consistency.py
@@ -186,6 +192,23 @@ def check_sphinx_version_source() -> list[str]:
     return errors
 
 
+def parse_release(version: str) -> tuple[int, int, int] | None:
+    """Return ``(MAJOR, MINOR, PATCH)`` for a full release version, else ``None``."""
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", version)
+    if not match:
+        return None
+    major, minor, patch = (int(part) for part in match.groups())
+    return major, minor, patch
+
+
+def newest_release(slugs: list[str]) -> str | None:
+    """Return the highest ``MAJOR.MINOR.PATCH`` slug: the one the switcher marks stable."""
+    releases = [slug for slug in slugs if parse_release(slug) is not None]
+    if not releases:
+        return None
+    return max(releases, key=parse_release)
+
+
 def looks_like_v_prefixed_release(slug: str) -> bool:
     return slug.startswith("v") and slug[1:2].isdigit()
 
@@ -217,24 +240,33 @@ def main() -> None:
                 f'"{slug[1:]}" instead.'
             )
 
-    # Check 2: the version being built must have a docs slug.
-    if cmake_version not in slugs:
+    # Check 2: version.cmake is never behind the newest release. Between
+    # releases it runs ahead of it, so the nightly wheels and the dev docs
+    # outrank the last release (RELEASING.md, #1204).
+    latest_release = newest_release(slugs)
+    if latest_release is not None and parse_release(cmake_version) < parse_release(
+        latest_release
+    ):
         errors.append(
             f"version.cmake is {cmake_version} but docs/site_root/versions.json "
-            f'has no entry with "version": "{cmake_version}". Add '
-            f'{{"name": "{cmake_version}", "version": "{cmake_version}"}} so the '
-            f"docs for this release are reachable from the version switcher."
+            f"already lists {latest_release}. The version under development "
+            f"must not be lower than the newest release: either version.cmake "
+            f"was lowered, or a slug was added for a release that has not "
+            f"shipped. After tagging v{latest_release}, advance version.cmake "
+            f"with `python3 tools/bump_version.py <next> --next`."
         )
 
-    # Check 3: the citation metadata must name the version in the tree.
+    # Check 3: the citation metadata must name the newest release.
     citation_version = read_citation_field("version")
-    if citation_version != cmake_version:
+    expected_citation = latest_release if latest_release is not None else cmake_version
+    if citation_version != expected_citation:
         errors.append(
-            f"CITATION.cff says version {citation_version} but version.cmake is "
-            f"{cmake_version}. The citation metadata would tell users to cite a "
-            f"release other than the one they installed. Set CITATION.cff's "
-            f"version to {cmake_version} and its date-released to the date that "
-            f"release ships."
+            f"CITATION.cff says version {citation_version} but the newest "
+            f"release in docs/site_root/versions.json is {expected_citation}. "
+            f"The citation metadata would tell users to cite a release other "
+            f"than the latest one. Set CITATION.cff's version to "
+            f"{expected_citation} and its date-released to the date that "
+            f"release shipped."
         )
 
     citation_date = read_citation_field("date-released")
@@ -264,6 +296,12 @@ def main() -> None:
                 f'docs/site_root/versions.json (expected "version": '
                 f'"{tag_version}").'
             )
+        if citation_version != tag_version:
+            errors.append(
+                f"git tag {tag} implies version {tag_version} but CITATION.cff "
+                f"says {citation_version}. Run `python3 tools/bump_version.py "
+                f"{tag_version}` in a release-prep pull request before tagging."
+            )
 
     # Check 5: the documentation builds must not carry a version literal.
     doxygen_number = re.search(r"^PROJECT_NUMBER\s*=(.*)$", DOXYFILE.read_text(), re.MULTILINE)
@@ -283,6 +321,7 @@ def main() -> None:
 
     summary = (
         f"Release metadata OK: version.cmake={cmake_version}, "
+        f"newest release={latest_release}, "
         f"CITATION.cff={citation_version} ({citation_date})"
     )
     if args.tag:

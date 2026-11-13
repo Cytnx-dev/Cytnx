@@ -2,17 +2,22 @@ name: Release metadata consistency
 
 # Guards the release metadata exactly the way the release workflows consume
 # it. version.cmake feeds the PyPI/conda package version (via
-# scikit-build-core), and docs/site_root/versions.json must list the docs
-# slug for the version being shipped -- numeric, matching the tag with its
-# leading "v" stripped, the directory docs.yml publishes to gh-pages.
-# CITATION.cff must carry the same version, and the documentation builds
-# (docs.doxygen, docs/source/conf.py) must take their version from
-# version.cmake through docs/cytnx_version.py instead of a literal.
+# scikit-build-core) and the nightly dev versions. docs/site_root/
+# versions.json lists the docs slugs -- numeric, matching the tag with its
+# leading "v" stripped, the directories docs.yml publishes to gh-pages --
+# and CITATION.cff must cite the newest of them, the latest release.
+# version.cmake must be at or above that newest slug: between releases it
+# runs ahead of it on purpose, so nightlies outrank the last release
+# (RELEASING.md step 4, #1204). The documentation builds (docs.doxygen,
+# docs/source/conf.py) must take their version from version.cmake through
+# docs/cytnx_version.py instead of a literal.
 #
-# Running on pull_request makes a release-prep PR fail before it is merged
-# if version.cmake, versions.json or CITATION.cff disagree, a docs slug is
-# "v"-prefixed, or a documentation build hard-codes a version. Running on
-# the v* tag push is the safety net at release time.
+# Running on pull_request makes a PR fail before it is merged if
+# version.cmake falls behind the newest release, CITATION.cff cites another
+# version, a docs slug is "v"-prefixed, or a documentation build hard-codes
+# a version. On the v* tag push the check is strict: the tag, version.cmake
+# and CITATION.cff must all name the same release, and that release must
+# have a docs slug.
 
 on:
   pull_request:
@@ -32,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - name: Check version.cmake / versions.json consistency
+      - name: Check release metadata consistency
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             python3 tools/check_release_consistency.py --tag "${GITHUB_REF#refs/tags/}"

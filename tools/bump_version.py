@@ -3,7 +3,8 @@
 
 Usage::
 
-    python3 tools/bump_version.py 1.2.0 [--date YYYY-MM-DD]
+    python3 tools/bump_version.py 1.2.0 [--date YYYY-MM-DD]   # release prep
+    python3 tools/bump_version.py 1.2.1 --next                # after the release
 
 Three committed files carry the version, and the release workflows and
 citation tools read them at the tagged commit (see RELEASING.md):
@@ -15,9 +16,16 @@ citation tools read them at the tagged commit (see RELEASING.md):
   the version switcher and the documentation landing page link to.
 * ``CITATION.cff`` -- ``version`` and ``date-released`` (today by default).
 
-The script rewrites all three and then runs
-``tools/check_release_consistency.py``, the same check CI runs on the
-release-prep pull request.
+For a release, the script rewrites all three. With ``--next`` it rewrites
+``version.cmake`` alone: right after a release ships, ``version.cmake``
+moves past it (the patch bump by default, see RELEASING.md step 4) while
+``versions.json`` and ``CITATION.cff`` keep describing the release that
+exists. Nightly wheels and the dev docs are stamped from ``version.cmake``,
+and PEP 440 orders ``X.Y.Z.devN`` below ``X.Y.Z``, so without this step
+every nightly would lose to the release in ``pip`` (#1204).
+
+Either way the script then runs ``tools/check_release_consistency.py``,
+the same check CI runs on every pull request.
 """
 
 from __future__ import annotations
@@ -29,6 +37,9 @@ import pathlib
 import re
 import subprocess
 import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from check_release_consistency import newest_release, parse_release, read_slugs  # noqa: E402
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 VERSION_CMAKE = REPO_ROOT / "version.cmake"
@@ -87,16 +98,35 @@ def main() -> None:
     parser.add_argument(
         "--date",
         type=datetime.date.fromisoformat,
-        default=datetime.date.today(),
-        help="release date for CITATION.cff, YYYY-MM-DD (default: today)",
+        help="release date for CITATION.cff, YYYY-MM-DD (default: today); not with --next",
+    )
+    parser.add_argument(
+        "--next",
+        action="store_true",
+        help="post-release bump: set version.cmake to a version above the newest release "
+        "(the patch bump by default) and leave versions.json and CITATION.cff at the "
+        "release that shipped",
     )
     args = parser.parse_args()
-    if not re.fullmatch(r"\d+\.\d+\.\d+", args.version):
+    if parse_release(args.version) is None:
         sys.exit(f"version must be MAJOR.MINOR.PATCH without a leading v, got {args.version!r}")
+    if args.next and args.date is not None:
+        parser.error("--date sets CITATION.cff, which --next leaves alone")
 
-    bump_version_cmake(args.version)
-    add_docs_slug(args.version)
-    bump_citation(args.version, args.date)
+    if args.next:
+        latest_release = newest_release(read_slugs())
+        if latest_release is not None and parse_release(args.version) <= parse_release(
+            latest_release
+        ):
+            sys.exit(
+                f"--next needs a version above the newest release {latest_release}, "
+                f"got {args.version}"
+            )
+        bump_version_cmake(args.version)
+    else:
+        bump_version_cmake(args.version)
+        add_docs_slug(args.version)
+        bump_citation(args.version, args.date or datetime.date.today())
 
     sys.exit(subprocess.run([sys.executable, str(CONSISTENCY_CHECK)]).returncode)
 
