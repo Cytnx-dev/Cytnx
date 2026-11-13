@@ -182,6 +182,10 @@ Green locally before opening a PR. CI enforces:
   non-contiguous tensor⊗tensor kernels that `cuAdd`/`cuSub` have — contiguous-ize
   first or results are silently wrong; a narrow LHS can OOB-write; a length-1
   scalar RHS must stay CPU-resident (#988).
+- **No device-side kernel launches or `cudaMemcpy*` from device code** (CUDA
+  dynamic parallelism); copy in-kernel with a loop. Each such call is a child
+  launch from a pool of 2048 pending launches; past that it fails with an error
+  code nobody reads, leaving elements silently uncopied, and can hang (#1229).
 - **Raise errors via `cytnx_error_msg(cond, "fmt", …)`** (throws `cytnx::error`,
   surfaced in Python as `cytnx.CytnxError`); the function name comes from
   `CYTNX_FUNC_NAME`. House style is `if (cond) cytnx_error_msg(…)` with a
