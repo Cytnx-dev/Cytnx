@@ -116,7 +116,7 @@ def write_report(path: Path, output_dir: Path, policy: str = "") -> None:
         "Source: Google Benchmark wall-clock/real-time medians (5 repetitions per case).",
         "Speedup = S0 latency / strategy latency. Larger is faster.",
         "",
-        f"Adaptive S4 bucket policy: \`{policy or 'not supplied'}\` (each digit selects S0..S3).",
+        f"Adaptive S4 bucket policy: `{policy or 'not supplied'}` (each digit selects S0..S3).",
         "Buckets: Nunit <=4, <=32, <=1024, and >1024.",
         "Policy is trained only on the four pilot cases; verify against ALL full cases.",
         "",
