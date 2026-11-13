@@ -46,6 +46,7 @@ on:
   push:
     branches:
       - master
+      - bench/1230-gpu-get-optimization
     tags:
       - "v*"
   workflow_dispatch:
@@ -103,6 +104,9 @@ jobs:
             channel="$requested"
           fi
           publish=true
+          if [[ "$ref" == "refs/heads/bench/1230-gpu-get-optimization" ]]; then
+            publish=false
+          fi
         fi
         if [[ "$channel" == "nightly" ]]; then
           dev_tag=".dev$(date -u +%Y%m%d%H%M)"
