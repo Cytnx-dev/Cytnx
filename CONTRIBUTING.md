@@ -126,6 +126,16 @@ Edit `pixi.toml` and commit the regenerated `pixi.lock` alongside it. `pixi
 lock` resolves every platform in the workspace at once, so the lock has to be
 regenerated even for a change that affects only one of them.
 
+## Pull requests that change behaviour
+
+If a change alters what an existing call returns or does (a new default, a removed
+option, a different convention), label the PR `behaviour-change` (or `deprecation`
+when it starts a deprecation cycle) and add a section `## Release note` to its
+description with the paragraph a user needs: what changed, what they will observe,
+and how to keep the old behaviour. The maintainer cutting the next release copies
+that paragraph into the release notes (RELEASING.md step 5); the generator only
+sees the PR title, so write the title as the changelog line it becomes.
+
 ## Updating the minimum supported Python version
 
 The minimum Python version is declared independently in a few places, since

@@ -1,3 +1,5 @@
+Historical changelog up to v1.0.0. Release notes since then are on the GitHub Releases page (see RELEASING.md).
+
 v1.0.0
 1. [Important] This is the first stable release of the project.
 2. [Change] Merge Contract and Contracts into Contract, and Contract_ and Contracts_ ito Contract_.
