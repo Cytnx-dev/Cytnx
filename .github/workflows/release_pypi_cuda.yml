@@ -209,6 +209,7 @@ jobs:
         # NVIDIA does not publish musllinux CUDA wheels for
         # tools/cibuildwheel_before_all_cuda.sh to install from.
         CIBW_BUILD: "cp311-manylinux_x86_64"
+        CIBW_ENVIRONMENT_PASS_LINUX: "CYTNX_BENCHMARK_EXPORT_DIR"
         CYTNX_BENCHMARK_EXPORT_DIR: /benchmark-export
         CIBW_BEFORE_TEST: "cd {project} && bash tools/export_cuda_benchmark_tree.sh"
         CIBW_SKIP: "*-musllinux*"
