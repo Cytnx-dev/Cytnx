@@ -84,7 +84,11 @@ def test_block_unitensor_normal_same_seed_is_reproducible():
     lhs.normal_(mean=2.0, std=3.0, seed=11)
     rhs.normal_(mean=2.0, std=3.0, seed=11)
 
-    _assert_blocks_equal(_block_values(lhs), _block_values(rhs))
+    lhs_blocks = _block_values(lhs)
+    rhs_blocks = _block_values(rhs)
+    _assert_blocks_equal(lhs_blocks, rhs_blocks)
+    assert len(lhs_blocks) == 2
+    assert not np.array_equal(lhs_blocks[0], lhs_blocks[1])
     assert lhs.labels() == ["left", "right"]
     assert lhs.name() == "block template"
     assert lhs.dtype() == cytnx.Type.Double
