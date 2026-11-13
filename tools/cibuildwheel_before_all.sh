@@ -40,7 +40,8 @@ if command -v dnf >/dev/null 2>&1; then
       "openblas=*=*openmp*" \
       liblapacke \
       "arpack=*=nompi*" \
-      "libboost-headers<1.89"
+      "libboost-headers<1.89" \
+      "boost-cpp<1.89"
 
 # musllinux_1_2 images are Alpine-based, so use apk there. conda-forge
 # publishes no musl builds, so arpack/boost still come from Alpine's own
