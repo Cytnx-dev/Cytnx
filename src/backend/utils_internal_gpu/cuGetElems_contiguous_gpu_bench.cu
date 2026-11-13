@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdlib>
+#include <stdexcept>
 #include <cstring>
 #include <vector>
 
@@ -116,7 +117,7 @@ void cuGetElems_contiguous_gpu_d_bench(
   }
   if (strategy < 1 || strategy > 3 || TotalElem == 0 || Nelem_grp == 0 ||
       offj.empty() || offj.size() != new_offj.size() || offj.size() != locators.size())
-    CYTNX_ERROR(true, "[gpu-get-bench] invalid strategy or metadata", );
+    throw std::invalid_argument("[gpu-get-bench] invalid strategy or metadata");
 
   // This is intentionally the same metadata path as S0, including cudaMalloc,
   // H2D transfer and device-buffer teardown on EVERY invocation.
