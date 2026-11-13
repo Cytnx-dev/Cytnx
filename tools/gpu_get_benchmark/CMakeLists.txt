@@ -4,7 +4,16 @@ project(cytnx_gpu_get_benchmark LANGUAGES CXX)
 # Consume the existing Cytnx install tree. Never configure or rebuild Cytnx
 # with RUN_BENCHMARKS=ON: that would invalidate the release-build cache.
 find_package(Cytnx CONFIG REQUIRED)
-find_package(benchmark CONFIG REQUIRED)
+find_package(benchmark CONFIG QUIET)
+if(NOT benchmark_FOUND)
+  include(FetchContent)
+  set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
+  set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "" FORCE)
+  FetchContent_Declare(googlebenchmark
+    URL https://github.com/google/benchmark/archive/refs/tags/v1.9.4.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE)
+  FetchContent_MakeAvailable(googlebenchmark)
+endif()
 find_package(CUDAToolkit REQUIRED)
 
 add_executable(gpu_get_benchmark
