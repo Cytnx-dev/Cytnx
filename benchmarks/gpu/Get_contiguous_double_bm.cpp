@@ -47,7 +47,6 @@ void Invoke(int strategy, double* out, double* in,
 }
 
 void BM_GetL2(benchmark::State& state, Case c, int strategy) {
-  state.PauseTiming();
   const cytnx_uint64 source_units =
       std::string(c.pattern) == "Strided" ? c.units * 2 : c.units;
   const std::size_t source_count = static_cast<std::size_t>(source_units * c.nunit);
@@ -116,7 +115,6 @@ void BM_GetL2(benchmark::State& state, Case c, int strategy) {
     cleanup(); return;
   }
 
-  state.ResumeTiming();
   for (auto _ : state) {
     Invoke(strategy, output, input, offj, new_offj, locators, c.units, c.nunit);
     const auto status = cudaDeviceSynchronize();
@@ -127,7 +125,6 @@ void BM_GetL2(benchmark::State& state, Case c, int strategy) {
     }
     benchmark::DoNotOptimize(output);
   }
-  state.PauseTiming();
   state.SetBytesProcessed(static_cast<int64_t>(state.iterations()) *
                           static_cast<int64_t>(output_count) * sizeof(double));
   cleanup();
@@ -181,7 +178,7 @@ bool RegisterAll() {
                         "/" + c.pattern + "/S" + std::to_string(strategy);
       benchmark::RegisterBenchmark(name.c_str(), [=](benchmark::State& state) {
         BM_GetL2(state, c, strategy);
-      })->UseRealTime()->Unit(benchmark::kMicrosecond)->Repetitions(5)->MinTime(0.06);
+      })->UseRealTime()->Unit(benchmark::kMicrosecond)->Repetitions(5)->MinTime(0.5);
     }
   }
   return true;
