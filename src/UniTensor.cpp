@@ -1,6 +1,8 @@
 #include "UniTensor.hpp"
 
+#include <cstdint>
 #include <filesystem>
+#include <map>
 #include <typeinfo>
 
 #include "utils/utils.hpp"
@@ -288,7 +290,7 @@ namespace cytnx {
                       "\n");
     }
     if (syms.empty()) {
-      cytnx_uint64 dim = 1;
+      std::uint64_t dim = 1;
       for (const Bond &bond : bonds) dim *= bond.dim();
       return dim;
     }
@@ -299,7 +301,7 @@ namespace cytnx {
     // BlockUniTensor::Init uses to decide which blocks exist. The cost is linear in the rank,
     // where enumerating the combinations would be exponential.
     using Charge = std::vector<cytnx_int64>;
-    std::map<Charge, cytnx_uint64> counts;
+    std::map<Charge, std::uint64_t> counts;
     Charge sector(syms.size());
     Charge total(syms.size());
     for (std::size_t b = 0; b < bonds.size(); ++b) {
@@ -307,7 +309,7 @@ namespace cytnx {
       const bool reversed = bond.type() == BD_BRA;
       const std::vector<std::vector<cytnx_int64>> &qnums = bond.qnums();
       const std::vector<cytnx_uint64> &degs = bond.getDegeneracies();
-      std::map<Charge, cytnx_uint64> next;
+      std::map<Charge, std::uint64_t> next;
       for (std::size_t s = 0; s < qnums.size(); ++s) {
         for (std::size_t i = 0; i < syms.size(); ++i) {
           sector[i] = reversed ? syms[i].reverse_rule(qnums[s][i]) : qnums[s][i];

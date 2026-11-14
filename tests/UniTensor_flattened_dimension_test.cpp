@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <cstdint>
 #include <functional>
 #include <numeric>
 #include <vector>
@@ -16,22 +17,22 @@ namespace cytnx {
     // Number of elements in the blocks the UniTensor actually stores, counted from the block
     // shapes. For a tensor that stores exactly the blocks its bonds allow, this equals
     // flattened_dimension().
-    cytnx_uint64 StoredElements(const UniTensor& ut) {
+    std::uint64_t stored_elements(const UniTensor& ut) {
       const auto block_size = [](const Tensor& block) {
-        cytnx_uint64 size = 1;
-        for (const cytnx_uint64 extent : block.shape()) size *= extent;
+        std::uint64_t size = 1;
+        for (const std::uint64_t extent : block.shape()) size *= extent;
         return size;
       };
       if (!ut.is_blockform()) return block_size(ut.get_block_());
-      cytnx_uint64 total = 0;
+      std::uint64_t total = 0;
       for (const Tensor& block : ut.get_blocks_()) total += block_size(block);
       return total;
     }
 
-    cytnx_uint64 ShapeProduct(const UniTensor& ut) {
-      const std::vector<cytnx_uint64> shape = ut.shape();
-      return std::accumulate(shape.begin(), shape.end(), cytnx_uint64{1},
-                             std::multiplies<cytnx_uint64>());
+    std::uint64_t shape_product(const UniTensor& ut) {
+      const std::vector<std::uint64_t> shape = ut.shape();
+      return std::accumulate(shape.begin(), shape.end(), std::uint64_t{1},
+                             std::multiplies<std::uint64_t>());
     }
 
     TEST(FlattenedDimension, EmptyBondListIsOne) {
@@ -41,14 +42,14 @@ namespace cytnx {
     TEST(FlattenedDimension, DenseIsProductOfBondDimensions) {
       const UniTensor ut(zeros({2, 3, 4}));
       EXPECT_EQ(ut.flattened_dimension(), 24u);
-      EXPECT_EQ(StoredElements(ut), 24u);
+      EXPECT_EQ(stored_elements(ut), 24u);
     }
 
     TEST(FlattenedDimension, DenseDiagonalIsFirstBondDimension) {
       const UniTensor ut(zeros({5}), true);
       ASSERT_TRUE(ut.is_diag());
       EXPECT_EQ(ut.flattened_dimension(), 5u);
-      EXPECT_EQ(StoredElements(ut), 5u);
+      EXPECT_EQ(stored_elements(ut), 5u);
     }
 
     // Ket bond {q=1: 2 states, q=0: 1 state} with a bra bond {q=1: 1, q=0: 3}: the allowed
@@ -63,13 +64,13 @@ namespace cytnx {
       const UniTensor ut_bra({ket, bra}, {"a", "b"}, 1);
       EXPECT_EQ(ut_bra.flattened_dimension(), 5u);
       EXPECT_EQ(flattened_dimension({ket, bra}), 5u);
-      EXPECT_EQ(StoredElements(ut_bra), 5u);
-      EXPECT_EQ(ShapeProduct(ut_bra), 12u);
+      EXPECT_EQ(stored_elements(ut_bra), 5u);
+      EXPECT_EQ(shape_product(ut_bra), 12u);
 
       const UniTensor ut_ket({ket, ket2}, {"a", "b"}, 1);
       EXPECT_EQ(ut_ket.flattened_dimension(), 3u);
       EXPECT_EQ(flattened_dimension({ket, ket2}), 3u);
-      EXPECT_EQ(StoredElements(ut_ket), 3u);
+      EXPECT_EQ(stored_elements(ut_ket), 3u);
     }
 
     // Two spin-1/2 kets {+1, -1} and their fused bra {+2: 1, 0: 2, -2: 1}: the allowed triples
@@ -80,8 +81,8 @@ namespace cytnx {
       const Bond fused(BD_BRA, {{2}, {0}, {-2}}, {1, 2, 1});
       const UniTensor ut({spin, spin, fused}, {"a", "b", "c"}, 2);
       EXPECT_EQ(ut.flattened_dimension(), 6u);
-      EXPECT_EQ(StoredElements(ut), 6u);
-      EXPECT_EQ(ShapeProduct(ut), 16u);
+      EXPECT_EQ(stored_elements(ut), 6u);
+      EXPECT_EQ(shape_product(ut), 16u);
     }
 
     // U1 x Z2, quantum numbers written (u1, z2):
@@ -95,8 +96,8 @@ namespace cytnx {
       const Bond c(BD_BRA, {{0, 1}, {0, 0}}, {2, 3}, syms);
       const UniTensor ut({a, b, c}, {"a", "b", "c"}, 2);
       EXPECT_EQ(ut.flattened_dimension(), 9u);
-      EXPECT_EQ(StoredElements(ut), 9u);
-      EXPECT_EQ(ShapeProduct(ut), 30u);
+      EXPECT_EQ(stored_elements(ut), 9u);
+      EXPECT_EQ(shape_product(ut), 30u);
     }
 
     // Fermion parity, each bond {even: 2, odd: 2}, two kets and a bra: the allowed parity
@@ -107,8 +108,8 @@ namespace cytnx {
       const UniTensor ut({ket, ket, bra}, {"a", "b", "c"}, 2);
       ASSERT_EQ(ut.uten_type(), UTenType.BlockFermionic);
       EXPECT_EQ(ut.flattened_dimension(), 32u);
-      EXPECT_EQ(StoredElements(ut), 32u);
-      EXPECT_EQ(ShapeProduct(ut), 64u);
+      EXPECT_EQ(stored_elements(ut), 32u);
+      EXPECT_EQ(shape_product(ut), 64u);
     }
 
     // Diagonal block UniTensor on {q=1: 2, q=0: 3}: one diagonal block per sector, 2 + 3 = 5.
@@ -118,7 +119,7 @@ namespace cytnx {
       ASSERT_TRUE(ut.is_diag());
       EXPECT_EQ(ut.flattened_dimension(), 5u);
       EXPECT_EQ(flattened_dimension(ut.bonds(), true), 5u);
-      EXPECT_EQ(StoredElements(ut), 5u);
+      EXPECT_EQ(stored_elements(ut), 5u);
     }
 
     // The value is a property of the bonds, so it does not change when the stored blocks are
@@ -129,7 +130,7 @@ namespace cytnx {
       UniTensor ut({spin, spin, fused}, {"a", "b", "c"}, 2);
       ut.permute_({2, 0, 1});
       EXPECT_EQ(ut.flattened_dimension(), 6u);
-      EXPECT_EQ(StoredElements(ut), 6u);
+      EXPECT_EQ(stored_elements(ut), 6u);
 
       // Contract a and b with a tensor on the conjugate bonds; c (bra) and d (ket) remain.
       const UniTensor left({spin, spin, fused}, {"a", "b", "c"}, 2);
@@ -138,7 +139,7 @@ namespace cytnx {
       const UniTensor out = Contract(left, right);
       ASSERT_EQ(out.rank(), 2u);
       EXPECT_EQ(out.flattened_dimension(), flattened_dimension(out.bonds()));
-      EXPECT_EQ(out.flattened_dimension(), StoredElements(out));
+      EXPECT_EQ(out.flattened_dimension(), stored_elements(out));
       // The fused bond and its conjugate: sectors (q, q) with degeneracies 1, 2, 1, so 1+4+1.
       EXPECT_EQ(out.flattened_dimension(), 6u);
     }
