@@ -421,3 +421,100 @@ args = [
 ]
 cmd = "tools\\activate_windows.bat python tools/run_pytest.py {{ preset }} {{ paths }} --doctest-modules"
 depends-on = [{ task = "install-python", args = ["{{ preset }}"] }]
+
+[feature.wheel-base]
+platforms = ["win-64"]
+
+[feature.wheel-base.dependencies]
+pip = ">=26.2.2"
+scikit-build-core = ">=0.11,<1"
+
+# Build tools. c-compiler/cxx-compiler activate an existing Visual Studio
+# 2022 installation; Pixi manages the activation glue, CMake, and Ninja.
+cmake = ">=3.31,<4"
+ninja = ">=1.11"
+git = "*"
+c-compiler = ">=1.11,<2"
+cxx-compiler = ">=1.11,<2"
+clang-format = "14.*"
+
+# Native dependencies shared by the development and wheel environments.
+arpack = { version = ">=3.9,<4", build = "nompi_*" }
+libboost-devel = "<1.89"
+gtest = "*"
+gmock = "*"
+
+# Python runtime and contributor tooling.
+numpy = "*"
+beartype = "*"
+graphviz = "*"
+pytest = "*"
+pytest-cov = "*"
+mypy = "*"
+ca-certificates = ">=2026.10.19"
+
+[feature.wheel-base.pypi-dependencies]
+# These exact versions must match pyproject.toml so direct CMake builds and
+# editable builds produce the same bindings and committed stubs.
+pybind11 = "==3.0.4"
+pybind11-stubgen = "==2.5.5"
+pefile = ">=2024.8.26"
+
+# Contributor environments stay fixed at the oldest supported interpreter.
+# Wheel orchestration uses a newer host Python only because cibuildwheel 3.3
+# requires Python >=3.11; it still produces CPython 3.10 through 3.14 wheels.
+
+[feature.wheel-base.activation]
+scripts = ["tools/activate_windows.bat"]
+
+[feature.wheel-base.activation.env]
+CMAKE_GENERATOR = "Ninja"
+CMAKE_GENERATOR_PLATFORM = ""
+CMAKE_GENERATOR_TOOLSET = ""
+CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+
+[feature.wheel-base.tasks]
+setup = "git submodule update --init --recursive"
+prepare-windows = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py"
+check-windows-layout = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --check"
+
+[feature.openblas.dependencies]
+libblas = { version = ">=3.9,<4", build = "*openblas" }
+liblapack = { version = ">=3.9,<4", build = "*openblas" }
+liblapacke = "*"
+openblas = "*"
+
+[feature.wheel.dependencies]
+ccache = "*"
+python = "3.11.*"
+
+[feature.wheel.pypi-dependencies]
+cibuildwheel = "==3.3.0"
+delvewheel = "==1.13.0"
+
+[feature.cuda.pypi-dependencies]
+cuda-toolkit = { version = "~=13.3.0", extras = [
+  "nvcc",
+  "cccl",
+  "cudart",
+  "cublas",
+  "cusolver",
+  "cusparse",
+  "curand",
+] }
+cutensor-cu13 = "~=2.7.0"
+
+[feature.cuda.activation.env]
+CMAKE_BUILD_PARALLEL_LEVEL = "2"
+CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DUSE_CUQUANTUM=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+
+[feature.cuda.tasks]
+check-cuda-layout = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --cuda --check"
+prepare-cuda = "tools\\activate_windows.bat python tools/prepare_windows_import_libraries.py --cuda"
+cuda-doctor = { cmd = "tools\\activate_windows.bat --cuda-doctor", depends-on = ["prepare-cuda"] }
+
+
+
+[environments]
+wheel-cpu = { features = ["wheel-base","openblas", "wheel"], solve-group = "windows-wheel", no-default-feature = true}
+wheel-cuda = { features = ["wheel-base","openblas", "cuda", "wheel"], solve-group = "windows-wheel", no-default-feature = true}

@@ -283,17 +283,14 @@ if(USE_CUDA)
     endif()
   endif()
   unset(_cytnx_user_set_cuda_architectures)
-  # Disable generation of "--option-file" flag in compile_commands.json.
-  # This workaround helps VSCode's cpptools extension correctly locate CUDA
-  # include files.
+  # Keep CUDA include flags visible in compile_commands.json so tools such as
+  # VSCode cpptools can locate them without expanding nvcc --options-file
+  # arguments. Leave CMake's object/library response-file decisions untouched,
+  # and keep all response-file defaults on Windows hosts where command-line
+  # limits apply regardless of the selected host compiler.
   # Refer to: https://discourse.cmake.org/t/cmake-target-include-directories-doesnt-export-to-compile-commands-json-when-using-cuda/10072/10
-  # Keep response files when CMake is hosted on Windows: the short Windows
-  # command-line limit applies regardless of whether the compiler is MSVC,
-  # clang-cl, or MinGW. Preserve the existing behavior on non-Windows hosts.
   if(NOT CMAKE_HOST_WIN32)
     set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
-    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
-    set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
   endif()
 endif()
 
@@ -401,14 +398,25 @@ if(WIN32)
 else()
   find_package(Boost REQUIRED)
 endif()
-target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
+if(WIN32)
+  # Re-find LAPACK in the installed package's consumer environment instead of
+  # exporting an absolute path into this Pixi checkout. The MKL backend adds
+  # the build-tree LAPACK libraries after selecting the backend below.
+  target_link_libraries(cytnx PUBLIC Boost::boost)
+else()
+  target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
+endif()
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 
 message(STATUS "backend = cytnx")
 include(CytnxBKNDCMakeLists.cmake)
 
 #ARPACK
-target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
+if(WIN32)
+  target_link_libraries(cytnx PRIVATE "$<BUILD_INTERFACE:${ARPACK_LIB}>")
+else()
+  target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
+endif()
 
 
 # #####################################################################
@@ -568,13 +576,7 @@ INSTALL(TARGETS cytnx EXPORT cytnx_targets
 if(BUILD_PYTHON)
   # COMPONENT is scoped to each artifact group in install(TARGETS).
   INSTALL(TARGETS pycytnx EXPORT pycytnx_targets
-    LIBRARY
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
-    COMPONENT libraries
-    RUNTIME
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx
-    COMPONENT libraries
-  )
+    LIBRARY DESTINATION cytnx COMPONENT libraries)
 endif()
 
 install(EXPORT cytnx_targets
@@ -596,9 +598,15 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion
 )
 
-# CytnxConfig.cmake.in references @USE_CUDA@ / @USE_HPTT@
-# directly so the installed Config re-finds the imported-target deps that
-# match the options of the cytnx build. See the template for the gating logic.
+# CytnxConfig.cmake.in references the build options directly so the installed
+# Config re-finds the imported-target deps that match the Cytnx build. See the
+# template for the gating logic.
+set(CYTNX_CUDA_TOOLKIT_VERSION_MAJOR 0)
+set(CYTNX_CUDA_TOOLKIT_VERSION_MINOR 0)
+if(USE_CUDA)
+  set(CYTNX_CUDA_TOOLKIT_VERSION_MAJOR "${CUDAToolkit_VERSION_MAJOR}")
+  set(CYTNX_CUDA_TOOLKIT_VERSION_MINOR "${CUDAToolkit_VERSION_MINOR}")
+endif()
 configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
   INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
@@ -610,6 +618,10 @@ configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxConfig.cmake.
 # configs can include() it.
 configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxDetectCCCL.cmake COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUTENSOR.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/FindCUTENSOR.cmake COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUQUANTUM.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/FindCUQUANTUM.cmake COPYONLY)
 
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/CytnxConfig.cmake
@@ -617,6 +629,8 @@ install(FILES
   # CytnxConfig.cmake includes this to re-detect the CUDA cccl include dir
   # against the consumer's toolkit, so it must ship next to the config.
   ${CMAKE_CURRENT_LIST_DIR}/cmake/CytnxDetectCCCL.cmake
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUTENSOR.cmake
+  ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules/FindCUQUANTUM.cmake
   DESTINATION ${INSTALL_CONFIGDIR}
   COMPONENT Development
 )
@@ -687,9 +701,9 @@ message(STATUS "")
 message(STATUS "")
 message(STATUS "")
 
-install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
-install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
-install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION cytnx COMPONENT libraries)
+install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION cytnx COMPONENT libraries)
 
 if(BUILD_PACKAGES)
   include("Package.cmake")

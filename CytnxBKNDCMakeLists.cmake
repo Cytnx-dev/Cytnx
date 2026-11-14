@@ -40,7 +40,11 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
   #  target_include_directories(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
   #  target_link_libraries(cytnx PUBLIC  $<LINK_ONLY:MKL::MKL>)
   #  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
-    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+    if(WIN32)
+      target_link_libraries(cytnx PUBLIC "$<BUILD_INTERFACE:${LAPACK_LIBRARIES}>")
+    else()
+      target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+    endif()
     target_compile_definitions(cytnx PUBLIC UNI_MKL)
 
 
@@ -154,8 +158,20 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
         endif()
       endif()
     endif()
-    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
-    target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
+    if(WIN32)
+      # The installed static target re-finds these final-link dependencies in
+      # the consumer environment. Do not export paths into the build-time Pixi
+      # environment.
+      target_link_libraries(cytnx PUBLIC
+        "$<BUILD_INTERFACE:${LAPACK_LIBRARIES}>"
+        "$<BUILD_INTERFACE:${LAPACKE_LIBRARIES}>"
+      )
+    else()
+      target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
+    endif()
+    # LAPACKE headers are used only while compiling cytnx itself. Do not export
+    # a build-environment include path to installed CMake consumers.
+    target_include_directories(cytnx PRIVATE ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
     message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
     message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
@@ -164,7 +180,16 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
 else()
   set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
-  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
+  if(WIN32)
+    # Match the discovery paths above: the installed static target re-finds
+    # these final-link dependencies instead of exporting build-machine paths.
+    target_link_libraries(cytnx PUBLIC
+      "$<BUILD_INTERFACE:${LAPACK_LIBRARIES}>"
+      "$<BUILD_INTERFACE:${LAPACKE_LIBRARIES}>"
+    )
+  else()
+    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
+  endif()
   message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
   message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
 endif()
@@ -250,6 +275,8 @@ if(USE_CUDA)
     find_package(CUDAToolkit REQUIRED)
 
     set_target_properties(cytnx PROPERTIES
+        CUDA_STANDARD 20
+        CUDA_STANDARD_REQUIRED ON
         CUDA_SEPARABLE_COMPILATION ON
                                     )
     set_target_properties(cytnx PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
@@ -300,8 +327,7 @@ if(USE_CUDA)
         find_package(CUTENSOR REQUIRED)
         if(CUTENSOR_FOUND)
             target_compile_definitions(cytnx PUBLIC UNI_CUTENSOR)
-            target_include_directories(cytnx PUBLIC ${CUTENSOR_INCLUDE_DIRS})
-            target_link_libraries(cytnx PUBLIC ${CUTENSOR_LIBRARIES})
+            target_link_libraries(cytnx PUBLIC CUTENSOR::CUTENSOR)
         else()
             message(FATAL_ERROR "cannot find cutensor! please specify cutensor root with -DCUTENSOR_ROOT")
         endif()
@@ -336,8 +362,7 @@ if(USE_CUDA)
         find_package(CUQUANTUM REQUIRED)
         if(CUQUANTUM_FOUND)
             target_compile_definitions(cytnx PUBLIC UNI_CUQUANTUM)
-            target_include_directories(cytnx PUBLIC ${CUQUANTUM_INCLUDE_DIRS})
-            target_link_libraries(cytnx PUBLIC ${CUQUANTUM_LIBRARIES})
+            target_link_libraries(cytnx PUBLIC CUQUANTUM::CUQUANTUM)
         else()
             message(FATAL_ERROR "cannot find cuquantum! please specify cuquantum root with -DCUQUANTUM_ROOT")
         endif()
