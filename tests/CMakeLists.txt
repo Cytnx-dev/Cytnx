@@ -58,6 +58,7 @@ add_executable(
   linalg_test/Eigh_truncate_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
+  linalg_test/IntegerMatmul_test.cpp
   linalg_test/Lanczos_test.cpp
   linalg_test/MaxMin_test.cpp
   linalg_test/Lanczos_Exp_test.cpp
