@@ -1,5 +1,7 @@
 #include "cuMovemem_gpu.hpp"
 
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+
 #include <algorithm>
 #include <vector>
 #include <type_traits>
@@ -9,6 +11,7 @@
 
 #include "backend/Storage.hpp"
 #include "cuAlloc_gpu.hpp"
+#include "cuTensorHandle_gpu.hpp"
 #include "Type.hpp"
 
 #ifdef UNI_GPU
@@ -157,12 +160,13 @@ namespace cytnx {
       }
       cuMovemem_kernel<<<NBlocks, 256, shifter_old.size() * 2 * sizeof(cytnx_uint64)>>>(
         dtmp, (cuT *)in->data(), dshifter_old, dperm_shifter_new, old_shape.size(), Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMovemem_kernel);
 
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = init_storage(dtype_T);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->data(), dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
@@ -231,8 +235,9 @@ namespace cytnx {
         one = 1;
       }
 
-      cutensorHandle_t handle;
-      checkCudaErrors(cutensorCreate(&handle));
+      // Shared per-device handle (#1132): cutensorCreate costs ~3.4 ms
+      // per call and its plan cache dies with the handle.
+      cutensorHandle_t handle = get_cutensor_handle();
 
       // This is the default alignment of cudaMalloc() and may also be the default alignment of
       // cudaMallocManaged()
@@ -268,9 +273,8 @@ namespace cytnx {
       checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
       checkCudaErrors(cutensorDestroyPlanPreference(planPref));
       checkCudaErrors(cutensorDestroyPlan(plan));
-      checkCudaErrors(cutensorDestroy(handle));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = init_storage(dtype_T);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(

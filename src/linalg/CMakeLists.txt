@@ -23,6 +23,7 @@ target_sources(cytnx
     Det.cpp
     Eig.cpp
     Eigh.cpp
+    Eigh_truncate.cpp
     Qr.cpp
     Qdr.cpp
     Exp.cpp

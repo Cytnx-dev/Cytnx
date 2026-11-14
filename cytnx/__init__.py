@@ -265,7 +265,7 @@ def _resolve_cpp_linkflags__():
         out+=" "
         if i == 0:
             lapack_ldir=os.path.dirname(line.split(' ')[0].strip())
-    if sys.platform != "win32":
+    if os.name != "nt":
         out += "-Wl,-rpath,%s "%(lapack_ldir)
 
     f.close()

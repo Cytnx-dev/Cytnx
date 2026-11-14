@@ -5,8 +5,7 @@
 # so the OpenBLAS branch's runtime-dependency check can inspect ARPACK_LIB's
 # own dependencies, and so it's available for the target_link_libraries(cytnx
 # PRIVATE ${ARPACK_LIB}) call in the main CMakeLists.txt after this file is
-# included. This file is only included for the non-BACKEND_TORCH build, so
-# ARPACK_LIB is not defined here when BACKEND_TORCH is on.
+# included.
 find_library(ARPACK_LIB arpack REQUIRED)
 message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
 
@@ -274,10 +273,6 @@ if(USE_CUDA)
 
     enable_language(CUDA)
     find_package(CUDAToolkit REQUIRED)
-    if(NOT DEFINED CMAKE_CUDA_STANDARD)
-        set(CMAKE_CUDA_STANDARD 20)
-        set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-    endif()
 
     set_target_properties(cytnx PROPERTIES
         CUDA_STANDARD 20
@@ -327,21 +322,6 @@ if(USE_CUDA)
 
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
     target_link_libraries(cytnx PUBLIC CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
-    if(TARGET CUDA::cudadevrt)
-      target_link_libraries(cytnx PUBLIC CUDA::cudadevrt)
-    else()
-      find_library(CUDA_cudadevrt_LIBRARY
-        NAMES cudadevrt
-        HINTS "${CUDAToolkit_LIBRARY_DIR}" "${CUDAToolkit_ROOT}"
-        PATH_SUFFIXES lib/x64 lib64 lib
-        REQUIRED
-      )
-      # The fallback is resolved again by CytnxConfig.cmake for installed
-      # consumers so the exported target does not bake in this build path.
-      target_link_libraries(cytnx PUBLIC
-        "$<BUILD_INTERFACE:${CUDA_cudadevrt_LIBRARY}>"
-      )
-    endif()
 
     if(USE_CUTENSOR)
         find_package(CUTENSOR REQUIRED)
@@ -418,8 +398,10 @@ if(USE_CUDA)
 
 
     message( STATUS " Build CUDA Support: YES")
-    message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
-    message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
+    message( STATUS "  - CUDA Version: ${CUDAToolkit_VERSION}")
+    message( STATUS "  - CUDA Toolkit bin dir: ${CUDAToolkit_BIN_DIR}")
+    message( STATUS "  - CUDA compiler (nvcc): ${CMAKE_CUDA_COMPILER}")
+    message( STATUS "  - CUDA compiler version: ${CMAKE_CUDA_COMPILER_VERSION}")
     message( STATUS "  - Internal macro switch: GPU/CUDA")
     if(MSVC)
       FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/DUNI_GPU\n" "")
@@ -452,13 +434,14 @@ if(USE_CUDA)
     if(WIN32)
       message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY}")
       FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY}\n" "")
-      message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY}")
-      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY}\n" "")
     else()
       message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY} -ldl")
       FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing
-      message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt")
-      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt\n" "") # use > to indicate special rt processing
+      # No cudadevrt here: it is the device-side runtime for CUDA dynamic
+      # parallelism, which cytnx no longer uses (#1229), and a host link of
+      # libcytnx.a never needed it (measured in the #1230 follow-up).
+      message( STATUS "  - rt library: -lrt")
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "-lrt\n" "")
     endif()
     message( STATUS "  - Cuda cusparse library: ${CUDA_cusparse_LIBRARY}")
     FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusparse_LIBRARY}\n" "")

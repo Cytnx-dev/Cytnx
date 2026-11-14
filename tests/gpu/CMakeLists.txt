@@ -16,6 +16,7 @@ add_executable(
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
   linalg_test/Abs_test.cpp
+  linalg_test/UnaryExpPowConj_test.cpp
   linalg_test/Add_test.cpp
   linalg_test/Kron_test.cpp
   linalg_test/Cpr_test.cpp
@@ -26,11 +27,14 @@ add_executable(
   linalg_test/InplacePromote_test.cpp
   linalg_test/NonContigElementwise_test.cpp
   linalg_test/Outer_test.cpp
+  linalg_test/CuLibraryHandle_test.cpp
+  linalg_test/CusolverResourceLeak_test.cpp
   linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_test.cpp
+  linalg_test/MaxMin_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Arnoldi_test.cpp
   linalg_test/Arnoldi_Ut_test.cpp
@@ -54,6 +58,10 @@ target_include_directories(
   gpu_test_main
   PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
+  # Internal backend headers (e.g. utils_internal_gpu/cuLibraryHandle_gpu.hpp) live under src/
+  # and are PRIVATE to the cytnx target; expose them to the test binary so internal utilities
+  # can be unit-tested directly. Mirrors what tests/CMakeLists.txt does for test_main.
+  ${CMAKE_SOURCE_DIR}/src
 )
 target_link_libraries(
   gpu_test_main

@@ -46,7 +46,10 @@ namespace cytnx {
           x += cytnx_uint64(tmp2 / shape2[j]) * shape1_acc[j];
           y += cytnx_uint64(tmp2 % shape2[j]) * shape2_acc[j];
         }
-        out[i] = Lin[x] * Rin[y];
+        // Compute through the operation's output type (#1003): TO is the promoted dtype the
+        // caller already allocated, so converting both operands first keeps the arithmetic on
+        // Cytnx's promotion rules instead of C++'s native ones.
+        out[i] = static_cast<TO>(Lin[x]) * static_cast<TO>(Rin[y]);
       }
     }
 

@@ -9,9 +9,7 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-  #include "backend/linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -61,7 +59,7 @@ namespace cytnx {
         return out;
 
       } else {
-  #ifdef UNI_GPU
+#ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(in.device()));
         cytnx::linalg_internal::lii.cuGeSvd_ii[in.dtype()](
           in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
@@ -73,11 +71,11 @@ namespace cytnx {
         if (is_vT) out.push_back(vT);
 
         return out;
-  #else
+#else
         cytnx_error_msg(true, "[Gesvd] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-  #endif
+#endif
       }
     }
 
@@ -455,5 +453,3 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
-
-#endif  // BACKEND_TORCH

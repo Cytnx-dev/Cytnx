@@ -2,6 +2,7 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
+#include "backend/utils_internal_gpu/cuLibraryHandle_gpu.hpp"
 
 namespace cytnx {
 
@@ -50,15 +51,15 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = nullptr;
-          checkCudaErrors(cublasCreate(&cublasH));
+          // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+          // up to 20x the cost of the small GEMMs it wraps.
+          cublasHandle_t cublasH = utils_internal::get_cublas_handle();
           checkCudaErrors(cublasZgemm(
             cublasH, transa, transb, m_array[i], n_array[i], k_array[i],
             (cuDoubleComplex *)&alphas[i], (cuDoubleComplex *)a_array[idx], lda_array[i],
             (cuDoubleComplex *)b_array[idx], ldb_array[i], (cuDoubleComplex *)&betas[i],
             (cuDoubleComplex *)c_array[idx], ldc_array[i]));
           idx++;
-          checkCudaErrors(cublasDestroy(cublasH));
         }
       }
     }
@@ -107,15 +108,15 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = nullptr;
-          checkCudaErrors(cublasCreate(&cublasH));
+          // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+          // up to 20x the cost of the small GEMMs it wraps.
+          cublasHandle_t cublasH = utils_internal::get_cublas_handle();
           checkCudaErrors(cublasCgemm(cublasH, transa, transb, m_array[i], n_array[i], k_array[i],
                                       (cuFloatComplex *)&alphas[i], (cuFloatComplex *)a_array[idx],
                                       lda_array[i], (cuFloatComplex *)b_array[idx], ldb_array[i],
                                       (cuFloatComplex *)&betas[i], (cuFloatComplex *)c_array[idx],
                                       ldc_array[i]));
           idx++;
-          checkCudaErrors(cublasDestroy(cublasH));
         }
       }
     }
@@ -164,14 +165,14 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = nullptr;
-          checkCudaErrors(cublasCreate(&cublasH));
+          // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+          // up to 20x the cost of the small GEMMs it wraps.
+          cublasHandle_t cublasH = utils_internal::get_cublas_handle();
           checkCudaErrors(cublasDgemm(
             cublasH, transa, transb, m_array[i], n_array[i], k_array[i], (cytnx_double *)&alphas[i],
             (cytnx_double *)a_array[idx], lda_array[i], (cytnx_double *)b_array[idx], ldb_array[i],
             (cytnx_double *)&betas[i], (cytnx_double *)c_array[idx], ldc_array[i]));
           idx++;
-          checkCudaErrors(cublasDestroy(cublasH));
         }
       }
       // checkCudaErrors(cudaDeviceSynchronize());
@@ -220,14 +221,14 @@ namespace cytnx {
               break;
           }
           // create handles:
-          cublasHandle_t cublasH = nullptr;
-          checkCudaErrors(cublasCreate(&cublasH));
+          // Shared per-device handle (#1144): cublasCreate costs ~330 us per call,
+          // up to 20x the cost of the small GEMMs it wraps.
+          cublasHandle_t cublasH = utils_internal::get_cublas_handle();
           checkCudaErrors(cublasSgemm(
             cublasH, transa, transb, m_array[i], n_array[i], k_array[i], (cytnx_float *)&alphas[i],
             (cytnx_float *)a_array[idx], lda_array[i], (cytnx_float *)b_array[idx], ldb_array[i],
             (cytnx_float *)&betas[i], (cytnx_float *)c_array[idx], ldc_array[i]));
           idx++;
-          checkCudaErrors(cublasDestroy(cublasH));
         }
       }
     }

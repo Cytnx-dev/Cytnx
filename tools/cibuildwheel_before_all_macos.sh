@@ -53,7 +53,11 @@ else
   conda_subdir="osx-64"
 fi
 
-curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj bin/micromamba
+# Pinned rather than `latest`, so a new micromamba release reaches the wheel
+# builds only through a reviewed change. Must match micromamba_version in
+# tools/cibuildwheel_before_all.sh.
+micromamba_version="2.9.0"
+curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/${micromamba_version}" | tar -xj bin/micromamba
 export MAMBA_ROOT_PREFIX="/tmp/cytnx-micromamba"
 ./bin/micromamba create -y -p "${deps_prefix}" -c conda-forge \
   "openblas=*=*openmp*" \

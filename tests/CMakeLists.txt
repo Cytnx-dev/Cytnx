@@ -1,7 +1,4 @@
 
-if(BACKEND_TORCH)
-else()
-
 # GoogleTest (gtest + gmock) is a required prerequisite for the test suite and
 # must be provided by the toolchain / a config-mode install. It is deliberately
 # NOT fetched here so the CMake configuration stays free of network access
@@ -45,7 +42,10 @@ add_executable(
   arange_test.cpp
   Type_test.cpp
   cytnx_error_test.cpp
+  overload_hygiene_test.cpp
+  Physics_test.cpp
   include_order_canary_test.cpp
+  operator_constraint_test.cpp
   Tensor_strides_test.cpp
   Storage_test.cpp
   Scalar_test.cpp
@@ -55,9 +55,11 @@ add_executable(
   utils/getNconParameter.cpp
   linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
+  linalg_test/Eigh_truncate_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_test.cpp
+  linalg_test/MaxMin_test.cpp
   linalg_test/Lanczos_Exp_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Arnoldi_test.cpp
@@ -68,6 +70,7 @@ add_executable(
   linalg_test/Gesvd_truncate_test.cpp
   linalg_test/Rsvd_test.cpp
   linalg_test/DtypePromotion_test.cpp
+  linalg_test/Kron_test.cpp
   linalg_test/Outer_test.cpp
   linalg_test/TypedArithmeticCoverage_test.cpp
   linalg_test/Gemm_Batch_test.cpp
@@ -134,19 +137,36 @@ gtest_discover_tests(test_main
                      # also has gpu_test_main's tests registered.
                      PROPERTIES LABELS cpu)
 
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
-      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
-      DESTINATION ${CMAKE_BINARY_DIR})
+# Reproduce #673 in a separate process with its own translation unit.
+# Unlike test_main, this executable does not reference Storage.cpp symbols
+# (such as operator<<) that would force the static library's initializer object
+# to be linked, masking the original missing-initializer bug.
+add_executable(storage_init_link_test storage_init_link_test.cpp)
+target_link_libraries(storage_init_link_test PRIVATE cytnx)
 
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
-      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
-      DESTINATION ${CMAKE_BINARY_DIR})
-
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
-      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
-      DESTINATION ${CMAKE_BINARY_DIR})
-
+if(USE_DEBUG)
+  if(MSVC)
+    target_compile_options(storage_init_link_test PRIVATE /fsanitize=address)
+  else()
+    target_compile_options(storage_init_link_test PRIVATE -fsanitize=address)
+    target_link_options(storage_init_link_test PRIVATE -fsanitize=address)
+  endif()
 endif()
+
+add_test(NAME storage_init_link_test COMMAND storage_init_link_test)
+set_tests_properties(storage_init_link_test PROPERTIES LABELS cpu)
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
+      DESTINATION ${CMAKE_BINARY_DIR})

@@ -18,9 +18,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using pybind_cytnx::dispatch_pyint;
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace {
   bool is_empty_tuple(py::handle object) {
     return py::isinstance<py::tuple>(object) &&
@@ -86,23 +83,23 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
 }
 
 namespace {
-  // Deprecated Norm() binding helper (#676): use norm() (returns a python float) instead.
-  // The -Wdeprecated-declarations warning from calling the [[deprecated]] Tensor::Norm() is
-  // suppressed here at file scope because a #pragma GCC diagnostic cannot legally sit inside
-  // the .def() chain expression under GCC (only clang tolerated that). Exposing the deprecated
-  // call for one release is intentional.
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  #endif
+// Deprecated Norm() binding helper (#676): use norm() (returns a python float) instead.
+// The -Wdeprecated-declarations warning from calling the [[deprecated]] Tensor::Norm() is
+// suppressed here at file scope because a #pragma GCC diagnostic cannot legally sit inside
+// the .def() chain expression under GCC (only clang tolerated that). Exposing the deprecated
+// call for one release is intentional.
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
   cytnx::Tensor tensor_Norm_deprecated(cytnx::Tensor &self) {
     if (PyErr_WarnEx(PyExc_DeprecationWarning, "Norm() is deprecated, use norm() instead.", 1) < 0)
       throw py::error_already_set();
     return self.Norm();
   }
-  #if defined(__GNUC__) || defined(__clang__)
-    #pragma GCC diagnostic pop
-  #endif
+#if defined(__GNUC__) || defined(__clang__)
+  #pragma GCC diagnostic pop
+#endif
 }  // namespace
 
 void tensor_binding(py::module &m) {
@@ -1567,4 +1564,3 @@ void tensor_binding(py::module &m) {
 
     ;  // end of object line
 }
-#endif

@@ -28,17 +28,11 @@ using ssize_t = std::make_signed_t<std::size_t>;
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
 
-#ifdef BACKEND_TORCH
-typedef int32_t blas_int;
-#else
-
-  #ifdef UNI_MKL
-    #include <mkl.h>
+#ifdef UNI_MKL
+  #include <mkl.h>
 typedef MKL_INT blas_int;
-  #else
+#else
 typedef int32_t blas_int;
-  #endif
-
 #endif
 
 // @cond

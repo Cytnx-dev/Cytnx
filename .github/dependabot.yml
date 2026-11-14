@@ -1,0 +1,32 @@
+# Keeps the exact pins in the workflows current. Actions are pinned by commit
+# SHA and the bootstrap pip by version and hash, so nothing moves until one of
+# these pull requests is reviewed and merged. The cooldown leaves a new release
+# a week to be noticed and pulled if it turns out to be compromised before it
+# is proposed; Dependabot security updates are not delayed by it.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    # Minor and patch updates arrive as one grouped pull request; each major
+    # update gets its own, since a major release can change inputs or
+    # behaviour and deserves a separate review.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  # .github/pip-bootstrap-requirements.txt, the hash-pinned pip the release
+  # workflows upgrade the runner's own pip to.
+  - package-ecosystem: pip
+    directory: /.github
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7

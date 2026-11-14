@@ -1,73 +1,148 @@
 Install & Usage of Cytnx
 ============================
-To install Cytnx, we recommend user to use anaconda/miniconda to install. However, advanced users can also build from source if necessary.
-Both the conda package and the PyPI wheel install only the Python API; the C++ headers and library are not included. See `Using the C++ API`_ below for how to build against Cytnx's C++ library instead.
+Cytnx publishes prebuilt Python wheels, so installing the Python API does not
+require a compiler or a CUDA toolkit. The recommended way to get one is
+`Pixi <https://pixi.sh>`_, which creates a project-local environment from a
+lock file so everyone working from the same project gets the same versions.
+
+If you want to call Cytnx from C++, or you need a build option the wheels are
+not compiled with, see `Using the C++ API`_ below.
 
 
-Conda install
+Install with Pixi
 ********************
-In the following we show how to install Cytnx with conda.
+1. Install Pixi by following the `Pixi installation guide
+   <https://pixi.sh/latest/installation/>`_.
 
-1. Install :anaconda:`Anaconda3 <>` / :miniconda:`Miniconda3 <>`.
-
-
-2. Create a virtual environment:
-
-* For linux/WSL:
+2. Create a project, pin a Python version Cytnx has wheels for, and add Cytnx:
 
 .. code-block:: shell
-    :linenos:
 
-    $conda config --add channels conda-forge
-    $conda create --channel conda-forge --name cytnx _openmp_mutex=*=*_llvm
+    pixi init my-project
+    cd my-project
+    pixi add "python=3.12"
+    pixi add --pypi cytnx
 
-.. Note::
+3. Run Python inside that environment:
 
-    1. We do not support a native Windows package at this stage. If you are using Windows OS, please use WSL.
+.. code-block:: shell
 
-* For MacOS:
+    pixi run python
 
-    Please build from source, currently 0.9+ does not have conda package support.
+.. important::
 
-..
-    * For MacOS (non-arm arch)
+    Pin the Python version. A bare ``pixi add python`` takes the newest
+    CPython conda-forge offers, which is already past the newest Python Cytnx
+    builds wheels for; the resolve then fails, reporting that it needs
+    ``cp315`` while Cytnx publishes only ``cp39`` through ``cp314``. Any
+    version in `Supported platforms`_ works, and ``3.12`` is a safe default.
+
+    Adding Cytnx before any Python at all fails differently, with
+    ``No Python interpreter found in the dependencies``.
+
+.. warning::
+
+    The current release on PyPI, ``cytnx`` 1.1.1, installs but then fails on
+    ``import cytnx`` with ``AttributeError: module 'importlib' has no attribute
+    'util'``. The bug is fixed in the development branch but is not in a
+    release yet.
+
+    Until the next patch release, take Cytnx from the nightly wheel index,
+    which is built from the development branch:
+
     .. code-block:: shell
-        :linenos:
 
-        $conda config --add channels conda-forge
-        $conda create --channel conda-forge --name cytnx llvm-openmp
+        pixi add --pypi cytnx --index https://pypi.anaconda.org/cytnx-nightly-wheels/simple
 
-
-.. note::
-
-    * See :virtualenv:`This page <>` for how to use virtual environment in conda.
-
-
-3. Activate environment and conda install the cytnx package:
-
-    Once you create a virtual environment, we need to activate the environment before starting to use it.
-
-.. code-block:: shell
-
-    $conda activate cytnx
-
-.. code-block:: shell
-
-    $conda install -c kaihsinwu cytnx
+    The nightly index carries every build, so this first resolve can take a
+    few minutes. It is not stuck.
 
 .. note::
 
-    * To install the GPU (CUDA) support version, use:
-
-    $conda install -c kaihsinwu cytnx_cuda
-
-
-Once it is installed, we are all set, and ready to start using Cytnx.
+    We do not publish a native Windows wheel at this stage. On Windows, please
+    use WSL.
 
 
-Using Python API after Conda install
+GPU (CUDA) support
 ---------------------------------------
-After installing Cytnx, using the Python API is very straight forward, simply import cytnx via:
+The CUDA build is a separate package, ``cytnx-cuda``. It is currently
+published only on the nightly index, and only for Linux on x86_64:
+
+.. code-block:: shell
+
+    pixi add --pypi cytnx-cuda --index https://pypi.anaconda.org/cytnx-nightly-wheels/simple
+
+The wheel bundles the CUDA runtime libraries it needs, so no system CUDA
+toolkit is required. An NVIDIA GPU and a sufficiently recent driver are, of
+course, needed to run on the GPU.
+
+
+Install with pip
+********************
+If you are not using Pixi, the wheels install with ``pip`` like any other
+package. Use a virtual environment so the install does not touch your system
+Python, and create it with a Python version from `Supported platforms`_:
+
+.. code-block:: shell
+
+    python3.12 -m venv cytnx-env
+    source cytnx-env/bin/activate
+    pip install cytnx
+
+.. note::
+
+    ``pip`` cannot be told to prefer one index over another: with
+    ``--extra-index-url`` it considers every index together and picks the
+    highest version, and a nightly such as ``1.1.1.dev202610071206`` sorts
+    *below* the ``1.1.1`` release. So ``pip install --pre --extra-index-url
+    ...`` quietly installs the release, not the nightly. To get a nightly with
+    ``pip``, pin one exactly::
+
+        pip install --extra-index-url https://pypi.anaconda.org/cytnx-nightly-wheels/simple \
+            cytnx==1.1.1.devYYYYMMDDHHMM
+
+    picking a version from the `nightly index
+    <https://pypi.anaconda.org/cytnx-nightly-wheels/simple/cytnx/>`_. Pixi and
+    ``uv`` both resolve a named index directly and need no such pin.
+
+
+Supported platforms
+********************
+The released wheels cover CPython 3.9 through 3.14 on:
+
+.. list-table::
+    :header-rows: 1
+    :widths: 30 35 35
+
+    * - Platform
+      - CPU (``cytnx``)
+      - CUDA (``cytnx-cuda``)
+    * - Linux x86_64
+      - yes
+      - yes (nightly only)
+    * - Linux aarch64
+      - yes
+      - no
+    * - macOS, Apple silicon
+      - yes (macOS 14+)
+      - no
+    * - macOS, Intel
+      - yes (macOS 15+)
+      - no
+    * - Windows
+      - no, use WSL
+      - no, use WSL
+
+The Linux wheels require glibc 2.27 or newer; musl-based distributions such as
+Alpine are covered by separate ``musllinux`` wheels. There is no source
+distribution on PyPI, so a platform without a wheel has to build from source as
+described in :doc:`adv_install`.
+
+
+Checking the installation
+---------------------------------------
+Importing ``cytnx`` and creating a tensor is enough to confirm the install
+works:
 
 * In Python:
 
@@ -76,6 +151,7 @@ After installing Cytnx, using the Python API is very straight forward, simply im
 
     import cytnx
 
+    print(cytnx.__version__)
     A = cytnx.ones(4)
     print(A)
 
@@ -89,13 +165,16 @@ Output>>
     Shape : (4)
     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
 
+.. note::
+
+    Run this from any directory other than a clone of the Cytnx source tree.
+    Inside the source tree the local ``cytnx/`` directory shadows the installed
+    package and the import fails.
+
+
 Using the C++ API
 ---------------------------------------
-The conda package and the PyPI wheel install only the compiled Python extension; they no longer carry the C++ headers or a linkable ``libcytnx``. To build your own C++ code against Cytnx, build and install the C++ library directly with CMake and consume it via ``find_package(Cytnx)``, as described in :doc:`adv_install`.
-
-
-
-
-
-
-.. toctree::
+The wheels install only the compiled Python extension; they do not carry the
+C++ headers or a linkable ``libcytnx``. To build your own C++ code against
+Cytnx, build and install the C++ library directly with CMake and consume it via
+``find_package(Cytnx)``, as described in :doc:`adv_install`.
