@@ -126,6 +126,15 @@ Green locally before opening a PR. CI enforces:
 - Small, single-purpose commits following the
   [Conventional Commits](https://www.conventionalcommits.org) standard:
   `fix(linalg): …`, `refactor(Storage): …`, `test(Type): …`.
+- **Stacked PRs: do not rewrite a branch that another PR is based on.** A rebase
+  or force-push replaces the parent's commits, which leaves every PR stacked on
+  it in conflict with its own base. While a child PR is open, update the parent
+  only when `master` actually conflicts with it, and do so with a merge commit;
+  PR branches do not need linear history. Land the parent with a merge commit,
+  not a squash, so the child stays valid and needs no update; if the parent is
+  squashed anyway, rebase the child's own commits onto `master` once. State the
+  dependency and the merge method in both PR bodies ("stacked on #N; merge #N
+  with a merge commit first").
 - Attribute agent-authored commits with a `Co-Authored-By:` trailer naming the
   agent. It is set when the commit is written and is **not checkable from a
   diff** — reviewers must not verify or flag it.
