@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <complex>
+#include <cstddef>
 #include <functional>
 #include <map>
 #include <string>
@@ -405,8 +406,8 @@ namespace cytnx {
       // The chain with all-ones tensors, large enough that cuTensorNet asks for a workspace of
       // tens of MiB per contraction. Every result element is the number of terms summed over c
       // and d.
-      constexpr cytnx_uint64 kOnesDimA = 30, kOnesDimB = 40, kOnesDimC = 50, kOnesDimD = 60,
-                             kOnesDimE = 20;
+      constexpr std::size_t kOnesDimA = 30, kOnesDimB = 40, kOnesDimC = 50, kOnesDimD = 60,
+                            kOnesDimE = 20;
 
       std::vector<UniTensor> MakeOnesChain() {
         const auto make = [](const std::vector<cytnx_uint64>& shape,
@@ -421,15 +422,15 @@ namespace cytnx {
         ASSERT_EQ(res.shape(), (std::vector<cytnx_uint64>{kOnesDimA, kOnesDimB, kOnesDimE}));
         const Tensor block = res.to(Device.cpu).get_block().contiguous();
         const std::complex<double> expected = static_cast<double>(kOnesDimC * kOnesDimD);
-        cytnx_uint64 mismatches = 0;
-        for (cytnx_uint64 a = 0; a < kOnesDimA; a++) {
-          for (cytnx_uint64 b = 0; b < kOnesDimB; b++) {
-            for (cytnx_uint64 e = 0; e < kOnesDimE; e++) {
+        std::size_t mismatches = 0;
+        for (std::size_t a = 0; a < kOnesDimA; a++) {
+          for (std::size_t b = 0; b < kOnesDimB; b++) {
+            for (std::size_t e = 0; e < kOnesDimE; e++) {
               if (std::abs(block.at<cytnx_complex128>({a, b, e}) - expected) > 1e-9) mismatches++;
             }
           }
         }
-        EXPECT_EQ(mismatches, 0);
+        EXPECT_EQ(mismatches, 0u);
       }
 
       // #856: on a cuQuantum build every Launch() kept its cuTensorNet workspace, its stream and
