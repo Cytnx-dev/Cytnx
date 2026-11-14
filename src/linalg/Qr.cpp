@@ -12,6 +12,9 @@
 typedef cytnx::Accessor ac;
 
 #include "backend/linalg_internal_interface.hpp"
+#ifdef UNI_GPU
+  #include "backend/linalg_internal_gpu/cuQr_internal.hpp"
+#endif
 
 namespace cytnx {
   namespace linalg {
@@ -57,32 +60,23 @@ namespace cytnx {
 
       } else {
 #ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+        cytnx_error_msg(is_tau, "[QR] Returning tau is not supported on GPU.%s", "\n");
 
         checkCudaErrors(cudaSetDevice(in.device()));
 
         Q.Init({Tin.shape()[0], n_tau}, in.dtype(), in.device());
         Q.storage().set_zeros();
 
+  #ifdef UNI_CUQUANTUM
         cytnx::linalg_internal::lii.cuQuantumQr_ii[in.dtype()](
           in._impl->storage()._impl, Q._impl->storage()._impl, R._impl->storage()._impl,
           D._impl->storage()._impl, tau._impl->storage()._impl, in.shape()[0], in.shape()[1],
           false);
-
-        std::vector<Tensor> out;
-        out.push_back(Q);
-        out.push_back(R);
-
-        // if (is_tau) out.push_back(tau);
-        cytnx_error_msg(is_tau, "[QR] Returning tau is currently not supported for cuQuantum QR.%s",
-                        "\n");
-
-        return out;
   #else
-        cytnx_error_msg(
-          true, "QR decomposition on GPU not implemented without cuQuantum support!%s", "\n");
-        return std::vector<Tensor>();
+        cytnx::linalg_internal::cuQr(in, Q, R);
   #endif
+
+        return std::vector<Tensor>{Q, R};
 #else
         cytnx_error_msg(true, "[QR] fatal error, %s",
                         "try to call the gpu section without CUDA support.\n");
