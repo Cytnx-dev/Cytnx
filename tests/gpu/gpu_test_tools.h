@@ -1,6 +1,7 @@
 #ifndef CYTNX_TESTS_GPU_GPU_TEST_TOOLS_H_
 #define CYTNX_TESTS_GPU_GPU_TEST_TOOLS_H_
 
+#include <functional>
 #include <random>
 #include <string>
 #include <vector>
@@ -61,6 +62,15 @@ namespace cytnx {
                      const std::vector<cytnx_uint64>& idices2);
 
     void InitUniTensorUniform(UniTensor& UT, unsigned int rand_seed = 0);
+
+    // Device memory tools
+
+    // Free memory of the current device, in MiB.
+    double FreeDeviceMiB();
+
+    // Runs `body` up to `attempts` times and returns the smallest amount of device memory, in
+    // MiB, that one run failed to give back; stops early once a run stays under `slack`.
+    double MeasureLeakMiB(const std::function<void()>& body, int attempts, double slack);
 
     /**
      * Helper function for the EXPECT_NUMBER_EQ assertion.
