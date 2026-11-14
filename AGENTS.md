@@ -65,7 +65,7 @@ overrides; read them when writing or reviewing code.
 
 The rules agents most often get wrong:
 
-- **No leading underscore in new C++ code** (strict). `_foo` is the retired
+- **No leading underscore in new C++ code** (strict/C++ only). `_foo` is the retired
   private-member convention (#836); new C++/CUDA members, helpers, and locals
   must not start with `_`. **The ban is C++-only.** In Python a single leading
   underscore is Google style's marker for a module- or class-internal name
