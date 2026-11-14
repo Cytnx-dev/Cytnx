@@ -473,7 +473,9 @@ namespace cytnx {
                     "[ERROR] type mismatch. try to get %s type from raw data of type %s",
                     type_spelling<T>, Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
-    cudaDeviceSynchronize();
+    // Device storage is unified memory that the caller dereferences on the host, so wait for
+    // pending kernels first. CPU storage has nothing to wait for.
+    if (this->device() != Device.cpu) cudaDeviceSynchronize();
 #endif
     return static_cast<T *>(this->data());
   }
@@ -562,7 +564,9 @@ namespace cytnx {
                       static_cast<unsigned long long>(this->size()));
 
 #ifdef UNI_GPU
-    cudaDeviceSynchronize();
+    // Device storage is unified memory that the caller dereferences on the host, so wait for
+    // pending kernels first. CPU storage has nothing to wait for.
+    if (this->device() != Device.cpu) cudaDeviceSynchronize();
 #endif
     return static_cast<T *>(this->data())[idx];
   }
@@ -591,7 +595,9 @@ namespace cytnx {
     cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 
 #ifdef UNI_GPU
-    cudaDeviceSynchronize();
+    // Device storage is unified memory that the caller dereferences on the host, so wait for
+    // pending kernels first. CPU storage has nothing to wait for.
+    if (this->device() != Device.cpu) cudaDeviceSynchronize();
 #endif
     return static_cast<T *>(this->data())[this->size() - 1];
   }
