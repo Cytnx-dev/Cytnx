@@ -20,6 +20,7 @@ add_executable(
   linalg/Mul_noncontig_bm.cpp
   linalg/Vectordot_bm.cpp
   linalg/Lanczos_bm.cpp
+  linalg/Krylov_dtype_bm.cpp
   linalg/linalg_basic_bm.cpp
   linalg/QR_bm.cpp
 
