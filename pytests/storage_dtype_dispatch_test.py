@@ -6,6 +6,8 @@ cytnx initializes the extension first, so Python cannot reproduce that
 linking failure.
 """
 
+import struct
+
 import pytest
 
 import cytnx
@@ -50,3 +52,42 @@ def test_storage_construction_bool_dtype_round_trips_true_and_false():
     s[1] = True
     assert s[0] is False
     assert s[1] is True
+
+
+def test_storage_construction_void_dtype_raises():
+    # Type.Void passes the dtype range check, and before #1073 it called a null
+    # function pointer.
+    with pytest.raises(cytnx.CytnxError):
+        cytnx.Storage(1, Type.Void)
+
+
+def _write_storage_file(path, dtype):
+    """Writes a one-element Storage file in the layout Storage.Load reads.
+
+    The header is written by hand so the dtype field can hold values that
+    Storage.Save never produces.
+
+    Args:
+        path: Destination file path.
+        dtype: Value for the dtype field of the header.
+    """
+    magic, size, device_cpu = 999, 1, -1
+    header = struct.pack("=IQIi", magic, size, int(dtype), device_cpu)
+    path.write_bytes(header + struct.pack("=d", 1.5))
+
+
+def test_storage_load_reads_hand_written_file(tmp_path):
+    path = tmp_path / "valid_dtype.bin"
+    _write_storage_file(path, Type.Double)
+    loaded = cytnx.Storage.Load(str(path))
+    assert loaded.dtype() == Type.Double
+    assert loaded.size() == 1
+    assert loaded[0] == 1.5
+
+
+@pytest.mark.parametrize("dtype", [Type.Void, 99])
+def test_storage_load_rejects_invalid_dtype_in_file(tmp_path, dtype):
+    path = tmp_path / "invalid_dtype.bin"
+    _write_storage_file(path, dtype)
+    with pytest.raises(cytnx.CytnxError):
+        cytnx.Storage.Load(str(path))
