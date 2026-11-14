@@ -109,7 +109,9 @@ namespace cytnx {
     void setDevice(int id);
     void createStream();
     void createHandle();
-    cutensornetWorkspaceDescriptor_t createNetworkDescriptor();
+    // dtype is the common dtype of every input tensor and of the output; it must be one of
+    // Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float.
+    cutensornetNetworkDescriptor_t createNetworkDescriptor(unsigned int dtype);
     void getWorkspacelimit();
     cutensornetContractionOptimizerInfo_t findOptimalOrder();
     cutensornetContractionOptimizerInfo_t createOptimizerInfo();
