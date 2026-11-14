@@ -159,7 +159,7 @@ def write_report(path: Path, output_dir: Path, policy: str = "") -> None:
     md.extend(["", "## Trends and caution",
         "",
         "The results include per-call CUDA metadata allocation and H2D copies, "
-        "not just kernel time. S0 calls the unmodified PR #1230 Double L2 function. "
+        "not just kernel time. S0 retains the PR #1230 Double kernel, with only its empty-locator metadata undefined behavior corrected. "
         "All strategies are correctness checked against independent CPU output.",
         "",
         "The CPU reference checks every output element before timing; all 345 strategy cases "
