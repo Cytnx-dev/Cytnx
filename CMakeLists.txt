@@ -258,9 +258,22 @@ if(USE_CUDA)
   # a preset's cacheVariables, or the CUDAARCHS environment variable, before
   # enable_language(CUDA) fills CMAKE_CUDA_ARCHITECTURES with its own default
   # and makes the "not specified" case impossible to detect.
+  #
+  # A *re*configure of an existing build dir needs more than that check: the
+  # first configure leaves a CMAKE_CUDA_ARCHITECTURES cache entry behind, so
+  # every later run sees a non-empty value and would mistake it for a caller's
+  # choice, silently collapsing the portable fat binary below onto whatever
+  # single architecture CMake defaulted to. CYTNX_CUDA_ARCHITECTURES_APPLIED
+  # remembers the list this project installed, so a cache entry that still
+  # matches it is recognized as ours and re-derived, while any other value --
+  # including a -D given on a later configure -- is honored as the caller's.
   set(_cytnx_user_set_cuda_architectures FALSE)
   if(CMAKE_CUDA_ARCHITECTURES OR DEFINED ENV{CUDAARCHS})
     set(_cytnx_user_set_cuda_architectures TRUE)
+    if(DEFINED CYTNX_CUDA_ARCHITECTURES_APPLIED
+       AND CMAKE_CUDA_ARCHITECTURES STREQUAL CYTNX_CUDA_ARCHITECTURES_APPLIED)
+      set(_cytnx_user_set_cuda_architectures FALSE)
+    endif()
   endif()
   # enable_language(CUDA) runs its own internal compiler ABI-detection compile
   # using whatever CMAKE_CUDA_ARCHITECTURES is set to at this point, so our own
@@ -277,10 +290,21 @@ if(USE_CUDA)
     # https://docs.nvidia.com/cuda/archive/13.0.0/cuda-toolkit-release-notes/),
     # so the floor is Turing (sm_75) on CUDA >=13 and Volta (sm_70) below that.
     if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 13.0)
-      set(CMAKE_CUDA_ARCHITECTURES 75-real 80-real 86-real 89-real 90-real 90-virtual)
+      set(_cytnx_cuda_architectures 75-real 80-real 86-real 89-real 90-real 90-virtual)
     else()
-      set(CMAKE_CUDA_ARCHITECTURES 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
+      set(_cytnx_cuda_architectures 70-real 75-real 80-real 86-real 89-real 90-real 90-virtual)
     endif()
+    # Write the list to the cache rather than shadowing it with a normal
+    # variable: the cache is what a reconfigure, an IDE, and anything else
+    # reading CMakeCache.txt actually see, and leaving CMake's single-
+    # architecture default sitting there is what made this collapse silent.
+    set(CMAKE_CUDA_ARCHITECTURES "${_cytnx_cuda_architectures}" CACHE STRING
+        "CUDA architectures to generate device code for" FORCE)
+    set(CYTNX_CUDA_ARCHITECTURES_APPLIED "${_cytnx_cuda_architectures}" CACHE INTERNAL
+        "Architecture list this project defaulted to; distinguishes it from a caller's choice")
+    unset(_cytnx_cuda_architectures)
+  else()
+    unset(CYTNX_CUDA_ARCHITECTURES_APPLIED CACHE)
   endif()
   unset(_cytnx_user_set_cuda_architectures)
   # Disable generation of "--option-file" flag in compile_commands.json.
