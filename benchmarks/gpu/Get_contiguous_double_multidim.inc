@@ -16,8 +16,9 @@ std::vector<cytnx_uint64> Range(cytnx_uint64 start, cytnx_uint64 end,
 }
 
 cytnx_uint64 Product(const std::vector<cytnx_uint64>& v) {
-  return std::accumulate(v.begin(), v.end(), cytnx_uint64{1},
-                         std::multiplies<cytnx_uint64>{});
+  cytnx_uint64 product = 1;
+  for (cytnx_uint64 value : v) product *= value;
+  return product;
 }
 
 std::vector<MultiCase> MakeMultiCases() {
@@ -125,21 +126,6 @@ GetMetadata MakeGetMetadata(const MultiCase& c) {
 cytnx_uint64 CPUPhysicalUnit(const MultiCase& c, cytnx_uint64 n,
                              cytnx_uint64 u) {
   const std::size_t rank = c.shape.size();
-  cytnx_uint64 address = 0, source_stride = u;
-  for (std::size_t i = rank; i-- > 0;) {
-    if (i + 1 == rank && c.picks[i].empty()) continue;
-    // All trailing dimensions are represented collectively by u.
-    cytnx_uint64 suffix = 1;
-    for (std::size_t j = i + 1; j < rank; ++j) {
-      if (!c.picks[j].empty()) break;
-      suffix *= c.shape[j];
-    }
-    if (suffix == u && c.picks[i].empty() && i + 1 < rank) continue;
-    (void)source_stride;
-    (void)address;
-    (void)n;
-    break;
-  }
   // Construct the length of the non-grouped prefix directly from the shape.
   std::size_t prefix = rank;
   cytnx_uint64 trailing = 1;
