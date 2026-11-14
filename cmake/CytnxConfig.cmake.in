@@ -1,19 +1,173 @@
 @PACKAGE_INIT@
 
+# The dependency lookups below are wrapped in block(SCOPE_FOR VARIABLES), which
+# needs CMake >= 3.25 — the same floor cytnx itself is built with. Report that
+# as a package-not-found reason instead of letting CMake fail on an unknown
+# command. cmake_minimum_required() is deliberately not used here: it would
+# apply cytnx's policy settings to the consuming project's scope.
+if(CMAKE_VERSION VERSION_LESS 3.25)
+  set(Cytnx_NOT_FOUND_MESSAGE
+    "Cytnx requires CMake 3.25 or newer to be consumed; this is CMake ${CMAKE_VERSION}.")
+  set(Cytnx_FOUND FALSE)
+  return()
+endif()
+
 include(CMakeFindDependencyMacro)
 
 find_dependency(Boost CONFIG REQUIRED)
 
 # Conditional re-find of build-time PUBLIC imported-target deps.
-# Plain absolute-path link entries (e.g. ${LAPACK_LIBRARIES}, ${ARPACK_LIB})
-# do not need this — they were baked into INTERFACE_LINK_LIBRARIES as paths.
-# Imported targets (CUDA::*, OpenMP::*) only exist after the
-# corresponding find_package runs in the consumer's project, so we recreate
-# them here when cytnx was built with the matching flag. The @VAR@ tokens
-# are expanded to the build-time value of each option by
-# configure_package_config_file when CytnxConfig.cmake is emitted.
+# Plain absolute-path link entries (e.g. ${ARPACK_LIB}) do not need this — they
+# were baked into INTERFACE_LINK_LIBRARIES as paths. Imported targets (CUDA::*,
+# OpenMP::*, MORSE::LAPACKE) only exist after the corresponding
+# find_package runs in the consumer's project, so we recreate them here when
+# cytnx was built with the matching flag. Each token below wrapped in at signs
+# is substituted with that option's build-time value by
+# configure_package_config_file when CytnxConfig.cmake is emitted — including
+# @USE_MKL@, which selects the same BLAS/LAPACK branch the build took.
 if(@USE_CUDA@)
   find_dependency(CUDAToolkit REQUIRED)
+endif()
+
+# The lookups below share one block(SCOPE_FOR VARIABLES): they all need
+# CMAKE_MODULE_PATH pointed at the finders shipped with cytnx, and the BLAS
+# vendor cytnx was built against, without either escaping into the consuming
+# project. The imported targets they create are directory-scoped, not
+# block-scoped, so they stay visible afterwards -- which is the whole point.
+# Boost, CUDAToolkit and OpenMP stay outside: a consumer legitimately reads the
+# result variables those set, and this block would swallow them.
+#
+# Morse's FindLAPACKE and its helper closure, plus cytnx's own FindCUTENSOR
+# and FindCUQUANTUM: the source tree for a build-tree consumer, the copies
+# inside the package for an installed one. Load them by module path
+# rather than including Morse's top-level MorseInit.cmake, which would rewrite
+# project-wide options, CMAKE_BUILD_TYPE, CMAKE_INCLUDE_PATH and
+# CMAKE_LIBRARY_PATH in the consumer. FindLAPACKE includes FindMorseInit itself,
+# which is the finder-only subset of those macros.
+block(SCOPE_FOR VARIABLES)
+  list(PREPEND CMAKE_MODULE_PATH @CYTNX_MORSE_MODULE_DIRS@ @CYTNX_FIND_MODULE_DIRS@)
+
+  # Ask for the BLAS/LAPACK vendor cytnx was built against. This steers a lookup
+  # that has not happened yet; it cannot redirect one that has, because neither
+  # finder replaces a target that already exists: FindLAPACK creates
+  # LAPACK::LAPACK only when no target of that name exists, and FindBLAS does the
+  # same for BLAS::BLAS. A pre-existing BLAS::BLAS reaches cytnx's link line even
+  # when no LAPACK target existed, because FindLAPACK drops BLAS_LIBRARIES from
+  # the LAPACK::LAPACK it creates and links that BLAS target in their place.
+  # Setting the vendor here also covers the arpack lookup below, whose package
+  # config resolves BLAS/LAPACK itself when arpack is static.
+  #
+  # Warn rather than bind silently: an OpenBLAS/reference or MKL LP64/ILP64
+  # mismatch miscomputes instead of failing loudly. Warn rather than fail,
+  # because a consumer that deliberately resolved the matching implementation
+  # first is a legitimate ordering, and telling the two apart from here would
+  # mean comparing against the build machine's library paths.
+  set(BLA_VENDOR "@BLA_VENDOR@")
+  set(_cytnx_preexisting_blas "")
+  if(TARGET LAPACK::LAPACK)
+    list(APPEND _cytnx_preexisting_blas "LAPACK::LAPACK")
+  endif()
+  if(TARGET BLAS::BLAS)
+    list(APPEND _cytnx_preexisting_blas "BLAS::BLAS")
+  endif()
+  if(_cytnx_preexisting_blas AND NOT "@BLA_VENDOR@" STREQUAL "")
+    list(JOIN _cytnx_preexisting_blas " and " _cytnx_preexisting_blas_names)
+    message(WARNING
+      "Cytnx was built against BLA_VENDOR=@BLA_VENDOR@, but this project "
+      "already defines ${_cytnx_preexisting_blas_names}, which the lookup below "
+      "will reuse rather than recreate -- so Cytnx will link whatever those "
+      "targets name. Check that they are the same BLAS/LAPACK implementation "
+      "and integer ABI: resolve BLAS and LAPACK with BLA_VENDOR=@BLA_VENDOR@ "
+      "before find_package(Cytnx), or find Cytnx first.")
+  endif()
+
+  # cytnx's BLAS/LAPACK requirement is PUBLIC: the installed header
+  # backend/lapack_wrapper.hpp includes <lapacke.h> (or <mkl.h> under UNI_MKL),
+  # so a consumer compiling it needs those headers, and a consumer linking the
+  # static libcytnx.a needs those libraries. CytnxTargets.cmake names only the
+  # imported target, so rerun the finder that creates it here -- against the
+  # consumer's own installation, which is what keeps the package relocatable.
+  #
+  if(@USE_MKL@)
+    # MKL's LAPACK carries the LAPACKE entry points and <mkl.h> itself, so
+    # CMake's own FindLAPACK is the whole lookup.
+    find_dependency(LAPACK REQUIRED)
+  else()
+    # A standalone LAPACKE is a separate library from the LAPACK under it, so
+    # LAPACK::LAPACK alone does not resolve the LAPACKE_* entry points (nor
+    # provide <lapacke.h>). One FindLAPACKE run recreates both targets cytnx
+    # links: it pulls in FindLAPACKEXT, which calls CMake's FindLAPACK.
+    #
+    # find_package rather than find_dependency, because find_dependency skips a
+    # call whose arguments match one another package config already made in this
+    # directory. That heuristic cannot see that this block just put cytnx's own
+    # FindLAPACKE on CMAKE_MODULE_PATH, so a project that resolved LAPACKE
+    # through a different finder first would leave MORSE::LAPACKE uncreated and
+    # the exported cytnx target naming a target that does not exist. MODULE for
+    # the same reason as the build: under CMAKE_FIND_PACKAGE_PREFER_CONFIG the
+    # basic signature would prefer a LAPACKEConfig.cmake, which defines no such
+    # target. The target is checked after the block, where reporting a
+    # package-not-found reason is in scope.
+    find_package(LAPACKE MODULE)
+  endif()
+
+  # libcytnx.a keeps arpack as a PRIVATE dependency, which a static archive
+  # still exports (as $<LINK_ONLY:arpack>, the target ARPACK::ARPACK aliases)
+  # because the consumer's final link is what resolves arpack's symbols.
+  # Recreate the target from the consumer's own arpack -- after the
+  # LAPACK/LAPACKE lookup above, because a statically built arpack's config
+  # resolves BLAS and LAPACK itself unless those targets already exist, and it
+  # would otherwise pull a different vendor's into the consumer.
+  # Either spelling of arpack-ng's package name, as in the build: 3.9 renamed it
+  # from arpack-ng to arpackng. find_package rather than find_dependency for the
+  # first attempt, because find_dependency aborts the whole config when a lookup
+  # comes up empty, even a QUIET one.
+  #
+  # Skip the lookup when the consuming project already supplies the target the
+  # export actually names -- from a subproject or a toolchain, say. That target
+  # already satisfies the exported dependency, so running the lookup anyway would
+  # fail find_package(Cytnx) over a dependency that is in fact present whenever
+  # the consumer has no arpack package config installed, and would otherwise
+  # reach arpack-ng's own targets file, which cannot redefine an arpack target
+  # that project already created. The name below is the one this build exported,
+  # substituted in rather than assumed, so a consumer supplying only the other
+  # spelling still gets the lookup that creates the one the export needs.
+  if(NOT TARGET @CYTNX_ARPACK_TARGET@)
+    find_package(arpackng CONFIG QUIET)
+    if(NOT arpackng_FOUND)
+      find_dependency(arpack-ng CONFIG REQUIRED)
+    endif()
+  endif()
+
+  # cytnx applies UNI_CUTENSOR / UNI_CUQUANTUM PUBLIC, which makes the installed
+  # headers cytnx_error.hpp and Network.hpp include <cutensor.h> /
+  # <cutensornet.h>. Recreate the imported targets carrying those include dirs
+  # from the consumer's own CUTENSOR_ROOT / CUQUANTUM_ROOT. Both finders read
+  # CUDAToolkit variables, so they must run after the find_dependency
+  # (CUDAToolkit) above.
+  #
+  # Skip the lookup when the consuming project already supplies the target: it
+  # already satisfies the exported cytnx target, and these finders raise a fatal
+  # error when their *_ROOT is unset, so running one anyway would fail
+  # find_package(Cytnx) over a dependency that is in fact present.
+  if(@USE_CUTENSOR@ AND NOT TARGET CUTENSOR::CUTENSOR)
+    find_dependency(CUTENSOR MODULE REQUIRED)
+  endif()
+
+  if(@USE_CUQUANTUM@ AND NOT TARGET CUQUANTUM::CUQUANTUM)
+    find_dependency(CUQUANTUM MODULE REQUIRED)
+  endif()
+endblock()
+
+# The LAPACKE lookup above is not REQUIRED, so report a missing MORSE::LAPACKE
+# here -- outside the block, where the result variables reach find_package.
+# Without it, CytnxTargets.cmake would name a target that does not exist and the
+# consumer would fail at generate time instead of at find_package(Cytnx).
+if(NOT @USE_MKL@ AND NOT TARGET MORSE::LAPACKE)
+  set(Cytnx_NOT_FOUND_MESSAGE
+    "Cytnx requires LAPACKE, but MORSE::LAPACKE was not created by the FindLAPACKE shipped with Cytnx. Check that LAPACKE is installed where CMake can find it.")
+  set(Cytnx_FOUND FALSE)
+  return()
 endif()
 
 if(@USE_HPTT@)
