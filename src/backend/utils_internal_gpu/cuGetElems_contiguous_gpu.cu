@@ -154,15 +154,17 @@ namespace cytnx {
       composit_locators.resize(Nte);
       Nte = 0;
       for (cytnx_uint32 i = 0; i < locators.size(); i++) {
-        memcpy(&composit_locators[Nte], &(locators[i][0]),
-               sizeof(cytnx_uint64) * locators[i].size());
+        if (!locators[i].empty())
+          memcpy(composit_locators.data() + Nte, locators[i].data(),
+                 sizeof(cytnx_uint64) * locators[i].size());
         Nte += locators[i].size();
       }
 
       utils_internal::DeviceBuffer<cytnx_uint64> d_locators(composit_locators.size());
-      checkCudaErrors(cudaMemcpy(d_locators.get(), &composit_locators[0],
-                                 sizeof(cytnx_uint64) * composit_locators.size(),
-                                 cudaMemcpyHostToDevice));
+      if (!composit_locators.empty())
+        checkCudaErrors(cudaMemcpy(d_locators.get(), composit_locators.data(),
+                                   sizeof(cytnx_uint64) * composit_locators.size(),
+                                   cudaMemcpyHostToDevice));
 
       utils_internal::DeviceBuffer<cytnx_uint64> d_picksize(picksize.size());
       checkCudaErrors(cudaMemcpy(d_picksize.get(), &picksize[0],

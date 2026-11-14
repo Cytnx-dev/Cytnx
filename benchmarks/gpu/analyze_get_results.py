@@ -88,6 +88,34 @@ def choose_dispatch(path: Path, output: Path) -> str:
 def write_report(path: Path, output_dir: Path, policy: str = "") -> None:
     data = records(path)
     all_cases = sorted({case[:4] for case in data}, key=lambda c: (c[0], c[1], c[2], c[3]))
+    if len(all_cases) != 69:
+        raise RuntimeError(f"Expected 69 distinct cases (29 original + 40 new), got {len(all_cases)}")
+    failures = [
+        (case, s, data.get((*case, s), (None, "missing"))[1])
+        for case in all_cases for s in range(5)
+        if data.get((*case, s), (None, "missing"))[1] != "ok"
+    ]
+    if failures:
+        raise RuntimeError(f"Correctness/incomplete benchmark failure(s): {failures[:20]}")
+    raw = json.loads(path.read_text())
+    samples = defaultdict(list)
+    units_to_us = {"ns": 0.001, "us": 1.0, "ms": 1000.0, "s": 1e6}
+    for entry in raw.get("benchmarks", []):
+        match = NAME_RE.match(entry.get("name", ""))
+        if not match or entry.get("aggregate_name") is not None:
+            continue
+        if entry.get("error_occurred"):
+            continue
+        value = entry.get("real_time")
+        if isinstance(value, (int, float)) and math.isfinite(value) and value > 0:
+            family, t, u, pattern, strategy = match.groups()
+            samples[(family, int(t), int(u), pattern, int(strategy))].append(
+                float(value) * units_to_us[entry.get("time_unit", "ns")])
+    short = [(key, len(v)) for key, v in samples.items() if len(v) != 5]
+    if short or len(samples) != 345:
+        raise RuntimeError(
+            f"Expected 345 strategies with 5 raw repetitions each, got {len(samples)}; "
+            f"non-five counts: {short[:20]}")
     rows = []
     for family, units, nunit, pattern in all_cases:
         baseline, baseline_status = data.get((family, units, nunit, pattern, 0),
@@ -101,6 +129,7 @@ def write_report(path: Path, output_dir: Path, policy: str = "") -> None:
                 "pattern": pattern, "strategy": f"S{s}",
                 "latency_us": f"{latency:.5f}" if latency is not None else "",
                 "speedup_vs_S0": f"{speedup:.4f}" if speedup is not None else "",
+                "cv_pct": f"{statistics.pstdev(samples[(family, units, nunit, pattern, s)]) / statistics.mean(samples[(family, units, nunit, pattern, s)]) * 100:.3f}",
                 "status": status,
             })
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -120,19 +149,21 @@ def write_report(path: Path, output_dir: Path, policy: str = "") -> None:
         "Buckets: Nunit <=4, <=32, <=1024, and >1024.",
         "Policy is trained only on the four pilot cases; verify against ALL full cases.",
         "",
-        "| Family | TotalElem | Nunit | Pattern | Strategy | Latency (µs) | Speedup | Status |",
-        "|:--|--:|--:|:--|:--|--:|--:|:--|",
+        "| Family | TotalElem | Nunit | Pattern | Strategy | Latency (µs) | Speedup | CV (%) | Status |",
+        "|:--|--:|--:|:--|:--|--:|--:|--:|:--|",
     ]
     for r in rows:
         md.append("| " + " | ".join([r["family"], str(r["TotalElem"]), str(r["Nunit"]),
                      r["pattern"], r["strategy"], r["latency_us"] or "—",
-                     r["speedup_vs_S0"] or "—", r["status"]]) + " |")
+                     r["speedup_vs_S0"] or "—", r["cv_pct"], r["status"]]) + " |")
     md.extend(["", "## Trends and caution",
         "",
         "The results include per-call CUDA metadata allocation and H2D copies, "
         "not just kernel time. S0 calls the unmodified PR #1230 Double L2 function. "
         "All strategies are correctness checked against independent CPU output.",
         "",
+        "The CPU reference checks every output element before timing; all 345 strategy cases "
+        "must complete with five raw repetitions or this report fails. "
         "Kernel-only speedups are NOT isolated by this experiment; the metadata overhead "
         "cannot be quantified uniquely without a separate dedicated profiling experiment. "
         "Treat small differences as potentially dominated by metadata transfer, "

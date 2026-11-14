@@ -183,6 +183,7 @@ bool RegisterAll() {
   }
   return true;
 }
+#include "Get_contiguous_double_multidim.inc"
 const bool registered = RegisterAll();
 }  // namespace
 #endif  // UNI_GPU
