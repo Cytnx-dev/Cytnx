@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "backend/arpack_wrapper.hpp"
+#include "arpack_block_layout.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -143,6 +144,13 @@ namespace cytnx {
       // to all signflips applied; no-op for bosonic/dense tensors.
       if constexpr (std::is_same_v<T_ten, UniTensor>) nextTens.apply_();
       nextTens.contiguous_();
+      if constexpr (std::is_same_v<T_ten, UniTensor>) {
+        if (buffer.uten_type() == UTenType.Block || buffer.uten_type() == UTenType.BlockFermionic) {
+          // matvec may return its blocks in another order than `buffer` stores them (#738).
+          copy_blocks_in_reference_layout(buffer, nextTens, v_out, "Arnoldi");
+          return;
+        }
+      }
       pass_data_UT<T, T_ten>(nextTens, v_out, false);
     }
 
@@ -290,7 +298,12 @@ namespace cytnx {
         func_xnaupd(&ido, &bmat, &dim, which, &nev, &tol, resid, &ncv, v, &ldv, iparam, ipntr,
                     workd, workl, &lworkl, rwork, &info, 1, 2);
         if (ido == -1 || ido == 1) {
-          matvec(Hop, buffer_UT, &workd[ipntr[0] - 1], &workd[ipntr[1] - 1]);
+          try {
+            matvec(Hop, buffer_UT, &workd[ipntr[0] - 1], &workd[ipntr[1] - 1]);
+          } catch (...) {
+            clean_arpack_complex_buffer(resid, v, workd, workl, rwork, select, d, z, workev);
+            throw;
+          }
         } else if (ido == 99) {
           break;
         } else {
@@ -469,7 +482,12 @@ namespace cytnx {
         func_xnaupd(&ido, &bmat, &dim, which, &nev, &tol, resid, &ncv, v, &ldv, iparam, ipntr,
                     workd, workl, &lworkl, &info, 1, 2);
         if (ido == -1 || ido == 1) {
-          matvec(Hop, buffer_UT, &workd[ipntr[0] - 1], &workd[ipntr[1] - 1]);
+          try {
+            matvec(Hop, buffer_UT, &workd[ipntr[0] - 1], &workd[ipntr[1] - 1]);
+          } catch (...) {
+            clean_arpack_real_buffer(resid, v, workd, workl, dr, di, select, z, workev);
+            throw;
+          }
         } else if (ido == 99) {
           break;
         } else {
