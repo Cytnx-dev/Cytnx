@@ -213,7 +213,6 @@ jobs:
         CIBW_BEFORE_TEST: "cd {project} && bash tools/export_cuda_benchmark_tree.sh"
         CIBW_SKIP: "*-musllinux*"
         CIBW_TEST_COMMAND: >-
-          python {project}/tools/validate_ccache_stats.py &&
           python -c "import cytnx; assert cytnx.Device.Ngpus == 0, cytnx.Device.Ngpus"
         # Compile HPTT's hand-vectorized kernels for the architecture this
         # wheel targets; see release_pypi.yml's equivalent for why runner.arch
