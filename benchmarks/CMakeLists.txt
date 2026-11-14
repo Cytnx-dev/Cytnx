@@ -2,6 +2,7 @@ add_executable(
   benchmarks_main
   benchmarks_main.cpp
   Tensor_bm.cpp
+  Storage_bm.cpp
   UniTensor_bm.cpp
   cublas_handle_bm.cpp
   cutensor_handle_bm.cpp
