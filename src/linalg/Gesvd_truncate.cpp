@@ -60,54 +60,26 @@ namespace cytnx {
         cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
         // prepare U, S, vT
-        Tensor U, S, vT, terr;
+        Tensor U, S, vT;
         S.Init({n_singlu}, Type.to_real(in.dtype()),
                in.device());  // if type is complex, S should be real
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-        if (return_err == 1) {
-          terr = zeros({}, S.dtype(), in.device());
-        } else if (return_err) {
-          terr = zeros({0}, S.dtype(), in.device());
-        }
 
-        cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
-                                                                  S, vT, terr);
-        // restart if less than mindim singular values are kept.
-        // TODO: issue #650 - mindim should be part of cuQuantumGeSvd after the refactoring to avoid
-        // redundant calls
-        if (S.shape()[0] < std::min(mindim, keepdim)) {
-          // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
-          // output tensor descriptors from the passed buffer shapes, so the buffers must be
-          // re-initialized to the full size before restarting.
-          S.Init({n_singlu}, Type.to_real(in.dtype()), in.device());
-          U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
-          vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-          if (return_err == 1) {
-            terr = zeros({}, S.dtype(), in.device());
-          } else if (return_err) {
-            terr = zeros({0}, S.dtype(), in.device());
-          }
-          cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
-                                                                    0., return_err, U, S, vT, terr);
-        }
+        // full SVD; the truncation below is shared with the cuSOLVER path
+        cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, U, S, vT);
 
-        // cuQuantum's SVD already truncates (keepdim/err) and fills terr with the discarded
-        // singular values, so we only assemble the packed result here.
         std::vector<Tensor> outT;
         outT.push_back(S);
         if (is_U) outT.push_back(U);
         if (is_vT) outT.push_back(vT);
-        if (return_err) outT.push_back(terr);
-
-        return outT;
-
   #else
         std::vector<Tensor> outT = Gesvd(Tin, is_U, is_vT);
+  #endif
+        // truncates outT in place and appends the error tensor when return_err != 0.
         cytnx::linalg_internal::cudaMemcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
                                                      mindim);
         return outT;
-  #endif
 #else
         cytnx_error_msg(
           true, "[Error][Gesvd_truncate] Trying to call the gpu section without CUDA support%s",

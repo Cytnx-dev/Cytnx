@@ -24,19 +24,14 @@ namespace cytnx {
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
-    /// cuSvd
-    void cuQuantumGeSvd_internal_cd(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                    const double &err, const unsigned int &return_err, Tensor &U,
-                                    Tensor &S, Tensor &vT, Tensor &terr);
-    void cuQuantumGeSvd_internal_cf(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                    const double &err, const unsigned int &return_err, Tensor &U,
-                                    Tensor &S, Tensor &vT, Tensor &terr);
-    void cuQuantumGeSvd_internal_d(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                   const double &err, const unsigned int &return_err, Tensor &U,
-                                   Tensor &S, Tensor &vT, Tensor &terr);
-    void cuQuantumGeSvd_internal_f(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                   const double &err, const unsigned int &return_err, Tensor &U,
-                                   Tensor &S, Tensor &vT, Tensor &terr);
+    // Full (untruncated) SVD Tin = U diag(S) vT on the GPU with cuTensorNet. U, S and vT must be
+    // allocated by the caller as contiguous tensors of shapes {rows, k}, {k} and {k, cols} with
+    // k = min(rows, cols); U and vT have the dtype of Tin and S the matching real dtype.
+    // Truncation is done by the callers with cudaMemcpyTruncation.
+    void cuQuantumGeSvd_internal_cd(const Tensor &Tin, Tensor &U, Tensor &S, Tensor &vT);
+    void cuQuantumGeSvd_internal_cf(const Tensor &Tin, Tensor &U, Tensor &S, Tensor &vT);
+    void cuQuantumGeSvd_internal_d(const Tensor &Tin, Tensor &U, Tensor &S, Tensor &vT);
+    void cuQuantumGeSvd_internal_f(const Tensor &Tin, Tensor &U, Tensor &S, Tensor &vT);
   #endif
 #endif
 
