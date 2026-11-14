@@ -449,6 +449,70 @@ namespace cytnx {
         ExpectTridiagLapackError(Type.Float, true, "sstev");
       }
 
+      // The 3-site chain (diagonal 2, couplings -1) on the matrix units (E00, E11, E01) of a 2x2
+      // UniTensor, with E10 decoupled. A diagonal result is returned in diagonal storage, so the
+      // start vector E00 and the first matvec result are both stored as two numbers although the
+      // Krylov space is three-dimensional.
+      class MatrixUnitChainOp : public LinOp {
+       public:
+        MatrixUnitChainOp() : LinOp("mv", 4, Type.Double) {}
+
+        UniTensor matvec(const UniTensor& v) override {
+          ++matvec_count;
+          UniTensor dense = v.clone();
+          if (dense.is_diag()) dense.to_dense_();
+          const Tensor in = dense.get_block_().contiguous();
+          const double m00 = in.at<cytnx_double>({0, 0});
+          const double m11 = in.at<cytnx_double>({1, 1});
+          const double m01 = in.at<cytnx_double>({0, 1});
+          const double m10 = in.at<cytnx_double>({1, 0});
+          const double out00 = 2.0 * m00 - m11;
+          const double out11 = -m00 + 2.0 * m11 - m01;
+          const double out01 = -m11 + 2.0 * m01;
+          const double out10 = 5.0 * m10;
+          UniTensor out;
+          if (out01 == 0.0 && out10 == 0.0) {
+            Tensor diag = zeros({2}, Type.Double);
+            diag.at<cytnx_double>({0}) = out00;
+            diag.at<cytnx_double>({1}) = out11;
+            out = UniTensor(diag, true);
+          } else {
+            Tensor full = zeros({2, 2}, Type.Double);
+            full.at<cytnx_double>({0, 0}) = out00;
+            full.at<cytnx_double>({1, 1}) = out11;
+            full.at<cytnx_double>({0, 1}) = out01;
+            full.at<cytnx_double>({1, 0}) = out10;
+            out = UniTensor(full, false, 1);
+          }
+          out.relabel_(v.labels());
+          return out;
+        }
+
+        int matvec_count = 0;
+      };
+
+      TEST(LanczosGndDiagonalStorage, OffDiagonalElementsAppearInLaterStep) {
+        MatrixUnitChainOp op;
+        Tensor start = zeros({2}, Type.Double);
+        start.at<cytnx_double>({0}) = 1.0;
+        std::vector<UniTensor> out = linalg::Lanczos(&op, UniTensor(start, true), "Gnd", 1.0e-14,
+                                                     20, 1, true, false, 0, false);
+        ASSERT_EQ(out.size(), 2u);
+        const double energy = double(out[0].get_block_().item().real());
+        EXPECT_NEAR(energy, 2.0 - std::sqrt(2.0), 1.0e-12);
+
+        UniTensor vec = out[1].clone();
+        if (vec.is_diag()) vec.to_dense_();
+        const Tensor block = vec.get_block_().contiguous();
+        // Ground state of the chain: (1/2, 1/sqrt(2), 1/2) on (E00, E11, E01), up to a sign.
+        const double sign = block.at<cytnx_double>({0, 0}) < 0 ? -1.0 : 1.0;
+        EXPECT_NEAR(sign * block.at<cytnx_double>({0, 0}), 0.5, 1.0e-10);
+        EXPECT_NEAR(sign * block.at<cytnx_double>({1, 1}), std::sqrt(0.5), 1.0e-10);
+        EXPECT_NEAR(sign * block.at<cytnx_double>({0, 1}), 0.5, 1.0e-10);
+        EXPECT_NEAR(block.at<cytnx_double>({1, 0}), 0.0, 1.0e-10);
+        EXPECT_LE(op.matvec_count, 4);
+      }
+
     }  // namespace
   }  // namespace test
 }  // namespace cytnx

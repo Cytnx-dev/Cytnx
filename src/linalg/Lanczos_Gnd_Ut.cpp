@@ -29,11 +29,17 @@ namespace cytnx {
       return Contract(A.Dagger(), B).item();
     }
 
-    // Number of stored elements, i.e. the dimension of the vector space the UniTensor lives in.
-    static cytnx_uint64 stored_elements(const UniTensor &v) {
-      if (!v.is_blockform()) return v.get_block_().storage().size();
+    // Number of elements the UniTensor represents, i.e. the dimension of the vector space it lives
+    // in. A tensor in diagonal storage keeps n numbers per block for an n x n block, and an
+    // operator may map it to a tensor with off-diagonal elements, so each such block counts n * n.
+    static cytnx_uint64 represented_elements(const UniTensor &v) {
+      const auto block_elements = [&v](const Tensor &block) {
+        const cytnx_uint64 stored = block.storage().size();
+        return v.is_diag() ? stored * stored : stored;
+      };
+      if (!v.is_blockform()) return block_elements(v.get_block_());
       cytnx_uint64 count = 0;
-      for (const Tensor &block : v.get_blocks_()) count += block.storage().size();
+      for (const Tensor &block : v.get_blocks_()) count += block_elements(block);
       return count;
     }
 
@@ -91,8 +97,9 @@ namespace cytnx {
                       "\n");
 
       // At most dim linearly independent Krylov vectors exist. The dimension is taken from the
-      // vectors themselves rather than from the user-supplied LinOp::nx().
-      const cytnx_uint64 dim = std::max(stored_elements(psi_1), stored_elements(new_psi));
+      // vectors themselves rather than from the user-supplied LinOp::nx(), and is raised whenever
+      // a later matvec result represents more elements.
+      cytnx_uint64 dim = std::max(represented_elements(psi_1), represented_elements(new_psi));
 
       auto alpha = _Dot(new_psi, psi_1).real();
       As(0) = alpha;
@@ -119,13 +126,11 @@ namespace cytnx {
 
         ///---------------------------
 
-        const unsigned int max_krylov_dim =
-          static_cast<unsigned int>(std::min<cytnx_uint64>(Maxiter, dim));
-
         // iteration LZ:
-        for (unsigned int i = 1; i < max_krylov_dim; i++) {
+        for (unsigned int i = 1; i < Maxiter; i++) {
           new_psi = Hop->matvec(psi_1);
           new_psi.apply_();  // resolve pending fermionic signflip; no-op for bosonic/dense
+          dim = std::max(dim, represented_elements(new_psi));
           alpha = _Dot(new_psi, psi_1).real();
           As.append(alpha);
           new_psi -= (alpha * psi_1 + beta * psi_0);
@@ -139,7 +144,7 @@ namespace cytnx {
 
           // Stop when the residual is at roundoff level (the Krylov space is invariant) or when
           // the Krylov space has become the whole vector space.
-          if (beta <= breakdown_tol * coeff_scale || i + 1 == dim) {
+          if (beta <= breakdown_tol * coeff_scale || i + 1 >= dim) {
             cvg_fin = true;
             break;
           }
