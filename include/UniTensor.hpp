@@ -3199,6 +3199,31 @@ namespace cytnx {
     cytnx_uint64 Nblocks() const { return this->_impl->Nblocks(); }
 
     /**
+    @brief Return the dimension of the vector space the UniTensor belongs to.
+    @details This is the number of independent coefficients that the bonds allow:
+      - dense UniTensor: the product of the bond dimensions;
+      - block or fermionic UniTensor: the sum, over all combinations of bond sectors whose total
+        quantum number is zero, of the product of the sector degeneracies;
+      - diagonal UniTensor: the dimension of its first bond;
+      - rank-0 UniTensor: 1.
+
+    A diagonal UniTensor lives in the space of diagonal tensors, so an n x n diagonal block counts
+    n. An operator acting on a diagonal UniTensor, for example in a Krylov solver, must therefore
+    return diagonal UniTensors.
+
+    The value is computed from the bonds alone. It does not depend on which blocks are stored,
+    on their contents (a block of numerical zeros counts in full), or on their memory layout.
+    For a block UniTensor it is in general smaller than the product of shape().
+
+    It is the largest number of linearly independent UniTensors with these bonds, so it bounds
+    the dimension of a Krylov space built from this UniTensor, and it is the value LinOp::nx()
+    should have for an operator acting on it.
+    @return cytnx_uint64
+    @see flattened_dimension(const std::vector<Bond> &bonds, bool is_diag)
+    */
+    cytnx_uint64 flattened_dimension() const;
+
+    /**
     @brief Return the rank of the UniTensor.
     @return cytnx_uint64
     */
@@ -6206,6 +6231,20 @@ namespace cytnx {
   ///@cond
   std::ostream &operator<<(std::ostream &os, const UniTensor &in);
   ///@endcond
+
+  /**
+  @brief Return the dimension of the vector space of UniTensors with the given bonds.
+  @details Gives the same value as UniTensor::flattened_dimension() for a UniTensor with these
+  bonds, without constructing that UniTensor. This is useful, for example, to set LinOp::nx() for
+  an effective Hamiltonian from the bonds of its environment tensors.
+  @param[in] bonds the bonds, in order. Either every bond carries the same symmetries, or none
+  carries a symmetry.
+  @param[in] is_diag whether the tensor is diagonal; then only the first bond is used.
+  @return cytnx_uint64; 1 for an empty list of bonds, and 0 if no combination of sectors has zero
+  total quantum number.
+  @see UniTensor::flattened_dimension()
+  */
+  cytnx_uint64 flattened_dimension(const std::vector<Bond> &bonds, bool is_diag = false);
 
   /**
   @brief Contract two UniTensor by tracing the ranks with common labels.
