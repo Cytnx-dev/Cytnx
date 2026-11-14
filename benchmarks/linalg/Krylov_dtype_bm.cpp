@@ -221,59 +221,70 @@ namespace krylov_dtype_bm {
     report_matvecs(state, op.matvec_count);
   }
 
-  // The same sizes on the CPU and the GPU, so the two can be compared directly. The CPU runs
-  // single-threaded, like the rest of Cytnx; the largest sizes take several seconds per solver
-  // call there.
+  // The same sizes on the CPU and the GPU, so the two can be compared directly; on one CPU thread
+  // the largest sizes take several seconds per solver call. Real time, not CPU time: matvec_time is
+  // a rate over the benchmark's time, and with a threaded BLAS or a GPU the main thread's CPU time
+  // is not the elapsed time.
   BENCHMARK_CAPTURE(bm_sandwich_matvec, cpu_float, false, true)
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_sandwich_matvec, cpu_double, false, false)
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_tensor, cpu_float, false, true)
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_tensor, cpu_double, false, false)
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_one_site_matvec, cpu_float, false, true)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_one_site_matvec, cpu_double, false, false)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_unitensor, cpu_float, false, true)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_unitensor, cpu_double, false, false)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_exp_unitensor, cpu_float, false, true)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_exp_unitensor, cpu_double, false, false)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
 
 #ifdef UNI_GPU
   // Lanczos_Exp has no GPU registration: it rejects CUDA devices ("Lanczos_Exp still does not
@@ -282,42 +293,50 @@ namespace krylov_dtype_bm {
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_sandwich_matvec, gpu_double, true, false)
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_tensor, gpu_float, true, true)
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_tensor, gpu_double, true, false)
     ->Arg(512)
     ->Arg(1024)
     ->Arg(2048)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_one_site_matvec, gpu_float, true, true)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_one_site_matvec, gpu_double, true, false)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_unitensor, gpu_float, true, true)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
   BENCHMARK_CAPTURE(bm_lanczos_gnd_unitensor, gpu_double, true, false)
     ->Arg(128)
     ->Arg(256)
     ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
 #endif  // UNI_GPU
 
 }  // namespace krylov_dtype_bm
