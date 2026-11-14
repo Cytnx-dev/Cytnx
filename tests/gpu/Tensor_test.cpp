@@ -254,7 +254,11 @@ namespace cytnx {
         EXPECT_EQ(tmp.shape()[1], 4);
         EXPECT_EQ(tmp.shape()[2], 5);
         EXPECT_EQ(tmp.shape()[3], 6);
-        AreNearlyEqTensor(tmp, tslice1);
+        // (tslice1 holds real values, so it cannot be compared with the complex tarcomplex3456.)
+        EXPECT_TRUE(AreNearlyEqTensor(
+          tmp.to(Device.cpu),
+          (cytnx_complex128(1, 1) * arange(120, 240, 1, Type.ComplexDouble)).reshape({1, 4, 5, 6}),
+          1e-12));
 
         tmp = tar3456.permute({2, 0, 1, 3});
         EXPECT_EQ(tmp.shape().size(), 4);
@@ -263,12 +267,48 @@ namespace cytnx {
         EXPECT_EQ(tmp.shape()[2], 4);
         EXPECT_EQ(tmp.shape()[3], 6);
         EXPECT_EQ(tmp.is_contiguous(), false);
-        std::cout << tmp(0, ":", ":", 0) << std::endl;
-        AreNearlyEqTensor(tmp(0, ":", ":", 0), arange(12).reshape({3, 4}), 1e-5);
-        AreNearlyEqTensor(tmp(":", 0, 0, ":"), arange(30).reshape({5, 6}), 1e-5);
-        AreNearlyEqTensor(tmp(":", 0, 0, "4:6"), arange(20, 30).reshape({5, 2}), 1e-5);
-        AreNearlyEqTensor(tmp(":", "2:4", ":", ":"),
-                          arange(3 * 2 * 5 * 6, 3 * 4 * 5 * 6).reshape({3, 2, 5, 6}), 1e-5);
+        // tar3456 holds arange(360) in C order, so tmp(a, b, c, d) = tar3456(b, c, a, d)
+        // = 120 * b + 30 * c + 6 * a + d. Copy each slice to the host and compare it with
+        // values computed here (comparing a CUDA tensor against a CPU one never matches).
+        auto value = [](cytnx_uint64 a, cytnx_uint64 b, cytnx_uint64 c, cytnx_uint64 d) {
+          return cytnx_complex128(120 * b + 30 * c + 6 * a + d, 0);
+        };
+        auto expect_slice = [](const Tensor& got, const std::vector<cytnx_uint64>& expected_shape,
+                               const std::vector<cytnx_complex128>& expected_values) {
+          Tensor host = got.to(Device.cpu);
+          ASSERT_EQ(host.shape(), expected_shape);
+          ASSERT_EQ(host.dtype(), Type.ComplexDouble);
+          host = host.contiguous();
+          ASSERT_EQ(host.storage().size(), expected_values.size());
+          for (cytnx_uint64 i = 0; i < expected_values.size(); i++)
+            EXPECT_EQ(host.storage().at<cytnx_complex128>(i), expected_values[i]) << "at " << i;
+        };
+        std::vector<cytnx_complex128> expected;
+
+        for (cytnx_uint64 b = 0; b < 3; b++)
+          for (cytnx_uint64 c = 0; c < 4; c++) expected.push_back(value(0, b, c, 0));
+        expect_slice(tmp(0, ":", ":", 0), {3, 4}, expected);
+
+        expected.clear();
+        for (cytnx_uint64 a = 0; a < 5; a++)
+          for (cytnx_uint64 d = 0; d < 6; d++) expected.push_back(value(a, 0, 0, d));
+        expect_slice(tmp(":", 0, 0, ":"), {5, 6}, expected);
+
+        expected.clear();
+        for (cytnx_uint64 a = 0; a < 5; a++)
+          for (cytnx_uint64 d = 4; d < 6; d++) expected.push_back(value(a, 0, 0, d));
+        expect_slice(tmp(":", 0, 0, "4:6"), {5, 2}, expected);
+
+        // axis 1 has length 3, so the exclusive upper bound may be at most 3
+        expected.clear();
+        for (cytnx_uint64 a = 0; a < 5; a++)
+          for (cytnx_uint64 b = 1; b < 3; b++)
+            for (cytnx_uint64 c = 0; c < 4; c++)
+              for (cytnx_uint64 d = 0; d < 6; d++) expected.push_back(value(a, b, c, d));
+        expect_slice(tmp(":", "1:3", ":", ":"), {5, 2, 4, 6}, expected);
+
+        // an upper bound past the dimension is an error, not an out-of-bounds device read
+        EXPECT_THROW(Tensor(tmp(":", "2:4", ":", ":")), std::logic_error);
       }
 
       TEST_F(TensorTest, GpuSet) {
@@ -630,6 +670,46 @@ namespace cytnx {
           EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 1}), 5.0 / 4.0);
           EXPECT_DOUBLE_EQ(got.at<cytnx_double>({1, 2}), 1.0);
         }
+      }
+
+      // A selection whose trailing accessor is not all() copies one element per kernel thread.
+      // With more than about 2048 such elements the device-side cudaMemcpyAsync that the kernel
+      // used to call failed silently for part of them, leaving those outputs unwritten (#1229).
+      TEST(TensorGetSetManyElements, GpuGetCopiesEveryElement) {
+        const std::size_t rows = 30000;
+        Tensor host({rows, 2}, Type.Double);
+        for (std::size_t i = 0; i < rows; i++) {
+          host.at<double>({i, 0}) = 0.5 * static_cast<double>(i) - 7.25;
+          host.at<double>({i, 1}) = -1.0;
+        }
+        Tensor picked =
+          host.to(Device.cuda).get({Accessor::all(), Accessor::range(0, 1)}).to(Device.cpu);
+        ASSERT_EQ(picked.shape(), (std::vector<cytnx_uint64>{rows, 1}));
+        std::size_t wrong = 0;
+        for (std::size_t i = 0; i < rows; i++) {
+          if (picked.storage().at<double>(i) != 0.5 * static_cast<double>(i) - 7.25) wrong++;
+        }
+        EXPECT_EQ(wrong, 0);
+      }
+
+      TEST(TensorGetSetManyElements, GpuSetComplexCopiesEveryElement) {
+        const std::size_t rows = 30000;
+        Tensor rhs_host({rows, 1}, Type.ComplexDouble);
+        for (std::size_t i = 0; i < rows; i++) {
+          rhs_host.at<cytnx_complex128>({i, 0}) =
+            cytnx_complex128(0.5 * static_cast<double>(i) - 7.25, -0.25 * static_cast<double>(i));
+        }
+        Tensor target = zeros({rows, 2}, Type.ComplexDouble, Device.cuda);
+        target.set({Accessor::all(), Accessor::range(0, 1)}, rhs_host.to(Device.cuda));
+        Tensor result = target.to(Device.cpu);
+        std::size_t wrong = 0;
+        for (std::size_t i = 0; i < rows; i++) {
+          const cytnx_complex128 expected(0.5 * static_cast<double>(i) - 7.25,
+                                          -0.25 * static_cast<double>(i));
+          if (result.at<cytnx_complex128>({i, 0}) != expected) wrong++;
+          if (result.at<cytnx_complex128>({i, 1}) != cytnx_complex128(0, 0)) wrong++;
+        }
+        EXPECT_EQ(wrong, 0);
       }
 
     }  // namespace

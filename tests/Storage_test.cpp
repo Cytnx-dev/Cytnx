@@ -1,6 +1,7 @@
 #include "Storage_test.h"
 
 #include <cstdio>
+#include <fstream>
 #include <string>
 #include <tuple>
 #include <type_traits>
@@ -295,6 +296,55 @@ namespace cytnx {
         EXPECT_EQ(loaded.clone().size(), 0);
         EXPECT_EQ(loaded.astype(Type.Float).dtype(), Type.Float);
         EXPECT_TRUE(loaded.vector<cytnx_double>().empty());
+      }
+
+      // Writes a one-element Storage file in the layout Storage::Load reads: magic number,
+      // element count, dtype, device, then the raw elements. Written by hand so the dtype
+      // field can hold values Storage::Save never produces.
+      void write_storage_file(const std::string& path, unsigned int dtype) {
+        const unsigned int magic = 999;
+        const unsigned long long size = 1;
+        const int device = Device.cpu;
+        const double element = 1.5;
+        std::ofstream f(path, std::ios::binary | std::ios::trunc);
+        f.write(reinterpret_cast<const char*>(&magic), sizeof(magic));
+        f.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        f.write(reinterpret_cast<const char*>(&dtype), sizeof(dtype));
+        f.write(reinterpret_cast<const char*>(&device), sizeof(device));
+        f.write(reinterpret_cast<const char*>(&element), sizeof(element));
+      }
+
+      // Type.Void passes the dtype >= N_Type check in Storage::Init, and before #1073 it
+      // called a null function pointer.
+      TEST_F(StorageTest, ConstructWithVoidDtypeThrows) {
+        EXPECT_THROW(Storage(1, Type.Void), cytnx::error);
+      }
+
+      TEST_F(StorageTest, LoadReadsHandWrittenFile) {
+        const std::string path = ::testing::TempDir() + "cytnx_storage_load_valid_dtype.bin";
+        const RemoveFileOnExit cleanup(path);
+        write_storage_file(path, Type.Double);
+
+        Storage loaded = Storage::Load(path);
+        EXPECT_EQ(loaded.dtype(), Type.Double);
+        ASSERT_EQ(loaded.size(), 1);
+        EXPECT_DOUBLE_EQ(loaded.at<cytnx_double>(0), 1.5);
+      }
+
+      TEST_F(StorageTest, LoadRejectsVoidDtypeInFile) {
+        const std::string path = ::testing::TempDir() + "cytnx_storage_load_void_dtype.bin";
+        const RemoveFileOnExit cleanup(path);
+        write_storage_file(path, Type.Void);
+
+        EXPECT_THROW(Storage::Load(path), cytnx::error);
+      }
+
+      TEST_F(StorageTest, LoadRejectsOutOfRangeDtypeInFile) {
+        const std::string path = ::testing::TempDir() + "cytnx_storage_load_bad_dtype.bin";
+        const RemoveFileOnExit cleanup(path);
+        write_storage_file(path, 99);
+
+        EXPECT_THROW(Storage::Load(path), cytnx::error);
       }
 
       TEST_F(StorageTest, InitByPtrRejectsZeroLength) {

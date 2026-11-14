@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include <type_traits>
+#include <utility>
+#include <variant>
 #include <vector>
 
 #include "boost/smart_ptr/intrusive_ptr.hpp"
@@ -75,9 +77,11 @@ namespace cytnx {
     //     call sites than the six arithmetic families converted in #941's
     //     first pass (Add/Sub/Mul/Div/Cpr/Mod) and is out of scope for that
     //     task.
-    //   - GPU kernel dispatch (src/backend/linalg_internal_gpu/*, the
-    //     cuAri_ii table) -- ruling 3 keeps GPU on the legacy table; see GPU
-    //     tracking issue #1013.
+    //   - GPU kernel launches (src/backend/linalg_internal_gpu/*). The dtype
+    //     *dispatch* there is typed now -- as_storage_variant() + type_promote_t,
+    //     with the legacy cuAri_ii table removed (#1003, #1013) -- but the launch
+    //     helpers still reinterpret_cast this erased pointer to the CUDA-native
+    //     kernel type, because CUDA needs the raw device address.
     // New code should use StorageImplementation<T>::data() (typed) via
     // as_storage_variant()/storage_cast<T> instead. Do not add new callers of
     // this accessor.
@@ -452,77 +456,37 @@ namespace cytnx {
                                                                             int device);
 
   ///@cond
-  typedef boost::intrusive_ptr<Storage_base> (*pStorage_init)();
-  inline boost::intrusive_ptr<Storage_base> SIInit_cd() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_cf() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_d() {
-    boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_f() {
-    boost::intrusive_ptr<Storage_base> out(new FloatStorage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_u64() {
-    boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_i64() {
-    boost::intrusive_ptr<Storage_base> out(new Int64Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_u32() {
-    boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_i32() {
-    boost::intrusive_ptr<Storage_base> out(new Int32Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_u16() {
-    boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_i16() {
-    boost::intrusive_ptr<Storage_base> out(new Int16Storage());
-    return out;
-  }
-  inline boost::intrusive_ptr<Storage_base> SIInit_b() {
-    boost::intrusive_ptr<Storage_base> out(new BoolStorage());
-    return out;
+  namespace internal {
+    // Fold over Type_list (skipping void at index 0) that constructs the
+    // StorageImplementation<T> whose dtype matches `dtype`. Mirrors
+    // as_storage_variant_impl so the supported dtype set stays single-sourced
+    // from Type_list.
+    template <std::size_t... Is>
+    boost::intrusive_ptr<Storage_base> init_storage_impl(unsigned int dtype,
+                                                         std::index_sequence<Is...>) {
+      boost::intrusive_ptr<Storage_base> out;
+      const bool matched = (... || [&]() {
+        using T = std::variant_alternative_t<Is + 1, Type_list>;
+        if (dtype != Type_class::cy_typeid_v<T>) return false;
+        out = boost::intrusive_ptr<Storage_base>(new StorageImplementation<T>());
+        return true;
+      }());
+      cytnx_error_msg(!matched, "[Storage] init_storage: invalid dtype %u.%s", dtype, "\n");
+      return out;
+    }
+  }  // namespace internal
+
+  // Runtime dtype -> storage factory. Constructs the (uninitialized)
+  // StorageImplementation<T> matching `dtype`; the caller then calls
+  // Init(size, device, init_zero) on the result. Type.Void has no
+  // StorageImplementation and is rejected. Callers that already know the
+  // element type T should construct StorageImplementation<T> directly instead
+  // of routing through this runtime dispatch.
+  inline boost::intrusive_ptr<Storage_base> init_storage(unsigned int dtype) {
+    constexpr std::size_t n_non_void = std::variant_size_v<Type_list> - 1;
+    return internal::init_storage_impl(dtype, std::make_index_sequence<n_non_void>());
   }
   ///@endcond
-  ///@cond
-  class Storage_init_interface : public Type_class {
-   public:
-    // std::vector<pStorage_init> USIInit;
-    inline static pStorage_init USIInit[N_Type];
-    inline static bool inited = false;
-    Storage_init_interface() {
-      if (!inited) {
-        USIInit[this->Double] = SIInit_d;
-        USIInit[this->Float] = SIInit_f;
-        USIInit[this->ComplexDouble] = SIInit_cd;
-        USIInit[this->ComplexFloat] = SIInit_cf;
-        USIInit[this->Uint64] = SIInit_u64;
-        USIInit[this->Int64] = SIInit_i64;
-        USIInit[this->Uint32] = SIInit_u32;
-        USIInit[this->Int32] = SIInit_i32;
-        USIInit[this->Uint16] = SIInit_u16;
-        USIInit[this->Int16] = SIInit_i16;
-        USIInit[this->Bool] = SIInit_b;
-        inited = true;
-      }
-    }
-  };
-  extern Storage_init_interface __SII;
-  ///@endcond;
 
 #ifdef UNI_GPU
   // Explicit specialization declarations for the GPU complex pointer views, so they are visible
@@ -541,10 +505,6 @@ namespace cytnx {
 
   ///@brief an memeory storage with multi-type/multi-device support
   class Storage {
-   private:
-    // Interface:
-    // Storage_init_interface __SII;
-
    public:
     ///@cond
     boost::intrusive_ptr<Storage_base> _impl;
@@ -571,17 +531,9 @@ namespace cytnx {
     void Init(const unsigned long long &size, const unsigned int &dtype = Type.Double,
               int device = -1, const bool &init_zero = true) {
       cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
-      this->_impl = __SII.USIInit[dtype]();
+      this->_impl = init_storage(dtype);
       this->_impl->Init(size, device, init_zero);
     }
-    // void _Init_byptr(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype =
-    // Type.Double, const int &device = -1,
-    //                              const bool &iscap = false, const unsigned long long &cap_in =
-    //                              0){
-    //   cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
-    //   this->_impl = __SII.USIInit[dtype]();
-    //   this->_impl->_Init_byptr(rawptr, len_in, device, iscap, cap_in);
-    // }
 
     /**
      * @brief The constructor of Storage class. It will call the function
@@ -596,13 +548,6 @@ namespace cytnx {
         : _impl(new Storage_base()) {
       Init(size, dtype, device, init_zero);
     }
-    // Storage(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype =
-    // Type.Double, const int &device = -1,
-    //       const bool &iscap = false, const unsigned long long &cap_in = 0)
-    //       : _impl(new Storage_base()){
-    //   _Init_byptr(rawptr,len_in,dtype,device,iscap,cap_in);
-    // }
-
     /**
      * @brief The default constructor of Storage class. It will create an empty Storage instance.
      */
@@ -748,10 +693,7 @@ namespace cytnx {
     @brief the dtype (std::string) of current Storage, see cytnx::Type for more details.
     @return [std::string] dtype name
     */
-    const std::string dtype_str() const {
-      std::string out = this->_impl->dtype_str();
-      return out;
-    }
+    std::string dtype_str() const { return this->_impl->dtype_str(); }
     /**
     @brief the device-id of current Storage, see cytnx::Device for more details.
     @return [cytnx_int64] the device-id.
@@ -762,10 +704,7 @@ namespace cytnx {
     @brief the device (std::string) of current Storage, see cytnx::Device for more details.
     @return [std::string] device name
     */
-    const std::string device_str() const {
-      std::string out = this->_impl->device_str();
-      return out;
-    }
+    std::string device_str() const { return this->_impl->device_str(); }
 
     /**
     @brief append a value
@@ -966,68 +905,19 @@ namespace cytnx {
 
     template <class T>
     void _from_vector(const std::vector<T> &vin, const int device = -1) {
-      // auto dispatch:
-      // check:
-      cytnx_error_msg(true, "[FATAL] ERROR unsupport type%s", "\n");
-      // this->_impl->Init(vin.size(),device);
-      // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
-    }
-
-    void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.ComplexDouble]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex128) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.ComplexFloat]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex64) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_double> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Double]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_double) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_float> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Float]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_float) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Uint64]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint64) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_int64> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Int64]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int64) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Uint32]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint32) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_int32> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Int32]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int32) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Uint16]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint16) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_int16> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Int16]();
-      this->_impl->Init(vin.size(), device);
-      memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int16) * vin.size());
-    }
-    void _from_vector(const std::vector<cytnx_bool> &vin, const int device = -1) {
-      this->_impl = __SII.USIInit[Type.Bool]();
-      this->_impl->Init(vin.size(), device);
-      this->_impl->_cpy_bool(this->_impl->data(), vin);
-      // memcpy(this->_impl->data(),vin.data(),sizeof(cytnx_bool)*vin.size());
+      static_assert(CytnxType<T>, "[ERROR][Storage._from_vector] unsupported vector element type.");
+      auto impl = boost::intrusive_ptr<Storage_base>(new StorageImplementation<T>());
+      impl->Init(vin.size(), device);
+      if constexpr (std::is_same_v<T, cytnx_bool>) {
+        // std::vector<bool> is bit-packed, so copy element-by-element rather than
+        // memcpy from a contiguous buffer.
+        impl->_cpy_bool(impl->data(), vin);
+      } else {
+        if (!vin.empty()) {
+          memcpy(impl->data(), vin.data(), sizeof(T) * vin.size());
+        }
+      }
+      this->_impl = impl;
     }
     /// @endcond
 

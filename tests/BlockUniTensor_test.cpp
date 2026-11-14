@@ -1,5 +1,7 @@
 #include "BlockUniTensor_test.h"
 
+#include <cstdint>
+
 namespace cytnx {
   namespace test {
     namespace {
@@ -1779,6 +1781,141 @@ namespace cytnx {
         EXPECT_EQ(A.bonds()[0].dim(), dim_a * dim_a * dim_a);
         Tensor block_after = A.get_block({0, 0}, false);
         EXPECT_TRUE(AreNearlyEqTensor(block_after, expected, 1e-12));
+      }
+
+      /*=====test info=====
+      describe:relabel() returns a view sharing block storage with its parent (#1206). Contracting
+      two views of one tensor must agree with the dense Tensordot of the tensor's dense form (an
+      independent reference) and must leave the parent's blocks untouched.
+      ====================*/
+      namespace {
+        // Assemble the dense array of a block-sparse UniTensor from its blocks and qindices.
+        Tensor DenseArrayOf(const UniTensor& ut) {
+          std::vector<cytnx_uint64> shape;
+          for (const auto& bond : ut.bonds()) shape.push_back(bond.dim());
+          Tensor out = zeros(shape, ut.dtype());
+          for (std::size_t b = 0; b < ut.Nblocks(); b++) {
+            const std::vector<cytnx_uint64>& qidx = ut.get_qindices(b);
+            std::vector<Accessor> where;
+            for (std::size_t leg = 0; leg < qidx.size(); leg++) {
+              const std::vector<cytnx_uint64>& degs = ut.bonds()[leg].getDegeneracies();
+              std::int64_t offset = 0;
+              for (std::size_t q = 0; q < qidx[leg]; q++) offset += degs[q];
+              where.push_back(Accessor::range(offset, offset + degs[qidx[leg]]));
+            }
+            out.set(where, ut.get_block_(b));
+          }
+          return out;
+        }
+
+        // tr(M) and tr(M*M) of a dense array read as a dim x dim matrix. Both are invariant under
+        // M -> P M P^T for a permutation P, but not under M -> P1 M P2^T with P1 != P2.
+        std::pair<double, double> TraceAndTraceOfSquare(const Tensor& dense, std::int64_t dim) {
+          const Tensor m = dense.reshape({dim, dim});
+          double trace = 0.0;
+          double trace_of_square = 0.0;
+          for (std::int64_t i = 0; i < dim; i++) {
+            trace += m.at<double>({static_cast<cytnx_uint64>(i), static_cast<cytnx_uint64>(i)});
+            for (std::int64_t j = 0; j < dim; j++) {
+              trace_of_square +=
+                m.at<double>({static_cast<cytnx_uint64>(i), static_cast<cytnx_uint64>(j)}) *
+                m.at<double>({static_cast<cytnx_uint64>(j), static_cast<cytnx_uint64>(i)});
+            }
+          }
+          return {trace, trace_of_square};
+        }
+      }  // namespace
+
+      TEST_F(BlockUniTensorTest, ContractTwoRelabelViewsOfOneTensor) {
+        Bond in = Bond(BD_IN, {Qs(0) >> 2, Qs(1) >> 2}, {Symmetry::Zn(2)});
+        UniTensor T({in, in, in.redirect(), in.redirect()}, {"a", "b", "c", "d"}, 2);
+        InitUniTensorUniform(T, 7);
+        UniTensor T_before = T.clone();  // an independent value snapshot (to_dense() would alias T)
+        std::vector<std::vector<cytnx_uint64>> shapes_before;
+        for (std::size_t b = 0; b < T.Nblocks(); b++)
+          shapes_before.push_back(T.get_block_(b).shape());
+        Tensor dense_T = DenseArrayOf(T);
+        Tensor expected = linalg::Tensordot(dense_T, dense_T, {3}, {0});  // abcs,sqrd->abcqrd
+
+        UniTensor C = Contract(T.relabel({"a", "b", "c", "s"}), T.relabel({"s", "q", "r", "d"}));
+        UniTensor C_clone =
+          Contract(T.relabel({"a", "b", "c", "s"}), T.clone().relabel({"s", "q", "r", "d"}));
+
+        EXPECT_EQ(C.labels(), std::vector<std::string>({"a", "b", "c", "q", "r", "d"}));
+        EXPECT_TRUE((C - C_clone).Norm().item() < 1e-12);
+        EXPECT_TRUE((DenseArrayOf(C) - expected).Norm().item() < 1e-12);
+        for (std::size_t b = 0; b < T.Nblocks(); b++)
+          EXPECT_EQ(T.get_block_(b).shape(), shapes_before[b]) << "block " << b;
+        EXPECT_TRUE((T - T_before).Norm().item() < 1e-15);
+      }
+
+      /*=====test info=====
+      describe:#630 regression -- combining the row bonds and the column bonds of an operator in
+        two separate combineBonds calls must put both combined bonds in the SAME basis order, so
+        the result is still the same operator M -> P M P^T for one permutation P. The first call
+        used to regroup the not-yet-combined column bonds as a side effect, so the second call
+        merged already-grouped bonds and ordered the states inside each sector differently
+        (M -> P1 M P2^T), which silently corrupts Trace, Eig, Eigh and any contraction between the
+        two bonds. Bonds with repeated qnum sectors are what triggers the regrouping.
+        Expected values are tr(M) and tr(M*M) of the dense matrix assembled BEFORE combining;
+        both are invariant under M -> P M P^T but not under M -> P1 M P2^T.
+      ====================*/
+      TEST_F(BlockUniTensorTest, CombineBondsRowAndColumnBondsShareBasisOrder) {
+        Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1, Qs(0) >> 1}, {Symmetry::Zn(2)});
+        Bond bo = bi.redirect();
+        UniTensor T = UniTensor({bi, bi, bo, bo}, {"a", "b", "c", "d"}, 2, Type.Double);
+        random::uniform_(T, -1.0, 1.0, 3);
+
+        const std::int64_t dim = bi.dim() * bi.dim();
+        const auto expected = TraceAndTraceOfSquare(DenseArrayOf(T), dim);
+
+        for (const bool rows_first : {true, false}) {
+          UniTensor C = T.clone();
+          if (rows_first) {
+            C.combineBond_({"a", "b"});
+            C.combineBond_({"c", "d"});
+          } else {
+            C.combineBond_({"c", "d"});
+            C.combineBond_({"a", "b"});
+          }
+          ASSERT_EQ(C.rank(), 2);
+          const auto actual = TraceAndTraceOfSquare(DenseArrayOf(C), dim);
+          EXPECT_NEAR(actual.first, expected.first, 1e-12) << "rows_first=" << rows_first;
+          EXPECT_NEAR(actual.second, expected.second, 1e-12) << "rows_first=" << rows_first;
+        }
+      }
+
+      /*=====test info=====
+      describe:#630 regression, the case of the original report -- permute, then combine the two
+        column bonds of T[0;1,2] in the order (2,1). The result must not depend on the block
+        order that permute leaves behind. Grouping used to direct-sum the blocks in block order,
+        which after a permute is not the order of the sector indices, so the states inside a
+        grouped sector of the combined bond came out in a different order than on the row bond
+        (M -> P1 M P2^T) and Eig returned wrong eigenvalues.
+        Scope: this is not a general statement about sector order. The check relies on the bonds
+        chosen here: the row bond and the combined bond have the same sector sequence
+        [0,1,1,0] before grouping, so grouping must apply the same permutation to both. With
+        column bonds whose sectors are listed in different orders (e.g. [0,1] and [1,0]) the
+        two sequences differ and tr(M) is not preserved; that case is not covered by this test.
+        Expected values are tr(M) and tr(M*M) of the dense matrix M[i,(j2,j1)] assembled from T
+        BEFORE permuting and combining.
+      ====================*/
+      TEST_F(BlockUniTensorTest, CombineBondsAfterPermuteDoesNotDependOnBlockOrder) {
+        Bond bi = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1, Qs(0) >> 1}, {Symmetry::Zn(2)});
+        Bond bo = Bond(BD_OUT, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::Zn(2)});
+        UniTensor T = UniTensor({bi, bo, bo}, {"0", "1", "2"}, 1, Type.Double);
+        random::uniform_(T, -1.0, 1.0, 5);
+
+        const std::int64_t dim = bi.dim();
+        const auto expected =
+          TraceAndTraceOfSquare(DenseArrayOf(T).permute({0, 2, 1}).contiguous(), dim);
+
+        UniTensor C = T.permute({"0", "2", "1"});
+        C.combineBond_({"2", "1"});
+        ASSERT_EQ(C.rank(), 2);
+        const auto actual = TraceAndTraceOfSquare(DenseArrayOf(C), dim);
+        EXPECT_NEAR(actual.first, expected.first, 1e-12);
+        EXPECT_NEAR(actual.second, expected.second, 1e-12);
       }
 
     }  // namespace

@@ -1,589 +1,176 @@
 #include "cuMaxMin_internal.hpp"
+
+#include <cstdint>
+#include <utility>
+
+#include "cuda/std/complex"
+
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+#include "backend/utils_internal_gpu/cuTypeTraits_gpu.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
-#include "backend/lapack_wrapper.hpp"
 
 namespace cytnx {
   namespace linalg_internal {
 
-#define _TNinB_REDUCE_ 512
+    namespace {
 
-    template <class X>
-    __device__ void warp_unroll_max(X *smem, int tid) {
-      X v;
-      v = (smem[tid] >= smem[tid + 32]) ? smem[tid] : smem[tid + 32];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] >= smem[tid + 16]) ? smem[tid] : smem[tid + 16];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] >= smem[tid + 8]) ? smem[tid] : smem[tid + 8];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] >= smem[tid + 4]) ? smem[tid] : smem[tid + 4];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] >= smem[tid + 2]) ? smem[tid] : smem[tid + 2];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] >= smem[tid + 1]) ? smem[tid] : smem[tid + 1];
-      __syncwarp();
-      smem[tid] = v;
-    }
+      // Threads per block of the reduction kernel. Must be a power of two: the in-block tree
+      // merges runs of 1, 2, 4, ... elements.
+      constexpr unsigned int kReduceBlockSize = 512;
 
-    __device__ void warp_unroll_max_cd(cuDoubleComplex *smem, int tid) {
-      cuDoubleComplex v;
-      v = (smem[tid].x >= smem[tid + 32].x) ? smem[tid] : smem[tid + 32];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 16].x) ? smem[tid] : smem[tid + 16];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 8].x) ? smem[tid] : smem[tid + 8];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 4].x) ? smem[tid] : smem[tid + 4];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 2].x) ? smem[tid] : smem[tid + 2];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 1].x) ? smem[tid] : smem[tid + 1];
-      __syncwarp();
-      smem[tid] = v;
-    }
-    __device__ void warp_unroll_max_cf(cuFloatComplex *smem, int tid) {
-      cuFloatComplex v;
-      v = (smem[tid].x >= smem[tid + 32].x) ? smem[tid] : smem[tid + 32];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 16].x) ? smem[tid] : smem[tid + 16];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 8].x) ? smem[tid] : smem[tid + 8];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 4].x) ? smem[tid] : smem[tid + 4];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 2].x) ? smem[tid] : smem[tid + 2];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x >= smem[tid + 1].x) ? smem[tid] : smem[tid + 1];
-      __syncwarp();
-      smem[tid] = v;
-    }
-
-    template <class X>
-    __device__ void warp_unroll_min(X *smem, int tid) {
-      X v;
-      v = (smem[tid] <= smem[tid + 32]) ? smem[tid] : smem[tid + 32];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] <= smem[tid + 16]) ? smem[tid] : smem[tid + 16];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] <= smem[tid + 8]) ? smem[tid] : smem[tid + 8];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] <= smem[tid + 4]) ? smem[tid] : smem[tid + 4];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] <= smem[tid + 2]) ? smem[tid] : smem[tid + 2];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid] <= smem[tid + 1]) ? smem[tid] : smem[tid + 1];
-      __syncwarp();
-      smem[tid] = v;
-    }
-    __device__ void warp_unroll_min_cd(cuDoubleComplex *smem, int tid) {
-      cuDoubleComplex v;
-      v = (smem[tid].x <= smem[tid + 32].x) ? smem[tid] : smem[tid + 32];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 16].x) ? smem[tid] : smem[tid + 16];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 8].x) ? smem[tid] : smem[tid + 8];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 4].x) ? smem[tid] : smem[tid + 4];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 2].x) ? smem[tid] : smem[tid + 2];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 1].x) ? smem[tid] : smem[tid + 1];
-      __syncwarp();
-      smem[tid] = v;
-    }
-    __device__ void warp_unroll_min_cf(cuFloatComplex *smem, int tid) {
-      cuFloatComplex v;
-      v = (smem[tid].x <= smem[tid + 32].x) ? smem[tid] : smem[tid + 32];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 16].x) ? smem[tid] : smem[tid + 16];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 8].x) ? smem[tid] : smem[tid + 8];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 4].x) ? smem[tid] : smem[tid + 4];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 2].x) ? smem[tid] : smem[tid + 2];
-      __syncwarp();
-      smem[tid] = v;
-      v = (smem[tid].x <= smem[tid + 1].x) ? smem[tid] : smem[tid + 1];
-      __syncwarp();
-      smem[tid] = v;
-    }
-
-    // require, threads per block to be 32*(2^n), n =0,1,2,3,4,5
-    template <class T>
-    __global__ void cuMax_kernel(T *out, T *in, cytnx_uint64 Nelem) {
-      __shared__ T sD[_TNinB_REDUCE_];  // allocate share mem for each thread
-      sD[threadIdx.x] = 0;
-
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        sD[threadIdx.x] = in[blockIdx.x * blockDim.x + threadIdx.x];
-      }
-      __syncthreads();
-
-      if (blockDim.x >= 1024) {
-        if (threadIdx.x < 512) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] >= sD[threadIdx.x + 512]) ? sD[threadIdx.x] : sD[threadIdx.x + 512];
+      // `earlier` precedes `later` in storage order. Both rules below reproduce the CPU
+      // implementation (MaxMin_internal.cpp): real elements are replaced only by a strictly
+      // better one, so the first of several equal elements is kept; complex elements are ordered
+      // by their real part alone and the last of several with equal real part is kept.
+      struct PickMax {
+        template <class T>
+        __device__ T operator()(T earlier, T later) const {
+          return later > earlier ? later : earlier;
         }
-        __syncthreads();
-      }
-      if (blockDim.x >= 512) {
-        if (threadIdx.x < 256) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] >= sD[threadIdx.x + 256]) ? sD[threadIdx.x] : sD[threadIdx.x + 256];
+        template <class F>
+        __device__ cuda::std::complex<F> operator()(cuda::std::complex<F> earlier,
+                                                    cuda::std::complex<F> later) const {
+          return later.real() >= earlier.real() ? later : earlier;
         }
-        __syncthreads();
-      }
-      if (blockDim.x >= 256) {
-        if (threadIdx.x < 128) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] >= sD[threadIdx.x + 128]) ? sD[threadIdx.x] : sD[threadIdx.x + 128];
+      };
+      struct PickMin {
+        template <class T>
+        __device__ T operator()(T earlier, T later) const {
+          return later < earlier ? later : earlier;
         }
-        __syncthreads();
-      }
-      if (blockDim.x >= 128) {
-        if (threadIdx.x < 64) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] >= sD[threadIdx.x + 64]) ? sD[threadIdx.x] : sD[threadIdx.x + 64];
+        template <class F>
+        __device__ cuda::std::complex<F> operator()(cuda::std::complex<F> earlier,
+                                                    cuda::std::complex<F> later) const {
+          return later.real() <= earlier.real() ? later : earlier;
         }
+      };
+
+      // Reduces each block of blockDim.x consecutive input elements to one output element.
+      // Requires blockDim.x to be a power of two no larger than kReduceBlockSize.
+      template <class T, class Pick>
+      __global__ void reduce_blocks_kernel(T *out, const T *in, std::uint64_t element_count) {
+        __shared__ T block_values[kReduceBlockSize];
+
+        // Slots past the end of the input are filled with the last element. A repeated element
+        // cannot change a maximum or minimum, whereas a fixed filler such as 0 can.
+        const std::uint64_t index =
+          static_cast<std::uint64_t>(blockIdx.x) * blockDim.x + threadIdx.x;
+        block_values[threadIdx.x] = in[index < element_count ? index : element_count - 1];
         __syncthreads();
-      }
 
-      if (threadIdx.x < 32) warp_unroll_max(sD, threadIdx.x);
-      __syncthreads();
-
-      if (threadIdx.x == 0) out[blockIdx.x] = sD[0];  // write to global for block
-    }
-
-    // require, threads per block to be 32*(2^n), n =0,1,2,3,4,5
-    __global__ void cuMax_kernel(cuDoubleComplex *out, cuDoubleComplex *in, cytnx_uint64 Nelem) {
-      __shared__ cuDoubleComplex sD[_TNinB_REDUCE_];  // allocate share mem for each thread
-      sD[threadIdx.x] = make_cuDoubleComplex(0, 0);
-
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        sD[threadIdx.x] = in[blockIdx.x * blockDim.x + threadIdx.x];
-      }
-      __syncthreads();
-
-      if (blockDim.x >= 1024) {
-        if (threadIdx.x < 512) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x >= sD[threadIdx.x + 512].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 512];
+        // Neighbouring runs are merged, so a slot always holds the result for one contiguous run
+        // of elements and its right-hand partner the run that follows it; Pick relies on that
+        // order. Every step is followed by a barrier: a thread reads a slot that another thread
+        // wrote in the previous step, and threads of one warp do not run in lockstep.
+        for (unsigned int stride = 1; stride < blockDim.x; stride *= 2) {
+          if (threadIdx.x % (2 * stride) == 0) {
+            block_values[threadIdx.x] =
+              Pick()(block_values[threadIdx.x], block_values[threadIdx.x + stride]);
+          }
+          __syncthreads();
         }
-        __syncthreads();
+
+        if (threadIdx.x == 0) out[blockIdx.x] = block_values[0];
       }
-      if (blockDim.x >= 512) {
-        if (threadIdx.x < 256) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x >= sD[threadIdx.x + 256].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 256];
+
+      // Writes the Pick-reduction of in[0, element_count) to out[0]. element_count must be > 0.
+      template <class T, class Pick>
+      void reduce_to_scalar(T *out, const T *in, std::uint64_t element_count) {
+        // Intermediate levels alternate between two buffers. The kernels run in launch order on
+        // one stream, so a level may overwrite the buffer that the level before it read from. The
+        // first buffer holds the first level's results and the second the (512 times fewer)
+        // results of the second level; every later level fits into one of the two.
+        utils_internal::DeviceBuffer<T> level_input;
+        utils_internal::DeviceBuffer<T> level_output;
+        while (true) {
+          const std::uint64_t block_count =
+            (element_count + kReduceBlockSize - 1) / kReduceBlockSize;
+          if (block_count > 1 && level_output.get() == nullptr) {
+            level_output = utils_internal::DeviceBuffer<T>(block_count);
+          }
+          T *block_results = block_count > 1 ? level_output.get() : out;
+          reduce_blocks_kernel<T, Pick>
+            <<<static_cast<unsigned int>(block_count), kReduceBlockSize>>>(block_results, in,
+                                                                           element_count);
+          CYTNX_CHECK_CUDA_LAUNCH(reduce_blocks_kernel);
+          if (block_count == 1) break;
+          in = block_results;
+          element_count = block_count;
+          std::swap(level_input, level_output);
         }
-        __syncthreads();
-      }
-      if (blockDim.x >= 256) {
-        if (threadIdx.x < 128) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x >= sD[threadIdx.x + 128].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 128];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 128) {
-        if (threadIdx.x < 64) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x].x >= sD[threadIdx.x + 64].x) ? sD[threadIdx.x] : sD[threadIdx.x + 64];
-        }
-        __syncthreads();
+        checkCudaErrors(cudaDeviceSynchronize());
       }
 
-      if (threadIdx.x < 32) warp_unroll_max_cd(sD, threadIdx.x);
-      __syncthreads();
-
-      if (threadIdx.x == 0) out[blockIdx.x] = sD[0];  // write to global for block
-    }
-    // require, threads per block to be 32*(2^n), n =0,1,2,3,4,5
-    __global__ void cuMax_kernel(cuFloatComplex *out, cuFloatComplex *in, cytnx_uint64 Nelem) {
-      __shared__ cuFloatComplex sD[_TNinB_REDUCE_];  // allocate share mem for each thread
-      sD[threadIdx.x] = make_cuFloatComplex(0, 0);
-
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        sD[threadIdx.x] = in[blockIdx.x * blockDim.x + threadIdx.x];
-      }
-      __syncthreads();
-
-      if (blockDim.x >= 1024) {
-        if (threadIdx.x < 512) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x >= sD[threadIdx.x + 512].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 512];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 512) {
-        if (threadIdx.x < 256) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x >= sD[threadIdx.x + 256].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 256];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 256) {
-        if (threadIdx.x < 128) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x >= sD[threadIdx.x + 128].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 128];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 128) {
-        if (threadIdx.x < 64) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x].x >= sD[threadIdx.x + 64].x) ? sD[threadIdx.x] : sD[threadIdx.x + 64];
-        }
-        __syncthreads();
-      }
-
-      if (threadIdx.x < 32) warp_unroll_max_cf(sD, threadIdx.x);
-      __syncthreads();
-
-      if (threadIdx.x == 0) out[blockIdx.x] = sD[0];  // write to global for block
-    }
-
-    template <class T>
-    __global__ void cuMin_kernel(T *out, T *in, cytnx_uint64 Nelem) {
-      __shared__ T sD[_TNinB_REDUCE_];  // allocate share mem for each thread
-      sD[threadIdx.x] = 0;
-
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        sD[threadIdx.x] = in[blockIdx.x * blockDim.x + threadIdx.x];
-      }
-      __syncthreads();
-
-      if (blockDim.x >= 1024) {
-        if (threadIdx.x < 512) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] <= sD[threadIdx.x + 512]) ? sD[threadIdx.x] : sD[threadIdx.x + 512];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 512) {
-        if (threadIdx.x < 256) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] <= sD[threadIdx.x + 256]) ? sD[threadIdx.x] : sD[threadIdx.x + 256];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 256) {
-        if (threadIdx.x < 128) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] <= sD[threadIdx.x + 128]) ? sD[threadIdx.x] : sD[threadIdx.x + 128];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 128) {
-        if (threadIdx.x < 64) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x] <= sD[threadIdx.x + 64]) ? sD[threadIdx.x] : sD[threadIdx.x + 64];
-        }
-        __syncthreads();
-      }
-
-      if (threadIdx.x < 32) warp_unroll_min(sD, threadIdx.x);
-      __syncthreads();
-
-      if (threadIdx.x == 0) out[blockIdx.x] = sD[0];  // write to global for block
-    }
-
-    // require, threads per block to be 32*(2^n), n =0,1,2,3,4,5
-    __global__ void cuMin_kernel(cuDoubleComplex *out, cuDoubleComplex *in, cytnx_uint64 Nelem) {
-      __shared__ cuDoubleComplex sD[_TNinB_REDUCE_];  // allocate share mem for each thread
-      sD[threadIdx.x] = make_cuDoubleComplex(0, 0);
-
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        sD[threadIdx.x] = in[blockIdx.x * blockDim.x + threadIdx.x];
-      }
-      __syncthreads();
-
-      if (blockDim.x >= 1024) {
-        if (threadIdx.x < 512) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x <= sD[threadIdx.x + 512].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 512];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 512) {
-        if (threadIdx.x < 256) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x <= sD[threadIdx.x + 256].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 256];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 256) {
-        if (threadIdx.x < 128) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x <= sD[threadIdx.x + 128].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 128];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 128) {
-        if (threadIdx.x < 64) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x].x <= sD[threadIdx.x + 64].x) ? sD[threadIdx.x] : sD[threadIdx.x + 64];
-        }
-        __syncthreads();
-      }
-
-      if (threadIdx.x < 32) warp_unroll_min_cd(sD, threadIdx.x);
-      __syncthreads();
-
-      if (threadIdx.x == 0) out[blockIdx.x] = sD[0];  // write to global for block
-    }
-
-    // require, threads per block to be 32*(2^n), n =0,1,2,3,4,5
-    __global__ void cuMin_kernel(cuFloatComplex *out, cuFloatComplex *in, cytnx_uint64 Nelem) {
-      __shared__ cuFloatComplex sD[_TNinB_REDUCE_];  // allocate share mem for each thread
-      sD[threadIdx.x] = make_cuFloatComplex(0, 0);
-
-      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
-        sD[threadIdx.x] = in[blockIdx.x * blockDim.x + threadIdx.x];
-      }
-      __syncthreads();
-
-      if (blockDim.x >= 1024) {
-        if (threadIdx.x < 512) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x <= sD[threadIdx.x + 512].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 512];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 512) {
-        if (threadIdx.x < 256) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x <= sD[threadIdx.x + 256].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 256];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 256) {
-        if (threadIdx.x < 128) {
-          sD[threadIdx.x] = (sD[threadIdx.x].x <= sD[threadIdx.x + 128].x) ? sD[threadIdx.x]
-                                                                           : sD[threadIdx.x + 128];
-        }
-        __syncthreads();
-      }
-      if (blockDim.x >= 128) {
-        if (threadIdx.x < 64) {
-          sD[threadIdx.x] =
-            (sD[threadIdx.x].x <= sD[threadIdx.x + 64].x) ? sD[threadIdx.x] : sD[threadIdx.x + 64];
-        }
-        __syncthreads();
-      }
-
-      if (threadIdx.x < 32) warp_unroll_min_cf(sD, threadIdx.x);
-      __syncthreads();
-
-      if (threadIdx.x == 0) out[blockIdx.x] = sD[0];  // write to global for block
-    }
-    //=======================
-    template <class T>
-    void swap(T *&a, T *&b) {
-      T *tmp = a;
-      a = b;
-      b = tmp;
-    }
-
-    template <class T>
-    void cuMax_gpu_generic(T *out, T *in, const cytnx_uint64 &Nelem) {
-      cytnx_uint64 Nelems = Nelem;
-      cytnx_uint64 NBlocks;
-
-      NBlocks = Nelems / _TNinB_REDUCE_;
-      if (Nelems % _TNinB_REDUCE_) NBlocks += 1;
-
-      // alloc mem for each block:
-      T *dblk;
-      cudaMalloc((void **)&dblk, NBlocks * sizeof(T));
-
-      if (NBlocks == 1) {
-        cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, in, Nelems);
-      } else {
-        cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk, in, Nelems);
-      }
-      Nelems = NBlocks;
-
-      while (Nelems > 1) {
-        NBlocks = Nelems / _TNinB_REDUCE_;
-        if (Nelems % _TNinB_REDUCE_) NBlocks += 1;
-
-        if (NBlocks == 1) {
-          cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, dblk, Nelems);
+      template <class HostType>
+      void max_min_gpu(boost::intrusive_ptr<Storage_base> &out,
+                       const boost::intrusive_ptr<Storage_base> &ten, char type) {
+        using DeviceType = typename utils_internal::ToCudaDType<HostType>::type;
+        DeviceType *out_data = static_cast<DeviceType *>(out->data());
+        const DeviceType *in_data = static_cast<const DeviceType *>(ten->data());
+        if (type == 'x') {
+          reduce_to_scalar<DeviceType, PickMax>(out_data, in_data, ten->size());
         } else {
-          T *dblk2;
-          cudaMalloc((void **)&dblk2, NBlocks * sizeof(T));
-          // do something:
-          cuMax_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
-
-          swap(dblk2, dblk);  // swap new data to old data, and free the old
-          cudaFree(dblk2);
+          reduce_to_scalar<DeviceType, PickMin>(out_data, in_data, ten->size());
         }
-        Nelems = NBlocks;
       }
-      cudaFree(dblk);
-    }
-    template <class T>
-    void cuMin_gpu_generic(T *out, T *in, const cytnx_uint64 &Nelem) {
-      cytnx_uint64 Nelems = Nelem;
-      cytnx_uint64 NBlocks;
 
-      NBlocks = Nelems / _TNinB_REDUCE_;
-      if (Nelems % _TNinB_REDUCE_) NBlocks += 1;
-
-      // alloc mem for each block:
-      T *dblk;
-      cudaMalloc((void **)&dblk, NBlocks * sizeof(T));
-
-      if (NBlocks == 1) {
-        cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, in, Nelems);
-      } else {
-        cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk, in, Nelems);
-      }
-      Nelems = NBlocks;
-
-      while (Nelems > 1) {
-        NBlocks = Nelems / _TNinB_REDUCE_;
-        if (Nelems % _TNinB_REDUCE_) NBlocks += 1;
-
-        if (NBlocks == 1) {
-          cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, dblk, Nelems);
-        } else {
-          T *dblk2;
-          cudaMalloc((void **)&dblk2, NBlocks * sizeof(T));
-          // do something:
-          cuMin_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
-
-          swap(dblk2, dblk);  // swap new data to old data, and free the old
-          cudaFree(dblk2);
-        }
-        Nelems = NBlocks;
-      }
-      cudaFree(dblk);
-    }
+    }  // namespace
 
     void cuMaxMin_internal_cd(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &ten,
                               const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cuDoubleComplex *)out->data(), (cuDoubleComplex *)ten->data(),
-                          ten->size());
-      else
-        cuMin_gpu_generic((cuDoubleComplex *)out->data(), (cuDoubleComplex *)ten->data(),
-                          ten->size());
+      max_min_gpu<cytnx_complex128>(out, ten, type);
     }
     void cuMaxMin_internal_cf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &ten,
                               const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cuFloatComplex *)out->data(), (cuFloatComplex *)ten->data(),
-                          ten->size());
-      else
-        cuMin_gpu_generic((cuFloatComplex *)out->data(), (cuFloatComplex *)ten->data(),
-                          ten->size());
+      max_min_gpu<cytnx_complex64>(out, ten, type);
     }
     void cuMaxMin_internal_d(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_double *)out->data(), (cytnx_double *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_double *)out->data(), (cytnx_double *)ten->data(), ten->size());
+      max_min_gpu<cytnx_double>(out, ten, type);
     }
     void cuMaxMin_internal_f(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_float *)out->data(), (cytnx_float *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_float *)out->data(), (cytnx_float *)ten->data(), ten->size());
+      max_min_gpu<cytnx_float>(out, ten, type);
     }
     void cuMaxMin_internal_u64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_uint64 *)out->data(), (cytnx_uint64 *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_uint64 *)out->data(), (cytnx_uint64 *)ten->data(), ten->size());
+      max_min_gpu<cytnx_uint64>(out, ten, type);
     }
     void cuMaxMin_internal_i64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_int64 *)out->data(), (cytnx_int64 *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_int64 *)out->data(), (cytnx_int64 *)ten->data(), ten->size());
+      max_min_gpu<cytnx_int64>(out, ten, type);
     }
     void cuMaxMin_internal_u32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_uint32 *)out->data(), (cytnx_uint32 *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_uint32 *)out->data(), (cytnx_uint32 *)ten->data(), ten->size());
+      max_min_gpu<cytnx_uint32>(out, ten, type);
     }
     void cuMaxMin_internal_i32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_int32 *)out->data(), (cytnx_int32 *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_int32 *)out->data(), (cytnx_int32 *)ten->data(), ten->size());
+      max_min_gpu<cytnx_int32>(out, ten, type);
     }
     void cuMaxMin_internal_u16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_uint16 *)out->data(), (cytnx_uint16 *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_uint16 *)out->data(), (cytnx_uint16 *)ten->data(), ten->size());
+      max_min_gpu<cytnx_uint16>(out, ten, type);
     }
     void cuMaxMin_internal_i16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_int16 *)out->data(), (cytnx_int16 *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_int16 *)out->data(), (cytnx_int16 *)ten->data(), ten->size());
+      max_min_gpu<cytnx_int16>(out, ten, type);
     }
     void cuMaxMin_internal_b(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      if (type == 'x')
-        cuMax_gpu_generic((cytnx_bool *)out->data(), (cytnx_bool *)ten->data(), ten->size());
-      else
-        cuMin_gpu_generic((cytnx_bool *)out->data(), (cytnx_bool *)ten->data(), ten->size());
+      max_min_gpu<cytnx_bool>(out, ten, type);
     }
 
   }  // namespace linalg_internal

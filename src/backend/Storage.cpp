@@ -6,8 +6,6 @@
 
 namespace cytnx {
 
-  Storage_init_interface __SII;
-
   std::ostream &operator<<(std::ostream &os, const Storage &in) {
     in.print();
     return os;
@@ -306,7 +304,7 @@ namespace cytnx {
       }
     }
 
-    this->_impl = __SII.USIInit[dt]();
+    this->_impl = init_storage(dt);
     this->_impl->Init(sz, dv);
     if (sz == 0) return;
 
@@ -336,7 +334,7 @@ namespace cytnx {
     // check:
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid std::fstream!.%s", "\n");
 
-    this->_impl = __SII.USIInit[dtype]();
+    this->_impl = init_storage(dtype);
     this->_impl->Init(Nelem, Device.cpu);
     if (Nelem != 0) f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
   }

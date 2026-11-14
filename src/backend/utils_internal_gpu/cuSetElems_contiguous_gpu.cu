@@ -1,5 +1,7 @@
 #include "cuSetElems_contiguous_gpu.hpp"
 
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+
 namespace cytnx {
   namespace utils_internal {
 
@@ -50,8 +52,7 @@ namespace cytnx {
         }
         cytnx_uint64 n = blockIdx.x * blockDim.x + threadIdx.x;
         // d_out[Loc] = d_in[blockIdx.x * blockDim.x + threadIdx.x];
-        cudaMemcpyAsync(d_out + Loc * Nunit, d_in + n * Nunit, sizeof(cuDoubleComplex) * Nunit,
-                        cudaMemcpyDeviceToDevice);
+        for (std::uint64_t x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[n * Nunit + x];
       }
     }
     // cd cf
@@ -122,8 +123,7 @@ namespace cytnx {
         }
         // d_out[Loc] = d_in[blockIdx.x * blockDim.x + threadIdx.x];
         cytnx_uint64 n = blockIdx.x * blockDim.x + threadIdx.x;
-        cudaMemcpyAsync(d_out + Loc * Nunit, d_in + n * Nunit, sizeof(cuFloatComplex) * Nunit,
-                        cudaMemcpyDeviceToDevice);
+        for (std::uint64_t x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[n * Nunit + x];
       }
     }
 
@@ -384,6 +384,7 @@ namespace cytnx {
       cuSetElems_conti_gpu_kernel<<<NBlocks, 256>>>(new_elem_ptr_, elem_ptr_, d_offj, d_new_offj,
                                                     d_locators, d_picksize, offj.size(), TotalElem,
                                                     Nunit);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetElems_conti_gpu_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);
@@ -441,6 +442,7 @@ namespace cytnx {
       cuSetElems_conti_gpu_scal_kernel<<<NBlocks, 256>>>(new_elem_, elem_ptr_, d_offj, d_new_offj,
                                                          d_locators, d_picksize, offj.size(),
                                                          TotalElem, Nunit);
+      CYTNX_CHECK_CUDA_LAUNCH(cuSetElems_conti_gpu_scal_kernel);
 
       cudaFree(d_offj);
       cudaFree(d_new_offj);

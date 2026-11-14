@@ -329,8 +329,10 @@ if(USE_CUDA)
 
 
     message( STATUS " Build CUDA Support: YES")
-    message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
-    message( STATUS "  - CUDA Toolkit Root: ${CUDA_TOOLKIT_ROOT_DIR}")
+    message( STATUS "  - CUDA Version: ${CUDAToolkit_VERSION}")
+    message( STATUS "  - CUDA Toolkit bin dir: ${CUDAToolkit_BIN_DIR}")
+    message( STATUS "  - CUDA compiler (nvcc): ${CMAKE_CUDA_COMPILER}")
+    message( STATUS "  - CUDA compiler version: ${CMAKE_CUDA_COMPILER_VERSION}")
     message( STATUS "  - Internal macro switch: GPU/CUDA")
     if(MSVC)
       FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "/DUNI_GPU\n" "")
@@ -363,13 +365,14 @@ if(USE_CUDA)
     if(WIN32)
       message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY}")
       FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY}\n" "")
-      message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY}")
-      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY}\n" "")
     else()
       message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY} -ldl")
       FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing
-      message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt")
-      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt -lcudadevrt\n" "") # use > to indicate special rt processing
+      # No cudadevrt here: it is the device-side runtime for CUDA dynamic
+      # parallelism, which cytnx no longer uses (#1229), and a host link of
+      # libcytnx.a never needed it (measured in the #1230 follow-up).
+      message( STATUS "  - rt library: -lrt")
+      FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "-lrt\n" "")
     endif()
     message( STATUS "  - Cuda cusparse library: ${CUDA_cusparse_LIBRARY}")
     FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cusparse_LIBRARY}\n" "")

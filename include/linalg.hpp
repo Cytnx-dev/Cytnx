@@ -757,7 +757,7 @@ namespace cytnx {
                                                const cytnx_uint64 &mindim = 1);
 
     /**
-     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
+     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at least
      * \p min_blockdim singular values in each block.
      * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
      * truncates the singular values. The result will depend on the rowrank of the
@@ -775,9 +775,16 @@ namespace cytnx {
      *
      * @param[in] Tin a BlockUniTensor, with the correct rowrank set to interpret it as a matrix
      * @param[in] keepdim the number (at most) of singular values to keep.
-     * @param[in] min_blockdim a vector containing the minimum dimension of each block;
-     * alternatively, a vector with only one element can be given to have the same min_blockdim for
-     * each block
+     * @param[in] min_blockdim per-block floors on the number of singular values kept. The vector
+     * is positional over the blocks of the singular-value UniTensor of the full SVD, i.e. over the
+     * charge sectors that survive the row/column bipartition of \p Tin, in the order the SVD lists
+     * them (ascending by qnum); a sector without a block in the SVD has no entry, so the length
+     * must equal the number of blocks of the singular-value UniTensor (checked), not the number of
+     * qnums of a bond. A vector with a single element applies that floor to every block. Each
+     * entry is a floor, not a cap: at least that many singular values of the block are kept,
+     * clamped to the block's rank, and the floors are honoured before \p keepdim, so the total kept
+     * dimension is max(\p keepdim, sum of the clamped floors), capped at the full rank. A zero
+     * entry imposes no floor on that block (the block may be dropped entirely).
      * @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
      * @param[in] is_UvT if \em true, the left- and right- unitary UniTensors (isometries) are
      * returned.
@@ -829,11 +836,13 @@ namespace cytnx {
                                                  const cytnx_uint64 &mindim = 1);
 
     /**
-     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
+     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at least
      * \p min_blockdim singular values in each block.
      * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
      * truncates the singular values. This version uses the ?gesvd method. See references below for
-     * more details.
+     * more details. \p min_blockdim has the same semantics as in Svd_truncate: positional over the
+     * blocks of the singular-value UniTensor (ascending by qnum), a per-block floor clamped to the
+     * block's rank, honoured before \p keepdim.
      * @see Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const
      * std::vector<cytnx_uint64> min_blockdim, const double &err, const bool &is_UvT,
      * const unsigned int &return_err, const cytnx_uint64 &mindim), Gesvd(const
@@ -904,8 +913,8 @@ namespace cytnx {
                                        unsigned int seed = random::__static_random_device());
 
     /**
-     * @brief Perform a truncated Singular-Value decomposition of a UniTensor and keep at most
-     * \p min_blockdim singular values in each block.
+     * @brief Perform a truncated Singular-Value decomposition of a UniTensor and keep at
+     * least \p min_blockdim singular values in each block.
      * @details For each block, the minimum dimension can be chosen for the truncation. This can be
      * helpful to avoid loosing symmetry sectors in the truncated SVD. For more details, please
      * refer to the documentation of the function \ref Rsvd(const cytnx::UniTensor &Tin,
@@ -921,9 +930,16 @@ namespace cytnx {
      * singular values are kept<br> 3) Keep at least \p mindim singular values;<br> 4) Drop all
      * singular values smaller than \p err (no normalization applied to the singular values)
      *
-     * @param[in] min_blockdim a vector containing the minimum dimension of each block;
-     * alternatively, a vector with only one element can be given to have the same min_blockdim for
-     * each block
+     * @param[in] min_blockdim per-block floors on the number of singular values kept. The vector
+     * is positional over the blocks of the singular-value UniTensor of the full SVD, i.e. over the
+     * charge sectors that survive the row/column bipartition of \p Tin, in the order the SVD lists
+     * them (ascending by qnum); a sector without a block in the SVD has no entry, so the length
+     * must equal the number of blocks of the singular-value UniTensor (checked), not the number of
+     * qnums of a bond. A vector with a single element applies that floor to every block. Each
+     * entry is a floor, not a cap: at least that many singular values of the block are kept,
+     * clamped to the block's rank, and the floors are honoured before \p keepdim, so the total kept
+     * dimension is max(\p keepdim, sum of the clamped floors), capped at the full rank. A zero
+     * entry imposes no floor on that block (the block may be dropped entirely).
      * @see Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err = 0., bool is_U =
      * true, bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1, cytnx_uint64
      * oversampling_summand = 10, double oversampling_factor = 1., cytnx_uint64 power_iteration = 0,
@@ -2100,6 +2116,85 @@ namespace cytnx {
 
     std::vector<UniTensor> Eigh(const cytnx::UniTensor &Tin, const bool &is_V = true,
                                 const bool &row_v = false);
+
+    /**
+    @brief Hermitian eigen-decomposition of a UniTensor with truncation of the eigenpairs.
+    @details Performs Eigh(const cytnx::UniTensor &Tin, const bool &is_V, const bool &row_v) and
+    keeps the eigenpairs with the largest eigenvalue magnitudes, the counterpart of Svd_truncate
+    for a Hermitian matrix (whose singular values are the eigenvalue magnitudes): a reduced
+    density matrix is truncated to its dominant eigenbasis, per charge sector, in one call.
+    The eigenvalues are ranked by \f$ |\lambda| \f$ across all blocks; the kept eigenvalues of
+    every block stay in the ascending order Eigh returns.
+
+    When per-block floors do not alter the global magnitude selection, the block-sparse and
+    dense paths select the same eigenvalue magnitudes. If the retained count is exactly
+    \p keepdim, the reconstruction is an optimal rank-\p keepdim approximation in spectral
+    norm (the Hermitian case of the Eckart-Young theorem). A cutoff can reduce that count;
+    floors and exact degeneracy at the cut can increase it. Per-block floors are selection
+    constraints and can exclude the unconstrained optimum even at the same retained count.
+    Ranking by magnitude makes \p return_err report discarded approximation errors, rather
+    than algebraic eigenvalues. To select the lowest or highest eigenvalues of a Hamiltonian,
+    use Eigh and keep the wanted part of its ascending spectrum, or Lanczos with \p which set
+    to "SA"/"LA".
+
+    Dense eigenvectors inherit Eigh's flattened row space and rowrank 1, including for
+    higher-rank inputs. Block eigenvectors preserve the row-space bonds and rowrank.
+
+    The truncation order is the same as in Svd_truncate (later constraints may be violated by
+    earlier ones): 1) keep at least \p min_blockdim eigenpairs in each block (the overload with
+    \p min_blockdim); 2) keep at most \p keepdim eigenpairs overall, except that an exact
+    degeneracy of \f$ |\lambda| \f$ at the cut is kept entirely; 3) keep at least \p mindim
+    eigenpairs; 4) drop eigenpairs with \f$ |\lambda| \f$ smaller than \p err.
+
+    @param[in] Tin a UniTensor with rowrank set so that it is a Hermitian matrix; a
+    DenseUniTensor, a BlockUniTensor or a BlockFermionicUniTensor
+    @param[in] keepdim the number (at most) of eigenpairs to keep
+    @param[in] err the cutoff: eigenpairs with \f$ |\lambda| \f$ smaller than \p err are dropped
+    @param[in] is_V if \em true, the eigenvector UniTensor is returned
+    @param[in] return_err selects the truncation information appended to the result: 0 appends
+    nothing; 1 appends a rank-0 tensor containing the largest discarded \f$ |\lambda| \f$, or zero
+    if none were discarded; >1 appends a rank-1 tensor containing all discarded
+    \f$ |\lambda| \f$ in descending order, empty if none were discarded.
+    @param[in] mindim the number (at least) of eigenpairs to keep
+    @return
+    @parblock
+    [std::vector<UniTensor>]
+
+    1. The first UniTensor is a diagonal UniTensor containing the kept eigenvalues.
+    2. If \p is_V is \em true, the eigenvector UniTensor follows; its last bond is the
+    truncated eigen bond, so \f$ V D V^\dagger \f$ is the projection of \p Tin onto the kept
+    eigenspace.
+    3. If \p return_err is nonzero, the discarded magnitudes are pushed back to the vector.
+    @endparblock
+    @see Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double
+    &err, const bool &is_UvT, const unsigned int &return_err, const cytnx_uint64 &mindim),
+    Eigh(const cytnx::UniTensor &Tin, const bool &is_V, const bool &row_v)
+    */
+    std::vector<UniTensor> Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                         double err = 0., bool is_V = true,
+                                         unsigned int return_err = 0, cytnx_uint64 mindim = 1);
+
+    /**
+    @brief Hermitian eigen-decomposition of a UniTensor with truncation and a per-block floor.
+    @details As Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err,
+    bool is_V, unsigned int return_err, cytnx_uint64 mindim), with \p min_blockdim as in
+    Svd_truncate: positional over the blocks of the eigenvalue UniTensor (one block per charge
+    sector of the row space, ascending by qnum), a per-block floor on the number of kept
+    eigenpairs clamped to the block's dimension and honoured before \p keepdim. The total kept
+    dimension can exceed \p keepdim due to floors or exact degeneracy, or be reduced by \p err
+    subject to the higher-priority constraints. A single-element vector applies that floor to
+    every block. For a DenseUniTensor it must have one element, acting as \p mindim instead:
+    it prevents cutoff-based removal but does not override \p keepdim. Thus a dense input with
+    keepdim=1 and floor {3} retains one eigenpair, while a one-sector block input retains three
+    if its sector has at least three eigenpairs.
+    @param[in] min_blockdim the per-block floors
+    @see Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err, bool is_V,
+    unsigned int return_err, cytnx_uint64 mindim)
+    */
+    std::vector<UniTensor> Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                         std::vector<cytnx_uint64> min_blockdim, double err = 0.,
+                                         bool is_V = true, unsigned int return_err = 0,
+                                         cytnx_uint64 mindim = 1);
 
     // Eig:
     //==================================================

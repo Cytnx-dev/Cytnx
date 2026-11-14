@@ -1,5 +1,7 @@
 #include "cuMovemem_gpu.hpp"
 
+#include "backend/utils_internal_gpu/cuScopedResource_gpu.hpp"
+
 #include <algorithm>
 #include <vector>
 #include <type_traits>
@@ -158,12 +160,13 @@ namespace cytnx {
       }
       cuMovemem_kernel<<<NBlocks, 256, shifter_old.size() * 2 * sizeof(cytnx_uint64)>>>(
         dtmp, (cuT *)in->data(), dshifter_old, dperm_shifter_new, old_shape.size(), Nelem);
+      CYTNX_CHECK_CUDA_LAUNCH(cuMovemem_kernel);
 
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = init_storage(dtype_T);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->data(), dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
@@ -271,7 +274,7 @@ namespace cytnx {
       checkCudaErrors(cutensorDestroyPlanPreference(planPref));
       checkCudaErrors(cutensorDestroyPlan(plan));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = init_storage(dtype_T);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(
