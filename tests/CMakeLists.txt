@@ -64,6 +64,7 @@ add_executable(
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Arnoldi_test.cpp
   linalg_test/Arnoldi_Ut_test.cpp
+  linalg_test/Arpack_block_order_test.cpp
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
   linalg_test/Svd_truncate_test.cpp
