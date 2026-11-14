@@ -471,7 +471,7 @@ scripts = ["tools/activate_windows.bat"]
 CMAKE_GENERATOR = "Ninja"
 CMAKE_GENERATOR_PLATFORM = ""
 CMAKE_GENERATOR_TOOLSET = ""
-CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF"
+CMAKE_ARGS = "-DUSE_HPTT=OFF -DHPTT_ENABLE_FINE_TUNE=OFF"
 
 [feature.wheel-base.tasks]
 setup = "git submodule update --init --recursive"
