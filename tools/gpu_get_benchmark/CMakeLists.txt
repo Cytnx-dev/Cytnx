@@ -29,6 +29,7 @@ if(NOT benchmark_FOUND)
 endif()
 
 add_executable(gpu_get_benchmark
+  "${CMAKE_CURRENT_LIST_DIR}/standalone_globals.cpp"
   "${CYTNX_SOURCE_DIR}/benchmarks/benchmarks_main.cpp"
   "${CYTNX_SOURCE_DIR}/benchmarks/gpu/Get_contiguous_double_bm.cpp"
   "${CYTNX_SOURCE_DIR}/src/backend/utils_internal_gpu/cuGetElems_contiguous_gpu.cu"
