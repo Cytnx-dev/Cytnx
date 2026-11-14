@@ -232,6 +232,72 @@ namespace cytnx {
                         utentype, i, tns[i].uten_type(), "\n");
       }
     }
+
+    // Derives everything Launch()/setOrder() need besides the tensors themselves from label_arr,
+    // TOUT_labels and ORDER_tokens: the position of each open leg, the integer modes handed to
+    // cuTensorNet, and the contraction tree with its einsum path. Every way of defining a network
+    // (FromString, construct, Contract_plan) has to end with this.
+    void BuildContractionMetadataInternal(Network_base &net) {
+      net.TOUT_pos.clear();
+      for (const std::string &out_label : net.TOUT_labels) {
+        for (std::size_t j = 0; j < net.label_arr.size(); j++) {
+          auto it = std::find(net.label_arr[j].begin(), net.label_arr[j].end(), out_label);
+          if (it != net.label_arr[j].end()) {
+            net.TOUT_pos.push_back(std::make_pair(
+              static_cast<int>(j), static_cast<int>(std::distance(net.label_arr[j].begin(), it))));
+            break;
+          }
+        }
+      }
+
+      std::map<std::string, cytnx_int64> labelmap;
+      net.int_modes = std::vector<std::vector<cytnx_int64>>(net.label_arr.size());
+      net.int_out_mode = std::vector<cytnx_int64>(net.TOUT_labels.size());
+      cytnx_int64 label_int = 0;
+      for (std::size_t i = 0; i < net.label_arr.size(); i++) {
+        net.int_modes[i] = std::vector<cytnx_int64>(net.label_arr[i].size());
+        for (std::size_t j = 0; j < net.label_arr[i].size(); j++) {
+          labelmap.insert(std::pair<std::string, cytnx_int64>(net.label_arr[i][j], label_int));
+          net.int_modes[i][j] = labelmap[net.label_arr[i][j]];
+          label_int += 1;
+        }
+      }
+      for (std::size_t i = 0; i < net.TOUT_labels.size(); i++) {
+        net.int_out_mode[i] = labelmap[net.TOUT_labels[i]];
+      }
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+      net.optimizerInfo = nullptr;
+  #endif
+#endif
+
+      for (std::size_t i = 0; i < net.names.size(); i++) {
+        net.CtTree.base_nodes[i]->name = net.names[i];
+      }
+      if (net.ORDER_tokens.size() != 0) {
+        net.CtTree.build_contraction_tree_by_tokens(net.name2pos, net.ORDER_tokens);
+      } else {
+        net.CtTree.build_default_contraction_tree();
+      }
+      net.einsum_path = CtTreeToEinsumpathInternal(net.CtTree, net.names);
+    }
+
+#if defined(UNI_GPU) && defined(UNI_CUQUANTUM)
+    // cuTensorNet contracts dense tensors that all hold one of the four floating-point dtypes.
+    // Everything else (diagonal storage, integer or mixed dtypes) takes the generic pairwise path,
+    // which is also what a CPU network does.
+    bool CanUseCutensornetInternal(const std::vector<UniTensor> &tns) {
+      const unsigned int dtype = tns[0].dtype();
+      if (dtype != Type.ComplexDouble && dtype != Type.ComplexFloat && dtype != Type.Double &&
+          dtype != Type.Float)
+        return false;
+      for (const UniTensor &tn : tns) {
+        if (tn.uten_type() != UTenType.Dense || tn.is_diag() || tn.dtype() != dtype) return false;
+      }
+      return true;
+    }
+#endif
   }  // namespace
 
   void RegularNetwork::Contract_plan(const std::vector<UniTensor> &utensors,
@@ -373,6 +439,8 @@ namespace cytnx {
       std::cerr << std::endl;
       cytnx_error_msg(true, "%s", "\n");
     }
+
+    BuildContractionMetadataInternal(*this);
 
     // put tensor:
     for (int i = 0; i < utensors.size(); i++) this->tensors[i] = utensors[i];
@@ -542,53 +610,7 @@ namespace cytnx {
       cytnx_error_msg(true, "%s", "\n");
     }
 
-    // maintain TOUT leg position
-    TOUT_pos = std::vector<std::pair<int, int>>();
-    for (int i = 0; i < TOUT_labels.size(); i++) {
-      for (int j = 0; j < label_arr.size(); j++) {
-        std::vector<std::string>::iterator it;
-        it = std::find(this->label_arr[j].begin(), this->label_arr[j].end(), TOUT_labels[i]);
-        if (it != this->label_arr[j].end()) {
-          TOUT_pos.push_back(std::make_pair(j, distance(label_arr[j].begin(), it)));
-          break;
-        }
-      }
-    }
-
-    // get int_label
-    std::map<std::string, cytnx_int64> labelmap = std::map<std::string, cytnx_int64>();
-    this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
-    this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
-    cytnx_int64 label_int = 0;
-    for (std::size_t i = 0; i < this->label_arr.size(); i++) {
-      this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
-      for (std::size_t j = 0; j < this->label_arr[i].size(); j++) {
-        labelmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], label_int));
-        this->int_modes[i][j] = labelmap[this->label_arr[i][j]];
-        label_int += 1;
-      }
-    }
-    for (std::size_t i = 0; i < TOUT_labels.size(); i++) {
-      this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
-    }
-
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    this->optimizerInfo = nullptr;
-  #endif
-#endif
-
-    std::vector<std::string> names;
-    for (int i = 0; i < this->names.size(); i++) {
-      names.push_back(this->names[i]);
-      CtTree.base_nodes[i]->name = this->names[i];
-    }
-    if (ORDER_tokens.size() != 0) {
-      CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-    } else {
-      CtTree.build_default_contraction_tree();
-    }
-    this->einsum_path = CtTreeToEinsumpathInternal(CtTree, names);
+    BuildContractionMetadataInternal(*this);
   }  // end of FromString
 
   void RegularNetwork::Fromfile(const std::string &fname) {
@@ -826,7 +848,7 @@ namespace cytnx {
       } else {
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
-        if (this->tensors[0].uten_type() != UTenType.Dense) {
+        if (!CanUseCutensornetInternal(this->tensors)) {
           std::string Optim_ORDERline = this->getOptimalOrder();
           this->order_line = Optim_ORDERline;
           ORDER_tokens = ParseOrderLineInternal(Optim_ORDERline, 999999);
@@ -843,7 +865,7 @@ namespace cytnx {
           cutn.set_output_extents(out_shape);
           cutn.set_extents(this->tensors);
           cutn.checkVersion();
-          this->descNet = cutn.createNetworkDescriptor();
+          this->descNet = cutn.createNetworkDescriptor(this->tensors[0].dtype());
           cutn.getWorkspacelimit();
           this->optimizerInfo = cutn.findOptimalOrder();
 
@@ -904,14 +926,17 @@ namespace cytnx {
     int tn_device = this->tensors[0].device();
 
 #if defined(UNI_GPU) && defined(UNI_CUQUANTUM)  // gpu workflow with cuquantum
-    if (tn_device != Device.cpu && this->tensors[0].uten_type() == UTenType.Dense) {
+    if (tn_device != Device.cpu && CanUseCutensornetInternal(this->tensors)) {
       std::vector<cytnx_uint64> out_shape;
       out_shape.reserve(this->TOUT_labels.size());
       for (int i = 0; i < this->TOUT_labels.size(); i++) {
         out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
       }
+      // Same labels and rowrank as the generic path, which ends with
+      // permute_(TOUT_labels, TOUT_iBondNum).
       UniTensor out =
-        UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
+        UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()), false,
+                  static_cast<cytnx_int64>(this->TOUT_iBondNum), this->TOUT_labels);
       cutensornet cutn;
       cutn.setDevice(this->tensors[0].device());
       cutn.createStream();
@@ -919,7 +944,7 @@ namespace cytnx {
       cutn.parseLabels(this->int_out_mode, this->int_modes);
       cutn.set_output_extents(out_shape);
       cutn.set_extents(this->tensors);
-      this->descNet = cutn.createNetworkDescriptor();
+      this->descNet = cutn.createNetworkDescriptor(this->tensors[0].dtype());
       cutn.setOutputMem(out);
       cutn.setInputMem(this->tensors);
       if (this->optimizerInfo != nullptr) {
@@ -1102,53 +1127,7 @@ namespace cytnx {
       }
     }
 
-    // maintain TOUT leg position
-    TOUT_pos = std::vector<std::pair<int, int>>();
-    for (int i = 0; i < TOUT_labels.size(); i++) {
-      for (int j = 0; j < label_arr.size(); j++) {
-        std::vector<std::string>::iterator it;
-        it = std::find(this->label_arr[j].begin(), this->label_arr[j].end(), TOUT_labels[i]);
-        if (it != this->label_arr[j].end()) {
-          TOUT_pos.push_back(std::make_pair(j, distance(label_arr[j].begin(), it)));
-          break;
-        }
-      }
-    }
-
-    // get int_label
-    std::map<std::string, cytnx_int64> labelmap = std::map<std::string, cytnx_int64>();
-    this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
-    this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
-    cytnx_int64 label_int = 0;
-    for (std::size_t i = 0; i < this->label_arr.size(); i++) {
-      this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
-      for (std::size_t j = 0; j < this->label_arr[i].size(); j++) {
-        labelmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], label_int));
-        this->int_modes[i][j] = labelmap[this->label_arr[i][j]];
-        label_int += 1;
-      }
-    }
-    for (std::size_t i = 0; i < TOUT_labels.size(); i++) {
-      this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
-    }
-
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    this->optimizerInfo = nullptr;
-  #endif
-#endif
-
-    std::vector<std::string> names;
-    for (int i = 0; i < this->names.size(); i++) {
-      names.push_back(this->names[i]);
-      CtTree.base_nodes[i]->name = this->names[i];
-    }
-    if (ORDER_tokens.size() != 0) {
-      CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-    } else {
-      CtTree.build_default_contraction_tree();
-    }
-    this->einsum_path = CtTreeToEinsumpathInternal(CtTree, names);
+    BuildContractionMetadataInternal(*this);
   }  // end construct
 
 }  // namespace cytnx

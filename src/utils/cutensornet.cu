@@ -248,7 +248,7 @@ namespace cytnx {
   // &res_label,
   //                               std::vector<std::vector<std::string>> &labels,
   //                               std::vector<UniTensor> &uts) {
-  cutensornetNetworkDescriptor_t cutensornet::createNetworkDescriptor() {
+  cutensornetNetworkDescriptor_t cutensornet::createNetworkDescriptor(unsigned int dtype) {
     if (verbose) {
       std::cout << "Cutensornet number of input tensors =  " << numInputs << std::endl;
       for (int i = 0; i < numInputs; i++) {
@@ -277,8 +277,22 @@ namespace cytnx {
       }
       std::cout << std::endl;
     }
-    typeData = CUDA_C_64F;  // type_mapper[ut.dtype()];
-    typeCompute = CUTENSORNET_COMPUTE_64F;
+    if (dtype == Type.ComplexDouble) {
+      typeData = CUDA_C_64F;
+      typeCompute = CUTENSORNET_COMPUTE_64F;
+    } else if (dtype == Type.ComplexFloat) {
+      typeData = CUDA_C_32F;
+      typeCompute = CUTENSORNET_COMPUTE_32F;
+    } else if (dtype == Type.Double) {
+      typeData = CUDA_R_64F;
+      typeCompute = CUTENSORNET_COMPUTE_64F;
+    } else if (dtype == Type.Float) {
+      typeData = CUDA_R_32F;
+      typeCompute = CUTENSORNET_COMPUTE_32F;
+    } else {
+      cytnx_error_msg(true, "[ERROR][cutensornet] dtype %s cannot be contracted by cuTensorNet.\n",
+                      Type.getname(dtype).c_str());
+    }
     HANDLE_ERROR(cutensornetCreateNetworkDescriptor(
       (const cutensornetHandle_t)handle, numInputs, (const int32_t *)numModesIn.data(),
       (const int64_t **)extentsIn.data(), (const int64_t **)stridesIn.data(),
