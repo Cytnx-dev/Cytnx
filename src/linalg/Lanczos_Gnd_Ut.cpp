@@ -4,12 +4,15 @@
 #include "Tensor.hpp"
 #include "LinOp.hpp"
 
+#include <algorithm>
 #include <cfloat>
 #include <vector>
 #include <cmath>
 #include "UniTensor.hpp"
 #include "utils/vec_print.hpp"
 #include <iomanip>
+
+#include "Lanczos_Gnd_breakdown.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -26,6 +29,14 @@ namespace cytnx {
       return Contract(A.Dagger(), B).item();
     }
 
+    // Number of stored elements, i.e. the dimension of the vector space the UniTensor lives in.
+    static cytnx_uint64 stored_elements(const UniTensor &v) {
+      if (!v.is_blockform()) return v.get_block_().storage().size();
+      cytnx_uint64 count = 0;
+      for (const Tensor &block : v.get_blocks_()) count += block.storage().size();
+      return count;
+    }
+
     void _Lanczos_Gnd_general_Ut(std::vector<UniTensor> &out, LinOp *Hop, const UniTensor &Tin,
                                  const bool &is_V, const double &CvgCrit,
                                  const unsigned int &Maxiter, const bool &verbose) {
@@ -36,6 +47,8 @@ namespace cytnx {
       // Frobenius norm is sign-flip independent, so it is the correct vector norm for fermionic
       // tensors too (and equals sqrt(<Tin|Tin>) for bosonic).
       double Norm = double(Tin.norm());
+      cytnx_error_msg(!(Norm > 0), "[ERROR][Lanczos] the initial vector Tin must be nonzero.%s",
+                      "\n");
 
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
@@ -51,7 +64,9 @@ namespace cytnx {
       bool cvg_fin = false;
 
       // declare variables, A,B should be real if LinOp is hermitian!
-      Tensor As = zeros({1}, Type.to_real(Hop->dtype()), Tin.device());
+      const unsigned int coeff_dtype = Type.to_real(Hop->dtype());
+      const double breakdown_tol = lanczos_gnd_breakdown_tolerance(coeff_dtype);
+      Tensor As = zeros({1}, coeff_dtype, Tin.device());
       Tensor Bs = As.clone();
       Scalar E;
 
@@ -75,69 +90,80 @@ namespace cytnx {
                       "labels and shape as input!%s",
                       "\n");
 
+      // At most dim linearly independent Krylov vectors exist. The dimension is taken from the
+      // vectors themselves rather than from the user-supplied LinOp::nx().
+      const cytnx_uint64 dim = std::max(stored_elements(psi_1), stored_elements(new_psi));
+
       auto alpha = _Dot(new_psi, psi_1).real();
       As(0) = alpha;
       new_psi -= alpha * psi_1;
       double beta = double(new_psi.norm());
       Bs(0) = beta;
-      psi_0 = psi_1;
-      new_psi /= beta;
-      psi_1 = new_psi;
-      if (is_V) {
-        psi_s.push_back(psi_1);
-      }
-      E = alpha;
-      Scalar Ediff;
+      // Size of the Lanczos coefficients seen so far, the scale a residual norm is compared to.
+      double coeff_scale = std::abs(double(alpha));
 
-      ///---------------------------
-
-      // iteration LZ:
-      for (unsigned int i = 1; i < Maxiter; i++) {
-        new_psi = Hop->matvec(psi_1);
-        new_psi.apply_();  // resolve pending fermionic signflip; no-op for bosonic/dense
-        alpha = _Dot(new_psi, psi_1).real();
-        As.append(alpha);
-        new_psi -= (alpha * psi_1 + beta * psi_0);
-
-        // diagonalize
-        try {
-          // diagonalize:
-          auto tmptmp = linalg::Tridiag(As, Bs, true, true, true);
-          tmpEsVs = tmptmp;
-        } catch (std::logic_error le) {
-          std::cout << "[WARNING] Lanczos_Gnd -> Tridiag error: \n";
-          std::cout << le.what() << std::endl;
-          std::cout << "Lanczos continues automatically." << std::endl;
-          break;
-        }
-
-        beta = double(new_psi.norm());
-        Bs.append(beta);
-
-        if (beta == 0) {
-          cvg_fin = true;
-          break;
-        }
-
+      if (dim == 1 || beta <= breakdown_tol * coeff_scale) {
+        // The initial vector spans an invariant subspace: the Krylov matrix is [As(0)], with
+        // eigenvalue As(0) and eigenvector (1).
+        cvg_fin = true;
+        tmpEsVs = {As.clone(), ones({1, 1}, coeff_dtype, Tin.device())};
+      } else {
         psi_0 = psi_1;
-        psi_1 = new_psi / beta;
+        new_psi /= beta;
+        psi_1 = new_psi;
         if (is_V) {
           psi_s.push_back(psi_1);
         }
-        Ediff = abs(E - tmpEsVs[0].storage().at(0));
-        if (verbose) {
-          printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n", i, double(E),
-                 double(Ediff));
-        }
+        E = alpha;
+        Scalar Ediff;
 
-        // chkf = true;
-        if (Ediff < CvgCrit) {
-          cvg_fin = true;
-          break;
-        }
-        E = tmpEsVs[0].storage().at(0);
+        ///---------------------------
 
-      }  // iteration
+        const unsigned int max_krylov_dim =
+          static_cast<unsigned int>(std::min<cytnx_uint64>(Maxiter, dim));
+
+        // iteration LZ:
+        for (unsigned int i = 1; i < max_krylov_dim; i++) {
+          new_psi = Hop->matvec(psi_1);
+          new_psi.apply_();  // resolve pending fermionic signflip; no-op for bosonic/dense
+          alpha = _Dot(new_psi, psi_1).real();
+          As.append(alpha);
+          new_psi -= (alpha * psi_1 + beta * psi_0);
+
+          // diagonalize:
+          tmpEsVs = linalg::Tridiag(As, Bs, true, true);
+
+          coeff_scale = std::max(coeff_scale, std::abs(double(alpha)) + beta);
+          beta = double(new_psi.norm());
+          Bs.append(beta);
+
+          // Stop when the residual is at roundoff level (the Krylov space is invariant) or when
+          // the Krylov space has become the whole vector space.
+          if (beta <= breakdown_tol * coeff_scale || i + 1 == dim) {
+            cvg_fin = true;
+            break;
+          }
+
+          psi_0 = psi_1;
+          psi_1 = new_psi / beta;
+          if (is_V) {
+            psi_s.push_back(psi_1);
+          }
+          Ediff = abs(E - tmpEsVs[0].storage().at(0));
+          if (verbose) {
+            printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n", i, double(E),
+                   double(Ediff));
+          }
+
+          // chkf = true;
+          if (Ediff < CvgCrit) {
+            cvg_fin = true;
+            break;
+          }
+          E = tmpEsVs[0].storage().at(0);
+
+        }  // iteration
+      }
 
       if (cvg_fin == false && verbose) {
         cytnx_warning_msg(true,
@@ -185,9 +211,9 @@ namespace cytnx {
       if (Hop->dtype() == Type.Float || Hop->dtype() == Type.ComplexFloat) {
         if (_cvgcrit < 1.0e-7) {
           _cvgcrit = 1.0e-7;
-          cytnx_warning_msg(_cvgcrit < 1.0e-7,
-                            "[WARNING][CvgCrit] for float precision type, CvgCrit cannot exceed "
-                            "it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s",
+          cytnx_warning_msg(true,
+                            "[WARNING][CvgCrit] for float precision type, CvgCrit cannot be "
+                            "smaller than 1e-7, and is automatically raised to 1e-7.%s",
                             "\n");
         }
       }
