@@ -137,6 +137,25 @@ gtest_discover_tests(test_main
                      # also has gpu_test_main's tests registered.
                      PROPERTIES LABELS cpu)
 
+# Reproduce #673 in a separate process with its own translation unit.
+# Unlike test_main, this executable does not reference Storage.cpp symbols
+# (such as operator<<) that would force the static library's initializer object
+# to be linked, masking the original missing-initializer bug.
+add_executable(storage_init_link_test storage_init_link_test.cpp)
+target_link_libraries(storage_init_link_test PRIVATE cytnx)
+
+if(USE_DEBUG)
+  if(MSVC)
+    target_compile_options(storage_init_link_test PRIVATE /fsanitize=address)
+  else()
+    target_compile_options(storage_init_link_test PRIVATE -fsanitize=address)
+    target_link_options(storage_init_link_test PRIVATE -fsanitize=address)
+  endif()
+endif()
+
+add_test(NAME storage_init_link_test COMMAND storage_init_link_test)
+set_tests_properties(storage_init_link_test PROPERTIES LABELS cpu)
+
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
