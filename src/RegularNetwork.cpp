@@ -268,7 +268,7 @@ namespace cytnx {
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
-      net.optimizerInfo = nullptr;
+      net.optimal_order_session.reset();
   #endif
 #endif
 
@@ -857,21 +857,21 @@ namespace cytnx {
           for (int i = 0; i < this->TOUT_labels.size(); i++) {
             out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
           }
-          cutensornet cutn;
-          cutn.setDevice(this->tensors[0].device());
-          cutn.createStream();
-          cutn.createHandle();
-          cutn.parseLabels(this->int_out_mode, this->int_modes);
-          cutn.set_output_extents(out_shape);
-          cutn.set_extents(this->tensors);
-          cutn.checkVersion();
-          this->descNet = cutn.createNetworkDescriptor(this->tensors[0].dtype());
-          cutn.getWorkspacelimit();
-          this->optimizerInfo = cutn.findOptimalOrder();
+          // The previous session, if any, is released when the new one replaces it below.
+          auto session = std::make_shared<cutensornet>();
+          session->setDevice(this->tensors[0].device());
+          session->createHandle();
+          session->parseLabels(this->int_out_mode, this->int_modes);
+          session->set_output_extents(out_shape);
+          session->set_extents(this->tensors);
+          session->checkVersion();
+          session->createNetworkDescriptor(this->tensors[0].dtype());
+          session->getWorkspacelimit();
+          session->findOptimalOrder();
 
           // Get contraction path
-          std::vector<std::pair<cytnx_int64, cytnx_int64>> path = cutn.getContractionPath();
-          cutn.freeHandle();
+          std::vector<std::pair<cytnx_int64, cytnx_int64>> path = session->getContractionPath();
+          this->optimal_order_session = std::move(session);
 
           std::vector<std::string> names;
           for (int i = 0; i < this->names.size(); i++) {
@@ -937,6 +937,8 @@ namespace cytnx {
       UniTensor out =
         UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()), false,
                   static_cast<cytnx_int64>(this->TOUT_iBondNum), this->TOUT_labels);
+      // cutn releases the stream, handle, descriptors, plan and workspace when it goes out of
+      // scope, also when one of the calls below raises.
       cutensornet cutn;
       cutn.setDevice(this->tensors[0].device());
       cutn.createStream();
@@ -944,13 +946,13 @@ namespace cytnx {
       cutn.parseLabels(this->int_out_mode, this->int_modes);
       cutn.set_output_extents(out_shape);
       cutn.set_extents(this->tensors);
-      this->descNet = cutn.createNetworkDescriptor(this->tensors[0].dtype());
+      cutn.createNetworkDescriptor(this->tensors[0].dtype());
       cutn.setOutputMem(out);
       cutn.setInputMem(this->tensors);
-      if (this->optimizerInfo != nullptr) {
-        cutn.setOptimizerInfo(this->optimizerInfo);
+      if (this->optimal_order_session != nullptr) {
+        cutn.useOptimizerInfoOf(*this->optimal_order_session);
       } else {
-        this->optimizerInfo = cutn.createOptimizerInfo();
+        cutn.createOptimizerInfo();
       }
       cutn.setContractionPath(einsum_path);
 
@@ -958,9 +960,6 @@ namespace cytnx {
       cutn.initializePlan();
       cutn.autotune();
       cutn.executeContraction();
-      cutn.freePlan();
-      cutn.freeWorkspaceDescriptor();
-      cutn.freeHandle();
 
       return out;
     }
