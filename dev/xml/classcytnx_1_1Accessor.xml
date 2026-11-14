@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="classcytnx_1_1Accessor" kind="class" language="C++" prot="public">
     <compoundname>cytnx::Accessor</compoundname>
     <includes refid="Accessor_8hpp" local="no">Accessor.hpp</includes>
@@ -216,7 +216,7 @@ Shape : (3,2)
     </sectiondef>
     <sectiondef kind="public-static-func">
       <memberdef kind="function" id="classcytnx_1_1Accessor_1a71b8c4af7182a2c9144929bdef9ff4fd" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <type><ref refid="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" kindref="member">Accessor</ref></type>
         <definition>static Accessor cytnx::Accessor::all</definition>
         <argsstring>()</argsstring>
         <name>all</name>
@@ -335,7 +335,7 @@ Shape : (3,2)
         <location file="include/Accessor.hpp" line="107" column="21" bodyfile="include/Accessor.hpp" bodystart="107" bodyend="107"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Accessor_1a7a5a508a58b71897c3dd162195aceaa9" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <type><ref refid="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" kindref="member">Accessor</ref></type>
         <definition>static Accessor cytnx::Accessor::range</definition>
         <argsstring>(const cytnx_int64 &amp;min, const cytnx_int64 &amp;max, const cytnx_int64 &amp;step=1)</argsstring>
         <name>range</name>
@@ -494,7 +494,7 @@ Shape : (3,2)
         <location file="include/Accessor.hpp" line="127" column="21" bodyfile="include/Accessor.hpp" bodystart="127" bodyend="130"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Accessor_1a23eb8386fd97d8b5d3d7ec7998a30dca" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <type><ref refid="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" kindref="member">Accessor</ref></type>
         <definition>static Accessor cytnx::Accessor::tilend</definition>
         <argsstring>(const cytnx_int64 &amp;min, const cytnx_int64 &amp;step=1)</argsstring>
         <name>tilend</name>
@@ -517,7 +517,7 @@ Shape : (3,2)
         <location file="include/Accessor.hpp" line="132" column="21" bodyfile="include/Accessor.hpp" bodystart="132" bodyend="139"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Accessor_1a6b86335651e6d8c9da971e5337545178" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <type><ref refid="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" kindref="member">Accessor</ref></type>
         <definition>static Accessor cytnx::Accessor::step</definition>
         <argsstring>(const cytnx_int64 &amp;step)</argsstring>
         <name>step</name>
@@ -535,7 +535,7 @@ Shape : (3,2)
         <location file="include/Accessor.hpp" line="141" column="21" bodyfile="include/Accessor.hpp" bodystart="141" bodyend="148"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Accessor_1a7d0a4717c759186aa48daa0ac0dab5c4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Accessor" kindref="compound">Accessor</ref></type>
+        <type><ref refid="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" kindref="member">Accessor</ref></type>
         <definition>static Accessor cytnx::Accessor::qns</definition>
         <argsstring>(const std::vector&lt; std::vector&lt; cytnx_int64 &gt; &gt; &amp;qns)</argsstring>
         <name>qns</name>

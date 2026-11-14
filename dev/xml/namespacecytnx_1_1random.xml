@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="namespacecytnx_1_1random" kind="namespace" language="C++">
     <compoundname>cytnx::random</compoundname>
     <sectiondef kind="var">
@@ -67,7 +67,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="118">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="104">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -209,7 +209,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="118">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="104">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -351,7 +351,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="118">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="104">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -503,7 +503,7 @@
 <parametername direction="in">std</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the standard deviation <formula id="118">$ \sigma $</formula> of a normal distribution. </para>
+<para>the standard deviation <formula id="104">$ \sigma $</formula> of a normal distribution. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>

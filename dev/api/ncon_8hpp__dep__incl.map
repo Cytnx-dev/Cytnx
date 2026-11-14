@@ -1,7 +1,7 @@
 <map id="include/ncon.hpp" name="include/ncon.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="8,5,140,31"/>
-<area shape="rect" id="Node000002" href="$cytnx_8hpp.html" title=" " alt="" coords="5,79,143,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,44,70,78,64,79,63,45"/>
-<area shape="poly" id="edge3_Node000002_Node000001" title=" " alt="" coords="80,65,78,31,84,31,85,65"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="131,75,157,79,166,84,169,91,164,100,152,106,117,107,117,101,151,100,161,96,164,91,162,87,155,84,130,80"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="8,5,139,33"/>
+<area shape="rect" id="Node000002" href="$cytnx_8hpp.html" title=" " alt="" coords="5,81,142,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,47,69,81,64,80,63,50"/>
+<area shape="poly" id="edge3_Node000002_Node000001" title=" " alt="" coords="80,65,79,36,82,31,85,66"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="158,82,165,87,168,95,161,106,143,111,142,106,158,102,163,95,161,91,156,87"/>
 </map>

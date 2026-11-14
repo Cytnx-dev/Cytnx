@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="classcytnx_1_1Bond" kind="class" language="C++" prot="public">
     <compoundname>cytnx::Bond</compoundname>
     <includes refid="Bond_8hpp" local="no">Bond.hpp</includes>
@@ -630,7 +630,7 @@ Deg&gt;&gt;    1   1   1   1
         <location file="include/Bond.hpp" line="410" column="17" bodyfile="include/Bond.hpp" bodystart="410" bodyend="410"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a6216d8b2269b1b7dc094127060271568" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::retype</definition>
         <argsstring>(const bondType &amp;new_bondType) const</argsstring>
         <name>retype</name>
@@ -665,7 +665,7 @@ Deg&gt;&gt;    1   1   1   1
         <location file="include/Bond.hpp" line="421" column="10" bodyfile="include/Bond.hpp" bodystart="421" bodyend="425"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a6f47360919864f12affe9fda49b03994" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::redirect</definition>
         <argsstring>() const</argsstring>
         <name>redirect</name>
@@ -680,7 +680,7 @@ Deg&gt;&gt;    1   1   1   1
         <location file="include/Bond.hpp" line="431" column="10" bodyfile="include/Bond.hpp" bodystart="431" bodyend="435"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a8c4d6443ffe7c3f3ecd8c474fd9a18eb" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::clone</definition>
         <argsstring>() const</argsstring>
         <name>clone</name>
@@ -761,13 +761,13 @@ True
         <location file="include/Bond.hpp" line="451" column="10" bodyfile="include/Bond.hpp" bodystart="451" bodyend="455"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a4714d9891e02b2aebf6756ec68c25e5c" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::combineBond</definition>
         <argsstring>(const Bond &amp;bd_in, const bool &amp;is_grp=true) const</argsstring>
         <name>combineBond</name>
         <qualifiedname>cytnx::Bond::combineBond</qualifiedname>
         <param>
-          <type>const <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
+          <type>const <ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref> &amp;</type>
           <declname>bd_in</declname>
         </param>
         <param>
@@ -926,13 +926,13 @@ Deg&gt;&gt;    1   1   1   1
         <location file="include/Bond.hpp" line="481" column="10" bodyfile="include/Bond.hpp" bodystart="481" bodyend="485"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1ad07796ead68b7eb31d08b276d21526f3" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::combineBond</definition>
         <argsstring>(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true) const</argsstring>
         <name>combineBond</name>
         <qualifiedname>cytnx::Bond::combineBond</qualifiedname>
         <param>
-          <type>const std::vector&lt; <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &gt; &amp;</type>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref> &gt; &amp;</type>
           <declname>bds</declname>
         </param>
         <param>
@@ -1091,13 +1091,13 @@ Deg&gt;&gt;    1   1   1   1
         <location file="include/Bond.hpp" line="511" column="10" bodyfile="include/Bond.hpp" bodystart="511" bodyend="517"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a2454a85dc8089c361a5b238b2936a38b" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::combineBonds</definition>
         <argsstring>(const std::vector&lt; Bond &gt; &amp;bds, const bool &amp;is_grp=true) const</argsstring>
         <name>combineBonds</name>
         <qualifiedname>cytnx::Bond::combineBonds</qualifiedname>
         <param>
-          <type>const std::vector&lt; <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &gt; &amp;</type>
+          <type>const std::vector&lt; <ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref> &gt; &amp;</type>
           <declname>bds</declname>
         </param>
         <param>
@@ -1508,7 +1508,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         <location file="include/Bond.hpp" line="633" column="19" bodyfile="include/Bond.hpp" bodystart="633" bodyend="635"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a5c7a08632dd9e9ac4d6eca53c90ab8bd" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::group_duplicates</definition>
         <argsstring>(std::vector&lt; cytnx_uint64 &gt; &amp;mapper) const</argsstring>
         <name>group_duplicates</name>
@@ -1532,7 +1532,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
 </parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="pre"><para>The <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> need to be symmetric type (namely, bondType should be <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref> or bondType.BD_DET, see <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" kindref="member">bondType</ref>.) </para>
+<simplesect kind="pre"><para>The <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> need to be symmetric type (namely, <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" kindref="member">bondType</ref> should be <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref> or bondType.BD_DET, see <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" kindref="member">bondType</ref>.) </para>
 </simplesect>
 <simplesect kind="note"><para>This function will sort ascending of the quantum number. </para>
 </simplesect>
@@ -1649,7 +1649,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         <name>operator==</name>
         <qualifiedname>cytnx::Bond::operator==</qualifiedname>
         <param>
-          <type>const <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
+          <type>const <ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref> &amp;</type>
           <declname>rhs</declname>
         </param>
         <briefdescription>
@@ -1671,7 +1671,7 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         <name>operator!=</name>
         <qualifiedname>cytnx::Bond::operator!=</qualifiedname>
         <param>
-          <type>const <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
+          <type>const <ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref> &amp;</type>
           <declname>rhs</declname>
         </param>
         <briefdescription>
@@ -1687,13 +1687,13 @@ If the degeneracy queried does not exist, return 0, and the indicies is empty.
         <location file="include/Bond.hpp" line="728" column="10"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1Bond_1a58e9304701945d156b88fafa8c64971d" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref></type>
+        <type><ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref></type>
         <definition>Bond cytnx::Bond::operator*</definition>
         <argsstring>(const Bond &amp;rhs) const</argsstring>
         <name>operator*</name>
         <qualifiedname>cytnx::Bond::operator*</qualifiedname>
         <param>
-          <type>const <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref> &amp;</type>
+          <type>const <ref refid="classcytnx_1_1Bond_1a41f9c5917e308156f9da0b8d882c37b0" kindref="member">Bond</ref> &amp;</type>
           <declname>rhs</declname>
         </param>
         <briefdescription>

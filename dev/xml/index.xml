@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.8" xml:lang="en-US">
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.15.0" xml:lang="en-US">
   <compound refid="classcytnx_1_1Accessor" kind="class"><name>cytnx::Accessor</name>
     <member refid="classcytnx_1_1Accessor_1af34f12b7cd4114ac80192f8a0df99681" kind="variable"><name>_type</name></member>
     <member refid="classcytnx_1_1Accessor_1a9f6fa9087f09756e020355a05196d384" kind="function"><name>Accessor</name></member>
@@ -128,7 +128,7 @@
     <member refid="classcytnx_1_1Symmetry_1ad102f58e1226ec26ae9a3bc2d6c366d2" kind="function"><name>operator!=</name></member>
   </compound>
   <compound refid="classcytnx_1_1Tensor" kind="class"><name>cytnx::Tensor</name>
-    <member refid="classcytnx_1_1Tensor_1a7e664bb4844ddff8d032f50579d7c73e" kind="typedef"><name>pointer_types</name></member>
+    <member refid="classcytnx_1_1Tensor_1a3842e5c7e52b45115825703ea91ee8d5" kind="typedef"><name>pointer_types</name></member>
     <member refid="classcytnx_1_1Tensor_1ab355c158b0ba1abb20a344c092fb8942" kind="function"><name>Save</name></member>
     <member refid="classcytnx_1_1Tensor_1a7465b1ca730e16718c220dfca046412c" kind="function"><name>Save</name></member>
     <member refid="classcytnx_1_1Tensor_1a55d945916b1e3771f100523a5e1de319" kind="function"><name>Tofile</name></member>
@@ -536,16 +536,6 @@
     <member refid="namespacecytnx_1ab3eaecf9ef354a43851bb3e4fd24147a" kind="function"><name>Contracts</name></member>
     <member refid="namespacecytnx_1aded169a56c47928185057cc8f24b4d66" kind="function"><name>Contract</name></member>
     <member refid="namespacecytnx_1ac17fa8d955067a516de44a7704a731ba" kind="function"><name>Contracts</name></member>
-  </compound>
-  <compound refid="namespacecytnx_1_1algo" kind="namespace"><name>cytnx::algo</name>
-    <member refid="namespacecytnx_1_1algo_1a72a0c42c4b78524bcac444a5c8ed1c20" kind="function"><name>Sort</name></member>
-    <member refid="namespacecytnx_1_1algo_1a17ac6e68684bf5d5cf7392bd218e309f" kind="function"><name>Concatenate</name></member>
-    <member refid="namespacecytnx_1_1algo_1a993ff4c266490e7fee38ab2f20e6aa50" kind="function"><name>Vstack</name></member>
-    <member refid="namespacecytnx_1_1algo_1aab9f9b299fa60c565206f5f0c021618b" kind="function"><name>Hstack</name></member>
-    <member refid="namespacecytnx_1_1algo_1a63774284b4470db6265bc944b60ac476" kind="function"><name>Vsplit_</name></member>
-    <member refid="namespacecytnx_1_1algo_1a030124e0b8e894d35837134e3111e3c7" kind="function"><name>Hsplit_</name></member>
-    <member refid="namespacecytnx_1_1algo_1a977a0c66043b8238214658b1178cd073" kind="function"><name>Vsplit</name></member>
-    <member refid="namespacecytnx_1_1algo_1a882e6a0d33e659d35f7f1df18a51152a" kind="function"><name>Hsplit</name></member>
   </compound>
   <compound refid="namespacecytnx_1_1internal" kind="namespace"><name>cytnx::internal</name>
     <member refid="namespacecytnx_1_1internal_1a892b9074c2498da118428f798784ce68" kind="function"><name>vformat_message</name></member>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="namespacecytnx" kind="namespace" language="C++">
     <compoundname>cytnx</compoundname>
     <innerclass refid="classcytnx_1_1Accessor" prot="public">cytnx::Accessor</innerclass>
@@ -11,11 +11,10 @@
     <innerclass refid="classcytnx_1_1Symmetry" prot="public">cytnx::Symmetry</innerclass>
     <innerclass refid="classcytnx_1_1Tensor" prot="public">cytnx::Tensor</innerclass>
     <innerclass refid="classcytnx_1_1UniTensor" prot="public">cytnx::UniTensor</innerclass>
-    <innernamespace refid="namespacecytnx_1_1algo">cytnx::algo</innernamespace>
     <innernamespace refid="namespacecytnx_1_1internal">cytnx::internal</innernamespace>
     <innernamespace refid="namespacecytnx_1_1linalg">cytnx::linalg</innernamespace>
-    <innernamespace refid="namespacecytnx_1_1operators">cytnx::operators</innernamespace>
     <innernamespace refid="namespacecytnx_1_1physics">cytnx::physics</innernamespace>
+    <innernamespace refid="namespacecytnx_1_1operators">cytnx::operators</innernamespace>
     <innernamespace refid="namespacecytnx_1_1random">cytnx::random</innernamespace>
     <sectiondef kind="enum">
       <memberdef kind="enum" id="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" prot="public" static="no" strong="no">
@@ -81,8 +80,8 @@
         </briefdescription>
         <detaileddescription>
 <para>This is about the enumeration of the type of the object <ref refid="classcytnx_1_1Bond" kindref="compound">Bond</ref>.<orderedlist>
-<listitem><para>For the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> which is non-symmetry, the corresponding bondType will be set as <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efabd7a05c57c46feedff6d9a4bfc136329" kindref="member">bondType.BD_REG</ref> defaultly. You also can set the bondType as <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref> if you want to give the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> more physics meaning.</para>
-</listitem><listitem><para>For the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is symmetry, the corresponding bondType must be <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref>.</para>
+<listitem><para>For the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> which is non-symmetry, the corresponding <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" kindref="member">bondType</ref> will be set as <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efabd7a05c57c46feedff6d9a4bfc136329" kindref="member">bondType.BD_REG</ref> defaultly. You also can set the <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" kindref="member">bondType</ref> as <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref> if you want to give the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> more physics meaning.</para>
+</listitem><listitem><para>For the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is symmetry, the corresponding <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480ef" kindref="member">bondType</ref> must be <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref>.</para>
 </listitem><listitem><para>Please note that if you want to do the contraction for symmetric <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>, you must make sure that the two bonds you want to contract are one <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> and the other <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref>. Namely, you cannot do the contraction if two bonds are both <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efafb540337e715cbcf2794d531577689fc" kindref="member">bondType.BD_KET</ref> or both <ref refid="namespacecytnx_1ac1ea381505268a3cf3bc68d7b8a480efac2962ae3afa12880a276114fa889d170" kindref="member">bondType.BD_BRA</ref>. <simplesect kind="note"><para>currently using gBD_* to indicate this is bond with new qnum structure! </para>
 </simplesect>
 </para>
@@ -143,28 +142,28 @@
         <detaileddescription>
 <para>It is about the type of the <ref refid="classcytnx_1_1Symmetry" kindref="compound">Symmetry</ref> object The supported enumerations are as following:</para>
 <para><table rows="6" cols="2"><row>
-<entry thead="yes"><para>enumeration   </para>
-</entry><entry thead="yes"><para>description    </para>
+<entry thead="yes"><para>enumeration  </para>
+</entry><entry thead="yes"><para>description  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Void   </para>
-</entry><entry thead="no"><para>-99, void type (that means not initialized)    </para>
+<entry thead="no"><para>Void  </para>
+</entry><entry thead="no"><para>-99, void type (that means not initialized)  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>U   </para>
-</entry><entry thead="no"><para>-1, U1 symmetry    </para>
+<entry thead="no"><para>U  </para>
+</entry><entry thead="no"><para>-1, U1 symmetry  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Z   </para>
-</entry><entry thead="no"><para>0, Zn symmetry    </para>
+<entry thead="no"><para>Z  </para>
+</entry><entry thead="no"><para>0, Zn symmetry  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>fPar   </para>
-</entry><entry thead="no"><para>-2, fermionParity symmetry    </para>
+<entry thead="no"><para>fPar  </para>
+</entry><entry thead="no"><para>-2, <ref refid="namespacecytnx_1af664ec40b8661447cc01a0e0d227795c" kindref="member">fermionParity</ref> symmetry  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>fNum   </para>
-</entry><entry thead="no"><para>-3, fermionNumber symmetry   </para>
+<entry thead="no"><para>fNum  </para>
+</entry><entry thead="no"><para>-3, fermionNumber symmetry  </para>
 </entry></row>
 </table>
 </para>
@@ -197,7 +196,7 @@
           </detaileddescription>
         </enumvalue>
         <briefdescription>
-<para>fermionParity </para>
+<para><ref refid="namespacecytnx_1af664ec40b8661447cc01a0e0d227795c" kindref="member">fermionParity</ref> </para>
         </briefdescription>
         <detaileddescription>
 <para>the parity of fermions EVEN For bosons or an even number of fermions ODD For an odd number of fermions </para>
@@ -236,16 +235,16 @@
  You can use it as following: <programlisting><codeline><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>device<sp/>=<sp/><ref refid="namespacecytnx_1a0159aceab8996db3faf89716e4dd6b9a" kindref="member">Device</ref>.cpu;</highlight></codeline>
 </programlisting> The supported enumerations are as following:</para>
 <para><table rows="3" cols="2"><row>
-<entry thead="yes"><para>enumeration   </para>
-</entry><entry thead="yes"><para>description    </para>
+<entry thead="yes"><para>enumeration  </para>
+</entry><entry thead="yes"><para>description  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>cpu   </para>
-</entry><entry thead="no"><para>-1, on cpu    </para>
+<entry thead="no"><para>cpu  </para>
+</entry><entry thead="no"><para>-1, on cpu  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>cuda   </para>
-</entry><entry thead="no"><para>0, on cuda   </para>
+<entry thead="no"><para>cuda  </para>
+</entry><entry thead="no"><para>0, on cuda  </para>
 </entry></row>
 </table>
 </para>
@@ -267,28 +266,28 @@
 <para>It is about the type of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>.<linebreak/>
  The supported enumerations are as following:</para>
 <para><table rows="6" cols="2"><row>
-<entry thead="yes"><para>enumeration   </para>
-</entry><entry thead="yes"><para>description    </para>
+<entry thead="yes"><para>enumeration  </para>
+</entry><entry thead="yes"><para>description  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Void   </para>
-</entry><entry thead="no"><para>-1, void <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>    </para>
+<entry thead="no"><para>Void  </para>
+</entry><entry thead="no"><para>-1, void <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Dense   </para>
-</entry><entry thead="no"><para>0, dense <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>    </para>
+<entry thead="no"><para>Dense  </para>
+</entry><entry thead="no"><para>0, dense <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Sparse   </para>
-</entry><entry thead="no"><para>1, sparse <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (deprecated)    </para>
+<entry thead="no"><para>Sparse  </para>
+</entry><entry thead="no"><para>1, sparse <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (deprecated)  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Block   </para>
-</entry><entry thead="no"><para>2, block <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>    </para>
+<entry thead="no"><para>Block  </para>
+</entry><entry thead="no"><para>2, block <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>BlockFermionic   </para>
-</entry><entry thead="no"><para>3, fermionic <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (block form)   </para>
+<entry thead="no"><para>BlockFermionic  </para>
+</entry><entry thead="no"><para>3, fermionic <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> (block form)  </para>
 </entry></row>
 </table>
 </para>
@@ -341,7 +340,7 @@
 <parametername>dtype</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">cytnx::Type </ref> </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -426,7 +425,7 @@
 <parametername>dtype</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">cytnx::Type </ref> </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -483,7 +482,7 @@
 <parametername>dtype</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">cytnx::Type </ref> </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -540,7 +539,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
 <parametername>dtype</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="" kindref="compound">cytnx::Type </ref> </para>
+<para>the dtype of the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It can be any type defined in <ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">cytnx::Type </ref> </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -652,7 +651,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
 <para>Create a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with incremental elements <computeroutput>start</computeroutput>, <computeroutput>start</computeroutput> + <computeroutput>step</computeroutput>, <computeroutput>start</computeroutput> + 2 * <computeroutput>step</computeroutput>, ..., following the same convention as <ulink url="https://numpy.org/doc/stable/reference/generated/numpy.arange.html">numpy.arange</ulink>. </para>
         </briefdescription>
         <detaileddescription>
-<para>The number of elements is <computeroutput>ceil((end - start) / step)</computeroutput>. The range is nominally half-open [<computeroutput>start</computeroutput>, <computeroutput>end</computeroutput>), but <ndash/> exactly as with numpy <ndash/> this is not guaranteed under floating-point rounding: the final element may equal or slightly exceed <computeroutput>end</computeroutput> (e.g. <computeroutput>arange(0.5, 0.8, 0.1)</computeroutput> yields <computeroutput>[0.5, 0.6, 0.7, 0.8]</computeroutput>). An empty or direction-mismatched range (a non-positive count) yields a zero-extent <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
+<para>The number of elements is <computeroutput>ceil((end - start) / step)</computeroutput>. The range is nominally half-open [<computeroutput>start</computeroutput>, <computeroutput>end</computeroutput>), but <ndash/> exactly as with numpy <ndash/> this is not guaranteed under floating-point rounding: the final element may equal or slightly exceed <computeroutput>end</computeroutput> (e.g. <computeroutput><ref refid="namespacecytnx_1acabf9410a3eb1e205321580186930003" kindref="member">arange</ref>(0.5, 0.8, 0.1)</computeroutput> yields <computeroutput>[0.5, 0.6, 0.7, 0.8]</computeroutput>). An empty or direction-mismatched range (a non-positive count) yields a zero-extent <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">start</parametername>
 </parameternamelist>
@@ -783,7 +782,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
 </simplesect>
 <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1ac61bd0f99306496fae81f8601fa4070c" kindref="member">linalg::Add(const cytnx::UniTensor &amp;Lt, const cytnx::UniTensor &amp;Rt)</ref> </para>
 </simplesect>
-<simplesect kind="note"><para>internal/advanced: not a TN operation; python surface removed per #934 (decision record 2026-07-06). This note is the canonical rationale for every UniTensor-vs-UniTensor elementwise arithmetic entry point: the free operators in this header (&apos;+&apos;, &apos;-&apos;, &apos;*&apos;, &apos;/&apos;) and the <ref refid="classcytnx_1_1UniTensor_1af8db9e12557098f0c424dabfb3a45ac3" kindref="member">UniTensor::Add</ref>/Sub/Mul/Div member functions (in-place and out-of-place). The python <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> dunders raise TypeError for the UniTensor-vs-UniTensor case (see pybind/unitensor_py.cpp, raise_unitensor_elementwise_removed) while the C++ layer remains. operator+ and operator- are load-bearing: src/linalg/Lanczos_Gnd_Ut.cpp and src/linalg/Lanczos_Exp.cpp use them as genuine Krylov-subspace vector-space arithmetic (axpy) inside the solvers backing <ref refid="namespacecytnx_1_1linalg_1a91b798c44c9479338b03e13f73284b3f" kindref="member">linalg::Lanczos</ref>(method=&quot;Gnd&quot;) and <ref refid="namespacecytnx_1_1linalg_1a74e4c9a9cfe97d7ca523012078a3f5e1" kindref="member">linalg::Lanczos_Exp()</ref>. operator* (elementwise/Hadamard product) and operator/ (elementwise division) are basis-dependent, have no tensor-network meaning, and no in-tree C++ caller as of the audit; they are kept un-deprecated only because the removal task&apos;s scope was the python surface. </para>
+<simplesect kind="note"><para>internal/advanced: not a TN operation; python surface removed per #934 (decision record 2026-07-06). This note is the canonical rationale for every UniTensor-vs-UniTensor elementwise arithmetic entry point: the free operators in this header (&apos;+&apos;, &apos;-&apos;, &apos;<emphasis>&apos;, &apos;/&apos;) and the <ref refid="classcytnx_1_1UniTensor_1af8db9e12557098f0c424dabfb3a45ac3" kindref="member">UniTensor::Add</ref>/Sub/Mul/Div member functions (in-place and out-of-place). The python <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> dunders raise TypeError for the UniTensor-vs-UniTensor case (see pybind/unitensor_py.cpp, raise_unitensor_elementwise_removed) while the C++ layer remains. operator+ and operator- are load-bearing: src/linalg/Lanczos_Gnd_Ut.cpp and src/linalg/Lanczos_Exp.cpp use them as genuine Krylov-subspace vector-space arithmetic (axpy) inside the solvers backing <ref refid="namespacecytnx_1_1linalg_1a91b798c44c9479338b03e13f73284b3f" kindref="member">linalg::Lanczos</ref>(method=&quot;Gnd&quot;) and <ref refid="namespacecytnx_1_1linalg_1a74e4c9a9cfe97d7ca523012078a3f5e1" kindref="member">linalg::Lanczos_Exp()</ref>. operator</emphasis> (elementwise/Hadamard product) and operator/ (elementwise division) are basis-dependent, have no tensor-network meaning, and no in-tree C++ caller as of the audit; they are kept un-deprecated only because the removal task&apos;s scope was the python surface. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -2470,7 +2469,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
           <declname>lhs</declname>
         </param>
         <param>
-          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <type>const Tensor::Tproxy &amp;</type>
           <declname>rhs</declname>
         </param>
         <briefdescription>
@@ -2492,7 +2491,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
           <declname>lhs</declname>
         </param>
         <param>
-          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <type>const Tensor::Tproxy &amp;</type>
           <declname>rhs</declname>
         </param>
         <briefdescription>
@@ -2514,7 +2513,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
           <declname>lhs</declname>
         </param>
         <param>
-          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <type>const Tensor::Tproxy &amp;</type>
           <declname>rhs</declname>
         </param>
         <briefdescription>
@@ -2536,7 +2535,7 @@ Note: This function is a alias of <ref refid="namespacecytnx_1acf9cf080bb224422e
           <declname>lhs</declname>
         </param>
         <param>
-          <type>const <ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref> &amp;</type>
+          <type>const Tensor::Tproxy &amp;</type>
           <declname>rhs</declname>
         </param>
         <briefdescription>

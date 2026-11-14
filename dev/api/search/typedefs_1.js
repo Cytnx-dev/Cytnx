@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pointer_5ftypes_0',['pointer_types',['../classcytnx_1_1Tensor.html#a7e664bb4844ddff8d032f50579d7c73e',1,'cytnx::Tensor']]]
+  ['pointer_5ftypes_0',['pointer_types',['../classcytnx_1_1Tensor.html#a3842e5c7e52b45115825703ea91ee8d5',1,'cytnx::Tensor']]]
 ];

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="classcytnx_1_1LinOp" kind="class" language="C++" prot="public">
     <compoundname>cytnx::LinOp</compoundname>
     <includes refid="LinOp_8hpp" local="no">LinOp.hpp</includes>
@@ -19,7 +19,7 @@
         <location file="include/LinOp.hpp" line="21" column="17" bodyfile="include/LinOp.hpp" bodystart="21" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1a38afcf53b4dc771d8c23e0441450a2d8" prot="private" static="no" mutable="no">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref></type>
+        <type>cytnx_uint64</type>
         <definition>cytnx_uint64 cytnx::LinOp::_nx</definition>
         <argsstring></argsstring>
         <name>_nx</name>
@@ -33,7 +33,7 @@
         <location file="include/LinOp.hpp" line="24" column="18" bodyfile="include/LinOp.hpp" bodystart="24" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1ac76c9e57aa2113b01bf71c3d509499fb" prot="private" static="no" mutable="no">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref></type>
+        <type>int</type>
         <definition>int cytnx::LinOp::_device</definition>
         <argsstring></argsstring>
         <name>_device</name>
@@ -47,7 +47,7 @@
         <location file="include/LinOp.hpp" line="27" column="9" bodyfile="include/LinOp.hpp" bodystart="27" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1a232ded9ea0ee4107477119fdaf5c4f1b" prot="private" static="no" mutable="no">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref></type>
+        <type>int</type>
         <definition>int cytnx::LinOp::_dtype</definition>
         <argsstring></argsstring>
         <name>_dtype</name>
@@ -61,7 +61,7 @@
         <location file="include/LinOp.hpp" line="28" column="9" bodyfile="include/LinOp.hpp" bodystart="28" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1af3a0dac626a93e3d76f99ec240ba29d8" prot="private" static="no" mutable="no">
-        <type>std::map&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref>, std::pair&lt; std::vector&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;</type>
+        <type>std::map&lt; cytnx_uint64, std::pair&lt; std::vector&lt; cytnx_uint64 &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;</type>
         <definition>std::map&lt;cytnx_uint64, std::pair&lt;std::vector&lt;cytnx_uint64&gt;, Tensor&gt; &gt; cytnx::LinOp::_elems</definition>
         <argsstring></argsstring>
         <name>_elems</name>
@@ -75,7 +75,7 @@
         <location file="include/LinOp.hpp" line="32" column="7" bodyfile="include/LinOp.hpp" bodystart="32" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcytnx_1_1LinOp_1a85e4b563c270ccc9a92a5035e50dfd42" prot="private" static="no" mutable="no">
-        <type>std::map&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref>, std::pair&lt; std::vector&lt; <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;<ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">::iterator</ref></type>
+        <type>std::map&lt; cytnx_uint64, std::pair&lt; std::vector&lt; cytnx_uint64 &gt;, <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &gt; &gt;::iterator</type>
         <definition>std::map&lt;cytnx_uint64,std::pair&lt;std::vector&lt;cytnx_uint64&gt;,Tensor&gt;&gt;::iterator cytnx::LinOp::_elems_it</definition>
         <argsstring></argsstring>
         <name>_elems_it</name>
@@ -97,7 +97,7 @@
         <name>_mv_elemfunc</name>
         <qualifiedname>cytnx::LinOp::_mv_elemfunc</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
         </param>
         <briefdescription>
         </briefdescription>
@@ -116,20 +116,20 @@
         <name>LinOp</name>
         <qualifiedname>cytnx::LinOp::LinOp</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> std::string &amp;</type>
+          <type>const std::string &amp;</type>
           <declname>type</declname>
         </param>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <type>const cytnx_uint64 &amp;</type>
           <declname>nx</declname>
         </param>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref> &amp;</type>
+          <type>const int &amp;</type>
           <declname>dtype</declname>
           <defval>Type.Double</defval>
         </param>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref> &amp;</type>
+          <type>const int &amp;</type>
           <declname>device</declname>
           <defval>Device.cpu</defval>
         </param>
@@ -271,30 +271,30 @@ Shape : (4)
       <memberdef kind="function" id="classcytnx_1_1LinOp_1adcdd3fb4a8e375e3225b11ea5e2c56ca" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <templateparamlist>
           <param>
-            <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">class</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">T</ref></type>
+            <type>class T</type>
           </param>
         </templateparamlist>
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">void</ref></type>
+        <type>void</type>
         <definition>void cytnx::LinOp::set_elem</definition>
         <argsstring>(const cytnx_uint64 &amp;i, const cytnx_uint64 &amp;j, const T &amp;elem, const bool check_exists=true)</argsstring>
         <name>set_elem</name>
         <qualifiedname>cytnx::LinOp::set_elem</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <type>const cytnx_uint64 &amp;</type>
           <declname>i</declname>
         </param>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <type>const cytnx_uint64 &amp;</type>
           <declname>j</declname>
         </param>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">T</ref> &amp;</type>
+          <type>const T &amp;</type>
           <declname>elem</declname>
         </param>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">bool</ref></type>
+          <type>const bool</type>
           <declname>check_exists</declname>
-          <defval><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">true</ref></defval>
+          <defval>true</defval>
         </param>
         <briefdescription>
         </briefdescription>
@@ -305,17 +305,17 @@ Shape : (4)
         <location file="include/LinOp.hpp" line="96" column="10" bodyfile="include/LinOp.hpp" bodystart="96" bodyend="115"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1afa706c8f70c20e993d8721b963a38b74" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1Tensor_1ac6d3310eb4defbdacf662dcd81d8fe09" kindref="member">Tensor::Tproxy</ref></type>
+        <type>Tensor::Tproxy</type>
         <definition>Tensor::Tproxy cytnx::LinOp::operator()</definition>
         <argsstring>(const cytnx_uint64 &amp;i, const cytnx_uint64 &amp;j)</argsstring>
         <name>operator()</name>
         <qualifiedname>cytnx::LinOp::operator()</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <type>const cytnx_uint64 &amp;</type>
           <declname>i</declname>
         </param>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref> &amp;</type>
+          <type>const cytnx_uint64 &amp;</type>
           <declname>j</declname>
         </param>
         <briefdescription>
@@ -327,13 +327,13 @@ Shape : (4)
         <location file="include/LinOp.hpp" line="116" column="20" bodyfile="include/LinOp.hpp" bodystart="116" bodyend="143"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1aeb31367ba356298976de92fef9e948cf" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">void</ref></type>
+        <type>void</type>
         <definition>void cytnx::LinOp::set_device</definition>
         <argsstring>(const int &amp;device)</argsstring>
         <name>set_device</name>
         <qualifiedname>cytnx::LinOp::set_device</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref> &amp;</type>
+          <type>const int &amp;</type>
           <declname>device</declname>
         </param>
         <briefdescription>
@@ -345,13 +345,13 @@ Shape : (4)
         <location file="include/LinOp.hpp" line="145" column="10" bodyfile="include/LinOp.hpp" bodystart="145" bodyend="148"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1af71ddba715715d03342a323c82b0eb7f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">void</ref></type>
+        <type>void</type>
         <definition>void cytnx::LinOp::set_dtype</definition>
         <argsstring>(const int &amp;dtype)</argsstring>
         <name>set_dtype</name>
         <qualifiedname>cytnx::LinOp::set_dtype</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref> &amp;</type>
+          <type>const int &amp;</type>
           <declname>dtype</declname>
         </param>
         <briefdescription>
@@ -377,7 +377,7 @@ Shape : (4)
         <location file="include/LinOp.hpp" line="153" column="9" bodyfile="include/LinOp.hpp" bodystart="153" bodyend="153"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1a64aa0529d6f0d5fd4bb06b900a469a08" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">int</ref></type>
+        <type>int</type>
         <definition>int cytnx::LinOp::dtype</definition>
         <argsstring>() const</argsstring>
         <name>dtype</name>
@@ -391,7 +391,7 @@ Shape : (4)
         <location file="include/LinOp.hpp" line="154" column="9" bodyfile="include/LinOp.hpp" bodystart="154" bodyend="154"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1a7d5704336a5a9f786a582ba0a668b521" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">cytnx_uint64</ref></type>
+        <type>cytnx_uint64</type>
         <definition>cytnx_uint64 cytnx::LinOp::nx</definition>
         <argsstring>() const</argsstring>
         <name>nx</name>
@@ -405,7 +405,7 @@ Shape : (4)
         <location file="include/LinOp.hpp" line="155" column="18" bodyfile="include/LinOp.hpp" bodystart="155" bodyend="155"/>
       </memberdef>
       <memberdef kind="function" id="classcytnx_1_1LinOp_1af3e9b2601404994b0ce40b4a148ab637" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">void</ref></type>
+        <type>void</type>
         <definition>void cytnx::LinOp::_print</definition>
         <argsstring>()</argsstring>
         <name>_print</name>
@@ -425,7 +425,7 @@ Shape : (4)
         <name>matvec</name>
         <qualifiedname>cytnx::LinOp::matvec</qualifiedname>
         <param>
-          <type><ref refid="classcytnx_1_1LinOp_1a46021c823974e5460d2be9e35dc0efea" kindref="member">const</ref> <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
+          <type>const <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> &amp;</type>
           <declname>Tin</declname>
         </param>
         <briefdescription>

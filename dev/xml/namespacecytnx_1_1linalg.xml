@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="namespacecytnx_1_1linalg" kind="namespace" language="C++">
     <compoundname>cytnx::linalg</compoundname>
     <sectiondef kind="func">
@@ -21,9 +21,8 @@
 <para>The addition function between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise addition. That means if the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="16">\[
-   T_o[i] = T_L[i] + T_R[i],
- \]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise addition. That means if the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="2">\[   T_o[i] = T_L[i] + T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -75,9 +74,8 @@
 <para>The addition function between a template type and a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will add the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together and add every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="20">$ T_i $</formula>, then the result will be:  <formula id="21">\[
-   T_o[i] = c + T_i[i],
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will add the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together and add every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="6">$ T_i $</formula>, then the result will be:   <formula id="7">\[   T_o[i] = c + T_i[i],
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">lc</parametername>
 </parameternamelist>
@@ -133,9 +131,8 @@
 <para>The addition function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will add the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together and add every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="20">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="25">\[
-  T_o[i] = T_i[i] + c,
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>.</para>
+<para>This is the addition function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will add the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together and add every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="6">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="11">\[  T_o[i] = T_i[i] + c,
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
@@ -187,9 +184,8 @@
 <para>The subtraction function between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will subtract the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will subtract every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="26">\[
- T_o[i] = T_L[i] - T_R[i],
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will subtract the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will subtract every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="12">\[ T_o[i] = T_L[i] - T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -241,9 +237,8 @@
 <para>The subtraction function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will subtract the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will subtract every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="20">$ T_i $</formula>, then the result will be:  <formula id="27">\[
- T_o[i] = c - T_i[i],
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will subtract the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will subtract every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="6">$ T_i $</formula>, then the result will be:   <formula id="13">\[ T_o[i] = c - T_i[i],
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -299,9 +294,8 @@
 <para>The subtraction function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will subtract the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will subtract every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="20">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="28">\[
-  T_o[i] = T_i[i] - c,
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the subtraction function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will subtract the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will subtract every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="6">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="14">\[  T_o[i] = T_i[i] - c,
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -352,9 +346,8 @@
 <para>The multiplication function between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will multiply the two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> together. It will multiply every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> with the corresponding element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput>. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="29">\[
- T_o[i] = T_L[i] \times T_R[i],
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will multiply the two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> together. It will multiply every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> with the corresponding element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput>. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="15">\[ T_o[i] = T_L[i] \times T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -406,9 +399,8 @@
 <para>The multiplication function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will multiply the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will multiply every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="20">$ T_i $</formula>, then the result will be:  <formula id="30">\[
- T_o[i] = c \times T_i[i],
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will multiply the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will multiply every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="6">$ T_i $</formula>, then the result will be:   <formula id="16">\[ T_o[i] = c \times T_i[i],
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -464,9 +456,8 @@
 <para>The multiplication function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will multiply the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will multiply every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="20">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="31">\[
-  T_o[i] = T_i[i] \times c,
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the multiplication function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will multiply the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will multiply every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="6">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="17">\[  T_o[i] = T_i[i] \times c,
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -517,9 +508,8 @@
 <para>The division function between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will divide the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> together. It will divide every element in the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. That means if the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="32">\[
-  T_o[i] = T_L[i] \div T_R[i],
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will divide the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> together. It will divide every element in the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. That means if the left <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="18">\[  T_o[i] = T_L[i] \div T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -571,9 +561,8 @@
 <para>The division function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will divide the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will divide every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="20">$ T_i $</formula>, then the result will be:  <formula id="33">\[
- T_o[i] = c \div T_i[i],
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will divide the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will divide every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="6">$ T_i $</formula>, then the result will be:   <formula id="19">\[ T_o[i] = c \div T_i[i],
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -633,9 +622,8 @@
 <para>The division function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will divide the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will divide every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="20">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="34">\[
-  T_o[i] = T_i[i] \div c,
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the division function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will divide the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type together. It will divide every element in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with the template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="6">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="20">\[  T_o[i] = T_i[i] \div c,
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -691,9 +679,8 @@
         </briefdescription>
         <detaileddescription>
 <para>The modulo function between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>.</para>
-<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise modulo between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="35">\[
-  T_o[i] = T_L[i] \mod T_R[i],
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise modulo between two <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="21">\[  T_o[i] = T_L[i] \mod T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -749,9 +736,8 @@
 <para>The modulo function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise modulo between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="20">$ T_i $</formula>, then the result will be:  <formula id="36">\[
- T_o[i] = c \mod T_i[i],
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise modulo between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="6">$ T_i $</formula>, then the result will be:   <formula id="22">\[ T_o[i] = c \mod T_i[i],
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername>lc</parametername>
 </parameternamelist>
@@ -807,9 +793,8 @@
 <para>The modulo function between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise modulo between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="20">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="37">\[
-  T_o[i] = T_i[i] \mod c,
-\]</formula> where <formula id="22">$ T_i[i] $</formula> and <formula id="23">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="20">$ T_i $</formula> and <formula id="24">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
+<para>This is the modulo function for <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It will perform the element-wise modulo between a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> and a template type. That means if the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="6">$ T_i $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="23">\[  T_o[i] = T_i[i] \mod c,
+\]</formula> where <formula id="8">$ T_i[i] $</formula> and <formula id="9">$ T_o[i] $</formula> are the elements in the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="6">$ T_i $</formula> and <formula id="10">$ T_o $</formula>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -1053,7 +1038,7 @@ const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is a diagonal <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="24">$ U $</formula> and <formula id="25">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -1065,7 +1050,7 @@ const bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64 &
 <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a0525c8197d0d441586467676bf814e90" kindref="member">Svd_truncate(const Tensor &amp;Tin, const cytnx_uint64 &amp;keepdim, const double &amp;err, const
 bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64&amp; mindim)</ref> </para>
 </simplesect>
-<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="40">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="41">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
+<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="26">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="27">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -1248,8 +1233,8 @@ cytnx::UniTensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</ref> </
 <para>Perform a randomized truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform a randomized truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It uses the ?gesvd method for the SVD. It will perform the randomized SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be: <formula id="43">\[ M = U S V^\dagger, \]</formula> where <formula id="44">$ S
-$</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="45">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
+<para>This function will perform a randomized truncated Singular-Value decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. It uses the ?gesvd method for the SVD. It will perform the randomized SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be: <formula id="29">\[ M = U S V^\dagger, \]</formula> where  <formula id="30">$ S
+$</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="31">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
 <para>The truncation order is as following (later constraints might be violated by previous ones):<linebreak/>
  1) Keep at most <computeroutput>keepdim</computeroutput> singular values; there might be an exception in case of exact degeneracies, see note below<linebreak/>
  2) Keep at least <computeroutput>mindim</computeroutput> singular values;<linebreak/>
@@ -1338,7 +1323,7 @@ $</formula> is a singular values matrix with the singular values truncated to th
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="24">$ U $</formula> and <formula id="25">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -1737,7 +1722,7 @@ const std::string &amp;b)</ref> instead. </para>
 <para>Take the power <computeroutput>p</computeroutput> of all elements in a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para><formula id="46">\[ T_\text{out}[i] = (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
+<para><formula id="32">\[ T_\text{out}[i] = (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Tin</parametername>
 </parameternamelist>
@@ -1792,7 +1777,7 @@ const std::string &amp;b)</ref> instead. </para>
 <para>Take the power <computeroutput>p</computeroutput> of all elements in a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para><formula id="47">\[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
+<para><formula id="33">\[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Tin</parametername>
 </parameternamelist>
@@ -1848,8 +1833,7 @@ const std::string &amp;b)</ref> instead. </para>
 <para>Element-wise (pseudo-)inverse. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs an element-wise inverse with clip. If <formula id="48">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.  <formula id="49">\[
-T_\text{out}[i] = \left\{
+<para>This function performs an element-wise inverse with clip. If <formula id="34">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.        <formula id="35">\[T_\text{out}[i] = \left\{
 \begin{array}{ll}
 1/(T_\text{in}[i]) &amp; \mathrm{if} \ |T_\text{in}[i]| &gt; \mathrm{clip} \\
 0 &amp; \mathrm{otherwise}
@@ -1875,7 +1859,7 @@ T_\text{out}[i] = \left\{
 <simplesect kind="return"><para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> </para>
 </simplesect>
 <simplesect kind="note"><para><orderedlist>
-<listitem><para>For complex type UniTensors, the norm <formula id="50">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
+<listitem><para>For complex type UniTensors, the norm <formula id="36">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
 </listitem><listitem><para>If Tin is integer type, it will automatically be promoted to Type.Double.</para>
 </listitem><listitem><para>For symmetric UniTensors, only the elements in the blocks are inverted. </para>
 </listitem></orderedlist>
@@ -1912,8 +1896,7 @@ T_\text{out}[i] = \left\{
 <para>Element-wise (pseudo-)inverse, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs an element-wise inverse with clip. If <formula id="48">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.  <formula id="51">\[
-T_\text{in}[i] \rightarrow \left\{
+<para>This function performs an element-wise inverse with clip. If <formula id="34">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.        <formula id="37">\[T_\text{in}[i] \rightarrow \left\{
 \begin{array}{ll}
 1/(T_\text{in}[i]) &amp; \mathrm{if} \ |T_\text{in}[i]| &gt; \mathrm{clip} \\
 0 &amp; \mathrm{otherwise}
@@ -1939,7 +1922,7 @@ T_\text{in}[i] \rightarrow \left\{
 <simplesect kind="return"><para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> </para>
 </simplesect>
 <simplesect kind="note"><para><orderedlist>
-<listitem><para>For complex type UniTensors, the norm <formula id="50">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
+<listitem><para>For complex type UniTensors, the norm <formula id="36">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
 </listitem><listitem><para>If Tin is integer type, it will automatically be promoted to Type.Double.</para>
 </listitem><listitem><para>For symmetric UniTensors, only the elements in the blocks are inverted. </para>
 </listitem></orderedlist>
@@ -2039,9 +2022,8 @@ T_\text{in}[i] \rightarrow \left\{
 <para>The addition function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the addition function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise addition. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="16">\[
-   T_o[i] = T_L[i] + T_R[i],
- \]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the addition function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise addition. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="2">\[   T_o[i] = T_L[i] + T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2093,9 +2075,8 @@ T_\text{in}[i] \rightarrow \left\{
 <para>The addition function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the addition function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise addition. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="52">\[
-   T_o[i] = c + T_L[i],
- \]</formula> where <formula id="18">$ T_R[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="15">$ T_R $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the addition function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise addition. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="38">\[   T_o[i] = c + T_L[i],
+\]</formula> where <formula id="4">$ T_R[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="1">$ T_R $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">lc</parametername>
 </parameternamelist>
@@ -2145,9 +2126,8 @@ T_\text{in}[i] \rightarrow \left\{
 <para>The addition function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the addition function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise addition. That means if the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="53">\[
-   T_o[i] = T_L[i] + c,
- \]</formula> where <formula id="17">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the addition function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise addition. That means if the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="39">\[   T_o[i] = T_L[i] + c,
+\]</formula> where <formula id="3">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula>. It will perform the element-wise addition and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2197,9 +2177,8 @@ T_\text{in}[i] \rightarrow \left\{
 <para>The addition function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the inplace addition function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise addition. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="54">\[
-   T_L[i] = T_L[i] + T_R[i],
- \]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise addition and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>This is the inplace addition function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise addition. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="40">\[   T_L[i] = T_L[i] + T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise addition and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Lt</parametername>
 </parameternamelist>
@@ -2255,9 +2234,8 @@ T_\text{in}[i] \rightarrow \left\{
 <para>The subtraction function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the subtraction function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise subtraction. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="55">\[
-  T_o[i] = T_L[i] - T_R[i],
- \]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the subtraction function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise subtraction. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="41">\[  T_o[i] = T_L[i] - T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2307,9 +2285,8 @@ T_\text{in}[i] \rightarrow \left\{
 <para>The subtraction function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the subtraction function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise subtraction. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="56">\[
-T_o[i] = c - T_R[i],
-\]</formula> where <formula id="18">$ T_R[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="15">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the subtraction function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise subtraction. That means if the template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="42">\[T_o[i] = c - T_R[i],
+\]</formula> where <formula id="4">$ T_R[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="1">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">lc</parametername>
 </parameternamelist>
@@ -2359,9 +2336,8 @@ T_o[i] = c - T_R[i],
 <para>The subtraction function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the subtraction function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise subtraction. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="57">\[
-T_o[i] = T_L[i] - c,
-\]</formula> where <formula id="17">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the subtraction function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise subtraction. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="43">\[T_o[i] = T_L[i] - c,
+\]</formula> where <formula id="3">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula>. It will perform the element-wise subtraction and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2411,9 +2387,8 @@ T_o[i] = T_L[i] - c,
 <para>The subtraction function for Tensot, inplscely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the subtraction function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise subtraction. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="58">\[
-T_L[i] = T_L[i] - T_R[i],
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>This is the subtraction function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise subtraction. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="44">\[T_L[i] = T_L[i] - T_R[i],
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise subtraction and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Lt</parametername>
 </parameternamelist>
@@ -2469,9 +2444,8 @@ T_L[i] = T_L[i] - T_R[i],
 <para>The multiplication function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the multiplication function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="59">\[
-T_o[i] = T_L[i] * T_R[i]
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the multiplication function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="45">\[T_o[i] = T_L[i] * T_R[i]
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2521,9 +2495,8 @@ T_o[i] = T_L[i] * T_R[i]
 <para>The multiplication function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the multiplication function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="60">\[
-T_o[i] = T_L[i] * c,
-\]</formula> where <formula id="17">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the multiplication function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="46">\[T_o[i] = T_L[i] * c,
+\]</formula> where <formula id="3">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2573,9 +2546,8 @@ T_o[i] = T_L[i] * c,
 <para>The multiplication function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the multiplication function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="60">\[
-T_o[i] = T_L[i] * c,
-\]</formula> where <formula id="17">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the multiplication function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="46">\[T_o[i] = T_L[i] * c,
+\]</formula> where <formula id="3">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula>. It will perform the element-wise multiplication and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2625,9 +2597,8 @@ T_o[i] = T_L[i] * c,
 <para>The multiplication function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the multiplication function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="59">\[
-T_o[i] = T_L[i] * T_R[i]
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise multiplication and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>This is the multiplication function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise multiplication. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="45">\[T_o[i] = T_L[i] * T_R[i]
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise multiplication and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Lt</parametername>
 </parameternamelist>
@@ -2681,9 +2652,8 @@ T_o[i] = T_L[i] * T_R[i]
 <para>The division function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the division function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise division. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="61">\[
-T_o[i] = T_L[i] / T_R[i]
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the division function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise division. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="47">\[T_o[i] = T_L[i] / T_R[i]
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2735,9 +2705,8 @@ T_o[i] = T_L[i] / T_R[i]
 <para>The division function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the division function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise division. That means if the left template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="62">\[
-T_o[i] = c / T_R[i]
-\]</formula> where <formula id="17">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the division function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise division. That means if the left template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="48">\[T_o[i] = c / T_R[i]
+\]</formula> where <formula id="3">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">lc</parametername>
 </parameternamelist>
@@ -2789,9 +2758,8 @@ T_o[i] = c / T_R[i]
 <para>The division function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the division function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise division. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="63">\[
-T_o[i] = T_L[i] / c
-\]</formula> where <formula id="17">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the division function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise division. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="49">\[T_o[i] = T_L[i] / c
+\]</formula> where <formula id="3">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula>. It will perform the element-wise division and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2843,9 +2811,8 @@ T_o[i] = T_L[i] / c
 <para>The inplace division function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the inplace division function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise division. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="61">\[
-T_o[i] = T_L[i] / T_R[i]
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise division and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>This is the inplace division function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise division. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="47">\[T_o[i] = T_L[i] / T_R[i]
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise division and note that it will modify the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Lt</parametername>
 </parameternamelist>
@@ -2901,9 +2868,8 @@ T_o[i] = T_L[i] / T_R[i]
 <para>The mod function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the mod function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise mod. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="64">\[
-T_o[i] = T_L[i] % T_R[i]
-\]</formula> where <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula>. It will perform the element-wise mod and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the mod function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise mod. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="50">\[T_o[i] = T_L[i] % T_R[i]
+\]</formula> where <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula>. It will perform the element-wise mod and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -2955,9 +2921,8 @@ T_o[i] = T_L[i] % T_R[i]
 <para>The mod function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the mod function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise mod. That means if the left template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="65">\[
-T_o[i] = c % T_R[i]
-\]</formula> where <formula id="18">$ T_R[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="15">$ T_R $</formula>. It will perform the element-wise mod and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the mod function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise mod. That means if the left template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:   <formula id="51">\[T_o[i] = c % T_R[i]
+\]</formula> where <formula id="4">$ T_R[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="1">$ T_R $</formula>. It will perform the element-wise mod and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">lc</parametername>
 </parameternamelist>
@@ -3009,9 +2974,8 @@ T_o[i] = c % T_R[i]
 <para>The mod function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the mod function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise mod. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="66">\[
-T_o[i] = T_L[i] % c
-\]</formula> where <formula id="17">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="14">$ T_L $</formula>. It will perform the element-wise mod and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+<para>This is the mod function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise mod. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:   <formula id="52">\[T_o[i] = T_L[i] % c
+\]</formula> where <formula id="3">$ T_L[i] $</formula> is the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="0">$ T_L $</formula>. It will perform the element-wise mod and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -3058,12 +3022,11 @@ T_o[i] = T_L[i] % c
 <para>The comparison function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the comparison function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise comparison. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="67">\[
-T_o[i] = \left\{\begin{array}{ll}
+<para>This is the comparison function between two <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. It will perform the element-wise comparison. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:      <formula id="53">\[T_o[i] = \left\{\begin{array}{ll}
  1, &amp; \text{if  } T_L[i]=T_R[i]\\
  0, &amp; \text{else}
  \end{array}\right.
-\]</formula> where <formula id="68">$ T_o[i]$</formula>, <formula id="17">$ T_L[i] $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="69">$ T_o$</formula>, <formula id="14">$ T_L $</formula> and <formula id="15">$ T_R $</formula> and <formula id="23">$ T_o[i] $</formula> is the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> which is a boolean type (see cytnx::Type). It will perform the element-wise comparison and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="54">$ T_o[i]$</formula>, <formula id="3">$ T_L[i] $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="55">$ T_o$</formula>, <formula id="0">$ T_L $</formula> and <formula id="1">$ T_R $</formula> and <formula id="9">$ T_o[i] $</formula> is the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> which is a boolean type (see cytnx::Type). It will perform the element-wise comparison and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -3115,12 +3078,11 @@ T_o[i] = \left\{\begin{array}{ll}
 <para>The comparison function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the comparison function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise comparison. That means if the left template type <computeroutput>lc</computeroutput> is given as <formula id="19">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="15">$ T_R $</formula>, then the result will be:  <formula id="70">\[
-T_o[i] = \left\{\begin{array}{ll}
+<para>This is the comparison function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise comparison. That means if the left template type <computeroutput>lc</computeroutput> is given as <formula id="5">$ c $</formula> and the right <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Rt</computeroutput> is given as <formula id="1">$ T_R $</formula>, then the result will be:      <formula id="56">\[T_o[i] = \left\{\begin{array}{ll}
  1, &amp; \text{if  } c=T_R[i]\\
  0, &amp; \text{else}
  \end{array}\right.
-\]</formula> where <formula id="68">$ T_o[i]$</formula>, <formula id="19">$ c $</formula> and <formula id="18">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="69">$ T_o$</formula>, <formula id="19">$ c $</formula> and <formula id="15">$ T_R $</formula> and <formula id="23">$ T_o[i] $</formula> is the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> which is a boolean type (see cytnx::Type). It will perform the element-wise comparison and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="54">$ T_o[i]$</formula>, <formula id="5">$ c $</formula> and <formula id="4">$ T_R[i] $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="55">$ T_o$</formula>, <formula id="5">$ c $</formula> and <formula id="1">$ T_R $</formula> and <formula id="9">$ T_o[i] $</formula> is the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> which is a boolean type (see cytnx::Type). It will perform the element-wise comparison and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">lc</parametername>
 </parameternamelist>
@@ -3170,12 +3132,11 @@ T_o[i] = \left\{\begin{array}{ll}
 <para>The comparison function for <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This is the comparison function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise comparison. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="14">$ T_L $</formula> and the right template type <computeroutput>rc</computeroutput> is given as <formula id="19">$ c $</formula>, then the result will be:  <formula id="71">\[
-T_o[i] = \left\{\begin{array}{ll}
+<para>This is the comparison function between a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a template type. It will perform the element-wise comparison. That means if the left <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Lt</computeroutput> is given as <formula id="0">$ T_L $</formula> and the right template type <computeroutput>rc</computeroutput> is given as <formula id="5">$ c $</formula>, then the result will be:      <formula id="57">\[T_o[i] = \left\{\begin{array}{ll}
  1, &amp; \text{if  } T_L[i]=c\\
  0, &amp; \text{else}
  \end{array}\right.
-\]</formula> where <formula id="68">$ T_o[i]$</formula>, <formula id="17">$ T_L[i] $</formula> and <formula id="19">$ c $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="69">$ T_o$</formula>, <formula id="14">$ T_L $</formula> and <formula id="19">$ c $</formula> and <formula id="23">$ T_o[i] $</formula> is the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> which is a boolean type (see cytnx::Type). It will perform the element-wise comparison and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
+\]</formula> where <formula id="54">$ T_o[i]$</formula>, <formula id="3">$ T_L[i] $</formula> and <formula id="5">$ c $</formula> are the elements in the <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <formula id="55">$ T_o$</formula>, <formula id="0">$ T_L $</formula> and <formula id="5">$ c $</formula> and <formula id="9">$ T_o[i] $</formula> is the output <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> which is a boolean type (see cytnx::Type). It will perform the element-wise comparison and note that it will return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> object. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Lt</parametername>
 </parameternamelist>
@@ -3386,7 +3347,7 @@ T_o[i] = \left\{\begin{array}{ll}
           <defval><ref refid="namespacecytnx_1_1random_1a4e3c78845de8c243cc0c31bb469f53cb" kindref="member">random::__static_random_device</ref>()</defval>
         </param>
         <briefdescription>
-<para>Generate an isometrized left isometry for a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>), such that Q * Qdag * Tin approximates Tin (Qdag is the hermitean conjugate of Q) </para>
+<para>Generate an isometrized left isometry for a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>), such that Q * Qdag * Tin approximates Tin (Qdag is the hermitean conjugate of Q). </para>
         </briefdescription>
         <detaileddescription>
 <para>The power iteration algorithm with Gaussian random matrices is used: 1) Generate Gaussian random matrix X 2) Y = Tin * X 3) QR factorization: Y = Q * R 4) [U&apos;, S, vT] = SVD(Qdag * Tom) where Qdag is the hermitian conjugate of Q 5) U = Q * U&apos; If power_iteration &gt; 0, additional steps are inserted between 3) and 4): 3.1) Y = Tdag * Q where Tdag is the hermitian conjugate of Q 3.2) QR factorization: Y = Q * R 3.3) Y = Tin * Q 3.4) QR factorization: Y = Q * R steps 3.1) to 3.4) are repeated power_iteration times; this power method results in an exponential convergence of the singular values and is especially suitable if the singular values decay slowly. The result will depend on the rowrank of the <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <computeroutput>Tin</computeroutput>. For more details, please refer to the documentation of the function Gesvd(const Tensor &amp;Tin, const bool &amp;is_UvT). <parameterlist kind="param"><parameteritem>
@@ -3449,10 +3410,9 @@ T_o[i] = \left\{\begin{array}{ll}
 <para>Perform Singular-Value decomposition on a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="72">\[
-M = U S V^\dagger,
-\]</formula> where <formula id="38">$ U $</formula> is a left uniform matrix, <formula id="45">$ S $</formula> is a diagonal matrix with singular values, and <formula id="39">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix <formula id="73">$ V
-$</formula>. Furthermore, <formula id="38">$ U $</formula> and <formula id="74">$ V $</formula> are unitary matrices, and <formula id="45">$ S $</formula> is a non-negative diagonal matrix.</para>
+<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be:   <formula id="58">\[M = U S V^\dagger,
+\]</formula> where <formula id="24">$ U $</formula> is a left uniform matrix, <formula id="31">$ S $</formula> is a diagonal matrix with singular values, and <formula id="25">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix  <formula id="59">$ V
+$</formula>. Furthermore, <formula id="24">$ U $</formula> and <formula id="60">$ V $</formula> are unitary matrices, and <formula id="31">$ S $</formula> is a non-negative diagonal matrix.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -3473,7 +3433,7 @@ $</formula>. Furthermore, <formula id="38">$ U $</formula> and <formula id="74">
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor contanin the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is true, then the tensors <formula id="75">$ U,V^\dagger $</formula> will be pushed back to the vector. </para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is true, then the tensors <formula id="61">$ U,V^\dagger $</formula> will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
 </parblock></para>
@@ -3514,10 +3474,9 @@ bool &amp;is_UvT, const unsigned int &amp;return_err, const cytnx_uint64&amp; mi
 <para>Perform Singular-Value decomposition on a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="72">\[
-M = U S V^\dagger,
-\]</formula> where <formula id="38">$ U $</formula> is a left uniform matrix, <formula id="45">$ S $</formula> is a diagonal matrix with singular values, and <formula id="39">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix <formula id="73">$ V
-$</formula>. Furthermore, <formula id="38">$ U $</formula> and <formula id="74">$ V $</formula> are unitary matrices, and <formula id="45">$ S $</formula> is a non-negative diagonal matrix.</para>
+<para>This function will perform Singular-Value decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be:   <formula id="58">\[M = U S V^\dagger,
+\]</formula> where <formula id="24">$ U $</formula> is a left uniform matrix, <formula id="31">$ S $</formula> is a diagonal matrix with singular values, and <formula id="25">$ V^\dagger $</formula> is the conjugate transpose of the right uniform matrix  <formula id="59">$ V
+$</formula>. Furthermore, <formula id="24">$ U $</formula> and <formula id="60">$ V $</formula> are unitary matrices, and <formula id="31">$ S $</formula> is a non-negative diagonal matrix.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -3546,7 +3505,7 @@ $</formula>. Furthermore, <formula id="38">$ U $</formula> and <formula id="74">
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor contaning the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_U</computeroutput> is true, then the tensor <formula id="38">$ U $</formula> will be pushed back to the vector, and if <computeroutput>is_vT</computeroutput> is true, <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector. </para>
+</listitem><listitem><para>If <computeroutput>is_U</computeroutput> is true, then the tensor <formula id="24">$ U $</formula> will be pushed back to the vector, and if <computeroutput>is_vT</computeroutput> is true, <formula id="25">$ V^\dagger $</formula> will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
 </parblock></para>
@@ -3601,9 +3560,8 @@ const bool &amp;is_U, const bool &amp;is_vT, const unsigned int &amp;return_err,
 <para>Perform a truncated Singular-Value decomposition of a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="72">\[
-M = U S V^\dagger,
-\]</formula> where <formula id="45">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="45">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
+<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be:   <formula id="58">\[M = U S V^\dagger,
+\]</formula> where <formula id="31">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="31">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
 <para>The truncation order is as following (later constraints might be violated by previous ones):<linebreak/>
  1) Keep at most <computeroutput>keepdim</computeroutput> singular values; there might be an exception in case of exact degeneracies, see note below<linebreak/>
  2) Keep at least <computeroutput>mindim</computeroutput> singular values;<linebreak/>
@@ -3652,7 +3610,7 @@ M = U S V^\dagger,
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="24">$ U $</formula> and <formula id="25">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -3663,7 +3621,7 @@ M = U S V^\dagger,
 </simplesect>
 <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a330151ef7e84a8169d6871cc08fa14d4" kindref="member">Svd(const Tensor &amp;Tin, const bool &amp;is_UvT)</ref> </para>
 </simplesect>
-<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="40">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="41">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
+<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="26">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="27">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -3734,7 +3692,7 @@ M = U S V^\dagger,
 <para>Perform a truncated Singular-Value decomposition of a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> (a <emphasis>matrix</emphasis>). </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It uses the ?gesvd method for the SVD. It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be: <formula id="43">\[ M = U S V^\dagger, \]</formula> where <formula id="45">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="45">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
+<para>This function will perform a truncated Singular-Value decomposition of a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). It uses the ?gesvd method for the SVD. It will perform the full SVD first, and then truncate the singular values to the given cutoff <computeroutput>err</computeroutput>. That means, given a matrix <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be: <formula id="29">\[ M = U S V^\dagger, \]</formula> where <formula id="31">$ S $</formula> is a singular values matrix with the singular values truncated to the given cutoff <computeroutput>err</computeroutput>. The dimension of <formula id="31">$ S $</formula> is at most <computeroutput>keepdim</computeroutput>.</para>
 <para>The truncation order is as following (later constraints might be violated by previous ones):<linebreak/>
  1) Keep at most <computeroutput>keepdim</computeroutput> singular values; there might be an exception in case of exact degeneracies, see note below<linebreak/>
  2) Keep at least <computeroutput>mindim</computeroutput> singular values;<linebreak/>
@@ -3823,7 +3781,7 @@ M = U S V^\dagger,
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="24">$ U $</formula> and <formula id="25">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -3929,7 +3887,7 @@ M = U S V^\dagger,
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first tensor is a 1-d tensor containing the singular values</para>
-</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="38">$ U $</formula> and <formula id="39">$ V^\dagger $</formula> will be pushed back to the vector.</para>
+</listitem><listitem><para>If <computeroutput>is_UvT</computeroutput> is <emphasis>true</emphasis>, then the tensors <formula id="24">$ U $</formula> and <formula id="25">$ V^\dagger $</formula> will be pushed back to the vector.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is true, then the error will be pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -3940,7 +3898,7 @@ M = U S V^\dagger,
 </simplesect>
 <simplesect kind="see"><para><ref refid="namespacecytnx_1_1linalg_1a8ae32a5c874c9f5c1cf8cbbd59ef50bb" kindref="member">Gesvd(const Tensor &amp;Tin, const bool &amp;is_U, const bool &amp;is_vT)</ref> </para>
 </simplesect>
-<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="40">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="41">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
+<simplesect kind="note"><para>The truncated bond dimension can be larger than <computeroutput>keepdim</computeroutput> for degenerate singular values: if the largest <formula id="26">$ n $</formula> truncated singular values would be exactly equal to the smallest kept singular value, then the bond dimension is enlarged to <computeroutput>keepdim</computeroutput> <formula id="27">$ + n $</formula>. Example: if the singular values are (1 2 2 2 2 3) and <computeroutput>keepdim</computeroutput> = 3, then the bond dimension will be 5 in order to keep all the degenerate singular values. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -4004,9 +3962,8 @@ M = U S V^\dagger,
 <para>Perform QR decomposition on a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform QR decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="76">\[
-M = Q R,
-\]</formula> where <formula id="77">$ Q $</formula> is a orthogonal matrix, and <formula id="78">$ R $</formula> is a right-upper triangular matrix.</para>
+<para>This function will perform QR decomposition on a matrix (a rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>). That means given a matrix <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be:   <formula id="62">\[M = Q R,
+\]</formula> where <formula id="63">$ Q $</formula> is a orthogonal matrix, and <formula id="64">$ R $</formula> is a right-upper triangular matrix.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -4026,9 +3983,9 @@ M = Q R,
 </parameterlist>
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
-<listitem><para>the first tensor is the orthomormal matrix <formula id="77">$ Q $</formula>, a 2-d tensor (matrix)</para>
-</listitem><listitem><para>the second tensor is the right-upper triangular matrix <formula id="78">$ R $</formula>, a 2-d tensor (matrix)</para>
-</listitem><listitem><para>the third tensor is the Householder reflectors <formula id="79">$ H $</formula>, a 1-d tensor (vector). This tensor will only return when <computeroutput>is_tau</computeroutput> = <emphasis>true</emphasis>. </para>
+<listitem><para>the first tensor is the orthomormal matrix <formula id="63">$ Q $</formula>, a 2-d tensor (matrix)</para>
+</listitem><listitem><para>the second tensor is the right-upper triangular matrix <formula id="64">$ R $</formula>, a 2-d tensor (matrix)</para>
+</listitem><listitem><para>the third tensor is the Householder reflectors <formula id="65">$ H $</formula>, a 1-d tensor (vector). This tensor will only return when <computeroutput>is_tau</computeroutput> = <emphasis>true</emphasis>. </para>
 </listitem></orderedlist>
 </para>
 </parblock></para>
@@ -4082,10 +4039,10 @@ M = Q R,
 </parameterlist>
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;Tensors&gt;]</para>
 <para><orderedlist>
-<listitem><para>the first tensor is the orthomormal matrix <formula id="77">$ Q $</formula>, a 2-d tensor (matrix)</para>
-</listitem><listitem><para>the second tensor is the diagonal matrix <formula id="80">$ D $</formula>, a 1-d tensor (diagonal matrix)</para>
-</listitem><listitem><para>the third tensor is the right-upper triangular matrix <formula id="78">$ R $</formula>, a 2-d tensor (matrix)</para>
-</listitem><listitem><para>the forth tensor is the Householder reflectors <formula id="79">$ H $</formula>, a 1-d tensor (vector). This tensor will only return when <computeroutput>is_tau</computeroutput> = <emphasis>true</emphasis>. </para>
+<listitem><para>the first tensor is the orthomormal matrix <formula id="63">$ Q $</formula>, a 2-d tensor (matrix)</para>
+</listitem><listitem><para>the second tensor is the diagonal matrix <formula id="66">$ D $</formula>, a 1-d tensor (diagonal matrix)</para>
+</listitem><listitem><para>the third tensor is the right-upper triangular matrix <formula id="64">$ R $</formula>, a 2-d tensor (matrix)</para>
+</listitem><listitem><para>the forth tensor is the Householder reflectors <formula id="65">$ H $</formula>, a 1-d tensor (vector). This tensor will only return when <computeroutput>is_tau</computeroutput> = <emphasis>true</emphasis>. </para>
 </listitem></orderedlist>
 </para>
 </parblock></para>
@@ -4125,9 +4082,8 @@ M = Q R,
 <para>eigen-value decomposition for Hermitian matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform eigen-value decomposition for Hermitian matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="81">\[
-M = V D V^\dagger,
-\]</formula> where <formula id="74">$ V $</formula> is a unitary matrix contains the eigen vectors, and <formula id="80">$ D $</formula> is a diagonal matrix contains the eigen values.</para>
+<para>This function will perform eigen-value decomposition for Hermitian matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be:   <formula id="67">\[M = V D V^\dagger,
+\]</formula> where <formula id="60">$ V $</formula> is a unitary matrix contains the eigen vectors, and <formula id="66">$ D $</formula> is a diagonal matrix contains the eigen values.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -4231,10 +4187,10 @@ M = V D V^\dagger,
 <para>Hermitian eigen-decomposition of a <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> with truncation of the eigenpairs. </para>
         </briefdescription>
         <detaileddescription>
-<para>Performs <ref refid="namespacecytnx_1_1linalg_1a9f15e25a4048a604b9f5ed243443bf80" kindref="member">Eigh(const cytnx::UniTensor &amp;Tin, const bool &amp;is_V, const bool &amp;row_v)</ref> and keeps the eigenpairs with the largest eigenvalue magnitudes, the counterpart of Svd_truncate for a Hermitian matrix (whose singular values are the eigenvalue magnitudes): a reduced density matrix is truncated to its dominant eigenbasis, per charge sector, in one call. The eigenvalues are ranked by <formula id="82">$ |\lambda| $</formula> across all blocks; the kept eigenvalues of every block stay in the ascending order Eigh returns.</para>
+<para>Performs <ref refid="namespacecytnx_1_1linalg_1a9f15e25a4048a604b9f5ed243443bf80" kindref="member">Eigh(const cytnx::UniTensor &amp;Tin, const bool &amp;is_V, const bool &amp;row_v)</ref> and keeps the eigenpairs with the largest eigenvalue magnitudes, the counterpart of Svd_truncate for a Hermitian matrix (whose singular values are the eigenvalue magnitudes): a reduced density matrix is truncated to its dominant eigenbasis, per charge sector, in one call. The eigenvalues are ranked by <formula id="68">$ |\lambda| $</formula> across all blocks; the kept eigenvalues of every block stay in the ascending order Eigh returns.</para>
 <para>When per-block floors do not alter the global magnitude selection, the block-sparse and dense paths select the same eigenvalue magnitudes. If the retained count is exactly <computeroutput>keepdim</computeroutput>, the reconstruction is an optimal rank-<computeroutput>keepdim</computeroutput> approximation in spectral norm (the Hermitian case of the Eckart-Young theorem). A cutoff can reduce that count; floors and exact degeneracy at the cut can increase it. Per-block floors are selection constraints and can exclude the unconstrained optimum even at the same retained count. Ranking by magnitude makes <computeroutput>return_err</computeroutput> report discarded approximation errors, rather than algebraic eigenvalues. To select the lowest or highest eigenvalues of a Hamiltonian, use Eigh and keep the wanted part of its ascending spectrum, or Lanczos with <computeroutput>which</computeroutput> set to &quot;SA&quot;/&quot;LA&quot;.</para>
 <para>Dense eigenvectors inherit Eigh&apos;s flattened row space and rowrank 1, including for higher-rank inputs. Block eigenvectors preserve the row-space bonds and rowrank.</para>
-<para>The truncation order is the same as in Svd_truncate (later constraints may be violated by earlier ones): 1) keep at least <computeroutput>min_blockdim</computeroutput> eigenpairs in each block (the overload with <computeroutput>min_blockdim</computeroutput>); 2) keep at most <computeroutput>keepdim</computeroutput> eigenpairs overall, except that an exact degeneracy of <formula id="82">$ |\lambda| $</formula> at the cut is kept entirely; 3) keep at least <computeroutput>mindim</computeroutput> eigenpairs; 4) drop eigenpairs with <formula id="82">$ |\lambda| $</formula> smaller than <computeroutput>err</computeroutput>.</para>
+<para>The truncation order is the same as in Svd_truncate (later constraints may be violated by earlier ones): 1) keep at least <computeroutput>min_blockdim</computeroutput> eigenpairs in each block (the overload with <computeroutput>min_blockdim</computeroutput>); 2) keep at most <computeroutput>keepdim</computeroutput> eigenpairs overall, except that an exact degeneracy of <formula id="68">$ |\lambda| $</formula> at the cut is kept entirely; 3) keep at least <computeroutput>mindim</computeroutput> eigenpairs; 4) drop eigenpairs with <formula id="68">$ |\lambda| $</formula> smaller than <computeroutput>err</computeroutput>.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -4256,7 +4212,7 @@ M = V D V^\dagger,
 <parametername direction="in">err</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the cutoff: eigenpairs with <formula id="82">$ |\lambda| $</formula> smaller than <computeroutput>err</computeroutput> are dropped </para>
+<para>the cutoff: eigenpairs with <formula id="68">$ |\lambda| $</formula> smaller than <computeroutput>err</computeroutput> are dropped </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -4272,7 +4228,7 @@ M = V D V^\dagger,
 <parametername direction="in">return_err</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded <formula id="82">$ |\lambda| $</formula>, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded <formula id="82">$ |\lambda| $</formula> in descending order, empty if none were discarded. </para>
+<para>selects the truncation information appended to the result: 0 appends nothing; 1 appends a rank-0 tensor containing the largest discarded <formula id="68">$ |\lambda| $</formula>, or zero if none were discarded; &gt;1 appends a rank-1 tensor containing all discarded <formula id="68">$ |\lambda| $</formula> in descending order, empty if none were discarded. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -4287,7 +4243,7 @@ M = V D V^\dagger,
 <simplesect kind="return"><para><parblock><para>[std::vector&lt;UniTensor&gt;]</para>
 <para><orderedlist>
 <listitem><para>The first <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> is a diagonal <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> containing the kept eigenvalues.</para>
-</listitem><listitem><para>If <computeroutput>is_V</computeroutput> is <emphasis>true</emphasis>, the eigenvector <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> follows; its last bond is the truncated eigen bond, so <formula id="83">$ V D V^\dagger $</formula> is the projection of <computeroutput>Tin</computeroutput> onto the kept eigenspace.</para>
+</listitem><listitem><para>If <computeroutput>is_V</computeroutput> is <emphasis>true</emphasis>, the eigenvector <ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> follows; its last bond is the truncated eigen bond, so <formula id="69">$ V D V^\dagger $</formula> is the projection of <computeroutput>Tin</computeroutput> onto the kept eigenspace.</para>
 </listitem><listitem><para>If <computeroutput>return_err</computeroutput> is nonzero, the discarded magnitudes are pushed back to the vector. </para>
 </listitem></orderedlist>
 </para>
@@ -4388,9 +4344,8 @@ unsigned int return_err, cytnx_uint64 mindim)</ref> </para>
 <para>eigen-value decomposition for generic square matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform eigen-value decomposition for generic square matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="42">$ M $</formula>, then the result will be:  <formula id="84">\[
-M = V D V^{-1},
-\]</formula> where <formula id="74">$ V $</formula> is a invertible matrix contains the eigen vectors, and <formula id="80">$ D $</formula> is a diagonal matrix contains the eigen values.</para>
+<para>This function will perform eigen-value decomposition for generic square matrix. Given a matrix <computeroutput>Tin</computeroutput> as <formula id="28">$ M $</formula>, then the result will be:   <formula id="70">\[M = V D V^{-1},
+\]</formula> where <formula id="60">$ V $</formula> is a invertible matrix contains the eigen vectors, and <formula id="66">$ D $</formula> is a diagonal matrix contains the eigen values.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -4420,7 +4375,7 @@ M = V D V^{-1},
 </simplesect>
 <simplesect kind="pre"><para>the <computeroutput>Tin</computeroutput> should be a square matrix. </para>
 </simplesect>
-<simplesect kind="warning"><para>The returned eigenvectors <formula id="74">$ V $</formula> are in general only invertible, NOT unitary: the reconstruction is <formula id="85">$ M = V D V^{-1} $</formula>, not <formula id="83">$ V D V^\dagger $</formula>. The underlying LAPACK geev routine does not orthonormalize the eigenvectors, so <formula id="74">$ V $</formula> is generally non-unitary even when <computeroutput>Tin</computeroutput> is Hermitian/normal. Use Eigh for a unitary eigen basis. </para>
+<simplesect kind="warning"><para>The returned eigenvectors <formula id="60">$ V $</formula> are in general only invertible, NOT unitary: the reconstruction is <formula id="71">$ M = V D V^{-1} $</formula>, not <formula id="69">$ V D V^\dagger $</formula>. The underlying LAPACK geev routine does not orthonormalize the eigenvectors, so <formula id="60">$ V $</formula> is generally non-unitary even when <computeroutput>Tin</computeroutput> is Hermitian/normal. Use Eigh for a unitary eigen basis. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -4480,8 +4435,7 @@ M = V D V^{-1},
 <para>perform trace over index. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform trace over index <computeroutput>axisA</computeroutput> and <computeroutput>axisB</computeroutput>. For example, if <computeroutput>Tn</computeroutput> is a rank-4 tensor <formula id="86">$ T $</formula>, then <computeroutput>axisA</computeroutput> = 0 and <computeroutput>axisB</computeroutput> = 2, then the result will be:  <formula id="87">\[
-\mathrm{Tr}_{j,l}(T) = \sum_{i,k} T_{i,j,k,l}
+<para>This function will perform trace over index <computeroutput>axisA</computeroutput> and <computeroutput>axisB</computeroutput>. For example, if <computeroutput>Tn</computeroutput> is a rank-4 tensor <formula id="72">$ T $</formula>, then <computeroutput>axisA</computeroutput> = 0 and <computeroutput>axisB</computeroutput> = 2, then the result will be:   <formula id="73">\[\mathrm{Tr}_{j,l}(T) = \sum_{i,k} T_{i,j,k,l}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tn</parametername>
@@ -4624,8 +4578,7 @@ M = V D V^{-1},
 <para>perform matrix multiplication on two tensors. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform matrix multiplication on two matrices (2-rank <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) <computeroutput>TL</computeroutput> and <computeroutput>TR</computeroutput>. The result will be:  <formula id="88">\[
-T = T_L T_R
+<para>This function will perform matrix multiplication on two matrices (2-rank <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>) <computeroutput>TL</computeroutput> and <computeroutput>TR</computeroutput>. The result will be:   <formula id="74">\[T = T_L T_R
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">TL</parametername>
@@ -4780,8 +4733,7 @@ T = T_L T_R
 <para>Element-wise (pseudo-)inverse. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs an element-wise inverse with clip. If <formula id="48">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.  <formula id="49">\[
-T_\text{out}[i] = \left\{
+<para>This function performs an element-wise inverse with clip. If <formula id="34">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.        <formula id="35">\[T_\text{out}[i] = \left\{
 \begin{array}{ll}
 1/(T_\text{in}[i]) &amp; \mathrm{if} \ |T_\text{in}[i]| &gt; \mathrm{clip} \\
 0 &amp; \mathrm{otherwise}
@@ -4807,7 +4759,7 @@ T_\text{out}[i] = \left\{
 <simplesect kind="return"><para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
 </simplesect>
 <simplesect kind="note"><para><orderedlist>
-<listitem><para>For complex type Tensors, the norm <formula id="50">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
+<listitem><para>For complex type Tensors, the norm <formula id="36">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
 </listitem><listitem><para>If Tin is integer type, it will automatically be promoted to Type.Double. </para>
 </listitem></orderedlist>
 </para>
@@ -4841,8 +4793,7 @@ T_\text{out}[i] = \left\{
 <para>Element-wise (pseudo-)inverse, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs an element-wise inverse with clip. If <formula id="48">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.  <formula id="51">\[
-T_\text{in}[i] \rightarrow \left\{
+<para>This function performs an element-wise inverse with clip. If <formula id="34">$ |T_\text{in}[i]| \le \mathrm{clip} $</formula>, then the new element is set to zero.        <formula id="37">\[T_\text{in}[i] \rightarrow \left\{
 \begin{array}{ll}
 1/(T_\text{in}[i]) &amp; \mathrm{if} \ |T_\text{in}[i]| &gt; \mathrm{clip} \\
 0 &amp; \mathrm{otherwise}
@@ -4868,7 +4819,7 @@ T_\text{in}[i] \rightarrow \left\{
 <simplesect kind="return"><para><ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> </para>
 </simplesect>
 <simplesect kind="note"><para><orderedlist>
-<listitem><para>For complex type Tensors, the norm <formula id="50">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
+<listitem><para>For complex type Tensors, the norm <formula id="36">$ \sqrt{Re^2 + Im^2} $</formula> is used to determine the clip.</para>
 </listitem><listitem><para>If Tin is integer type, it will automatically be promoted to Type.Double. </para>
 </listitem></orderedlist>
 </para>
@@ -4897,8 +4848,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Conjugate all the element in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function take the complex conjugate of all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:  <formula id="89">\[
-    T_{o}[i] = T_{in}[i]^*
+<para>This function take the complex conjugate of all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:   <formula id="75">\[    T_{o}[i] = T_{in}[i]^*
 \]</formula> Furthermore,<orderedlist>
 <listitem><para>if the input <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is complex, then return a new <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> with all the elements are conjugated.</para>
 </listitem><listitem><para>if the input <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> is real, then return a copy of input <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. <parameterlist kind="param"><parameteritem>
@@ -4960,8 +4910,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Exponential all the element in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Exponential on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:  <formula id="90">\[
-    T_{o}[i] = e^{T_{i}[i]}
+<para>This function will perform Exponential on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be:   <formula id="76">\[    T_{o}[i] = e^{T_{i}[i]}
 \]</formula> The output preserves the input&apos;s floating precision (Float stays Float, Double stays Double, ComplexFloat/ComplexDouble preserved); integer/bool inputs promote to Double. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
@@ -5095,7 +5044,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Take the power <computeroutput>p</computeroutput> of all elements in a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>. </para>
         </briefdescription>
         <detaileddescription>
-<para><formula id="46">\[ T_\text{out}[i] = (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
+<para><formula id="32">\[ T_\text{out}[i] = (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Tin</parametername>
 </parameternamelist>
@@ -5144,7 +5093,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Take the power <computeroutput>p</computeroutput> of all elements in a <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para><formula id="47">\[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
+<para><formula id="33">\[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="inout">Tin</parametername>
 </parameternamelist>
@@ -5189,7 +5138,7 @@ T_\text{in}[i] \rightarrow \left\{
 <para>Elementwise absolute value. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function will perform Elementwise absolute value on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be: <formula id="91">\[ T_{o}[i] = |T_{i}[i]| \]</formula> <parameterlist kind="param"><parameteritem>
+<para>This function will perform Elementwise absolute value on all the elements in <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> <computeroutput>Tin</computeroutput>. That is, the output will be: <formula id="77">\[ T_{o}[i] = |T_{i}[i]| \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Tin</parametername>
 </parameternamelist>
@@ -5844,8 +5793,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for Hermitian matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for Hermitian matrix, That is,  <formula id="92">\[
-    O = \exp{(aM + b)}
+<para>This function perform matrix exponential for Hermitian matrix, That is,   <formula id="78">\[    O = \exp{(aM + b)}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">in</parametername>
@@ -5897,9 +5845,8 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for Hermitian matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for Hermitian matrix, That is,  <formula id="93">\[
-      O = \exp{M}
-   \]</formula> <simplesect kind="pre"><para>the <computeroutput>in</computeroutput> should be a Hermitian matrix. </para>
+<para>This function perform matrix exponential for Hermitian matrix, That is,   <formula id="79">\[      O = \exp{M}
+\]</formula> <simplesect kind="pre"><para>the <computeroutput>in</computeroutput> should be a Hermitian matrix. </para>
 </simplesect>
 <simplesect kind="warning"><para>If <computeroutput>in</computeroutput> is not a Hermitian matrix, only the lower triangular matrix will be used. (This is strongly not recommended, please use <ref refid="namespacecytnx_1_1linalg_1a07b223a17f1b1daa8de5ad1e9dc1dd34" kindref="member">ExpM(const Tensor &amp;in)</ref> instead).</para>
 </simplesect>
@@ -5939,8 +5886,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for generic matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for generic matrix, That is,  <formula id="92">\[
-    O = \exp{(aM + b)}
+<para>This function perform matrix exponential for generic matrix, That is,   <formula id="78">\[    O = \exp{(aM + b)}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">in</parametername>
@@ -5990,8 +5936,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>perform matrix exponential for generic matrix </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform matrix exponential for generic matrix, That is,  <formula id="94">\[
-    O = \exp{M}
+<para>This function perform matrix exponential for generic matrix, That is,   <formula id="80">\[    O = \exp{M}
 \]</formula> <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">in</parametername>
@@ -6152,7 +6097,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="81">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -6162,8 +6107,8 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem></orderedlist>
 </para>
 </simplesect>
-<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is <formula id="96">$[1.0+0i,
-0.7+0.1i, 0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which=&quot;LI&quot;</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="97">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="98">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
+<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is  <formula id="82">$[1.0+0i,
+0.7+0.1i, 0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which="LI"</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="83">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="84">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -6312,7 +6257,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem><listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="81">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -6323,8 +6268,8 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem></orderedlist>
 </para>
 </simplesect>
-<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is <formula id="99">$[1.0+0i, 0.7+0.1i,
-0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which=&quot;LI&quot;</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="97">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="98">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
+<simplesect kind="attention"><para>For the <computeroutput>which</computeroutput> equal to <computeroutput>SI</computeroutput> or <computeroutput>LI</computeroutput>, and the data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> is real rather than complex, the output of eigenvectors are same as <computeroutput>ARPACK</computeroutput>. For example, if the full spectrum is  <formula id="85">$[1.0+0i, 0.7+0.1i,
+0.7-0.1i, 0.2+0.2i, 0.2-0.2i]$</formula>, and you choose <computeroutput>which="LI"</computeroutput>, <computeroutput>k=2</computeroutput>, then the output eigenvalues are <formula id="83">$[0.2+0.2i, 0.2-0.2i]$</formula> rather than <formula id="84">$[0.2+0.2i, 0.7+0.1i]$</formula> (as ARPACK prioritizes returning complete complex conjugate pairs for real operators). </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -6626,7 +6571,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="81">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -6783,7 +6728,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </listitem><listitem><para>The data type of <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> should be float and same as input inital vector.</para>
 </listitem><listitem><para>1 &lt;= <computeroutput>k</computeroutput> &lt;= nx. Where nx is the dimension of the vector.</para>
 </listitem><listitem><para><computeroutput>Tin</computeroutput> should be a rank-1 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref>, and the dimension need to same as LinOp-&gt;nx().</para>
-</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="95">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
+</listitem><listitem><para>If <computeroutput>ncv</computeroutput> <formula id="81">$ \neq 0$</formula>, then k+2&lt;= <computeroutput>ncv</computeroutput>&lt;= dim, where dim = LinOp-&gt;nx(). </para>
 </listitem></orderedlist>
 </para>
 </simplesect>
@@ -7281,7 +7226,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para>[eigvals (<ref refid="classcytnx_1_1UniTensor_1a8e4a44ff5b17788458dc8cf2642f811f" kindref="member">UniTensor::Dense</ref>), eigvecs (<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>)(option)] </para>
+<simplesect kind="return"><para>[eigvals (UniTensor::Dense), eigvecs (<ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref>)(option)] </para>
 </simplesect>
 <simplesect kind="note"><para>To use, define a linear operator with <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class either by assign a custom function or create a class that inherit <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> (see <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> for further details) </para>
 </simplesect>
@@ -7325,19 +7270,17 @@ This function will return a diagonal tensor with diagonal elements provided as <
           <defval>false</defval>
         </param>
         <briefdescription>
-<para>Perform the Lanczos algorithm for hermitian operator <formula id="100">$H$</formula> to approximate <formula id="101">$e^{H\tau}v$</formula>. </para>
+<para>Perform the Lanczos algorithm for hermitian operator <formula id="86">$H$</formula> to approximate <formula id="87">$e^{H\tau}v$</formula>. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function perform the Lanczos-like algorithm for hermitian linear operator <formula id="100">$H$</formula> to approximate  <formula id="102">\[
-            e^{H\tau}v
-            \]</formula> and return the state <formula id="103">$w$</formula> such that  <formula id="104">\[
-            |\exp(H\tau)v - w| &lt; \delta.
-            \]</formula> Here <formula id="105">$v$</formula> is a given vector or a state. <parameterlist kind="param"><parameteritem>
+<para>This function perform the Lanczos-like algorithm for hermitian linear operator <formula id="86">$H$</formula> to approximate   <formula id="88">\[            e^{H\tau}v
+\]</formula> and return the state <formula id="89">$w$</formula> such that   <formula id="90">\[            |\exp(H\tau)v - w| &lt; \delta.
+\]</formula> Here <formula id="91">$v$</formula> is a given vector or a state. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">Hop</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>the Linear Operator defined by <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class or it&apos;s inheritance (see <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref>). The operation method <formula id="106">$Hv$</formula> need to be defined in it. </para>
+<para>the Linear Operator defined by <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class or it&apos;s inheritance (see <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref>). The operation method <formula id="92">$Hv$</formula> need to be defined in it. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7345,7 +7288,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <parametername direction="in">v</parametername>
 </parameternamelist>
 <parameterdescription>
-<para>The input vector (or state). The norm <formula id="107">$|v|$</formula> should be equal to 1. </para>
+<para>The input vector (or state). The norm <formula id="93">$|v|$</formula> should be equal to 1. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7361,7 +7304,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <parametername direction="in">CvgCrit</parametername>
 </parameternamelist>
 <parameterdescription>
-<para><formula id="108">$\delta$</formula>, the convergence criterion. </para>
+<para><formula id="94">$\delta$</formula>, the convergence criterion. </para>
 </parameterdescription>
 </parameteritem>
 <parameteritem>
@@ -7381,11 +7324,11 @@ This function will return a diagonal tensor with diagonal elements provided as <
 </parameterdescription>
 </parameteritem>
 </parameterlist>
-<simplesect kind="return"><para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="103">$w$</formula> </para>
+<simplesect kind="return"><para><ref refid="classcytnx_1_1UniTensor" kindref="compound">UniTensor</ref> <formula id="89">$w$</formula> </para>
 </simplesect>
 <simplesect kind="note"><para>To use, define a linear operator with <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> class either by assign a custom function or create a class that inherit <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> (see <ref refid="classcytnx_1_1LinOp" kindref="compound">LinOp</ref> for further details) </para>
 </simplesect>
-<simplesect kind="warning"><para>User need to guarantee that the input operator <formula id="100">$H$</formula> is Hermitian , and the exponetiate <formula id="109">$e^{-H\tau}$</formula> will converged. Ohterwise, the function will return the wrong results without any warning. </para>
+<simplesect kind="warning"><para>User need to guarantee that the input operator <formula id="86">$H$</formula> is Hermitian , and the exponetiate <formula id="95">$e^{-H\tau}$</formula> will converged. Ohterwise, the function will return the wrong results without any warning. </para>
 </simplesect>
 </para>
         </detaileddescription>
@@ -7416,7 +7359,7 @@ This function will return a diagonal tensor with diagonal elements provided as <
 <para>Return the least-squares solution to a linear matrix equation. </para>
         </briefdescription>
         <detaileddescription>
-<para>Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the &quot;exact&quot; solution of the equation. Else, x minimizes the Euclidean 2-norm <formula id="110">$ || b - a x ||_2 $</formula>.</para>
+<para>Computes the vector x that approximatively solves the equation A @ x = b. The equation may be under-, well-, or over-determined independent columns. If a is square and of full rank, then x (but for round-off error) is the &quot;exact&quot; solution of the equation. Else, x minimizes the Euclidean 2-norm <formula id="96">$ || b - a x ||_2 $</formula>.</para>
 <para><parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">A</parametername>
@@ -7544,12 +7487,11 @@ This function will return a diagonal tensor with diagonal elements provided as <
           <declname>c</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm, performing <formula id="111">$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} $</formula>, inplacely. </para>
+<para>Blas Gemm, performing <formula id="97">$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} $</formula>, inplacely. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs  <formula id="112">\[
-\textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c},
-\]</formula> where <formula id="113">$ \textbf{x},\textbf{y},\textbf{c} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a, b are Scalars. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput> <computeroutput>b</computeroutput> <computeroutput>c</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>This function performs   <formula id="98">\[\textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c},
+\]</formula> where <formula id="99">$ \textbf{x},\textbf{y},\textbf{c} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a, b are Scalars. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput> <computeroutput>b</computeroutput> <computeroutput>c</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">a</parametername>
 </parameternamelist>
@@ -7615,12 +7557,11 @@ This function will return a diagonal tensor with diagonal elements provided as <
           <declname>y</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm, performing <formula id="114">$ a\textbf{x}\textbf{y} -&gt; $</formula> return. </para>
+<para>Blas Gemm, performing <formula id="100">$ a\textbf{x}\textbf{y} -&gt; $</formula> return. </para>
         </briefdescription>
         <detaileddescription>
-<para>This function performs  <formula id="115">\[
-return = a\textbf{x}\textbf{y},
-\]</formula> where <formula id="116">$ \textbf{x},\textbf{y} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a is Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>This function performs   <formula id="101">\[return = a\textbf{x}\textbf{y},
+\]</formula> where <formula id="102">$ \textbf{x},\textbf{y} $</formula> are rank-2 <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> and a is Scalar. The dtype of return <ref refid="classcytnx_1_1Tensor" kindref="compound">Tensor</ref> will be the strongest among <computeroutput>x</computeroutput>, <computeroutput>y</computeroutput> and <computeroutput>a</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">a</parametername>
 </parameternamelist>
@@ -7684,7 +7625,7 @@ return = a\textbf{x}\textbf{y},
           <declname>group_size</declname>
         </param>
         <briefdescription>
-<para>Blas Gemm_Batch, performing many(batch) <formula id="117">$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
+<para>Blas Gemm_Batch, performing many(batch)  <formula id="103">$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
 \beta\textbf{c} $</formula>, inplacely. You do not need to consider the row-major or column-major, just provide the correct shape. </para>
         </briefdescription>
         <detaileddescription>

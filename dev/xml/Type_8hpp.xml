@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="Type_8hpp" kind="file" language="C++">
     <compoundname>Type.hpp</compoundname>
     <includes local="no">complex</includes>
@@ -328,8 +328,8 @@
     </sectiondef>
     <sectiondef kind="var">
       <memberdef kind="variable" id="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" prot="public" static="no" constexpr="yes" mutable="no">
-        <type>constexpr Type_class</type>
-        <definition>constexpr Type_class Type</definition>
+        <type>Type_class</type>
+        <definition>Type_class Type</definition>
         <argsstring></argsstring>
         <name>Type</name>
         <briefdescription>
@@ -341,56 +341,56 @@
 </programlisting></para>
 <para>The supported enumerations are as following:</para>
 <para><table rows="13" cols="2"><row>
-<entry thead="yes"><para>enumeration   </para>
-</entry><entry thead="yes"><para>description    </para>
+<entry thead="yes"><para>enumeration  </para>
+</entry><entry thead="yes"><para>description  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Void   </para>
-</entry><entry thead="no"><para>the data type is void (nothing)    </para>
+<entry thead="no"><para>Void  </para>
+</entry><entry thead="no"><para>the data type is void (nothing)  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>ComplexDouble   </para>
-</entry><entry thead="no"><para>complex double type with 128 bits    </para>
+<entry thead="no"><para>ComplexDouble  </para>
+</entry><entry thead="no"><para>complex double type with 128 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>ComplexFloat   </para>
-</entry><entry thead="no"><para>complex float type with 64 bits    </para>
+<entry thead="no"><para>ComplexFloat  </para>
+</entry><entry thead="no"><para>complex float type with 64 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Double   </para>
-</entry><entry thead="no"><para>double float type with 64 bits    </para>
+<entry thead="no"><para>Double  </para>
+</entry><entry thead="no"><para>double float type with 64 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Float   </para>
-</entry><entry thead="no"><para>single float type with 32 bits    </para>
+<entry thead="no"><para>Float  </para>
+</entry><entry thead="no"><para>single float type with 32 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Int64   </para>
-</entry><entry thead="no"><para>long long integer type with 64 bits    </para>
+<entry thead="no"><para>Int64  </para>
+</entry><entry thead="no"><para>long long integer type with 64 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Uint64   </para>
-</entry><entry thead="no"><para>unsigned long long integer type with 64 bits    </para>
+<entry thead="no"><para>Uint64  </para>
+</entry><entry thead="no"><para>unsigned long long integer type with 64 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Int32   </para>
-</entry><entry thead="no"><para>integer type with 32 bits    </para>
+<entry thead="no"><para>Int32  </para>
+</entry><entry thead="no"><para>integer type with 32 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Uint32   </para>
-</entry><entry thead="no"><para>unsigned integer type with 32 bits    </para>
+<entry thead="no"><para>Uint32  </para>
+</entry><entry thead="no"><para>unsigned integer type with 32 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Int16   </para>
-</entry><entry thead="no"><para>short integer type with 16 bits    </para>
+<entry thead="no"><para>Int16  </para>
+</entry><entry thead="no"><para>short integer type with 16 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Uint16   </para>
-</entry><entry thead="no"><para>undigned short integer with 16 bits    </para>
+<entry thead="no"><para>Uint16  </para>
+</entry><entry thead="no"><para>undigned short integer with 16 bits  </para>
 </entry></row>
 <row>
-<entry thead="no"><para>Bool   </para>
-</entry><entry thead="no"><para>boolean type   </para>
+<entry thead="no"><para>Bool  </para>
+</entry><entry thead="no"><para>boolean type  </para>
 </entry></row>
 </table>
 </para>
@@ -940,8 +940,9 @@
 <codeline lineno="520"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TL,<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>TR&gt;</highlight></codeline>
 <codeline lineno="521"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">type_promote_from_pointer_t<sp/>=<sp/></highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>type_promote_from_pointer&lt;TL,<sp/>TR&gt;::type;</highlight></codeline>
 <codeline lineno="522"><highlight class="normal"></highlight></codeline>
-<codeline lineno="523"><highlight class="normal"><sp/><sp/>};<sp/><sp/></highlight><highlight class="comment">//<sp/>Type_class</highlight></codeline>
-<codeline lineno="525"></codeline>
+<codeline lineno="523"><highlight class="normal"><sp/><sp/>};<sp/><sp/></highlight><highlight class="comment">//<sp/>Type_class</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="525"><highlight class="normal"></highlight></codeline>
+<codeline lineno="552"><highlight class="normal"></highlight></codeline>
 <codeline lineno="553" refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">constexpr</highlight><highlight class="normal"><sp/>Type_class<sp/><ref refid="Type_8hpp_1aca659129dad1fd53a88bfce6ac7f8743" kindref="member">Type</ref>;</highlight></codeline>
 <codeline lineno="554"><highlight class="normal"></highlight></codeline>
 <codeline lineno="555"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">extern</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><ref refid="Type_8hpp_1a7730a97d285d53e329a7b5e9d74ad05c" kindref="member">__blasINTsize__</ref>;</highlight></codeline>

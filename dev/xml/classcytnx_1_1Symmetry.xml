@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
   <compounddef id="classcytnx_1_1Symmetry" kind="class" language="C++" prot="public">
     <compoundname>cytnx::Symmetry</compoundname>
     <includes refid="Symmetry_8hpp" local="no">Symmetry.hpp</includes>
@@ -17,10 +17,12 @@
 <para><heading level="3">valid qnum value range:</heading>
 </para>
 <para><verbatim>\f$(-\infty , \infty)\f$
-</verbatim> <heading level="3">combine rule:</heading>
+</verbatim></para>
+<para><heading level="3">combine rule:</heading>
 </para>
 <para><verbatim>Q + Q
-</verbatim> <heading level="3">description:</heading>
+</verbatim></para>
+<para><heading level="3">description:</heading>
 </para>
 <para>create a new U1 symmetry object that serves as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</para>
 <para><heading level="2">Example:</heading>
@@ -160,18 +162,20 @@ Deg&gt;&gt;    1   1   2   2   3   2   2   2   2   1   1   1
           <declname>n</declname>
         </param>
         <briefdescription>
-<para>create a Zn discrete symmetry object with <formula id="119">$n\in\mathbb{N}$</formula> </para>
+<para>create a Zn discrete symmetry object with <formula id="105">$n\in\mathbb{N}$</formula> </para>
         </briefdescription>
         <detaileddescription>
 <para><heading level="3">valid qnum value range:</heading>
 </para>
 <para><verbatim>\f$[0 , n)\f$
-</verbatim> <heading level="3">combine rule:</heading>
+</verbatim></para>
+<para><heading level="3">combine rule:</heading>
 </para>
 <para><verbatim>(Q + Q)%n
-</verbatim> <heading level="3">description:</heading>
+</verbatim></para>
+<para><heading level="3">description:</heading>
 </para>
-<para>create a new Zn discrete symmetry object with integer <formula id="40">$ n $</formula> that serves as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</para>
+<para>create a new Zn discrete symmetry object with integer <formula id="26">$ n $</formula> that serves as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined.</para>
 <para><heading level="2">Example:</heading>
 </para>
 <para><heading level="3">c++ API:</heading>
@@ -377,7 +381,8 @@ Deg&gt;&gt;    3   3   3   3
 <para><heading level="3">combine rule:</heading>
 </para>
 <para><verbatim>(Q + Q)%2
-</verbatim> <heading level="3">description:</heading>
+</verbatim></para>
+<para><heading level="3">description:</heading>
 </para>
 <para>create a new fermionic parity symmetry object that serves as a generator. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined. </para>
         </detaileddescription>
@@ -398,10 +403,12 @@ Deg&gt;&gt;    3   3   3   3
 <para><heading level="3">valid qnum value range:</heading>
 </para>
 <para><verbatim>\f$(-\infty , \infty)\f$
-</verbatim> <heading level="3">combine rule:</heading>
+</verbatim></para>
+<para><heading level="3">combine rule:</heading>
 </para>
 <para><verbatim>Q + Q
-</verbatim> <heading level="3">description:</heading>
+</verbatim></para>
+<para><heading level="3">description:</heading>
 </para>
 <para>create a new fermionic occupation number object that serves as a generator. This is a U1 symmetry with parity defined as EVEN for even occupation numbers and ODD for odd occupation numbers. The symmetry object is a property of <ref refid="classcytnx_1_1Bond" kindref="compound">Bond </ref>. It is used to identify the symmetry of the quantum number set, as well as providing the combining rule for the quantum number when Bonds are combined. </para>
         </detaileddescription>
@@ -885,7 +892,7 @@ True
 <para>Apply reverse rule of current symmetry to a given quantum number and store in parameter <computeroutput>out</computeroutput>. </para>
         </briefdescription>
         <detaileddescription>
-<para>that means, <formula id="120">$ o = -i $</formula>, where <formula id="121">$ o $</formula> is the output quantum number <computeroutput>out</computeroutput>, and <formula id="122">$ i $</formula> is the input quantum number <computeroutput>in</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>that means, <formula id="106">$ o = -i $</formula>, where <formula id="107">$ o $</formula> is the output quantum number <computeroutput>out</computeroutput>, and <formula id="108">$ i $</formula> is the input quantum number <computeroutput>in</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="out">out</parametername>
 </parameternamelist>
@@ -922,7 +929,7 @@ True
 <para>Apply reverse rule of current symmetry to a given quantum number and return the result. </para>
         </briefdescription>
         <detaileddescription>
-<para>that means, <formula id="120">$ o = -i $</formula>, where <formula id="121">$ o $</formula> is the reverse quantum number, and <formula id="122">$ i $</formula> is the input quantum number <computeroutput>in</computeroutput>. <parameterlist kind="param"><parameteritem>
+<para>that means, <formula id="106">$ o = -i $</formula>, where <formula id="107">$ o $</formula> is the reverse quantum number, and <formula id="108">$ i $</formula> is the input quantum number <computeroutput>in</computeroutput>. <parameterlist kind="param"><parameteritem>
 <parameternamelist>
 <parametername direction="in">in</parametername>
 </parameternamelist>

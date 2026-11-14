@@ -1,9 +1,9 @@
 <map id="include/algo.hpp" name="include/algo.hpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="9,5,139,31"/>
-<area shape="rect" id="Node000002" href="$cytnx_8hpp.html" title=" " alt="" coords="5,79,143,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,44,77,79,71,79,71,44"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="131,75,157,79,166,84,169,91,164,100,152,106,117,107,117,101,151,100,161,96,164,91,162,87,155,84,130,80"/>
-<area shape="rect" id="Node000003" href="$ncon_8hpp.html" title=" " alt="" coords="8,152,140,177"/>
-<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="68,118,70,152,64,152,63,118"/>
-<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="80,139,78,104,84,104,85,138"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="9,5,138,33"/>
+<area shape="rect" id="Node000002" href="$cytnx_8hpp.html" title=" " alt="" coords="5,81,142,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,46,76,81,71,80,73,51"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="157,82,165,87,168,95,161,106,143,111,141,106,158,102,163,95,161,91,157,87"/>
+<area shape="rect" id="Node000003" href="$ncon_8hpp.html" title=" " alt="" coords="8,157,139,184"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="67,122,69,157,64,156,63,126"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="80,140,79,111,82,107,85,142"/>
 </map>
