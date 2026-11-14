@@ -126,6 +126,11 @@ Green locally before opening a PR. CI enforces:
 - Small, single-purpose commits following the
   [Conventional Commits](https://www.conventionalcommits.org) standard:
   `fix(linalg): …`, `refactor(Storage): …`, `test(Type): …`.
+- **Stacked PRs:** when you update a branch that another PR is based on (new
+  commits or a rebase), update the PRs stacked on it in the same step. Do not
+  rebase or force-push a branch that someone else may have pulled or is working
+  on without asking them first. State the dependency in the child's PR body
+  ("stacked on #N; merge after #N").
 - Attribute agent-authored commits with a `Co-Authored-By:` trailer naming the
   agent. It is set when the commit is written and is **not checkable from a
   diff** — reviewers must not verify or flag it.
