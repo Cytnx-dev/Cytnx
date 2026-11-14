@@ -265,6 +265,8 @@ namespace krylov_dtype_bm {
     ->Unit(benchmark::kMillisecond);
 
 #ifdef UNI_GPU
+  // Lanczos_Exp has no GPU registration: it rejects CUDA devices ("Lanczos_Exp still does not
+  // support cuda devices").
   BENCHMARK_CAPTURE(bm_sandwich_matvec, gpu_float, true, true)
     ->Arg(1024)
     ->Arg(2048)
@@ -297,14 +299,8 @@ namespace krylov_dtype_bm {
     ->Arg(256)
     ->Arg(512)
     ->Unit(benchmark::kMillisecond);
-  BENCHMARK_CAPTURE(bm_lanczos_exp_unitensor, gpu_float, true, true)
-    ->Arg(256)
-    ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
-  BENCHMARK_CAPTURE(bm_lanczos_exp_unitensor, gpu_double, true, false)
-    ->Arg(256)
-    ->Arg(512)
-    ->Unit(benchmark::kMillisecond);
+  ->Arg(256)->Arg(512)->Unit(benchmark::kMillisecond);
+  ->Arg(256)->Arg(512)->Unit(benchmark::kMillisecond);
 #endif  // UNI_GPU
 
 }  // namespace krylov_dtype_bm
