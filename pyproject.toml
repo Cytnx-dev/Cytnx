@@ -61,6 +61,9 @@ test = [
     # Statistical goodness-of-fit tests (kstest, cramervonmises, chisquare)
     # for the random-distribution pytests.
     "scipy",
+    # Exercises the release-manifest rewrite tests without making tomlkit a
+    # runtime dependency of either cytnx distribution.
+    "tomlkit",
 ]
 # Tooling for collecting C++ coverage from the build directory. Pure
 # Python and works against any GCC/Clang-produced .gcno/.gcda pair.
