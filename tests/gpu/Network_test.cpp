@@ -131,10 +131,10 @@ namespace cytnx {
         const bool is_complex = IsComplexDtype(dtype);
         Tensor tensor = zeros(shape, is_complex ? Type.ComplexDouble : Type.Double);
         std::vector<cytnx_uint64> locator(shape.size(), 0);
-        cytnx_uint64 total = 1;
-        for (cytnx_uint64 extent : shape) total *= extent;
-        for (cytnx_uint64 flat = 0; flat < total; flat++) {
-          cytnx_uint64 rest = flat;
+        std::size_t total = 1;
+        for (std::size_t extent : shape) total *= extent;
+        for (std::size_t flat = 0; flat < total; flat++) {
+          std::size_t rest = flat;
           for (std::size_t axis = shape.size(); axis-- > 0;) {
             locator[axis] = rest % shape[axis];
             rest /= shape[axis];
@@ -331,6 +331,59 @@ namespace cytnx {
           UniTensor res =
             Network::Contract(MakeChain(dtype), "e;b,a", {"A", "B", "C"}, "(A,(B,C))").Launch();
           ExpectChainResult(res, dtype, {"e", "b", "a"}, 1, ChainExpectedFn(dtype));
+        }
+      }
+
+      // A closed network: every leg is contracted, so the result is a rank-0 UniTensor holding
+      // sum over i and j of S1(i,j) S2(j,i).
+      std::vector<UniTensor> MakeClosedPair(unsigned int dtype) {
+        Tensor S1 = MakeTensor({kDimC, kDimD}, dtype,
+                               [](const std::vector<cytnx_uint64>& loc, bool is_complex) {
+                                 return ChainElemB(loc[0], loc[1], is_complex);
+                               });
+        Tensor S2 = MakeTensor({kDimD, kDimC}, dtype,
+                               [](const std::vector<cytnx_uint64>& loc, bool is_complex) {
+                                 return ChainElemA(loc[0], loc[1], 1, is_complex);
+                               });
+        return {UniTensor(S1.to(Device.cuda), false, -1, {"i", "j"}),
+                UniTensor(S2.to(Device.cuda), false, -1, {"j", "i"})};
+      }
+
+      void ExpectClosedPairResult(const UniTensor& res, unsigned int dtype) {
+        EXPECT_EQ(res.dtype(), dtype);
+        EXPECT_EQ(res.device(), Device.cuda);
+        EXPECT_TRUE(res.labels().empty());
+        EXPECT_EQ(res.rowrank(), 0);
+        ASSERT_TRUE(res.shape().empty());
+
+        const bool is_complex = IsComplexDtype(dtype);
+        std::complex<double> expected = 0.0;
+        for (cytnx_uint64 i = 0; i < kDimC; i++) {
+          for (cytnx_uint64 j = 0; j < kDimD; j++) {
+            expected += ChainElemB(i, j, is_complex) * ChainElemA(j, i, 1, is_complex);
+          }
+        }
+        const bool is_single = dtype == Type.ComplexFloat || dtype == Type.Float;
+        const std::complex<double> got =
+          res.to(Device.cpu).get_block().astype(Type.ComplexDouble).item<cytnx_complex128>();
+        EXPECT_LE(std::abs(got - expected), is_single ? 1e-5 : 1e-12)
+          << "got " << got << ", expected " << expected;
+      }
+
+      TEST_F(NetworkTest, GpuNetworkDenseScalarOutput) {
+        for (unsigned int dtype : kFloatDtypes) {
+          SCOPED_TRACE(Type.getname(dtype));
+          auto net = Network();
+          net.FromString({"S1: i,j", "S2: j,i", "TOUT:"});
+          net.PutUniTensors({"S1", "S2"}, MakeClosedPair(dtype));
+          ExpectClosedPairResult(net.Launch(), dtype);
+        }
+      }
+
+      TEST_F(NetworkTest, GpuNetworkStaticContractScalarOutput) {
+        for (unsigned int dtype : kFloatDtypes) {
+          SCOPED_TRACE(Type.getname(dtype));
+          ExpectClosedPairResult(Network::Contract(MakeClosedPair(dtype), "").Launch(), dtype);
         }
       }
 
