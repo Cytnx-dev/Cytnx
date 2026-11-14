@@ -232,7 +232,33 @@ jobs:
         CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || env.HOST_CCACHE_DIR }}
         CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
-        CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
+        # cibuildwheel installs each repaired wheel into a fresh virtualenv
+        # and runs this from a temporary directory outside the checkout, so
+        # `import cytnx` can only resolve to the wheel. A non-zero exit fails
+        # this job, and both publish jobs `needs` it.
+        #   1. tools/artifact_smoke_test.py imports cytnx first thing in a
+        #      fresh interpreter, checks the wheel and runtime versions, and
+        #      runs a small numerical smoke test.
+        #   2. The Python suite runs against the installed wheel. Left out:
+        #      pytests/example (reads the example/ sources relative to the
+        #      checkout), the release-tooling tests (they test tools/, not the
+        #      wheel, and read a pyproject.toml the nightly stamping has
+        #      rewritten; release_tools_test.py arrives with #1239;
+        #      version_test.py is superseded by step 1, which also knows
+        #      the nightly suffix), and random_distribution_test.py
+        #      (needs scipy, which has no wheel for every interpreter built
+        #      here).
+        #   3. The ccache statistics check stays as an extra diagnostic.
+        CIBW_TEST_REQUIRES: pytest
+        CIBW_TEST_COMMAND: >-
+          python {project}/tools/artifact_smoke_test.py --version-cmake {project}/version.cmake &&
+          python -m pytest -p no:cacheprovider {project}/pytests
+          --ignore={project}/pytests/example
+          --ignore={project}/pytests/version_test.py
+          --ignore={project}/pytests/prune_nightly_wheels_test.py
+          --ignore={project}/pytests/release_tools_test.py
+          --ignore={project}/pytests/random_distribution_test.py &&
+          python {project}/tools/validate_ccache_stats.py
         # Compile HPTT's hand-vectorized kernels for the architecture this
         # wheel targets. Every matrix entry builds natively (cibuildwheel's
         # default CIBW_ARCHS=auto), so runner.arch names the wheel's target:
