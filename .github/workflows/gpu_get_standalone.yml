@@ -8,6 +8,8 @@ on:
       - '.github/workflows/gpu_get_standalone.yml'
       - 'tools/gpu_get_benchmark/**'
       - 'benchmarks/gpu/Get_contiguous_double_bm.cpp'
+      - 'benchmarks/gpu/Get_contiguous_double_multidim.inc'
+      - 'benchmarks/gpu/analyze_get_results.py'
       - 'benchmarks/benchmarks_main.cpp'
       - 'src/backend/utils_internal_gpu/**'
       - 'include/**'
@@ -20,14 +22,15 @@ jobs:
   BuildStandalone:
     runs-on: ubuntu-24.04
     container:
-      image: nvidia/cuda:12.8.1-devel-ubuntu24.04
+      image: nvidia/cuda:12.8.1-devel-ubuntu22.04
     steps:
       - uses: actions/checkout@v4
       - name: Install CMake and build tools
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            cmake ninja-build g++ git ca-certificates curl libboost-dev
+            ninja-build g++ git ca-certificates curl libboost-dev binutils python3-pip
+          python3 -m pip install 'cmake>=3.25,<4'
       - name: Configure and build S0-S4
         run: |
           cmake -S tools/gpu_get_benchmark -B build/gpu-get -G Ninja \
@@ -38,6 +41,16 @@ jobs:
       - name: Package standalone benchmark
         run: |
           mkdir -p dist
+          python3 - <<'PY'
+          import re, subprocess
+          binary = 'build/gpu-get/gpu_get_benchmark'
+          symbols = subprocess.check_output(['objdump', '-T', binary], text=True)
+          versions = [tuple(map(int, m)) for m in re.findall(r'GLIBC_(\d+)\.(\d+)', symbols)]
+          assert versions, 'Missing GLIBC symbol version information'
+          maximum = max(versions)
+          print('Maximum required GLIBC version:', '.'.join(map(str, maximum)), flush=True)
+          assert maximum <= (2, 35), f'Artifact needs GLIBC {maximum}, incompatible with Ubuntu 22.04-class Kaggle runtimes'
+          PY
           cp build/gpu-get/gpu_get_benchmark dist/
           cp benchmarks/gpu/kaggle_run.sh dist/
           cp benchmarks/gpu/analyze_get_results.py dist/
