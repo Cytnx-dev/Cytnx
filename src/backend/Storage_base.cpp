@@ -4,6 +4,11 @@
 #include "utils_internal_interface.hpp"
 
 namespace cytnx {
+  // Declared in Scalar.hpp for the then-incomplete Storage_base (see there). Forward to the
+  // intrusive_ptr_base hooks.
+  void intrusive_ptr_add_ref(Storage_base *s) { intrusive_ptr_add_ref<Storage_base>(s); }
+  void intrusive_ptr_release(Storage_base *s) { intrusive_ptr_release<Storage_base>(s); }
+
   void Storage_base::Init(const unsigned long long &len_in, const int &device,
                           const bool &init_zero) {}
 
