@@ -92,18 +92,19 @@ Python, and create it with a Python version from `Supported platforms`_:
 .. note::
 
     ``pip`` cannot be told to prefer one index over another: with
-    ``--extra-index-url`` it considers every index together and picks the
-    highest version, and a nightly such as ``1.1.1.dev202610071206`` sorts
-    *below* the ``1.1.1`` release. So ``pip install --pre --extra-index-url
-    ...`` quietly installs the release, not the nightly. To get a nightly with
-    ``pip``, pin one exactly::
+    ``--extra-index-url`` it considers every index together and installs the
+    highest version it finds, and pre-releases only count with ``--pre``.
+    Nightlies are therefore versioned past the newest release (for example
+    ``1.1.2.devYYYYMMDDHHMM`` while ``1.1.1`` is the newest release), so
+    with ``--pre`` the nightly wins::
 
-        pip install --extra-index-url https://pypi.anaconda.org/cytnx-nightly-wheels/simple \
-            cytnx==1.1.1.devYYYYMMDDHHMM
+        pip install --pre --extra-index-url https://pypi.anaconda.org/cytnx-nightly-wheels/simple cytnx
 
+    Without ``--pre`` the same command installs the release. To hold a
+    particular nightly, pin it exactly (``cytnx==1.1.2.devYYYYMMDDHHMM``,
     picking a version from the `nightly index
-    <https://pypi.anaconda.org/cytnx-nightly-wheels/simple/cytnx/>`_. Pixi and
-    ``uv`` both resolve a named index directly and need no such pin.
+    <https://pypi.anaconda.org/cytnx-nightly-wheels/simple/cytnx/>`_). Pixi
+    and ``uv`` both resolve a named index directly and need neither flag.
 
 
 Supported platforms
