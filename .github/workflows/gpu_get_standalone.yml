@@ -27,7 +27,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-            cmake ninja-build g++ git ca-certificates curl
+            cmake ninja-build g++ git ca-certificates curl libboost-dev
       - name: Configure and build S0-S4
         run: |
           cmake -S tools/gpu_get_benchmark -B build/gpu-get -G Ninja \
