@@ -299,8 +299,6 @@ namespace krylov_dtype_bm {
     ->Arg(256)
     ->Arg(512)
     ->Unit(benchmark::kMillisecond);
-  ->Arg(256)->Arg(512)->Unit(benchmark::kMillisecond);
-  ->Arg(256)->Arg(512)->Unit(benchmark::kMillisecond);
 #endif  // UNI_GPU
 
 }  // namespace krylov_dtype_bm
