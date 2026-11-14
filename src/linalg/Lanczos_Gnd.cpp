@@ -4,10 +4,14 @@
 #include "Tensor.hpp"
 #include "LinOp.hpp"
 
+#include <algorithm>
 #include <cfloat>
+#include <cmath>
 #include <vector>
 #include "Tensor.hpp"
 #include <iomanip>
+
+#include "Lanczos_Gnd_breakdown.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -19,17 +23,25 @@ namespace cytnx {
       out.clear();
       //[require] Tin should be provided!
 
-      Tensor psi_1 = Tin.clone() / double(Tin.norm());
+      const double tin_norm = double(Tin.norm());
+      cytnx_error_msg(!(tin_norm > 0), "[ERROR][Lanczos] the initial vector Tin must be nonzero.%s",
+                      "\n");
+
+      // The Lanczos coefficients of a Hermitian operator are real.
+      const unsigned int coeff_dtype = Type.to_real(Hop->dtype());
+      const double breakdown_tol = lanczos_gnd_breakdown_tolerance(coeff_dtype);
+      // At most dim linearly independent Krylov vectors exist.
+      const cytnx_uint64 dim = Tin.shape()[0];
+
+      Tensor psi_1 = Tin.clone() / tin_norm;
 
       Tensor psi_0;  // = cytnx::zeros({psi_1.shape()[0]},psi_1.dtype(),Tin.device());
       Tensor new_psi;
       bool cvg_fin = false;
 
       // declare variables:
-      Tensor As = zeros({1}, Hop->dtype(), Tin.device());
+      Tensor As = zeros({1}, coeff_dtype, Tin.device());
       Tensor Bs = As.clone();
-
-      Scalar E = Scalar::maxval(Hop->dtype());
 
       // temporary:
       std::vector<Tensor> tmpEsVs;
@@ -38,65 +50,76 @@ namespace cytnx {
       //-------------------------------------------------
       new_psi = Hop->matvec(psi_1);
 
-      As(0) = linalg::Vectordot(new_psi, psi_1, true).item();
+      Scalar alpha = linalg::Vectordot(new_psi, psi_1, true).item().real();
+      As(0) = alpha;
       new_psi -= As(0) * psi_1;
 
-      Bs(0) = double(new_psi.norm());
+      double beta = double(new_psi.norm());
+      Bs(0) = beta;
+      // Size of the Lanczos coefficients seen so far, the scale a residual norm is compared to.
+      double coeff_scale = std::abs(double(alpha));
 
-      psi_0 = psi_1;
-      new_psi /= Bs(0);
-
-      psi_1 = new_psi;
-
-      E = As(0).item();
-      Scalar Ediff;
-
-      ///---------------------------
-
-      // iteration LZ:
-      for (unsigned int i = 1; i < Maxiter; i++) {
-        new_psi = Hop->matvec(psi_1);  //- Bs(i-1)*psi_0;
-
-        As.append(linalg::Vectordot(new_psi, psi_1, true).item());
-
-        new_psi -= As(i) * psi_1;
-        new_psi -= Bs(i - 1) * psi_0;
-
-        try {
-          // diagonalize:
-          auto tmptmp = linalg::Tridiag(As, Bs, true, true, true);
-          tmpEsVs = tmptmp;
-        } catch (std::logic_error le) {
-          std::cout << "[WARNING] Lanczos_Gnd -> Tridiag error: \n";
-          std::cout << le.what() << std::endl;
-          std::cout << "Lanczos continues automatically." << std::endl;
-          break;
-        }
-        double tmp = double(new_psi.norm());
-        Bs.append(tmp);
-        if (tmp == 0) {
-          cvg_fin = true;
-          break;
-        }
-
+      if (dim == 1 || beta <= breakdown_tol * coeff_scale) {
+        // The initial vector spans an invariant subspace: the Krylov matrix is [As(0)], with
+        // eigenvalue As(0) and eigenvector (1).
+        cvg_fin = true;
+        tmpEsVs = {As.clone(), ones({1, 1}, coeff_dtype, Tin.device())};
+      } else {
         psi_0 = psi_1;
-        new_psi /= Bs(i);
+        new_psi /= Bs(0);
 
         psi_1 = new_psi;
 
-        Ediff = abs(E - tmpEsVs[0].storage().at(0));
-        if (verbose)
-          printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n", i, double(E),
-                 double(Ediff));
+        Scalar E = alpha;
+        Scalar Ediff;
 
-        // chkf = true;
-        if (Ediff < CvgCrit) {
-          cvg_fin = true;
-          break;
-        }
-        E = tmpEsVs[0].storage().at(0);
+        ///---------------------------
 
-      }  // iteration
+        const unsigned int max_krylov_dim =
+          static_cast<unsigned int>(std::min<cytnx_uint64>(Maxiter, dim));
+
+        // iteration LZ:
+        for (unsigned int i = 1; i < max_krylov_dim; i++) {
+          new_psi = Hop->matvec(psi_1);  //- Bs(i-1)*psi_0;
+
+          alpha = linalg::Vectordot(new_psi, psi_1, true).item().real();
+          As.append(alpha);
+
+          new_psi -= As(i) * psi_1;
+          new_psi -= Bs(i - 1) * psi_0;
+
+          // diagonalize:
+          tmpEsVs = linalg::Tridiag(As, Bs, true, true);
+
+          coeff_scale = std::max(coeff_scale, std::abs(double(alpha)) + beta);
+          beta = double(new_psi.norm());
+          Bs.append(beta);
+          // Stop when the residual is at roundoff level (the Krylov space is invariant) or when
+          // the Krylov space has become the whole vector space.
+          if (beta <= breakdown_tol * coeff_scale || i + 1 == dim) {
+            cvg_fin = true;
+            break;
+          }
+
+          psi_0 = psi_1;
+          new_psi /= Bs(i);
+
+          psi_1 = new_psi;
+
+          Ediff = abs(E - tmpEsVs[0].storage().at(0));
+          if (verbose)
+            printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n", i, double(E),
+                   double(Ediff));
+
+          // chkf = true;
+          if (Ediff < CvgCrit) {
+            cvg_fin = true;
+            break;
+          }
+          E = tmpEsVs[0].storage().at(0);
+
+        }  // iteration
+      }
 
       if (cvg_fin == false) {
         cytnx_warning_msg(true,
@@ -113,20 +136,20 @@ namespace cytnx {
         tmpEsVs.pop_back();
 
         // restarted again, and evaluate the vectors on the fly:
-        psi_1 = Tin.clone() / double(Tin.norm());
+        psi_1 = Tin.clone() / tin_norm;
         eV = kryVg(0) * psi_1;
-        new_psi = Hop->matvec(psi_1) - As(0) * psi_1;
-
-        psi_0 = psi_1;
-        psi_1 = new_psi / Bs(0);
 
         for (unsigned int n = 1; n < tmpEsVs[0].shape()[0]; n++) {
-          eV += kryVg(n) * psi_1;
-          new_psi = Hop->matvec(psi_1) - Bs(n - 1) * psi_0;
-          new_psi -= As(n) * psi_1;
+          if (n == 1) {
+            new_psi = Hop->matvec(psi_1) - As(0) * psi_1;
+          } else {
+            new_psi = Hop->matvec(psi_1) - Bs(n - 2) * psi_0;
+            new_psi -= As(n - 1) * psi_1;
+          }
 
           psi_0 = psi_1;
-          psi_1 = new_psi / Bs(n);
+          psi_1 = new_psi / Bs(n - 1);
+          eV += kryVg(n) * psi_1;
         }
 
         out.push_back(eV);
@@ -394,9 +417,9 @@ namespace cytnx {
       if (Hop->dtype() == Type.Float || Hop->dtype() == Type.ComplexFloat) {
         if (_cvgcrit < 1.0e-7) {
           _cvgcrit = 1.0e-7;
-          cytnx_warning_msg(_cvgcrit < 1.0e-7,
-                            "[WARNING][CvgCrit] for float precision type, CvgCrit cannot exceed "
-                            "it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s",
+          cytnx_warning_msg(true,
+                            "[WARNING][CvgCrit] for float precision type, CvgCrit cannot be "
+                            "smaller than 1e-7, and is automatically raised to 1e-7.%s",
                             "\n");
         }
       }
