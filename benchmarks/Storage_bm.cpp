@@ -62,10 +62,7 @@ namespace storage_access_bm {
     }
     state.SetItemsProcessed(state.iterations() * ops_per_iteration);
   }
-  BENCHMARK(bm_gpu_inplace_div_host_scalar)
-    ->Arg(2048)
-    ->Arg(1 << 20)
-    ->Unit(benchmark::kMicrosecond);
+  BENCHMARK(bm_gpu_inplace_div_host_scalar)->Arg(2048)->Arg(1 << 20)->Unit(benchmark::kMicrosecond);
 #endif  // UNI_GPU
 
 }  // namespace storage_access_bm
