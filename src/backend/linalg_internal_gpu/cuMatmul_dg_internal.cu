@@ -173,9 +173,9 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &inr,
                                   const cytnx_int64 &Ml, const cytnx_int64 &Comm,
                                   const cytnx_int64 &Nr, const int &diag_L) {
-      cytnx_int64 *_out = (cytnx_int64 *)out->data();
-      cytnx_int64 *_inl = (cytnx_int64 *)inl->data();
-      cytnx_int64 *_inr = (cytnx_int64 *)inr->data();
+      cytnx_int32 *_out = (cytnx_int32 *)out->data();
+      cytnx_int32 *_inl = (cytnx_int32 *)inl->data();
+      cytnx_int32 *_inr = (cytnx_int32 *)inr->data();
 
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
@@ -193,9 +193,9 @@ namespace cytnx {
                                   const boost::intrusive_ptr<Storage_base> &inr,
                                   const cytnx_int64 &Ml, const cytnx_int64 &Comm,
                                   const cytnx_int64 &Nr, const int &diag_L) {
-      cytnx_uint64 *_out = (cytnx_uint64 *)out->data();
-      cytnx_uint64 *_inl = (cytnx_uint64 *)inl->data();
-      cytnx_uint64 *_inr = (cytnx_uint64 *)inr->data();
+      cytnx_uint32 *_out = (cytnx_uint32 *)out->data();
+      cytnx_uint32 *_inl = (cytnx_uint32 *)inl->data();
+      cytnx_uint32 *_inr = (cytnx_uint32 *)inr->data();
 
       cytnx_uint64 Nblocks = (cytnx_uint64(Ml) * Nr) / 512;
       if ((cytnx_uint64(Ml) * Nr) % 512) Nblocks += 1;
