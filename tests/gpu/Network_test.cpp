@@ -387,6 +387,106 @@ namespace cytnx {
         }
       }
 
+      // A relaunch after setOrder(true) reuses the optimizer info kept by the network.
+      TEST_F(NetworkTest, GpuNetworkDenseFindOptimalRelaunch) {
+        for (unsigned int dtype : kFloatDtypes) {
+          SCOPED_TRACE(Type.getname(dtype));
+          auto net = Network();
+          net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
+          net.PutUniTensors({"A", "B", "C"}, MakeChain(dtype));
+          net.setOrder(true, "");
+          ExpectChainResult(net.Launch(), dtype, {"a", "b", "e"}, 2, ChainExpectedFn(dtype));
+          ExpectChainResult(net.Launch(), dtype, {"a", "b", "e"}, 2, ChainExpectedFn(dtype));
+          net.setOrder(true, "");
+          ExpectChainResult(net.Launch(), dtype, {"a", "b", "e"}, 2, ChainExpectedFn(dtype));
+        }
+      }
+
+      // The chain with all-ones tensors, large enough that cuTensorNet asks for a workspace of
+      // tens of MiB per contraction. Every result element is the number of terms summed over c
+      // and d.
+      constexpr cytnx_uint64 kOnesDimA = 30, kOnesDimB = 40, kOnesDimC = 50, kOnesDimD = 60,
+                             kOnesDimE = 20;
+
+      std::vector<UniTensor> MakeOnesChain() {
+        const auto make = [](const std::vector<cytnx_uint64>& shape,
+                             const std::vector<std::string>& labels) {
+          return UniTensor(ones(shape, Type.ComplexDouble).to(Device.cuda), false, -1, labels);
+        };
+        return {make({kOnesDimA, kOnesDimB, kOnesDimC}, {"a", "b", "c"}),
+                make({kOnesDimC, kOnesDimD}, {"c", "d"}), make({kOnesDimD, kOnesDimE}, {"d", "e"})};
+      }
+
+      void ExpectOnesChainResult(const UniTensor& res) {
+        ASSERT_EQ(res.shape(), (std::vector<cytnx_uint64>{kOnesDimA, kOnesDimB, kOnesDimE}));
+        const Tensor block = res.to(Device.cpu).get_block().contiguous();
+        const std::complex<double> expected = static_cast<double>(kOnesDimC * kOnesDimD);
+        cytnx_uint64 mismatches = 0;
+        for (cytnx_uint64 a = 0; a < kOnesDimA; a++) {
+          for (cytnx_uint64 b = 0; b < kOnesDimB; b++) {
+            for (cytnx_uint64 e = 0; e < kOnesDimE; e++) {
+              if (std::abs(block.at<cytnx_complex128>({a, b, e}) - expected) > 1e-9) mismatches++;
+            }
+          }
+        }
+        EXPECT_EQ(mismatches, 0);
+      }
+
+      // #856: on a cuQuantum build every Launch() kept its cuTensorNet workspace, its stream and
+      // its network descriptor. Before the fix the 20 launches below lost 682 MiB with cuTensorNet
+      // 2.13 and 362 MiB with cuTensorNet 2.4; the threshold sits far below both and leaves room
+      // for allocator caching.
+      TEST_F(NetworkTest, GpuNetworkRepeatedLaunchDoesNotLeakDeviceMemory) {
+        constexpr int kCalls = 20;
+        constexpr double kSlackMiB = 64.0;
+        constexpr int kAttempts = 5;
+
+        auto net = Network();
+        net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
+        net.PutUniTensors({"A", "B", "C"}, MakeOnesChain());
+        // Warm up so one-time CUDA context and library allocation is outside the measurement.
+        ExpectOnesChainResult(net.Launch());
+
+        const double leaked = MeasureLeakMiB(
+          [&net] {
+            for (int i = 0; i < kCalls; ++i) net.Launch();
+          },
+          kAttempts, kSlackMiB);
+
+        EXPECT_LT(leaked, kSlackMiB)
+          << "leaked " << leaked << " MiB of device memory over " << kCalls << " launches (best of "
+          << kAttempts << " attempts)";
+        ExpectOnesChainResult(net.Launch());
+      }
+
+      // Same guard for the path through setOrder(true), where the network keeps the cuTensorNet
+      // objects of the latest search: searching again must release the previous ones.
+      TEST_F(NetworkTest, GpuNetworkRepeatedFindOptimalDoesNotLeakDeviceMemory) {
+        constexpr int kCalls = 20;
+        constexpr double kSlackMiB = 64.0;
+        constexpr int kAttempts = 5;
+
+        auto net = Network();
+        net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
+        net.PutUniTensors({"A", "B", "C"}, MakeOnesChain());
+        net.setOrder(true, "");
+        ExpectOnesChainResult(net.Launch());
+
+        const double leaked = MeasureLeakMiB(
+          [&net] {
+            for (int i = 0; i < kCalls; ++i) {
+              net.setOrder(true, "");
+              net.Launch();
+            }
+          },
+          kAttempts, kSlackMiB);
+
+        EXPECT_LT(leaked, kSlackMiB)
+          << "leaked " << leaked << " MiB of device memory over " << kCalls
+          << " setOrder(true) + Launch rounds (best of " << kAttempts << " attempts)";
+        ExpectOnesChainResult(net.Launch());
+      }
+
       // Helper: Copy tensors to CPU. Contract them directly with Contract, and permute the open
       // legs into the requested TOUT order.
       static UniTensor BlockNetworkReferenceCPU(const UniTensor& A, const UniTensor& B,

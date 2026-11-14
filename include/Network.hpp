@@ -4,6 +4,7 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include <initializer_list>
+#include <memory>
 #include <vector>
 #include <map>
 #include <fstream>
@@ -20,6 +21,9 @@
 
 namespace cytnx {
   /// @cond
+#if defined(UNI_GPU) && defined(UNI_CUQUANTUM)
+  class cutensornet;
+#endif
   struct __ntwk {
     enum __nttype { Void = -1, Regular = 0, Fermion = 1 };
   };
@@ -69,15 +73,9 @@ namespace cytnx {
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
-    // // stream
-    // cudaStream_t stream;
-    // // cutensornet handle
-    // cutensornetHandle_t handle;
-
-    // network descriptor
-    cutensornetNetworkDescriptor_t descNet;
-    // optimizer info
-    cutensornetContractionOptimizerInfo_t optimizerInfo;
+    // The cuTensorNet session of the latest setOrder(optimal=true). Launch() contracts with the
+    // optimizer info this session holds, so it has to stay alive as long as the network does.
+    std::shared_ptr<cutensornet> optimal_order_session;
   #endif
 #endif
     friend class FermionNetwork;
