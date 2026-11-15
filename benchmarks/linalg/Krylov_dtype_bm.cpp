@@ -68,6 +68,26 @@ namespace krylov_dtype_bm {
     return s.astype(dtype).to(device);
   }
 
+  // A rank-0 or single-element tensor's value, as a double, on either device.
+  double value_of(const Tensor& t) {
+    return t.astype(cytnx::Type.Double).to(cytnx::Device.cpu).storage().at<double>(0);
+  }
+
+  // Checks that a Ritz pair (theta, v) returned by Lanczos is finite and that theta equals the
+  // Rayleigh quotient <v, H v> / <v, v>, as it must for a Ritz pair whether or not it has
+  // converged. hv is H applied to v. On failure, marks the benchmark as failed and returns false.
+  bool ritz_pair_is_consistent(benchmark::State& state, double theta, const Tensor& v,
+                               const Tensor& hv) {
+    const double rayleigh =
+      value_of(cytnx::linalg::Vectordot(v, hv)) / value_of(cytnx::linalg::Vectordot(v, v));
+    const double tolerance = 1.0e-6 * std::abs(theta);
+    if (std::isfinite(theta) && std::abs(theta - rayleigh) <= tolerance) return true;
+    state.SkipWithError(("Lanczos returned an inconsistent Ritz pair: eigenvalue " +
+                         std::to_string(theta) + ", Rayleigh quotient " + std::to_string(rayleigh))
+                          .c_str());
+    return false;
+  }
+
   class SandwichOp : public LinOp {
    public:
     SandwichOp(std::uint64_t d, unsigned int dtype, int device)
@@ -203,7 +223,9 @@ namespace krylov_dtype_bm {
       return cytnx::linalg::Lanczos(&op, v0, "Gnd", unreachable_cvg_crit, krylov_steps, k,
                                     /*is_V=*/true, /*is_row=*/false, max_krydim);
     };
-    run();
+    const std::vector<Tensor> warm_up = run();
+    if (!ritz_pair_is_consistent(state, value_of(warm_up[0]), warm_up[1], op.matvec(warm_up[1])))
+      return;
     sync_device(on_gpu);
     op.matvec_count = 0;
     for ([[maybe_unused]] auto iteration : state) {
@@ -241,7 +263,12 @@ namespace krylov_dtype_bm {
       return cytnx::linalg::Lanczos(&op, op.start_vector(), "Gnd", unreachable_cvg_crit,
                                     krylov_steps, k, /*is_V=*/true, /*is_row=*/false, max_krydim);
     };
-    run();
+    const std::vector<UniTensor> warm_up = run();
+    const UniTensor hv = op.matvec(warm_up[1]);
+    if (!ritz_pair_is_consistent(state, value_of(warm_up[0].get_block()),
+                                 warm_up[1].get_block().contiguous().flatten(),
+                                 hv.get_block().contiguous().flatten()))
+      return;
     sync_device(on_gpu);
     op.matvec_count = 0;
     for ([[maybe_unused]] auto iteration : state) {
