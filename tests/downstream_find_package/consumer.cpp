@@ -1,29 +1,28 @@
-// Downstream consumer smoke test. Exercises a code path that runs through
-// HPTT (Tensor::permute dispatches to the HPTT-backed tensor transpose in
-// Movemem_cpu.cpp when cytnx is built with USE_HPTT=ON), so a clean link
-// and a correct result together prove the exported package wired up both
-// cytnx itself and its bundled HPTT/OpenMP dependencies.
+// Downstream consumer smoke test. Materialize a permuted tensor large enough
+// to enter HPTT, checking both exported dependency linkage and execution.
 #include <cytnx.hpp>
 
 #include <iostream>
 
 int main() {
-  // A 2x3 tensor with values 0..5, then permute the two axes. permute goes
-  // through the HPTT path; if libhptt or OpenMP failed to link, this would
-  // not resolve at link time.
-  cytnx::Tensor t = cytnx::arange(6).reshape(2, 3);
-  cytnx::Tensor tp = t.permute(1, 0).contiguous();
+  // More than 64 elements are needed to enter Cytnx's HPTT transpose path.
+  const cytnx::Tensor source = cytnx::arange(99).reshape(9, 11);
+  const cytnx::Tensor result = source.permute(1, 0).contiguous();
 
-  if (tp.shape().size() != 2 || tp.shape()[0] != 3 || tp.shape()[1] != 2) {
-    std::cerr << "FAIL: unexpected permuted shape\n";
+  if (result.shape().size() != 2 || result.shape()[0] != 11 || result.shape()[1] != 9 ||
+      result.dtype() != cytnx::Type.Double) {
+    std::cerr << "FAIL: unexpected permuted shape or dtype\n";
     return 1;
   }
 
-  // t[i, j] == tp[j, i]; check one off-diagonal element to confirm the
-  // transpose actually moved data rather than returning a no-op.
-  if (tp.at<double>(2, 1) != t.at<double>(1, 2)) {
-    std::cerr << "FAIL: permuted element mismatch\n";
-    return 1;
+  // Independent row-major oracle for every coefficient of the transposed tensor.
+  for (int i = 0; i < 11; ++i) {
+    for (int j = 0; j < 9; ++j) {
+      if (result.at<double>(i, j) != j * 11 + i) {
+        std::cerr << "FAIL: permuted element mismatch\n";
+        return 1;
+      }
+    }
   }
 
   std::cout << "OK: downstream find_package(Cytnx) consumer linked and ran\n";

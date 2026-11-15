@@ -259,8 +259,8 @@ if [[ ${do_test} -eq 0 ]]; then
 fi
 
 # Idle worker threads busy-spin between the tiny, microsecond-spaced
-# parallel regions the test suites trigger (HPTT opens an OpenMP team of
-# Device.Ncpus on every permute, even 50-element ones), oversubscribing the
+# parallel regions the test suites trigger (HPTT's OpenMP team and the
+# BLAS workers), oversubscribing the
 # CPU and inflating test wall time several-fold -- worst under parallel
 # ctest (issue #1058). Make idle workers sleep instead. One knob per
 # threading runtime, and both are set because either OpenBLAS variant may

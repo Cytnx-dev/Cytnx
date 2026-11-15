@@ -170,3 +170,43 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_BINARY_DIR})
+
+if(USE_HPTT)
+  add_executable(tensor_transpose_thread_test Tensor_transpose_threads_test.cpp)
+  target_link_libraries(tensor_transpose_thread_test PRIVATE cytnx)
+  add_dependencies(test_main tensor_transpose_thread_test)
+  if(USE_DEBUG AND NOT MSVC)
+    target_compile_options(tensor_transpose_thread_test PRIVATE -fsanitize=address)
+    target_link_options(tensor_transpose_thread_test PRIVATE -fsanitize=address)
+  elseif(USE_DEBUG)
+    target_compile_options(tensor_transpose_thread_test PRIVATE /fsanitize=address)
+  endif()
+  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
+     AND "gomp" IN_LIST OpenMP_CXX_LIB_NAMES)
+    target_compile_definitions(tensor_transpose_thread_test PRIVATE CYTNX_TEST_GOMP_TEAMS)
+    target_link_options(tensor_transpose_thread_test PRIVATE -Wl,--wrap=GOMP_parallel)
+  endif()
+
+  function(cytnx_transpose_thread_case name outer inner override)
+    add_test(NAME TensorTransposeThreads.${name}
+      COMMAND ${CMAKE_COMMAND} -E env --unset=HPTT_NUM_THREADS
+        OMP_DYNAMIC=FALSE OMP_MAX_ACTIVE_LEVELS=2 OMP_THREAD_LIMIT=16
+        OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 ${ARGN}
+        $<TARGET_FILE:tensor_transpose_thread_test> ${outer} ${inner} ${override})
+    set_tests_properties(TensorTransposeThreads.${name} PROPERTIES LABELS cpu)
+  endfunction()
+  cytnx_transpose_thread_case(OpenmpSerial 1 1 0 OMP_NUM_THREADS=1)
+  cytnx_transpose_thread_case(NestedSerial 4 1 0 OMP_NUM_THREADS=4,1)
+  cytnx_transpose_thread_case(NestedParallel 4 2 0 OMP_NUM_THREADS=4,2)
+  cytnx_transpose_thread_case(SerialOverride 1 1 1 OMP_NUM_THREADS=4,2 HPTT_NUM_THREADS=1)
+  cytnx_transpose_thread_case(ParallelOverride 3 3 3 OMP_NUM_THREADS=1 HPTT_NUM_THREADS=3)
+  cytnx_transpose_thread_case(ThreadLimit 4 1 0 OMP_NUM_THREADS=8,2 OMP_THREAD_LIMIT=4)
+  cytnx_transpose_thread_case(SerializedNesting 4 1 0 OMP_NUM_THREADS=4,2 OMP_MAX_ACTIVE_LEVELS=1)
+  foreach(value IN ITEMS 0 2,1 invalid)
+    add_test(NAME TensorTransposeThreads.InvalidOverride_${value}
+      COMMAND ${CMAKE_COMMAND} -E env HPTT_NUM_THREADS=${value} OMP_NUM_THREADS=1
+        OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+        $<TARGET_FILE:tensor_transpose_thread_test> invalid)
+    set_tests_properties(TensorTransposeThreads.InvalidOverride_${value} PROPERTIES LABELS cpu)
+  endforeach()
+endif()

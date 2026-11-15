@@ -50,9 +50,6 @@ def test_guide_behavior_clone(capsys):
     excute_and_output('guide_behavior_clone', capsys)
 
 # Device
-def test_guide_Device_Ncpus(capsys):
-    excute_and_output('guide_Device_Ncpus', capsys)
-
 def test_guide_Device_Ngpus(capsys):
     excute_and_output('guide_Device_Ngpus', capsys)
 

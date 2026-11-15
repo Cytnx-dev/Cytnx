@@ -1,5 +1,8 @@
 #include "Movemem_cpu.hpp"
 
+#include <cstdlib>
+#include <memory>
+#include <stdexcept>
 #include <type_traits>
 #include <vector>
 
@@ -99,17 +102,26 @@ namespace cytnx {
         in->dtype_str().c_str(), Type.getname(Type.cy_typeid(T())));
 #endif
 
-      T *des = (T *)malloc(in->size() * sizeof(T));
+      // Plan creation can reject HPTT_NUM_THREADS. Keep ownership until the
+      // output storage accepts the allocation, including on error paths.
+      std::unique_ptr<T, decltype(&std::free)> output_owner(
+        static_cast<T *>(std::malloc(in->size() * sizeof(T))), &std::free);
+      T *des = output_owner.get();
       T *src = static_cast<T *>(in->data());
       cytnx_uint64 accu_old = 1, accu_new = 1;
 
 #ifdef UNI_HPTT
       if (in->size() > 64) {
-        std::vector<int> perm(mapper.begin(), mapper.end());
-        std::vector<int> size(old_shape.begin(), old_shape.end());
-        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des,
-                                      nullptr, hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
-        plan->execute();
+        const std::vector<int> perm(mapper.begin(), mapper.end());
+        const std::vector<int> size(old_shape.begin(), old_shape.end());
+        try {
+          auto plan =
+            hptt::create_plan(perm.data(), static_cast<int>(perm.size()), T{1}, src, size.data(),
+                              nullptr, T{}, des, nullptr, hptt::ESTIMATE, hptt::Layout::RowMajor);
+          plan->execute();
+        } catch (const std::invalid_argument &error) {
+          cytnx_error_msg(true, "HPTT transpose: %s\n", error.what());
+        }
         accu_old = in->size();
       } else {
         std::vector<cytnx_int64> newshape(old_shape.size());
@@ -202,10 +214,10 @@ namespace cytnx {
       }
       if (is_inplace) {
         memcpy(in->data(), des, sizeof(T) * accu_old);
-        free(des);
         return out;
       } else {
         out->_Init_byptr(des, accu_old, in->device(), true, in->size());
+        output_owner.release();
         return out;
       }
     }
