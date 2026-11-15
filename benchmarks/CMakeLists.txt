@@ -14,6 +14,7 @@ add_executable(
   linalg/Abs_bm.cpp
   linalg/iArithmetic_bm.cpp
   linalg/Directsum_bm.cpp
+  linalg/Eigh_bm.cpp
   linalg/Svd_bm.cpp
   linalg/Svd_truncate_bm.cpp
   linalg/Trace_bm.cpp
