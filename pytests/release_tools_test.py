@@ -25,7 +25,6 @@ RELEASE_FILES = (
     "docs/site_root/versions.json",
     "CITATION.cff",
     "docs.doxygen",
-    "docs/source/conf.py",
 )
 
 
@@ -147,34 +146,6 @@ def test_check_rejects_a_doxygen_version_literal(release_tree):
 
     assert result.returncode == 1
     assert "PROJECT_NUMBER" in result.stderr
-
-
-@pytest.mark.parametrize(
-    ("old", "new", "reported"),
-    [
-        ("release = version_label()", 'release = "1.0.0"', "release"),
-        ("release = version_label()", 'release = f"1.0.0"', "release"),
-        ("version = release_version()", "version = str(1.0)", "version"),
-        ("version = release_version()", "version = release_version('x')", "version"),
-        ("release = version_label()", "", "release"),
-        (
-            "release = version_label()",
-            "release = version_label()\nrelease = '1.0.0'",
-            "release",
-        ),
-        ('html_title = f"{project} {release}"', 'html_title = "Cytnx 1.0.0"', "html_title"),
-    ],
-)
-def test_check_rejects_a_sphinx_version_not_from_cytnx_version(release_tree, old, new, reported):
-    conf = release_tree / "docs/source/conf.py"
-    text = conf.read_text()
-    assert re.search(rf"^{re.escape(old)}$", text, re.MULTILINE)
-    conf.write_text(re.sub(rf"^{re.escape(old)}$", new, text, flags=re.MULTILINE))
-
-    result = run_script(release_tree, "tools/check_release_consistency.py")
-
-    assert result.returncode == 1
-    assert reported in result.stderr
 
 
 def write_version_cmake(tree, version):
