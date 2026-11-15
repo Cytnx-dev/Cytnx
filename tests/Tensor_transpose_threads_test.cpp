@@ -1,12 +1,10 @@
+#include <cstdlib>
 #include <fstream>
 #include <limits>
 #include <string>
 
 #include <gtest/gtest.h>
 
-#ifdef __linux__
-  #include <sched.h>
-#endif
 #ifdef _OPENMP
   #include <omp.h>
 #endif
@@ -111,20 +109,28 @@ namespace cytnx {
 #endif
       }
 
-      // The default Device.Ncpus stays within OpenMP's thread count and the CPUs the process may
-      // run on, and is 1 without OpenMP.
-      TEST(DeviceNcpus, DefaultWithinOpenmpAndAffinity) {
-        EXPECT_GE(Device.Ncpus, 1);
-#ifdef _OPENMP
-        EXPECT_LE(Device.Ncpus, omp_get_max_threads());
-#else
+      // Cytnx's CPU kernels are single-threaded unless the user asks for more: Device.Ncpus is 1
+      // unless CYTNX_NUM_THREADS is set.
+      TEST(DeviceNcpus, DefaultIsOneUnlessSet) {
+        if (std::getenv("CYTNX_NUM_THREADS") != nullptr)
+          GTEST_SKIP() << "CYTNX_NUM_THREADS is set.";
         EXPECT_EQ(Device.Ncpus, 1);
-#endif
-#ifdef __linux__
-        cpu_set_t allowed;
-        CPU_ZERO(&allowed);
-        ASSERT_EQ(sched_getaffinity(0, sizeof(allowed), &allowed), 0);
-        EXPECT_LE(Device.Ncpus, CPU_COUNT(&allowed));
+      }
+
+      // With the default setting, even a transpose with plenty of work runs on the calling thread
+      // when OpenMP would allow more.
+      TEST(TensorTransposeThreads, DefaultIsSingleThreaded) {
+#ifndef _OPENMP
+        GTEST_SKIP() << "Built without OpenMP, so without HPTT.";
+#else
+        if (std::getenv("CYTNX_NUM_THREADS") != nullptr)
+          GTEST_SKIP() << "CYTNX_NUM_THREADS is set.";
+        if (process_thread_count() < 0) GTEST_SKIP() << "/proc/self/status is not available.";
+        const Tensor source = random::uniform({64, 64, 64}, -1.0, 1.0, Device.cpu, /*seed=*/0);
+        Tensor result;
+        EXPECT_EQ(threads_started_by_transpose(source, /*openmp_threads=*/4, Device.Ncpus, result),
+                  0);
+        expect_reversed(result, source);
 #endif
       }
 

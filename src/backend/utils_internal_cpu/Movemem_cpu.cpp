@@ -25,10 +25,11 @@ namespace cytnx {
 #ifdef UNI_HPTT
     namespace {
 
-      // Bytes of a transpose per thread. Starting a thread team costs microseconds, so a
-      // transpose gets one more thread per 64 KiB of data: below 128 KiB it runs on one thread.
-      // Timed across sizes and thread counts on a Zen 5 Threadripper (libgomp) and a dual-socket
-      // Xeon (libiomp5); see #939.
+      // Bytes of a transpose per thread when Device.Ncpus allows more than one (its default is 1).
+      // Starting a thread team costs microseconds, so a transpose gets one more thread per 64 KiB
+      // of data and runs on one thread below 128 KiB. Timed on isolated transposes across sizes and
+      // thread counts on a Zen 5 Threadripper (libgomp) and a dual-socket Xeon (libiomp5); see
+      // #939.
       constexpr std::size_t kTransposeBytesPerThread = 64 * 1024;
 
       // Threads for an HPTT transpose of `bytes`: the largest power of two up to

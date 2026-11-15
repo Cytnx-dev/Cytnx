@@ -1,16 +1,9 @@
 #include "Device.hpp"
 
-#include <algorithm>
-#include <fstream>
-#include <set>
-#include <string>
-
-#ifdef __linux__
-  #include <sched.h>
-#endif
-#ifdef _OPENMP
-  #include <omp.h>
-#endif
+#include <cerrno>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
 
 #include "cytnx_error.hpp"
 
@@ -18,43 +11,25 @@ namespace cytnx {
 
   namespace {
 
-    // Physical cores among the CPUs this process may run on, counting hyperthread siblings once,
-    // or 0 where the topology cannot be read.
-    int physical_cores_in_affinity() {
-#ifdef __linux__
-      cpu_set_t allowed;
-      CPU_ZERO(&allowed);
-      if (sched_getaffinity(0, sizeof(allowed), &allowed) != 0) return 0;
-      std::set<std::string> cores;  // one sibling list per physical core
-      for (int cpu = 0; cpu < CPU_SETSIZE; ++cpu) {
-        if (!CPU_ISSET(cpu, &allowed)) continue;
-        const std::string topology =
-          "/sys/devices/system/cpu/cpu" + std::to_string(cpu) + "/topology/";
-        std::ifstream siblings(topology + "core_cpus_list");
-        if (!siblings.is_open()) siblings.open(topology + "thread_siblings_list");
-        std::string list;
-        if (!std::getline(siblings, list)) return 0;
-        cores.insert(list);
-      }
-      return static_cast<int>(cores.size());
-#else
-      return 0;
-#endif
-    }
-
-    // The default for Device.Ncpus. OpenMP's thread count honours OMP_NUM_THREADS and the
-    // process's CPU affinity (taskset, cpusets, batch-system allocations such as Slurm's), unlike
-    // std::thread::hardware_concurrency(). It is capped at the physical cores, because thread teams
-    // that also use hyperthread siblings make Cytnx's transposes slower and erratic (#939). Without
-    // OpenMP, Cytnx's CPU kernels are single-threaded.
+    // The default for Device.Ncpus: CYTNX_NUM_THREADS if it is set to a positive integer, otherwise
+    // 1. Cytnx's CPU kernels are single-threaded unless the user asks for more: in DMRG workloads,
+    // multi-threaded transposes interleaved with BLAS calls measured slower than single-threaded
+    // ones (#939). This runs during static initialization, so a malformed value is reported on
+    // stderr and ignored rather than thrown.
     int default_cpu_threads() {
-#ifdef _OPENMP
-      const int openmp_threads = omp_get_max_threads();
-      const int cores = physical_cores_in_affinity();
-      return cores > 0 ? std::min(openmp_threads, cores) : openmp_threads;
-#else
-      return 1;
-#endif
+      const char* setting = std::getenv("CYTNX_NUM_THREADS");
+      if (setting == nullptr || *setting == '\0') return 1;
+      char* end = nullptr;
+      errno = 0;
+      const long threads = std::strtol(setting, &end, 10);
+      if (errno != 0 || *end != '\0' || threads < 1 || threads > INT_MAX) {
+        std::fprintf(stderr,
+                     "[WARNING] Cytnx: ignoring CYTNX_NUM_THREADS=\"%s\"; expected a positive "
+                     "integer. Using 1 thread.\n",
+                     setting);
+        return 1;
+      }
+      return static_cast<int>(threads);
     }
 
   }  // namespace

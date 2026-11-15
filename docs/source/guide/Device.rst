@@ -20,15 +20,15 @@ Number of threads
     :language: c++
     :linenos:
 
-You can also set it, for example ``cytnx.Device.Ncpus = 4`` in Python or ``cytnx::Device.Ncpus = 4`` in C++.
-
-The default is OpenMP's thread count, capped at the number of physical cores. OpenMP's count honours ``OMP_NUM_THREADS`` and the CPUs the process may run on: ``taskset``, cpusets, and batch-system allocations such as Slurm's. If Cytnx is not compiled with OpenMP, Device.Ncpus is 1.
-
-A transpose uses at most one thread per 64 KiB of data, so small transposes always run on a single thread. ``OMP_NUM_THREADS`` and ``omp_set_num_threads()`` also cap the thread count. For example, the following line limits Cytnx's transposes, and any OpenMP-threaded BLAS such as MKL, to 16 threads:
+Cytnx's CPU kernels are single-threaded unless you ask for more, so the default is 1. To use more threads, set **Device.Ncpus**, for example ``cytnx.Device.Ncpus = 4`` in Python or ``cytnx::Device.Ncpus = 4`` in C++, or set the environment variable before starting the program:
 
 .. code-block:: console
 
-    export OMP_NUM_THREADS=16
+    export CYTNX_NUM_THREADS=4
+
+With more than one thread allowed, a transpose uses at most one thread per 64 KiB of data, so small transposes still run on a single thread. ``OMP_NUM_THREADS``, ``omp_set_num_threads()`` and the CPUs the process may run on (``taskset``, cpusets, and batch-system allocations such as Slurm's) cap the thread count as well. If Cytnx is not compiled with OpenMP, transposes are always single-threaded.
+
+Multi-threaded transposes pay off mainly for large transposes run in isolation. In DMRG-style workloads, where transposes alternate with BLAS calls, single-threaded transposes measured faster; see `#939 <https://github.com/Cytnx-dev/Cytnx/issues/939>`_.
 
 
 .. Note::
