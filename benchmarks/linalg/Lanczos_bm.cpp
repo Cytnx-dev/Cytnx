@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <benchmark/benchmark.h>
 #include <cytnx.hpp>
 using namespace cytnx;
@@ -66,6 +68,49 @@ namespace BMTest_Lanczos {
       return psi;
     }
   };
+
+  // Fixed-work CPU cases for the HPTT thread-policy comparison (#939). These
+  // alternate tensor transposes and BLAS, unlike the isolated copy benchmark.
+  void bm_one_site_operator(benchmark::State& state) {
+    OneSiteOp op(2, state.range(0), 5, Type.Double);
+    const auto check = op.matvec(op.UT_init);
+    if (!std::isfinite(check.Norm().item<double>())) {
+      state.SkipWithError("one-site operator returned a non-finite result");
+      return;
+    }
+    for ([[maybe_unused]] auto iteration : state) {
+      auto result = op.matvec(op.UT_init);
+      benchmark::DoNotOptimize(result);
+    }
+  }
+  BENCHMARK(bm_one_site_operator)
+    ->Arg(128)
+    ->Arg(256)
+    ->Arg(512)
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
+
+  void bm_one_site_lanczos_20(benchmark::State& state) {
+    OneSiteOp op(2, state.range(0), 5, Type.Double);
+    // An unreachable tolerance fixes the maximum work at 20 Krylov steps.
+    const auto run = [&]() {
+      return linalg::Lanczos(&op, op.UT_init, "Gnd", 1.0e-300, 20, 1, true, false, 0);
+    };
+    auto check = run();
+    if (!std::isfinite(check[0].item<double>())) {
+      state.SkipWithError("Lanczos returned a non-finite result");
+      return;
+    }
+    for ([[maybe_unused]] auto iteration : state) {
+      auto result = run();
+      benchmark::DoNotOptimize(result);
+    }
+  }
+  BENCHMARK(bm_one_site_lanczos_20)
+    ->Arg(128)
+    ->Arg(256)
+    ->Unit(benchmark::kMillisecond)
+    ->UseRealTime();
 
   static void BM_Lanczos_Gnd_F64(benchmark::State& state) {
     // prepare data
