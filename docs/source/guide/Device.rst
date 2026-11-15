@@ -33,7 +33,9 @@ Multi-threaded transposes pay off mainly for large transposes run in isolation. 
 
 .. Note::
 
-    The BLAS/LAPACK library manages its own threads. Set those with the library's own variables, such as ``OPENBLAS_NUM_THREADS`` or ``MKL_NUM_THREADS``. With an OpenBLAS built on pthreads, running OpenBLAS and Cytnx's transposes multithreaded on the same cores at once can be much slower than running either alone.
+    The BLAS/LAPACK library manages its own threads. Set those with the library's own variables, such as ``OPENBLAS_NUM_THREADS`` or ``MKL_NUM_THREADS``.
+
+    If you raise **Device.Ncpus**, also make idle threads sleep instead of spinning: set ``OMP_WAIT_POLICY=passive`` and, with an OpenBLAS built on pthreads, ``OPENBLAS_THREAD_TIMEOUT=4``. Otherwise idle OpenMP and OpenBLAS threads spin and compete for the same cores. For a one-site DMRG effective Hamiltonian at bond dimension 512 on a 32-core Zen 5, ``CYTNX_NUM_THREADS=32`` made each application about 1.6 times faster than the default with these settings, and about 5 times slower without them.
 
 
 Number of GPUs
