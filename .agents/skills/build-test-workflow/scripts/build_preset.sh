@@ -70,7 +70,9 @@ set -euo pipefail
 # makes pybind11 discoverable and sets up the import redirect pytest needs.
 # Every later call for that preset -- Python target or not -- is a direct
 # `cmake --build`, reusing that same build dir incrementally; no repeat pip
-# overhead once the venv exists.
+# overhead once the venv exists. After such a build of a Python target, the
+# script also refreshes the compiled files the editable install copied into
+# the venv (see below), so pytest imports what was just built.
 
 if [[ $# -lt 1 ]]; then
   echo "Usage: $0 <preset> [--target <target>] [--test [args...]]" >&2
@@ -225,6 +227,31 @@ else
   # shellcheck disable=SC2206
   target_words=(${target})
   cmake --build "${build_dir}" --target "${target_words[@]}" --parallel "${jobs}"
+
+  # The editable install redirects only the pure-Python files to the source
+  # tree. scikit-build-core copies the compiled extension module and the
+  # *.tmp runtime files (the "libraries" install component) into the venv's
+  # site-packages when `pip install --editable` runs, and Python imports
+  # those copies. A plain `cmake --build` updates only the build dir's
+  # versions, so without this step pytest would keep importing the extension
+  # from the first pip build. `cmake --install --prefix` cannot do the copy:
+  # the extension's install DESTINATION is an absolute path fixed at
+  # configure time (pip's temporary wheel directory). Only files the
+  # editable install actually placed in the venv are refreshed. Each file is
+  # copied to a temporary sibling and renamed over the installed one: a
+  # rename gives the installed path a new inode, so a Python process that has
+  # already loaded the old extension keeps its mapping, whereas copying over
+  # the file in place would change code under that running process.
+  if [[ ${needs_python} -eq 1 ]]; then
+    platlib="$("${venv_dir}/bin/python" -c 'import sysconfig; print(sysconfig.get_paths()["platlib"])')"
+    for built in "${build_dir}"/cytnx*.so "${build_dir}"/*.tmp; do
+      installed="${platlib}/cytnx/$(basename "${built}")"
+      if [[ -f "${built}" && -f "${installed}" ]]; then
+        cp -f "${built}" "${installed}.new.$$"
+        mv -f "${installed}.new.$$" "${installed}"
+      fi
+    done
+  fi
 fi
 
 if [[ ${do_test} -eq 0 ]]; then
