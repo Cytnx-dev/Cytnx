@@ -36,7 +36,7 @@ namespace cytnx {
       Gesvd_ii[Type.Float] = Gesvd_internal_f;
 
       //=====================
-      Eigh_ii = std::vector<Eighfunc_oii>(5);
+      Eigh_ii = std::vector<Eighdriverfunc_oii>(5);
 
       Eigh_ii[Type.ComplexDouble] = Eigh_internal_cd;
       Eigh_ii[Type.ComplexFloat] = Eigh_internal_cf;

@@ -352,38 +352,39 @@ void linalg_binding(py::module &m) {
   //                py::arg("row_v") = false);
   m_linalg.def(
     "Eigh",
-    [](const Tensor &Tin, const bool &is_V, const bool &row_v) {
-      return cytnx::linalg::Eigh(Tin, is_V, row_v);
+    [](const Tensor &Tin, const bool &is_V, const bool &row_v, const std::string &algorithm) {
+      return cytnx::linalg::Eigh(Tin, is_V, row_v, algorithm);
     },
     py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false,
-    py::call_guard<py::gil_scoped_release>());
+    py::arg("algorithm") = "default", py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Eigh",
-    [](const UniTensor &Tin, const bool &is_V, const bool &row_v) {
-      return cytnx::linalg::Eigh(Tin, is_V, row_v);
+    [](const UniTensor &Tin, const bool &is_V, const bool &row_v, const std::string &algorithm) {
+      return cytnx::linalg::Eigh(Tin, is_V, row_v, algorithm);
     },
     py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false,
-    py::call_guard<py::gil_scoped_release>());
+    py::arg("algorithm") = "default", py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Eigh_truncate",
     [](const UniTensor &Tin, cytnx_uint64 keepdim, double err, bool is_V, unsigned int return_err,
-       cytnx_uint64 mindim) {
-      return cytnx::linalg::Eigh_truncate(Tin, keepdim, err, is_V, return_err, mindim);
+       cytnx_uint64 mindim, const std::string &algorithm) {
+      return cytnx::linalg::Eigh_truncate(Tin, keepdim, err, is_V, return_err, mindim, algorithm);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0., py::arg("is_V") = true,
     py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
-    py::call_guard<py::gil_scoped_release>());
+    py::arg("algorithm") = "default", py::call_guard<py::gil_scoped_release>());
   m_linalg.def(
     "Eigh_truncate",
     [](const UniTensor &Tin, cytnx_uint64 keepdim, std::vector<cytnx_uint64> min_blockdim,
-       double err, bool is_V, unsigned int return_err, cytnx_uint64 mindim) {
-      return cytnx::linalg::Eigh_truncate(Tin, keepdim, min_blockdim, err, is_V, return_err,
-                                          mindim);
+       double err, bool is_V, unsigned int return_err, cytnx_uint64 mindim,
+       const std::string &algorithm) {
+      return cytnx::linalg::Eigh_truncate(Tin, keepdim, min_blockdim, err, is_V, return_err, mindim,
+                                          algorithm);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("min_blockdim"), py::arg("err") = 0.,
     py::arg("is_V") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
-    py::call_guard<py::gil_scoped_release>());
+    py::arg("algorithm") = "default", py::call_guard<py::gil_scoped_release>());
 
   m_linalg.def(
     "Eig",

@@ -9,17 +9,45 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
+#include "Device.hpp"
+#include "backend/decomposition_algorithm.hpp"
 #include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
+  namespace linalg_internal {
+
+    EighDriver resolve_eigh_algorithm(const std::string &algorithm, int device) {
+      const bool on_cpu = device == Device.cpu;
+      if (algorithm == kAlgorithmDefault) return on_cpu ? EighDriver::kQr : EighDriver::kDc;
+      if (algorithm == kAlgorithmDc) return EighDriver::kDc;
+      if (algorithm == kAlgorithmQr) {
+        cytnx_error_msg(!on_cpu,
+                        "[ERROR][Eigh] algorithm 'qr' is not available on a GPU: cuSOLVER has no "
+                        "QR-iteration driver for the Hermitian eigenproblem. Use 'dc'.%s",
+                        "\n");
+        return EighDriver::kQr;
+      }
+      cytnx_error_msg(true,
+                      "[ERROR][Eigh] unknown algorithm '%s'. The algorithms are 'default', 'qr' "
+                      "(CPU only) and 'dc'.\n",
+                      algorithm.c_str());
+      return EighDriver::kQr;  // not reached
+    }
+
+  }  // namespace linalg_internal
+
   namespace linalg {
 
-    std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v) {
+    std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v,
+                             const std::string &algorithm) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Eigh] error, Eigh can only operate on rank-2 Tensor.%s", "\n");
 
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[Eigh] error, Eigh should accept a square matrix.%s", "\n");
+
+      const linalg_internal::EighDriver driver =
+        linalg_internal::resolve_eigh_algorithm(algorithm, Tin.device());
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
@@ -41,9 +69,9 @@ namespace cytnx {
       }
 
       if (Tin.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Eigh_ii[in.dtype()](in._impl->storage()._impl,
-                                                        S._impl->storage()._impl,
-                                                        V._impl->storage()._impl, in.shape()[0]);
+        cytnx::linalg_internal::lii.Eigh_ii[in.dtype()](
+          in._impl->storage()._impl, S._impl->storage()._impl, V._impl->storage()._impl,
+          in.shape()[0], driver);
 
         std::vector<Tensor> out;
         out.push_back(S);
@@ -63,6 +91,8 @@ namespace cytnx {
 
       } else {
 #ifdef UNI_GPU
+        // resolve_eigh_algorithm() admits only the divide-and-conquer driver on a GPU, which is
+        // what the cuSOLVER kernels run.
         checkCudaErrors(cudaSetDevice(in.device()));
         cytnx::linalg_internal::lii.cuEigh_ii[in.dtype()](in._impl->storage()._impl,
                                                           S._impl->storage()._impl,
@@ -93,7 +123,8 @@ namespace cytnx {
 
     // actual impls:
     static void Eigh_Dense_UT_internal(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
-                                       const bool &is_V, const bool &row_v) {
+                                       const bool &is_V, const bool &row_v,
+                                       const std::string &algorithm) {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
@@ -116,7 +147,7 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp.reshape_({rowdim, -1});
 
-      std::vector<Tensor> outT = cytnx::linalg::Eigh(tmp, is_V, row_v);
+      std::vector<Tensor> outT = cytnx::linalg::Eigh(tmp, is_V, row_v, algorithm);
       if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
       int t = 0;
@@ -146,7 +177,8 @@ namespace cytnx {
     // steps do nothing.
     template <class BUT>
     static void Eigh_BlockUT_internal(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
-                                      const bool &is_V, const bool &row_v) {
+                                      const bool &is_V, const bool &row_v,
+                                      const std::string &algorithm) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
@@ -252,7 +284,7 @@ namespace cytnx {
         Tensor BTen = algo::_fx_Matric_combine(Tlist, Rblk_dim, Cblk_dim);
         //  Now we can perform linalg!
         aux_qnums.push_back(x.first);
-        auto out = linalg::Eigh(BTen, is_V, row_v);
+        auto out = linalg::Eigh(BTen, is_V, row_v, algorithm);
         aux_degs.push_back(out[0].shape()[0]);
         e_blocks.push_back(out[0]);
 
@@ -318,7 +350,8 @@ namespace cytnx {
       }
     }  // Eigh_BlockUT_internal
 
-    std::vector<cytnx::UniTensor> Eigh(const UniTensor &Tin, const bool &is_V, const bool &row_v) {
+    std::vector<cytnx::UniTensor> Eigh(const UniTensor &Tin, const bool &is_V, const bool &row_v,
+                                       const std::string &algorithm) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rank() <= 1,
                       "[ERROR][Eigh] Input UniTensor should have rank>1, but rank is %d\n",
@@ -335,15 +368,18 @@ namespace cytnx {
                       "supported. Use other manipulation.%s",
                       "\n");
 
+      // Refuse a bad algorithm here, once, also for a tensor without blocks.
+      linalg_internal::resolve_eigh_algorithm(algorithm, Tin.device());
+
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        Eigh_Dense_UT_internal(outCyT, Tin, is_V, row_v);
+        Eigh_Dense_UT_internal(outCyT, Tin, is_V, row_v, algorithm);
 
       } else if (Tin.uten_type() == UTenType.Block) {
-        Eigh_BlockUT_internal<BlockUniTensor>(outCyT, Tin, is_V, row_v);
+        Eigh_BlockUT_internal<BlockUniTensor>(outCyT, Tin, is_V, row_v, algorithm);
 
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        Eigh_BlockUT_internal<BlockFermionicUniTensor>(outCyT, Tin, is_V, row_v);
+        Eigh_BlockUT_internal<BlockFermionicUniTensor>(outCyT, Tin, is_V, row_v, algorithm);
 
       } else {
         cytnx_error_msg(true, "[ERROR][Eigh] UniTensor type '%s' not supported\n",

@@ -74,6 +74,25 @@ Eigenvalue decomposition
     :language: python
     :linenos:
 
+Choosing the driver of Eigh
+---------------------------
+
+**Eigh()** and **Eigh_truncate()** take an **algorithm** argument that selects the routine computing the decomposition:
+
+* ``"qr"``: QR iteration (LAPACK ``?syev`` / ``?heev``). It is available on the CPU only.
+* ``"dc"``: divide and conquer (LAPACK ``?syevd`` / ``?heevd``; cuSOLVER ``?syevd`` / ``?heevd`` on a GPU). It needs a larger workspace than ``"qr"``.
+* ``"default"``: ``"qr"`` on the CPU and ``"dc"`` on a GPU.
+
+An unknown name, or a driver that the device of the input does not have, raises an error. For a UniTensor with symmetries the same driver is used in every charge sector.
+
+.. code-block:: python
+
+    e, V = cytnx.linalg.Eigh(H, algorithm="dc")
+
+.. note::
+
+    The eigenvalues, and the projector onto each eigenspace, are the same for every **algorithm** up to rounding. The eigenvectors are not: their signs (phases) and the basis they form inside a degenerate eigenspace are not fixed by the decomposition, and they differ between drivers and between the CPU and a GPU. Compare :math:`V D V^\dagger`, not :math:`V`.
+
 Truncated Hermitian eigenvalue decomposition
 --------------------------------------------
 

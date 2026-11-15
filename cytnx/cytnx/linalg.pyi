@@ -44,16 +44,16 @@ def Eig(Tin: cytnx.cytnx.Tensor, is_V: bool = True, row_v: bool = False) -> list
 def Eig(Tin: cytnx.cytnx.UniTensor, is_V: bool = True, row_v: bool = False) -> list[cytnx.cytnx.UniTensor]:
     ...
 @typing.overload
-def Eigh(Tin: cytnx.cytnx.Tensor, is_V: bool = True, row_v: bool = False) -> list[cytnx.cytnx.Tensor]:
+def Eigh(Tin: cytnx.cytnx.Tensor, is_V: bool = True, row_v: bool = False, algorithm: str = 'default') -> list[cytnx.cytnx.Tensor]:
     ...
 @typing.overload
-def Eigh(Tin: cytnx.cytnx.UniTensor, is_V: bool = True, row_v: bool = False) -> list[cytnx.cytnx.UniTensor]:
+def Eigh(Tin: cytnx.cytnx.UniTensor, is_V: bool = True, row_v: bool = False, algorithm: str = 'default') -> list[cytnx.cytnx.UniTensor]:
     ...
 @typing.overload
-def Eigh_truncate(Tin: cytnx.cytnx.UniTensor, keepdim: typing.SupportsInt | typing.SupportsIndex, err: typing.SupportsFloat | typing.SupportsIndex = 0.0, is_V: bool = True, return_err: typing.SupportsInt | typing.SupportsIndex = 0, mindim: typing.SupportsInt | typing.SupportsIndex = 1) -> list[cytnx.cytnx.UniTensor]:
+def Eigh_truncate(Tin: cytnx.cytnx.UniTensor, keepdim: typing.SupportsInt | typing.SupportsIndex, err: typing.SupportsFloat | typing.SupportsIndex = 0.0, is_V: bool = True, return_err: typing.SupportsInt | typing.SupportsIndex = 0, mindim: typing.SupportsInt | typing.SupportsIndex = 1, algorithm: str = 'default') -> list[cytnx.cytnx.UniTensor]:
     ...
 @typing.overload
-def Eigh_truncate(Tin: cytnx.cytnx.UniTensor, keepdim: typing.SupportsInt | typing.SupportsIndex, min_blockdim: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], err: typing.SupportsFloat | typing.SupportsIndex = 0.0, is_V: bool = True, return_err: typing.SupportsInt | typing.SupportsIndex = 0, mindim: typing.SupportsInt | typing.SupportsIndex = 1) -> list[cytnx.cytnx.UniTensor]:
+def Eigh_truncate(Tin: cytnx.cytnx.UniTensor, keepdim: typing.SupportsInt | typing.SupportsIndex, min_blockdim: collections.abc.Sequence[typing.SupportsInt | typing.SupportsIndex], err: typing.SupportsFloat | typing.SupportsIndex = 0.0, is_V: bool = True, return_err: typing.SupportsInt | typing.SupportsIndex = 0, mindim: typing.SupportsInt | typing.SupportsIndex = 1, algorithm: str = 'default') -> list[cytnx.cytnx.UniTensor]:
     ...
 def Exp(Tin: cytnx.cytnx.Tensor) -> cytnx.cytnx.Tensor:
     ...

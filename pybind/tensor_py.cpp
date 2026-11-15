@@ -1513,7 +1513,8 @@ void tensor_binding(py::module &m) {
          })
     // linalg >>
     .def("Svd", &cytnx::Tensor::Svd, py::arg("is_UvT") = true)
-    .def("Eigh", &cytnx::Tensor::Eigh, py::arg("is_V") = true, py::arg("row_v") = false)
+    .def("Eigh", &cytnx::Tensor::Eigh, py::arg("is_V") = true, py::arg("row_v") = false,
+         py::arg("algorithm") = "default")
     .def("InvM_",
          [](py::object self) {
            self.cast<cytnx::Tensor &>().InvM_();
