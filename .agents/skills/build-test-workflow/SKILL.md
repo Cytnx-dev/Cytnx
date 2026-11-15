@@ -35,7 +35,11 @@ preset runs `pip install --editable` into `build/<preset>-venv` — this is
 what installs pybind11 and the other build requirements and creates the
 import redirect pytest needs. Every later call, Python target or not, is a
 plain incremental `cmake --build` of the same `build/<preset>` dir — no
-repeat pip overhead.
+repeat pip overhead. The redirect covers only the pure-Python files: the
+editable install copies the compiled extension into the venv, so after a
+Python-target build the script copies the rebuilt extension over it. Never
+run `cmake --build` by hand and then pytest — the venv would still import
+the old extension.
 
 **Never delete a build dir over a generator or cache mismatch** — that
 erases the accumulated cache and forces a full rebuild. Reconfigure with no
