@@ -29,7 +29,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Cytnx<span id="projectnumber">&#160;1.1.1.dev659+gca21c858</span>
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;1.1.1.dev661+g9084b74d</span>
    </div>
   </td>
  </tr>
@@ -95,55 +95,71 @@ $(function() {
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacecytnx.html">cytnx</a> {</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>  <span class="keyword">class </span>intrusive_ptr_base {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>   <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    intrusive_ptr_base()</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        : ref_count(0){</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>            <span class="comment">// pass</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>          };</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    intrusive_ptr_base(intrusive_ptr_base&lt;T&gt; <span class="keyword">const</span> &amp;) : ref_count(0) {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>      <span class="comment">// pass</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    }</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>  <span class="keyword">class </span>intrusive_ptr_base;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  <span class="comment">// The boost::intrusive_ptr hooks, found by argument-dependent lookup. Deduction through the base</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="comment">// class gives the derived type T, so intrusive_ptr_release() deletes the complete object.</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="comment">// They are namespace-scope function templates on purpose. Defined as friends inside the class</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="comment">// template, they break nvcc&#39;s cudafe++ as soon as a constexpr destructor calls them, which</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="comment">// boost::intrusive_ptr&#39;s destructor is since Boost 1.89 (#1124).</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keywordtype">void</span> intrusive_ptr_add_ref(<span class="keyword">const</span> intrusive_ptr_base&lt;T&gt; *s);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keywordtype">void</span> intrusive_ptr_release(<span class="keyword">const</span> intrusive_ptr_base&lt;T&gt; *s);</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">// copy assignment</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    intrusive_ptr_base &amp;operator=(intrusive_ptr_base <span class="keyword">const</span> &amp;rhs) {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      <span class="comment">// not allowed.</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    }</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// hook boost::intrusive_ptr add</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> intrusive_ptr_add_ref(T *s) {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>      <span class="comment">// add ref</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>      assert(s != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>      <span class="keyword">auto</span> &amp;base = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>intrusive_ptr_base&lt;T&gt; &amp;<span class="keyword">&gt;</span>(*s);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      assert(base.ref_count &gt;= 0);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      ++base.ref_count;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// hook boost::intrusive_ptr release</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> intrusive_ptr_release(T *s) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      <span class="comment">// release ref</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      assert(s != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>      <span class="keyword">auto</span> &amp;base = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>intrusive_ptr_base&lt;T&gt; &amp;<span class="keyword">&gt;</span>(*s);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      assert(base.ref_count &gt; 0);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      <span class="keywordflow">if</span> (--base.ref_count == 0) boost::checked_delete(<span class="keyword">static_cast&lt;</span>T <span class="keyword">const </span>*<span class="keyword">&gt;</span>(s));</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    boost::intrusive_ptr&lt;T&gt; self() { <span class="keywordflow">return</span> boost::intrusive_ptr&lt;T&gt;((T *)<span class="keyword">this</span>); }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    boost::intrusive_ptr&lt;const T&gt; self()<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      <span class="keywordflow">return</span> boost::intrusive_ptr&lt;const T&gt;((T <span class="keyword">const</span> *)<span class="keyword">this</span>);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">int</span> refcount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref_count; }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>   <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="comment">// should be modifiable within the class.</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">mutable</span> boost::detail::atomic_count ref_count;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  };</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}  <span class="comment">// namespace cytnx</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">class </span>intrusive_ptr_base {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    intrusive_ptr_base()</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        : ref_count(0){</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="comment">// pass</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>          };</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    intrusive_ptr_base(intrusive_ptr_base&lt;T&gt; <span class="keyword">const</span> &amp;) : ref_count(0) {</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      <span class="comment">// pass</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// copy assignment</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    intrusive_ptr_base &amp;operator=(intrusive_ptr_base <span class="keyword">const</span> &amp;rhs) {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      <span class="comment">// not allowed.</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    boost::intrusive_ptr&lt;T&gt; self() { <span class="keywordflow">return</span> boost::intrusive_ptr&lt;T&gt;((T *)<span class="keyword">this</span>); }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    boost::intrusive_ptr&lt;const T&gt; self()<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>      <span class="keywordflow">return</span> boost::intrusive_ptr&lt;const T&gt;((T <span class="keyword">const</span> *)<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keywordtype">int</span> refcount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> ref_count; }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> intrusive_ptr_add_ref(<span class="keyword">const</span> intrusive_ptr_base&lt;U&gt; *s);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> U&gt;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">friend</span> <span class="keywordtype">void</span> intrusive_ptr_release(<span class="keyword">const</span> intrusive_ptr_base&lt;U&gt; *s);</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// should be modifiable within the class.</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">mutable</span> boost::detail::atomic_count ref_count;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  };</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_INTRUSIVE_PTR_BASE_H_</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">void</span> intrusive_ptr_add_ref(<span class="keyword">const</span> intrusive_ptr_base&lt;T&gt; *s) {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    assert(s != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    assert(s-&gt;ref_count &gt;= 0);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    ++s-&gt;ref_count;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  }</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">void</span> intrusive_ptr_release(<span class="keyword">const</span> intrusive_ptr_base&lt;T&gt; *s) {</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    assert(s != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    assert(s-&gt;ref_count &gt; 0);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">if</span> (--s-&gt;ref_count == 0) boost::checked_delete(<span class="keyword">static_cast&lt;</span>T <span class="keyword">const </span>*<span class="keyword">&gt;</span>(s));</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>}  <span class="comment">// namespace cytnx</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_INTRUSIVE_PTR_BASE_H_</span></div>
 <div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition</b> Accessor.hpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
