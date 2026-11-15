@@ -1,12 +1,65 @@
 #include "Device.hpp"
 
-#include <thread>
+#include <algorithm>
+#include <fstream>
+#include <set>
+#include <string>
+
+#ifdef __linux__
+  #include <sched.h>
+#endif
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
 
 #include "cytnx_error.hpp"
 
 namespace cytnx {
 
-  Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
+  namespace {
+
+    // Physical cores among the CPUs this process may run on, counting hyperthread siblings once,
+    // or 0 where the topology cannot be read.
+    int physical_cores_in_affinity() {
+#ifdef __linux__
+      cpu_set_t allowed;
+      CPU_ZERO(&allowed);
+      if (sched_getaffinity(0, sizeof(allowed), &allowed) != 0) return 0;
+      std::set<std::string> cores;  // one sibling list per physical core
+      for (int cpu = 0; cpu < CPU_SETSIZE; ++cpu) {
+        if (!CPU_ISSET(cpu, &allowed)) continue;
+        const std::string topology =
+          "/sys/devices/system/cpu/cpu" + std::to_string(cpu) + "/topology/";
+        std::ifstream siblings(topology + "core_cpus_list");
+        if (!siblings.is_open()) siblings.open(topology + "thread_siblings_list");
+        std::string list;
+        if (!std::getline(siblings, list)) return 0;
+        cores.insert(list);
+      }
+      return static_cast<int>(cores.size());
+#else
+      return 0;
+#endif
+    }
+
+    // The default for Device.Ncpus. OpenMP's thread count honours OMP_NUM_THREADS and the
+    // process's CPU affinity (taskset, cpusets, batch-system allocations such as Slurm's), unlike
+    // std::thread::hardware_concurrency(). It is capped at the physical cores, because thread teams
+    // that also use hyperthread siblings make Cytnx's transposes slower and erratic (#939). Without
+    // OpenMP, Cytnx's CPU kernels are single-threaded.
+    int default_cpu_threads() {
+#ifdef _OPENMP
+      const int openmp_threads = omp_get_max_threads();
+      const int cores = physical_cores_in_affinity();
+      return cores > 0 ? std::min(openmp_threads, cores) : openmp_threads;
+#else
+      return 1;
+#endif
+    }
+
+  }  // namespace
+
+  Device_class::Device_class() : Ngpus(0), Ncpus(default_cpu_threads()) {
 #ifdef UNI_GPU
 
     // get all available gpus. A machine with no CUDA-capable device or no

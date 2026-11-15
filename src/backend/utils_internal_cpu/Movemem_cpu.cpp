@@ -10,12 +10,40 @@
 #ifdef UNI_HPTT
   #include <omp.h>
 
+  #include <algorithm>
+  #include <bit>
+  #include <cstddef>
+
+  #include "Device.hpp"
   #include "hptt.h"
 #endif
 
 namespace cytnx {
 
   namespace utils_internal {
+
+#ifdef UNI_HPTT
+    namespace {
+
+      // Bytes of a transpose per thread. Starting a thread team costs microseconds, so a
+      // transpose gets one more thread per 64 KiB of data: below 128 KiB it runs on one thread.
+      // Timed across sizes and thread counts on a Zen 5 Threadripper (libgomp) and a dual-socket
+      // Xeon (libiomp5); see #939.
+      constexpr std::size_t kTransposeBytesPerThread = 64 * 1024;
+
+      // Threads for an HPTT transpose of `bytes`: the largest power of two up to
+      // bytes / kTransposeBytesPerThread, at most Device.Ncpus, and at most OpenMP's current
+      // thread count. HPTT turns the count into an explicit num_threads clause, which would
+      // otherwise override OMP_NUM_THREADS and omp_set_num_threads().
+      int transpose_threads(std::size_t bytes) {
+        const std::size_t by_size =
+          std::bit_floor(std::max<std::size_t>(1, bytes / kTransposeBytesPerThread));
+        const int cap = std::max(1, std::min(cytnx::Device.Ncpus, omp_get_max_threads()));
+        return static_cast<int>(std::min(by_size, static_cast<std::size_t>(cap)));
+      }
+
+    }  // namespace
+#endif
 
     template <typename T, typename std::enable_if_t<std::is_integral_v<T>, bool>>
     boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base> &in,
@@ -109,13 +137,9 @@ namespace cytnx {
       if (in->size() > 64) {
         std::vector<int> perm(mapper.begin(), mapper.end());
         std::vector<int> size(old_shape.begin(), old_shape.end());
-        // An explicit HPTT thread count overrides OMP_NUM_THREADS, so pass OpenMP's current
-        // default: it honours OMP_NUM_THREADS, omp_set_num_threads() and the process's CPU affinity
-        // (taskset, cpusets, batch-system allocations such as Slurm's), unlike the
-        // std::thread::hardware_concurrency() count used before.
-        auto plan =
-          hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des, nullptr,
-                            hptt::ESTIMATE, omp_get_max_threads(), nullptr, true);
+        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des,
+                                      nullptr, hptt::ESTIMATE,
+                                      transpose_threads(in->size() * sizeof(T)), nullptr, true);
         plan->execute();
         accu_old = in->size();
       } else {

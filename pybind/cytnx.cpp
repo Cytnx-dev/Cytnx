@@ -69,14 +69,27 @@ PYBIND11_MODULE(cytnx, m) {
   }
   type_enum.export_values();
 
-  auto mdev = m.def_submodule("Device");
-  mdev.attr("cpu") = (cytnx_int64)cytnx::Device.cpu;
-  mdev.attr("cuda") = (cytnx_int64)cytnx::Device.cuda;
-  mdev.attr("Ngpus") = cytnx::Device.Ngpus;
-  mdev.attr("Ncpus") = cytnx::Device.Ncpus;
-  mdev.def("Print_Property", []() { cytnx::Device.Print_Property(); });
-  mdev.def("getname",
-           [](const int &device_id) -> std::string { return cytnx::Device.getname(device_id); });
+  // cytnx.Device refers to the C++ cytnx::Device object rather than holding copies of its values,
+  // so that assigning Device.Ncpus from Python changes the thread count Cytnx uses.
+  py::class_<cytnx::Device_class>(m, "Device_class")
+    .def_property_readonly(
+      "cpu", [](const cytnx::Device_class &) -> cytnx_int64 { return cytnx::Device_class::cpu; })
+    .def_property_readonly(
+      "cuda", [](const cytnx::Device_class &) -> cytnx_int64 { return cytnx::Device_class::cuda; })
+    .def_readonly("Ngpus", &cytnx::Device_class::Ngpus)
+    .def_property(
+      "Ncpus", [](const cytnx::Device_class &device) { return device.Ncpus; },
+      [](cytnx::Device_class &device, int num_threads) {
+        if (num_threads < 1)
+          cytnx_error_msg(true, "[ERROR] Device.Ncpus must be at least 1, got %d.\n", num_threads);
+        device.Ncpus = num_threads;
+      },
+      "Maximum number of threads for Cytnx's own CPU kernels (tensor transposes).")
+    .def("Print_Property", &cytnx::Device_class::Print_Property)
+    .def("getname", [](cytnx::Device_class &device, int device_id) -> std::string {
+      return device.getname(device_id);
+    });
+  m.attr("Device") = py::cast(&cytnx::Device, py::return_value_policy::reference);
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
   m.attr("__cytnx_backend__") = std::string("cytnx");
 

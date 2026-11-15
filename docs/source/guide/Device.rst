@@ -6,7 +6,7 @@ In Cytnx, all the Device properties are handled by **cytnx.Device**.
 
 Number of threads
 ********************
-To check how many threads can be used in your current program by Cytnx, you can use **Device.Ncpus**.
+**Device.Ncpus** is the maximum number of threads that Cytnx's own CPU kernels use. Currently these are the tensor transposes behind ``contiguous()``, which go through HPTT. You can read it:
 
 * In Python:
 
@@ -20,26 +20,20 @@ To check how many threads can be used in your current program by Cytnx, you can 
     :language: c++
     :linenos:
 
-If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.
+You can also set it, for example ``cytnx.Device.Ncpus = 4`` in Python or ``cytnx::Device.Ncpus = 4`` in C++.
 
+The default is OpenMP's thread count, capped at the number of physical cores. OpenMP's count honours ``OMP_NUM_THREADS`` and the CPUs the process may run on: ``taskset``, cpusets, and batch-system allocations such as Slurm's. If Cytnx is not compiled with OpenMP, Device.Ncpus is 1.
 
-.. Note::
-
-    For parallel computing with OpenMP, by default mkl uses all the available threads.
-    However, any Cytnx internal function that utilizes OpenMP may or may not automatically use all threads, depending on your current environment configuration.
-
-
-If OpenMP is enabled and you want to set a restriction on how many threads you want your program to use, this can be done by simply changing an environment variable before you execute your program. For example, the following line will make mkl as well as Cytnx internal functions use 16 threads in all places where they are parallelizable.
+A transpose uses at most one thread per 64 KiB of data, so small transposes always run on a single thread. ``OMP_NUM_THREADS`` and ``omp_set_num_threads()`` also cap the thread count. For example, the following line limits Cytnx's transposes, and any OpenMP-threaded BLAS such as MKL, to 16 threads:
 
 .. code-block:: console
 
     export OMP_NUM_THREADS=16
 
 
+.. Note::
 
-.. Warning::
-
-    Do not change this value manually!
+    The BLAS/LAPACK library manages its own threads. Set those with the library's own variables, such as ``OPENBLAS_NUM_THREADS`` or ``MKL_NUM_THREADS``. With an OpenBLAS built on pthreads, running OpenBLAS and Cytnx's transposes multithreaded on the same cores at once can be much slower than running either alone.
 
 
 Number of GPUs
