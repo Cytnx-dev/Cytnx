@@ -23,21 +23,24 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 VERSION_CMAKE = REPO_ROOT / "version.cmake"
 
 
-def release_version() -> str:
-    """Return ``MAJOR.MINOR.PATCH`` from version.cmake.
+# Same pattern as the ``regex`` in pyproject.toml's
+# ``[tool.scikit-build.metadata.version]`` block, which scikit-build-core uses
+# to read the package version, so the docs accept exactly the version.cmake
+# the package build accepts. It is copied rather than read from pyproject.toml
+# because the docs build runs on Python 3.10, which has no ``tomllib``;
+# pytests/release_tools_test.py fails if the two copies diverge.
+VERSION_CMAKE_REGEX = r"""set\(\w+?VERSION_MAJOR\s+(?P<major>\d+)\)
+set\(\w+?VERSION_MINOR\s+(?P<minor>\d+)\)
+set\(\w+?VERSION_PATCH\s+(?P<patch>\d+)\)
+"""
 
-    The pattern mirrors the one scikit-build-core uses in pyproject.toml's
-    ``[tool.scikit-build.metadata.version]`` block, so the docs accept exactly
-    the version.cmake the package build accepts.
-    """
-    text = VERSION_CMAKE.read_text()
-    parts = []
-    for field in ("MAJOR", "MINOR", "PATCH"):
-        match = re.search(rf"set\(\w+?VERSION_{field}\s+(\d+)\)", text)
-        if not match:
-            raise ValueError(f"could not parse {field} version from {VERSION_CMAKE}")
-        parts.append(match.group(1))
-    return ".".join(parts)
+
+def release_version() -> str:
+    """Return ``MAJOR.MINOR.PATCH`` from version.cmake."""
+    match = re.search(VERSION_CMAKE_REGEX, VERSION_CMAKE.read_text())
+    if not match:
+        raise ValueError(f"could not parse MAJOR.MINOR.PATCH from {VERSION_CMAKE}")
+    return "{major}.{minor}.{patch}".format(**match.groupdict())
 
 
 def version_label() -> str:
