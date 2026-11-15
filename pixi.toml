@@ -41,12 +41,7 @@ cxx-compiler = ">=1.11,<2"
 clang-format = "14.*"
 
 arpack = { version = ">=3.9,<4", build = "nompi_*" }
-# Must match the libboost-headers constraint in
-# tools/cibuildwheel_before_all.sh. Boost 1.89 marks boost::intrusive_ptr's
-# members constexpr, which crashes nvcc's cudafe++ frontend in every CUDA
-# translation unit reaching cytnx::intrusive_ptr_base through
-# backend/Storage.hpp.
-libboost-devel = "<1.89"
+libboost-devel = "*"
 gtest = "*"
 gmock = "*"
 # find_package(benchmark REQUIRED) under RUN_BENCHMARKS=ON, which the configure
