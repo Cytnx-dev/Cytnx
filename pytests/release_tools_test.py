@@ -306,11 +306,18 @@ def make_simple_index(root, package, version):
 
 
 def pip_resolves(package, release_index, nightly_index):
-    """Return the version ``pip install --pre`` would pick with both indexes present."""
+    """Return the version ``pip install --pre`` would pick with both indexes present.
+
+    ``--ignore-installed`` makes pip resolve from the two indexes alone: without it
+    a ``cytnx`` already installed in this interpreter (as in CI, where the checkout
+    is installed before pytest runs) satisfies the requirement and the report
+    lists nothing to install.
+    """
     result = subprocess.run(
         [
             sys.executable, "-m", "pip", "install", "--dry-run", "--no-deps", "--quiet",
-            "--isolated", "--disable-pip-version-check", "--report", "-", "--pre",
+            "--isolated", "--ignore-installed", "--disable-pip-version-check",
+            "--report", "-", "--pre",
             "--index-url", release_index, "--extra-index-url", nightly_index, package,
         ],
         capture_output=True,
