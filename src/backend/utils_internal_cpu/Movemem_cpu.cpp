@@ -13,6 +13,7 @@
   #include <algorithm>
   #include <bit>
   #include <cstddef>
+  #include <numeric>
 
   #include "Device.hpp"
   #include "hptt.h"
@@ -138,9 +139,16 @@ namespace cytnx {
       if (in->size() > 64) {
         std::vector<int> perm(mapper.begin(), mapper.end());
         std::vector<int> size(old_shape.begin(), old_shape.end());
-        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des,
-                                      nullptr, hptt::ESTIMATE,
-                                      transpose_threads(in->size() * sizeof(T)), nullptr, true);
+        const int num_threads = transpose_threads(in->size() * sizeof(T));
+        // HPTT copies only on a calling thread whose omp_get_thread_num() is in its thread-id list,
+        // which defaults to 0 .. num_threads - 1. Inside a user's OpenMP parallel region the caller
+        // can have a larger id (any thread but 0 when one thread is allowed there) and would get an
+        // uninitialised result, so start the list at the caller's own id.
+        std::vector<int> thread_ids(num_threads);
+        std::iota(thread_ids.begin(), thread_ids.end(), omp_get_thread_num());
+        auto plan =
+          hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des, nullptr,
+                            hptt::ESTIMATE, num_threads, thread_ids.data(), true);
         plan->execute();
         accu_old = in->size();
       } else {
