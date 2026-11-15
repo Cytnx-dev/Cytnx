@@ -8,6 +8,8 @@
 #include "backend/Storage.hpp"
 
 #ifdef UNI_HPTT
+  #include <omp.h>
+
   #include "hptt.h"
 #endif
 
@@ -107,8 +109,13 @@ namespace cytnx {
       if (in->size() > 64) {
         std::vector<int> perm(mapper.begin(), mapper.end());
         std::vector<int> size(old_shape.begin(), old_shape.end());
-        auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des,
-                                      nullptr, hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
+        // An explicit HPTT thread count overrides OMP_NUM_THREADS, so pass OpenMP's current
+        // default: it honours OMP_NUM_THREADS, omp_set_num_threads() and the process's CPU affinity
+        // (taskset, cpusets, batch-system allocations such as Slurm's), unlike the
+        // std::thread::hardware_concurrency() count used before.
+        auto plan =
+          hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des, nullptr,
+                            hptt::ESTIMATE, omp_get_max_threads(), nullptr, true);
         plan->execute();
         accu_old = in->size();
       } else {

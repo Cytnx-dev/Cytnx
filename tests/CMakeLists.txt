@@ -47,6 +47,7 @@ add_executable(
   include_order_canary_test.cpp
   operator_constraint_test.cpp
   Tensor_strides_test.cpp
+  Tensor_transpose_threads_test.cpp
   Storage_test.cpp
   Scalar_test.cpp
   search_tree_test.cpp
