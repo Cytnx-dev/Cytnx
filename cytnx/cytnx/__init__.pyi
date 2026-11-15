@@ -4,13 +4,12 @@ import cytnx.utils
 import numpy
 import typing
 import typing_extensions
-from . import Device
 from . import algo
 from . import linalg
 from . import physics
 from . import qgates
 from . import random
-__all__: list[str] = ['BD_BRA', 'BD_IN', 'BD_KET', 'BD_OUT', 'BD_REG', 'Bond', 'Bool', 'ComplexDouble', 'ComplexFloat', 'Contract', 'Contracts', 'CytnxError', 'Device', 'Double', 'EVEN', 'Fermion', 'Float', 'Helpclass', 'Int16', 'Int32', 'Int64', 'LinOp', 'Network', 'NtType', 'ODD', 'Regular', 'Storage', 'SymType', 'Symmetry', 'Tensor', 'Type', 'U', 'Uint16', 'Uint32', 'Uint64', 'UniTensor', 'User_debug', 'Void', 'Z', 'algo', 'arange', 'bondType', 'eye', 'fNum', 'fPar', 'fermionParity', 'identity', 'linalg', 'linspace', 'ncon', 'ones', 'ostream_redirect', 'physics', 'qgates', 'random', 'zeros']
+__all__: list[str] = ['BD_BRA', 'BD_IN', 'BD_KET', 'BD_OUT', 'BD_REG', 'Bond', 'Bool', 'ComplexDouble', 'ComplexFloat', 'Contract', 'Contracts', 'CytnxError', 'Device', 'Device_class', 'Double', 'EVEN', 'Fermion', 'Float', 'Helpclass', 'Int16', 'Int32', 'Int64', 'LinOp', 'Network', 'NtType', 'ODD', 'Regular', 'Storage', 'SymType', 'Symmetry', 'Tensor', 'Type', 'U', 'Uint16', 'Uint32', 'Uint64', 'UniTensor', 'User_debug', 'Void', 'Z', 'algo', 'arange', 'bondType', 'eye', 'fNum', 'fPar', 'fermionParity', 'identity', 'linalg', 'linspace', 'ncon', 'ones', 'ostream_redirect', 'physics', 'qgates', 'random', 'zeros']
 class Bond:
     __hash__: typing.ClassVar[None] = None
     @staticmethod
@@ -101,6 +100,28 @@ class CytnxError(RuntimeError):
     """
     Raised when a cytnx C++ operation fails (via cytnx_error_msg). Subclass of RuntimeError; only cytnx_error_msg-originated errors are reclassified as CytnxError.
     """
+class Device_class:
+    def Print_Property(self) -> None:
+        ...
+    def getname(self, arg0: typing.SupportsInt | typing.SupportsIndex) -> str:
+        ...
+    @property
+    def Ncpus(self) -> int:
+        """
+        Maximum number of threads for Cytnx's own CPU kernels (tensor transposes).
+        """
+    @Ncpus.setter
+    def Ncpus(self, arg1: typing.SupportsInt | typing.SupportsIndex) -> None:
+        ...
+    @property
+    def Ngpus(self) -> int:
+        ...
+    @property
+    def cpu(self) -> int:
+        ...
+    @property
+    def cuda(self) -> int:
+        ...
 class Helpclass:
     def dtype(self) -> int:
         ...
@@ -2865,6 +2886,7 @@ BD_REG: bondType  # value = <bondType.BD_REG: 0>
 Bool: Type  # value = <Type.Bool: 11>
 ComplexDouble: Type  # value = <Type.ComplexDouble: 1>
 ComplexFloat: Type  # value = <Type.ComplexFloat: 2>
+Device: Device_class  # value = <cytnx.cytnx.Device_class object>
 Double: Type  # value = <Type.Double: 3>
 EVEN: fermionParity  # value = <fermionParity.EVEN: 0>
 Fermion: NtType  # value = <NtType.Fermion: 1>
