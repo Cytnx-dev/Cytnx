@@ -133,7 +133,7 @@ option, a different convention), label the PR `behaviour-change` (or `deprecatio
 when it starts a deprecation cycle) and add a section `## Release note` to its
 description with the paragraph a user needs: what changed, what they will observe,
 and how to keep the old behaviour. The maintainer cutting the next release copies
-that paragraph into the release notes (RELEASING.md step 5); the generator only
+that paragraph into the release notes (RELEASING.md step 3); the generator only
 sees the PR title, so write the title as the changelog line it becomes.
 
 ## Updating the minimum supported Python version

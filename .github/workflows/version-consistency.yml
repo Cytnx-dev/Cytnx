@@ -8,7 +8,7 @@ name: Release metadata consistency
 # and CITATION.cff must cite the newest of them, the latest release.
 # version.cmake must be at or above that newest slug: between releases it
 # runs ahead of it on purpose, so nightlies outrank the last release
-# (RELEASING.md step 4, #1204). The Doxygen build (docs.doxygen) must take
+# (RELEASING.md step 5, #1204). The Doxygen build (docs.doxygen) must take
 # its version from version.cmake through docs/cytnx_version.py instead of a
 # literal.
 #
