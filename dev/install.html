@@ -7,7 +7,7 @@
         <link rel="prefetch" href="_static/Iconi.png" as="image">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
-        <title>Install &amp; Usage of Cytnx - Cytnx 1.1.1.dev666+g938eaba5</title>
+        <title>Install &amp; Usage of Cytnx - Cytnx 1.1.1.dev672+g5bd9137c</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -162,7 +162,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">Cytnx 1.1.1.dev666+g938eaba5</div></a>
+      <a href="index.html"><div class="brand">Cytnx 1.1.1.dev672+g5bd9137c</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -186,7 +186,7 @@
     <img class="sidebar-logo" src="_static/Iconi.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">Cytnx 1.1.1.dev666+g938eaba5</span>
+  <span class="sidebar-brand-text">Cytnx 1.1.1.dev672+g5bd9137c</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -525,17 +525,20 @@ pip<span class="w"> </span>install<span class="w"> </span>cytnx
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span></code> cannot be told to prefer one index over another: with
-<code class="docutils literal notranslate"><span class="pre">--extra-index-url</span></code> it considers every index together and picks the
-highest version, and a nightly such as <code class="docutils literal notranslate"><span class="pre">1.1.1.dev202610071206</span></code> sorts
-<em>below</em> the <code class="docutils literal notranslate"><span class="pre">1.1.1</span></code> release. So <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--pre</span> <span class="pre">--extra-index-url</span>
-<span class="pre">...</span></code> quietly installs the release, not the nightly. To get a nightly with
-<code class="docutils literal notranslate"><span class="pre">pip</span></code>, pin one exactly:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">extra</span><span class="o">-</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pypi</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cytnx</span><span class="o">-</span><span class="n">nightly</span><span class="o">-</span><span class="n">wheels</span><span class="o">/</span><span class="n">simple</span> \
-    <span class="n">cytnx</span><span class="o">==</span><span class="mf">1.1.1</span><span class="o">.</span><span class="n">devYYYYMMDDHHMM</span>
+<code class="docutils literal notranslate"><span class="pre">--extra-index-url</span></code> it considers every index together and installs the
+highest version it finds, and pre-releases only count with <code class="docutils literal notranslate"><span class="pre">--pre</span></code>.
+Nightlies are therefore versioned past the newest release (for example
+<code class="docutils literal notranslate"><span class="pre">1.1.2.devYYYYMMDDHHMM</span></code> while <code class="docutils literal notranslate"><span class="pre">1.1.1</span></code> is the newest release), so
+with <code class="docutils literal notranslate"><span class="pre">--pre</span></code> the nightly wins:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="o">--</span><span class="n">pre</span> <span class="o">--</span><span class="n">extra</span><span class="o">-</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pypi</span><span class="o">.</span><span class="n">anaconda</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cytnx</span><span class="o">-</span><span class="n">nightly</span><span class="o">-</span><span class="n">wheels</span><span class="o">/</span><span class="n">simple</span> <span class="n">cytnx</span>
 </pre></div>
 </div>
-<p>picking a version from the <a class="reference external" href="https://pypi.anaconda.org/cytnx-nightly-wheels/simple/cytnx/">nightly index</a>. Pixi and
-<code class="docutils literal notranslate"><span class="pre">uv</span></code> both resolve a named index directly and need no such pin.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--upgrade</span></code> matters when a release is already installed: without it
+<code class="docutils literal notranslate"><span class="pre">pip</span></code> reports the requirement as satisfied and installs nothing.
+Without <code class="docutils literal notranslate"><span class="pre">--pre</span></code> the same command installs the release. To hold a
+particular nightly, pin it exactly (<code class="docutils literal notranslate"><span class="pre">cytnx==1.1.2.devYYYYMMDDHHMM</span></code>,
+picking a version from the <a class="reference external" href="https://pypi.anaconda.org/cytnx-nightly-wheels/simple/cytnx/">nightly index</a>). Pixi
+and <code class="docutils literal notranslate"><span class="pre">uv</span></code> both resolve a named index directly and need neither flag.</p>
 </div>
 </section>
 <section id="supported-platforms">
@@ -700,7 +703,7 @@ Cytnx, build and install the C++ library directly with CMake and consume it via
   </div>
 </div><script src="_static/jquery.js?v=5d32c60e"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="_static/documentation_options.js?v=675a9a0d"></script>
+    <script src="_static/documentation_options.js?v=e0e1460a"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
