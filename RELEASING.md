@@ -152,10 +152,11 @@ Because `version.cmake` is above the last release between releases (step 4),
 a nightly outranks every published release, so
 
 ```sh
-pip install --pre --extra-index-url https://pypi.anaconda.org/cytnx-nightly-wheels/simple cytnx
+pip install --upgrade --pre --extra-index-url https://pypi.anaconda.org/cytnx-nightly-wheels/simple cytnx
 ```
 
-selects the nightly rather than the PyPI release. `pytests/release_tools_test.py`
+selects the nightly rather than the PyPI release (`--upgrade` so that an
+already installed release does not satisfy the requirement). `pytests/release_tools_test.py`
 checks this resolution against local indexes for both `cytnx` and
 `cytnx-cuda`, and `tools/check_release_consistency.py` fails any pull request
 that drops `version.cmake` below the newest release.

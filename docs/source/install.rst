@@ -98,8 +98,10 @@ Python, and create it with a Python version from `Supported platforms`_:
     ``1.1.2.devYYYYMMDDHHMM`` while ``1.1.1`` is the newest release), so
     with ``--pre`` the nightly wins::
 
-        pip install --pre --extra-index-url https://pypi.anaconda.org/cytnx-nightly-wheels/simple cytnx
+        pip install --upgrade --pre --extra-index-url https://pypi.anaconda.org/cytnx-nightly-wheels/simple cytnx
 
+    ``--upgrade`` matters when a release is already installed: without it
+    ``pip`` reports the requirement as satisfied and installs nothing.
     Without ``--pre`` the same command installs the release. To hold a
     particular nightly, pin it exactly (``cytnx==1.1.2.devYYYYMMDDHHMM``,
     picking a version from the `nightly index

@@ -33,7 +33,7 @@ name: Release wheels
 #
 # Install commands:
 #   stable:   pip install cytnx
-#   nightly:  pip install --pre \
+#   nightly:  pip install --upgrade --pre \
 #               --extra-index-url \
 #                 https://pypi.anaconda.org/cytnx-nightly-wheels/simple \
 #               cytnx
