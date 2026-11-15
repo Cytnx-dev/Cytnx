@@ -237,13 +237,18 @@ else
   # from the first pip build. `cmake --install --prefix` cannot do the copy:
   # the extension's install DESTINATION is an absolute path fixed at
   # configure time (pip's temporary wheel directory). Only files the
-  # editable install actually placed in the venv are refreshed.
+  # editable install actually placed in the venv are refreshed. Each file is
+  # copied to a temporary sibling and renamed over the installed one: a
+  # rename gives the installed path a new inode, so a Python process that has
+  # already loaded the old extension keeps its mapping, whereas copying over
+  # the file in place would change code under that running process.
   if [[ ${needs_python} -eq 1 ]]; then
     platlib="$("${venv_dir}/bin/python" -c 'import sysconfig; print(sysconfig.get_paths()["platlib"])')"
     for built in "${build_dir}"/cytnx*.so "${build_dir}"/*.tmp; do
       installed="${platlib}/cytnx/$(basename "${built}")"
       if [[ -f "${built}" && -f "${installed}" ]]; then
-        cp -f "${built}" "${installed}"
+        cp -f "${built}" "${installed}.new.$$"
+        mv -f "${installed}.new.$$" "${installed}"
       fi
     done
   fi
