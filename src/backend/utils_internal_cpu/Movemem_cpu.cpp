@@ -10,6 +10,8 @@
 #ifdef UNI_HPTT
   #include <omp.h>
 
+  #include <numeric>
+
   #include "hptt.h"
 #endif
 
@@ -113,9 +115,16 @@ namespace cytnx {
         // default: it honours OMP_NUM_THREADS, omp_set_num_threads() and the process's CPU affinity
         // (taskset, cpusets, batch-system allocations such as Slurm's), unlike the
         // std::thread::hardware_concurrency() count used before.
+        const int num_threads = omp_get_max_threads();
+        // HPTT copies only on a calling thread whose omp_get_thread_num() is in its thread-id list,
+        // which defaults to 0 .. num_threads - 1. Inside a user's OpenMP parallel region the caller
+        // can have a larger id (any thread but 0 when omp_get_max_threads() is 1 there) and would
+        // get an uninitialised result, so start the list at the caller's own id.
+        std::vector<int> thread_ids(num_threads);
+        std::iota(thread_ids.begin(), thread_ids.end(), omp_get_thread_num());
         auto plan =
           hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], nullptr, 0, des, nullptr,
-                            hptt::ESTIMATE, omp_get_max_threads(), nullptr, true);
+                            hptt::ESTIMATE, num_threads, thread_ids.data(), true);
         plan->execute();
         accu_old = in->size();
       } else {
