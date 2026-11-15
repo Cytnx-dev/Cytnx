@@ -209,6 +209,7 @@ jobs:
         # GPU kernels are not exercised here.
         CIBW_TEST_REQUIRES: pytest
         CIBW_TEST_COMMAND: >-
+          python {project}/tools/validate_ccache_stats.py &&
           python {project}/tools/artifact_smoke_test.py --version-cmake {project}/version.cmake &&
           python -m pytest -p no:cacheprovider {project}/pytests
           --ignore={project}/pytests/example
@@ -216,7 +217,6 @@ jobs:
           --ignore={project}/pytests/prune_nightly_wheels_test.py
           --ignore={project}/pytests/release_tools_test.py
           --ignore={project}/pytests/random_distribution_test.py &&
-          python {project}/tools/validate_ccache_stats.py &&
           python -c "import cytnx; assert cytnx.Device.Ngpus == 0, cytnx.Device.Ngpus"
         # Compile HPTT's hand-vectorized kernels for the architecture this
         # wheel targets; see release_pypi.yml's equivalent for why runner.arch
