@@ -1,7 +1,6 @@
 #include "MaxMin_internal.hpp"
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
-#include <cfloat>
 #include <limits>
 
 namespace cytnx {
@@ -128,12 +127,12 @@ namespace cytnx {
       cytnx_double *_out = (cytnx_double *)out->data();
 
       if (type == 'x') {
-        _out[0] = DBL_MIN;
+        _out[0] = -std::numeric_limits<cytnx_double>::infinity();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = DBL_MAX;
+        _out[0] = std::numeric_limits<cytnx_double>::infinity();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }
@@ -147,12 +146,12 @@ namespace cytnx {
       cytnx_float *_out = (cytnx_float *)out->data();
 
       if (type == 'x') {
-        _out[0] = FLT_MIN;
+        _out[0] = -std::numeric_limits<cytnx_float>::infinity();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] > _out[0]) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = FLT_MAX;
+        _out[0] = std::numeric_limits<cytnx_float>::infinity();
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n] < _out[0]) _out[0] = _ten[n];
         }
@@ -165,12 +164,12 @@ namespace cytnx {
       cytnx_complex128 *_out = (cytnx_complex128 *)out->data();
 
       if (type == 'x') {
-        _out[0] = cytnx_complex128(DBL_MIN, DBL_MIN);
+        _out[0] = cytnx_complex128(-std::numeric_limits<cytnx_double>::infinity(), 0);
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n].real() >= _out[0].real()) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = cytnx_complex128(DBL_MAX, DBL_MAX);
+        _out[0] = cytnx_complex128(std::numeric_limits<cytnx_double>::infinity(), 0);
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n].real() <= _out[0].real()) _out[0] = _ten[n];
         }
@@ -184,12 +183,12 @@ namespace cytnx {
       cytnx_complex64 *_out = (cytnx_complex64 *)out->data();
 
       if (type == 'x') {
-        _out[0] = cytnx_complex64(FLT_MIN, FLT_MIN);
+        _out[0] = cytnx_complex64(-std::numeric_limits<cytnx_float>::infinity(), 0);
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n].real() >= _out[0].real()) _out[0] = _ten[n];
         }
       } else if (type == 'n') {
-        _out[0] = cytnx_complex64(FLT_MAX, FLT_MAX);
+        _out[0] = cytnx_complex64(std::numeric_limits<cytnx_float>::infinity(), 0);
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           if (_ten[n].real() <= _out[0].real()) _out[0] = _ten[n];
         }

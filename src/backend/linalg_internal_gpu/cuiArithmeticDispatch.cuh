@@ -118,12 +118,15 @@ namespace cytnx {
 
         if (rhs_is_scalar) {
           iscalar_kernel<op_code><<<NBlocks, 512>>>(out, lhs, len, rhs[0]);
+          CYTNX_CHECK_CUDA_LAUNCH(iscalar_kernel);
         } else if (shape.size() == 0) {
           itn_kernel<op_code><<<NBlocks, 512>>>(out, lhs, len, rhs);
+          CYTNX_CHECK_CUDA_LAUNCH(itn_kernel);
         } else {
           const gpu_layout::GpuNonContigLayout layout =
             gpu_layout::make_gpu_non_contig_layout(shape, invmapper_L, invmapper_R);
           itn_nonconti_kernel<op_code><<<NBlocks, 512>>>(out, lhs, len, rhs, layout);
+          CYTNX_CHECK_CUDA_LAUNCH(itn_nonconti_kernel);
         }
       }
 

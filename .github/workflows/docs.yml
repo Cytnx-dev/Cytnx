@@ -25,7 +25,13 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
-          version: "0.8.17"
+          # uv releases before 0.13.5 trust the compromised eMudhra
+          # intermediate CA certificates. The checksum is that of
+          # uv-x86_64-unknown-linux-gnu.tar.gz, the archive this x86_64 runner
+          # downloads, so a substituted download fails the job instead of
+          # running. Must match `version`.
+          version: "0.13.5"
+          checksum: "f68d291c75783122dad58ab77def0e13f3233f358731db5d6d7e8715603b928f"
           enable-cache: true
       - name: Install dependencies
         run: |

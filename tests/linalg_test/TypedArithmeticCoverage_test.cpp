@@ -241,6 +241,77 @@ namespace cytnx {
         }
       }
 
+      template <class T>
+      T make_value(double re, double im) {
+        if constexpr (is_complex_v<T>) {
+          using Real = typename T::value_type;
+          return T(static_cast<Real>(re), static_cast<Real>(im));
+        } else {
+          return static_cast<T>(re);
+        }
+      }
+
+      // A contiguous rank-1 tensor of dtype T holding values[k].
+      template <class T>
+      Tensor make_vector(const std::vector<T>& values) {
+        Tensor t = zeros({values.size()}, Type.cy_typeid(T()));
+        for (std::size_t k = 0; k < values.size(); ++k) t.at<T>({k}) = values[k];
+        return t;
+      }
+
+      // Checks `lhs op= rhs` (tensor RHS) and `lhs op= rhs_scalar` (weak scalar RHS) for one
+      // op, where lhs and rhs share dtype T so the kernel writes into lhs's own buffer. The
+      // expected values come from T's own arithmetic, one element at a time. 37 elements cover
+      // a vectorized loop body plus a scalar tail.
+      template <class T, class Op>
+      void check_same_dtype_inplace(Op op) {
+        const std::size_t n = 37;
+        std::vector<T> lhs_values(n), rhs_values(n);
+        for (std::size_t k = 0; k < n; ++k) {
+          lhs_values[k] = make_value<T>(0.25 * k - 4.0, 1.5 - 0.125 * k);
+          rhs_values[k] = make_value<T>(0.5 + 0.125 * k, -0.75 + 0.0625 * k);
+        }
+        const T rhs_scalar = make_value<T>(-1.25, 0.5);
+
+        Tensor with_tensor = make_vector(lhs_values);
+        const T* tensor_buffer = with_tensor.ptr_as<T>();
+        op(with_tensor, make_vector(rhs_values));
+        Tensor with_scalar = make_vector(lhs_values);
+        const T* scalar_buffer = with_scalar.ptr_as<T>();
+        op(with_scalar, rhs_scalar);
+
+        // Same dtype, same buffer: the kernel wrote in place rather than promoting.
+        EXPECT_EQ(with_tensor.dtype(), Type.cy_typeid(T()));
+        EXPECT_EQ(with_tensor.ptr_as<T>(), tensor_buffer);
+        EXPECT_EQ(with_scalar.dtype(), Type.cy_typeid(T()));
+        EXPECT_EQ(with_scalar.ptr_as<T>(), scalar_buffer);
+        for (std::size_t k = 0; k < n; ++k) {
+          T expected_tensor = lhs_values[k];
+          op(expected_tensor, rhs_values[k]);
+          T expected_scalar = lhs_values[k];
+          op(expected_scalar, rhs_scalar);
+          EXPECT_EQ(with_tensor.at<T>({k}), expected_tensor) << "element " << k;
+          EXPECT_EQ(with_scalar.at<T>({k}), expected_scalar) << "element " << k;
+        }
+      }
+
+      template <class T>
+      void check_same_dtype_inplace_all_ops() {
+        check_same_dtype_inplace<T>([](auto& a, const auto& b) { a += b; });
+        check_same_dtype_inplace<T>([](auto& a, const auto& b) { a -= b; });
+        check_same_dtype_inplace<T>([](auto& a, const auto& b) { a *= b; });
+        check_same_dtype_inplace<T>([](auto& a, const auto& b) { a /= b; });
+      }
+
+      // In-place arithmetic whose output is the LHS buffer itself, for every op and every
+      // floating-point dtype.
+      TEST(TypedArithCoverage, InplaceSameDtypeWritesIntoLhs) {
+        check_same_dtype_inplace_all_ops<cytnx_float>();
+        check_same_dtype_inplace_all_ops<cytnx_double>();
+        check_same_dtype_inplace_all_ops<cytnx_complex64>();
+        check_same_dtype_inplace_all_ops<cytnx_complex128>();
+      }
+
     }  // namespace
   }  // namespace test
 }  // namespace cytnx

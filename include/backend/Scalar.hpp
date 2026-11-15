@@ -12,7 +12,9 @@ namespace cytnx {
   ///@cond
   class Storage_base;
 
-  // The following two declarations are necessary for ADL.
+  // Scalar::Sproxy holds a boost::intrusive_ptr<Storage_base> while Storage_base is incomplete, so
+  // the hook templates in intrusive_ptr_base.hpp cannot be deduced through its base class here.
+  // These overloads are found by ADL instead; they are defined in Storage_base.cpp.
   void intrusive_ptr_add_ref(Storage_base *);
   void intrusive_ptr_release(Storage_base *);
   ///@endcond

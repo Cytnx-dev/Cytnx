@@ -13,6 +13,11 @@ CYTNX_DEPS_PREFIX="/opt/cytnx-deps"
 # ci-cmake_tests.yml's own mamba-based dependency install already relies on
 # this same conda-forge OpenMP runtime for the native test build.
 if command -v dnf >/dev/null 2>&1; then
+    # dnf verifies packages by signature, so upgrading ca-certificates here is
+    # safe even if the image's bundle is stale. The upgraded bundle no longer
+    # trusts the compromised eMudhra intermediate CA certificates, and curl
+    # and micromamba below verify HTTPS against it.
+    dnf upgrade -y ca-certificates
     dnf install -y ccache curl bzip2
 
     arch="$(uname -m)"
@@ -21,19 +26,14 @@ if command -v dnf >/dev/null 2>&1; then
     else
       conda_subdir="linux-64"
     fi
-    curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/latest" | tar -xj -C /usr/local bin/micromamba
-    # Boost >= 1.89 marks boost::intrusive_ptr's members constexpr. Every CUDA
-    # translation unit that reaches cytnx::intrusive_ptr_base through
-    # backend/Storage.hpp then crashes nvcc's cudafe++ frontend with
-    # "internal error: check_for_and_take_source_seq_entry: wrong entry"
-    # (issues #1124, #1063). g++ and clang++ accept the same code, and no nvcc
-    # flag avoids it, so the Boost version is the only lever here.
-    # TODO: lift this pin once a CUDA toolkit ships a fixed cudafe++.
+    # Must match micromamba_version in tools/cibuildwheel_before_all_macos.sh.
+    micromamba_version="2.9.0"
+    curl -fLs "https://micro.mamba.pm/api/micromamba/${conda_subdir}/${micromamba_version}" | tar -xj -C /usr/local bin/micromamba
     MAMBA_ROOT_PREFIX=/opt/micromamba /usr/local/bin/micromamba create -y -p "${CYTNX_DEPS_PREFIX}" -c conda-forge \
       "openblas=*=*openmp*" \
       liblapacke \
       "arpack=*=nompi*" \
-      "libboost-headers<1.89"
+      libboost-headers
 
 # musllinux_1_2 images are Alpine-based, so use apk there. conda-forge
 # publishes no musl builds, so arpack/boost still come from Alpine's own
@@ -44,6 +44,11 @@ if command -v dnf >/dev/null 2>&1; then
 # replace Alpine's copy with it in place.
 elif command -v apk >/dev/null 2>&1; then
     apk update
+    # apk verifies packages by signature, so upgrading ca-certificates here is
+    # safe even if the image's bundle is stale. The upgraded bundle no longer
+    # trusts the compromised eMudhra intermediate CA certificates, and the
+    # git clone below verifies HTTPS against it.
+    apk add --upgrade ca-certificates
     apk add boost-dev openblas-dev arpack-dev ccache \
       build-base gfortran linux-headers perl git patchelf
 

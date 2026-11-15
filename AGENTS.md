@@ -65,7 +65,7 @@ overrides; read them when writing or reviewing code.
 
 The rules agents most often get wrong:
 
-- **No leading underscore in new C++ code** (strict). `_foo` is the retired
+- **No leading underscore in new C++ code** (strict/C++ only). `_foo` is the retired
   private-member convention (#836); new C++/CUDA members, helpers, and locals
   must not start with `_`. **The ban is C++-only.** In Python a single leading
   underscore is Google style's marker for a module- or class-internal name
@@ -126,6 +126,11 @@ Green locally before opening a PR. CI enforces:
 - Small, single-purpose commits following the
   [Conventional Commits](https://www.conventionalcommits.org) standard:
   `fix(linalg): …`, `refactor(Storage): …`, `test(Type): …`.
+- **Stacked PRs:** when you update a branch that another PR is based on (new
+  commits or a rebase), update the PRs stacked on it in the same step. Do not
+  rebase or force-push a branch that someone else may have pulled or is working
+  on without asking them first. State the dependency in the child's PR body
+  ("stacked on #N; merge after #N").
 - Attribute agent-authored commits with a `Co-Authored-By:` trailer naming the
   agent. It is set when the commit is written and is **not checkable from a
   diff** — reviewers must not verify or flag it.
@@ -182,6 +187,10 @@ Green locally before opening a PR. CI enforces:
   non-contiguous tensor⊗tensor kernels that `cuAdd`/`cuSub` have — contiguous-ize
   first or results are silently wrong; a narrow LHS can OOB-write; a length-1
   scalar RHS must stay CPU-resident (#988).
+- **No device-side kernel launches or `cudaMemcpy*` from device code** (CUDA
+  dynamic parallelism); copy in-kernel with a loop. Each such call is a child
+  launch from a pool of 2048 pending launches; past that it fails with an error
+  code nobody reads, leaving elements silently uncopied, and can hang (#1229).
 - **Raise errors via `cytnx_error_msg(cond, "fmt", …)`** (throws `cytnx::error`,
   surfaced in Python as `cytnx.CytnxError`); the function name comes from
   `CYTNX_FUNC_NAME`. House style is `if (cond) cytnx_error_msg(…)` with a

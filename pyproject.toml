@@ -57,6 +57,9 @@ viz = [
 test = [
     "pytest",
     "pytest-cov",
+    # Statistical goodness-of-fit tests (kstest, cramervonmises, chisquare)
+    # for the random-distribution pytests.
+    "scipy",
 ]
 # Tooling for collecting C++ coverage from the build directory. Pure
 # Python and works against any GCC/Clang-produced .gcno/.gcda pair.

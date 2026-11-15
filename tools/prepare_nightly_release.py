@@ -19,7 +19,9 @@ The script
      for the `cytnx` PyPI project with that static dev version
      (`pip install --pre cytnx` will pick up the nightly; `pip install
      cytnx` continues to install the latest stable, mirroring the
-     numpy / scipy convention); and
+     numpy / scipy convention -- provided version.cmake is already
+     above the last release, see RELEASING.md step 4 and #1204; a
+     `.devN` of the released version sorts below the release); and
   4. appends `CYTNX_VERSION_TAG=.devYYYYMMDDHHMM` to `$GITHUB_ENV` so
      downstream steps that were not given the tag explicitly can
      still forward it into CMake. The C++ compile definition
