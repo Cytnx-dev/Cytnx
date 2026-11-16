@@ -57,6 +57,21 @@ orders a `.devN` version *before* its base release, which is why
 `version.cmake` must never equal the last release between releases: a
 `1.1.1.devN` build would rank below 1.1.1 (#1204).
 
+## Choosing the version number
+
+A release that can break working user code needs a new **major** version.
+That covers removing or renaming a public C++ or Python name, changing a
+signature, and changing what a call returns or raises (value, dtype, shape,
+labels) when the old behaviour was the documented or intended one.
+
+Correcting a result that was wrong is a bug fix. It does not by itself
+require a major version, even though users will see different output, but it
+still gets a release note (step 3).
+
+Whether a change is a fix or a break is decided by the reviewers of that pull
+request. A pull request judged breaking carries the Conventional Commits `!`
+in its title, and a release that contains one is a major release.
+
 ## Steps
 
 1. **Run the bump script** with the new `MAJOR.MINOR.PATCH` (no leading `v`):
