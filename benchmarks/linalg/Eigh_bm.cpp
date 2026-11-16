@@ -6,8 +6,9 @@
 
 #include <cytnx.hpp>
 
-// linalg::Eigh with its default arguments, so that the file builds at every revision and the
-// columns of a cross-revision comparison differ only in what the default driver is (#1214).
+// linalg::Eigh with its default arguments, and the same calls with algorithm = "dc" (#1214).
+// The benchmarks without "Dc" in their name build at every revision; the "Dc" ones need the
+// algorithm option, and running both from one binary compares the two CPU drivers.
 namespace BMTest_Eigh {
 
   using namespace cytnx;
@@ -75,5 +76,41 @@ namespace BMTest_Eigh {
     }
   }
   BENCHMARK(BM_BlockUT_Eigh_F64)->Arg(450)->Arg(1250)->Unit(benchmark::kMillisecond);
+
+  static void BM_Tensor_Eigh_Dc_F64(benchmark::State& state) {
+    const Tensor T = hermitian(state.range(0), Type.Double);
+    for (auto _ : state) {
+      std::vector<Tensor> out = linalg::Eigh(T, true, false, "dc");
+      benchmark::DoNotOptimize(out);
+    }
+  }
+  BENCHMARK(BM_Tensor_Eigh_Dc_F64)->Arg(100)->Arg(450)->Arg(1250)->Unit(benchmark::kMillisecond);
+
+  static void BM_Tensor_Eigh_Dc_C128(benchmark::State& state) {
+    const Tensor T = hermitian(state.range(0), Type.ComplexDouble);
+    for (auto _ : state) {
+      std::vector<Tensor> out = linalg::Eigh(T, true, false, "dc");
+      benchmark::DoNotOptimize(out);
+    }
+  }
+  BENCHMARK(BM_Tensor_Eigh_Dc_C128)->Arg(100)->Arg(450)->Arg(1250)->Unit(benchmark::kMillisecond);
+
+  static void BM_Tensor_Eigh_Dc_ValuesOnly_F64(benchmark::State& state) {
+    const Tensor T = hermitian(state.range(0), Type.Double);
+    for (auto _ : state) {
+      std::vector<Tensor> out = linalg::Eigh(T, false, false, "dc");
+      benchmark::DoNotOptimize(out);
+    }
+  }
+  BENCHMARK(BM_Tensor_Eigh_Dc_ValuesOnly_F64)->Arg(450)->Arg(1250)->Unit(benchmark::kMillisecond);
+
+  static void BM_BlockUT_Eigh_Dc_F64(benchmark::State& state) {
+    const UniTensor T = hermitian_z2(state.range(0));
+    for (auto _ : state) {
+      std::vector<UniTensor> out = linalg::Eigh(T, true, false, "dc");
+      benchmark::DoNotOptimize(out);
+    }
+  }
+  BENCHMARK(BM_BlockUT_Eigh_Dc_F64)->Arg(450)->Arg(1250)->Unit(benchmark::kMillisecond);
 
 }  // namespace BMTest_Eigh
