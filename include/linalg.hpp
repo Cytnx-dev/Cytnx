@@ -2105,11 +2105,16 @@ namespace cytnx {
     @param[in] row_V if set to ture, the return eigen vectors will be row form.
     @param[in] algorithm the driver that computes the decomposition:
     - "qr": QR iteration (LAPACK ?syev / ?heev). CPU only: cuSOLVER has no such driver.
-    - "dc": divide and conquer (LAPACK ?syevd / ?heevd, cuSOLVER ?syevd / ?heevd). It needs a
-      larger workspace than "qr" (of the order of two more copies of the matrix when the
-      eigenvectors are requested). If LAPACK reports that it failed to converge, the
-      decomposition is redone with "qr" and a warning is printed.
-    - "default": "qr" on the CPU and "dc" on a GPU.
+    - "dc": divide and conquer (LAPACK ?syevd / ?heevd, cuSOLVER ?syevd / ?heevd). On the CPU
+      it is usually faster than "qr" for matrices of several hundred rows or more when the
+      eigenvectors are requested (measured: 2 times with MKL, 6 to 10 times with OpenBLAS, for
+      a 1250 x 1250 matrix), and costs the same when they are not; the gain depends on the
+      LAPACK library and the matrix. It needs a larger workspace than "qr" (of
+      the order of two more copies of the matrix when the eigenvectors are requested). If
+      LAPACK reports that it failed to converge, the decomposition is redone with "qr" and a
+      warning is printed.
+    - "default": "qr" on the CPU and "dc" on a GPU, which is what Eigh did before it had this
+      argument. To get the faster driver on the CPU, pass "dc".
 
     An unknown name, or a driver that the device of \p Tin does not have, raises an error.
     @return [std::vector<Tensors>], the first tensor is the eigen values, a 1-d tensor (vector).
@@ -2120,7 +2125,8 @@ namespace cytnx {
     @note The eigenvalues, and the projector onto each eigenspace, do not depend on \p algorithm
     beyond rounding. The eigenvectors do: their signs (phases), and the basis they form inside a
     degenerate eigenspace, are not fixed by the decomposition and differ between drivers and
-    between the CPU and a GPU. Do not compare eigenvectors element by element.
+    between the CPU and a GPU. Do not compare eigenvectors element by element: code that does,
+    for instance against stored eigenvectors, sees a difference when \p algorithm changes.
     @warning If \p Tin is not a Hermitian matrix, only the lower triangular matrix will be used.
     (This is strongly not recommended, please use
     Eig(const Tensor &Tin, const bool &is_V, const bool &row_v) instead.
