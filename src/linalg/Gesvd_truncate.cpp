@@ -55,10 +55,12 @@ namespace cytnx {
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
+        // Integer and Bool input is converted to Double, as Gesvd does on the CPU path and on the
+        // GPU path without cuQuantum; cuQuantumGeSvd_ii has no kernel for those dtypes.
+        if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
         // cytnx_uint64 n_singlu = std::min(keepdim, std::min(Tin.shape()[0], Tin.shape()[1]));
         cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
-        // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
         // prepare U, S, vT
         Tensor U, S, vT, terr;
         S.Init({n_singlu}, Type.to_real(in.dtype()),
