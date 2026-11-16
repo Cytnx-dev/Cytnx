@@ -246,10 +246,9 @@ jobs:
         #      wheel, and read a pyproject.toml the nightly stamping has
         #      rewritten; release_tools_test.py arrives with #1239;
         #      version_test.py is superseded by step 2, which also knows
-        #      the nightly suffix), and random_distribution_test.py
-        #      (needs scipy, which has no wheel for every interpreter built
-        #      here).
-        CIBW_TEST_REQUIRES: pytest
+        #      the nightly suffix). scipy is installed for
+        #      random_distribution_test.py.
+        CIBW_TEST_REQUIRES: pytest scipy
         CIBW_TEST_COMMAND: >-
           python {project}/tools/validate_ccache_stats.py &&
           python {project}/tools/artifact_smoke_test.py --version-cmake {project}/version.cmake &&
@@ -258,7 +257,6 @@ jobs:
           --ignore={project}/pytests/version_test.py
           --ignore={project}/pytests/prune_nightly_wheels_test.py
           --ignore={project}/pytests/release_tools_test.py
-          --ignore={project}/pytests/random_distribution_test.py
         # Compile HPTT's hand-vectorized kernels for the architecture this
         # wheel targets. Every matrix entry builds natively (cibuildwheel's
         # default CIBW_ARCHS=auto), so runner.arch names the wheel's target:
