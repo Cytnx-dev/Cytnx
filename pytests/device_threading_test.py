@@ -37,8 +37,9 @@ def test_transpose_with_hptt_override(dtype, inplace, monkeypatch) -> None:
         np.testing.assert_array_equal(actual, expected)
 
 
-@pytest.mark.skipif("UNI_HPTT" not in cytnx.__variant_info__,
-                    reason="HPTT is disabled in this build")
+# Not skipped on a build marker: every Python build path (the pyproject preset,
+# CI, wheels, conda) sets USE_HPTT=ON, and ``cytnx.__variant_info__`` does not
+# record UNI_HPTT, so a skip keyed on it would hide these cases everywhere.
 @pytest.mark.parametrize("value", ["", "0", "-1", "2,1", "invalid"])
 def test_invalid_hptt_override_raises(value, monkeypatch) -> None:
     """Translate HPTT configuration errors without corrupting the source."""
