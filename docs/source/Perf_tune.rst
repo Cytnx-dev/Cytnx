@@ -10,7 +10,7 @@ Performance tuning
 
 
 CPU transpose and BLAS threads
------------------------------
+------------------------------
 
 HPTT follows the current OpenMP thread request. Use ``OMP_NUM_THREADS=1`` for
 serial HPTT transposes, or a larger value to select a shared OpenMP default.
