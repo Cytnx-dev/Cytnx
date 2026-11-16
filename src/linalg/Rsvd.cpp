@@ -483,7 +483,6 @@ namespace cytnx {
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
-        // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
         // Project away the larger external dimension so the  full SVD runs on the smaller matrix;
         // with Tin = (m, n) and samplenum = l: for m<=n sketch the row space and SVD on (m x l);
@@ -502,6 +501,10 @@ namespace cytnx {
           }
           n_singlu = samplenum;
         }
+        // Integer and Bool input is converted to Double, as Gesvd does on the CPU path and on the
+        // GPU path without cuQuantum; cuQuantumGeSvd_ii has no kernel for those dtypes. The
+        // conversion follows the projection, as it does on those paths.
+        if (in.dtype() > Type.Float) in = in.astype(Type.Double);
         // prepare U, S, vT
         Tensor U, S, vT, terr;
         S.Init({n_singlu}, Type.to_real(in.dtype()),
