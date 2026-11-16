@@ -529,6 +529,11 @@ IF(BUILD_PYTHON)
     CYTNX_VERSION="${CYTNX_VERSION_FULL}"
     _LIBCPP_DISABLE_AVAILABILITY
   )
+  if(USE_HPTT)
+    # UNI_HPTT is PRIVATE to the cytnx target. The bindings need it only to
+    # record whether this build routes transposes through HPTT.
+    target_compile_definitions(pycytnx PRIVATE UNI_HPTT)
+  endif()
   if(USE_DEBUG)
     target_compile_options(pycytnx PRIVATE ${cytnx_asan_compile_options})
   endif()
