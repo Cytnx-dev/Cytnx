@@ -93,12 +93,12 @@ orders a `.devN` version *before* its base release, which is why
    release notes* (next step) lists the merged pull requests by title, grouped by
    label as `.github/release.yml` prescribes, and nothing else. It cannot tell a
    user that a default changed, what they will observe, or how to keep the old
-   behaviour. For every PR labelled `behaviour-change` or `deprecation`, paste the
-   paragraph from that PR's description (contributors put it under a
-   `## Release note` heading, see CONTRIBUTING.md) above the generated list, under
-   a heading such as `## Notes for users`. A PR title is the changelog line, so it
-   should read as one: "linalg: `Eigh` takes `algorithm=`; default moves to divide
-   and conquer" rather than "fix syev".
+   behaviour. For every PR labelled `behaviour-change` or `deprecation`, and any
+   other PR whose description has a `## Release note` section, paste that
+   paragraph (see CONTRIBUTING.md) above the generated list, under a heading such
+   as `## Notes for users`. A PR title is the changelog line, so it should read as
+   one: "linalg: `Exp` keeps the input precision; `Expf` is deprecated" rather
+   than "fix exp".
 
 4. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
    new release*, create the tag `vMAJOR.MINOR.PATCH` targeting the merged

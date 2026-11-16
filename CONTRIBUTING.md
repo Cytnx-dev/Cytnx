@@ -135,6 +135,8 @@ description with the paragraph a user needs: what changed, what they will observ
 and how to keep the old behaviour. The maintainer cutting the next release copies
 that paragraph into the release notes (RELEASING.md step 3); the generator only
 sees the PR title, so write the title as the changelog line it becomes.
+A new feature that needs more than its title to be used correctly may carry a
+`## Release note` section too; it needs no extra label.
 
 ## Updating the minimum supported Python version
 
