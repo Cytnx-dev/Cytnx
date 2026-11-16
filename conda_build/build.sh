@@ -9,6 +9,17 @@ start_time=$(date +%s)
 # only one value in the list is changed.
 install_log=$(mktemp)
 
+# conda's macOS toolchain links with -dead_strip_dylibs, which drops every
+# library the extension does not reference a symbol of directly. With MKL
+# (the x86 build) that leaves only libmkl_intel_lp64 in the extension and
+# drops libmkl_intel_thread, libmkl_core and libiomp5, which the interface
+# library needs at load time: `import cytnx` then fails with "symbol not
+# found in flat namespace '_mkl_blas_caxpy'" unless something else (numpy)
+# loaded MKL first. Keep every library CMake put on the link line.
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "x86_64" ]; then
+  export LDFLAGS="${LDFLAGS//-Wl,-dead_strip_dylibs/}"
+fi
+
 run_pip_install() {
   set -o pipefail
   # meta.yaml sets CYTNX_HPTT_ISA_OPTION for the architectures HPTT has

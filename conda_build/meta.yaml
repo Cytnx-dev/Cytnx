@@ -1,5 +1,16 @@
-{% set data = load_file_data('pyproject.toml') %}
-{% set version = data.get('project').get('version') %}
+# version.cmake is the single source of the release version: scikit-build-core
+# stamps it onto the Python distribution (pyproject.toml declares the version
+# as dynamic, so there is no `project.version` to read) and CMake compiles it
+# into cytnx.__version__. The pattern is the one pyproject.toml's
+# [tool.scikit-build.metadata.version] block uses, read from the recipe
+# directory so it resolves before the source is copied into the work
+# directory. If version.cmake is missing or does not match, rendering stops
+# here, before anything is built.
+{% set version_match = load_file_regex(
+     load_file='../version.cmake',
+     from_recipe_dir=True,
+     regex_pattern='set\\(\\w+?VERSION_MAJOR\\s+(\\d+)\\)\\s+set\\(\\w+?VERSION_MINOR\\s+(\\d+)\\)\\s+set\\(\\w+?VERSION_PATCH\\s+(\\d+)\\)') %}
+{% set version = version_match.groups() | join('.') %}
 
 package:
   name: cytnx
@@ -58,6 +69,34 @@ requirements:
     - beartype
     - arpack
 
+# Runs against the built archive, installed into a fresh environment that
+# holds only the run requirements above plus pip and pytest: nothing from the
+# build tree is on the path. tools/artifact_smoke_test.py imports cytnx before
+# anything else, checks that the conda record, the Python distribution and
+# cytnx.__version__ all carry the version.cmake version, and runs a small
+# numerical smoke test. The Python test suite then runs against the installed
+# package, with the same exclusions as the wheel workflows
+# (.github/workflows/release_pypi.yml): tests that read files of the checkout
+# that are not copied here, and the one that needs scipy. A failure fails
+# `conda build`, which is what stops the release workflow before its upload
+# step.
 test:
+  source_files:
+    - version.cmake
+    - tools/artifact_smoke_test.py
+    - pytests
   requires:
-    - gtest
+    - pip
+    - pytest
+  imports:
+    - cytnx
+  commands:
+    - python tools/artifact_smoke_test.py --version-cmake version.cmake --check-conda-metadata
+    - >-
+      python -m pytest -p no:cacheprovider pytests
+      --ignore=pytests/example
+      --ignore=pytests/version_test.py
+      --ignore=pytests/prune_nightly_wheels_test.py
+      --ignore=pytests/release_tools_test.py
+      --ignore=pytests/random_distribution_test.py
+    - pip check

@@ -23,6 +23,13 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Check the release tag matches version.cmake
+      # The recipe takes the package version from version.cmake, not from the
+      # tag. Stop here, before the build, if the two disagree: the upload
+      # would otherwise publish a package whose version is not the tag's.
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: python3 tools/check_release_consistency.py --tag "${GITHUB_REF_NAME}"
+
     - uses: conda-incubator/setup-miniconda@fc2d68f6413eb2d87b895e92f8584b5b94a10167  # v3.3.0
       with:
         # Remember to quote this, or YAML will think you want python 3.1 not 3.10
