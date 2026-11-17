@@ -18,7 +18,7 @@ citation tools read them at the tagged commit (see RELEASING.md):
 
 For a release, the script rewrites all three. With ``--next`` it rewrites
 ``version.cmake`` alone: right after a release ships, ``version.cmake``
-moves past it (the patch bump by default, see RELEASING.md step 4) while
+moves past it (the patch bump by default, see RELEASING.md step 5) while
 ``versions.json`` and ``CITATION.cff`` keep describing the release that
 exists. Nightly wheels and the dev docs are stamped from ``version.cmake``,
 and PEP 440 orders ``X.Y.Z.devN`` below ``X.Y.Z``, so without this step

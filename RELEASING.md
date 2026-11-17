@@ -49,13 +49,28 @@ shows `X.Y.Z` on the release tag and `X.Y.Z.devN+g<sha>` on the `dev` docs
 built from `master`.
 
 Between releases `version.cmake` holds a version *above* the last release
-(step 4 below), so with 1.1.1 released the `dev` docs read, for example,
+(step 5 below), so with 1.1.1 released the `dev` docs read, for example,
 `1.1.2.dev581+g<sha>`: 581 commits past the `v1.1.1` tag, labelled with the
 version in `version.cmake`. The nightly wheels carry the same base version
 (`1.1.2.devYYYYMMDDHHMM`, see `tools/prepare_nightly_release.py`). PEP 440
 orders a `.devN` version *before* its base release, which is why
 `version.cmake` must never equal the last release between releases: a
 `1.1.1.devN` build would rank below 1.1.1 (#1204).
+
+## Choosing the version number
+
+A release that can break working user code needs a new **major** version.
+That covers removing or renaming a public C++ or Python name, changing a
+signature, and changing what a call returns or raises (value, dtype, shape,
+labels) when the old behaviour was the documented or intended one.
+
+Correcting a result that was wrong is a bug fix. It does not by itself
+require a major version, even though users will see different output, but it
+still gets a release note (step 3).
+
+Whether a change is a fix or a break is decided by the reviewers of that pull
+request. A pull request judged breaking carries the Conventional Commits `!`
+in its title, and a release that contains one is a major release.
 
 ## Steps
 
@@ -89,13 +104,24 @@ orders a `.devN` version *before* its base release, which is why
    edited by hand and drifted, the PR check fails before the release goes
    out.
 
-3. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
+3. **Write the release note for anything the generator cannot say.** *Generate
+   release notes* (next step) lists the merged pull requests by title, grouped by
+   label as `.github/release.yml` prescribes, and nothing else. It cannot tell a
+   user that a default changed, what they will observe, or how to keep the old
+   behaviour. For every PR labelled `behaviour-change` or `deprecation`, and any
+   other PR whose description has a `## Release note` section, paste that
+   paragraph (see CONTRIBUTING.md) above the generated list, under a heading such
+   as `## Notes for users`. A PR title is the changelog line, so it should read as
+   one: "linalg: `Exp` keeps the input precision; `Expf` is deprecated" rather
+   than "fix exp".
+
+4. **Draft and publish the GitHub Release.** On GitHub: *Releases → Draft a
    new release*, create the tag `vMAJOR.MINOR.PATCH` targeting the merged
    release-prep commit on `master`, click *Generate release notes*, review,
    and publish. Publishing pushes the tag and starts the release workflows
    above.
 
-4. **Advance `version.cmake` past the release.** Right after publishing,
+5. **Advance `version.cmake` past the release.** Right after publishing,
    open and merge a one-line pull request made with
 
    ```sh
@@ -135,7 +161,7 @@ last action before the bump, not the first.
   `pip install cytnx-cuda==X.Y.Z` resolves (Linux x86_64 only).
 - Once `conda_build_release.yml` finishes, confirm the package is listed by
   `conda search -c kaihsinwu cytnx` at `X.Y.Z`.
-- Merge the post-release bump from step 4, then check that the next push to
+- Merge the post-release bump from step 5, then check that the next push to
   `master` publishes nightlies versioned above `X.Y.Z` (see below).
 
 ## Nightly builds
@@ -148,7 +174,7 @@ channel on anaconda.org (index URL
 `https://pypi.anaconda.org/cytnx-nightly-wheels/simple`), never to PyPI,
 and `tools/prune_nightly_wheels.py` keeps the channel at five versions.
 
-Because `version.cmake` is above the last release between releases (step 4),
+Because `version.cmake` is above the last release between releases (step 5),
 a nightly outranks every published release, so
 
 ```sh
@@ -160,3 +186,10 @@ already installed release does not satisfy the requirement). `pytests/release_to
 checks this resolution against local indexes for both `cytnx` and
 `cytnx-cuda`, and `tools/check_release_consistency.py` fails any pull request
 that drops `version.cmake` below the newest release.
+
+## The changelog
+
+The changelog of a release is its GitHub Release page: the hand-written notes of
+step 3 followed by the generated list of pull requests. There is no changelog file
+in the repository. `misc_doc/version.log` is the historical log of the releases up
+to v1.0.0 and is kept for the record only.

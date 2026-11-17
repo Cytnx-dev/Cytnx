@@ -42,7 +42,7 @@ name: Release CUDA wheels
 #               cytnx-cuda
 #
 # The nightly command relies on version.cmake being *above* the last
-# release between releases (RELEASING.md step 4, #1204), exactly as for cytnx:
+# release between releases (RELEASING.md step 5, #1204), exactly as for cytnx:
 # both packages are stamped from the same file.
 
 on:
