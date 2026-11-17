@@ -29,7 +29,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Icon_small.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Cytnx<span id="projectnumber">&#160;1.1.2.dev682+g8f749b64</span>
+   <div id="projectname">Cytnx<span id="projectnumber">&#160;1.1.2.dev688+g681d5245</span>
    </div>
   </td>
  </tr>
@@ -100,19 +100,18 @@ $(function() {
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>   <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    enum : <span class="keywordtype">int</span> { cpu = -1, cuda = 0 };</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordtype">int</span> Ngpus;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">int</span> Ncpus;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    std::vector&lt;std::vector&lt;bool&gt;&gt; CanAccessPeer;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    Device_class();</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordtype">void</span> Print_Property();</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    std::string getname(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;device_id);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    ~Device_class();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="comment">// void cudaDeviceSynchronize();</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  };</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keyword">extern</span> Device_class <a class="code hl_variable" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}  <span class="comment">// namespace cytnx</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_DEVICE_H_</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    std::vector&lt;std::vector&lt;bool&gt;&gt; CanAccessPeer;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    Device_class();</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordtype">void</span> Print_Property();</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    std::string getname(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;device_id);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    ~Device_class();</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="comment">// void cudaDeviceSynchronize();</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  };</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">extern</span> Device_class <a class="code hl_variable" href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">Device</a>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}  <span class="comment">// namespace cytnx</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#endif  </span><span class="comment">// CYTNX_DEVICE_H_</span></div>
 <div class="ttc" id="anamespacecytnx_html"><div class="ttname"><a href="namespacecytnx.html">cytnx</a></div><div class="ttdef"><b>Definition</b> Accessor.hpp:12</div></div>
 <div class="ttc" id="anamespacecytnx_html_a0159aceab8996db3faf89716e4dd6b9a"><div class="ttname"><a href="namespacecytnx.html#a0159aceab8996db3faf89716e4dd6b9a">cytnx::Device</a></div><div class="ttdeci">Device_class Device</div><div class="ttdoc">data on which devices.</div></div>
 </div><!-- fragment --></div><!-- contents -->

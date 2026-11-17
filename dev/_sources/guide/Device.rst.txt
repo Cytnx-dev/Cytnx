@@ -4,42 +4,47 @@ Device
 In Cytnx, all the Device properties are handled by **cytnx.Device**.
 
 
-Number of threads
+CPU thread settings
 ********************
-To check how many threads can be used in your current program by Cytnx, you can use **Device.Ncpus**.
 
-* In Python:
-
-.. literalinclude:: ../../code/python/doc_codes/guide_Device_Ncpus.py
-    :language: python
-    :linenos:
-
-* In C++:
-
-.. literalinclude:: ../../code/cplusplus/doc_codes/guide_Device_Ncpus.cpp
-    :language: c++
-    :linenos:
-
-If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.
-
-
-.. Note::
-
-    For parallel computing with OpenMP, by default mkl uses all the available threads.
-    However, any Cytnx internal function that utilizes OpenMP may or may not automatically use all threads, depending on your current environment configuration.
-
-
-If OpenMP is enabled and you want to set a restriction on how many threads you want your program to use, this can be done by simply changing an environment variable before you execute your program. For example, the following line will make mkl as well as Cytnx internal functions use 16 threads in all places where they are parallelizable.
+Cytnx delegates floating-point CPU transposes to HPTT. HPTT follows the current
+OpenMP thread settings when it executes. Set ``OMP_NUM_THREADS`` before starting
+your program to select the default for HPTT and other OpenMP libraries:
 
 .. code-block:: console
 
-    export OMP_NUM_THREADS=16
+    OMP_NUM_THREADS=1 python simulation.py
 
+A larger value permits parallel transposes. Nested lists such as
+``OMP_NUM_THREADS=4,1`` and later C++ ``omp_set_num_threads()`` calls are respected.
+OpenMP's nesting, dynamic-team and thread-limit settings still apply. With no
+explicit setting, the OpenMP runtime chooses its default.
 
+Use ``HPTT_NUM_THREADS`` to request a different count for transposes while
+retaining the general OpenMP setting for other operations. For example:
 
-.. Warning::
+.. code-block:: console
 
-    Do not change this value manually!
+    OMP_NUM_THREADS=8 HPTT_NUM_THREADS=1 python simulation.py
+
+``HPTT_NUM_THREADS`` must be a positive integer. HPTT reads it whenever Cytnx
+creates a transpose plan, so Python can also set ``os.environ["HPTT_NUM_THREADS"]``
+before a subsequent transpose. Invalid values raise ``cytnx.CytnxError`` when
+that HPTT operation is requested. Integer tensors and builds without HPTT use
+Cytnx's serial transpose implementation.
+
+BLAS libraries retain their own thread controls. OpenMP-threaded BLAS can share
+the ``OMP_NUM_THREADS`` default; overrides such as ``MKL_NUM_THREADS`` and
+``OPENBLAS_NUM_THREADS`` apply only to their respective libraries. For an
+OpenBLAS pthreads build, set ``OPENBLAS_NUM_THREADS`` separately when needed.
+See :doc:`../Perf_tune` for CPU thread and wait-policy configuration.
+
+.. note::
+
+    ``Device.Ncpus`` has been removed from the C++ and Python APIs. Replace reads
+    or assignments with the threading settings above. The old Python attribute
+    was a copy of the C++ value, so assigning it did not control library threads.
+    C++ consumers must rebuild after this public class-layout change.
 
 
 Number of GPUs

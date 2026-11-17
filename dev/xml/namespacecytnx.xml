@@ -251,7 +251,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/Device.hpp" line="43" column="23" declfile="include/Device.hpp" declline="43" declcolumn="23"/>
+        <location file="include/Device.hpp" line="42" column="23" declfile="include/Device.hpp" declline="42" declcolumn="23"/>
       </memberdef>
       <memberdef kind="variable" id="namespacecytnx_1a224ad816267928be693a2396f5483e06" prot="public" static="no" extern="yes" mutable="no">
         <type>UniTensorType_class</type>

@@ -7,7 +7,7 @@
         <link rel="prefetch" href="../_static/Iconi.png" as="image">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
-        <title>2. Device - Cytnx 1.1.2.dev682+g8f749b64</title>
+        <title>2. Device - Cytnx 1.1.2.dev688+g681d5245</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -162,7 +162,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">Cytnx 1.1.2.dev682+g8f749b64</div></a>
+      <a href="../index.html"><div class="brand">Cytnx 1.1.2.dev688+g681d5245</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -186,7 +186,7 @@
     <img class="sidebar-logo" src="../_static/Iconi.png" alt="Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">Cytnx 1.1.2.dev682+g8f749b64</span>
+  <span class="sidebar-brand-text">Cytnx 1.1.2.dev688+g681d5245</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -448,34 +448,39 @@
           <section id="device">
 <h1><span class="section-number">2. </span>Device<a class="headerlink" href="#device" title="Link to this heading">¶</a></h1>
 <p>In Cytnx, all the Device properties are handled by <strong>cytnx.Device</strong>.</p>
-<section id="number-of-threads">
-<h2><span class="section-number">2.1. </span>Number of threads<a class="headerlink" href="#number-of-threads" title="Link to this heading">¶</a></h2>
-<p>To check how many threads can be used in your current program by Cytnx, you can use <strong>Device.Ncpus</strong>.</p>
-<ul class="simple">
-<li><p>In Python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">print</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">Ncpus</span><span class="p">)</span>
+<section id="cpu-thread-settings">
+<h2><span class="section-number">2.1. </span>CPU thread settings<a class="headerlink" href="#cpu-thread-settings" title="Link to this heading">¶</a></h2>
+<p>Cytnx delegates floating-point CPU transposes to HPTT. HPTT follows the current
+OpenMP thread settings when it executes. Set <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> before starting
+your program to select the default for HPTT and other OpenMP libraries:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">OMP_NUM_THREADS=1 python simulation.py</span>
 </pre></div>
 </div>
-<ul class="simple">
-<li><p>In C++:</p></li>
-</ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Device</span><span class="p">.</span><span class="n">Ncpus</span><span class="p">;</span>
+<p>A larger value permits parallel transposes. Nested lists such as
+<code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS=4,1</span></code> and later C++ <code class="docutils literal notranslate"><span class="pre">omp_set_num_threads()</span></code> calls are respected.
+OpenMP’s nesting, dynamic-team and thread-limit settings still apply. With no
+explicit setting, the OpenMP runtime chooses its default.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">HPTT_NUM_THREADS</span></code> to request a different count for transposes while
+retaining the general OpenMP setting for other operations. For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">OMP_NUM_THREADS=8 HPTT_NUM_THREADS=1 python simulation.py</span>
 </pre></div>
 </div>
-<p>If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.</p>
+<p><code class="docutils literal notranslate"><span class="pre">HPTT_NUM_THREADS</span></code> must be a positive integer. HPTT reads it whenever Cytnx
+creates a transpose plan, so Python can also set <code class="docutils literal notranslate"><span class="pre">os.environ[&quot;HPTT_NUM_THREADS&quot;]</span></code>
+before a subsequent transpose. Invalid values raise <code class="docutils literal notranslate"><span class="pre">cytnx.CytnxError</span></code> when
+that HPTT operation is requested. Integer tensors and builds without HPTT use
+Cytnx’s serial transpose implementation.</p>
+<p>BLAS libraries retain their own thread controls. OpenMP-threaded BLAS can share
+the <code class="docutils literal notranslate"><span class="pre">OMP_NUM_THREADS</span></code> default; overrides such as <code class="docutils literal notranslate"><span class="pre">MKL_NUM_THREADS</span></code> and
+<code class="docutils literal notranslate"><span class="pre">OPENBLAS_NUM_THREADS</span></code> apply only to their respective libraries. For an
+OpenBLAS pthreads build, set <code class="docutils literal notranslate"><span class="pre">OPENBLAS_NUM_THREADS</span></code> separately when needed.
+See <a class="reference internal" href="../Perf_tune.html"><span class="doc">Performance tuning</span></a> for CPU thread and wait-policy configuration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For parallel computing with OpenMP, by default mkl uses all the available threads.
-However, any Cytnx internal function that utilizes OpenMP may or may not automatically use all threads, depending on your current environment configuration.</p>
-</div>
-<p>If OpenMP is enabled and you want to set a restriction on how many threads you want your program to use, this can be done by simply changing an environment variable before you execute your program. For example, the following line will make mkl as well as Cytnx internal functions use 16 threads in all places where they are parallelizable.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export OMP_NUM_THREADS=16</span>
-</pre></div>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Do not change this value manually!</p>
+<p><code class="docutils literal notranslate"><span class="pre">Device.Ncpus</span></code> has been removed from the C++ and Python APIs. Replace reads
+or assignments with the threading settings above. The old Python attribute
+was a copy of the C++ value, so assigning it did not control library threads.
+C++ consumers must rebuild after this public class-layout change.</p>
 </div>
 </section>
 <section id="number-of-gpus">
@@ -589,7 +594,7 @@ However, any Cytnx internal function that utilizes OpenMP may or may not automat
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">2. Device</a><ul>
-<li><a class="reference internal" href="#number-of-threads">2.1. Number of threads</a></li>
+<li><a class="reference internal" href="#cpu-thread-settings">2.1. CPU thread settings</a></li>
 <li><a class="reference internal" href="#number-of-gpus">2.2. Number of GPUs</a></li>
 <li><a class="reference internal" href="#gpu-status">2.3. GPU status</a></li>
 <li><a class="reference internal" href="#initializing-tensors-on-gpu">2.4. Initializing tensors on GPU</a></li>
@@ -606,7 +611,7 @@ However, any Cytnx internal function that utilizes OpenMP may or may not automat
   </div>
 </div><script src="../_static/jquery.js?v=5d32c60e"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script src="../_static/documentation_options.js?v=a4addcf1"></script>
+    <script src="../_static/documentation_options.js?v=20b4799d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
