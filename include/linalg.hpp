@@ -2057,10 +2057,18 @@ namespace cytnx {
 
     1. the first tensor is the orthomormal matrix \f$ Q \f$, a 2-d tensor (matrix)
     2. the second tensor is the right-upper triangular matrix \f$ R \f$, a 2-d tensor (matrix)
-    3. the third tensor is the Householder reflectors \f$ H \f$, a 1-d tensor (vector).
-    This tensor will only return when \p is_tau = @em true.
+    3. the third tensor is \f$ \tau \f$, a 1-d tensor (vector) of length \f$ \min(m, n) \f$ with
+    the scalar factors of the Householder reflectors. This tensor will only return when
+    \p is_tau = @em true.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
+    @note Convention of \f$ \tau \f$: Cytnx stores matrices row-major and obtains the factorization
+    from the LQ factorization (LAPACK @c gelqf) of the transposed layout. For real dtypes
+    \f$ \tau \f$ equals the scalars LAPACK @c geqrf would return for \f$ M \f$. For complex dtypes
+    it is their complex conjugate: with \f$ v_i \f$ the Householder vectors of @c geqrf,
+    \f$ Q = H_1 \cdots H_k \f$ and \f$ H_i = I - \overline{\tau_i} v_i v_i^\dagger \f$. The
+    Householder vectors themselves are not returned. \f$ \tau \f$ is only available for CPU
+    tensors; \p is_tau = @em true raises an error for a GPU tensor.
     @see Qdr(const Tensor &Tin, const bool &is_tau)
     */
     std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau = false);

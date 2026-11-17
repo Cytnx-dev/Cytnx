@@ -51,9 +51,6 @@ namespace cytnx {
       }
 
       TEST(Rsvd, GpuDenseLowRankRectangularAndTransposedExactReconstruction) {
-#ifndef UNI_CUQUANTUM
-        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
-#endif
         std::string test_case_name =
           ::testing::UnitTest::GetInstance()->current_test_info()->name();
         fail_msg.Init(test_case_name);
@@ -90,9 +87,6 @@ namespace cytnx {
         is_VT:true
       ====================*/
       TEST(Rsvd, GpuDenseExpSvalsTest) {
-#ifndef UNI_CUQUANTUM
-        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
-#endif
         std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                               "dense_nondiag_exp_Svals_F64"};
         for (const auto& case_name : case_list) {
@@ -108,9 +102,6 @@ namespace cytnx {
       in Rsvd. input: T:Dense UniTensor with real or complex real type. is_U:true is_VT:true
       ====================*/
       TEST(Rsvd, GpuDenseExpSvalsNoPowerIterationTest) {
-#ifndef UNI_CUQUANTUM
-        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
-#endif
         std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                               "dense_nondiag_exp_Svals_F64"};
         for (const auto& case_name : case_list) {
@@ -438,9 +429,6 @@ namespace cytnx {
         is_VT:true
       ====================*/
       TEST(RsvdNoTruncation, GpuDenseNondiagCompareGesvd) {
-#ifndef UNI_CUQUANTUM
-        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
-#endif
         std::vector<std::string> case_list = {"dense_nondiag_C128", "dense_nondiag_F64"};
         for (const auto& case_name : case_list) {
           std::string test_case_name =
@@ -534,9 +522,6 @@ namespace cytnx {
         is_VT:true
       ====================*/
       TEST(RsvdNoTruncation, GpuDenseExpSvalsTest) {
-#ifndef UNI_CUQUANTUM
-        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
-#endif
         std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                               "dense_nondiag_exp_Svals_F64"};
         for (const auto& case_name : case_list) {
@@ -553,9 +538,6 @@ namespace cytnx {
       is_VT:true
       ====================*/
       TEST(RsvdNoTruncation, GpuDenseExpSvalsNoPowerIterationTest) {
-#ifndef UNI_CUQUANTUM
-        GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
-#endif
         std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                               "dense_nondiag_exp_Svals_F64"};
         for (const auto& case_name : case_list) {

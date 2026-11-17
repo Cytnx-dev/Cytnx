@@ -30,6 +30,7 @@ target_sources(cytnx
     # cuTensordot_internal.hpp
     # cuQuantumGeSvd_internal.hpp
     # cuQuantumQr_internal.hpp
+    # cuQr_internal.hpp
     # cudaMemcpyTruncation.hpp
     # cuUnaryDispatch.cuh
 
@@ -65,5 +66,6 @@ target_sources(cytnx
     cuTensordot_internal.cu
     cuQuantumGeSvd_internal.cu
     cuQuantumQr_internal.cu
+    cuQr_internal.cu
     cudaMemcpyTruncation.cu
 )
