@@ -2103,28 +2103,56 @@ namespace cytnx {
     @param[in] Tin a \link cytnx::Tensor Tensor \endlink, it should be a rank-2 tensor (matrix)
     @param[in] is_V whether need to return the eigen vectors.
     @param[in] row_V if set to ture, the return eigen vectors will be row form.
+    @param[in] algorithm the driver that computes the decomposition:
+    - "qr": QR iteration (LAPACK ?syev / ?heev). CPU only: cuSOLVER has no such driver.
+    - "dc": divide and conquer (LAPACK ?syevd / ?heevd, cuSOLVER ?syevd / ?heevd). On the CPU
+      it is usually faster than "qr" for matrices of several hundred rows or more when the
+      eigenvectors are requested (measured: 2 times with MKL, 6 to 10 times with OpenBLAS, for
+      a 1250 x 1250 matrix), and costs the same when they are not; the gain depends on the
+      LAPACK library and the matrix. It needs a larger workspace than "qr" (of
+      the order of two more copies of the matrix when the eigenvectors are requested). If
+      LAPACK reports that it failed to converge, the decomposition is redone with "qr" and a
+      warning is printed.
+    - "default": "qr" on the CPU and "dc" on a GPU, which is what Eigh did before it had this
+      argument. To get the faster driver on the CPU, pass "dc".
+
+    An unknown name, or a driver that the device of \p Tin does not have, raises an error.
     @return [std::vector<Tensors>], the first tensor is the eigen values, a 1-d tensor (vector).
     The second tensor is the eigen vectors, a 2-d tensor (matrix). This tensor will only return when
     \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row
     form. Otherwise, the eigen vectors will be column form.
     @pre the \p Tin should be a Hermitian matrix.
+    @note The eigenvalues, and the projector onto each eigenspace, do not depend on \p algorithm
+    beyond rounding. The eigenvectors do: their signs (phases), and the basis they form inside a
+    degenerate eigenspace, are not fixed by the decomposition and differ between drivers and
+    between the CPU and a GPU. Do not compare eigenvectors element by element: code that does,
+    for instance against stored eigenvectors, sees a difference when \p algorithm changes.
     @warning If \p Tin is not a Hermitian matrix, only the lower triangular matrix will be used.
     (This is strongly not recommended, please use
     Eig(const Tensor &Tin, const bool &is_V, const bool &row_v) instead.
     */
-    std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
+    std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false,
+                             const std::string &algorithm = "default");
 
+    /**
+    @brief eigen-value decomposition for a Hermitian UniTensor
+    @details As Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v, const std::string
+    &algorithm), for a UniTensor whose rowrank splits it into a Hermitian matrix: a
+    DenseUniTensor, a BlockUniTensor or a BlockFermionicUniTensor. For the block types the
+    decomposition is done charge sector by charge sector, each with the driver \p algorithm.
+    */
     std::vector<UniTensor> Eigh(const cytnx::UniTensor &Tin, const bool &is_V = true,
-                                const bool &row_v = false);
+                                const bool &row_v = false,
+                                const std::string &algorithm = "default");
 
     /**
     @brief Hermitian eigen-decomposition of a UniTensor with truncation of the eigenpairs.
-    @details Performs Eigh(const cytnx::UniTensor &Tin, const bool &is_V, const bool &row_v) and
-    keeps the eigenpairs with the largest eigenvalue magnitudes, the counterpart of Svd_truncate
-    for a Hermitian matrix (whose singular values are the eigenvalue magnitudes): a reduced
-    density matrix is truncated to its dominant eigenbasis, per charge sector, in one call.
-    The eigenvalues are ranked by \f$ |\lambda| \f$ across all blocks; the kept eigenvalues of
-    every block stay in the ascending order Eigh returns.
+    @details Performs Eigh(const cytnx::UniTensor &Tin, const bool &is_V, const bool &row_v,
+    const std::string &algorithm) and keeps the eigenpairs with the largest eigenvalue magnitudes,
+    the counterpart of Svd_truncate for a Hermitian matrix (whose singular values are the eigenvalue
+    magnitudes): a reduced density matrix is truncated to its dominant eigenbasis, per charge
+    sector, in one call. The eigenvalues are ranked by \f$ |\lambda| \f$ across all blocks; the kept
+    eigenvalues of every block stay in the ascending order Eigh returns.
 
     When per-block floors do not alter the global magnitude selection, the block-sparse and
     dense paths select the same eigenvalue magnitudes. If the retained count is exactly
@@ -2156,6 +2184,8 @@ namespace cytnx {
     if none were discarded; >1 appends a rank-1 tensor containing all discarded
     \f$ |\lambda| \f$ in descending order, empty if none were discarded.
     @param[in] mindim the number (at least) of eigenpairs to keep
+    @param[in] algorithm the driver of the underlying Eigh, see
+    Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v, const std::string &algorithm)
     @return
     @parblock
     [std::vector<UniTensor>]
@@ -2168,19 +2198,21 @@ namespace cytnx {
     @endparblock
     @see Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double
     &err, const bool &is_UvT, const unsigned int &return_err, const cytnx_uint64 &mindim),
-    Eigh(const cytnx::UniTensor &Tin, const bool &is_V, const bool &row_v)
+    Eigh(const cytnx::UniTensor &Tin, const bool &is_V, const bool &row_v, const std::string
+    &algorithm)
     */
     std::vector<UniTensor> Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
                                          double err = 0., bool is_V = true,
-                                         unsigned int return_err = 0, cytnx_uint64 mindim = 1);
+                                         unsigned int return_err = 0, cytnx_uint64 mindim = 1,
+                                         const std::string &algorithm = "default");
 
     /**
     @brief Hermitian eigen-decomposition of a UniTensor with truncation and a per-block floor.
     @details As Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err,
-    bool is_V, unsigned int return_err, cytnx_uint64 mindim), with \p min_blockdim as in
-    Svd_truncate: positional over the blocks of the eigenvalue UniTensor (one block per charge
-    sector of the row space, ascending by qnum), a per-block floor on the number of kept
-    eigenpairs clamped to the block's dimension and honoured before \p keepdim. The total kept
+    bool is_V, unsigned int return_err, cytnx_uint64 mindim, const std::string &algorithm), with \p
+    min_blockdim as in Svd_truncate: positional over the blocks of the eigenvalue UniTensor (one
+    block per charge sector of the row space, ascending by qnum), a per-block floor on the number of
+    kept eigenpairs clamped to the block's dimension and honoured before \p keepdim. The total kept
     dimension can exceed \p keepdim due to floors or exact degeneracy, or be reduced by \p err
     subject to the higher-priority constraints. A single-element vector applies that floor to
     every block. For a DenseUniTensor it must have one element, acting as \p mindim instead:
@@ -2189,12 +2221,13 @@ namespace cytnx {
     if its sector has at least three eigenpairs.
     @param[in] min_blockdim the per-block floors
     @see Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err, bool is_V,
-    unsigned int return_err, cytnx_uint64 mindim)
+    unsigned int return_err, cytnx_uint64 mindim, const std::string &algorithm)
     */
     std::vector<UniTensor> Eigh_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
                                          std::vector<cytnx_uint64> min_blockdim, double err = 0.,
                                          bool is_V = true, unsigned int return_err = 0,
-                                         cytnx_uint64 mindim = 1);
+                                         cytnx_uint64 mindim = 1,
+                                         const std::string &algorithm = "default");
 
     // Eig:
     //==================================================

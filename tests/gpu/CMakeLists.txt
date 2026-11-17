@@ -31,6 +31,7 @@ add_executable(
   linalg_test/CusolverResourceLeak_test.cpp
   linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
+  linalg_test/Eigh_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_test.cpp

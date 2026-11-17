@@ -118,6 +118,10 @@ namespace cytnx {
     typedef void (*Eighfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
                                  boost::intrusive_ptr<Storage_base> &,
                                  boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &);
+    typedef void (*Eighdriverfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
+                                       boost::intrusive_ptr<Storage_base> &,
+                                       boost::intrusive_ptr<Storage_base> &, cytnx_int64,
+                                       EighDriver);
     typedef void (*InvMinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &);
     typedef void (*Conjinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
     typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &,
@@ -192,7 +196,7 @@ namespace cytnx {
      public:
       std::vector<Svdfunc_oii> Sdd_ii;
       std::vector<Svdfunc_oii> Gesvd_ii;
-      std::vector<Eighfunc_oii> Eigh_ii;
+      std::vector<Eighdriverfunc_oii> Eigh_ii;
       std::vector<Eighfunc_oii> Eig_ii;
       std::vector<InvMinplacefunc_oii> InvM_inplace_ii;
       std::vector<Invinplacefunc_oii> Inv_inplace_ii;

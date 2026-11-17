@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <limits>
 #include <numeric>
+#include <string>
 #include <vector>
 
 #include "Accessor.hpp"
@@ -91,8 +92,9 @@ namespace cytnx {
 
       void eigh_truncate_dense_ut_internal(std::vector<UniTensor> &output, const UniTensor &input,
                                            std::uint64_t keepdim, double err, bool return_vectors,
-                                           unsigned int return_err, std::uint64_t mindim) {
-        output = linalg::Eigh(input, return_vectors, false);
+                                           unsigned int return_err, std::uint64_t mindim,
+                                           const std::string &algorithm) {
+        output = linalg::Eigh(input, return_vectors, false, algorithm);
         const Tensor e_full = output[0].get_block_();
         const std::vector<double> values = block_values(e_full);
         const std::vector<std::size_t> order = magnitude_order(values);
@@ -135,12 +137,12 @@ namespace cytnx {
                                            std::uint64_t keepdim,
                                            std::vector<cytnx_uint64> min_blockdim, double err,
                                            bool return_vectors, unsigned int return_err,
-                                           std::uint64_t mindim) {
+                                           std::uint64_t mindim, const std::string &algorithm) {
         cytnx_error_msg(min_blockdim.empty(),
                         "[ERROR][Eigh_truncate] min_blockdim must not be empty; use the overload "
                         "without min_blockdim if no per-block floor is needed.%s",
                         "\n");
-        output = linalg::Eigh(input, return_vectors, false);
+        output = linalg::Eigh(input, return_vectors, false, algorithm);
         // the return_err entry is pushed below while e and vectors are referenced: no reallocation
         output.reserve(output.size() + 1);
         UniTensor &e = output[0];
@@ -275,16 +277,16 @@ namespace cytnx {
 
     std::vector<UniTensor> Eigh_truncate(const UniTensor &input, cytnx_uint64 keepdim, double err,
                                          bool return_vectors, unsigned int return_err,
-                                         cytnx_uint64 mindim) {
+                                         cytnx_uint64 mindim, const std::string &algorithm) {
       check_eigh_truncate_input(input, keepdim);
       std::vector<UniTensor> output;
       if (input.uten_type() == UTenType.Dense) {
         eigh_truncate_dense_ut_internal(output, input, keepdim, err, return_vectors, return_err,
-                                        mindim);
+                                        mindim, algorithm);
       } else if (input.uten_type() == UTenType.Block ||
                  input.uten_type() == UTenType.BlockFermionic) {
         eigh_truncate_block_ut_internal(output, input, keepdim, {0}, err, return_vectors,
-                                        return_err, mindim);
+                                        return_err, mindim, algorithm);
       } else {
         cytnx_error_msg(true, "[ERROR][Eigh_truncate] UniTensor type '%s' not supported\n",
                         input.uten_type_str().c_str());
@@ -295,7 +297,7 @@ namespace cytnx {
     std::vector<UniTensor> Eigh_truncate(const UniTensor &input, cytnx_uint64 keepdim,
                                          std::vector<cytnx_uint64> min_blockdim, double err,
                                          bool return_vectors, unsigned int return_err,
-                                         cytnx_uint64 mindim) {
+                                         cytnx_uint64 mindim, const std::string &algorithm) {
       check_eigh_truncate_input(input, keepdim);
       std::vector<UniTensor> output;
       if (input.uten_type() == UTenType.Dense) {
@@ -303,11 +305,11 @@ namespace cytnx {
           min_blockdim.size() != 1,
           "[ERROR][Eigh_truncate] min_blockdim must have one element for dense UniTensor%s", "\n");
         eigh_truncate_dense_ut_internal(output, input, keepdim, err, return_vectors, return_err,
-                                        std::max(mindim, min_blockdim[0]));
+                                        std::max(mindim, min_blockdim[0]), algorithm);
       } else if (input.uten_type() == UTenType.Block ||
                  input.uten_type() == UTenType.BlockFermionic) {
         eigh_truncate_block_ut_internal(output, input, keepdim, min_blockdim, err, return_vectors,
-                                        return_err, mindim);
+                                        return_err, mindim, algorithm);
       } else {
         cytnx_error_msg(true, "[ERROR][Eigh_truncate] UniTensor type '%s' not supported\n",
                         input.uten_type_str().c_str());

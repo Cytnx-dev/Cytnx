@@ -1660,10 +1660,11 @@ namespace cytnx {
 
     /**
      * @brief the Eigh member function. Same as
-     * \ref cytnx::linalg::Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v)
-     * , where \p Tin is the current Tensor.
+     * \ref cytnx::linalg::Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v, const
+     * std::string &algorithm) , where \p Tin is the current Tensor.
      */
-    std::vector<Tensor> Eigh(const bool &is_V = true, const bool &row_v = false) const;
+    std::vector<Tensor> Eigh(const bool &is_V = true, const bool &row_v = false,
+                             const std::string &algorithm = "default") const;
 
     /**
      * @brief the InvM_ member function. Same as
