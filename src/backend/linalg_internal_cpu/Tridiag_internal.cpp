@@ -2,6 +2,7 @@
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
 #include <iostream>
+#include <vector>
 namespace cytnx {
 
   namespace linalg_internal {
@@ -16,9 +17,9 @@ namespace cytnx {
       // copy from in to S[out]
       memcpy(S->data(), diag->data(), L * sizeof(cytnx_double));
 
-      // create tmp for sub-diag and cpy in:
-      cytnx_double *Dsv = (cytnx_double *)malloc((L - 1) * sizeof(cytnx_double));
-      memcpy(Dsv, s_diag->data(), (L - 1) * sizeof(cytnx_double));
+      // LAPACK overwrites the sub-diagonal, so work on a copy:
+      const cytnx_double *sub_diag = static_cast<const cytnx_double *>(s_diag->data());
+      std::vector<cytnx_double> Dsv(sub_diag, sub_diag + (L - 1));
 
       lapack_int ldz = 1;
       lapack_int info;
@@ -28,17 +29,9 @@ namespace cytnx {
         ldz = L;
       }
 
-      info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L, (cytnx_double *)S->data(), Dsv,
+      info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L, (cytnx_double *)S->data(), Dsv.data(),
                            (cytnx_double *)U->data(), ldz);
-      if (!throw_excp and info != 0) {
-        cytnx_error_msg(info != 0, "%s %d",
-                        "Error in Lapack function 'dstev': Lapack INFO = ", info);
-      } else if (info != 0) {
-        throw std::logic_error("Error in Lapack function 'dstev': Lapack INFO = " + info);
-      }
-
-      // house keeping
-      free(Dsv);
+      cytnx_error_msg(info != 0, "Error in Lapack function 'dstev': Lapack INFO = %d\n", info);
     }
     void Tridiag_internal_f(const boost::intrusive_ptr<Storage_base> &diag,
                             const boost::intrusive_ptr<Storage_base> &s_diag,
@@ -50,9 +43,9 @@ namespace cytnx {
       // copy from in to S[out]
       memcpy(S->data(), diag->data(), L * sizeof(cytnx_float));
 
-      // create tmp for sub-diag and cpy in:
-      cytnx_float *Dsv = (cytnx_float *)malloc((L - 1) * sizeof(cytnx_float));
-      memcpy(Dsv, s_diag->data(), (L - 1) * sizeof(cytnx_float));
+      // LAPACK overwrites the sub-diagonal, so work on a copy:
+      const cytnx_float *sub_diag = static_cast<const cytnx_float *>(s_diag->data());
+      std::vector<cytnx_float> Dsv(sub_diag, sub_diag + (L - 1));
 
       lapack_int ldz = 1;
       lapack_int info;
@@ -62,12 +55,9 @@ namespace cytnx {
         ldz = L;
       }
 
-      info = LAPACKE_sstev(LAPACK_COL_MAJOR, job, L, (cytnx_float *)S->data(), Dsv,
+      info = LAPACKE_sstev(LAPACK_COL_MAJOR, job, L, (cytnx_float *)S->data(), Dsv.data(),
                            (cytnx_float *)U->data(), ldz);
-      cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sstev': Lapack INFO = ", info);
-
-      // house keeping
-      free(Dsv);
+      cytnx_error_msg(info != 0, "Error in Lapack function 'sstev': Lapack INFO = %d\n", info);
     }
   }  // namespace linalg_internal
 }  // namespace cytnx

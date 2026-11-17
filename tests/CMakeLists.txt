@@ -62,6 +62,7 @@ add_executable(
   linalg_test/MaxMin_test.cpp
   linalg_test/Lanczos_Exp_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
+  linalg_test/Lanczos_Gnd_breakdown_test.cpp
   linalg_test/Arnoldi_test.cpp
   linalg_test/Arnoldi_Ut_test.cpp
   linalg_test/Svd_test.cpp

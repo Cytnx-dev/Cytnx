@@ -104,6 +104,68 @@ namespace cytnx {
         // EXPECT_DOUBLE_EQ(ev, evans);
       }
 
+      // #943: H = diag(1, 2) on the GPU, acting on a rank-1 Tensor or a rank-1 dense UniTensor.
+      class GpuDiagonalOp : public LinOp {
+       public:
+        GpuDiagonalOp() : LinOp("mv", 2, Type.Double, Device.cuda) {
+          mat_ = zeros({2, 2}, Type.Double);
+          mat_.at<cytnx_double>({0, 0}) = 1.0;
+          mat_.at<cytnx_double>({1, 1}) = 2.0;
+          mat_.to_(Device.cuda);
+        }
+        Tensor matvec(const Tensor& v) override { return linalg::Dot(mat_, v); }
+        UniTensor matvec(const UniTensor& v) override {
+          return UniTensor(linalg::Dot(mat_, v.get_block_()));
+        }
+
+       private:
+        Tensor mat_;
+      };
+
+      Tensor GpuVector2(double x0, double x1) {
+        Tensor v = zeros({2}, Type.Double);
+        v.at<cytnx_double>({0}) = x0;
+        v.at<cytnx_double>({1}) = x1;
+        return v.to(Device.cuda);
+      }
+
+      // Expects the eigenpair (1, +-(1, 0)) of diag(1, 2).
+      void ExpectGpuDiagonalGroundState(const Tensor& energy, const Tensor& vec) {
+        EXPECT_EQ(vec.device(), Device.cuda);
+        EXPECT_NEAR(double(energy.to(Device.cpu).item().real()), 1.0, 1e-12);
+        Tensor v = vec.to(Device.cpu);
+        EXPECT_NEAR(std::abs(v.at<cytnx_double>({0})), 1.0, 1e-12);
+        EXPECT_NEAR(v.at<cytnx_double>({1}), 0.0, 1e-12);
+      }
+
+      // The start vector is the ground state itself, so the Krylov space is one-dimensional.
+      TEST(LanczosGnd, GpuStartAtGroundState) {
+        GpuDiagonalOp op;
+        std::vector<Tensor> eigs =
+          linalg::Lanczos(&op, GpuVector2(1.0, 0.0), "Gnd", 1.0e-14, 20, 1, true, false, 0, false);
+        ASSERT_EQ(eigs.size(), 2);
+        ExpectGpuDiagonalGroundState(eigs[0], eigs[1]);
+
+        std::vector<UniTensor> eigs_ut = linalg::Lanczos(
+          &op, UniTensor(GpuVector2(1.0, 0.0)), "Gnd", 1.0e-14, 20, 1, true, false, 0, false);
+        ASSERT_EQ(eigs_ut.size(), 2);
+        ExpectGpuDiagonalGroundState(eigs_ut[0].get_block_(), eigs_ut[1].get_block_());
+      }
+
+      // The Krylov space of (1, 1) is the whole two-dimensional space.
+      TEST(LanczosGnd, GpuKrylovSpaceIsWholeSpace) {
+        GpuDiagonalOp op;
+        std::vector<Tensor> eigs =
+          linalg::Lanczos(&op, GpuVector2(1.0, 1.0), "Gnd", 1.0e-300, 20, 1, true, false, 0, false);
+        ASSERT_EQ(eigs.size(), 2);
+        ExpectGpuDiagonalGroundState(eigs[0], eigs[1]);
+
+        std::vector<UniTensor> eigs_ut = linalg::Lanczos(
+          &op, UniTensor(GpuVector2(1.0, 1.0)), "Gnd", 1.0e-300, 20, 1, true, false, 0, false);
+        ASSERT_EQ(eigs_ut.size(), 2);
+        ExpectGpuDiagonalGroundState(eigs_ut[0].get_block_(), eigs_ut[1].get_block_());
+      }
+
     }  // namespace
   }  // namespace gpu_test
 }  // namespace cytnx
