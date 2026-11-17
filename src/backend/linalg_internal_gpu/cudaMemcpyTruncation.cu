@@ -9,14 +9,14 @@
 #include "Generator.hpp"
 
 #ifdef UNI_GPU
-  #define HANDLE_CUDA_ERROR(x)                                                    \
-    {                                                                             \
-      const auto err = x;                                                         \
-      if (err != cudaSuccess) {                                                   \
-        printf("CUDA Error: %s in line %d\n", cudaGetErrorString(err), __LINE__); \
-        fflush(stdout);                                                           \
-      }                                                                           \
-    };
+  // Raises instead of printing: a failed copy leaves the freshly allocated destination unwritten,
+  // which would otherwise be returned as if it were the result (#1250).
+  #define HANDLE_CUDA_ERROR(x)                                                           \
+    do {                                                                                 \
+      const cudaError_t cuda_status = (x);                                               \
+      cytnx_error_msg(cuda_status != cudaSuccess, "[cudaMemcpyTruncation] %s: %s\n", #x, \
+                      cudaGetErrorString(cuda_status));                                  \
+    } while (0)
 #endif
 
 namespace cytnx {

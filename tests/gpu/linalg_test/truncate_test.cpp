@@ -137,8 +137,7 @@ namespace cytnx {
         }
       }
 
-      // A huge err would truncate almost everything; mindim must floor the kept count. On the
-      // cuQuantum backend this exercises the "restart with keepdim=mindim" path in Gesvd_truncate.
+      // A huge err would truncate almost everything; mindim must floor the kept count.
       TEST(GesvdTruncate, GpuMindimFloor) {
         Tensor T = Tensor({6, 5}, Type.Double).to(Device.cuda);
         InitTensorUniform(T, 9);

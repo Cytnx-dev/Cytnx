@@ -177,9 +177,7 @@ namespace cytnx {
 #ifdef UNI_GPU
 
   #ifdef UNI_CUQUANTUM
-    typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                       const double &err, const unsigned int &return_err, Tensor &U,
-                                       Tensor &S, Tensor &vT, Tensor &terr);
+    typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, Tensor &U, Tensor &S, Tensor &vT);
     typedef void (*cuQuantumQr_oii)(const boost::intrusive_ptr<Storage_base> &in,
                                     boost::intrusive_ptr<Storage_base> &Q,
                                     boost::intrusive_ptr<Storage_base> &R,
