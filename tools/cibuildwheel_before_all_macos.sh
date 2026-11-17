@@ -67,6 +67,27 @@ export MAMBA_ROOT_PREFIX="/tmp/cytnx-micromamba"
   llvm-openmp
 ./bin/micromamba create -y -p "${build_tools_prefix}" -c conda-forge ccache
 
+# conda-forge's ARPACK loads BLAS and LAPACK through the generic names
+# libblas.3.dylib and liblapack.3.dylib, which in this prefix are both
+# symlinks to OpenBLAS. delocate bundles OpenBLAS once but rewrites only one
+# of the two names, so the repaired wheel's ARPACK still asks for
+# @rpath/libblas.3.dylib, which the wheel does not contain, and `import cytnx`
+# fails. Point ARPACK at OpenBLAS by its own install name before the build,
+# so there is a single name left for delocate to rewrite.
+arpack_dylib="$(realpath "${deps_prefix}/lib/libarpack.dylib")"
+openblas_install_name="$(otool -D "${deps_prefix}/lib/libopenblas.dylib" | tail -n 1)"
+while IFS= read -r generic_name; do
+  install_name_tool -change "${generic_name}" "${openblas_install_name}" "${arpack_dylib}"
+done < <(otool -L "${arpack_dylib}" | awk '$1 ~ /\/lib(blas|lapack)\.[0-9.]*dylib$/ {print $1}')
+# install_name_tool invalidates the code signature arm64 requires.
+codesign --force --sign - "${arpack_dylib}"
+echo "ARPACK dependencies after pointing BLAS/LAPACK at OpenBLAS:"
+otool -L "${arpack_dylib}"
+if otool -L "${arpack_dylib}" | grep -Eq '/lib(blas|lapack)\.[0-9.]*dylib'; then
+  echo "ARPACK still depends on a generic BLAS/LAPACK name" >&2
+  exit 1
+fi
+
 report_file="${PWD}/.cibw_macos_condaforge_minos_report.txt"
 target_file="${PWD}/.cibw_macos_deployment_target.txt"
 
