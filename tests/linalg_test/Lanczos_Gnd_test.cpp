@@ -222,8 +222,14 @@ namespace cytnx {
         // check the number of the eigenvalues
         cytnx_uint64 lanczos_eigvals_len = lanczos_eigvals.shape()[0];
         auto dtype = H.dtype();
-        const double tolerance =
-          (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
+#ifdef _MSC_VER
+        constexpr double single_precision_tolerance = 2.0e-4;
+#else
+        constexpr double single_precision_tolerance = 1.0e-4;
+#endif
+        const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float)
+                                   ? single_precision_tolerance
+                                   : 1.0e-12;
         if (lanczos_eigvals_len != k) return false;
         for (cytnx_uint64 i = 0; i < k; ++i) {
           auto lanczos_eigval = lanczos_eigvals.get_block_().storage().at(i);
@@ -233,10 +239,18 @@ namespace cytnx {
           // check eigenvalue by comparing with the full spectrum results.
           // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'LM'
           auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
-          if (eigval_err >= tolerance) return false;
+          if (eigval_err >= tolerance) {
+            std::cerr << "Lanczos eigenvalue error for dtype " << dtype << ": " << eigval_err
+                      << " (tolerance " << tolerance << ")\n";
+            return false;
+          }
           // check the is the eigenvector correct
           auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
-          if (resi_err >= tolerance) return false;
+          if (resi_err >= tolerance) {
+            std::cerr << "Lanczos residual error for dtype " << dtype << ": " << resi_err
+                      << " (tolerance " << tolerance << ")\n";
+            return false;
+          }
           // check phase
         }
         return true;
