@@ -1,10 +1,15 @@
 #ifndef CYTNX_UTILS_CUTENSORNET_H_
 #define CYTNX_UTILS_CUTENSORNET_H_
 
+#include <cstdint>
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "Type.hpp"
+#include "UniTensor.hpp"
 #include "cytnx_error.hpp"
-// #include "Tensor.hpp"
-// #include "UniTensor.hpp"
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
@@ -18,6 +23,9 @@ namespace cytnx {
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
 
+  // One cuTensorNet session: a library handle and everything created through it. The object owns
+  // what it creates and releases it in its destructor, so a session lasts exactly as long as the
+  // object and cannot be copied.
   class cutensornet {
    private:
     // std::vector<cudaDataType_t> type_mapper;
@@ -36,42 +44,43 @@ namespace cytnx {
     cutensornetComputeType_t typeCompute;  // CUTENSORNET_COMPUTE_32F;
 
     // stream
-    cudaStream_t stream;
+    cudaStream_t stream = nullptr;
 
     // cutensornet handle
-    cutensornetHandle_t handle;
+    cutensornetHandle_t handle = nullptr;
 
     // network descriptor
-    cutensornetNetworkDescriptor_t descNet;
+    cutensornetNetworkDescriptor_t descNet = nullptr;
 
     // mem info
     std::size_t freeMem, totalMem;
     uint64_t workspaceLimit;
 
     // optimizer config
-    cutensornetContractionOptimizerConfig_t optimizerConfig;
+    cutensornetContractionOptimizerConfig_t optimizerConfig = nullptr;
 
     // number of hypersamples
     int32_t num_hypersamples = 8;
 
-    // optimizer info
-    cutensornetContractionOptimizerInfo_t optimizerInfo;
+    // optimizer info; owned unless it was borrowed with useOptimizerInfoOf()
+    cutensornetContractionOptimizerInfo_t optimizerInfo = nullptr;
+    bool ownsOptimizerInfo = false;
 
     // the number of slices the tensor network execution will be split into
     int64_t numSlices;
 
     // workspace descriptor
-    cutensornetWorkspaceDescriptor_t workDesc;
+    cutensornetWorkspaceDescriptor_t workDesc = nullptr;
 
     // required workspace
     int64_t requiredWorkspaceSize = 0;
     void *work = nullptr;
 
     // contraction plan
-    cutensornetContractionPlan_t plan;
+    cutensornetContractionPlan_t plan = nullptr;
 
     // auto tune
-    cutensornetContractionAutotunePreference_t autotunePref;
+    cutensornetContractionAutotunePreference_t autotunePref = nullptr;
     int numAutotuningIterations = 5;  // may be 0
 
     // Create a cutensornetSliceGroup_t object from a range of slice IDs
@@ -99,7 +108,9 @@ namespace cytnx {
    public:
     UniTensor out;
     cutensornet();
-    // ~cutensornet();
+    ~cutensornet();
+    cutensornet(const cutensornet &) = delete;
+    cutensornet &operator=(const cutensornet &) = delete;
     void parseLabels(std::vector<int64_t> &res_label, std::vector<std::vector<int64_t>> &labels);
     void setOutputMem(UniTensor &res);
     void setInputMem(std::vector<UniTensor> &uts);
@@ -111,10 +122,12 @@ namespace cytnx {
     void createHandle();
     // dtype is the common dtype of every input tensor and of the output; it must be one of
     // Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float.
-    cutensornetNetworkDescriptor_t createNetworkDescriptor(unsigned int dtype);
+    void createNetworkDescriptor(unsigned int dtype);
     void getWorkspacelimit();
-    cutensornetContractionOptimizerInfo_t findOptimalOrder();
-    cutensornetContractionOptimizerInfo_t createOptimizerInfo();
+    void findOptimalOrder();
+    void createOptimizerInfo();
+    // Contract with the optimizer info that `owner` holds; `owner` has to outlive this object.
+    void useOptimizerInfoOf(const cutensornet &owner);
     void createWorkspaceDescriptor();
     void initializePlan();
     void autotune();
@@ -123,17 +136,7 @@ namespace cytnx {
     void setContractionPath(std::vector<std::pair<int64_t, int64_t>> einsum_path);
     std::vector<std::pair<int64_t, int64_t>> getContractionPath();
 
-    void setNetworkDescriptor(cutensornetNetworkDescriptor_t in);
-    void setOptimizerInfo(cutensornetContractionOptimizerInfo_t in);
-    // void createContractor();
-
     void QueryFlopCount();
-
-    void freePlan();
-    void freeOptimizer();
-    void freeWorkspaceDescriptor();
-    void freeNetworkDescriptor();
-    void freeHandle();
   };
 
   #endif

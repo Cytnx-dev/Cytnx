@@ -1,5 +1,9 @@
 #include "gpu_test_tools.h"
 
+#include <cuda_runtime.h>
+
+#include <algorithm>
+#include <cstddef>
 #include <exception>
 #include <iostream>
 #include <limits>
@@ -587,6 +591,35 @@ namespace cytnx {
       }
 
       return shapes;
+    }
+
+    double FreeDeviceMiB() {
+      std::size_t free_bytes = 0, total_bytes = 0;
+      EXPECT_EQ(cudaMemGetInfo(&free_bytes, &total_bytes), cudaSuccess);
+      return static_cast<double>(free_bytes) / (1024.0 * 1024.0);
+    }
+
+    // Runs `body` and reports the device memory it failed to give back, in MiB.
+    //
+    // `cudaMemGetInfo` reports free memory for the whole *device*, not for this process, so any
+    // other CUDA process on the same GPU moves the number under our feet. That is not hypothetical
+    // here: the self-hosted machine that runs this suite also serves GPU CI, and a concurrent job
+    // made a cuSOLVER leak test report 68 MiB against its 64 MiB threshold in 1 run out of 5.
+    //
+    // A genuine leak reproduces on every attempt; contention does not. So measure the loop up to
+    // `attempts` times and keep the smallest delta, stopping early as soon as one attempt comes in
+    // under `slack`. The bias is deliberate and one-sided: if a neighbouring process *frees* during
+    // our window the delta is understated, so this errs toward a false pass rather than a false
+    // failure. For a guard, an intermittent red is worse than a missed regression -- and the leaks
+    // these tests exist to catch are orders of magnitude above the threshold, not marginal.
+    double MeasureLeakMiB(const std::function<void()>& body, int attempts, double slack) {
+      double best = std::numeric_limits<double>::max();
+      for (int i = 0; i < attempts && best >= slack; ++i) {
+        const double before = FreeDeviceMiB();
+        body();
+        best = std::min(best, before - FreeDeviceMiB());
+      }
+      return best;
     }
 
   }  // namespace gpu_test
