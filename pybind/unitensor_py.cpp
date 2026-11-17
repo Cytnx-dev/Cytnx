@@ -586,6 +586,7 @@ void unitensor_binding(py::module &m) {
 
     .def("rowrank", &UniTensor::rowrank)
     .def("Nblocks", &UniTensor::Nblocks)
+    .def("flattened_dimension", &UniTensor::flattened_dimension)
     .def("rank", &UniTensor::rank)
     .def("size", &UniTensor::size)
     .def("uten_type", &UniTensor::uten_type)
@@ -2719,6 +2720,12 @@ void unitensor_binding(py::module &m) {
        const bool &optimal) -> UniTensor { return Contract(TNs, order, optimal); },
     py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true,
     py::call_guard<py::gil_scoped_release>());
+  m.def(
+    "flattened_dimension",
+    [](const std::vector<Bond> &bonds, bool is_diag) -> cytnx_uint64 {
+      return cytnx::flattened_dimension(bonds, is_diag);
+    },
+    py::arg("bonds"), py::arg("is_diag") = false);
   m.def(
     "Contracts",
     [](const std::vector<UniTensor> &TNs, const std::string &order,

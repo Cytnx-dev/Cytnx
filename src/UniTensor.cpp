@@ -1,6 +1,8 @@
 #include "UniTensor.hpp"
 
+#include <cstdint>
 #include <filesystem>
+#include <map>
 #include <typeinfo>
 
 #include "utils/utils.hpp"
@@ -266,6 +268,67 @@ namespace cytnx {
                       "\n");
     }
     return *this;
+  }
+
+  cytnx_uint64 UniTensor::flattened_dimension() const {
+    cytnx_error_msg(this->is_void(),
+                    "[ERROR][UniTensor::flattened_dimension] the UniTensor is uninitialized.%s",
+                    "\n");
+    return cytnx::flattened_dimension(this->bonds(), this->is_diag());
+  }
+
+  cytnx_uint64 flattened_dimension(const std::vector<Bond> &bonds, bool is_diag) {
+    if (bonds.empty()) return 1;
+    // A diagonal UniTensor stores one block per sector of its first bond, with the size of
+    // that sector's degeneracy (dense: one block of the first bond's dimension).
+    if (is_diag) return bonds[0].dim();
+
+    const std::vector<Symmetry> &syms = bonds[0].syms();
+    for (const Bond &bond : bonds) {
+      cytnx_error_msg(bond.syms() != syms,
+                      "[ERROR][flattened_dimension] all bonds must carry the same symmetries.%s",
+                      "\n");
+    }
+    if (syms.empty()) {
+      std::uint64_t dim = 1;
+      for (const Bond &bond : bonds) dim *= bond.dim();
+      return dim;
+    }
+
+    // Fold in one bond at a time, keeping the number of basis states for each total quantum
+    // number. A combination of sectors is allowed when its total quantum number is zero for
+    // every symmetry, with the quantum numbers of BD_BRA bonds reversed, the same rule that
+    // BlockUniTensor::Init uses to decide which blocks exist. The cost is linear in the rank,
+    // where enumerating the combinations would be exponential.
+    using Charge = std::vector<cytnx_int64>;
+    std::map<Charge, std::uint64_t> counts;
+    Charge sector(syms.size());
+    Charge total(syms.size());
+    for (std::size_t b = 0; b < bonds.size(); ++b) {
+      const Bond &bond = bonds[b];
+      const bool reversed = bond.type() == BD_BRA;
+      const std::vector<std::vector<cytnx_int64>> &qnums = bond.qnums();
+      const std::vector<cytnx_uint64> &degs = bond.getDegeneracies();
+      std::map<Charge, std::uint64_t> next;
+      for (std::size_t s = 0; s < qnums.size(); ++s) {
+        for (std::size_t i = 0; i < syms.size(); ++i) {
+          sector[i] = reversed ? syms[i].reverse_rule(qnums[s][i]) : qnums[s][i];
+        }
+        if (b == 0) {
+          next[sector] += degs[s];
+          continue;
+        }
+        for (const auto &[charge, count] : counts) {
+          for (std::size_t i = 0; i < syms.size(); ++i) {
+            total[i] = syms[i].combine_rule(charge[i], sector[i]);
+          }
+          next[total] += count * degs[s];
+        }
+      }
+      counts = std::move(next);
+    }
+    const auto zero = counts.find(Charge(syms.size(), 0));
+    return zero == counts.end() ? 0 : zero->second;
   }
 
 }  // namespace cytnx

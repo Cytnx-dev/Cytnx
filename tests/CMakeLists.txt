@@ -37,6 +37,7 @@ add_executable(
   BlockUniTensor_test.cpp
   BlockFermionicUniTensor_test.cpp
   DenseUniTensor_test.cpp
+  UniTensor_flattened_dimension_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
   arange_test.cpp
