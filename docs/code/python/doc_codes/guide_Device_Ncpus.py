@@ -1,1 +1,0 @@
-print(cytnx.Device.Ncpus)

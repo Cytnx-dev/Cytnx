@@ -43,12 +43,7 @@ namespace DocTest {
 
   // 1.2 clone
   // 2. Device
-  // 2.1 Number of threads
-  TEST(Doc, guide_Device_Ncpus){OUT_REDIRECT
-#include "guide_Device_Ncpus.cpp"
-                                  OUT_RESET}
-
-  // 2.2 Number of GPUs
+  // 2.1 Number of GPUs
   TEST(Doc, guide_Device_Ngpus){OUT_REDIRECT
 #include "guide_Device_Ngpus.cpp"
                                   OUT_RESET}

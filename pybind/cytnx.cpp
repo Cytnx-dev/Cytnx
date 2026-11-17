@@ -47,6 +47,14 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__version__") = CYTNX_VERSION;
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
+  // Compiled in, so it stays correct for every install layout. The *.tmp build
+  // metadata that cytnx/__init__.py reads does not: an editable install reads
+  // the committed placeholders instead of the configured build's files.
+#ifdef UNI_HPTT
+  m.attr("_hptt_enabled") = true;
+#else
+  m.attr("_hptt_enabled") = false;
+#endif
 
   // Map cytnx::error (thrown by cytnx_error_msg) to cytnx.CytnxError, a subclass
   // of RuntimeError so existing `except RuntimeError` call sites keep working.
@@ -73,7 +81,6 @@ PYBIND11_MODULE(cytnx, m) {
   mdev.attr("cpu") = (cytnx_int64)cytnx::Device.cpu;
   mdev.attr("cuda") = (cytnx_int64)cytnx::Device.cuda;
   mdev.attr("Ngpus") = cytnx::Device.Ngpus;
-  mdev.attr("Ncpus") = cytnx::Device.Ncpus;
   mdev.def("Print_Property", []() { cytnx::Device.Print_Property(); });
   mdev.def("getname",
            [](const int &device_id) -> std::string { return cytnx::Device.getname(device_id); });

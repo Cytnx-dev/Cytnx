@@ -2884,5 +2884,6 @@ Z: SymType  # value = <SymType.Z: 0>
 __blasINTsize__: int = 4
 __cytnx_backend__: str = 'cytnx'
 __version__: str = '1.1.1'
+_hptt_enabled: bool = True
 fNum: SymType  # value = <SymType.fNum: -3>
 fPar: SymType  # value = <SymType.fPar: -2>

@@ -1,12 +1,10 @@
 #include "Device.hpp"
 
-#include <thread>
-
 #include "cytnx_error.hpp"
 
 namespace cytnx {
 
-  Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
+  Device_class::Device_class() : Ngpus(0) {
 #ifdef UNI_GPU
 
     // get all available gpus. A machine with no CUDA-capable device or no
