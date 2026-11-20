@@ -1,0 +1,18 @@
+# Git metadata
+.git
+.gitignore
+
+# Build artifacts
+build/
+dist/
+bin/
+*.o
+*.so
+*.a
+
+# Python junk
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
